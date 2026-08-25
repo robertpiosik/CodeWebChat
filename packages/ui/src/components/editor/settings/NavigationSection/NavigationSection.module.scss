@@ -1,14 +1,17 @@
 .container {
-  opacity: var(--dimmed-opacity);
-  transition: opacity var(--transition-duration-250);
   display: flex;
   flex-direction: column;
 
-  &--active {
+  > :not(:first-child) {
+    opacity: var(--dimmed-opacity);
+    transition: opacity var(--transition-duration-250);
+  }
+
+  &--active > :not(:first-child) {
     opacity: 1;
   }
 
-  &:hover {
+  &:hover > :not(:first-child) {
     opacity: 1;
   }
 }
