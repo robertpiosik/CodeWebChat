@@ -70,7 +70,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
     return (
       <UiSection
         ref={ref}
-        title={t('api-calls.title')}
+        title={t('api.title')}
         subtitle={t('api-calls.subtitle')}
       >
         <UiNotice type="info">

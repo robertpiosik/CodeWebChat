@@ -33,9 +33,8 @@
   }
 
   &__label {
-    font-family: var(--font-family-accent);
+    @include accent-font;
     font-size: 32px;
-    letter-spacing: 1.5px;
   }
 
   &__label-char {

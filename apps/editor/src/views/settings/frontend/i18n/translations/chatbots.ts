@@ -1,21 +1,21 @@
 export const translations = {
-  'chatbots.title': {
-    en: 'Chatbots',
-    pl: 'Chatboty',
-    'zh-cn': '聊天机器人',
-    ja: 'チャットボット',
-    'zh-tw': '聊天機器人',
-    de: 'Chatbots',
-    es: 'Chatbots',
-    fr: 'Chatbots',
-    'pt-br': 'Chatbots',
-    ru: 'Чат-боты',
-    ko: '챗봇',
-    it: 'Chatbot',
-    tr: 'Sohbet Botları',
-    cs: 'Chatboti',
-    hu: 'Chatbotok',
-    bg: 'Чатботове'
+  'web.title': {
+    en: 'Web',
+    pl: 'Web',
+    'zh-cn': 'Web',
+    ja: 'Web',
+    'zh-tw': 'Web',
+    de: 'Web',
+    es: 'Web',
+    fr: 'Web',
+    'pt-br': 'Web',
+    ru: 'Web',
+    ko: 'Web',
+    it: 'Web',
+    tr: 'Web',
+    cs: 'Web',
+    hu: 'Web',
+    bg: 'Web'
   },
   'chatbots.configurations.title': {
     en: 'Configurations',

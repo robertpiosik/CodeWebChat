@@ -5,16 +5,18 @@
   gap: 8px;
   padding: 0 8px;
   border-radius: 4px;
+  font-size: 18px;
+  @include accent-font;
   color: var(--vscode-textLink-foreground);
   height: 32px;
   transition: background-color 0.1s;
-  font-weight: 500;
 }
 
 .label {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  padding: 0 1px;
 }
 
 .warning {

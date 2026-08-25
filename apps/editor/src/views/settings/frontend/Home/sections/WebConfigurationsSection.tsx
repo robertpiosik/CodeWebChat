@@ -108,7 +108,7 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
     return (
       <UiSection
         ref={ref}
-        title={t('chatbots.title')}
+        title={t('web.title')}
         subtitle={t('chatbots.subtitle')}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

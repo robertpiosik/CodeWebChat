@@ -1,21 +1,21 @@
 export const translations = {
-  'api-calls.title': {
-    en: 'API Calls',
-    pl: 'Konfiguracje API',
-    'zh-cn': 'API 配置',
-    ja: '設定',
-    'zh-tw': '設定',
-    de: 'API-Konfigurationen',
-    es: 'Configuraciones de API',
-    fr: 'Configurations API',
-    'pt-br': 'Configurações de API',
-    ru: 'Конфигурации API',
-    ko: 'API 구성',
-    it: 'Configurazioni API',
-    tr: 'API Yapılandırmaları',
-    cs: 'Konfigurace API',
-    hu: 'API Konfigurációk',
-    bg: 'API Конфигурации'
+  'api.title': {
+    en: 'API',
+    pl: 'API',
+    'zh-cn': 'API',
+    ja: 'API',
+    'zh-tw': 'API',
+    de: 'API',
+    es: 'API',
+    fr: 'API',
+    'pt-br': 'API',
+    ru: 'API',
+    ko: 'API',
+    it: 'API',
+    tr: 'API',
+    cs: 'API',
+    hu: 'API',
+    bg: 'API'
   },
   'api-calls.model-providers.title': {
     en: 'Model Providers',

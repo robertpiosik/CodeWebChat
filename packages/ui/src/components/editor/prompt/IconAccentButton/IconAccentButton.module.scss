@@ -102,10 +102,9 @@
   }
 
   &__label {
-    font-family: var(--font-family-accent);
+    @include accent-font;
     font-size: 16px;
     line-height: 1;
-    letter-spacing: 1px;
     padding-top: 2px;
     padding-right: 1px;
     overflow: hidden;

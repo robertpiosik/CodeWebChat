@@ -273,9 +273,8 @@
 
       &__button {
         position: relative;
-        font-family: var(--font-family-accent);
+        @include accent-font;
         color: var(--cwc-text-color-dimmed);
-        letter-spacing: 1px;
         font-size: 16px;
         padding: 0 4px;
 

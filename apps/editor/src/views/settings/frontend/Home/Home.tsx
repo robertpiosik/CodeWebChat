@@ -65,7 +65,7 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   },
   {
     id: 'section:chatbots',
-    label: 'chatbots.title'
+    label: 'web.title'
   },
   {
     id: 'section:chatbots:group:web-configurations',
@@ -77,7 +77,7 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   },
   {
     id: 'section:api-calls',
-    label: 'api-calls.title'
+    label: 'api.title'
   },
   {
     id: 'section:api-calls:group:model-providers',

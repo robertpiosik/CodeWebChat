@@ -56,10 +56,9 @@
     display: flex;
     align-items: center;
     height: 24px;
-    font-family: var(--font-family-accent);
+    @include accent-font;
     font-size: 18px;
     line-height: 1;
-    letter-spacing: 1px;
     padding-top: 1px;
     white-space: nowrap;
   }

@@ -19,10 +19,9 @@
   }
 
   &__tab {
-    font-family: var(--font-family-accent);
+    @include accent-font;
     font-size: 16px;
     padding: 5px 9px 0 9px;
-    letter-spacing: 1px;
     display: flex;
     align-items: center;
     text-transform: none;
