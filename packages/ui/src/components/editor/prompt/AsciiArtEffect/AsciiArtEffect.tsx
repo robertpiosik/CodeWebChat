@@ -1,7 +1,11 @@
 import { useEffect, useRef } from 'react'
 import styles from './AsciiArtEffect.module.scss'
 
-export const AsciiArtEffect = () => {
+export type AsciiArtEffectProps = {
+  density?: number
+}
+
+export const AsciiArtEffect = ({ density = 1 }: AsciiArtEffectProps) => {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -32,9 +36,14 @@ export const AsciiArtEffect = () => {
     }
   }, [])
 
+  const size = Math.round(88 / Math.sqrt(density))
+
   return (
     <div ref={ref} className={styles.container}>
-      <div className={styles.inner} />
+      <div
+        className={styles.inner}
+        style={{ '--mask-size': `${size}px ${size}px` } as React.CSSProperties}
+      />
     </div>
   )
 }

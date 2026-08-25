@@ -178,6 +178,7 @@ export const Home: React.FC<Props> = (props) => {
             [styles['header__modes--visible']]: has_scrolled_past_mode_button
           })}
         >
+          <AsciiArtEffect density={2.3} />
           <UiKeycapWrapper char={is_alt_pressed ? '1' : undefined} full_width>
             <UiModeButton
               label={MODE.WEB}
