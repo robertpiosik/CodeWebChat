@@ -1,7 +1,7 @@
 import { MODE, Mode } from '@shared/types/mode'
 import { use_compacting } from '@shared/hooks'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import { PromptTypeButton as UiPromptTypeButton } from '@ui/components/editor/prompt/PromptTypeButton'
+import { IconAccentButton as UiIconAccentButton } from '@ui/components/editor/prompt/IconAccentButton'
 import { KeycapWrapper as UiKeycapWrapper } from '@ui/components/editor/prompt/KeycapWrapper'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import styles from './Header.module.scss'
@@ -45,7 +45,7 @@ export const Header: React.FC<Props> = (props) => {
         {props.mode == MODE.WEB && (
           <>
             <UiKeycapWrapper char={is_alt_pressed ? 'E' : undefined}>
-              <UiPromptTypeButton
+              <UiIconAccentButton
                 label={web_prompt_type_labels['edit-files']}
                 icon="edit-sparkle"
                 is_active={props.web_prompt_type == 'edit-files'}
@@ -59,7 +59,7 @@ export const Header: React.FC<Props> = (props) => {
               />
             </UiKeycapWrapper>
             <UiKeycapWrapper char={is_alt_pressed ? 'A' : undefined}>
-              <UiPromptTypeButton
+              <UiIconAccentButton
                 label={web_prompt_type_labels['ask-about-files']}
                 icon="chat-sparkle"
                 is_active={props.web_prompt_type == 'ask-about-files'}
@@ -77,7 +77,7 @@ export const Header: React.FC<Props> = (props) => {
           </>
         )}
         {props.mode == MODE.API && (
-          <UiPromptTypeButton
+          <UiIconAccentButton
             label={api_prompt_type_labels['edit-files']}
             icon="edit-sparkle"
             is_active={props.api_prompt_type == 'edit-files'}

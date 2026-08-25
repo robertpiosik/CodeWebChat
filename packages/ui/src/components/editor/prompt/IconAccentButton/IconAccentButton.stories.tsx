@@ -1,11 +1,11 @@
-import { PromptTypeButton } from './PromptTypeButton'
+import { IconAccentButton } from './IconAccentButton'
 
 export default {
-  component: PromptTypeButton
+  component: IconAccentButton
 }
 
 export const Default = () => (
-  <PromptTypeButton
+  <IconAccentButton
     label="Default Button"
     icon="gear"
     on_click={() => console.log('Clicked')}
@@ -13,7 +13,7 @@ export const Default = () => (
 )
 
 export const WithIcon = () => (
-  <PromptTypeButton
+  <IconAccentButton
     label="Run Prompt"
     icon="play"
     on_click={() => console.log('Clicked')}
@@ -21,7 +21,7 @@ export const WithIcon = () => (
 )
 
 export const Active = () => (
-  <PromptTypeButton
+  <IconAccentButton
     label="Active Button"
     icon="check"
     is_active
@@ -30,7 +30,7 @@ export const Active = () => (
 )
 
 export const ActiveBlue = () => (
-  <PromptTypeButton
+  <IconAccentButton
     label="Active Blue Button"
     icon="check"
     is_active
@@ -40,7 +40,7 @@ export const ActiveBlue = () => (
 )
 
 export const ActiveOrange = () => (
-  <PromptTypeButton
+  <IconAccentButton
     label="Active Orange Button"
     icon="check"
     is_active
@@ -49,8 +49,28 @@ export const ActiveOrange = () => (
   />
 )
 
+export const ActiveGreen = () => (
+  <IconAccentButton
+    label="Active Green Button"
+    icon="check"
+    is_active
+    active_color="green"
+    on_click={() => console.log('Clicked')}
+  />
+)
+
+export const ActiveRed = () => (
+  <IconAccentButton
+    label="Active Red Button"
+    icon="check"
+    is_active
+    active_color="red"
+    on_click={() => console.log('Clicked')}
+  />
+)
+
 export const Compact = () => (
-  <PromptTypeButton
+  <IconAccentButton
     label="Compact Button"
     icon="gear"
     is_compact

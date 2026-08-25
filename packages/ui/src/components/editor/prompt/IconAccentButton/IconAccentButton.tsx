@@ -1,19 +1,19 @@
 import { FC } from 'react'
-import styles from './PromptTypeButton.module.scss'
+import styles from './IconAccentButton.module.scss'
 import cn from 'classnames'
 
-export namespace PromptTypeButton {
+export namespace IconAccentButton {
   export type Props = {
     label: string
     icon: string
     is_compact?: boolean
     is_active?: boolean
-    active_color?: 'blue' | 'orange'
+    active_color?: 'blue' | 'orange' | 'green' | 'red'
     on_click?: () => void
   }
 }
 
-export const PromptTypeButton: FC<PromptTypeButton.Props> = (props) => {
+export const IconAccentButton: FC<IconAccentButton.Props> = (props) => {
   return (
     <button
       className={cn(styles.button, {
@@ -22,7 +22,10 @@ export const PromptTypeButton: FC<PromptTypeButton.Props> = (props) => {
         [styles['button--blue']]:
           props.is_active && props.active_color == 'blue',
         [styles['button--orange']]:
-          props.is_active && props.active_color == 'orange'
+          props.is_active && props.active_color == 'orange',
+        [styles['button--green']]:
+          props.is_active && props.active_color == 'green',
+        [styles['button--red']]: props.is_active && props.active_color == 'red'
       })}
       onClick={props.on_click}
       type="button"
