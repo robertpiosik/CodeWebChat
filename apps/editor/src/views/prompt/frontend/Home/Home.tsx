@@ -253,7 +253,7 @@ export const Home: React.FC<Props> = (props) => {
                   {roots.length > 1 && (
                     <div className={styles['inner__workspace-dropdown']}>
                       <div
-                        className={styles['inner__workspace-dropdown-button']}
+                        className={styles['inner__workspace-dropdown__button']}
                         onClick={(e) => {
                           e.stopPropagation()
                           post_message(props.vscode, {
@@ -265,14 +265,16 @@ export const Home: React.FC<Props> = (props) => {
                         title={t('home.folder')}
                       >
                         <span
-                          className={styles['inner__workspace-dropdown-text']}
+                          className={
+                            styles['inner__workspace-dropdown__button__text']
+                          }
                         >
                           {active_root?.split(/[\\/]/).pop() || active_root}
                         </span>
                         <span
                           className={cn(
                             'codicon codicon-unfold',
-                            styles['inner__workspace-dropdown-icon']
+                            styles['inner__workspace-dropdown__button__icon']
                           )}
                         />
                       </div>

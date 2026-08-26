@@ -162,36 +162,34 @@
     position: relative;
     display: flex;
     align-items: center;
-    height: 24px;
     min-width: 0;
-    margin-right: 2px;
 
-    &-button {
+    &__button {
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 2px;
       color: var(--vscode-descriptionForeground);
-      font-size: 11px;
       min-width: 0;
-      padding: 2px 4px;
+      padding: 2px 4px 2px 5px;
       border-radius: 5px;
 
       &:hover {
         background-color: var(--vscode-toolbar-hoverBackground);
         color: var(--vscode-icon-foreground);
       }
-    }
 
-    &-text {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
+      &__text {
+        font-size: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
 
-    &-icon {
-      font-size: 12px;
-      flex-shrink: 0;
+      &__icon {
+        font-size: 12px !important;
+        flex-shrink: 0;
+      }
     }
   }
 
