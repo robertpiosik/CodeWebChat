@@ -8,11 +8,20 @@ export const get_referencing_files_for_position = async (params: {
   workspace_provider: WorkspaceProvider
   ignore_paths: string[]
 }): Promise<{ file_path: string; range: vscode.Range }[]> => {
-  const locations = await vscode.commands.executeCommand<vscode.Location[]>(
+  let locations = await vscode.commands.executeCommand<vscode.Location[]>(
     'vscode.executeReferenceProvider',
     params.uri,
     params.position
   )
+
+  if (!locations || locations.length === 0) {
+    await new Promise((resolve) => setTimeout(resolve, 500))
+    locations = await vscode.commands.executeCommand<vscode.Location[]>(
+      'vscode.executeReferenceProvider',
+      params.uri,
+      params.position
+    )
+  }
 
   if (!locations || locations.length === 0) return []
 

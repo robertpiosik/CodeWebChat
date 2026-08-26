@@ -29,9 +29,16 @@ export const get_referencing_files_for_uris = async (params: {
       if (is_unsupported_for_symbol_search) {
         positions.push(new vscode.Position(0, 0))
       } else {
-        const symbols = await vscode.commands.executeCommand<
+        let symbols = await vscode.commands.executeCommand<
           vscode.DocumentSymbol[] | vscode.SymbolInformation[]
         >('vscode.executeDocumentSymbolProvider', uri)
+
+        if (!symbols || symbols.length === 0) {
+          await new Promise((resolve) => setTimeout(resolve, 500))
+          symbols = await vscode.commands.executeCommand<
+            vscode.DocumentSymbol[] | vscode.SymbolInformation[]
+          >('vscode.executeDocumentSymbolProvider', uri)
+        }
 
         if (symbols) {
           const top_level_containers = new Set<string>()
@@ -71,15 +78,29 @@ export const get_referencing_files_for_uris = async (params: {
         }
       }
 
+      let has_retried_references = false
+
       for (let i = 0; i < positions.length; i++) {
         if (params.token.isCancellationRequested) {
           break
         }
         const position = positions[i]
 
-        const locations = await vscode.commands.executeCommand<
-          vscode.Location[]
-        >('vscode.executeReferenceProvider', uri, position)
+        let locations = await vscode.commands.executeCommand<vscode.Location[]>(
+          'vscode.executeReferenceProvider',
+          uri,
+          position
+        )
+
+        if ((!locations || locations.length === 0) && !has_retried_references) {
+          has_retried_references = true
+          await new Promise((resolve) => setTimeout(resolve, 500))
+          locations = await vscode.commands.executeCommand<vscode.Location[]>(
+            'vscode.executeReferenceProvider',
+            uri,
+            position
+          )
+        }
 
         if (locations) {
           for (const loc of locations) {

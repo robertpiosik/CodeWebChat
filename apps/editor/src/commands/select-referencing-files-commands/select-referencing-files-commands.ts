@@ -105,11 +105,20 @@ export const select_referencing_files_commands = (
               title: t('command.select-referencing-files.processing')
             },
             async () => {
-              const definitions = await vscode.commands.executeCommand<any[]>(
+              let definitions = await vscode.commands.executeCommand<any[]>(
                 'vscode.executeDefinitionProvider',
                 target_uri,
                 target_position
               )
+
+              if (!definitions || definitions.length === 0) {
+                await new Promise((resolve) => setTimeout(resolve, 500))
+                definitions = await vscode.commands.executeCommand<any[]>(
+                  'vscode.executeDefinitionProvider',
+                  target_uri,
+                  target_position
+                )
+              }
 
               const ignore_paths: string[] = []
 
