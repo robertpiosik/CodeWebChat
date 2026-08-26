@@ -93,7 +93,8 @@ export const handle_autofill = async (params: {
     context_text,
     skill_definitions,
     system_instructions: formatted_system_instructions,
-    user_instructions
+    user_instructions,
+    separator: true
   })
 
   const prompt_type = params.prompt_view_provider.web_prompt_type

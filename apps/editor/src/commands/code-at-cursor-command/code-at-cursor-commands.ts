@@ -3,11 +3,13 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import { CommitMessageDetails } from '@/utils/commit-message-details'
 import { perform_code_at_cursor } from './utils/perform-code-at-cursor'
+import { WebSocketManager } from '@/services/websocket-manager'
 
 export const code_at_cursor_commands = (params: {
   workspace_provider: WorkspaceProvider
   open_editors_provider: OpenEditorsProvider
   extension_context: vscode.ExtensionContext
+  websocket_manager: WebSocketManager
 }) => {
   return [
     vscode.commands.registerCommand(
@@ -32,6 +34,7 @@ export const code_at_cursor_commands = (params: {
         workspace_provider: params.workspace_provider,
         open_editors_provider: params.open_editors_provider,
         extension_context: params.extension_context,
+        websocket_manager: params.websocket_manager,
         with_completion_instructions: false,
         show_quick_pick: false
       })
@@ -43,6 +46,7 @@ export const code_at_cursor_commands = (params: {
           workspace_provider: params.workspace_provider,
           open_editors_provider: params.open_editors_provider,
           extension_context: params.extension_context,
+          websocket_manager: params.websocket_manager,
           with_completion_instructions: true,
           show_quick_pick: false
         })
@@ -52,6 +56,7 @@ export const code_at_cursor_commands = (params: {
         workspace_provider: params.workspace_provider,
         open_editors_provider: params.open_editors_provider,
         extension_context: params.extension_context,
+        websocket_manager: params.websocket_manager,
         with_completion_instructions: false,
         show_quick_pick: true
       })
@@ -63,6 +68,7 @@ export const code_at_cursor_commands = (params: {
           workspace_provider: params.workspace_provider,
           open_editors_provider: params.open_editors_provider,
           extension_context: params.extension_context,
+          websocket_manager: params.websocket_manager,
           with_completion_instructions: true,
           show_quick_pick: true
         })

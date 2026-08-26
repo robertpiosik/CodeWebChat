@@ -37,7 +37,8 @@ export const copy_markdown_commands = (
       }
 
       context_text =
-        PromptBuilder.build_prompt({ context_text }).full_prompt + '\n'
+        PromptBuilder.build_prompt({ context_text, separator: true })
+          .full_prompt + '\n'
       await vscode.env.clipboard.writeText(context_text)
       vscode.window.showInformationMessage(
         t('command.copy-markdown.info.context-copied')
@@ -117,7 +118,8 @@ export const copy_markdown_commands = (
         if (context_text == '') return
 
         context_text =
-          PromptBuilder.build_prompt({ context_text }).full_prompt + '\n'
+          PromptBuilder.build_prompt({ context_text, separator: true })
+            .full_prompt + '\n'
         await vscode.env.clipboard.writeText(context_text)
         vscode.window.showInformationMessage(
           t('command.copy-markdown.info.context-from-editors-copied')

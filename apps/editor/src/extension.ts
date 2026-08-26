@@ -122,12 +122,13 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       prompt_view_provider,
       workspace_provider,
       prompt_view_api_calls_manager,
-      websocket_manager: websocket_server_instance!
+      websocket_manager: websocket_server_instance
     }),
     ...code_at_cursor_commands({
       workspace_provider,
       open_editors_provider,
-      extension_context
+      extension_context,
+      websocket_manager: websocket_server_instance
     }),
     ...history_command({
       extension_context,

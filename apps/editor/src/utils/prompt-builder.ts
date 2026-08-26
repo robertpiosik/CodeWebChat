@@ -88,7 +88,7 @@ export namespace PromptBuilder {
     }
 
     const has_system = !!params.system_instructions
-    const separator = params.separator !== false && has_system
+    const separator = params.separator && has_system
 
     if (params.system_instructions) {
       const sys = params.system_instructions.trimEnd()

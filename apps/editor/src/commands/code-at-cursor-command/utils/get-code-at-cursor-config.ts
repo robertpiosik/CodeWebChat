@@ -39,23 +39,6 @@ export const get_code_at_cursor_api_configuration = async (params: {
       await params.model_providers_manager.get_default_code_at_cursor_api_configuration()
     if (default_api_configuration) {
       selected_api_configuration = default_api_configuration
-    } else {
-      const last_selected_id =
-        params.extension_context.workspaceState.get<string>(
-          LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
-        )
-      if (last_selected_id) {
-        selected_api_configuration =
-          code_at_cursor_api_configurations.find(
-            (c) => get_api_configuration_id(c) == last_selected_id
-          ) || null
-      }
-      if (
-        !selected_api_configuration &&
-        code_at_cursor_api_configurations.length > 0
-      ) {
-        selected_api_configuration = code_at_cursor_api_configurations[0]
-      }
     }
   }
 

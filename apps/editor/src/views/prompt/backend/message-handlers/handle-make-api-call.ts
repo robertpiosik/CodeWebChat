@@ -241,7 +241,8 @@ export const handle_make_api_call = async (
         recent_files: collected.recent_files,
         skill_definitions,
         system_instructions: formatted_system_instructions,
-        user_instructions: processed_instructions
+        user_instructions: processed_instructions,
+        separator: true
       })
       user_content = build_user_content({ model_provider, part1, part2 })
     }

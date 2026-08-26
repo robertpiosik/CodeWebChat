@@ -52,7 +52,8 @@ export const handle_preview_web_configuration = async (
     context_text,
     skill_definitions,
     system_instructions: formatted_system_instructions,
-    user_instructions
+    user_instructions,
+    separator: true
   })
   const text_to_send = built_prompt
 

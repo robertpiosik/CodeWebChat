@@ -50,7 +50,8 @@ export const handle_copy_prompt = async (params: {
     context_text,
     skill_definitions,
     system_instructions: formatted_system_instructions,
-    user_instructions
+    user_instructions,
+    separator: true
   })
 
   vscode.env.clipboard.writeText(text.trim())
