@@ -107,14 +107,11 @@ export const prompt_for_intelligent_search_results = async (params: {
 
     const unmatched_quick_pick_items = group_quick_pick_items({
       mapped_items: mapped_unmatched_items,
-      is_multi_root,
-      workspace_provider: params.workspace_provider
+      is_multi_root: false,
+      workspace_provider: params.workspace_provider,
+      label_prefix: t('feature.search-files.results.unmatched')
     }) as (vscode.QuickPickItem & { file_path?: string })[]
 
-    quick_pick_items.push({
-      label: t('feature.search-files.results.unmatched'),
-      kind: vscode.QuickPickItemKind.Separator
-    })
     quick_pick_items.push(...unmatched_quick_pick_items)
   }
 

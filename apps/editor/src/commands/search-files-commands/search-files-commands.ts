@@ -114,46 +114,6 @@ export const search_files_commands = (
     }
   ) => {
     if (options?.provided_files) {
-      let decision:
-        | { selected_paths: string[]; matched_paths: string[]; title?: string }
-        | undefined = undefined
-
-      let restored_selected_paths: string[] | undefined = undefined
-
-      while (true) {
-        const result = await prompt_for_provided_results({
-          files: options.provided_files,
-          workspace_provider,
-          restored_selected_paths
-        })
-
-        if (!result) return
-
-        if ('action' in result) {
-          const sub_search_result = await search_files({
-            get_files: async () => result.matched_paths,
-            workspace_provider,
-            extension_context,
-            websocket_manager,
-            show_back_button: true,
-            is_sub_search: true
-          })
-
-          if (sub_search_result === 'back') {
-            restored_selected_paths = result.selected_paths
-            continue
-          }
-
-          if (!sub_search_result) return
-
-          decision = sub_search_result
-          break
-        }
-
-        decision = result
-        break
-      }
-
       let resolved_all_files: string[] = []
 
       if (options.is_search_in_selected) {
@@ -178,6 +138,51 @@ export const search_files_commands = (
             resolved_all_files.push(...result)
           }
         }
+      }
+
+      let decision:
+        | { selected_paths: string[]; matched_paths: string[]; title?: string }
+        | undefined = undefined
+
+      let restored_selected_paths: string[] | undefined = undefined
+      let restored_unmatched_paths: string[] | undefined = undefined
+
+      while (true) {
+        const result = await prompt_for_provided_results({
+          files: options.provided_files,
+          workspace_provider,
+          restored_selected_paths,
+          restored_unmatched_paths,
+          is_search_in_selected: options.is_search_in_selected,
+          searched_files: resolved_all_files
+        })
+
+        if (!result) return
+
+        if ('action' in result) {
+          const sub_search_result = await search_files({
+            get_files: async () => result.matched_paths,
+            workspace_provider,
+            extension_context,
+            websocket_manager,
+            show_back_button: true,
+            is_sub_search: true
+          })
+
+          if (sub_search_result === 'back') {
+            restored_selected_paths = result.selected_paths
+            restored_unmatched_paths = result.unmatched_paths
+            continue
+          }
+
+          if (!sub_search_result) return
+
+          decision = sub_search_result
+          break
+        }
+
+        decision = result
+        break
       }
 
       await process_search_result({
