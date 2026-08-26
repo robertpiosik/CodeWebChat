@@ -61,6 +61,26 @@ export const chatgpt: Chatbot = {
             // Don't show alert because temporary mode doesn't work in projects (url override)
           })
         }
+      } else if (
+        option == 'think (free)' &&
+        supported_options?.['think (free)']
+      ) {
+        const think_icon_path = document.querySelector(
+          'path[d^="M14.8974 2.29998"]'
+        )
+        if (think_icon_path) {
+          const think_button = think_icon_path.closest(
+            'button'
+          ) as HTMLButtonElement
+          if (think_button) {
+            think_button.click()
+          }
+        } else {
+          report_initialization_error({
+            function_name: 'set_options',
+            log_message: 'Think button icon not found'
+          })
+        }
       }
     }
   },
