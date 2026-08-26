@@ -33,7 +33,7 @@
 
 **CWC** helps with all common use-cases like multi-file editing, planning, generating code at cursor or commit messages.
 
-#### File editing
+### File editing
 
 Implement new features, fix bugs and refactor code across many files.
 
@@ -57,7 +57,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 </details>
 
-#### Asking about file selection
+### Asking about file selection
 
 Plan features or get explanations.
 
@@ -76,7 +76,7 @@ Plan features or get explanations.
 
 </details>
 
-#### TAB completions
+### TAB completions
 
 Quality autocomplete with SOTA reasoning models.
 
@@ -107,7 +107,7 @@ Find correct replacement text for the <missing_text> symbol.
 
 </details>
 
-#### Commit messages
+### Commit messages
 
 Generate commit messages based on staged changes and context files.
 
