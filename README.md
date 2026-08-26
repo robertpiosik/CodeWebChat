@@ -33,12 +33,12 @@
 
 **CWC** helps with all common use-cases like multi-file editing, planning, generating code at cursor or commit messages.
 
+#### File editing
+
+Implement new features, fix bugs and refactor code across many files.
+
 <details>
-<summary><strong>File editing</strong> (click to expand)</summary>
-
-_Implement new features, fix bugs and refactor code across many files._
-
-Structure of the constructed prompt:
+<summary>Structure of the constructed prompt (click to expand)</summary>
 
 ```
 # Files
@@ -57,12 +57,12 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 </details>
 
+#### Asking about file selection
+
+Plan features or get explanations.
+
 <details>
-<summary><strong>Asking about file selection</strong></summary>
-
-_Plan features or get explanations._
-
-Structure of the constructed prompt:
+<summary>tructure of the constructed prompt</summary>
 
 ```
 # Files
@@ -76,12 +76,12 @@ Structure of the constructed prompt:
 
 </details>
 
+#### TAB completions
+
+Quality autocomplete with SOTA reasoning models.
+
 <details>
-<summary><strong>TAB completions</strong></summary>
-
-<p>_Quality TAB completions from SOTA reasoning models._</p>
-
-Structure of the constructed prompt:
+<summary>Structure of the constructed prompt</summary>
 
 ````
 # Files
@@ -104,6 +104,33 @@ Your response must begin with a markdown heading identifying the file and the cu
 
 Find correct replacement text for the <missing_text> symbol.
 ````
+
+</details>
+
+#### Commit messages
+
+Generate commit messages based on staged changes and context files.
+
+<details>
+<summary>Structure of the constructed prompt</summary>
+
+```
+# Files
+
+[SELECTED FILES OF ACCEPTED EDITS]
+
+# Changes
+
+[STAGED CHANGES]
+
+# Output formatting
+
+[FORMATTING INSTRUCTIONS]
+
+# Task
+
+Write a brief and precise summary for the changes, limited to a single sentence. Because the summary will be used for a commit message, don't use any markdown formatting and don't include a trailing dot. Use an imperative tone to ensure clarity and focus on the primary change or purpose.
+```
 
 </details>
 
