@@ -330,6 +330,7 @@ export const MainView: React.FC<Props> = (props) => {
             warning={warning}
             voice_input_push_to_talk={props.voice_input_push_to_talk}
             token_count={props.token_count}
+            currently_open_file_path={props.currently_open_file_path}
             translations={{
               voice_input: t('prompt-field.voice-input'),
               stop_recording: t('prompt-field.stop-recording'),
