@@ -140,7 +140,7 @@ Write a brief and precise summary for the changes, limited to a single sentence.
 
 ## Enabling autofill
 
-Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) and never copy and paste again.
+Install the browser extension and never copy and paste again ([source code](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser)).
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/autofill-for-code-web-chat/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/autofill-for-code-web-chat/)

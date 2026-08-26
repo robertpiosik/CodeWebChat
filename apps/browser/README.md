@@ -8,7 +8,8 @@ It serves two purposes:
 
 2. Placing Apply Response button under responses
 
-The Apply Response button is an alias for the _copy to clipboard_ button, commonly present under responses.
+> [!NOTE]
+> The Apply Response button is an alias for the _copy to clipboard_ button, commonly present under responses.
 
 ## Permissions
 
