@@ -38,7 +38,7 @@
 Implement new features, fix bugs and refactor code across many files.
 
 <details>
-<summary>Structure of the constructed prompt (click to expand)</summary>
+<summary>Structure of the constructed prompt</summary>
 
 ```
 # Files
@@ -62,7 +62,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 Plan features or get explanations.
 
 <details>
-<summary>tructure of the constructed prompt</summary>
+<summary>Structure of the constructed prompt</summary>
 
 ```
 # Files
