@@ -953,24 +953,6 @@ export const translations = {
     hu: 'Keresés tartalmában és fájlnevekben egyaránt',
     bg: 'Търсене както в съдържанието, така и в имената на файловете'
   },
-  'feature.search-files.results.in-workspace': {
-    en: 'results in {workspace}',
-    pl: 'wyniki w {workspace}',
-    'zh-cn': '{workspace} 中的结果',
-    ja: '{workspace} の結果',
-    'zh-tw': '{workspace} 中的結果',
-    de: 'Ergebnisse in {workspace}',
-    es: 'resultados en {workspace}',
-    fr: 'résultats dans {workspace}',
-    'pt-br': 'resultados em {workspace}',
-    ru: 'результаты в {workspace}',
-    ko: '{workspace}의 결과',
-    it: 'risultati in {workspace}',
-    tr: "{workspace}'deki sonuçlar",
-    cs: 'výsledky v {workspace}',
-    hu: 'eredmények itt: {workspace}',
-    bg: 'резултати в {workspace}'
-  },
   'feature.search-files.results.unmatched': {
     en: 'unmatched selected files',
     pl: 'Niedopasowane wybrane pliki',
