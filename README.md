@@ -79,7 +79,7 @@ Structure of the constructed prompt:
 <details>
 <summary><strong>TAB completions</strong></summary>
 
-_Quality TAB completions from SOTA reasoning models._
+<p>_Quality TAB completions from SOTA reasoning models._</p>
 
 Structure of the constructed prompt:
 
