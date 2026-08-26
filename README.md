@@ -29,14 +29,16 @@
 
 **CWC** constructs unified prompts with all relevant files and instructions, so the model has everything it needs from the start. Steer it with examples, focus its attention on specific code, and make simple instructions just work!
 
-## Prompt types
+## Features
 
 **CWC** helps with all common use-cases like multi-file editing, planning, generating code at cursor or commit messages.
 
 <details>
-<summary><strong>Edit files</strong> (click to expand)</summary>
+<summary><strong>File editing</strong> (click to expand)</summary>
 
 _Implement new features, fix bugs and refactor code across many files._
+
+Structure of the constructed prompt:
 
 ```
 # Files
@@ -56,9 +58,11 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 </details>
 
 <details>
-<summary><strong>Ask about files</strong></summary>
+<summary><strong>Asking about file selection</strong></summary>
 
 _Plan features or get explanations._
+
+Structure of the constructed prompt:
 
 ```
 # Files
@@ -73,9 +77,11 @@ _Plan features or get explanations._
 </details>
 
 <details>
-<summary><strong>Code at cursor</strong></summary>
+<summary><strong>TAB completions</strong></summary>
 
 _Quality TAB completions from SOTA reasoning models._
+
+Structure of the constructed prompt:
 
 ````
 # Files
