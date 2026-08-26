@@ -172,32 +172,12 @@ export const Prompt = () => {
     )
   }
 
-  const get_current_instructions = () => {
-    let state: { instructions: string[]; active_index: number } | undefined
-
-    const prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
-
-    if (prompt_type == 'ask-about-files') {
-      state = ask_about_context_instructions
-    } else if (prompt_type == 'edit-files') {
-      state = edit_files_instructions
-    }
-
-    if (!state) return ''
-
-    return state.instructions[state.active_index] || ''
-  }
-
   const get_current_instructions_state = () => {
     const prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
     if (prompt_type == 'ask-about-files') return ask_about_context_instructions
     if (prompt_type == 'edit-files') return edit_files_instructions
     return undefined
   }
-
-  const has_instructions = !!get_current_instructions().trim()
-  const is_preview_disabled =
-    !is_connected || !has_instructions || token_count == 0
 
   const handle_apply_click = () => {
     post_message(vscode, {
@@ -429,7 +409,7 @@ export const Prompt = () => {
               }
               title="Edit Configuration"
               header_slot={
-                !is_preview_disabled && (
+                is_connected && (
                   <UiTextButton on_click={handle_preview_web_configuration}>
                     Preview
                   </UiTextButton>
