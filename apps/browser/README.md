@@ -1,8 +1,14 @@
 # Autofill for Code Web Chat
 
-This extension exchanges messages with a locally run WebSockets server to open new tabs and autofill prompts.
+The browser extension communicates with the editor via a locally run WebSockets server.
 
-It also places "APPLY RESPONSE" button under messages. It's an alias for the _copy to clipboard_ button.
+It serves two purposes:
+
+1. Autofilling prompt text for further edits
+
+2. Placing Apply Response button under responses
+
+The Apply Response button is an alias for the _copy to clipboard_ button, commonly present under responses.
 
 ## Permissions
 
