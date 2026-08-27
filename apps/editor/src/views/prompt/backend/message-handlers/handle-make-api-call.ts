@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { t } from '@/i18n'
-import { FilesCollector } from '@/utils/files-collector'
+import { build_prompt_payload } from './utils/build-prompt-payload'
 import { Logger } from '@shared/utils/logger'
 import {
   ModelProvidersManager,
@@ -17,7 +17,6 @@ import { MakeApiCallMessage } from '@/views/prompt/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { build_user_content } from '@/utils/build-user-content'
-import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
 import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
@@ -166,26 +165,15 @@ export const handle_make_api_call = async (
     return
   }
 
-  const { instructions: processed_instructions, skill_definitions } =
-    await replace_symbols({
-      instructions: current_instructions,
-      extension_context: prompt_view_provider.extension_context,
-      workspace_provider: prompt_view_provider.workspace_provider
-    })
-
-  let collected_files = ''
-  let other_files = ''
-  let recent_files = ''
-
-  if (prompt_view_provider.include_selected_files) {
-    const collected = await FilesCollector.collect_files({
-      workspace_provider: prompt_view_provider.workspace_provider,
-      open_editors_provider: prompt_view_provider.open_editors_provider
-    })
-    other_files = collected.other_files
-    recent_files = collected.recent_files
-    collected_files = other_files + recent_files
-  }
+  const {
+    other_files,
+    recent_files,
+    collected_files,
+    processed_instructions,
+    skill_definitions
+  } = await build_prompt_payload({
+    prompt_view_provider
+  })
 
   if (prompt_view_provider.include_selected_files && !collected_files) {
     prompt_view_provider.send_message({

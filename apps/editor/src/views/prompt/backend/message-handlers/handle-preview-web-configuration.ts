@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { PreviewWebConfigurationMessage } from '@/views/prompt/types/messages'
-import { FilesCollector } from '@/utils/files-collector'
+import { build_prompt_payload } from './utils/build-prompt-payload'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
@@ -9,7 +9,6 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
-import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
 import { PromptBuilder } from '@/utils/prompt-builder'
 
 export const handle_preview_web_configuration = async (
@@ -20,22 +19,15 @@ export const handle_preview_web_configuration = async (
 
   const current_instructions = prompt_view_provider.current_instructions
 
-  let context_text = ''
-  if (prompt_view_provider.include_selected_files) {
-    const collected = await FilesCollector.collect_files({
-      workspace_provider: prompt_view_provider.workspace_provider,
-      open_editors_provider: prompt_view_provider.open_editors_provider
-    })
-    context_text = collected.other_files + collected.recent_files
-  }
-
-  const { instructions: processed_instructions, skill_definitions } =
-    await replace_symbols({
-      instructions: current_instructions,
-      extension_context: prompt_view_provider.extension_context,
-      workspace_provider: prompt_view_provider.workspace_provider,
-      remove_images: true
-    })
+  const {
+    other_files,
+    recent_files,
+    processed_instructions,
+    skill_definitions
+  } = await build_prompt_payload({
+    prompt_view_provider,
+    remove_images: true
+  })
 
   let formatted_system_instructions = ''
   const user_instructions = processed_instructions
@@ -52,7 +44,8 @@ export const handle_preview_web_configuration = async (
   }
 
   const { full_prompt: built_prompt } = PromptBuilder.build_prompt({
-    context_text,
+    other_files,
+    recent_files,
     skill_definitions,
     system_instructions: formatted_system_instructions,
     user_instructions,

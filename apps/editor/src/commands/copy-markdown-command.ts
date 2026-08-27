@@ -13,14 +13,16 @@ export const copy_markdown_commands = (
 ) => {
   return [
     vscode.commands.registerCommand('codeWebChat.copyMarkdown', async () => {
-      let context_text = ''
+      let other_files = ''
+      let recent_files = ''
 
       try {
         const collected = await FilesCollector.collect_files({
           workspace_provider,
           open_editors_provider
         })
-        context_text = collected.other_files + collected.recent_files
+        other_files = collected.other_files
+        recent_files = collected.recent_files
       } catch (error: any) {
         console.error('Error collecting files:', error)
         vscode.window.showErrorMessage(
@@ -31,14 +33,17 @@ export const copy_markdown_commands = (
         return
       }
 
-      if (context_text == '') {
+      if (!other_files && !recent_files) {
         vscode.window.showWarningMessage(t('common.warning.no-files-selected'))
         return
       }
 
-      context_text =
-        PromptBuilder.build_prompt({ context_text, separator: true })
-          .full_prompt + '\n'
+      const context_text =
+        PromptBuilder.build_prompt({
+          other_files,
+          recent_files,
+          separator: true
+        }).full_prompt + '\n'
       await vscode.env.clipboard.writeText(context_text)
       vscode.window.showInformationMessage(
         t('command.copy-markdown.info.context-copied')
@@ -118,8 +123,10 @@ export const copy_markdown_commands = (
         if (context_text == '') return
 
         context_text =
-          PromptBuilder.build_prompt({ context_text, separator: true })
-            .full_prompt + '\n'
+          PromptBuilder.build_prompt({
+            other_files: context_text,
+            separator: true
+          }).full_prompt + '\n'
         await vscode.env.clipboard.writeText(context_text)
         vscode.window.showInformationMessage(
           t('command.copy-markdown.info.context-from-editors-copied')

@@ -1,37 +1,27 @@
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import * as vscode from 'vscode'
-import { FilesCollector } from '@/utils/files-collector'
+import { build_prompt_payload } from './utils/build-prompt-payload'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
   EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
-import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { t } from '@/i18n'
 
 export const handle_copy_prompt = async (params: {
   prompt_view_provider: PromptViewProvider
 }): Promise<void> => {
-  let context_text = ''
-  if (params.prompt_view_provider.include_selected_files) {
-    const collected = await FilesCollector.collect_files({
-      workspace_provider: params.prompt_view_provider.workspace_provider,
-      open_editors_provider: params.prompt_view_provider.open_editors_provider
-    })
-    context_text = collected.other_files + collected.recent_files
-  }
-
-  const current_instructions = params.prompt_view_provider.current_instructions
-
-  const { instructions: processed_instructions, skill_definitions } =
-    await replace_symbols({
-      instructions: current_instructions,
-      extension_context: params.prompt_view_provider.extension_context,
-      workspace_provider: params.prompt_view_provider.workspace_provider,
-      remove_images: true
-    })
+  const {
+    other_files,
+    recent_files,
+    processed_instructions,
+    skill_definitions
+  } = await build_prompt_payload({
+    prompt_view_provider: params.prompt_view_provider,
+    remove_images: true
+  })
 
   let formatted_system_instructions = ''
   const user_instructions = processed_instructions
@@ -50,7 +40,8 @@ export const handle_copy_prompt = async (params: {
   }
 
   const { full_prompt: text } = PromptBuilder.build_prompt({
-    context_text,
+    other_files,
+    recent_files,
     skill_definitions,
     system_instructions: formatted_system_instructions,
     user_instructions,
