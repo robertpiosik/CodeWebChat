@@ -2,20 +2,18 @@ import { FC } from 'react'
 import { Checkbox } from '../../common/Checkbox'
 import styles from './TokenCounts.module.scss'
 
-export namespace TokenCounts {
-  export type Props = {
-    token_count: {
-      selected_files: string
-      prompt: string
-    }
-    translations: {
-      selected_files: string
-      prompt: string
-    }
+type Props = {
+  token_count: {
+    selected_files: string
+    prompt: string
+  }
+  translations: {
+    selected_files: string
+    prompt: string
   }
 }
 
-export const TokenCounts: FC<TokenCounts.Props> = (props) => {
+export const TokenCounts: FC<Props> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles.item}>
