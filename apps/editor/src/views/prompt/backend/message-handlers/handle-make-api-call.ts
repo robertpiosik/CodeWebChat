@@ -148,7 +148,7 @@ export const handle_make_api_call = async (
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 
-  const { prompt_type } = message
+  const prompt_type = prompt_view_provider.prompt_type as ApiPromptType
   const model_providers_manager = new ModelProvidersManager(
     prompt_view_provider.extension_context
   )

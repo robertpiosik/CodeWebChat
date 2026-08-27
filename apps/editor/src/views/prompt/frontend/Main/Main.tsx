@@ -367,16 +367,15 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_make_api_call = (use_quick_pick: boolean) => {
-    const instruction = get_current_instructions()
+    const instructions = get_current_instructions()
 
     post_message(props.vscode, {
       command: 'MAKE_API_CALL',
-      prompt_type: current_prompt_type as ApiPromptType,
       use_quick_pick
     })
 
-    if (instruction.trim()) {
-      update_chat_history(instruction)
+    if (instructions.trim()) {
+      update_chat_history(instructions)
     }
   }
 
@@ -403,7 +402,6 @@ export const Main: React.FC<Props> = (props) => {
 
     post_message(props.vscode, {
       command: 'MAKE_API_CALL',
-      prompt_type: props.api_prompt_type,
       use_quick_pick: false,
       api_configuration_id: id
     })

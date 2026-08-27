@@ -211,7 +211,6 @@ export interface GetModeMessage extends BaseMessage {
 
 export interface MakeApiCallMessage extends BaseMessage {
   command: 'MAKE_API_CALL'
-  prompt_type: ApiPromptType
   use_quick_pick: boolean
   api_configuration_id?: string
 }
