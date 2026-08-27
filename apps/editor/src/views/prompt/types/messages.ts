@@ -90,8 +90,8 @@ export interface GetEditFormatInstructionsMessage extends BaseMessage {
   command: 'GET_EDIT_FORMAT_INSTRUCTIONS'
 }
 
-export interface SelectEditFormatMessage extends BaseMessage {
-  command: 'SELECT_EDIT_FORMAT'
+export interface SelectEditFormatInstructionsMessage extends BaseMessage {
+  command: 'SELECT_EDIT_FORMAT_INSTRUCTIONS'
 }
 
 export interface GetConnectionStatusMessage extends BaseMessage {
@@ -517,7 +517,7 @@ export type FrontendMessage =
   | GetEditFormat
   | SaveEditFormatMessage
   | GetEditFormatInstructionsMessage
-  | SelectEditFormatMessage
+  | SelectEditFormatInstructionsMessage
   | GetConnectionStatusMessage
   | GetWebConfigurationsMessage
   | ReorderWebConfigurationsMessage

@@ -216,16 +216,6 @@
         min-width: 0;
       }
 
-      &__token-count-wrapper {
-        position: relative;
-      }
-
-      &__token-count {
-        color: var(--cwc-text-color-dimmed);
-        font-variant-numeric: tabular-nums;
-        cursor: default;
-      }
-
       &__button {
         pointer-events: all;
         color: var(--vscode-foreground);

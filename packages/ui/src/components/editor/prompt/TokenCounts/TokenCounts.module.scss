@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+  font-size: 11px;
+
+  :global([data-modern-ui='true']) & {
+    padding: 0 10px;
+  }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+
+    &__text {
+      color: var(--cwc-text-color-dimmed);
+    }
+
+    &__count {
+      font-weight: 500;
+    }
+  }
+}

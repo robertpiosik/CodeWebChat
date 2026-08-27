@@ -65,7 +65,6 @@ export const Empty = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
@@ -130,7 +129,6 @@ export const WithText = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
@@ -195,7 +193,6 @@ export const LongText = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
@@ -260,7 +257,6 @@ export const WithPlaceholderSavedContext = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
@@ -331,7 +327,6 @@ export const WithPlaceholderSelection = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
@@ -396,12 +391,10 @@ export const WithCommit = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
 )
-
 export const WithCommitWithQuotes = () => (
   <PromptField
     value='Ask about #Commit(my-repo:a1b2c3d "feat: add \"cool\" feature")'
@@ -461,11 +454,11 @@ export const WithCommitWithQuotes = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
 )
+
 export const WithEditFormatSelector = () => {
   const [edit_format, set_edit_format] = useState<EditFormat>('diff')
   return (
@@ -532,7 +525,6 @@ export const WithEditFormatSelector = () => {
         copy_prompt: 'Copy prompt',
         more_actions: 'More actions',
         send: 'Send',
-        tokens_in_context: 'Tokens in context',
         mode: 'Mode'
       }}
     />
@@ -598,7 +590,6 @@ export const WithFilePaths = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
@@ -691,7 +682,6 @@ export const WithTabs = () => {
         copy_prompt: 'Copy prompt',
         more_actions: 'More actions',
         send: 'Send',
-        tokens_in_context: 'Tokens in context',
         mode: 'Mode'
       }}
     />
@@ -755,7 +745,6 @@ export const WithWarning = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
     warning="Add a configuration"

@@ -350,7 +350,7 @@ export const Main: React.FC<Props> = (props) => {
       })
     } else {
       post_message(props.vscode, {
-        command: 'SELECT_EDIT_FORMAT'
+        command: 'SELECT_EDIT_FORMAT_INSTRUCTIONS'
       })
     }
   }

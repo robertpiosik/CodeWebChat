@@ -4,6 +4,7 @@ import { configurations } from './configurations'
 import { actions } from './actions'
 import { prompt_field } from './prompt-field'
 import { recent_donations } from './recent-donations'
+import { main } from './main'
 
 import { footer } from './footer'
 import { modals } from './modals'
@@ -16,5 +17,6 @@ export const translations = {
   ...prompt_field,
   ...recent_donations,
   ...footer,
-  ...modals
+  ...modals,
+  ...main
 }

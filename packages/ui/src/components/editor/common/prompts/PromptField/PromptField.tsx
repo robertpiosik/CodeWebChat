@@ -78,7 +78,6 @@ export type PromptFieldProps = {
   on_tabs_reorder?: (new_order: number[]) => void
   warning?: string
   voice_input_push_to_talk?: boolean
-  token_count?: number
   is_copy_only?: boolean
   mode: Mode
   on_mode_change: (mode: Mode) => void
@@ -102,7 +101,6 @@ export type PromptFieldProps = {
     copy_prompt: string
     more_actions: string
     send: string
-    tokens_in_context: string
     mode: string
   }
 }
@@ -117,7 +115,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [is_focused, set_is_focused] = useState(false)
   const [is_recording_hovered, set_is_recording_hovered] = useState(false)
   const [is_edit_format_hovered, set_is_edit_format_hovered] = useState(false)
-  const [is_token_count_hovered, set_is_token_count_hovered] = useState(false)
   const [is_mode_switch_hovered, set_is_mode_switch_hovered] = useState(false)
   const [hovered_left_action, set_hovered_left_action] = useState<
     'at' | 'hash' | 'slash' | null
@@ -440,8 +437,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         <div
           className={cn(styles['footer__right__details'], {
             [styles['footer__right__details--visible']]:
-              props.show_edit_format_selector ||
-              (props.token_count !== undefined && props.token_count > 0)
+              props.show_edit_format_selector
           })}
         >
           {props.show_edit_format_selector && props.edit_format && (
@@ -560,29 +556,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 )}
               </button>
             </div>
-          )}
-          {props.token_count !== undefined &&
-            props.token_count > 0 &&
-            props.show_edit_format_selector &&
-            props.edit_format && <span>·</span>}
-          {props.token_count !== undefined && props.token_count > 0 && (
-            <span
-              className={styles['footer__right__details__token-count-wrapper']}
-              onMouseEnter={() => set_is_token_count_hovered(true)}
-              onMouseLeave={() => set_is_token_count_hovered(false)}
-            >
-              {is_token_count_hovered && (
-                <Tooltip
-                  message={props.translations.tokens_in_context}
-                  align="center"
-                />
-              )}
-              <span className={styles['footer__right__details__token-count']}>
-                {props.token_count < 1000
-                  ? props.token_count.toString()
-                  : Math.floor(props.token_count / 1000).toString() + 'K'}
-              </span>
-            </span>
           )}
         </div>
 

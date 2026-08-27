@@ -1,5 +1,6 @@
 import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/prompt/Configurations'
+import { TokenCounts as UiTokenCounts } from '@ui/components/editor/prompt/TokenCounts'
 import { PromptField as UiPromptField } from '@ui/components/editor/common/prompts/PromptField'
 import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
 import { WebConfiguration } from '@shared/types/web-configuration'
@@ -17,6 +18,13 @@ import { SelectionState } from '@/views/prompt/types/messages'
 import { use_translation } from '../../i18n/use-translation'
 import { Icon } from '@ui/components/editor/common/Icon'
 import { CHATBOTS } from '@shared/constants/chatbots'
+import { display_token_count } from '@/utils/display-token-count'
+import {
+  EDIT_FORMAT_INSTRUCTIONS_WHOLE,
+  EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
+  EDIT_FORMAT_INSTRUCTIONS_DIFF,
+  EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
+} from '@/constants/edit-format-instructions'
 
 type Props = {
   scroll_reset_key: number
@@ -233,6 +241,24 @@ export const MainView: React.FC<Props> = (props) => {
       }
     })
 
+  const get_edit_format_token_count = (format: EditFormat) => {
+    switch (format) {
+      case 'whole':
+        return Math.ceil(EDIT_FORMAT_INSTRUCTIONS_WHOLE.length / 4)
+      case 'search-replace':
+        return Math.ceil(EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE.length / 4)
+      case 'diff':
+        return Math.ceil(EDIT_FORMAT_INSTRUCTIONS_DIFF.length / 4)
+      case 'truncated':
+        return Math.ceil(EDIT_FORMAT_INSTRUCTIONS_TRUNCATED.length / 4)
+
+      default:
+        return 0
+    }
+  }
+
+  const edit_format_token_count = get_edit_format_token_count(props.edit_format)
+
   return (
     <>
       <Header
@@ -331,7 +357,6 @@ export const MainView: React.FC<Props> = (props) => {
             on_tabs_reorder={props.on_tabs_reorder}
             warning={warning}
             voice_input_push_to_talk={props.voice_input_push_to_talk}
-            token_count={props.selected_files_token_count}
             currently_open_file_path={props.currently_open_file_path}
             translations={{
               voice_input: t('prompt-field.voice-input'),
@@ -357,11 +382,31 @@ export const MainView: React.FC<Props> = (props) => {
               copy_prompt: t('prompt-field.action.copy-prompt'),
               more_actions: t('prompt-field.action.more-actions'),
               send: t('prompt-field.action.send'),
-              tokens_in_context: t('prompt-field.tokens-in-context'),
               mode: t('prompt-field.mode')
             }}
           />
         </div>
+
+        <UiSeparator height={6} />
+
+        <UiTokenCounts
+          token_count={{
+            selected_files: display_token_count(
+              props.selected_files_token_count
+            ),
+            prompt: display_token_count(
+              (props.mode == MODE.WEB
+                ? props.web_prompt_type
+                : props.api_prompt_type) == 'edit-files'
+                ? props.edit_instructions_token_count + edit_format_token_count
+                : props.ask_instructions_token_count
+            )
+          }}
+          translations={{
+            selected_files: t('main.token-count.selected-files'),
+            prompt: t('main.token-count.prompt')
+          }}
+        />
 
         <UiSeparator height={10} />
 

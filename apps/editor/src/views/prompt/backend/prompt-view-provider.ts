@@ -85,7 +85,7 @@ import { handle_update_api_configuration } from './message-handlers/handle-updat
 import { handle_pick_model_provider } from './message-handlers/handle-pick-model-provider'
 import { handle_pick_api_model } from './message-handlers/handle-pick-api-model'
 import { handle_pick_api_reasoning_effort } from './message-handlers/handle-pick-api-reasoning-effort'
-import { handle_select_edit_format } from './message-handlers/handle-select-edit-format'
+import { handle_select_edit_format_instructions } from './message-handlers/handle-select-edit-format-instructions'
 import { SelectionState } from '../types/messages'
 import {
   EDIT_FORMAT_STATE_KEY,
@@ -718,8 +718,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             handle_get_edit_format(this)
           } else if (message.command == 'SAVE_EDIT_FORMAT') {
             await handle_save_edit_format(this, message)
-          } else if (message.command == 'SELECT_EDIT_FORMAT') {
-            await handle_select_edit_format(this, message)
+          } else if (message.command == 'SELECT_EDIT_FORMAT_INSTRUCTIONS') {
+            await handle_select_edit_format_instructions(this, message)
           } else if (message.command == 'CARET_POSITION_CHANGED') {
             this.caret_position = message.caret_position
           } else if (message.command == 'MODE_CHANGED') {
