@@ -152,6 +152,10 @@ export class WorkspaceProvider
 
   private async _save_checked_files_state(): Promise<void> {
     await this._extension_context.workspaceState.update(
+      CONTEXT_CHECKED_PATHS_STATE_KEY,
+      this.get_all_checked_paths()
+    )
+    await this._extension_context.workspaceState.update(
       CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
       Object.fromEntries(this._checked_timestamps)
     )
