@@ -242,7 +242,7 @@ export const Home: React.FC<Props> = (props) => {
               </UiKeycapWrapper>
             </div>
 
-            <UiSeparator height={12} />
+            <UiSeparator height={10} />
 
             <UiTabs
               tabs={[{ id: 'tasks', label: t('home.tasks') }]}
