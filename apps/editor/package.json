@@ -460,11 +460,11 @@
         },
         {
           "command": "codeWebChat.selectReferencingFiles",
-          "group": "1_action@7"
+          "group": "2_action@1"
         },
         {
           "command": "codeWebChat.selectDefinitionFile",
-          "group": "1_action@8"
+          "group": "2_action@2"
         }
       ],
       "commandPalette": [

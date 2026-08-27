@@ -73,7 +73,7 @@ export const Prompt = () => {
     handle_tabs_reorder,
     voice_input_push_to_talk,
     is_modern_ui,
-    token_count
+    selected_files_token_count
   } = use_panel(vscode)
 
   const {
@@ -349,7 +349,7 @@ export const Prompt = () => {
                 on_tab_delete={handle_tab_delete}
                 on_tabs_reorder={handle_tabs_reorder}
                 voice_input_push_to_talk={voice_input_push_to_talk}
-                token_count={token_count}
+                selected_files_token_count={selected_files_token_count}
               />
             </div>
             <div

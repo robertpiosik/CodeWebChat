@@ -51,7 +51,7 @@ type Props = {
   currently_open_file_path?: string
   current_selection?: SelectionState | null
   chat_history: string[]
-  token_count: number
+  selected_files_token_count: number
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
@@ -329,7 +329,7 @@ export const MainView: React.FC<Props> = (props) => {
             on_tabs_reorder={props.on_tabs_reorder}
             warning={warning}
             voice_input_push_to_talk={props.voice_input_push_to_talk}
-            token_count={props.token_count}
+            token_count={props.selected_files_token_count}
             currently_open_file_path={props.currently_open_file_path}
             translations={{
               voice_input: t('prompt-field.voice-input'),

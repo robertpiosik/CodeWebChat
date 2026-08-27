@@ -68,7 +68,7 @@ type Props = {
   on_tabs_reorder: (new_order: number[]) => void
   missing_web_configuration?: boolean
   voice_input_push_to_talk: boolean
-  token_count: number
+  selected_files_token_count: number
   bottom_spacer_height?: number
 }
 
@@ -487,7 +487,7 @@ export const Main: React.FC<Props> = (props) => {
       on_quick_action_click={handle_quick_action_click}
       current_selection={props.current_selection}
       chat_history={current_history || []}
-      token_count={props.token_count}
+      selected_files_token_count={props.selected_files_token_count}
       web_prompt_type={props.web_prompt_type}
       api_prompt_type={props.api_prompt_type}
       on_web_prompt_type_change={props.on_web_prompt_type_change}

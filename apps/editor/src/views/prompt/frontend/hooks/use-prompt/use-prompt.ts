@@ -25,7 +25,8 @@ export const use_prompt = (vscode: any) => {
   const [chat_input_focus_key, set_chat_input_focus_key] = useState(0)
   const [chat_input_focus_and_select_key, set_chat_input_focus_and_select_key] =
     useState(0)
-  const [token_count, set_token_count] = useState<number>(0)
+  const [selected_files_token_count, set_selected_files_token_count] =
+    useState<number>(0)
 
   const {
     ask_about_context_instructions,
@@ -119,7 +120,7 @@ export const use_prompt = (vscode: any) => {
       } else if (message.command == 'VOICE_INPUT_PUSH_TO_TALK') {
         set_voice_input_push_to_talk(message.enabled)
       } else if (message.command == 'TOKEN_COUNT_UPDATED') {
-        set_token_count(message.token_count)
+        set_selected_files_token_count(message.selected_files_token_count)
       } else if (message.command == 'IS_MODERN_UI') {
         set_is_modern_ui(message.is_modern_ui)
       }
@@ -236,6 +237,6 @@ export const use_prompt = (vscode: any) => {
     handle_tabs_reorder,
     voice_input_push_to_talk,
     is_modern_ui,
-    token_count
+    selected_files_token_count
   }
 }

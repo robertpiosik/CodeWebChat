@@ -79,8 +79,7 @@ import {
   handle_delete_api_configuration,
   handle_update_last_used_web_configuration,
   handle_request_return_home,
-  handle_pick_tasks_workspace,
-  handle_get_token_count
+  handle_pick_tasks_workspace
 } from './message-handlers'
 import { handle_update_api_configuration } from './message-handlers/handle-update-api-configuration'
 import { handle_pick_model_provider } from './message-handlers/handle-pick-model-provider'
@@ -114,6 +113,13 @@ import { SharedContextState } from '@/context/shared-context-state'
 import { webview_html } from '@/views/shared/utils/webview-html'
 import { get_selected_files } from '@/context/helpers/get-selected-files'
 import { normalize_path } from '@/utils/normalize-path'
+import { replace_symbols } from './utils/symbols/replace-symbols'
+import {
+  EDIT_FORMAT_INSTRUCTIONS_WHOLE,
+  EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
+  EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
+  EDIT_FORMAT_INSTRUCTIONS_DIFF
+} from '@/constants/edit-format-instructions'
 
 export class PromptViewProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri
@@ -158,6 +164,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     workspace_name?: string
   }[] = []
   public api_call_abort_controller: AbortController | null = null
+  public current_selected_files_token_count: number = 0
   public prompt_view_api_calls_manager!: PromptViewApiCallsManager
   public response_history: ResponseHistoryItem[] = []
   public message_listeners: ((message: BackendMessage) => void)[] = []
@@ -398,12 +405,9 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     )
 
     token_count_emitter.on('token-count-updated', (token_count: number) => {
+      this.current_selected_files_token_count = token_count
       if (this.webview_view) {
-        this.send_message({
-          command: 'TOKEN_COUNT_UPDATED',
-          token_count
-        })
-
+        this.send_token_count()
         this.send_selected_files()
       }
     })
@@ -536,6 +540,50 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     controllers.forEach((item) => item.controller.abort('Preview finished.'))
   }
 
+  public async send_token_count() {
+    const edit_instructions_result = await replace_symbols({
+      instruction: this.current_edit_files_instruction,
+      extension_context: this.extension_context,
+      workspace_provider: this.workspace_provider,
+      remove_images: true
+    })
+    const ask_instructions_result = await replace_symbols({
+      instruction: this.current_ask_about_context_instruction,
+      extension_context: this.extension_context,
+      workspace_provider: this.workspace_provider,
+      remove_images: true
+    })
+
+    let formatted_system_instructions = ''
+    const edit_format_instructions = {
+      whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
+      truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
+      'search-replace': EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
+      diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
+    }[this.edit_format]
+    if (edit_format_instructions) {
+      formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
+    }
+
+    this.send_message({
+      command: 'TOKEN_COUNT_UPDATED',
+      selected_files_token_count: this.current_selected_files_token_count,
+      edit_instructions_token_count: Math.ceil(
+        (edit_instructions_result.instruction.length +
+          edit_instructions_result.skill_definitions.length) /
+          4
+      ),
+      ask_instructions_token_count: Math.ceil(
+        (ask_instructions_result.instruction.length +
+          ask_instructions_result.skill_definitions.length) /
+          4
+      ),
+      edit_format_instructions_token_count: Math.ceil(
+        formatted_system_instructions.length / 4
+      )
+    })
+  }
+
   public send_selected_files() {
     const file_paths = get_selected_files({
       workspace_provider: this.workspace_provider,
@@ -612,6 +660,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             handle_get_instructions(this)
           } else if (message.command == 'SAVE_INSTRUCTIONS') {
             await handle_save_instructions(this, message)
+            this.send_token_count()
           } else if (message.command == 'GET_CONNECTION_STATUS') {
             handle_get_connection_status(this)
           } else if (message.command == 'GET_WEB_CONFIGURATIONS') {
@@ -650,8 +699,10 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_delete_web_configuration(message)
           } else if (message.command == 'UNDO') {
             await handle_undo(this)
+            this.send_token_count()
           } else if (message.command == 'APPLY_RESPONSE_FROM_HISTORY') {
             await handle_apply_response_from_history(message)
+            this.send_token_count()
           } else if (message.command == 'EXECUTE_COMMAND') {
             await vscode.commands.executeCommand(message.command_id)
           } else if (message.command == 'MAKE_API_CALL') {
@@ -800,7 +851,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'PICK_TASKS_WORKSPACE') {
             await handle_pick_tasks_workspace(this, message)
           } else if (message.command == 'GET_TOKEN_COUNT') {
-            await handle_get_token_count(this)
+            this.send_token_count()
           }
         } catch (error: any) {
           Logger.error({
@@ -907,5 +958,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       edit_files: this.edit_files_instructions,
       caret_position: this.caret_position
     })
+    this.send_token_count()
   }
 }
