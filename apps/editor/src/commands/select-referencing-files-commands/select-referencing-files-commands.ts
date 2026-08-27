@@ -121,23 +121,26 @@ export const select_referencing_files_commands = (
               }
 
               const ignore_paths: string[] = []
+              const target_uris: string[] = [target_uri!.toString()]
 
               if (definitions) {
                 for (const d of definitions) {
                   const uri = d.uri || d.targetUri
-                  if (uri && uri.fsPath == target_uri!.fsPath) {
-                    if (!ignore_paths.includes(target_uri!.fsPath)) {
-                      ignore_paths.push(target_uri!.fsPath)
+                  if (uri) {
+                    target_uris.push(uri.toString())
+                    if (!ignore_paths.includes(uri.fsPath)) {
+                      ignore_paths.push(uri.fsPath)
                     }
                   }
                 }
               }
 
               return await get_referencing_files_for_position({
-                uri: target_uri,
+                uri: target_uri!,
                 position: target_position,
                 workspace_provider,
-                ignore_paths
+                ignore_paths,
+                target_uris
               })
             }
           )

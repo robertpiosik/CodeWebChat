@@ -7,6 +7,7 @@ export const get_referencing_files_for_position = async (params: {
   position: vscode.Position
   workspace_provider: WorkspaceProvider
   ignore_paths: string[]
+  target_uris: string[]
 }): Promise<{ file_path: string; range: vscode.Range }[]> => {
   let locations = await vscode.commands.executeCommand<vscode.Location[]>(
     'vscode.executeReferenceProvider',
@@ -48,7 +49,7 @@ export const get_referencing_files_for_position = async (params: {
           cached_imports.set(file_path, imports)
         }
 
-        if (imports.includes(params.uri.toString())) {
+        if (params.target_uris.some((u) => imports.includes(u))) {
           file_map.set(file_path, loc.range)
         }
       }
