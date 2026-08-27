@@ -13,8 +13,8 @@ import { replace_website_symbol } from './website/replace-website-symbol'
 import { replace_fragment_symbol } from './fragment/replace-fragment-symbol'
 import { replace_clipboard_paths_symbol } from './clipboard-paths/replace-clipboard-paths-symbol'
 
-export interface ReplaceSymbolsParams {
-  instruction: string
+type ReplaceSymbolsParams = {
+  instructions: string
   extension_context: vscode.ExtensionContext
   workspace_provider: WorkspaceProvider
   remove_images?: boolean
@@ -22,8 +22,8 @@ export interface ReplaceSymbolsParams {
 
 export const replace_symbols = async (
   params: ReplaceSymbolsParams
-): Promise<{ instruction: string; skill_definitions: string }> => {
-  let processed_instructions = params.instruction
+): Promise<{ instructions: string; skill_definitions: string }> => {
+  let processed_instructions = params.instructions
   let skill_definitions = ''
 
   if (processed_instructions.includes('#Selection')) {
@@ -99,5 +99,5 @@ export const replace_symbols = async (
     processed_instructions = replace_fragment_symbol(processed_instructions)
   }
 
-  return { instruction: processed_instructions, skill_definitions }
+  return { instructions: processed_instructions, skill_definitions }
 }

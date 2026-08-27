@@ -169,9 +169,9 @@ export const handle_make_api_call = async (
     return
   }
 
-  const { instruction: processed_instructions, skill_definitions } =
+  const { instructions: processed_instructions, skill_definitions } =
     await replace_symbols({
-      instruction: instructions,
+      instructions,
       extension_context: prompt_view_provider.extension_context,
       workspace_provider: prompt_view_provider.workspace_provider
     })

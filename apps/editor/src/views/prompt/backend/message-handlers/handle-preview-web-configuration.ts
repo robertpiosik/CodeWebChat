@@ -26,9 +26,9 @@ export const handle_preview_web_configuration = async (
   })
   const context_text = collected.other_files + collected.recent_files
 
-  const { instruction: processed_instructions, skill_definitions } =
+  const { instructions: processed_instructions, skill_definitions } =
     await replace_symbols({
-      instruction: current_instructions,
+      instructions: current_instructions,
       extension_context: prompt_view_provider.extension_context,
       workspace_provider: prompt_view_provider.workspace_provider,
       remove_images: true

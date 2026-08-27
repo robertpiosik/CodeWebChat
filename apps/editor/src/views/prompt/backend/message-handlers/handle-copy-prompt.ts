@@ -22,9 +22,9 @@ export const handle_copy_prompt = async (params: {
   })
   const context_text = collected.other_files + collected.recent_files
 
-  const { instruction: processed_instructions, skill_definitions } =
+  const { instructions: processed_instructions, skill_definitions } =
     await replace_symbols({
-      instruction: params.instructions,
+      instructions: params.instructions,
       extension_context: params.prompt_view_provider.extension_context,
       workspace_provider: params.prompt_view_provider.workspace_provider,
       remove_images: true
