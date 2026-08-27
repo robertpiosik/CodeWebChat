@@ -58,12 +58,15 @@ export const handle_autofill = async (params: {
 
   const additional_paths: string[] = []
 
-  const collected = await FilesCollector.collect_files({
-    workspace_provider: params.prompt_view_provider.workspace_provider,
-    open_editors_provider: params.prompt_view_provider.open_editors_provider,
-    additional_paths
-  })
-  const context_text = collected.other_files + collected.recent_files
+  let context_text = ''
+  if (params.prompt_view_provider.include_selected_files) {
+    const collected = await FilesCollector.collect_files({
+      workspace_provider: params.prompt_view_provider.workspace_provider,
+      open_editors_provider: params.prompt_view_provider.open_editors_provider,
+      additional_paths
+    })
+    context_text = collected.other_files + collected.recent_files
+  }
 
   const current_instructions = params.prompt_view_provider.current_instructions
 

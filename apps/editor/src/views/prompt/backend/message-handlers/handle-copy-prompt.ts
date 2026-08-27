@@ -14,11 +14,14 @@ import { t } from '@/i18n'
 export const handle_copy_prompt = async (params: {
   prompt_view_provider: PromptViewProvider
 }): Promise<void> => {
-  const collected = await FilesCollector.collect_files({
-    workspace_provider: params.prompt_view_provider.workspace_provider,
-    open_editors_provider: params.prompt_view_provider.open_editors_provider
-  })
-  const context_text = collected.other_files + collected.recent_files
+  let context_text = ''
+  if (params.prompt_view_provider.include_selected_files) {
+    const collected = await FilesCollector.collect_files({
+      workspace_provider: params.prompt_view_provider.workspace_provider,
+      open_editors_provider: params.prompt_view_provider.open_editors_provider
+    })
+    context_text = collected.other_files + collected.recent_files
+  }
 
   const current_instructions = params.prompt_view_provider.current_instructions
 

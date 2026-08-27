@@ -7,6 +7,8 @@ type Props = {
     selected_files: string
     prompt: string
   }
+  include_selected_files: boolean
+  on_toggle_include_selected_files: (include: boolean) => void
   translations: {
     selected_files: string
     prompt: string
@@ -17,7 +19,10 @@ export const TokenCounts: FC<Props> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles.item}>
-        <Checkbox checked={true} on_change={() => {}} disabled />
+        <Checkbox
+          checked={props.include_selected_files}
+          on_change={props.on_toggle_include_selected_files}
+        />
         <div className={styles.item__label}>
           <span className={styles.item__label__text}>
             {props.translations.selected_files}:{' '}

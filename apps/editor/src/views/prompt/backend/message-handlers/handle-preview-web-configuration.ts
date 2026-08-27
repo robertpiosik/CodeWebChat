@@ -20,11 +20,14 @@ export const handle_preview_web_configuration = async (
 
   const current_instructions = prompt_view_provider.current_instructions
 
-  const collected = await FilesCollector.collect_files({
-    workspace_provider: prompt_view_provider.workspace_provider,
-    open_editors_provider: prompt_view_provider.open_editors_provider
-  })
-  const context_text = collected.other_files + collected.recent_files
+  let context_text = ''
+  if (prompt_view_provider.include_selected_files) {
+    const collected = await FilesCollector.collect_files({
+      workspace_provider: prompt_view_provider.workspace_provider,
+      open_editors_provider: prompt_view_provider.open_editors_provider
+    })
+    context_text = collected.other_files + collected.recent_files
+  }
 
   const { instructions: processed_instructions, skill_definitions } =
     await replace_symbols({

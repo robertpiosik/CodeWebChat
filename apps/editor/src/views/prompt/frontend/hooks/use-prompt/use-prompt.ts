@@ -31,6 +31,8 @@ export const use_prompt = (vscode: any) => {
     useState<number>(0)
   const [ask_instructions_token_count, set_ask_instructions_token_count] =
     useState<number>(0)
+  const [include_selected_files, set_include_selected_files] =
+    useState<boolean>(true)
 
   const {
     ask_about_context_instructions,
@@ -129,6 +131,8 @@ export const use_prompt = (vscode: any) => {
         set_ask_instructions_token_count(message.ask_instructions_token_count)
       } else if (message.command == 'IS_MODERN_UI') {
         set_is_modern_ui(message.is_modern_ui)
+      } else if (message.command == 'INCLUDE_SELECTED_FILES') {
+        set_include_selected_files(message.include)
       }
     }
     window.addEventListener('message', handle_message)
@@ -144,7 +148,8 @@ export const use_prompt = (vscode: any) => {
       { command: 'GET_SETUP_PROGRESS' },
       { command: 'GET_VOICE_INPUT_PUSH_TO_TALK' },
       { command: 'GET_IS_MODERN_UI' },
-      { command: 'GET_TOKEN_COUNT' }
+      { command: 'GET_TOKEN_COUNT' },
+      { command: 'GET_INCLUDE_SELECTED_FILES' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -203,6 +208,14 @@ export const use_prompt = (vscode: any) => {
     })
   }
 
+  const handle_toggle_include_selected_files = (include: boolean) => {
+    set_include_selected_files(include)
+    post_message(vscode, {
+      command: 'TOGGLE_INCLUDE_SELECTED_FILES',
+      include
+    })
+  }
+
   const is_setup_complete = setup_progress
     ? Object.values(setup_progress).every((v) => v)
     : true
@@ -245,6 +258,8 @@ export const use_prompt = (vscode: any) => {
     is_modern_ui,
     selected_files_token_count,
     edit_instructions_token_count,
-    ask_instructions_token_count
+    ask_instructions_token_count,
+    include_selected_files,
+    handle_toggle_include_selected_files
   }
 }

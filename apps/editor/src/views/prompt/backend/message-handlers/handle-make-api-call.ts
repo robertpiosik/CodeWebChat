@@ -173,13 +173,21 @@ export const handle_make_api_call = async (
       workspace_provider: prompt_view_provider.workspace_provider
     })
 
-  const collected = await FilesCollector.collect_files({
-    workspace_provider: prompt_view_provider.workspace_provider,
-    open_editors_provider: prompt_view_provider.open_editors_provider
-  })
-  const collected_files = collected.other_files + collected.recent_files
+  let collected_files = ''
+  let other_files = ''
+  let recent_files = ''
 
-  if (!collected_files) {
+  if (prompt_view_provider.include_selected_files) {
+    const collected = await FilesCollector.collect_files({
+      workspace_provider: prompt_view_provider.workspace_provider,
+      open_editors_provider: prompt_view_provider.open_editors_provider
+    })
+    other_files = collected.other_files
+    recent_files = collected.recent_files
+    collected_files = other_files + recent_files
+  }
+
+  if (prompt_view_provider.include_selected_files && !collected_files) {
     prompt_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
       title: t('views.prompt.handlers.make-api-call.context-cannot-be-empty'),
@@ -234,8 +242,8 @@ export const handle_make_api_call = async (
         default_system_instructions
 
       const { part1, part2 } = PromptBuilder.build_prompt({
-        other_files: collected.other_files,
-        recent_files: collected.recent_files,
+        other_files,
+        recent_files,
         skill_definitions,
         system_instructions: formatted_system_instructions,
         user_instructions: processed_instructions,
