@@ -27,6 +27,7 @@ export const preview_handler = async (params: {
   created_at?: number
   url?: string
   recent_api_configuration?: RecentApiConfiguration
+  is_code_at_cursor?: boolean
 }): Promise<boolean> => {
   let resolve_cleanup_promise: () => void
   ongoing_preview_cleanup_promise = new Promise((resolve) => {
@@ -154,14 +155,17 @@ export const preview_handler = async (params: {
         }
       }
 
-      for (const [workspace_root, files] of files_by_workspace.entries()) {
-        CommitMessageDetails.add({
-          extension_context: params.extension_context,
-          workspace_root,
-          prompt: params.raw_instructions,
-          files,
-          selected_files: selected_files_by_workspace.get(workspace_root) || []
-        })
+      if (!params.is_code_at_cursor) {
+        for (const [workspace_root, files] of files_by_workspace.entries()) {
+          CommitMessageDetails.add({
+            extension_context: params.extension_context,
+            workspace_root,
+            prompt: params.raw_instructions,
+            files,
+            selected_files:
+              selected_files_by_workspace.get(workspace_root) || []
+          })
+        }
       }
 
       update_undo_button_state({

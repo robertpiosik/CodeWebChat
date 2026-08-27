@@ -120,6 +120,10 @@ export const apply_response_command = (params: {
         (i) => i.type == 'intelligent-file-search-results'
       )
 
+      const is_code_at_cursor = response_items.some(
+        (item) => item.type == 'code-at-cursor'
+      )
+
       if (resolve_fn && !is_intelligent_file_search_results) {
         const history = params.prompt_view_provider.response_history
 
@@ -212,13 +216,10 @@ export const apply_response_command = (params: {
           const has_valid_blocks =
             (args?.files_with_content && args.files_with_content.length > 0) ||
             response_items.some(
-              (item) =>
-                item.type == 'file' ||
-                item.type == 'diff' ||
-                item.type == 'code-at-cursor'
+              (item) => item.type == 'file' || item.type == 'diff'
             )
 
-          if (has_valid_blocks) {
+          if (has_valid_blocks && !is_code_at_cursor) {
             params.prompt_view_provider.send_message({
               command: 'SHOW_PROGRESS',
               title: t('common.progress.preparing-preview')
@@ -405,7 +406,8 @@ export const apply_response_command = (params: {
             raw_instructions: args?.raw_instructions,
             created_at: created_at_for_preview,
             url: args?.url,
-            recent_api_configuration: args?.recent_api_configuration
+            recent_api_configuration: args?.recent_api_configuration,
+            is_code_at_cursor
           })
 
           if (changes_accepted) {
