@@ -179,7 +179,7 @@ export const handle_hash_sign_quick_pick = async (
     return
   }
 
-  const current_text = prompt_view_provider.current_instruction
+  const current_text = prompt_view_provider.current_instructions
 
   const is_after_hash_sign = current_text
     .slice(0, prompt_view_provider.caret_position)

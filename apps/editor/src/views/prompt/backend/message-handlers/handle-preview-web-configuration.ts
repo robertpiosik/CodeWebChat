@@ -18,7 +18,7 @@ export const handle_preview_web_configuration = async (
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 
-  const current_instructions = prompt_view_provider.current_instruction
+  const current_instructions = prompt_view_provider.current_instructions
 
   const collected = await FilesCollector.collect_files({
     workspace_provider: prompt_view_provider.workspace_provider,

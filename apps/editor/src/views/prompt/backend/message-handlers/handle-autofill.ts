@@ -33,7 +33,7 @@ export const handle_autofill = async (params: {
     return
   }
 
-  const current_instructions = params.prompt_view_provider.current_instruction
+  const current_instructions = params.prompt_view_provider.current_instructions
 
   const resolution = await resolve_web_configuration({
     prompt_view_provider: params.prompt_view_provider,

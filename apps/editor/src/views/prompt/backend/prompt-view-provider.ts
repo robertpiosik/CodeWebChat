@@ -196,7 +196,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     return this.edit_files_instructions
   }
 
-  public get current_instruction(): string {
+  public get current_instructions(): string {
     const state = this.active_instructions_state
     return state.instructions[state.active_index] || ''
   }
@@ -915,7 +915,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
 
   public add_text_at_cursor_position(text: string, chars_to_remove_before = 0) {
     const target_state = this.active_instructions_state
-    const current_instructions = this.current_instruction
+    const current_instructions = this.current_instructions
 
     const before_caret = current_instructions.slice(
       0,

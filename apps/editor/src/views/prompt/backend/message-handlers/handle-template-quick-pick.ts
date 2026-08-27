@@ -270,7 +270,7 @@ export const handle_template_quick_pick = async (
         is_entering_variables = false
         is_template_accepted = true
 
-        const current_text = prompt_view_provider.current_instruction
+        const current_text = prompt_view_provider.current_instructions
         const is_after_slash = current_text
           .slice(0, prompt_view_provider.caret_position)
           .endsWith('/')
