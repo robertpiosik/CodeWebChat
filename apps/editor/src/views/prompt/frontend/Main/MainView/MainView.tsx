@@ -32,7 +32,7 @@ type Props = {
     web_configuration_name?: string
     show_quick_pick?: boolean
   }) => void
-  copy_to_clipboard: (web_configuration_name?: string) => void
+  on_copy: () => void
   on_show_home: () => void
   on_create_web_configuration: (params?: {
     insertion_index?: number
@@ -311,7 +311,7 @@ export const MainView: React.FC<Props> = (props) => {
             on_change={handle_input_change}
             on_submit={handle_submit}
             on_submit_with_control={handle_submit_with_control}
-            on_copy={props.copy_to_clipboard}
+            on_copy={props.on_copy}
             on_at_sign_click={props.on_at_sign_click}
             on_hash_sign_click={props.on_hash_sign_click}
             on_slash_click={props.on_slash_click}

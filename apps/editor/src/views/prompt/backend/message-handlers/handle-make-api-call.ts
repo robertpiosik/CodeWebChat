@@ -153,12 +153,9 @@ export const handle_make_api_call = async (
     prompt_view_provider.extension_context
   )
 
-  let instructions = ''
-  if (prompt_type == 'edit-files') {
-    instructions = prompt_view_provider.current_edit_files_instruction
-  }
+  const current_instructions = prompt_view_provider.current_instructions
 
-  if (!instructions) {
+  if (!current_instructions) {
     prompt_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
       title: t(
@@ -171,7 +168,7 @@ export const handle_make_api_call = async (
 
   const { instructions: processed_instructions, skill_definitions } =
     await replace_symbols({
-      instructions,
+      instructions: current_instructions,
       extension_context: prompt_view_provider.extension_context,
       workspace_provider: prompt_view_provider.workspace_provider
     })
@@ -279,7 +276,7 @@ export const handle_make_api_call = async (
             provider_name: api_configuration.model_provider_name,
             model: api_configuration.model,
             reasoning_effort: api_configuration.reasoning_effort,
-            raw_instructions: instructions
+            raw_instructions: current_instructions
           }
         )
 
@@ -293,7 +290,7 @@ export const handle_make_api_call = async (
         if (prompt_type == 'edit-files') {
           vscode.commands.executeCommand('codeWebChat.applyResponse', {
             response: result.response,
-            raw_instructions: instructions,
+            raw_instructions: current_instructions,
             edit_format,
             recent_api_configuration
           })

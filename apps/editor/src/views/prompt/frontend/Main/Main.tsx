@@ -226,11 +226,9 @@ export const Main: React.FC<Props> = (props) => {
     update_chat_history(instructions)
   }
 
-  const handle_copy_to_clipboard = (web_configuration_name?: string) => {
+  const handle_copy = () => {
     post_message(props.vscode, {
-      command: 'COPY_PROMPT',
-      instructions,
-      web_configuration_name
+      command: 'COPY_PROMPT'
     })
 
     if (instructions.trim()) {
@@ -469,7 +467,7 @@ export const Main: React.FC<Props> = (props) => {
       scroll_reset_key={props.scroll_reset_key}
       on_show_home={props.on_show_home}
       initialize_chats={handle_initialize_chats}
-      copy_to_clipboard={handle_copy_to_clipboard}
+      on_copy={handle_copy}
       api_configurations={api_configurations}
       on_api_configuration_click={handle_api_configuration_click}
       on_api_configurations_reorder={handle_api_configurations_reorder}

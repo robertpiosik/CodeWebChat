@@ -33,8 +33,6 @@ export const handle_autofill = async (params: {
     return
   }
 
-  const current_instructions = params.prompt_view_provider.current_instructions
-
   const resolution = await resolve_web_configuration({
     prompt_view_provider: params.prompt_view_provider,
     web_configuration_name: params.web_configuration_name,
@@ -66,6 +64,8 @@ export const handle_autofill = async (params: {
     additional_paths
   })
   const context_text = collected.other_files + collected.recent_files
+
+  const current_instructions = params.prompt_view_provider.current_instructions
 
   const { instructions: processed_instructions, skill_definitions } =
     await replace_symbols({
@@ -131,7 +131,6 @@ const show_web_configuration_quick_pick = async (params: {
   get_is_web_configuration_disabled: (
     web_configuration: ConfigWebConfigurationFormat
   ) => boolean
-  current_instructions: string
 }): Promise<{ web_configuration_name: string | undefined } | null> => {
   const {
     web_configurations,
@@ -226,19 +225,6 @@ const resolve_web_configuration = async (params: {
     'webConfigurations',
     []
   )
-  let current_instructions = ''
-  if (params.prompt_view_provider.web_prompt_type == 'ask-about-files') {
-    current_instructions =
-      params.prompt_view_provider.ask_about_context_instructions.instructions[
-        params.prompt_view_provider.ask_about_context_instructions.active_index
-      ] || ''
-  } else if (params.prompt_view_provider.web_prompt_type == 'edit-files') {
-    current_instructions =
-      params.prompt_view_provider.edit_files_instructions.instructions[
-        params.prompt_view_provider.edit_files_instructions.active_index
-      ] || ''
-  }
-
   const get_is_web_configuration_disabled = (
     web_configuration: ConfigWebConfigurationFormat
   ) =>
@@ -285,8 +271,7 @@ const resolve_web_configuration = async (params: {
     extension_context: params.extension_context,
     prompt_type: params.prompt_view_provider.web_prompt_type,
     prompt_view_provider: params.prompt_view_provider,
-    get_is_web_configuration_disabled,
-    current_instructions
+    get_is_web_configuration_disabled
   })
 
   return resolution ?? { web_configuration_name: undefined }

@@ -120,8 +120,6 @@ export interface AutofillMessage extends BaseMessage {
 
 export interface CopyPromptMessage extends BaseMessage {
   command: 'COPY_PROMPT'
-  instructions: string
-  web_configuration_name?: string
 }
 
 export interface RequestEditorStateMessage extends BaseMessage {

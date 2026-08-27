@@ -655,9 +655,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_preview_web_configuration(this, message)
           } else if (message.command == 'COPY_PROMPT') {
             await handle_copy_prompt({
-              prompt_view_provider: this,
-              instructions: message.instructions,
-              web_configuration_name: message.web_configuration_name
+              prompt_view_provider: this
             })
           } else if (message.command == 'REQUEST_EDITOR_STATE') {
             handle_request_editor_state(this)
