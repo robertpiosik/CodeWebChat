@@ -69,6 +69,8 @@ type Props = {
   missing_web_configuration?: boolean
   voice_input_push_to_talk: boolean
   selected_files_token_count: number
+  edit_instructions_token_count: number
+  ask_instructions_token_count: number
   bottom_spacer_height?: number
 }
 
@@ -488,6 +490,8 @@ export const Main: React.FC<Props> = (props) => {
       current_selection={props.current_selection}
       chat_history={current_history || []}
       selected_files_token_count={props.selected_files_token_count}
+      edit_instructions_token_count={props.edit_instructions_token_count}
+      ask_instructions_token_count={props.ask_instructions_token_count}
       web_prompt_type={props.web_prompt_type}
       api_prompt_type={props.api_prompt_type}
       on_web_prompt_type_change={props.on_web_prompt_type_change}

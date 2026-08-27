@@ -663,7 +663,6 @@ export interface TokenCountMessage extends BaseMessage {
   selected_files_token_count: number
   edit_instructions_token_count: number
   ask_instructions_token_count: number
-  edit_format_instructions_token_count: number
 }
 
 export interface WebConfigurationUpdatedMessage extends BaseMessage {

@@ -27,6 +27,10 @@ export const use_prompt = (vscode: any) => {
     useState(0)
   const [selected_files_token_count, set_selected_files_token_count] =
     useState<number>(0)
+  const [edit_instructions_token_count, set_edit_instructions_token_count] =
+    useState<number>(0)
+  const [ask_instructions_token_count, set_ask_instructions_token_count] =
+    useState<number>(0)
 
   const {
     ask_about_context_instructions,
@@ -121,6 +125,8 @@ export const use_prompt = (vscode: any) => {
         set_voice_input_push_to_talk(message.enabled)
       } else if (message.command == 'TOKEN_COUNT_UPDATED') {
         set_selected_files_token_count(message.selected_files_token_count)
+        set_edit_instructions_token_count(message.edit_instructions_token_count)
+        set_ask_instructions_token_count(message.ask_instructions_token_count)
       } else if (message.command == 'IS_MODERN_UI') {
         set_is_modern_ui(message.is_modern_ui)
       }
@@ -237,6 +243,8 @@ export const use_prompt = (vscode: any) => {
     handle_tabs_reorder,
     voice_input_push_to_talk,
     is_modern_ui,
-    selected_files_token_count
+    selected_files_token_count,
+    edit_instructions_token_count,
+    ask_instructions_token_count
   }
 }

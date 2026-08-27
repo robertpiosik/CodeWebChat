@@ -114,12 +114,6 @@ import { webview_html } from '@/views/shared/utils/webview-html'
 import { get_selected_files } from '@/context/helpers/get-selected-files'
 import { normalize_path } from '@/utils/normalize-path'
 import { replace_symbols } from './utils/symbols/replace-symbols'
-import {
-  EDIT_FORMAT_INSTRUCTIONS_WHOLE,
-  EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-  EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
-  EDIT_FORMAT_INSTRUCTIONS_DIFF
-} from '@/constants/edit-format-instructions'
 
 export class PromptViewProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri
@@ -554,17 +548,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       remove_images: true
     })
 
-    let formatted_system_instructions = ''
-    const edit_format_instructions = {
-      whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
-      truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-      'search-replace': EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
-      diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
-    }[this.edit_format]
-    if (edit_format_instructions) {
-      formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
-    }
-
     this.send_message({
       command: 'TOKEN_COUNT_UPDATED',
       selected_files_token_count: this.current_selected_files_token_count,
@@ -577,9 +560,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
         (ask_instructions_result.instruction.length +
           ask_instructions_result.skill_definitions.length) /
           4
-      ),
-      edit_format_instructions_token_count: Math.ceil(
-        formatted_system_instructions.length / 4
       )
     })
   }

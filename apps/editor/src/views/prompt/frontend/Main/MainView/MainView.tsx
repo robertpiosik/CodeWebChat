@@ -52,6 +52,8 @@ type Props = {
   current_selection?: SelectionState | null
   chat_history: string[]
   selected_files_token_count: number
+  edit_instructions_token_count: number
+  ask_instructions_token_count: number
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
