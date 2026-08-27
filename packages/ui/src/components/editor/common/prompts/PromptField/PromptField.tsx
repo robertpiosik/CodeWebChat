@@ -678,10 +678,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 )}
                 <button
                   ref={chevron_button_ref}
-                  className={cn(
-                    styles['footer__right__submit__button'],
-                    styles['footer__right__submit__button--chevron']
-                  )}
+                  className={styles['footer__right__submit__button']}
                   onClick={() => {
                     toggle_dropdown()
                   }}
@@ -795,10 +792,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   />
                   <button
                     ref={disconnected_chevron_button_ref}
-                    className={cn(
-                      styles['footer__right__submit__button'],
-                      styles['footer__right__submit__button--chevron']
-                    )}
+                    className={styles['footer__right__submit__button']}
                     onClick={() => {
                       toggle_dropdown()
                     }}

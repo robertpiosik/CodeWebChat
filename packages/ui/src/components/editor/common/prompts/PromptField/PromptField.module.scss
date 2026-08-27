@@ -347,13 +347,6 @@
           }
         }
 
-        &--chevron {
-          > span.codicon::before {
-            font-size: 11px;
-            transition: transform 0.2s ease-in-out;
-          }
-        }
-
         &--toggled {
           transform: rotate(180deg);
         }
@@ -387,7 +380,6 @@
     font-weight: 500;
     gap: 4px;
     cursor: pointer;
-    transition: all 0.1s ease-in-out;
     position: relative;
     opacity: var(--dimmed-opacity);
 
