@@ -200,24 +200,6 @@ export const translations = {
     hu: 'Fájl nem található: {{path}}.',
     bg: 'Файлът не е намерен: {{path}}.'
   },
-  'command.apply-response.error.invalid-position': {
-    en: 'Invalid position for code completion in {{path}}.',
-    pl: 'Nieprawidłowa pozycja dla uzupełniania kodu w {{path}}.',
-    'zh-cn': '{{path}} 中的代码补全位置无效。',
-    ja: '{{path}} のコード補完位置が無効です。',
-    'zh-tw': '{{path}} 中的代碼補全位置無效。',
-    de: 'Ungültige Position für Codevervollständigung in {{path}}.',
-    es: 'Posición no válida para la finalización de código en {{path}}.',
-    fr: 'Position invalide pour la complétion de code dans {{path}}.',
-    'pt-br': 'Posição inválida para preenchimento de código em {{path}}.',
-    ru: 'Недопустимая позиция для автодополнения кода в {{path}}.',
-    ko: '{{path}}의 코드 완성 위치가 잘못되었습니다.',
-    it: 'Posizione non valida per il completamento del codice in {{path}}.',
-    tr: '{{path}} içinde kod tamamlama için geçersiz konum.',
-    cs: 'Neplatná pozice pro dokončování kódu v {{path}}.',
-    hu: 'Érvénytelen pozíció a kódkiegészítéshez a következőben: {{path}}.',
-    bg: 'Невалидна позиция за завършване на код в {{path}}.'
-  },
   'command.apply-response.error.invalid-file-path-traversal': {
     en: 'Invalid file path: {{path}}. Path may contain traversal attempts.',
     pl: 'Nieprawidłowa ścieżka pliku: {{path}}. Ścieżka może zawierać próby przejścia.',

@@ -124,6 +124,24 @@ export const apply_response_command = (params: {
         (item) => item.type == 'code-at-cursor'
       )
 
+      if (is_code_at_cursor) {
+        const item = response_items.find(
+          (i) => i.type == 'code-at-cursor'
+        ) as any
+
+        await vscode.commands.executeCommand(
+          'codeWebChat.internal.applyCodeAtCursor',
+          {
+            file_path: item.file_path,
+            workspace_name: item.workspace_name,
+            line: item.line,
+            character: item.character,
+            content: item.content
+          }
+        )
+        return
+      }
+
       if (resolve_fn && !is_intelligent_file_search_results) {
         const history = params.prompt_view_provider.response_history
 

@@ -1,4 +1,9 @@
 import * as vscode from 'vscode'
+import * as fs from 'fs'
+import * as path from 'path'
+import { create_safe_path } from '@/utils/path-sanitizer'
+import { show_ghost_text } from './utils/show-ghost-text'
+import { normalize_path } from '@/utils/normalize-path'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import { CommitMessageDetails } from '@/utils/commit-message-details'
@@ -12,6 +17,102 @@ export const code_at_cursor_commands = (params: {
   websocket_manager: WebSocketManager
 }) => {
   return [
+    vscode.commands.registerCommand(
+      'codeWebChat.internal.applyCodeAtCursor',
+      async (args: {
+        file_path: string
+        workspace_name?: string
+        line: number
+        character: number
+        content: string
+      }) => {
+        const workspace_map = new Map<string, string>()
+        vscode.workspace.workspaceFolders?.forEach((folder) => {
+          workspace_map.set(folder.name, folder.uri.fsPath)
+        })
+        const default_workspace =
+          vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
+        if (!default_workspace) {
+          vscode.window.showErrorMessage('No workspace folder open')
+          return
+        }
+
+        let workspace_root = default_workspace
+        if (args.workspace_name && workspace_map.has(args.workspace_name)) {
+          workspace_root = workspace_map.get(args.workspace_name)!
+        }
+
+        const safe_path = create_safe_path(workspace_root, args.file_path)
+        if (!safe_path || !fs.existsSync(safe_path)) {
+          vscode.window.showErrorMessage(`File not found: ${args.file_path}`)
+          return
+        }
+
+        const document = await vscode.workspace.openTextDocument(safe_path)
+        const editor = await vscode.window.showTextDocument(document)
+
+        const line_index = args.line - 1
+        const char_index = args.character - 1
+
+        if (
+          line_index < 0 ||
+          char_index < 0 ||
+          line_index >= document.lineCount ||
+          char_index > document.lineAt(line_index).text.length
+        ) {
+          vscode.window.showErrorMessage(
+            `Invalid position in file: ${args.file_path}`
+          )
+          return
+        }
+
+        const position = new vscode.Position(line_index, char_index)
+
+        if (
+          editor.selection.active.line !== position.line ||
+          editor.selection.active.character !== position.character
+        ) {
+          editor.selection = new vscode.Selection(position, position)
+          editor.revealRange(
+            new vscode.Range(position, position),
+            vscode.TextEditorRevealType.InCenterIfOutsideViewport
+          )
+        }
+
+        const decoded_completion = args.content
+
+        const selected_files: string[] = []
+        const checked_files = params.workspace_provider.get_checked_files()
+        for (const file of checked_files) {
+          const file_workspace_root =
+            params.workspace_provider.get_workspace_root_for_file(file)
+          if (file_workspace_root === workspace_root) {
+            const relative_path = normalize_path(
+              path.relative(workspace_root, file)
+            )
+            selected_files.push(relative_path)
+          }
+        }
+
+        await show_ghost_text({
+          editor,
+          position,
+          ghost_text: decoded_completion,
+          command: {
+            title: 'Code at Cursor Accepted',
+            command: 'codeWebChat.internal.codeAtCursorAccepted',
+            arguments: [
+              {
+                workspace_root,
+                prompt: '',
+                file_path: safe_path,
+                selected_files
+              }
+            ]
+          }
+        })
+      }
+    ),
     vscode.commands.registerCommand(
       'codeWebChat.internal.codeAtCursorAccepted',
       async (args: {
