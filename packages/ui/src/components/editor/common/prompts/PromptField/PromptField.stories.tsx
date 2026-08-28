@@ -45,6 +45,9 @@ export const Empty = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    selected_files_token_count={0}
+    include_selected_files={true}
+    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -65,6 +68,7 @@ export const Empty = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
+      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
@@ -109,6 +113,9 @@ export const WithText = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    selected_files_token_count={0}
+    include_selected_files={true}
+    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -129,6 +136,7 @@ export const WithText = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
+      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
@@ -138,6 +146,7 @@ export const LongText = () => (
   <PromptField
     value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     chat_history={[]}
+    prompt_token_count={2500}
     on_change={(value) => console.log('Changed:', value)}
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
@@ -173,6 +182,9 @@ export const LongText = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    selected_files_token_count={0}
+    include_selected_files={true}
+    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -193,6 +205,7 @@ export const LongText = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
+      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
@@ -237,6 +250,9 @@ export const WithPlaceholderSavedContext = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    selected_files_token_count={0}
+    include_selected_files={true}
+    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -257,6 +273,7 @@ export const WithPlaceholderSavedContext = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
+      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
@@ -307,6 +324,9 @@ export const WithPlaceholderSelection = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    selected_files_token_count={0}
+    include_selected_files={true}
+    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -327,6 +347,7 @@ export const WithPlaceholderSelection = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
+      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
@@ -371,6 +392,9 @@ export const WithCommit = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    selected_files_token_count={0}
+    include_selected_files={true}
+    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -391,6 +415,7 @@ export const WithCommit = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
+      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
@@ -434,6 +459,9 @@ export const WithCommitWithQuotes = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    selected_files_token_count={0}
+    include_selected_files={true}
+    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -454,6 +482,7 @@ export const WithCommitWithQuotes = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
+      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
@@ -505,6 +534,9 @@ export const WithEditFormatSelector = () => {
       on_tab_change={() => {}}
       on_new_tab={() => {}}
       on_tab_delete={() => {}}
+      selected_files_token_count={0}
+      include_selected_files={true}
+      on_toggle_include_selected_files={() => {}}
       translations={{
         voice_input: 'Voice input',
         stop_recording: 'Stop recording',
@@ -525,6 +557,7 @@ export const WithEditFormatSelector = () => {
         copy_prompt: 'Copy prompt',
         more_actions: 'More actions',
         send: 'Send',
+        tokens_in_context: 'Tokens in context',
         mode: 'Mode'
       }}
     />
@@ -570,6 +603,9 @@ export const WithFilePaths = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    selected_files_token_count={0}
+    include_selected_files={true}
+    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -590,6 +626,7 @@ export const WithFilePaths = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
+      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
   />
@@ -662,6 +699,9 @@ export const WithTabs = () => {
       on_tab_change={set_active_index}
       on_new_tab={handle_new_tab}
       on_tab_delete={handle_tab_delete}
+      selected_files_token_count={0}
+      include_selected_files={true}
+      on_toggle_include_selected_files={() => {}}
       translations={{
         voice_input: 'Voice input',
         stop_recording: 'Stop recording',
@@ -682,6 +722,7 @@ export const WithTabs = () => {
         copy_prompt: 'Copy prompt',
         more_actions: 'More actions',
         send: 'Send',
+        tokens_in_context: 'Tokens in context',
         mode: 'Mode'
       }}
     />
@@ -725,6 +766,9 @@ export const WithWarning = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    selected_files_token_count={0}
+    include_selected_files={true}
+    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -745,6 +789,7 @@ export const WithWarning = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
+      tokens_in_context: 'Tokens in context',
       mode: 'Mode'
     }}
     warning="Add a configuration"

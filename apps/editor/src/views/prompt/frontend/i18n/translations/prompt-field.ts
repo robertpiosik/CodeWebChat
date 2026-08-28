@@ -341,6 +341,24 @@ export const prompt_field = {
     hu: 'Küldés',
     bg: 'Изпращане'
   },
+  'prompt-field.tokens-in-context': {
+    en: 'Tokens in context',
+    pl: 'Tokeny w kontekście',
+    'zh-cn': '上下文中的令牌数',
+    ja: 'コンテキスト内のトークン数',
+    'zh-tw': '上下文中的權杖數',
+    de: 'Tokens im Kontext',
+    es: 'Tokens en contexto',
+    fr: 'Tokens dans le contexte',
+    'pt-br': 'Tokens no contexto',
+    ru: 'Токены в контексте',
+    ko: '컨텍스트 내 토큰 수',
+    it: 'Token nel contesto',
+    tr: 'Bağlamdaki belirteçler',
+    cs: 'Tokeny v kontextu',
+    hu: 'Tokenek a kontextusban',
+    bg: 'Токени в контекста'
+  },
   'prompt-field.mode': {
     en: 'Mode',
     pl: 'Tryb',
