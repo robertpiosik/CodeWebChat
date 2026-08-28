@@ -14,6 +14,7 @@ import { Tooltip } from './components'
 import { KeycapWrapper } from '../../../prompt/KeycapWrapper'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { MODE, Mode } from '@shared/types/mode'
+import { display_token_count } from '@shared/utils/display-token-count'
 import {
   get_caret_position_from_div,
   set_caret_position_for_div,
@@ -105,7 +106,7 @@ export type PromptFieldProps = {
     copy_prompt: string
     more_actions: string
     send: string
-    tokens_in_context: string
+    tokens_in_selected_files: string
     mode: string
   }
 }
@@ -454,7 +455,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               {is_edit_format_hovered && (
                 <Tooltip
                   message={props.translations.edit_format}
-                  details={is_mac ? '⌥' : 'Alt'}
+                  details={is_mac ? '⌥(W/S/D/T)' : 'Alt+(W/S/D/T)'}
                   align="center"
                 />
               )}
@@ -564,55 +565,68 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               </button>
             </div>
           )}
-          {props.selected_files_token_count > 0 &&
-            props.show_edit_format_selector &&
-            props.edit_format && <span>·</span>}
-          {props.selected_files_token_count > 0 && (
-            <span
-              className={cn(
-                styles['footer__right__details__token-count-wrapper'],
-                {
-                  [styles[
-                    'footer__right__details__token-count-wrapper--clickable'
-                  ]]: true
-                }
-              )}
-              onMouseEnter={() => set_is_token_count_hovered(true)}
-              onMouseLeave={() => set_is_token_count_hovered(false)}
-              onClick={(e) => {
-                e.stopPropagation()
-                props.on_toggle_include_selected_files()
-              }}
-            >
-              {is_token_count_hovered && (
-                <Tooltip
-                  message={props.translations.tokens_in_context}
-                  align="center"
-                />
-              )}
-              <span
-                className={cn(styles['footer__right__details__token-count'], {
-                  [styles['footer__right__details__token-count--excluded']]:
+          <div
+            className={cn(
+              styles['footer__right__details__token-count-wrapper'],
+              {
+                [styles[
+                  'footer__right__details__token-count-wrapper--clickable'
+                ]]: true
+              }
+            )}
+            onMouseEnter={() => set_is_token_count_hovered(true)}
+            onMouseLeave={() => set_is_token_count_hovered(false)}
+            onClick={(e) => {
+              e.stopPropagation()
+              props.on_toggle_include_selected_files()
+            }}
+          >
+            {is_token_count_hovered && (
+              <Tooltip
+                message={props.translations.tokens_in_selected_files}
+                details={is_mac ? '⌥X' : 'Alt+X'}
+                align="center"
+              />
+            )}
+            <KeycapWrapper char={is_alt_pressed ? 'X' : undefined}>
+              <div className={styles['footer__right__details__token-count']}>
+                <div
+                  className={cn(
+                    styles['footer__right__details__token-count__icon'],
+                    'codicon',
                     props.include_selected_files === false
-                })}
-              >
-                {props.selected_files_token_count < 1000
-                  ? props.selected_files_token_count.toString()
-                  : Math.floor(
-                      props.selected_files_token_count / 1000
-                    ).toString() + 'K'}
-              </span>
-            </span>
-          )}
+                      ? 'codicon-skip'
+                      : 'codicon-pass'
+                  )}
+                />
+                <div
+                  className={cn(
+                    styles['footer__right__details__token-count__count'],
+                    {
+                      [styles[
+                        'footer__right__details__token-count__count--excluded'
+                      ]]: props.include_selected_files === false
+                    }
+                  )}
+                >
+                  {display_token_count(props.selected_files_token_count)}
+                </div>
+              </div>
+            </KeycapWrapper>
+          </div>
         </div>
 
         <div className={styles['footer__right__submit']} ref={dropdown_ref}>
           {props.mode && props.on_mode_change && (
             <div className={styles['footer__right__mode-switch']}>
               {is_mode_switch_hovered && (
-                <Tooltip message={props.translations.mode} align="center" />
+                <Tooltip
+                  message={props.translations.mode}
+                  details={is_mac ? '⌥Esc' : 'Alt+Esc'}
+                  align="center"
+                />
               )}
-              <KeycapWrapper char={is_alt_pressed ? 'ESC' : undefined}>
+              <KeycapWrapper char={is_alt_pressed ? 'Esc' : undefined}>
                 <button
                   className={cn(
                     styles['footer__right__submit__button'],

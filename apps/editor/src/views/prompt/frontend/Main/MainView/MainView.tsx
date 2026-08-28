@@ -372,7 +372,9 @@ export const MainView: React.FC<Props> = (props) => {
               copy_prompt: t('prompt-field.action.copy-prompt'),
               more_actions: t('prompt-field.action.more-actions'),
               send: t('prompt-field.action.send'),
-              tokens_in_context: t('prompt-field.tokens-in-context'),
+              tokens_in_selected_files: t(
+                'prompt-field.tokens-in-selected-files'
+              ),
               mode: t('prompt-field.mode')
             }}
           />

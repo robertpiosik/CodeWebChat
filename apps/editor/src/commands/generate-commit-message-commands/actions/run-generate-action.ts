@@ -17,7 +17,7 @@ import {
   LAST_USED_COMMIT_MESSAGE_ACTION_STATE_KEY
 } from '@/constants/state-keys'
 import { get_prompt_data } from './get-prompt-data'
-import { display_token_count } from '@/utils/display-token-count'
+import { display_token_count } from '@shared/utils/display-token-count'
 import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { dictionary } from '@shared/constants/dictionary'

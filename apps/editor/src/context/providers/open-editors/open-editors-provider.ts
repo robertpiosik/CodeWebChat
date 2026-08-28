@@ -3,8 +3,8 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { FileItem } from '../workspace/workspace-provider'
 import { WorkspaceProvider } from '../workspace/workspace-provider'
-import { display_token_count } from '../../../utils/display-token-count'
 import { SharedContextState } from '@/context/shared-context-state'
+import { display_token_count } from '@shared/utils/display-token-count'
 
 export class OpenEditorsProvider
   implements vscode.TreeDataProvider<FileItem>, vscode.Disposable

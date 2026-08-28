@@ -4,10 +4,10 @@ import * as fs from 'fs'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
-import { display_token_count } from '../utils/display-token-count'
 import { t } from '@/i18n'
 import { search_files } from '@/features/search-files'
 import { WebSocketManager } from '@/services/websocket-manager'
+import { display_token_count } from '@shared/utils/display-token-count'
 
 export const select_unstaged_files_command = (
   workspace_provider: WorkspaceProvider,

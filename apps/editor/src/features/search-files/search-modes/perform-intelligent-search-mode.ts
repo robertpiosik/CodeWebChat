@@ -16,7 +16,7 @@ import { search_files_by_intelligent } from '../utils/search-files-by-intelligen
 import { prompt_for_intelligent_search_results } from '../utils/prompt-for-intelligent-search-results'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { WebSocketManager } from '@/services/websocket-manager'
-import { display_token_count } from '@/utils/display-token-count'
+import { display_token_count } from '@shared/utils/display-token-count'
 import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import {

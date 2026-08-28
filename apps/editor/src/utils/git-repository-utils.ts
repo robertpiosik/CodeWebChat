@@ -3,9 +3,9 @@ import { execSync } from 'child_process'
 import { dictionary } from '@shared/constants/dictionary'
 import * as path from 'path'
 import { t } from '@/i18n'
-import { display_token_count } from './display-token-count'
 import { MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE } from '@/constants/values'
 import { PromptBuilder } from './prompt-builder'
+import { display_token_count } from '@shared/utils/display-token-count'
 
 export type GitRepository = {
   rootUri: vscode.Uri

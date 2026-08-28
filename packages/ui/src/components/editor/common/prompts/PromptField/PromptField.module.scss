@@ -222,7 +222,7 @@
       justify-content: flex-end;
       min-width: 0;
       font-size: 11px;
-      gap: 3px;
+      gap: 5px;
       pointer-events: all;
 
       &--visible {
@@ -254,13 +254,23 @@
       }
 
       &__token-count {
+        display: flex;
+        align-items: center;
+        gap: 3px;
         color: var(--cwc-text-color-dimmed);
-        font-variant-numeric: tabular-nums;
         cursor: default;
 
-        &--excluded {
-          text-decoration: line-through;
-          opacity: 0.5;
+        &__icon::before {
+          font-size: 13px;
+        }
+
+        &__count {
+          font-variant-numeric: tabular-nums;
+
+          &--excluded {
+            text-decoration: line-through;
+            opacity: var(--disabled-opacity);
+          }
         }
       }
 

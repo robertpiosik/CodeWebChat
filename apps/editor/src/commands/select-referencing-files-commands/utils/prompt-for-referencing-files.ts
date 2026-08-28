@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
-import { display_token_count } from '@/utils/display-token-count'
+import { display_token_count } from '@shared/utils/display-token-count'
 import { t } from '@/i18n'
 import { show_parent_folder_quick_pick } from '@/utils/show-parent-folder-quick-pick'
 import { search_files } from '@/features/search-files'

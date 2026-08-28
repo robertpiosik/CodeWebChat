@@ -6,7 +6,7 @@ import { show_parent_folder_quick_pick } from '@/utils/show-parent-folder-quick-
 import { group_quick_pick_items } from './group-quick-pick-items'
 import { map_files_to_quick_pick_items } from './map-files-to-quick-pick-items'
 import { handle_parent_folder_result } from './handle-parent-folder-result'
-import { display_token_count } from '@/utils/display-token-count'
+import { display_token_count } from '@shared/utils/display-token-count'
 
 export const show_search_results_quick_pick = async (params: {
   matched_items: { path: string; checked?: boolean }[]

@@ -3,7 +3,7 @@ import * as path from 'path'
 import { SavedContext } from '@/types/context'
 import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
 import { resolve_context_paths } from './resolve-context-paths'
-import { display_token_count } from '../../../utils/display-token-count'
+import { display_token_count } from '@shared/utils/display-token-count'
 
 export const create_context_description = async (params: {
   context: SavedContext

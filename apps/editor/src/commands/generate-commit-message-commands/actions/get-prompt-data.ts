@@ -10,7 +10,7 @@ import { normalize_path } from '@/utils/normalize-path'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { FilesCollector } from '@/utils/files-collector'
 import { t } from '@/i18n'
-import { display_token_count } from '@/utils/display-token-count'
+import { display_token_count } from '@shared/utils/display-token-count'
 import { LAST_USE_CONTEXT_FILES_STATE_KEY } from '@/constants/state-keys'
 
 export const get_prompt_data = async (params: {

@@ -68,7 +68,7 @@ export const Empty = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
+      tokens_in_selected_files: 'Tokens in selected files',
       mode: 'Mode'
     }}
   />
@@ -136,7 +136,7 @@ export const WithText = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
+      tokens_in_selected_files: 'Tokens in selected files',
       mode: 'Mode'
     }}
   />
@@ -205,7 +205,7 @@ export const LongText = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
+      tokens_in_selected_files: 'Tokens in selected files',
       mode: 'Mode'
     }}
   />
@@ -273,7 +273,7 @@ export const WithPlaceholderSavedContext = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
+      tokens_in_selected_files: 'Tokens in selected files',
       mode: 'Mode'
     }}
   />
@@ -347,7 +347,7 @@ export const WithPlaceholderSelection = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
+      tokens_in_selected_files: 'Tokens in selected files',
       mode: 'Mode'
     }}
   />
@@ -415,7 +415,7 @@ export const WithCommit = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
+      tokens_in_selected_files: 'Tokens in selected files',
       mode: 'Mode'
     }}
   />
@@ -482,7 +482,7 @@ export const WithCommitWithQuotes = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
+      tokens_in_selected_files: 'Tokens in selected files',
       mode: 'Mode'
     }}
   />
@@ -557,7 +557,7 @@ export const WithEditFormatSelector = () => {
         copy_prompt: 'Copy prompt',
         more_actions: 'More actions',
         send: 'Send',
-        tokens_in_context: 'Tokens in context',
+        tokens_in_selected_files: 'Tokens in selected files',
         mode: 'Mode'
       }}
     />
@@ -626,7 +626,7 @@ export const WithFilePaths = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
+      tokens_in_selected_files: 'Tokens in selected files',
       mode: 'Mode'
     }}
   />
@@ -722,7 +722,7 @@ export const WithTabs = () => {
         copy_prompt: 'Copy prompt',
         more_actions: 'More actions',
         send: 'Send',
-        tokens_in_context: 'Tokens in context',
+        tokens_in_selected_files: 'Tokens in selected files',
         mode: 'Mode'
       }}
     />
@@ -789,7 +789,7 @@ export const WithWarning = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context',
+      tokens_in_selected_files: 'Tokens in selected files',
       mode: 'Mode'
     }}
     warning="Add a configuration"
