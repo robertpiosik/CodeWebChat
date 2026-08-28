@@ -49,7 +49,6 @@ export const get_highlighted_text = (params: {
   current_selection?: SelectionState | null
   context_file_paths: string[]
   is_web_mode?: boolean
-  show_clear_button?: boolean
   tabs_config?: {
     count: number
     active_index: number
@@ -317,21 +316,6 @@ export const get_highlighted_text = (params: {
     )}" data-role="tab-new" title="New Tab"></span>`
 
     header_html += `<span class="${pfStyles['tabs']}" data-role="tabs-container">${tabs_items}</span>`
-  }
-
-  let show_clear_button = params.show_clear_button
-  if (show_clear_button === undefined) {
-    show_clear_button =
-      !!params.text || (params.tabs_config && params.tabs_config.count > 1)
-  }
-
-  if (show_clear_button) {
-    const title = params.text ? 'Clear' : 'Close tab'
-    header_html += `<span class="${cn(
-      pfStyles['clear-button'],
-      'codicon',
-      'codicon-close'
-    )}" data-role="clear-button" title="${title}"></span>`
   }
 
   if (header_html) {

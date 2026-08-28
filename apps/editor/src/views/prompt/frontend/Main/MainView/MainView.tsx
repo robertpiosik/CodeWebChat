@@ -378,6 +378,8 @@ export const MainView: React.FC<Props> = (props) => {
           />
         </div>
 
+        <UiSeparator height={10} />
+
         {props.mode == MODE.WEB && (
           <UiConfigurations
             configurations={web_configurations}
