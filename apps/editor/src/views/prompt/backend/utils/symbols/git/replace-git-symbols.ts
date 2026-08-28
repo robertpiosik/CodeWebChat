@@ -5,6 +5,7 @@ import { AsciiTree } from '@/utils/ascii-tree/ascii-tree'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
+import { SymbolCacheManager } from '../symbol-cache'
 
 const patch_diff_paths = (
   diff_text: string,
@@ -149,6 +150,7 @@ const build_changes_markdown = (
 
 export const replace_changes_symbol = async (params: {
   instruction: string
+  symbols_cache?: SymbolCacheManager
 }): Promise<{ instruction: string; changes_definitions: string }> => {
   const regex = /#Changes\(([^)]+)\)/g
   const matches = [...params.instruction.matchAll(regex)]
@@ -161,6 +163,7 @@ export const replace_changes_symbol = async (params: {
   }
 
   for (const match of matches) {
+    const full_match = match[0]
     const branch_spec = match[1]
     const escaped_branch_spec = branch_spec.replace(
       /[.*+?^${}()|[\]\\]/g,
@@ -185,6 +188,9 @@ export const replace_changes_symbol = async (params: {
         vscode.window.showErrorMessage(
           dictionary.error_message.NO_WORKSPACE_FOLDERS_FOUND
         )
+        if (params.symbols_cache) {
+          params.symbols_cache.set(full_match, '', '')
+        }
         result_instruction = result_instruction.replace(replacement_regex, '')
         continue
       }
@@ -196,11 +202,35 @@ export const replace_changes_symbol = async (params: {
         vscode.window.showErrorMessage(
           dictionary.error_message.WORKSPACE_FOLDER_NOT_FOUND(folder_name)
         )
+        if (params.symbols_cache) {
+          params.symbols_cache.set(full_match, '', '')
+        }
         result_instruction = result_instruction.replace(replacement_regex, '')
         continue
       }
 
+      let cache_key = full_match
       try {
+        const head_sha = execSync('git rev-parse HEAD', {
+          cwd: target_folder.uri.fsPath
+        })
+          .toString()
+          .trim()
+
+        cache_key = `${full_match}:${head_sha}`
+
+        if (params.symbols_cache) {
+          const cached = params.symbols_cache.get(cache_key)
+          if (cached) {
+            changes_definitions += cached.definitions
+            result_instruction = result_instruction.replace(
+              replacement_regex,
+              cached.replacement
+            )
+            continue
+          }
+        }
+
         const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
           cwd: target_folder.uri.fsPath
         })
@@ -230,6 +260,9 @@ export const replace_changes_symbol = async (params: {
               folder_name
             )
           )
+          if (params.symbols_cache) {
+            params.symbols_cache.set(cache_key, '', '')
+          }
           result_instruction = result_instruction.replace(replacement_regex, '')
           continue
         }
@@ -241,14 +274,20 @@ export const replace_changes_symbol = async (params: {
           branch_name,
           workspace_folders.length > 1 ? folder_name : undefined
         )
-        changes_definitions += replacement_text
         const link_hash = `diff-with-${branch_name
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-|-$/g, '')}`
+        const replacement = ` [Diff with ${branch_name}](#${link_hash}) `
+
+        if (params.symbols_cache) {
+          params.symbols_cache.set(cache_key, replacement, replacement_text)
+        }
+
+        changes_definitions += replacement_text
         result_instruction = result_instruction.replace(
           replacement_regex,
-          ` [Diff with ${branch_name}](#${link_hash}) `
+          replacement
         )
       } catch (error) {
         vscode.window.showErrorMessage(
@@ -262,6 +301,9 @@ export const replace_changes_symbol = async (params: {
           message: `Error getting diff from branch ${branch_name} in folder ${folder_name}`,
           data: error
         })
+        if (params.symbols_cache) {
+          params.symbols_cache.set(cache_key, '', '')
+        }
         result_instruction = result_instruction.replace(replacement_regex, '')
       }
     } else {
@@ -271,11 +313,35 @@ export const replace_changes_symbol = async (params: {
         vscode.window.showErrorMessage(
           dictionary.error_message.NO_GIT_REPOSITORY_FOUND
         )
+        if (params.symbols_cache) {
+          params.symbols_cache.set(full_match, '', '')
+        }
         result_instruction = result_instruction.replace(replacement_regex, '')
         continue
       }
 
+      let cache_key = full_match
       try {
+        const head_sha = execSync('git rev-parse HEAD', {
+          cwd: repository.rootUri.fsPath
+        })
+          .toString()
+          .trim()
+
+        cache_key = `${full_match}:${head_sha}`
+
+        if (params.symbols_cache) {
+          const cached = params.symbols_cache.get(cache_key)
+          if (cached) {
+            changes_definitions += cached.definitions
+            result_instruction = result_instruction.replace(
+              replacement_regex,
+              cached.replacement
+            )
+            continue
+          }
+        }
+
         const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
           cwd: repository.rootUri.fsPath
         })
@@ -304,6 +370,9 @@ export const replace_changes_symbol = async (params: {
               branch_name
             )
           )
+          if (params.symbols_cache) {
+            params.symbols_cache.set(cache_key, '', '')
+          }
           result_instruction = result_instruction.replace(replacement_regex, '')
           continue
         }
@@ -314,14 +383,20 @@ export const replace_changes_symbol = async (params: {
           diff_base,
           branch_name
         )
-        changes_definitions += replacement_text
         const link_hash = `diff-with-${branch_name
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-|-$/g, '')}`
+        const replacement = ` [Diff with ${branch_name}](#${link_hash}) `
+
+        if (params.symbols_cache) {
+          params.symbols_cache.set(cache_key, replacement, replacement_text)
+        }
+
+        changes_definitions += replacement_text
         result_instruction = result_instruction.replace(
           replacement_regex,
-          ` [Diff with ${branch_name}](#${link_hash}) `
+          replacement
         )
       } catch (error) {
         vscode.window.showErrorMessage(
@@ -334,6 +409,9 @@ export const replace_changes_symbol = async (params: {
           message: `Error getting diff from branch ${branch_name}`,
           data: error
         })
+        if (params.symbols_cache) {
+          params.symbols_cache.set(cache_key, '', '')
+        }
         result_instruction = result_instruction.replace(replacement_regex, '')
       }
     }
@@ -445,6 +523,7 @@ const build_commit_changes_markdown = (
 
 export const replace_commit_symbol = async (params: {
   instruction: string
+  symbols_cache?: SymbolCacheManager
 }): Promise<{ instruction: string; commit_definitions: string }> => {
   const regex =
     /#(Commit|CommitMessage)\(([^:]+):([a-fA-F0-9]+)\s*(?:"((?:[^"\\]|\\.)*)")?\)/g
@@ -468,6 +547,20 @@ export const replace_commit_symbol = async (params: {
     const commit_hash = match[3]
     const commit_message = match[4]?.replace(/\\(.)/g, '$1')
 
+    if (params.symbols_cache) {
+      const cached = params.symbols_cache.get(full_match)
+      if (cached) {
+        commit_definitions += cached.definitions
+        result_instruction = result_instruction.replace(
+          new RegExp(
+            `\\s*${full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`
+          ),
+          cached.replacement
+        )
+        continue
+      }
+    }
+
     const target_folder = workspace_folders.find(
       (folder) => folder.name === folder_name
     )
@@ -475,6 +568,9 @@ export const replace_commit_symbol = async (params: {
       vscode.window.showErrorMessage(
         dictionary.error_message.WORKSPACE_FOLDER_NOT_FOUND(folder_name)
       )
+      if (params.symbols_cache) {
+        params.symbols_cache.set(full_match, '', '')
+      }
       result_instruction = result_instruction.replace(full_match, '')
       continue
     }
@@ -520,6 +616,9 @@ export const replace_commit_symbol = async (params: {
               { commit_hash }
             )
           )
+          if (params.symbols_cache) {
+            params.symbols_cache.set(full_match, '', '')
+          }
           result_instruction = result_instruction.replace(full_match, '')
           continue
         }
@@ -538,19 +637,27 @@ export const replace_commit_symbol = async (params: {
       }
 
       if (symbol_type === 'Commit') {
+        const replacement = ` [${title_text}](#${link_hash}) `
+        if (params.symbols_cache) {
+          params.symbols_cache.set(full_match, replacement, replacement_text)
+        }
         commit_definitions += replacement_text
         result_instruction = result_instruction.replace(
           new RegExp(
             `\\s*${full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`
           ),
-          ` [${title_text}](#${link_hash}) `
+          replacement
         )
       } else {
+        const replacement = `\n\n${replacement_text}`
+        if (params.symbols_cache) {
+          params.symbols_cache.set(full_match, replacement, '')
+        }
         result_instruction = result_instruction.replace(
           new RegExp(
             `\\s*${full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`
           ),
-          `\n\n${replacement_text}`
+          replacement
         )
       }
     } catch (error) {
@@ -562,6 +669,9 @@ export const replace_commit_symbol = async (params: {
         message: `Error getting diff for commit ${commit_hash}`,
         data: error
       })
+      if (params.symbols_cache) {
+        params.symbols_cache.set(full_match, '', '')
+      }
       result_instruction = result_instruction.replace(full_match, '')
     }
   }

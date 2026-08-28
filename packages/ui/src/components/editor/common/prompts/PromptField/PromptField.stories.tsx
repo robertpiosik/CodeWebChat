@@ -46,6 +46,7 @@ export const Empty = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     selected_files_token_count={0}
+    prompt_token_count={0}
     include_selected_files={true}
     on_toggle_include_selected_files={() => {}}
     translations={{
@@ -68,7 +69,7 @@ export const Empty = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_selected_files: 'Tokens in selected files',
+      attach_selected_files: 'Attach selected files',
       mode: 'Mode'
     }}
   />
@@ -87,7 +88,7 @@ export const WithText = () => (
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
-    mode="api"
+    mode={MODE.API}
     on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -114,6 +115,7 @@ export const WithText = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     selected_files_token_count={0}
+    prompt_token_count={0}
     include_selected_files={true}
     on_toggle_include_selected_files={() => {}}
     translations={{
@@ -136,7 +138,7 @@ export const WithText = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_selected_files: 'Tokens in selected files',
+      attach_selected_files: 'Attach selected files',
       mode: 'Mode'
     }}
   />
@@ -156,7 +158,7 @@ export const LongText = () => (
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
-    mode="api"
+    mode={MODE.API}
     on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -205,7 +207,7 @@ export const LongText = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_selected_files: 'Tokens in selected files',
+      attach_selected_files: 'Attach selected files',
       mode: 'Mode'
     }}
   />
@@ -223,7 +225,7 @@ export const WithPlaceholderSavedContext = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    mode="api"
+    mode={MODE.API}
     on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -251,6 +253,7 @@ export const WithPlaceholderSavedContext = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     selected_files_token_count={0}
+    prompt_token_count={0}
     include_selected_files={true}
     on_toggle_include_selected_files={() => {}}
     translations={{
@@ -273,7 +276,7 @@ export const WithPlaceholderSavedContext = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_selected_files: 'Tokens in selected files',
+      attach_selected_files: 'Attach selected files',
       mode: 'Mode'
     }}
   />
@@ -297,7 +300,7 @@ export const WithPlaceholderSelection = () => (
     }}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    mode="api"
+    mode={MODE.API}
     on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -325,6 +328,7 @@ export const WithPlaceholderSelection = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     selected_files_token_count={0}
+    prompt_token_count={0}
     include_selected_files={true}
     on_toggle_include_selected_files={() => {}}
     translations={{
@@ -347,7 +351,7 @@ export const WithPlaceholderSelection = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_selected_files: 'Tokens in selected files',
+      attach_selected_files: 'Attach selected files',
       mode: 'Mode'
     }}
   />
@@ -365,7 +369,7 @@ export const WithCommit = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    mode="api"
+    mode={MODE.API}
     on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -393,6 +397,7 @@ export const WithCommit = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     selected_files_token_count={0}
+    prompt_token_count={0}
     include_selected_files={true}
     on_toggle_include_selected_files={() => {}}
     translations={{
@@ -415,7 +420,7 @@ export const WithCommit = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_selected_files: 'Tokens in selected files',
+      attach_selected_files: 'Attach selected files',
       mode: 'Mode'
     }}
   />
@@ -432,7 +437,7 @@ export const WithCommitWithQuotes = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    mode="api"
+    mode={MODE.API}
     on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -460,6 +465,7 @@ export const WithCommitWithQuotes = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     selected_files_token_count={0}
+    prompt_token_count={0}
     include_selected_files={true}
     on_toggle_include_selected_files={() => {}}
     translations={{
@@ -482,7 +488,7 @@ export const WithCommitWithQuotes = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_selected_files: 'Tokens in selected files',
+      attach_selected_files: 'Attach selected files',
       mode: 'Mode'
     }}
   />
@@ -503,7 +509,7 @@ export const WithEditFormatSelector = () => {
       currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
       is_web_mode={false}
-      mode="api"
+      mode={MODE.API}
       on_mode_change={(mode) => console.log('Mode changed:', mode)}
       on_at_sign_click={() => console.log('@ clicked')}
       on_hash_sign_click={() => console.log('# clicked')}
@@ -535,6 +541,7 @@ export const WithEditFormatSelector = () => {
       on_new_tab={() => {}}
       on_tab_delete={() => {}}
       selected_files_token_count={0}
+      prompt_token_count={0}
       include_selected_files={true}
       on_toggle_include_selected_files={() => {}}
       translations={{
@@ -557,7 +564,7 @@ export const WithEditFormatSelector = () => {
         copy_prompt: 'Copy prompt',
         more_actions: 'More actions',
         send: 'Send',
-        tokens_in_selected_files: 'Tokens in selected files',
+        attach_selected_files: 'Attach selected files',
         mode: 'Mode'
       }}
     />
@@ -577,7 +584,7 @@ export const WithFilePaths = () => (
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
-    mode="api"
+    mode={MODE.API}
     on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -604,6 +611,7 @@ export const WithFilePaths = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     selected_files_token_count={0}
+    prompt_token_count={0}
     include_selected_files={true}
     on_toggle_include_selected_files={() => {}}
     translations={{
@@ -626,7 +634,7 @@ export const WithFilePaths = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_selected_files: 'Tokens in selected files',
+      attach_selected_files: 'Attach selected files',
       mode: 'Mode'
     }}
   />
@@ -673,7 +681,7 @@ export const WithTabs = () => {
       currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
       is_web_mode={false}
-      mode="api"
+      mode={MODE.API}
       on_mode_change={(mode) => console.log('Mode changed:', mode)}
       on_at_sign_click={() => console.log('@ clicked')}
       on_hash_sign_click={() => console.log('# clicked')}
@@ -700,6 +708,7 @@ export const WithTabs = () => {
       on_new_tab={handle_new_tab}
       on_tab_delete={handle_tab_delete}
       selected_files_token_count={0}
+      prompt_token_count={0}
       include_selected_files={true}
       on_toggle_include_selected_files={() => {}}
       translations={{
@@ -722,7 +731,7 @@ export const WithTabs = () => {
         copy_prompt: 'Copy prompt',
         more_actions: 'More actions',
         send: 'Send',
-        tokens_in_selected_files: 'Tokens in selected files',
+        attach_selected_files: 'Attach selected files',
         mode: 'Mode'
       }}
     />
@@ -742,7 +751,7 @@ export const WithWarning = () => (
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={true}
-    mode="web"
+    mode={MODE.WEB}
     on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -767,6 +776,7 @@ export const WithWarning = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     selected_files_token_count={0}
+    prompt_token_count={0}
     include_selected_files={true}
     on_toggle_include_selected_files={() => {}}
     translations={{
@@ -789,7 +799,7 @@ export const WithWarning = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_selected_files: 'Tokens in selected files',
+      attach_selected_files: 'Attach selected files',
       mode: 'Mode'
     }}
     warning="Add a configuration"

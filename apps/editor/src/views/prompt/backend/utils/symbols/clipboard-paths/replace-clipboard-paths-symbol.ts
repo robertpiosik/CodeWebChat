@@ -5,10 +5,12 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-files'
 import { extract_paths_from_text } from '@/utils/extract-paths-from-text'
 import { normalize_path } from '@/utils/normalize-path'
+import { SymbolCacheManager } from '../symbol-cache'
 
 export const replace_clipboard_paths_symbol = async (params: {
   instruction: string
   workspace_provider: WorkspaceProvider
+  symbols_cache?: SymbolCacheManager
 }): Promise<{ instruction: string; additional_files_definitions: string }> => {
   const regex = /#ClipboardPaths/g
   let result_instruction = params.instruction
@@ -22,6 +24,17 @@ export const replace_clipboard_paths_symbol = async (params: {
   if (!text || !text.trim()) {
     result_instruction = result_instruction.replace(regex, '')
     return { instruction: result_instruction, additional_files_definitions }
+  }
+
+  const cache_key = `#ClipboardPaths:${text}`
+
+  if (params.symbols_cache) {
+    const cached = params.symbols_cache.get(cache_key)
+    if (cached) {
+      additional_files_definitions += cached.definitions
+      result_instruction = result_instruction.replace(regex, cached.replacement)
+      return { instruction: result_instruction, additional_files_definitions }
+    }
   }
 
   const workspace_roots = params.workspace_provider.get_workspace_roots()
@@ -103,11 +116,21 @@ export const replace_clipboard_paths_symbol = async (params: {
 
   if (files_markdown) {
     additional_files_definitions += `# Additional files\n\n${files_markdown}`
-    result_instruction = result_instruction.replace(
-      regex,
-      display_paths.join(', ')
-    )
+    const replacement = display_paths.join(', ')
+
+    if (params.symbols_cache) {
+      params.symbols_cache.set(
+        cache_key,
+        replacement,
+        additional_files_definitions
+      )
+    }
+
+    result_instruction = result_instruction.replace(regex, replacement)
   } else {
+    if (params.symbols_cache) {
+      params.symbols_cache.set(cache_key, '', '')
+    }
     result_instruction = result_instruction.replace(regex, '')
   }
 

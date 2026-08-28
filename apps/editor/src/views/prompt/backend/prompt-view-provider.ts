@@ -114,6 +114,7 @@ import { webview_html } from '@/views/shared/utils/webview-html'
 import { get_selected_files } from '@/context/helpers/get-selected-files'
 import { normalize_path } from '@/utils/normalize-path'
 import { replace_symbols } from './utils/symbols/replace-symbols'
+import { SymbolCacheManager } from './utils/symbols/symbol-cache'
 
 export class PromptViewProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri
@@ -163,6 +164,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
   public prompt_view_api_calls_manager!: PromptViewApiCallsManager
   public response_history: ResponseHistoryItem[] = []
   public message_listeners: ((message: BackendMessage) => void)[] = []
+  public symbols_cache = new SymbolCacheManager()
 
   // Voice input
   public is_recording = false
@@ -201,6 +203,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     const state = this.active_instructions_state
     return state.instructions[state.active_index] || ''
   }
+
+  private _save_instructions_timeout: NodeJS.Timeout | null = null
 
   public preview_switch_choice_resolver:
     | ((choice: 'Switch' | undefined) => void)
@@ -546,13 +550,15 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       instructions: this.current_edit_files_instruction,
       extension_context: this.extension_context,
       workspace_provider: this.workspace_provider,
-      remove_images: true
+      remove_images: true,
+      symbols_cache: this.symbols_cache
     })
     const ask_instructions_result = await replace_symbols({
       instructions: this.current_ask_about_context_instruction,
       extension_context: this.extension_context,
       workspace_provider: this.workspace_provider,
-      remove_images: true
+      remove_images: true,
+      symbols_cache: this.symbols_cache
     })
 
     this.send_message({
@@ -647,7 +653,20 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             handle_get_instructions(this)
           } else if (message.command == 'SAVE_INSTRUCTIONS') {
             await handle_save_instructions(this, message)
-            this.send_token_count()
+            if (this._save_instructions_timeout) {
+              clearTimeout(this._save_instructions_timeout)
+            }
+
+            const current_instruction =
+              message.instruction.instructions[message.instruction.active_index]
+
+            if (!current_instruction) {
+              this.send_token_count()
+            } else {
+              this._save_instructions_timeout = setTimeout(() => {
+                this.send_token_count()
+              }, 1000)
+            }
           } else if (message.command == 'GET_CONNECTION_STATUS') {
             handle_get_connection_status(this)
           } else if (message.command == 'GET_WEB_CONFIGURATIONS') {

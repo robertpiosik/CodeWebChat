@@ -62,7 +62,7 @@
 
   &__prompt-token-count {
     font-size: 10px;
-    transform: translateY(0.5px);
+    transform: translateY(-1px);
     color: var(--vscode-icon-foreground);
     opacity: var(--dimmed-opacity);
     pointer-events: none;
@@ -256,7 +256,7 @@
       &__token-count {
         display: flex;
         align-items: center;
-        gap: 3px;
+        gap: 1px;
         color: var(--cwc-text-color-dimmed);
         cursor: default;
 
@@ -269,7 +269,6 @@
 
           &--excluded {
             text-decoration: line-through;
-            opacity: var(--disabled-opacity);
           }
         }
       }

@@ -8,11 +8,13 @@ import {
   load_and_merge_file_contexts
 } from '@/features/context-restoration'
 import { Logger } from '@shared/utils/logger'
+import { SymbolCacheManager } from '../symbol-cache'
 
 export const replace_saved_context_symbol = async (params: {
   instruction: string
   extension_context: vscode.ExtensionContext
   workspace_provider: WorkspaceProvider
+  symbols_cache?: SymbolCacheManager
 }): Promise<{ instruction: string; context_definitions: string }> => {
   const regex = /#SavedContext\(([^)]+)\)/g
   let result_instruction = params.instruction
@@ -47,12 +49,27 @@ export const replace_saved_context_symbol = async (params: {
       continue
     }
 
+    if (params.symbols_cache) {
+      const cached = params.symbols_cache.get(full_match)
+      if (cached) {
+        context_definitions += cached.definitions
+        result_instruction = result_instruction.replace(
+          replacement_regex,
+          cached.replacement
+        )
+        continue
+      }
+    }
+
     const saved_context = all_contexts.find((c) => c.name === context_name)
 
     if (!saved_context) {
       vscode.window.showWarningMessage(
         `Saved context "${context_name}" not found.`
       )
+      if (params.symbols_cache) {
+        params.symbols_cache.set(full_match, ' ', '')
+      }
       result_instruction = result_instruction.replace(replacement_regex, ' ')
       continue
     }
@@ -86,17 +103,28 @@ export const replace_saved_context_symbol = async (params: {
       }
     }
 
-    if (files_markdown) {
-      context_definitions += `# ${context_name}\n\n${files_markdown}`
-    }
-
     const link_hash = context_name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-|-$/g, '')
+    const replacement = ` [${context_name}](#${link_hash}) `
+
+    if (files_markdown) {
+      const defs = `# ${context_name}\n\n${files_markdown}`
+      context_definitions += defs
+
+      if (params.symbols_cache) {
+        params.symbols_cache.set(full_match, replacement, defs)
+      }
+    } else {
+      if (params.symbols_cache) {
+        params.symbols_cache.set(full_match, replacement, '')
+      }
+    }
+
     result_instruction = result_instruction.replace(
       replacement_regex,
-      ` [${context_name}](#${link_hash}) `
+      replacement
     )
   }
 

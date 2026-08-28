@@ -12,17 +12,15 @@ import { replace_pasted_text_symbol } from './pasted-text/replace-pasted-text-sy
 import { replace_website_symbol } from './website/replace-website-symbol'
 import { replace_fragment_symbol } from './fragment/replace-fragment-symbol'
 import { replace_clipboard_paths_symbol } from './clipboard-paths/replace-clipboard-paths-symbol'
+import { SymbolCacheManager } from './symbol-cache'
 
-type ReplaceSymbolsParams = {
+export const replace_symbols = async (params: {
   instructions: string
   extension_context: vscode.ExtensionContext
   workspace_provider: WorkspaceProvider
   remove_images?: boolean
-}
-
-export const replace_symbols = async (
-  params: ReplaceSymbolsParams
-): Promise<{ instructions: string; skill_definitions: string }> => {
+  symbols_cache?: SymbolCacheManager
+}): Promise<{ instructions: string; skill_definitions: string }> => {
   let processed_instructions = params.instructions
   let skill_definitions = ''
 
@@ -32,7 +30,8 @@ export const replace_symbols = async (
 
   if (processed_instructions.includes('#Changes(')) {
     const result = await replace_changes_symbol({
-      instruction: processed_instructions
+      instruction: processed_instructions,
+      symbols_cache: params.symbols_cache
     })
     processed_instructions = result.instruction
     skill_definitions += result.changes_definitions
@@ -43,7 +42,8 @@ export const replace_symbols = async (
     processed_instructions.includes('#CommitMessage(')
   ) {
     const result = await replace_commit_symbol({
-      instruction: processed_instructions
+      instruction: processed_instructions,
+      symbols_cache: params.symbols_cache
     })
     processed_instructions = result.instruction
     skill_definitions += result.commit_definitions
@@ -53,7 +53,8 @@ export const replace_symbols = async (
     const result = await replace_saved_context_symbol({
       instruction: processed_instructions,
       extension_context: params.extension_context,
-      workspace_provider: params.workspace_provider
+      workspace_provider: params.workspace_provider,
+      symbols_cache: params.symbols_cache
     })
     processed_instructions = result.instruction
     skill_definitions += result.context_definitions
@@ -62,7 +63,8 @@ export const replace_symbols = async (
   if (processed_instructions.includes('#ClipboardPaths')) {
     const result = await replace_clipboard_paths_symbol({
       instruction: processed_instructions,
-      workspace_provider: params.workspace_provider
+      workspace_provider: params.workspace_provider,
+      symbols_cache: params.symbols_cache
     })
     processed_instructions = result.instruction
     skill_definitions += result.additional_files_definitions
@@ -70,7 +72,8 @@ export const replace_symbols = async (
 
   if (processed_instructions.includes('#Skill(')) {
     const result = await replace_skill_symbol({
-      instruction: processed_instructions
+      instruction: processed_instructions,
+      symbols_cache: params.symbols_cache
     })
     processed_instructions = result.instruction
     skill_definitions += result.skill_definitions
@@ -91,7 +94,8 @@ export const replace_symbols = async (
 
   if (processed_instructions.includes('#Website(')) {
     processed_instructions = await replace_website_symbol({
-      instruction: processed_instructions
+      instruction: processed_instructions,
+      symbols_cache: params.symbols_cache
     })
   }
 

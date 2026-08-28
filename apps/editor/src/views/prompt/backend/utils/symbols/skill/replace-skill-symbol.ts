@@ -6,9 +6,11 @@ import {
   discover_skills
 } from '../../../message-handlers/handle-hash-sign-quick-pick/symbols/skill-symbol'
 import { normalize_path } from '@/utils/normalize-path'
+import { SymbolCacheManager } from '../symbol-cache'
 
 export const replace_skill_symbol = async (params: {
   instruction: string
+  symbols_cache?: SymbolCacheManager
 }): Promise<{ instruction: string; skill_definitions: string }> => {
   const regex = /#Skill\(([^:]+):([^:]+(?::[^:]+)?):([^)]+)\)/g
   let skill_definitions = ''
@@ -16,7 +18,7 @@ export const replace_skill_symbol = async (params: {
 
   const instruction = params.instruction.replace(
     regex,
-    (_, agent_name, _repo_id, skill_name) => {
+    (full_match, agent_name, _repo_id, skill_name) => {
       const key = `${agent_name}:${skill_name}`
 
       const formatted_skill_name = skill_name
@@ -34,12 +36,24 @@ export const replace_skill_symbol = async (params: {
         return reference
       }
 
+      if (params.symbols_cache) {
+        const cached = params.symbols_cache.get(full_match)
+        if (cached) {
+          skill_definitions += cached.definitions
+          processed_skills.add(key)
+          return cached.replacement
+        }
+      }
+
       const agent = agents[agent_name]
       if (!agent) {
         Logger.warn({
           function_name: 'replace_skill_symbol',
           message: `Agent ${agent_name} not found`
         })
+        if (params.symbols_cache) {
+          params.symbols_cache.set(full_match, '', '')
+        }
         return ''
       }
 
@@ -51,6 +65,9 @@ export const replace_skill_symbol = async (params: {
           function_name: 'replace_skill_symbol',
           message: `Skill ${skill_name} not found for agent ${agent_name}`
         })
+        if (params.symbols_cache) {
+          params.symbols_cache.set(full_match, '', '')
+        }
         return ''
       }
 
@@ -96,10 +113,17 @@ export const replace_skill_symbol = async (params: {
           message: `Error reading files for skill ${skill_name}`,
           data: e
         })
+        if (params.symbols_cache) {
+          params.symbols_cache.set(full_match, '', '')
+        }
         return ''
       }
 
       skill_definitions += skill_content
+
+      if (params.symbols_cache) {
+        params.symbols_cache.set(full_match, reference, skill_content)
+      }
 
       return reference
     }

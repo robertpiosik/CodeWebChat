@@ -80,10 +80,10 @@ export type PromptFieldProps = {
   warning?: string
   voice_input_push_to_talk?: boolean
   selected_files_token_count: number
+  prompt_token_count: number
   include_selected_files: boolean
   on_toggle_include_selected_files: () => void
   is_copy_only?: boolean
-  prompt_token_count?: number
   mode: Mode
   on_mode_change: (mode: Mode) => void
   translations: {
@@ -106,7 +106,7 @@ export type PromptFieldProps = {
     copy_prompt: string
     more_actions: string
     send: string
-    tokens_in_selected_files: string
+    attach_selected_files: string
     mode: string
   }
 }
@@ -583,7 +583,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           >
             {is_token_count_hovered && (
               <Tooltip
-                message={props.translations.tokens_in_selected_files}
+                message={props.translations.attach_selected_files}
                 details={is_mac ? '⌥X' : 'Alt+X'}
                 align="center"
               />
@@ -594,9 +594,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   className={cn(
                     styles['footer__right__details__token-count__icon'],
                     'codicon',
-                    props.include_selected_files === false
-                      ? 'codicon-skip'
-                      : 'codicon-pass'
+                    'codicon-attach'
                   )}
                 />
                 <div
@@ -885,12 +883,13 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       >
         <div className={styles['input-wrapper']}>
           <div className={styles['top-right']}>
-            {props.prompt_token_count !== undefined &&
-              props.prompt_token_count > 1000 && (
-                <div className={styles['top-right__prompt-token-count']}>
-                  {Math.floor(props.prompt_token_count / 1000)}K
-                </div>
-              )}
+            {props.prompt_token_count > 0 && (
+              <div className={styles['top-right__prompt-token-count']}>
+                {props.prompt_token_count >= 1000
+                  ? `${Math.floor(props.prompt_token_count / 1000)}K`
+                  : props.prompt_token_count}
+              </div>
+            )}
             {(!!props.value || props.tabs_count > 1) && (
               <div
                 className={cn(

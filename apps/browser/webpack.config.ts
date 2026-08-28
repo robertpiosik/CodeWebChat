@@ -75,7 +75,7 @@ const config = (_: any, argv: Record<string, any>): webpack.Configuration => {
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
-      plugins: [new TsconfigPathsPlugin()]
+      plugins: [new TsconfigPathsPlugin() as any]
     },
     plugins,
     stats: 'errors-warnings'
