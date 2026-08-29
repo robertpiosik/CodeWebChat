@@ -37,39 +37,11 @@
   }
 }
 
-.icon {
-  font-size: 30px !important;
-  text-align: center;
-  padding-top: 16px;
-  display: flex;
-  justify-content: center;
-
-  &--success {
-    color: var(--cwc-text-color-green);
-  }
-
-  &--warning {
-    color: var(--cwc-text-color-orange);
-  }
-
-  &--error {
-    color: var(--cwc-text-color-red);
-  }
-
-  &--info {
-    color: var(--vscode-notificationsInfoIcon-foreground);
-  }
-}
-
 .title {
   text-align: center;
   font-weight: 500;
   font-size: 14px;
   padding: 10px 12px 0 12px;
-
-  &--with-icon {
-    padding-top: 6px;
-  }
 
   &--without-content {
     padding-bottom: 16px;

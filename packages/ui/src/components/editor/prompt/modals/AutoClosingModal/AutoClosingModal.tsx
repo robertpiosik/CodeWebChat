@@ -1,12 +1,11 @@
 import { useEffect, useState, useRef } from 'react'
 import styles from './AutoClosingModal.module.scss'
 import { Button } from '../../../common/Button'
-import { Modal, ModalIconType } from '../Modal'
+import { Modal } from '../Modal'
 
 type Props = {
   title: string
   duration: number
-  type: ModalIconType
   on_close: () => void
   non_dismissable?: boolean
 }
@@ -45,7 +44,6 @@ export const AutoClosingModal: React.FC<Props> = (props) => {
     >
       <Modal
         title={props.title}
-        icon={props.type}
         content_slot={
           <div className={styles.progress}>
             <div

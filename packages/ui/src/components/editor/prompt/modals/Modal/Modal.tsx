@@ -3,11 +3,8 @@ import cn from 'classnames'
 import { Scrollable } from '../../../common/Scrollable'
 import styles from './Modal.module.scss'
 
-export type ModalIconType = 'success' | 'warning' | 'error' | 'info'
-
 type Props = {
   title?: string
-  icon?: ModalIconType
   content_slot?: React.ReactNode
   footer_slot?: React.ReactNode
   content_max_height?: string
@@ -48,29 +45,13 @@ export const Modal: React.FC<Props> = (props) => {
           [styles['container--full-width']]: props.use_full_width
         })}
       >
-        {props.icon && (
-          <div
-            className={cn(styles.icon, 'codicon', {
-              'codicon-check': props.icon == 'success',
-              'codicon-warning': props.icon == 'warning',
-              'codicon-error': props.icon == 'error',
-              'codicon-info': props.icon == 'info',
-              [styles['icon--success']]: props.icon == 'success',
-              [styles['icon--warning']]: props.icon == 'warning',
-              [styles['icon--error']]: props.icon == 'error',
-              [styles['icon--info']]: props.icon == 'info'
-            })}
-          />
-        )}
-
         {props.title && (
           <div
-            className={cn(styles.title, {
-              [styles['title--with-icon']]: !!props.icon,
-              [styles['title--without-content']]: !props.content_slot
+            className={cn(styles.header, {
+              [styles['header--without-content']]: !props.content_slot
             })}
           >
-            {props.title}
+            <div className={styles.title}>{props.title}</div>
           </div>
         )}
 

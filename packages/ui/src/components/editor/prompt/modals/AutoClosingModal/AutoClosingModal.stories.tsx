@@ -17,7 +17,6 @@ export const Default = () => {
       title="Initialized in the connected browser"
       duration={3000}
       on_close={handle_close}
-      type="success"
     />
   ) : null
 }
