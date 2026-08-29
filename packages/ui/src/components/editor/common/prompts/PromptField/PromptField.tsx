@@ -831,11 +831,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       >
         <div className={styles['input-wrapper']}>
           <div className={styles['top-right']}>
-            {props.prompt_token_count > 0 && (
+            {!!props.value && props.prompt_token_count > 0 && (
               <div className={styles['top-right__prompt-token-count']}>
-                {props.prompt_token_count >= 1000
-                  ? `${Math.floor(props.prompt_token_count / 1000)}K`
-                  : props.prompt_token_count}
+                {display_token_count(props.prompt_token_count)}
               </div>
             )}
             {(!!props.value || props.tabs_count > 1) && (
