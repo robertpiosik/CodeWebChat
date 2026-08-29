@@ -1,14 +1,14 @@
 .container {
-  margin: 0 22px;
+  --height: 24px;
   display: flex;
   justify-content: space-between;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
-  overflow: hidden;
   color: var(--cwc-text-color);
   background-color: var(--cwc-bg-tertiary);
-  user-select: none;
-  height: 28px;
+  overflow: hidden;
+  height: var(--height);
+  margin: 0 22px;
 
   :global([data-modern-ui='true']) & {
     margin: 0 20px;
@@ -20,7 +20,7 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  padding-left: 7px;
+  padding-left: 5px;
   min-width: 0;
 
   &__label {
@@ -31,9 +31,9 @@
     cursor: pointer;
     height: 100%;
     display: block;
-    line-height: 28px;
+    line-height: var(--height);
     padding-left: 6px;
-    padding-right: 4px;
+    padding-right: 6px;
   }
 }
 
@@ -61,8 +61,12 @@
   cursor: pointer;
   white-space: nowrap;
   color: var(--vscode-textLink-foreground);
-  padding: 0 6px 0 6px;
+  padding: 0 6px 0 5px;
   height: 100%;
+
+  > span:first-child::before {
+    font-size: 15px;
+  }
 
   &:hover {
     background-color: var(--vscode-toolbar-hoverBackground);

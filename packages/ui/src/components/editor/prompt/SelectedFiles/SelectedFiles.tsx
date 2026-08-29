@@ -38,13 +38,16 @@ export const SelectedFiles: React.FC<SelectedFiles.Props> = (props) => {
         </label>
       </div>
       <div className={styles.actions}>
-        <span
-          className={cn(styles.count, {
-            [styles['count--excluded']]: props.include_selected_files === false
-          })}
-        >
-          {display_token_count(props.selected_files_token_count)}
-        </span>
+        {props.selected_files_token_count > 0 && (
+          <span
+            className={cn(styles.count, {
+              [styles['count--excluded']]:
+                props.include_selected_files === false
+            })}
+          >
+            {display_token_count(props.selected_files_token_count)}
+          </span>
+        )}
         <div
           className={styles.preview}
           onClick={(e) => {
