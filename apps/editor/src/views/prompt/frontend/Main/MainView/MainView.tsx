@@ -331,6 +331,7 @@ export const MainView: React.FC<Props> = (props) => {
             on_paste_long_text={props.on_paste_long_text}
             on_open_pasted_text={props.on_open_pasted_text}
             on_paste_url={props.on_paste_url}
+            on_preview_prompt={props.on_preview_prompt}
             is_recording={props.is_recording}
             on_recording_started={props.on_recording_started}
             on_recording_finished={props.on_recording_finished}
@@ -365,6 +366,7 @@ export const MainView: React.FC<Props> = (props) => {
               send_with: t('prompt-field.action.send-with'),
               send_with_ellipsis: t('prompt-field.action.send-with-ellipsis'),
               copy_prompt: t('prompt-field.action.copy-prompt'),
+              preview_prompt: t('prompt-field.action.preview-prompt'),
               more_actions: t('prompt-field.action.more-actions'),
               send: t('prompt-field.action.send'),
               attach_selected_files: t('prompt-field.attach-selected-files'),
@@ -379,10 +381,10 @@ export const MainView: React.FC<Props> = (props) => {
           on_toggle_include_selected_files={
             props.on_toggle_include_selected_files
           }
-          on_preview={props.on_preview_prompt}
           translations={{
             attach_selected_files: t('main.attach-selected-files'),
-            preview: t('main.preview' as any)
+            tokens_in_selected_files: t('main.tokens-in-selected-files' as any),
+            disabled_attaching_files: t('main.disabled-attaching-files' as any)
           }}
         />
 

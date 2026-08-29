@@ -305,6 +305,24 @@ export const prompt_field = {
     hu: 'Prompt másolása',
     bg: 'Копиране на промпта'
   },
+  'prompt-field.action.preview-prompt': {
+    en: 'Preview prompt',
+    pl: 'Podgląd promptu',
+    'zh-cn': '预览提示',
+    ja: 'プロンプトをプレビュー',
+    'zh-tw': '預覽提示',
+    de: 'Prompt-Vorschau',
+    es: 'Vista previa del prompt',
+    fr: 'Aperçu du prompt',
+    'pt-br': 'Pré-visualizar prompt',
+    ru: 'Предпросмотр промпта',
+    ko: '프롬프트 미리보기',
+    it: 'Anteprima prompt',
+    tr: 'İstem önizlemesi',
+    cs: 'Náhled promptu',
+    hu: 'Prompt előnézete',
+    bg: 'Преглед на промпта'
+  },
   'prompt-field.action.more-actions': {
     en: 'More actions',
     pl: 'Więcej akcji',

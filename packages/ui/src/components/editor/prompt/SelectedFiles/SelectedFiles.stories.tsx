@@ -13,10 +13,10 @@ export const Default = () => {
       selected_files_token_count={12500}
       include_selected_files={include}
       on_toggle_include_selected_files={set_include}
-      on_preview={() => {}}
       translations={{
         attach_selected_files: 'Attach selected files',
-        preview: 'Preview'
+        tokens_in_selected_files: 'tokens in selected files',
+        disabled_attaching_files: 'Disabled attaching files'
       }}
     />
   )
@@ -30,10 +30,10 @@ export const ZeroTokens = () => {
       selected_files_token_count={0}
       include_selected_files={include}
       on_toggle_include_selected_files={set_include}
-      on_preview={() => {}}
       translations={{
         attach_selected_files: 'Attach selected files',
-        preview: 'Preview'
+        tokens_in_selected_files: 'tokens in selected files',
+        disabled_attaching_files: 'Disabled attaching files'
       }}
     />
   )

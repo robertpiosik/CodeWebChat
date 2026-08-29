@@ -55,6 +55,7 @@ export const CHATBOTS = {
     supports_url_override: true,
     url_override_label: 'Project URL',
     url_override_disabled_options: ['temporary'],
+    supported_reasoning_efforts: ['instant', 'medium', 'high'],
     supported_options: {
       temporary: 'Temporary',
       'think (free)': 'Think (free)'

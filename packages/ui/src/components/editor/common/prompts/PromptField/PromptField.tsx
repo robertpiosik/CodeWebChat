@@ -68,6 +68,7 @@ export type PromptFieldProps = {
   on_paste_long_text: (text: string) => void
   on_open_pasted_text: (hash: string) => void
   on_paste_url: (url: string) => void
+  on_preview_prompt?: () => void
   is_recording: boolean
   on_recording_started: () => void
   on_recording_finished: () => void
@@ -101,6 +102,7 @@ export type PromptFieldProps = {
     send_with: string
     send_with_ellipsis: string
     copy_prompt: string
+    preview_prompt: string
     more_actions: string
     send: string
     attach_selected_files: string
@@ -450,7 +452,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               {is_edit_format_hovered && (
                 <Tooltip
                   message={props.translations.edit_format}
-                  details={is_mac ? '⌥(W/S/D/T)' : 'Alt+(W/S/D/T)'}
+                  details={is_mac ? '⌥' : 'Alt'}
                   align="center"
                 />
               )}
@@ -568,7 +570,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               {is_mode_switch_hovered && (
                 <Tooltip
                   message={props.translations.mode}
-                  details={is_mac ? '⌥Esc' : 'Alt+Esc'}
+                  details={is_mac ? '⌥' : 'Alt'}
                   align="center"
                 />
               )}
@@ -714,7 +716,14 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                             }
                           }
                         ]
-                      : [])
+                      : []),
+                    {
+                      label: props.translations.preview_prompt,
+                      on_click: () => {
+                        props.on_preview_prompt?.()
+                        close_dropdown()
+                      }
+                    }
                   ]}
                 />
               </>
@@ -798,6 +807,13 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         shortcut: is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space',
                         on_click: () => {
                           props.on_recording_started()
+                          close_dropdown()
+                        }
+                      },
+                      {
+                        label: props.translations.preview_prompt,
+                        on_click: () => {
+                          props.on_preview_prompt?.()
                           close_dropdown()
                         }
                       }

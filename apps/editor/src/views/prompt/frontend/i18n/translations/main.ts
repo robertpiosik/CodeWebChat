@@ -89,6 +89,42 @@ export const main = {
     hu: ' token',
     bg: ' токена'
   },
+  'main.tokens-in-selected-files': {
+    en: 'tokens in selected files',
+    pl: 'tokenów w wybranych plikach',
+    'zh-cn': '个令牌在选定的文件中',
+    ja: '選択したファイルのトークン',
+    'zh-tw': '個代幣在選定的檔案中',
+    de: 'Token in ausgewählten Dateien',
+    es: 'tokens en archivos seleccionados',
+    fr: 'jetons dans les fichiers sélectionnés',
+    'pt-br': 'tokens nos arquivos selecionados',
+    ru: 'токенов в выбранных файлах',
+    ko: '선택한 파일의 토큰',
+    it: 'token nei file selezionati',
+    tr: 'seçili dosyalardaki jetonlar',
+    cs: 'tokenů ve vybraných souborech',
+    hu: 'token a kiválasztott fájlokban',
+    bg: 'токена в избраните файлове'
+  },
+  'main.disabled-attaching-files': {
+    en: 'Disabled attaching files',
+    pl: 'Wyłączono dołączanie plików',
+    'zh-cn': '已禁用附加文件',
+    ja: 'ファイルの添付が無効になっています',
+    'zh-tw': '已停用附加檔案',
+    de: 'Anhängen von Dateien deaktiviert',
+    es: 'Se deshabilitó adjuntar archivos',
+    fr: 'Fichiers joints désactivés',
+    'pt-br': 'Anexar arquivos desativado',
+    ru: 'Прикрепление файлов отключено',
+    ko: '파일 첨부 비활성화됨',
+    it: 'Allegati disabilitati',
+    tr: 'Dosya ekleme devre dışı',
+    cs: 'Připojování souborů zakázáno',
+    hu: 'Fájlok csatolása letiltva',
+    bg: 'Прикачването на файлове е деактивирано'
+  },
   'main.attach-selected-files': {
     en: 'Attach selected files',
     pl: 'Dołącz wybrane pliki',
@@ -106,23 +142,5 @@ export const main = {
     cs: 'Připojit vybrané soubory',
     hu: 'Kiválasztott fájlok csatolása',
     bg: 'Прикачване на избраните файлове'
-  },
-  'main.preview': {
-    en: 'Preview',
-    pl: 'Podgląd',
-    'zh-cn': '预览',
-    ja: 'プレビュー',
-    'zh-tw': '預覽',
-    de: 'Vorschau',
-    es: 'Vista previa',
-    fr: 'Aperçu',
-    'pt-br': 'Pré-visualização',
-    ru: 'Предпросмотр',
-    ko: '미리보기',
-    it: 'Anteprima',
-    tr: 'Önizleme',
-    cs: 'Náhled',
-    hu: 'Előnézet',
-    bg: 'Преглед'
   }
 } as const

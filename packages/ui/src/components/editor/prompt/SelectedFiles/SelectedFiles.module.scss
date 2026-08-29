@@ -33,14 +33,13 @@
     display: block;
     line-height: var(--height);
     padding-left: 6px;
-    padding-right: 6px;
   }
 }
 
 .warning {
   display: inline-block;
   color: var(--cwc-text-color-orange);
-  margin-right: 6px;
+  margin-right: 5px;
   vertical-align: middle;
 
   span::before {
@@ -49,38 +48,7 @@
   }
 }
 
-.count {
-  font-size: 12px;
+.wont-send {
   color: var(--cwc-text-color-dimmed);
-  flex-shrink: 0;
-
-  &--excluded {
-    text-decoration: line-through;
-  }
-}
-
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.preview {
-  display: flex;
-  font-size: 12px;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-  white-space: nowrap;
-  color: var(--vscode-textLink-foreground);
-  padding: 0 6px 0 5px;
-  height: 100%;
-
-  > span:first-child::before {
-    font-size: 15px;
-  }
-
-  &:hover {
-    background-color: var(--vscode-toolbar-hoverBackground);
-  }
+  font-style: italic;
 }
