@@ -109,8 +109,6 @@ type Props = {
   on_tabs_reorder: (new_order: number[]) => void
   voice_input_push_to_talk: boolean
   bottom_spacer_height?: number
-  include_selected_files: boolean
-  on_toggle_include_selected_files: (include: boolean) => void
   on_preview_prompt: () => void
 }
 
@@ -372,16 +370,9 @@ export const MainView: React.FC<Props> = (props) => {
         <UiSelectedFiles
           selected_files_token_count={props.selected_files_token_count}
           selected_files_count={props.selected_files.length}
-          include_selected_files={props.include_selected_files}
-          on_toggle_include_selected_files={
-            props.on_toggle_include_selected_files
-          }
           translations={{
             attach_selected_files: t('selected-files.attach-selected-files'),
-            attaching_files: t('selected-files.attaching-files'),
-            disabled_attaching_selected_files: t(
-              'selected-files.disabled-attaching-selected-files'
-            )
+            attaching_files: t('selected-files.attaching-files')
           }}
         />
 

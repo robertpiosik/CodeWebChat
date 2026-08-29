@@ -17,15 +17,13 @@ export const build_prompt_payload = async (params: {
   let recent_files = ''
   let collected_files = ''
 
-  if (prompt_view_provider.include_selected_files) {
-    const collected = await FilesCollector.collect_files({
-      workspace_provider: prompt_view_provider.workspace_provider,
-      open_editors_provider: prompt_view_provider.open_editors_provider
-    })
-    other_files = collected.other_files
-    recent_files = collected.recent_files
-    collected_files = other_files + recent_files
-  }
+  const collected = await FilesCollector.collect_files({
+    workspace_provider: prompt_view_provider.workspace_provider,
+    open_editors_provider: prompt_view_provider.open_editors_provider
+  })
+  other_files = collected.other_files
+  recent_files = collected.recent_files
+  collected_files = other_files + recent_files
 
   const { instructions: processed_instructions, skill_definitions } =
     await replace_symbols({

@@ -508,15 +508,6 @@ export interface GetTokenCountMessage extends BaseMessage {
   command: 'GET_TOKEN_COUNT'
 }
 
-export interface ToggleIncludeSelectedFilesMessage extends BaseMessage {
-  command: 'TOGGLE_INCLUDE_SELECTED_FILES'
-  include: boolean
-}
-
-export interface GetIncludeSelectedFilesMessage extends BaseMessage {
-  command: 'GET_INCLUDE_SELECTED_FILES'
-}
-
 export interface PreviewPromptMessage extends BaseMessage {
   command: 'PREVIEW_PROMPT'
 }
@@ -609,8 +600,6 @@ export type FrontendMessage =
   | PickTasksWorkspaceMessage
   | GetIsModernUiMessage
   | GetTokenCountMessage
-  | ToggleIncludeSelectedFilesMessage
-  | GetIncludeSelectedFilesMessage
   | PreviewPromptMessage
 
 // === FROM BACKEND TO FRONTEND ===
@@ -861,11 +850,6 @@ export interface IsModernUiMessage extends BaseMessage {
   is_modern_ui: boolean
 }
 
-export interface IncludeSelectedFilesMessage extends BaseMessage {
-  command: 'INCLUDE_SELECTED_FILES'
-  include: boolean
-}
-
 export type BackendMessage =
   | InstructionsMessage
   | FocusPromptFieldMessage
@@ -919,4 +903,3 @@ export type BackendMessage =
   | StartApiConfigurationCreationMessage
   | TasksWorkspacePickedMessage
   | IsModernUiMessage
-  | IncludeSelectedFilesMessage

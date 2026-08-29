@@ -142,7 +142,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
   public api_edit_format: EditFormat
   public api_prompt_type: ApiPromptType
   public mode: Mode = MODE.WEB
-  public include_selected_files: boolean = true
 
   public get edit_format(): EditFormat {
     return this.mode == MODE.WEB ? this.web_edit_format : this.api_edit_format
@@ -347,12 +346,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       this.extension_context.workspaceState.get<ApiPromptType>(
         API_MODE_STATE_KEY,
         'edit-files'
-      )
-
-    this.include_selected_files =
-      this.extension_context.workspaceState.get<boolean>(
-        'codeWebChat.includeSelectedFiles',
-        true
       )
 
     this.extension_context.subscriptions.push(
@@ -857,24 +850,9 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_pick_tasks_workspace(this, message)
           } else if (message.command == 'GET_TOKEN_COUNT') {
             this.send_token_count()
-          } else if (message.command == 'GET_INCLUDE_SELECTED_FILES') {
-            this.send_message({
-              command: 'INCLUDE_SELECTED_FILES',
-              include: this.include_selected_files
-            })
           } else if (message.command == 'PREVIEW_PROMPT') {
             await handle_preview_prompt({
               prompt_view_provider: this
-            })
-          } else if (message.command == 'TOGGLE_INCLUDE_SELECTED_FILES') {
-            this.include_selected_files = message.include
-            this.extension_context.workspaceState.update(
-              'codeWebChat.includeSelectedFiles',
-              message.include
-            )
-            this.send_message({
-              command: 'INCLUDE_SELECTED_FILES',
-              include: this.include_selected_files
             })
           }
         } catch (error: any) {

@@ -76,8 +76,6 @@ export const Prompt = () => {
     selected_files_token_count,
     edit_instructions_token_count,
     ask_instructions_token_count,
-    include_selected_files,
-    handle_toggle_include_selected_files,
     handle_preview_prompt
   } = use_panel(vscode)
 
@@ -357,10 +355,6 @@ export const Prompt = () => {
                 selected_files_token_count={selected_files_token_count}
                 edit_instructions_token_count={edit_instructions_token_count}
                 ask_instructions_token_count={ask_instructions_token_count}
-                include_selected_files={include_selected_files}
-                on_toggle_include_selected_files={
-                  handle_toggle_include_selected_files
-                }
                 on_preview_prompt={handle_preview_prompt}
               />
             </div>
