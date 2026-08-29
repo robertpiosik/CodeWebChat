@@ -79,10 +79,7 @@ export type PromptFieldProps = {
   on_tabs_reorder?: (new_order: number[]) => void
   warning?: string
   voice_input_push_to_talk?: boolean
-  selected_files_token_count: number
   prompt_token_count: number
-  include_selected_files: boolean
-  on_toggle_include_selected_files: () => void
   is_copy_only?: boolean
   mode: Mode
   on_mode_change: (mode: Mode) => void
@@ -121,7 +118,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [is_focused, set_is_focused] = useState(false)
   const [is_recording_hovered, set_is_recording_hovered] = useState(false)
   const [is_edit_format_hovered, set_is_edit_format_hovered] = useState(false)
-  const [is_token_count_hovered, set_is_token_count_hovered] = useState(false)
   const [is_mode_switch_hovered, set_is_mode_switch_hovered] = useState(false)
   const [hovered_left_action, set_hovered_left_action] = useState<
     'at' | 'hash' | 'slash' | null
@@ -444,8 +440,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         <div
           className={cn(styles['footer__right__details'], {
             [styles['footer__right__details--visible']]:
-              props.show_edit_format_selector ||
-              props.selected_files_token_count > 0
+              props.show_edit_format_selector
           })}
         >
           {props.show_edit_format_selector && props.edit_format && (
@@ -565,53 +560,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               </button>
             </div>
           )}
-          <div
-            className={cn(
-              styles['footer__right__details__token-count-wrapper'],
-              {
-                [styles[
-                  'footer__right__details__token-count-wrapper--clickable'
-                ]]: true
-              }
-            )}
-            onMouseEnter={() => set_is_token_count_hovered(true)}
-            onMouseLeave={() => set_is_token_count_hovered(false)}
-            onClick={(e) => {
-              e.stopPropagation()
-              props.on_toggle_include_selected_files()
-            }}
-          >
-            {is_token_count_hovered && (
-              <Tooltip
-                message={props.translations.attach_selected_files}
-                details={is_mac ? '⌥X' : 'Alt+X'}
-                align="center"
-              />
-            )}
-            <KeycapWrapper char={is_alt_pressed ? 'X' : undefined}>
-              <div className={styles['footer__right__details__token-count']}>
-                <div
-                  className={cn(
-                    styles['footer__right__details__token-count__icon'],
-                    'codicon',
-                    'codicon-attach'
-                  )}
-                />
-                <div
-                  className={cn(
-                    styles['footer__right__details__token-count__count'],
-                    {
-                      [styles[
-                        'footer__right__details__token-count__count--excluded'
-                      ]]: props.include_selected_files === false
-                    }
-                  )}
-                >
-                  {display_token_count(props.selected_files_token_count)}
-                </div>
-              </div>
-            </KeycapWrapper>
-          </div>
         </div>
 
         <div className={styles['footer__right__submit']} ref={dropdown_ref}>

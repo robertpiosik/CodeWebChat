@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react'
 import styles from './AsciiArtEffect.module.scss'
 
-export type AsciiArtEffectProps = {
+export type Props = {
   density?: number
 }
 
-export const AsciiArtEffect = ({ density = 1 }: AsciiArtEffectProps) => {
+export const AsciiArtEffect = ({ density = 1 }: Props) => {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

@@ -37,14 +37,6 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
           return
         }
 
-        if (e.code == 'KeyX') {
-          e.preventDefault()
-          if (props.on_toggle_include_selected_files) {
-            props.on_toggle_include_selected_files()
-          }
-          return
-        }
-
         if (props.show_edit_format_selector && props.on_edit_format_change) {
           switch (e.code) {
             case 'KeyW':

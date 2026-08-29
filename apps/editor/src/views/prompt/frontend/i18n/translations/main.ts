@@ -88,5 +88,41 @@ export const main = {
     cs: ' tokenů',
     hu: ' token',
     bg: ' токена'
+  },
+  'main.attach-selected-files': {
+    en: 'Attach selected files',
+    pl: 'Dołącz wybrane pliki',
+    'zh-cn': '附加所选文件',
+    ja: '選択したファイルを添付',
+    'zh-tw': '附加選取的檔案',
+    de: 'Ausgewählte Dateien anhängen',
+    es: 'Adjuntar archivos seleccionados',
+    fr: 'Joindre les fichiers sélectionnés',
+    'pt-br': 'Anexar arquivos selecionados',
+    ru: 'Прикрепить выбранные файлы',
+    ko: '선택한 파일 첨부',
+    it: 'Allega file selezionati',
+    tr: 'Seçili dosyaları ekle',
+    cs: 'Připojit vybrané soubory',
+    hu: 'Kiválasztott fájlok csatolása',
+    bg: 'Прикачване на избраните файлове'
+  },
+  'main.preview': {
+    en: 'Preview',
+    pl: 'Podgląd',
+    'zh-cn': '预览',
+    ja: 'プレビュー',
+    'zh-tw': '預覽',
+    de: 'Vorschau',
+    es: 'Vista previa',
+    fr: 'Aperçu',
+    'pt-br': 'Pré-visualização',
+    ru: 'Предпросмотр',
+    ko: '미리보기',
+    it: 'Anteprima',
+    tr: 'Önizleme',
+    cs: 'Náhled',
+    hu: 'Előnézet',
+    bg: 'Преглед'
   }
 } as const

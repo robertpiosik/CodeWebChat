@@ -1,6 +1,7 @@
 import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/prompt/Configurations'
 import { PromptField as UiPromptField } from '@ui/components/editor/common/prompts/PromptField'
+import { SelectedFiles as UiSelectedFiles } from '@ui/components/editor/prompt/SelectedFiles'
 import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { Responses as UiResponses } from '@ui/components/editor/prompt/Responses'
@@ -340,13 +341,6 @@ export const MainView: React.FC<Props> = (props) => {
             on_tabs_reorder={props.on_tabs_reorder}
             warning={warning}
             voice_input_push_to_talk={props.voice_input_push_to_talk}
-            selected_files_token_count={props.selected_files_token_count}
-            include_selected_files={props.include_selected_files}
-            on_toggle_include_selected_files={() =>
-              props.on_toggle_include_selected_files(
-                !props.include_selected_files
-              )
-            }
             currently_open_file_path={props.currently_open_file_path}
             translations={{
               voice_input: t('prompt-field.voice-input'),
@@ -377,6 +371,18 @@ export const MainView: React.FC<Props> = (props) => {
             }}
           />
         </div>
+
+        <UiSelectedFiles
+          selected_files_token_count={props.selected_files_token_count}
+          include_selected_files={props.include_selected_files}
+          on_toggle_include_selected_files={
+            props.on_toggle_include_selected_files
+          }
+          translations={{
+            attach_selected_files: t('main.attach-selected-files'),
+            preview: t('main.preview' as any)
+          }}
+        />
 
         <UiSeparator height={10} />
 

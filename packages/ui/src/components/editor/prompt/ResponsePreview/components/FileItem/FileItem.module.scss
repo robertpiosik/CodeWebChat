@@ -120,13 +120,17 @@
 }
 
 .message {
-  margin: 0 20px;
+  margin: 0 22px;
   display: flex;
   justify-content: space-between;
   gap: 4px;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
   overflow: hidden;
+
+  :global([data-modern-ui='true']) & {
+    margin: 0 20px;
+  }
 
   &--error {
     color: var(--cwc-text-color-red);

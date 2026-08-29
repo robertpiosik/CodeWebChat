@@ -1,0 +1,70 @@
+.container {
+  margin: 0 22px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  overflow: hidden;
+  color: var(--cwc-text-color);
+  background-color: var(--cwc-bg-tertiary);
+  user-select: none;
+  height: 28px;
+
+  :global([data-modern-ui='true']) & {
+    margin: 0 20px;
+  }
+}
+
+.left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-left: 7px;
+  min-width: 0;
+
+  &__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    cursor: pointer;
+    height: 100%;
+    display: block;
+    line-height: 28px;
+    padding-left: 6px;
+    padding-right: 4px;
+  }
+}
+
+.count {
+  font-size: 12px;
+  color: var(--cwc-text-color-dimmed);
+  flex-shrink: 0;
+
+  &--excluded {
+    text-decoration: line-through;
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.preview {
+  display: flex;
+  font-size: 12px;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  color: var(--vscode-textLink-foreground);
+  padding: 0 6px 0 6px;
+  height: 100%;
+
+  &:hover {
+    background-color: var(--vscode-toolbar-hoverBackground);
+  }
+}

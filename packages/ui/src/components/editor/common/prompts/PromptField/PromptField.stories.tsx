@@ -45,10 +45,7 @@ export const Empty = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    selected_files_token_count={0}
     prompt_token_count={0}
-    include_selected_files={true}
-    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -114,10 +111,7 @@ export const WithText = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    selected_files_token_count={0}
     prompt_token_count={0}
-    include_selected_files={true}
-    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -184,9 +178,6 @@ export const LongText = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    selected_files_token_count={0}
-    include_selected_files={true}
-    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -252,10 +243,7 @@ export const WithPlaceholderSavedContext = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    selected_files_token_count={0}
     prompt_token_count={0}
-    include_selected_files={true}
-    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -327,10 +315,7 @@ export const WithPlaceholderSelection = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    selected_files_token_count={0}
     prompt_token_count={0}
-    include_selected_files={true}
-    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -396,10 +381,7 @@ export const WithCommit = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    selected_files_token_count={0}
     prompt_token_count={0}
-    include_selected_files={true}
-    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -464,10 +446,7 @@ export const WithCommitWithQuotes = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    selected_files_token_count={0}
     prompt_token_count={0}
-    include_selected_files={true}
-    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -540,10 +519,7 @@ export const WithEditFormatSelector = () => {
       on_tab_change={() => {}}
       on_new_tab={() => {}}
       on_tab_delete={() => {}}
-      selected_files_token_count={0}
       prompt_token_count={0}
-      include_selected_files={true}
-      on_toggle_include_selected_files={() => {}}
       translations={{
         voice_input: 'Voice input',
         stop_recording: 'Stop recording',
@@ -610,10 +586,7 @@ export const WithFilePaths = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    selected_files_token_count={0}
     prompt_token_count={0}
-    include_selected_files={true}
-    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -707,10 +680,7 @@ export const WithTabs = () => {
       on_tab_change={set_active_index}
       on_new_tab={handle_new_tab}
       on_tab_delete={handle_tab_delete}
-      selected_files_token_count={0}
       prompt_token_count={0}
-      include_selected_files={true}
-      on_toggle_include_selected_files={() => {}}
       translations={{
         voice_input: 'Voice input',
         stop_recording: 'Stop recording',
@@ -775,10 +745,7 @@ export const WithWarning = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    selected_files_token_count={0}
     prompt_token_count={0}
-    include_selected_files={true}
-    on_toggle_include_selected_files={() => {}}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',

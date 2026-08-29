@@ -235,44 +235,6 @@
         min-width: 0;
       }
 
-      &__token-count-wrapper {
-        position: relative;
-
-        &--clickable {
-          cursor: pointer;
-
-          .footer__right__details__token-count {
-            cursor: pointer;
-          }
-
-          &:hover {
-            .footer__right__details__token-count {
-              color: var(--vscode-foreground);
-            }
-          }
-        }
-      }
-
-      &__token-count {
-        display: flex;
-        align-items: center;
-        gap: 1px;
-        color: var(--cwc-text-color-dimmed);
-        cursor: default;
-
-        &__icon::before {
-          font-size: 13px;
-        }
-
-        &__count {
-          font-variant-numeric: tabular-nums;
-
-          &--excluded {
-            text-decoration: line-through;
-          }
-        }
-      }
-
       &__button {
         pointer-events: all;
         color: var(--vscode-foreground);
