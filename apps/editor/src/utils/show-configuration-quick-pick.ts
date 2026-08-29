@@ -112,9 +112,14 @@ export const show_configuration_quick_pick = async <T>(
     quick_pick.buttons = [close_button]
   }
 
-  const last_selected_item = items_with_duplicates.find(
-    (item) => item.id === last_selected_id
-  )
+  const last_selected_item =
+    last_selected_id !== undefined
+      ? items_with_duplicates.find(
+          (item) =>
+            item.kind !== vscode.QuickPickItemKind.Separator &&
+            item.id === last_selected_id
+        )
+      : undefined
   if (last_selected_item) {
     quick_pick.activeItems = [last_selected_item]
   } else if (items_with_duplicates.length > 0) {
@@ -155,7 +160,7 @@ export const show_configuration_quick_pick = async <T>(
 
       quick_pick.onDidAccept(() => {
         const selected = quick_pick.selectedItems[0]
-        if (selected && selected.original_item && selected.id) {
+        if (selected && selected.original_item && selected.id !== undefined) {
           resolved = true
           resolve({
             item: selected.original_item,
