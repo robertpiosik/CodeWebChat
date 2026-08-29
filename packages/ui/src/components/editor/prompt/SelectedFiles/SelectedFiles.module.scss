@@ -37,6 +37,17 @@
   }
 }
 
+.warning {
+  display: flex;
+  align-items: center;
+  color: var(--cwc-text-color-orange);
+  margin-left: 6px;
+
+  span::before {
+    font-size: 15px;
+  }
+}
+
 .count {
   font-size: 12px;
   color: var(--cwc-text-color-dimmed);

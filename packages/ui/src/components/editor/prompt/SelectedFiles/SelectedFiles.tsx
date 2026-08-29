@@ -26,6 +26,11 @@ export const SelectedFiles: React.FC<SelectedFiles.Props> = (props) => {
           on_change={props.on_toggle_include_selected_files}
           title={props.translations.attach_selected_files}
         />
+        {!props.include_selected_files && (
+          <div className={styles.warning}>
+            <span className="codicon codicon-warning" />
+          </div>
+        )}
         <label
           className={styles.left__label}
           onClick={() =>
