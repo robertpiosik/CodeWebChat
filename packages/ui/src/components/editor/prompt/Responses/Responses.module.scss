@@ -1,16 +1,18 @@
 .responses {
-  margin: 0 16px;
   display: flex;
   position: relative;
   flex-direction: column;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
   border: 1px solid var(--cwc-border-color-dimmed);
   border-bottom: 0px;
-  padding-bottom: 5px;
-  margin-bottom: calc(5px * -1);
   overflow: hidden;
   background-color: var(--vscode-sideBar-background);
+  margin: 0 20px;
+
+  :global([data-modern-ui='true']) & {
+    margin: 0 18px;
+  }
 
   &:hover {
     border-color: var(--cwc-border-color);

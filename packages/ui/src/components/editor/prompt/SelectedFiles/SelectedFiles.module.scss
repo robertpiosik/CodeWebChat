@@ -8,10 +8,10 @@
   background-color: var(--cwc-bg-tertiary);
   overflow: hidden;
   height: var(--height);
-  margin: 0 22px;
+  margin: 0 20px;
 
   :global([data-modern-ui='true']) & {
-    margin: 0 20px;
+    margin: 0 18px;
   }
 }
 
@@ -20,7 +20,7 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  padding-left: 5px;
+  padding: 0 8px 0 5px;
   min-width: 0;
 
   &__label {
@@ -40,6 +40,17 @@
   display: inline-block;
   color: var(--cwc-text-color-orange);
   margin-right: 5px;
+  vertical-align: middle;
+
+  span::before {
+    font-size: 15px;
+    line-height: 24px;
+  }
+}
+
+.attach {
+  display: inline-block;
+  margin-right: 4px;
   vertical-align: middle;
 
   span::before {

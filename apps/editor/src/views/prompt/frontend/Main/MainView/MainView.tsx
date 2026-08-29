@@ -253,13 +253,7 @@ export const MainView: React.FC<Props> = (props) => {
 
         {!props.is_connected &&
           props.mode == MODE.WEB &&
-          props.web_configurations.length > 0 && (
-            <>
-              <div className={styles['browser-extension-message']}>
-                <UiBrowserExtensionMessage />
-              </div>
-            </>
-          )}
+          props.web_configurations.length > 0 && <UiBrowserExtensionMessage />}
 
         {props.response_history.length > 0 && (
           <UiResponses
@@ -377,14 +371,19 @@ export const MainView: React.FC<Props> = (props) => {
 
         <UiSelectedFiles
           selected_files_token_count={props.selected_files_token_count}
+          selected_files_count={props.selected_files.length}
           include_selected_files={props.include_selected_files}
           on_toggle_include_selected_files={
             props.on_toggle_include_selected_files
           }
           translations={{
-            attach_selected_files: t('main.attach-selected-files'),
-            tokens_in_selected_files: t('main.tokens-in-selected-files' as any),
-            disabled_attaching_files: t('main.disabled-attaching-files' as any)
+            attach_selected_files: t('selected-files.attach-selected-files'),
+            tokens_in_selected_files: t(
+              'selected-files.tokens-in-selected-files'
+            ),
+            disabled_attaching_selected_files: t(
+              'selected-files.disabled-attaching-selected-files'
+            )
           }}
         />
 

@@ -1,15 +1,19 @@
 .container {
-  padding: 6px 8px 8px 8px;
-  margin-bottom: calc(5px * -1);
+  position: relative;
+  padding: 4px 7px;
   background: linear-gradient(
     135deg,
     rgba(255, 0, 221, 0.1) 0%,
     rgba(37, 94, 209, 0.1) 100%
   );
   color: var(--vscode-inputOption-activeForeground);
-  --border-radius: 8px;
-  border-top-left-radius: var(--border-radius);
-  border-top-right-radius: var(--border-radius);
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  margin: 0 20px;
+
+  :global([data-modern-ui='true']) & {
+    margin: 0 18px;
+  }
 }
 
 .heading {

@@ -6,12 +6,13 @@ import { display_token_count } from '@shared/utils/display-token-count'
 export namespace SelectedFiles {
   export type Props = {
     selected_files_token_count: number
+    selected_files_count: number
     include_selected_files: boolean
     on_toggle_include_selected_files: (include: boolean) => void
     translations: {
       attach_selected_files: string
       tokens_in_selected_files: string
-      disabled_attaching_files: string
+      disabled_attaching_selected_files: string
     }
   }
 }
@@ -20,6 +21,9 @@ export const SelectedFiles: React.FC<SelectedFiles.Props> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles.left}>
+        <span className={styles.attach}>
+          <span className="codicon codicon-attach" />
+        </span>
         <Checkbox
           checked={props.include_selected_files}
           on_change={props.on_toggle_include_selected_files}
@@ -39,13 +43,17 @@ export const SelectedFiles: React.FC<SelectedFiles.Props> = (props) => {
                 <span className="codicon codicon-warning" />
               </span>
               <span className={styles['wont-send']}>
-                {props.translations.disabled_attaching_files}
+                {props.translations.disabled_attaching_selected_files}
               </span>
             </>
           ) : (
             <>
-              {display_token_count(props.selected_files_token_count)}{' '}
-              {props.translations.tokens_in_selected_files}
+              {props.translations.tokens_in_selected_files
+                .replace(
+                  '{tokens}',
+                  display_token_count(props.selected_files_token_count)
+                )
+                .replace('{files}', String(props.selected_files_count))}
             </>
           )}
         </label>

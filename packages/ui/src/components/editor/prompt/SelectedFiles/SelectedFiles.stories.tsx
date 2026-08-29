@@ -11,12 +11,13 @@ export const Default = () => {
   return (
     <SelectedFiles
       selected_files_token_count={12500}
+      selected_files_count={5}
       include_selected_files={include}
       on_toggle_include_selected_files={set_include}
       translations={{
         attach_selected_files: 'Attach selected files',
-        tokens_in_selected_files: 'tokens in selected files',
-        disabled_attaching_files: 'Disabled attaching files'
+        tokens_in_selected_files: 'Attaching {tokens} tokens in {files} files',
+        disabled_attaching_selected_files: 'Disabled attaching selected files'
       }}
     />
   )
@@ -28,12 +29,13 @@ export const ZeroTokens = () => {
   return (
     <SelectedFiles
       selected_files_token_count={0}
+      selected_files_count={0}
       include_selected_files={include}
       on_toggle_include_selected_files={set_include}
       translations={{
         attach_selected_files: 'Attach selected files',
-        tokens_in_selected_files: 'tokens in selected files',
-        disabled_attaching_files: 'Disabled attaching files'
+        tokens_in_selected_files: 'Attaching {tokens} tokens in {files} files',
+        disabled_attaching_selected_files: 'Disabled attaching selected files'
       }}
     />
   )
