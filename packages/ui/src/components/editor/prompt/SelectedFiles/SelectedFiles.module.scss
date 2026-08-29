@@ -38,13 +38,14 @@
 }
 
 .warning {
-  display: flex;
-  align-items: center;
+  display: inline-block;
   color: var(--cwc-text-color-orange);
-  margin-left: 6px;
+  margin-right: 6px;
+  vertical-align: middle;
 
   span::before {
     font-size: 15px;
+    line-height: 24px;
   }
 }
 
