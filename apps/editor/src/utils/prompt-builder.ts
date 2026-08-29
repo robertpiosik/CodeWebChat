@@ -70,16 +70,26 @@ export namespace PromptBuilder {
     }
 
     if (params.context_text !== undefined) {
-      if (params.context_text) {
-        full_prompt += `# Files\n\n${params.context_text}`
-      }
-      if (active_file_context) {
-        full_prompt += active_file_context
+      if (params.context_text || active_file_context) {
+        full_prompt += `# Files\n\n`
+        if (params.context_text) {
+          full_prompt += params.context_text
+        }
+        if (active_file_context) {
+          full_prompt += active_file_context
+        }
       }
     } else {
-      part1 = `# Files\n\n${params.other_files || ''}`
-      part2 += `${params.recent_files || ''}${active_file_context}`
-      full_prompt = part1 + part2
+      const has_files = !!(
+        params.other_files ||
+        params.recent_files ||
+        active_file_context
+      )
+      if (has_files) {
+        part1 = `# Files\n\n${params.other_files || ''}`
+        part2 += `${params.recent_files || ''}${active_file_context}`
+        full_prompt = part1 + part2
+      }
     }
 
     if (params.skill_definitions) {
@@ -87,25 +97,20 @@ export namespace PromptBuilder {
       full_prompt += params.skill_definitions
     }
 
-    const has_system = !!params.system_instructions
-    const separator = params.separator && has_system
-
     if (params.system_instructions) {
       const sys = params.system_instructions.trimEnd()
       if (sys) {
-        part2 += `${sys}\n`
-        full_prompt += `${sys}\n`
-        if (separator) {
-          part2 += `\n---\n`
-          full_prompt += `\n---\n\n`
-          if (params.user_instructions) {
-            part2 += `\n`
-          }
-        } else {
-          part2 += `\n\n`
-          full_prompt += `\n\n`
-        }
+        part2 += `${sys}\n\n`
+        full_prompt += `${sys}\n\n`
       }
+    }
+
+    if (
+      params.separator &&
+      (part1.length > 0 || part2.length > 0 || full_prompt.length > 0)
+    ) {
+      part2 = part2.trimEnd() + '\n\n---\n\n'
+      full_prompt = full_prompt.trimEnd() + '\n\n---\n\n'
     }
 
     if (params.user_instructions) {

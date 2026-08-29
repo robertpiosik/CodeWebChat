@@ -79,7 +79,8 @@ import {
   handle_delete_api_configuration,
   handle_update_last_used_web_configuration,
   handle_request_return_home,
-  handle_pick_tasks_workspace
+  handle_pick_tasks_workspace,
+  handle_preview_prompt
 } from './message-handlers'
 import { handle_update_api_configuration } from './message-handlers/handle-update-api-configuration'
 import { handle_pick_model_provider } from './message-handlers/handle-pick-model-provider'
@@ -860,6 +861,10 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             this.send_message({
               command: 'INCLUDE_SELECTED_FILES',
               include: this.include_selected_files
+            })
+          } else if (message.command == 'PREVIEW_PROMPT') {
+            await handle_preview_prompt({
+              prompt_view_provider: this
             })
           } else if (message.command == 'TOGGLE_INCLUDE_SELECTED_FILES') {
             this.include_selected_files = message.include

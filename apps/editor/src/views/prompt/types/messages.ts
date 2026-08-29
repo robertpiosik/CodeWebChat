@@ -517,6 +517,10 @@ export interface GetIncludeSelectedFilesMessage extends BaseMessage {
   command: 'GET_INCLUDE_SELECTED_FILES'
 }
 
+export interface PreviewPromptMessage extends BaseMessage {
+  command: 'PREVIEW_PROMPT'
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -607,6 +611,7 @@ export type FrontendMessage =
   | GetTokenCountMessage
   | ToggleIncludeSelectedFilesMessage
   | GetIncludeSelectedFilesMessage
+  | PreviewPromptMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {

@@ -111,6 +111,7 @@ type Props = {
   bottom_spacer_height?: number
   include_selected_files: boolean
   on_toggle_include_selected_files: (include: boolean) => void
+  on_preview_prompt: () => void
 }
 
 const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
@@ -378,6 +379,7 @@ export const MainView: React.FC<Props> = (props) => {
           on_toggle_include_selected_files={
             props.on_toggle_include_selected_files
           }
+          on_preview={props.on_preview_prompt}
           translations={{
             attach_selected_files: t('main.attach-selected-files'),
             preview: t('main.preview' as any)

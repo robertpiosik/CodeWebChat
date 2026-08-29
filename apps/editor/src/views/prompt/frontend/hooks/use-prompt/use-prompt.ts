@@ -94,6 +94,12 @@ export const use_prompt = (vscode: any) => {
     })
   }
 
+  const handle_preview_prompt = () => {
+    post_message(vscode, {
+      command: 'PREVIEW_PROMPT'
+    })
+  }
+
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
@@ -260,6 +266,7 @@ export const use_prompt = (vscode: any) => {
     edit_instructions_token_count,
     ask_instructions_token_count,
     include_selected_files,
-    handle_toggle_include_selected_files
+    handle_toggle_include_selected_files,
+    handle_preview_prompt
   }
 }

@@ -9,7 +9,7 @@ export namespace SelectedFiles {
     selected_files_token_count: number
     include_selected_files: boolean
     on_toggle_include_selected_files: (include: boolean) => void
-    on_preview?: () => void
+    on_preview: () => void
     translations: {
       attach_selected_files: string
       preview: string

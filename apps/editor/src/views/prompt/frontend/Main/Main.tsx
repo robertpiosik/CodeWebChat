@@ -74,6 +74,7 @@ type Props = {
   bottom_spacer_height?: number
   include_selected_files: boolean
   on_toggle_include_selected_files: (include: boolean) => void
+  on_preview_prompt: () => void
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -548,6 +549,7 @@ export const Main: React.FC<Props> = (props) => {
       bottom_spacer_height={props.bottom_spacer_height}
       include_selected_files={props.include_selected_files}
       on_toggle_include_selected_files={props.on_toggle_include_selected_files}
+      on_preview_prompt={props.on_preview_prompt}
     />
   )
 }
