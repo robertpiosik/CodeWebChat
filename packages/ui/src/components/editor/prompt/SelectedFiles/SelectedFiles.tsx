@@ -11,7 +11,7 @@ export namespace SelectedFiles {
     on_toggle_include_selected_files: (include: boolean) => void
     translations: {
       attach_selected_files: string
-      tokens_in_selected_files: string
+      attaching_files: string
       disabled_attaching_selected_files: string
     }
   }
@@ -20,44 +20,43 @@ export namespace SelectedFiles {
 export const SelectedFiles: React.FC<SelectedFiles.Props> = (props) => {
   return (
     <div className={styles.container}>
-      <div className={styles.left}>
-        <span className={styles.attach}>
-          <span className="codicon codicon-attach" />
-        </span>
-        <Checkbox
-          checked={props.include_selected_files}
-          on_change={props.on_toggle_include_selected_files}
-          title={props.translations.attach_selected_files}
-        />
-        <label
-          className={styles.left__label}
-          onClick={() =>
-            props.on_toggle_include_selected_files(
-              !props.include_selected_files
-            )
-          }
-        >
-          {!props.include_selected_files ? (
-            <>
-              <span className={styles.warning}>
-                <span className="codicon codicon-warning" />
-              </span>
-              <span className={styles['wont-send']}>
-                {props.translations.disabled_attaching_selected_files}
-              </span>
-            </>
-          ) : (
-            <>
-              {props.translations.tokens_in_selected_files
-                .replace(
-                  '{tokens}',
-                  display_token_count(props.selected_files_token_count)
-                )
-                .replace('{files}', String(props.selected_files_count))}
-            </>
-          )}
-        </label>
-      </div>
+      <span className={styles.attach}>
+        <span className="codicon codicon-attach" />
+      </span>
+      <Checkbox
+        checked={props.include_selected_files}
+        on_change={props.on_toggle_include_selected_files}
+        title={props.translations.attach_selected_files}
+      />
+      <label
+        className={styles.label}
+        onClick={() =>
+          props.on_toggle_include_selected_files(!props.include_selected_files)
+        }
+      >
+        {!props.include_selected_files ? (
+          <>
+            <span className={styles.warning}>
+              <span className="codicon codicon-warning" />
+            </span>
+            <span className={styles['wont-send']}>
+              {props.translations.disabled_attaching_selected_files}
+            </span>
+          </>
+        ) : (
+          <>
+            <span>
+              {props.translations.attaching_files.replace(
+                '{files}',
+                String(props.selected_files_count)
+              )}
+            </span>
+            <span className={styles.tokens}>
+              {display_token_count(props.selected_files_token_count)}
+            </span>
+          </>
+        )}
+      </label>
     </div>
   )
 }

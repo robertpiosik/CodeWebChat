@@ -378,9 +378,7 @@ export const MainView: React.FC<Props> = (props) => {
           }
           translations={{
             attach_selected_files: t('selected-files.attach-selected-files'),
-            tokens_in_selected_files: t(
-              'selected-files.tokens-in-selected-files'
-            ),
+            attaching_files: t('selected-files.attaching-files'),
             disabled_attaching_selected_files: t(
               'selected-files.disabled-attaching-selected-files'
             )

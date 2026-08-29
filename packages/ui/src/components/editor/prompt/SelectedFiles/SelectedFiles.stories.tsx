@@ -16,8 +16,8 @@ export const Default = () => {
       on_toggle_include_selected_files={set_include}
       translations={{
         attach_selected_files: 'Attach selected files',
-        tokens_in_selected_files: 'Attaching {tokens} tokens in {files} files',
-        disabled_attaching_selected_files: 'Disabled attaching selected files'
+        attaching_files: 'Attaching {files} files',
+        disabled_attaching_selected_files: 'Disabled attaching selected files!'
       }}
     />
   )
@@ -34,8 +34,8 @@ export const ZeroTokens = () => {
       on_toggle_include_selected_files={set_include}
       translations={{
         attach_selected_files: 'Attach selected files',
-        tokens_in_selected_files: 'Attaching {tokens} tokens in {files} files',
-        disabled_attaching_selected_files: 'Disabled attaching selected files'
+        attaching_files: 'Attaching {files} files',
+        disabled_attaching_selected_files: 'Disabled attaching selected files!'
       }}
     />
   )

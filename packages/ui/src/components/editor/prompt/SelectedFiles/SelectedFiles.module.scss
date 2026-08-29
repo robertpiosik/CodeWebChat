@@ -1,13 +1,14 @@
 .container {
   --height: 24px;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
   color: var(--cwc-text-color);
   background-color: var(--cwc-bg-tertiary);
   overflow: hidden;
   height: var(--height);
+  padding: 0 8px 0 5px;
   margin: 0 20px;
 
   :global([data-modern-ui='true']) & {
@@ -15,25 +16,17 @@
   }
 }
 
-.left {
-  flex: 1;
-  display: flex;
-  align-items: center;
+.label {
   overflow: hidden;
-  padding: 0 8px 0 5px;
-  min-width: 0;
-
-  &__label {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 12px;
-    cursor: pointer;
-    height: 100%;
-    display: block;
-    line-height: var(--height);
-    padding-left: 6px;
-  }
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  cursor: pointer;
+  height: 100%;
+  display: block;
+  line-height: var(--height);
+  padding-left: 6px;
+  color: var(--cwc-text-color);
 }
 
 .warning {
@@ -62,4 +55,9 @@
 .wont-send {
   color: var(--cwc-text-color-dimmed);
   font-style: italic;
+}
+
+.tokens {
+  color: var(--cwc-text-color-dimmed);
+  margin-left: 5px;
 }
