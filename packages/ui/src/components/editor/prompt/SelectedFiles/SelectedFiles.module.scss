@@ -21,11 +21,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 12px;
-  cursor: pointer;
   height: 100%;
   display: block;
   line-height: var(--height);
-  padding-left: 6px;
   color: var(--cwc-text-color);
 }
 
@@ -42,9 +40,7 @@
 }
 
 .attach {
-  display: inline-block;
-  margin-right: 4px;
-  vertical-align: middle;
+  margin-right: 5px;
 
   span::before {
     font-size: 15px;

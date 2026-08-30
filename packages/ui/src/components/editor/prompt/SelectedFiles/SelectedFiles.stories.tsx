@@ -7,10 +7,9 @@ export default {
 export const Default = () => {
   return (
     <SelectedFiles
-      selected_files_token_count={12500}
-      selected_files_count={5}
+      token_count={12500}
+      files_count={5}
       translations={{
-        attach_selected_files: 'Attach selected files',
         attaching_files: 'Attaching {files} files'
       }}
     />
@@ -20,10 +19,9 @@ export const Default = () => {
 export const ZeroTokens = () => {
   return (
     <SelectedFiles
-      selected_files_token_count={0}
-      selected_files_count={0}
+      token_count={0}
+      files_count={0}
       translations={{
-        attach_selected_files: 'Attach selected files',
         attaching_files: 'Attaching {files} files'
       }}
     />

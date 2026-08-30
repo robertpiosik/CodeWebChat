@@ -1,22 +1,4 @@
 export const selected_files = {
-  'selected-files.attach-selected-files': {
-    en: 'Attach selected files',
-    pl: 'Dołącz wybrane pliki',
-    'zh-cn': '附加所选文件',
-    ja: '選択したファイルを添付',
-    'zh-tw': '附加選取的檔案',
-    de: 'Ausgewählte Dateien anhängen',
-    es: 'Adjuntar archivos seleccionados',
-    fr: 'Joindre les fichiers sélectionnés',
-    'pt-br': 'Anexar arquivos selecionados',
-    ru: 'Прикрепить выбранные файлы',
-    ko: '선택한 파일 첨부',
-    it: 'Allega file selezionati',
-    tr: 'Seçili dosyaları ekle',
-    cs: 'Připojit vybrané soubory',
-    hu: 'Kiválasztott fájlok csatolása',
-    bg: 'Прикачване на избраните файлове'
-  },
   'selected-files.attaching-files': {
     en: 'Attaching {files} files',
     pl: 'Dołączanie {files} plików',

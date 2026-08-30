@@ -216,24 +216,11 @@
     pointer-events: none;
     min-width: 0;
 
-    &__details {
-      display: none;
-      align-items: center;
-      justify-content: flex-end;
+    &__edit-format {
+      position: relative;
+      display: flex;
       min-width: 0;
       font-size: 11px;
-      gap: 5px;
-      pointer-events: all;
-
-      &--visible {
-        display: flex;
-      }
-
-      &__edit-format-wrapper {
-        position: relative;
-        display: flex;
-        min-width: 0;
-      }
 
       &__button {
         pointer-events: all;

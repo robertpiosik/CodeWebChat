@@ -439,130 +439,125 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           e.stopPropagation()
         }}
       >
-        <div
-          className={cn(styles['footer__right__details'], {
-            [styles['footer__right__details--visible']]:
-              props.show_edit_format_selector
-          })}
-        >
-          {props.show_edit_format_selector && props.edit_format && (
-            <div
-              className={styles['footer__right__details__edit-format-wrapper']}
+        {props.show_edit_format_selector && props.edit_format && (
+          <div className={styles['footer__right__edit-format']}>
+            {is_edit_format_hovered && (
+              <Tooltip
+                message={props.translations.edit_format}
+                details={is_mac ? '⌥' : 'Alt'}
+                align="center"
+              />
+            )}
+            <button
+              className={cn(styles['footer__right__edit-format__button'], {
+                [styles['footer__right__edit-format__button--alt-pressed']]:
+                  is_alt_pressed
+              })}
+              onClick={() => props.on_edit_format_change?.()}
+              onMouseEnter={() => set_is_edit_format_hovered(true)}
+              onMouseLeave={() => set_is_edit_format_hovered(false)}
             >
-              {is_edit_format_hovered && (
-                <Tooltip
-                  message={props.translations.edit_format}
-                  details={is_mac ? '⌥' : 'Alt'}
-                  align="center"
-                />
+              {is_alt_pressed ? (
+                <span className={styles['footer__right__edit-format__keycaps']}>
+                  <KeycapWrapper
+                    char={props.edit_format != 'whole' ? 'W' : undefined}
+                  >
+                    <span
+                      className={cn(
+                        styles['footer__right__edit-format__keycap'],
+                        {
+                          [styles[
+                            'footer__right__edit-format__keycap--active'
+                          ]]: props.edit_format == 'whole'
+                        }
+                      )}
+                      style={{
+                        visibility:
+                          props.edit_format != 'whole' ? 'hidden' : undefined
+                      }}
+                    >
+                      W
+                    </span>
+                  </KeycapWrapper>
+                  <KeycapWrapper
+                    char={
+                      props.edit_format != 'search-replace' ? 'S' : undefined
+                    }
+                  >
+                    <span
+                      className={cn(
+                        styles['footer__right__edit-format__keycap'],
+                        {
+                          [styles[
+                            'footer__right__edit-format__keycap--active'
+                          ]]: props.edit_format == 'search-replace'
+                        }
+                      )}
+                      style={{
+                        visibility:
+                          props.edit_format != 'search-replace'
+                            ? 'hidden'
+                            : undefined
+                      }}
+                    >
+                      S
+                    </span>
+                  </KeycapWrapper>
+                  <KeycapWrapper
+                    char={props.edit_format != 'diff' ? 'D' : undefined}
+                  >
+                    <span
+                      className={cn(
+                        styles['footer__right__edit-format__keycap'],
+                        {
+                          [styles[
+                            'footer__right__edit-format__keycap--active'
+                          ]]: props.edit_format == 'diff'
+                        }
+                      )}
+                      style={{
+                        visibility:
+                          props.edit_format != 'diff' ? 'hidden' : undefined
+                      }}
+                    >
+                      D
+                    </span>
+                  </KeycapWrapper>
+                  <KeycapWrapper
+                    char={props.edit_format != 'truncated' ? 'T' : undefined}
+                  >
+                    <span
+                      className={cn(
+                        styles['footer__right__edit-format__keycap'],
+                        {
+                          [styles[
+                            'footer__right__edit-format__keycap--active'
+                          ]]: props.edit_format == 'truncated'
+                        }
+                      )}
+                      style={{
+                        visibility:
+                          props.edit_format != 'truncated'
+                            ? 'hidden'
+                            : undefined
+                      }}
+                    >
+                      T
+                    </span>
+                  </KeycapWrapper>
+                </span>
+              ) : (
+                {
+                  whole: props.translations.edit_format_whole,
+                  'search-replace':
+                    props.translations.edit_format_search_replace,
+                  diff: props.translations.edit_format_diff,
+                  truncated: props.translations.edit_format_truncated
+                }[props.edit_format as EditFormat]
               )}
-              <button
-                className={cn(styles['footer__right__details__button'], {
-                  [styles['footer__right__details__button--alt-pressed']]:
-                    is_alt_pressed
-                })}
-                onClick={() => props.on_edit_format_change?.()}
-                onMouseEnter={() => set_is_edit_format_hovered(true)}
-                onMouseLeave={() => set_is_edit_format_hovered(false)}
-              >
-                {is_alt_pressed ? (
-                  <span className={styles['footer__right__details__keycaps']}>
-                    <KeycapWrapper
-                      char={props.edit_format != 'whole' ? 'W' : undefined}
-                    >
-                      <span
-                        className={cn(
-                          styles['footer__right__details__keycap'],
-                          {
-                            [styles['footer__right__details__keycap--active']]:
-                              props.edit_format == 'whole'
-                          }
-                        )}
-                        style={{
-                          visibility:
-                            props.edit_format != 'whole' ? 'hidden' : undefined
-                        }}
-                      >
-                        W
-                      </span>
-                    </KeycapWrapper>
-                    <KeycapWrapper
-                      char={
-                        props.edit_format != 'search-replace' ? 'S' : undefined
-                      }
-                    >
-                      <span
-                        className={cn(
-                          styles['footer__right__details__keycap'],
-                          {
-                            [styles['footer__right__details__keycap--active']]:
-                              props.edit_format == 'search-replace'
-                          }
-                        )}
-                        style={{
-                          visibility:
-                            props.edit_format != 'search-replace'
-                              ? 'hidden'
-                              : undefined
-                        }}
-                      >
-                        S
-                      </span>
-                    </KeycapWrapper>
-                    <KeycapWrapper
-                      char={props.edit_format != 'diff' ? 'D' : undefined}
-                    >
-                      <span
-                        className={cn(
-                          styles['footer__right__details__keycap'],
-                          {
-                            [styles['footer__right__details__keycap--active']]:
-                              props.edit_format == 'diff'
-                          }
-                        )}
-                        style={{
-                          visibility:
-                            props.edit_format != 'diff' ? 'hidden' : undefined
-                        }}
-                      >
-                        D
-                      </span>
-                    </KeycapWrapper>
-                    <KeycapWrapper
-                      char={props.edit_format != 'truncated' ? 'T' : undefined}
-                    >
-                      <span
-                        className={cn(
-                          styles['footer__right__details__keycap'],
-                          {
-                            [styles['footer__right__details__keycap--active']]:
-                              props.edit_format == 'truncated'
-                          }
-                        )}
-                        style={{
-                          visibility:
-                            props.edit_format != 'truncated'
-                              ? 'hidden'
-                              : undefined
-                        }}
-                      >
-                        T
-                      </span>
-                    </KeycapWrapper>
-                  </span>
-                ) : (
-                  {
-                    whole: props.translations.edit_format_whole,
-                    'search-replace':
-                      props.translations.edit_format_search_replace,
-                    diff: props.translations.edit_format_diff,
-                    truncated: props.translations.edit_format_truncated
-                  }[props.edit_format as EditFormat]
-                )}
-              </button>
-            </div>
-          )}
-        </div>
+            </button>
+          </div>
+        )}
 
         <div className={styles['footer__right__submit']} ref={dropdown_ref}>
           {props.mode && props.on_mode_change && (

@@ -368,10 +368,9 @@ export const MainView: React.FC<Props> = (props) => {
         </div>
 
         <UiSelectedFiles
-          selected_files_token_count={props.selected_files_token_count}
-          selected_files_count={props.selected_files.length}
+          token_count={props.selected_files_token_count}
+          files_count={props.selected_files.length}
           translations={{
-            attach_selected_files: t('selected-files.attach-selected-files'),
             attaching_files: t('selected-files.attaching-files')
           }}
         />
