@@ -13,6 +13,7 @@ import {
 import { close_preview_diff_editors, show_diff_with_actions } from './vscode-ui'
 import { PreparedFile, PreviewableFile } from './types'
 import { ItemInPreview } from '@shared/types/file-in-preview'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 
 export const preview = async (params: {
   original_states: OriginalFileState[]
@@ -23,6 +24,7 @@ export const preview = async (params: {
   created_at?: number
   url?: string
   recent_api_configuration?: RecentApiConfiguration
+  workspace_provider: WorkspaceProvider
 }): Promise<{
   accepted_files: PreviewableFile[]
   rejected_states: OriginalFileState[]
@@ -152,7 +154,8 @@ export const preview = async (params: {
       prompt_view_provider: params.prompt_view_provider,
       workspace_map,
       default_workspace,
-      created_at: params.created_at
+      created_at: params.created_at,
+      workspace_provider: params.workspace_provider
     })
 
     create_temp_files_with_original_content(prepared_files)

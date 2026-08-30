@@ -10,6 +10,7 @@ import { remove_directory_if_empty } from '../file-operations'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { create_temp_files_with_original_content } from './temp-file-manager'
 import { normalize_path } from '@/utils/normalize-path'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 
 export let toggle_file_preview_state:
   | ((file: {
@@ -80,6 +81,7 @@ export const setup_workspace_listeners = (params: {
   workspace_map: Map<string, string>
   default_workspace: string
   created_at?: number
+  workspace_provider: WorkspaceProvider
 }) => {
   const deleted_files_content_cache = new Map<string, string>()
 
@@ -156,19 +158,26 @@ export const setup_workspace_listeners = (params: {
         const workspace_folder = vscode.workspace.getWorkspaceFolder(doc.uri)
         if (!workspace_folder) return
 
+        const file_path = doc.uri.fsPath
+        const relative_path = normalize_path(
+          vscode.workspace.asRelativePath(doc.uri, false)
+        )
+
+        if (
+          params.workspace_provider.is_ignored_by_patterns(file_path) ||
+          params.workspace_provider.is_excluded(relative_path)
+        ) {
+          return
+        }
+
         // Check if it's already added to avoid races
         if (
-          params.prepared_files.some(
-            (pf) => pf.sanitized_path == doc.uri.fsPath
-          )
+          params.prepared_files.some((pf) => pf.sanitized_path == file_path)
         ) {
           return
         }
 
         const new_content = doc.getText()
-        const relative_path = normalize_path(
-          vscode.workspace.asRelativePath(doc.uri, false)
-        )
 
         let original_content = ''
         let is_new = false
@@ -279,16 +288,25 @@ export const setup_workspace_listeners = (params: {
         const workspace_folder = vscode.workspace.getWorkspaceFolder(uri)
         if (!workspace_folder) continue
 
+        const file_path = uri.fsPath
+        const relative_path = normalize_path(
+          vscode.workspace.asRelativePath(uri, false)
+        )
+
         if (
-          params.prepared_files.some((pf) => pf.sanitized_path == uri.fsPath)
+          params.workspace_provider.is_ignored_by_patterns(file_path) ||
+          params.workspace_provider.is_excluded(relative_path)
+        ) {
+          continue
+        }
+
+        if (
+          params.prepared_files.some((pf) => pf.sanitized_path == file_path)
         ) {
           continue
         }
 
         const new_content = ''
-        const relative_path = normalize_path(
-          vscode.workspace.asRelativePath(uri, false)
-        )
 
         const original_content_for_undo =
           deleted_files_content_cache.get(uri.fsPath) ?? ''
@@ -377,9 +395,21 @@ export const setup_workspace_listeners = (params: {
         const workspace_folder = vscode.workspace.getWorkspaceFolder(uri)
         if (!workspace_folder) continue
 
+        const file_path = uri.fsPath
+        const relative_path = normalize_path(
+          vscode.workspace.asRelativePath(uri, false)
+        )
+
+        if (
+          params.workspace_provider.is_ignored_by_patterns(file_path) ||
+          params.workspace_provider.is_excluded(relative_path)
+        ) {
+          continue
+        }
+
         // Avoid duplicates if already tracked
         if (
-          params.prepared_files.some((pf) => pf.sanitized_path === uri.fsPath)
+          params.prepared_files.some((pf) => pf.sanitized_path === file_path)
         ) {
           continue
         }
@@ -392,10 +422,6 @@ export const setup_workspace_listeners = (params: {
         } catch (e) {
           new_content = ''
         }
-
-        const relative_path = normalize_path(
-          vscode.workspace.asRelativePath(uri, false)
-        )
 
         const original_content = ''
         const is_new = true
@@ -593,6 +619,15 @@ export const setup_workspace_listeners = (params: {
           })
         } else {
           // Not previously tracked: treat rename as delete (old) + create (new)
+          if (
+            params.workspace_provider.is_ignored_by_patterns(newUri.fsPath) ||
+            params.workspace_provider.is_excluded(new_relative) ||
+            params.workspace_provider.is_ignored_by_patterns(oldUri.fsPath) ||
+            params.workspace_provider.is_excluded(old_relative)
+          ) {
+            continue
+          }
+
           if (
             params.prepared_files.some(
               (pf) => pf.sanitized_path === newUri.fsPath

@@ -43,7 +43,8 @@ export const preview_handler = async (params: {
       extension_context: params.extension_context,
       created_at: params.created_at,
       url: params.url,
-      recent_api_configuration: params.recent_api_configuration
+      recent_api_configuration: params.recent_api_configuration,
+      workspace_provider: params.workspace_provider
     })
 
     if (preview_result === null || preview_result.accepted_files.length == 0) {
