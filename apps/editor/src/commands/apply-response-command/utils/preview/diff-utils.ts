@@ -14,7 +14,9 @@ export const get_diff_stats = (params: {
     return { lines_added: 0, lines_removed: 0 }
   }
 
-  const changes = diffLines(original_content_processed, new_content_processed)
+  const changes = diffLines(original_content_processed, new_content_processed, {
+    ignoreWhitespace: true
+  })
 
   let lines_added = 0
   let lines_removed = 0
