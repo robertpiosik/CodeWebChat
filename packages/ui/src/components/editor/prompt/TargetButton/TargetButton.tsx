@@ -1,4 +1,4 @@
-import styles from './ModeButton.module.scss'
+import styles from './TargetButton.module.scss'
 import cn from 'classnames'
 
 type Props = {
@@ -7,7 +7,7 @@ type Props = {
   is_compact?: boolean
 }
 
-export const ModeButton: React.FC<Props> = (props) => {
+export const TargetButton: React.FC<Props> = (props) => {
   return (
     <button
       className={cn(styles.button, {

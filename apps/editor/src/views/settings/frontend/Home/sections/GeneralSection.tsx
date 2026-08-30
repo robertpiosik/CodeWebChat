@@ -17,11 +17,11 @@ type ClearChecksBehavior = 'ignore-open-editors' | 'uncheck-all'
 
 type Props = {
   are_automatic_checkpoints_disabled: boolean
-  synchronize_edit_format_between_modes: boolean
+  synchronize_edit_format_between_targets: boolean
   send_with_shift_enter: boolean
   check_new_files: boolean
   checkpoint_lifespan: number
-  on_synchronize_edit_format_between_modes_change: (enabled: boolean) => void
+  on_synchronize_edit_format_between_targets_change: (enabled: boolean) => void
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
   on_check_new_files_change: (enabled: boolean) => void
@@ -288,9 +288,9 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               )}
               slot_right={
                 <UiToggler
-                  is_on={props.synchronize_edit_format_between_modes}
+                  is_on={props.synchronize_edit_format_between_targets}
                   on_toggle={
-                    props.on_synchronize_edit_format_between_modes_change
+                    props.on_synchronize_edit_format_between_targets_change
                   }
                 />
               }

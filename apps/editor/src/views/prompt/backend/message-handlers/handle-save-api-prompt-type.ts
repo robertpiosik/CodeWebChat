@@ -7,7 +7,7 @@ export const handle_save_api_prompt_type = async (
 ): Promise<void> => {
   prompt_view_provider.api_prompt_type = prompt_type
   await prompt_view_provider.extension_context.workspaceState.update(
-    'api-mode',
+    'api-target',
     prompt_type
   )
 }

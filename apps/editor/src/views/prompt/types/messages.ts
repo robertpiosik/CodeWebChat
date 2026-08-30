@@ -14,7 +14,7 @@ import {
   ShowPromptViewApiCallsManagerProgressMessage,
   HidePromptViewApiCallsManagerProgressMessage
 } from '@/views/shared/types/messages'
-import { Mode } from '@shared/types/mode'
+import { Target } from '@shared/types/mode'
 
 export type { BaseMessage }
 
@@ -200,13 +200,13 @@ export interface PickReasoningEffortMessage extends BaseMessage {
   current_effort?: string
 }
 
-export interface ModeChangedMessage extends BaseMessage {
-  command: 'MODE_CHANGED'
-  mode: Mode
+export interface TargetChangedMessage extends BaseMessage {
+  command: 'TARGET_CHANGED'
+  target: Target
 }
 
-export interface GetModeMessage extends BaseMessage {
-  command: 'GET_MODE'
+export interface GetTargetMessage extends BaseMessage {
+  command: 'GET_TARGET'
 }
 
 export interface MakeApiCallMessage extends BaseMessage {
@@ -540,8 +540,8 @@ export type FrontendMessage =
   | PickModelMessage
   | PickChatbotMessage
   | PickReasoningEffortMessage
-  | ModeChangedMessage
-  | GetModeMessage
+  | TargetChangedMessage
+  | GetTargetMessage
   | MakeApiCallMessage
   | CancelApiRequestMessage
   | ShowAtSignQuickPickMessage
@@ -686,9 +686,9 @@ export interface NewlyPickedReasoningEffortMessage extends BaseMessage {
   effort: string
 }
 
-export interface ModeMessage extends BaseMessage {
-  command: 'MODE'
-  mode: Mode
+export interface TargetMessage extends BaseMessage {
+  command: 'TARGET'
+  target: Target
 }
 
 export interface WebPromptTypeMessage extends BaseMessage {
@@ -867,7 +867,7 @@ export type BackendMessage =
   | NewlyPickedModelMessage
   | NewlyPickedChatbotMessage
   | NewlyPickedReasoningEffortMessage
-  | ModeMessage
+  | TargetMessage
   | WebPromptTypeMessage
   | ApiPromptTypeMessage
   | VersionMessage

@@ -89,7 +89,7 @@ export const Settings = () => {
       settings_hook.edit_files_system_instructions !== undefined &&
       settings_hook.intelligent_file_search_instructions !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
-      settings_hook.synchronize_edit_format_between_modes !== undefined &&
+      settings_hook.synchronize_edit_format_between_targets !== undefined &&
       settings_hook.attach_ascii_tree_of_context !== undefined &&
       settings_hook.use_context_files_in_commit_message_prompt !== undefined &&
       settings_hook.select_all_prompts_in_commit_messages_by_default !==
@@ -141,8 +141,8 @@ export const Settings = () => {
         intelligent_file_search_instructions={
           settings_hook.intelligent_file_search_instructions!
         }
-        synchronize_edit_format_between_modes={
-          settings_hook.synchronize_edit_format_between_modes!
+        synchronize_edit_format_between_targets={
+          settings_hook.synchronize_edit_format_between_targets!
         }
         attach_ascii_tree_of_context={
           settings_hook.attach_ascii_tree_of_context!
@@ -180,8 +180,8 @@ export const Settings = () => {
         on_delete_template={settings_hook.handle_delete_template}
         set_providers={settings_hook.set_providers}
         set_api_configurations={settings_hook.set_api_configurations}
-        on_synchronize_edit_format_between_modes_change={
-          settings_hook.handle_synchronize_edit_format_between_modes_change
+        on_synchronize_edit_format_between_targets_change={
+          settings_hook.handle_synchronize_edit_format_between_targets_change
         }
         on_commit_instructions_change={
           settings_hook.handle_commit_instructions_change

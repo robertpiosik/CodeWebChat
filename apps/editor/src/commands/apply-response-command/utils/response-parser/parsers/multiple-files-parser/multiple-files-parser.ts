@@ -284,7 +284,13 @@ export const parse_multiple_files = (params: {
 
           last_seen_file_path_was_header = is_header_line
           if (is_header_line) {
-            last_seen_header_was_persistent = /updated|new|renamed/i.test(line)
+            const stripped = line
+              .replace(/^###\s+/, '')
+              .replace(/[`*]/g, '')
+              .trim()
+            last_seen_header_was_persistent =
+              /updated|new|renamed|file/i.test(line) ||
+              stripped == extracted_filename
           }
           header_path_already_used = false
         }

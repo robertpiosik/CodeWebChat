@@ -36,10 +36,10 @@ import {
   handle_at_sign_quick_pick,
   handle_get_web_prompt_type,
   handle_save_web_prompt_type,
-  handle_mode_changed,
+  handle_target_changed,
   handle_get_api_prompt_type,
   handle_save_api_prompt_type,
-  handle_get_mode,
+  handle_get_target,
   handle_get_workspace_state,
   handle_get_version,
   handle_template_quick_pick,
@@ -91,11 +91,11 @@ import { SelectionState } from '../types/messages'
 import {
   EDIT_FORMAT_STATE_KEY,
   get_edit_format_state_key,
-  API_MODE_STATE_KEY,
+  API_TARGET_STATE_KEY,
   INSTRUCTIONS_ASK_STATE_KEY,
   INSTRUCTIONS_EDIT_FILES_STATE_KEY,
-  PROMPT_VIEW_MODE_STATE_KEY,
-  WEB_MODE_STATE_KEY,
+  PROMPT_VIEW_TARGET_STATE_KEY,
+  WEB_TARGET_STATE_KEY,
   LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
   get_last_used_web_configuration_key
 } from '@/constants/state-keys'
@@ -104,7 +104,7 @@ import {
   ConfigWebConfigurationFormat
 } from '@/utils/web-configuration-format-converters'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { MODE, Mode } from '@shared/types/mode'
+import { TARGET, Target } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Logger } from '@shared/utils/logger'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
@@ -141,14 +141,16 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
   public web_edit_format: EditFormat
   public api_edit_format: EditFormat
   public api_prompt_type: ApiPromptType
-  public mode: Mode = MODE.WEB
+  public target: Target = TARGET.WEB
 
   public get edit_format(): EditFormat {
-    return this.mode == MODE.WEB ? this.web_edit_format : this.api_edit_format
+    return this.target == TARGET.WEB
+      ? this.web_edit_format
+      : this.api_edit_format
   }
 
   public set edit_format(value: EditFormat) {
-    if (this.mode == MODE.WEB) {
+    if (this.target == TARGET.WEB) {
       this.web_edit_format = value
     } else {
       this.api_edit_format = value
@@ -189,7 +191,9 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
   }
 
   public get prompt_type(): WebPromptType | ApiPromptType {
-    return this.mode == MODE.WEB ? this.web_prompt_type : this.api_prompt_type
+    return this.target == TARGET.WEB
+      ? this.web_prompt_type
+      : this.api_prompt_type
   }
 
   public get active_instructions_state(): InstructionsState {
@@ -300,10 +304,10 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
 
     this.web_edit_format =
       this.extension_context.workspaceState.get<EditFormat>(
-        get_edit_format_state_key(MODE.WEB)
+        get_edit_format_state_key(TARGET.WEB)
       ) ??
       this.extension_context.globalState.get<EditFormat>(
-        get_edit_format_state_key(MODE.WEB)
+        get_edit_format_state_key(TARGET.WEB)
       ) ??
       this.extension_context.workspaceState.get<EditFormat>(
         EDIT_FORMAT_STATE_KEY
@@ -315,10 +319,10 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
 
     this.api_edit_format =
       this.extension_context.workspaceState.get<EditFormat>(
-        get_edit_format_state_key(MODE.API)
+        get_edit_format_state_key(TARGET.API)
       ) ??
       this.extension_context.globalState.get<EditFormat>(
-        get_edit_format_state_key(MODE.API)
+        get_edit_format_state_key(TARGET.API)
       ) ??
       this.extension_context.workspaceState.get<EditFormat>(
         EDIT_FORMAT_STATE_KEY
@@ -328,23 +332,23 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       ) ??
       'whole'
 
-    this.mode =
-      this.extension_context.workspaceState.get<Mode>(
-        PROMPT_VIEW_MODE_STATE_KEY
+    this.target =
+      this.extension_context.workspaceState.get<Target>(
+        PROMPT_VIEW_TARGET_STATE_KEY
       ) ??
-      this.extension_context.globalState.get<Mode>(
-        PROMPT_VIEW_MODE_STATE_KEY
+      this.extension_context.globalState.get<Target>(
+        PROMPT_VIEW_TARGET_STATE_KEY
       ) ??
-      MODE.WEB
+      TARGET.WEB
 
     this.web_prompt_type =
       this.extension_context.workspaceState.get<WebPromptType>(
-        WEB_MODE_STATE_KEY,
+        WEB_TARGET_STATE_KEY,
         'edit-files'
       )
     this.api_prompt_type =
       this.extension_context.workspaceState.get<ApiPromptType>(
-        API_MODE_STATE_KEY,
+        API_TARGET_STATE_KEY,
         'edit-files'
       )
 
@@ -740,10 +744,10 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_select_edit_format_instructions(this, message)
           } else if (message.command == 'CARET_POSITION_CHANGED') {
             this.caret_position = message.caret_position
-          } else if (message.command == 'MODE_CHANGED') {
-            handle_mode_changed(this, message)
-          } else if (message.command == 'GET_MODE') {
-            handle_get_mode(this)
+          } else if (message.command == 'TARGET_CHANGED') {
+            handle_target_changed(this, message)
+          } else if (message.command == 'GET_TARGET') {
+            handle_get_target(this)
           } else if (message.command == 'GET_VERSION') {
             handle_get_version(this)
           } else if (message.command == 'SHOW_AT_SIGN_QUICK_PICK') {

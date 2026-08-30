@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import styles from './Home.module.scss'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { Tabs as UiTabs } from '@ui/components/editor/prompt/Tabs'
-import { ModeButton as UiModeButton } from '@ui/components/editor/prompt/ModeButton'
+import { TargetButton as UiTargetButton } from '@ui/components/editor/prompt/TargetButton'
 import { KeycapWrapper as UiKeycapWrapper } from '@ui/components/editor/prompt/KeycapWrapper'
 import cn from 'classnames'
 import { post_message } from '../utils/post-message'
@@ -15,9 +15,9 @@ import { Translation, use_translation } from '../i18n/use-translation'
 import { CompactableActionButton } from '@ui/components/editor/prompt/CompactableActionButton'
 import { Tasks as UiTasks } from '@ui/components/editor/prompt/Tasks'
 import { use_tasks } from './hooks/use-tasks'
-import { use_has_scrolled_past_mode_button } from './hooks/use-has-scrolled-past-mode-button'
+import { use_has_scrolled_past_target_button } from './hooks/use-has-scrolled-past-mode-button'
 import { use_compacting } from '@shared/hooks'
-import { MODE } from '@shared/types/mode'
+import { TARGET } from '@shared/types/mode'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 
 type Props = {
@@ -42,11 +42,11 @@ export const Home: React.FC<Props> = (props) => {
   const { t } = use_translation()
   const [active_workspace_root, set_active_workspace_root] = useState<string>()
   const {
-    has_scrolled_past_mode_button,
+    has_scrolled_past_target_button,
     responses_ref,
-    mode_ref,
+    target_ref,
     handle_scroll
-  } = use_has_scrolled_past_mode_button(props.is_active)
+  } = use_has_scrolled_past_target_button(props.is_active)
 
   const {
     tasks,
@@ -65,7 +65,7 @@ export const Home: React.FC<Props> = (props) => {
 
   const { container_ref, compact_step } = use_compacting()
 
-  const header_modes_ref = useRef<HTMLDivElement>(null)
+  const header_targets_ref = useRef<HTMLDivElement>(null)
 
   const [is_alt_pressed, set_is_alt_pressed] = useState(false)
   const alt_interrupted_ref = useRef(false)
@@ -146,7 +146,7 @@ export const Home: React.FC<Props> = (props) => {
       <div className={styles.header}>
         <div
           className={cn(styles.header__normal, {
-            [styles['header__normal--hidden']]: has_scrolled_past_mode_button
+            [styles['header__normal--hidden']]: has_scrolled_past_target_button
           })}
           ref={container_ref}
         >
@@ -173,23 +173,24 @@ export const Home: React.FC<Props> = (props) => {
         </div>
 
         <div
-          ref={header_modes_ref}
-          className={cn(styles.header__modes, {
-            [styles['header__modes--visible']]: has_scrolled_past_mode_button
+          ref={header_targets_ref}
+          className={cn(styles.header__targets, {
+            [styles['header__targets--visible']]:
+              has_scrolled_past_target_button
           })}
         >
           <AsciiArtEffect density={2.3} />
           <UiKeycapWrapper char={is_alt_pressed ? '1' : undefined} full_width>
-            <UiModeButton
-              label={MODE.WEB}
+            <UiTargetButton
+              label={TARGET.WEB}
               on_click={props.on_chatbots_click}
               is_compact
             />
           </UiKeycapWrapper>
-          <div className={styles['header__modes-divider']} />
+          <div className={styles['header__targets-divider']} />
           <UiKeycapWrapper char={is_alt_pressed ? '2' : undefined} full_width>
-            <UiModeButton
-              label={MODE.API}
+            <UiTargetButton
+              label={TARGET.API}
               on_click={props.on_api_calls_click}
               is_compact
             />
@@ -220,14 +221,14 @@ export const Home: React.FC<Props> = (props) => {
               </div>
             )}
 
-            <div className={styles.inner__mode} ref={mode_ref}>
+            <div className={styles.inner__target} ref={target_ref}>
               <AsciiArtEffect />
               <UiKeycapWrapper
                 char={is_alt_pressed ? '1' : undefined}
                 full_width
               >
-                <UiModeButton
-                  label={MODE.WEB}
+                <UiTargetButton
+                  label={TARGET.WEB}
                   on_click={props.on_chatbots_click}
                 />
               </UiKeycapWrapper>
@@ -235,8 +236,8 @@ export const Home: React.FC<Props> = (props) => {
                 char={is_alt_pressed ? '2' : undefined}
                 full_width
               >
-                <UiModeButton
-                  label={MODE.API}
+                <UiTargetButton
+                  label={TARGET.API}
                   on_click={props.on_api_calls_click}
                 />
               </UiKeycapWrapper>

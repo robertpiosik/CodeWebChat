@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
-import { MODE } from '@shared/types/mode'
+import { TARGET } from '@shared/types/mode'
 import { get_last_used_template_key } from '@/constants/state-keys'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { t } from '@/i18n'
@@ -14,7 +14,7 @@ export const handle_template_quick_pick = async (
   prompt_view_provider: PromptViewProvider
 ): Promise<void> => {
   const prompt_type: WebPromptType | ApiPromptType | undefined =
-    prompt_view_provider.mode == MODE.WEB
+    prompt_view_provider.target == TARGET.WEB
       ? prompt_view_provider.web_prompt_type
       : prompt_view_provider.api_prompt_type
 

@@ -4,7 +4,7 @@ import { Button as UiButton } from '@ui/components/editor/common/Button'
 import { Page as UiPage } from '@ui/components/editor/prompt/Page'
 import { EditWebConfigurationForm } from '@/views/shared/forms/EditWebConfigurationForm'
 import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
-import { MODE } from '@shared/types/mode'
+import { TARGET } from '@shared/types/mode'
 import { Home } from './Home'
 import styles from './Prompt.module.scss'
 import cn from 'classnames'
@@ -47,7 +47,7 @@ export const Prompt = () => {
     is_connected,
     ask_about_context_instructions,
     edit_files_instructions,
-    mode,
+    target,
     web_prompt_type,
     api_prompt_type,
     chat_input_focus_key,
@@ -58,7 +58,7 @@ export const Prompt = () => {
     handle_instructions_change,
     handle_web_prompt_type_change,
     handle_api_prompt_type_change,
-    handle_mode_change,
+    handle_target_change,
     handle_paste_image,
     handle_open_image,
     handle_paste_long_text,
@@ -153,7 +153,7 @@ export const Prompt = () => {
     ask_about_context_instructions === undefined ||
     edit_files_instructions === undefined ||
     !version ||
-    mode === undefined ||
+    target === undefined ||
     web_prompt_type === undefined ||
     is_connected === undefined ||
     api_prompt_type === undefined ||
@@ -176,7 +176,7 @@ export const Prompt = () => {
   }
 
   const get_current_instructions_state = () => {
-    const prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
+    const prompt_type = target == TARGET.WEB ? web_prompt_type : api_prompt_type
     if (prompt_type == 'ask-about-files') return ask_about_context_instructions
     if (prompt_type == 'edit-files') return edit_files_instructions
     return undefined
@@ -303,11 +303,11 @@ export const Prompt = () => {
                   ] || ''
                 }
                 set_instructions={handle_instructions_change}
-                mode={mode}
+                target={target}
                 web_prompt_type={web_prompt_type}
                 api_prompt_type={api_prompt_type}
-                on_mode_change={(new_mode) =>
-                  handle_mode_change(new_mode, true)
+                on_target_change={(new_target) =>
+                  handle_target_change(new_target, true)
                 }
                 currently_open_file_path={currently_open_file_path}
                 current_selection={current_selection}
@@ -372,13 +372,13 @@ export const Prompt = () => {
                 on_chatbots_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
-                  handle_mode_change(MODE.WEB)
+                  handle_target_change(TARGET.WEB)
                   set_chat_input_focus_key((k) => k + 1)
                 }}
                 on_api_calls_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
-                  handle_mode_change(MODE.API)
+                  handle_target_change(TARGET.API)
                   set_chat_input_focus_key((k) => k + 1)
                 }}
                 version={version}

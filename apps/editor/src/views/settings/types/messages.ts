@@ -61,12 +61,12 @@ export interface UpdateCommitMessageInstructionsMessage {
   instructions: string
 }
 
-export interface GetSynchronizeEditFormatBetweenModesMessage {
-  command: 'GET_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_MODES'
+export interface GetSynchronizeEditFormatBetweenTargetsMessage {
+  command: 'GET_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_TARGETS'
 }
 
-export interface UpdateSynchronizeEditFormatBetweenModesMessage {
-  command: 'UPDATE_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_MODES'
+export interface UpdateSynchronizeEditFormatBetweenTargetsMessage {
+  command: 'UPDATE_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_TARGETS'
   enabled: boolean
 }
 
@@ -370,8 +370,8 @@ export type FrontendMessage =
   | SelectDefaultApiConfigurationMessage
   | GetCommitMessageInstructionsMessage
   | UpdateCommitMessageInstructionsMessage
-  | GetSynchronizeEditFormatBetweenModesMessage
-  | UpdateSynchronizeEditFormatBetweenModesMessage
+  | GetSynchronizeEditFormatBetweenTargetsMessage
+  | UpdateSynchronizeEditFormatBetweenTargetsMessage
   | GetAttachAsciiTreeOfContextMessage
   | UpdateAttachAsciiTreeOfContextMessage
   | GetUseContextFilesInCommitMessagePromptMessage
@@ -445,8 +445,8 @@ export interface CommitMessageInstructionsMessage {
   instructions: string
 }
 
-export interface SynchronizeEditFormatBetweenModesMessage {
-  command: 'SYNCHRONIZE_EDIT_FORMAT_BETWEEN_MODES'
+export interface SynchronizeEditFormatBetweenTargetsMessage {
+  command: 'SYNCHRONIZE_EDIT_FORMAT_BETWEEN_TARGETS'
   enabled: boolean
 }
 
@@ -611,8 +611,8 @@ export interface StartTemplateCreationMessage {
 export type BackendMessage =
   | ModelProvidersMessage
   | ApiConfigurationsMessage
+  | SynchronizeEditFormatBetweenTargetsMessage
   | CommitMessageInstructionsMessage
-  | SynchronizeEditFormatBetweenModesMessage
   | AttachAsciiTreeOfContextMessage
   | UseContextFilesInCommitMessagePromptMessage
   | SelectAllPromptsInCommitMessagesByDefaultMessage

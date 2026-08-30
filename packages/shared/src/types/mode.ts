@@ -1,6 +1,6 @@
-export const MODE = {
+export const TARGET = {
   WEB: 'WEB',
   API: 'API'
 }
 
-export type Mode = (typeof MODE)[keyof typeof MODE]
+export type Target = (typeof TARGET)[keyof typeof TARGET]

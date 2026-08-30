@@ -3,7 +3,7 @@ import * as vscode from 'vscode'
 import { build_prompt_payload } from './utils/build-prompt-payload'
 import { get_last_used_web_configuration_key } from '@/constants/state-keys'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
-import { MODE } from '@shared/types/mode'
+import { TARGET } from '@shared/types/mode'
 import { WebPromptType } from '@shared/types/prompt-types'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { dictionary } from '@shared/constants/dictionary'
@@ -23,7 +23,7 @@ export const handle_autofill = async (params: {
   show_quick_pick?: boolean
 }): Promise<void> => {
   if (
-    params.prompt_view_provider.mode == MODE.WEB &&
+    params.prompt_view_provider.target == TARGET.WEB &&
     !params.prompt_view_provider.websocket_server_instance.is_connected_with_browser()
   ) {
     vscode.window.showWarningMessage(

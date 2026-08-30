@@ -4,7 +4,7 @@ import {
   FrontendMessage,
   SetupProgress
 } from '../../../types/messages'
-import { Mode, MODE } from '@shared/types/mode'
+import { Target, TARGET } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { post_message } from '../../utils/post-message'
 import { use_instructions } from './hooks/use-instructions'
@@ -19,7 +19,7 @@ export const use_prompt = (vscode: any) => {
     set_apply_button_enabling_trigger_count
   ] = useState(0)
   const [is_connected, set_is_connected] = useState<boolean>()
-  const [mode, set_mode] = useState<Mode>()
+  const [target, set_target] = useState<Target>()
   const [web_prompt_type, set_web_mode] = useState<WebPromptType>()
   const [api_prompt_type, set_api_mode] = useState<ApiPromptType>()
   const [chat_input_focus_key, set_chat_input_focus_key] = useState(0)
@@ -40,7 +40,7 @@ export const use_prompt = (vscode: any) => {
     handle_new_tab,
     handle_tab_delete,
     handle_tabs_reorder
-  } = use_instructions(vscode, mode, web_prompt_type, api_prompt_type)
+  } = use_instructions(vscode, target, web_prompt_type, api_prompt_type)
 
   const [can_undo, set_can_undo] = useState<boolean>(false)
   const [send_with_shift_enter, set_send_with_shift_enter] = useState(false)
@@ -105,8 +105,8 @@ export const use_prompt = (vscode: any) => {
         set_is_connected(message.connected)
       } else if (message.command == 'VERSION') {
         set_version(message.version)
-      } else if (message.command == 'MODE') {
-        set_mode(message.mode)
+      } else if (message.command == 'TARGET') {
+        set_target(message.target)
       } else if (message.command == 'WEB_PROMPT_TYPE') {
         set_web_mode(message.prompt_type)
       } else if (message.command == 'API_PROMPT_TYPE') {
@@ -141,7 +141,7 @@ export const use_prompt = (vscode: any) => {
 
     const initial_messages: FrontendMessage[] = [
       { command: 'GET_VERSION' },
-      { command: 'GET_MODE' },
+      { command: 'GET_TARGET' },
       { command: 'GET_WEB_PROMPT_TYPE' },
       { command: 'GET_API_PROMPT_TYPE' },
       { command: 'GET_CONNECTION_STATUS' },
@@ -187,25 +187,28 @@ export const use_prompt = (vscode: any) => {
     })
   }
 
-  const handle_mode_change = (new_mode: Mode, sync_prompt_type?: boolean) => {
-    if (mode == new_mode) return
+  const handle_target_change = (
+    new_target: Target,
+    sync_prompt_type?: boolean
+  ) => {
+    if (target == new_target) return
 
     if (sync_prompt_type) {
-      if (new_mode == MODE.API && web_prompt_type) {
+      if (new_target == TARGET.API && web_prompt_type) {
         if (web_prompt_type == 'edit-files') {
           handle_api_prompt_type_change(web_prompt_type, true)
         }
-      } else if (new_mode == MODE.WEB && api_prompt_type) {
+      } else if (new_target == TARGET.WEB && api_prompt_type) {
         handle_web_prompt_type_change(api_prompt_type, true)
       }
     }
 
-    set_mode(new_mode)
+    set_target(new_target)
     set_chat_input_focus_key((k) => k + 1)
     set_main_view_scroll_reset_key((k) => k + 1)
     post_message(vscode, {
-      command: 'MODE_CHANGED',
-      mode: new_mode
+      command: 'TARGET_CHANGED',
+      target: new_target
     })
   }
 
@@ -223,7 +226,7 @@ export const use_prompt = (vscode: any) => {
     is_connected,
     ask_about_context_instructions,
     edit_files_instructions,
-    mode,
+    target,
     web_prompt_type,
     api_prompt_type,
     chat_input_focus_key,
@@ -234,7 +237,7 @@ export const use_prompt = (vscode: any) => {
     handle_instructions_change,
     handle_web_prompt_type_change,
     handle_api_prompt_type_change,
-    handle_mode_change,
+    handle_target_change,
     handle_paste_image,
     handle_open_image,
     handle_paste_long_text,

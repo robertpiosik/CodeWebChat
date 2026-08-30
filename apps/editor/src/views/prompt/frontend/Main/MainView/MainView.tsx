@@ -7,7 +7,7 @@ import { WebConfiguration } from '@shared/types/web-configuration'
 import { Responses as UiResponses } from '@ui/components/editor/prompt/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { EditFormat } from '@shared/types/edit-format'
-import { MODE, Mode } from '@shared/types/mode'
+import { TARGET, Target } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/prompt/BrowserExtensionMessage'
@@ -72,8 +72,8 @@ type Props = {
   instructions: string
   set_instructions: (value: string) => void
   on_caret_position_change: (caret_position: number) => void
-  mode: Mode
-  on_mode_change: (value: Mode) => void
+  target: Target
+  on_target_change: (value: Target) => void
   on_make_api_call: (use_quick_pick: boolean) => void
   caret_position_to_set?: number
   on_caret_position_set?: () => void
@@ -139,11 +139,11 @@ export const MainView: React.FC<Props> = (props) => {
   const { t } = use_translation()
 
   const show_edit_format_selector =
-    (props.mode == MODE.WEB && props.web_prompt_type == 'edit-files') ||
-    (props.mode == MODE.API && props.api_prompt_type == 'edit-files')
+    (props.target == TARGET.WEB && props.web_prompt_type == 'edit-files') ||
+    (props.target == TARGET.API && props.api_prompt_type == 'edit-files')
 
   let warning: string | undefined
-  if (props.mode == MODE.API && props.api_configurations.length == 0) {
+  if (props.target == TARGET.API && props.api_configurations.length == 0) {
     warning = 'Add a configuration'
   }
 
@@ -152,7 +152,7 @@ export const MainView: React.FC<Props> = (props) => {
   }
 
   const handle_submit = async () => {
-    if (props.mode == MODE.WEB) {
+    if (props.target == TARGET.WEB) {
       props.initialize_chats({})
     } else {
       props.on_make_api_call(false)
@@ -160,7 +160,7 @@ export const MainView: React.FC<Props> = (props) => {
   }
 
   const handle_submit_with_control = async () => {
-    if (props.mode == MODE.WEB) {
+    if (props.target == TARGET.WEB) {
       props.initialize_chats({
         show_quick_pick: true
       })
@@ -170,7 +170,7 @@ export const MainView: React.FC<Props> = (props) => {
   }
 
   const last_choice_tooltip = use_last_choice_tooltip({
-    mode: props.mode,
+    target: props.target,
     selected_web_configuration_or_group_name:
       props.selected_web_configuration_name,
     web_configurations: props.web_configurations,
@@ -238,7 +238,7 @@ export const MainView: React.FC<Props> = (props) => {
   return (
     <>
       <Header
-        mode={props.mode}
+        target={props.target}
         on_show_home={props.on_show_home}
         web_prompt_type={props.web_prompt_type}
         on_web_prompt_type_change={props.on_web_prompt_type_change}
@@ -250,7 +250,7 @@ export const MainView: React.FC<Props> = (props) => {
         <UiSeparator height={4} />
 
         {!props.is_connected &&
-          props.mode == MODE.WEB &&
+          props.target == TARGET.WEB &&
           props.web_configurations.length > 0 && <UiBrowserExtensionMessage />}
 
         {props.response_history.length > 0 && (
@@ -274,7 +274,7 @@ export const MainView: React.FC<Props> = (props) => {
         <div className={styles['chat-input-container']}>
           <UiPromptField
             is_copy_only={
-              props.mode == MODE.WEB && props.web_configurations.length == 0
+              props.target == TARGET.WEB && props.web_configurations.length == 0
             }
             value={props.instructions}
             chat_history={props.chat_history}
@@ -285,10 +285,10 @@ export const MainView: React.FC<Props> = (props) => {
             on_at_sign_click={props.on_at_sign_click}
             on_hash_sign_click={props.on_hash_sign_click}
             on_slash_click={props.on_slash_click}
-            is_web_mode={props.mode == MODE.WEB}
+            is_web_target={props.target == TARGET.WEB}
             is_connected={props.is_connected}
             prompt_type={
-              props.mode == MODE.WEB
+              props.target == TARGET.WEB
                 ? props.web_prompt_type
                 : props.api_prompt_type
             }
@@ -298,7 +298,7 @@ export const MainView: React.FC<Props> = (props) => {
             on_caret_position_change={props.on_caret_position_change}
             caret_position_to_set={props.caret_position_to_set}
             prompt_token_count={
-              (props.mode == MODE.WEB
+              (props.target == TARGET.WEB
                 ? props.web_prompt_type
                 : props.api_prompt_type) == 'edit-files'
                 ? props.edit_instructions_token_count
@@ -316,8 +316,8 @@ export const MainView: React.FC<Props> = (props) => {
             on_pasted_lines_click={props.on_pasted_lines_click}
             on_open_url={props.on_open_url}
             on_open_website={props.on_open_website}
-            mode={props.mode}
-            on_mode_change={(mode) => props.on_mode_change(mode)}
+            target={props.target}
+            on_target_change={(target) => props.on_target_change(target)}
             on_paste_image={props.on_paste_image}
             on_open_image={props.on_open_image}
             on_paste_long_text={props.on_paste_long_text}
@@ -362,7 +362,7 @@ export const MainView: React.FC<Props> = (props) => {
               more_actions: t('prompt-field.action.more-actions'),
               send: t('prompt-field.action.send'),
               attach_selected_files: t('prompt-field.attach-selected-files'),
-              mode: t('prompt-field.mode')
+              target: t('prompt-field.target')
             }}
           />
         </div>
@@ -377,7 +377,7 @@ export const MainView: React.FC<Props> = (props) => {
 
         <UiSeparator height={6} />
 
-        {props.mode == MODE.WEB && (
+        {props.target == TARGET.WEB && (
           <UiConfigurations
             configurations={web_configurations}
             disable_invocation={!!warning || !props.is_connected}
@@ -418,7 +418,7 @@ export const MainView: React.FC<Props> = (props) => {
           />
         )}
 
-        {props.mode == MODE.API && (
+        {props.target == TARGET.API && (
           <UiConfigurations
             configurations={api_configurations_ui}
             disable_invocation={!!warning}

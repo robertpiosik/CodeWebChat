@@ -13,7 +13,7 @@ import { use_is_mac } from '@shared/hooks'
 import { Tooltip } from './components'
 import { KeycapWrapper } from '../../../prompt/KeycapWrapper'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import { MODE, Mode } from '@shared/types/mode'
+import { TARGET, Target } from '@shared/types/mode'
 import { display_token_count } from '@shared/utils/display-token-count'
 import {
   get_caret_position_from_div,
@@ -43,7 +43,7 @@ export type PromptFieldProps = {
   prompt_type: WebPromptType | ApiPromptType
   current_selection?: SelectionState | null
   on_caret_position_change: (caret_position: number) => void
-  is_web_mode: boolean
+  is_web_target: boolean
   on_at_sign_click: () => void
   on_hash_sign_click: () => void
   on_slash_click: () => void
@@ -82,8 +82,8 @@ export type PromptFieldProps = {
   voice_input_push_to_talk?: boolean
   prompt_token_count: number
   is_copy_only?: boolean
-  mode: Mode
-  on_mode_change: (mode: Mode) => void
+  target: Target
+  on_target_change: (target: Target) => void
   translations: {
     voice_input: string
     stop_recording: string
@@ -106,7 +106,7 @@ export type PromptFieldProps = {
     more_actions: string
     send: string
     attach_selected_files: string
-    mode: string
+    target: string
   }
 }
 
@@ -120,7 +120,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [is_focused, set_is_focused] = useState(false)
   const [is_recording_hovered, set_is_recording_hovered] = useState(false)
   const [is_edit_format_hovered, set_is_edit_format_hovered] = useState(false)
-  const [is_mode_switch_hovered, set_is_mode_switch_hovered] = useState(false)
+  const [is_target_switch_hovered, set_is_target_switch_hovered] =
+    useState(false)
   const [hovered_left_action, set_hovered_left_action] = useState<
     'at' | 'hash' | 'slash' | null
   >(null)
@@ -150,7 +151,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   useEffect(() => {
     const has_submit_button =
       !props.is_copy_only &&
-      (!props.is_web_mode || (props.is_web_mode && props.is_connected)) &&
+      (!props.is_web_target || (props.is_web_target && props.is_connected)) &&
       !props.is_recording &&
       !!props.value
 
@@ -160,7 +161,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   }, [
     props.value,
     props.is_recording,
-    props.is_web_mode,
+    props.is_web_target,
     props.is_connected,
     props.prompt_type,
     props.is_copy_only
@@ -175,7 +176,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   }, [
     props.value,
     props.is_recording,
-    props.is_web_mode,
+    props.is_web_target,
     props.is_connected,
     props.prompt_type
   ])
@@ -266,7 +267,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       text: props.value,
       current_selection: props.current_selection,
       context_file_paths: props.selected_files ?? [],
-      is_web_mode: props.is_web_mode,
+      is_web_target: props.is_web_target,
       tabs_config: {
         count: props.tabs_count,
         active_index: props.active_tab_index
@@ -277,7 +278,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     props.prompt_type,
     props.current_selection,
     props.selected_files,
-    props.is_web_mode,
+    props.is_web_target,
     props.tabs_count,
     props.active_tab_index
   ])
@@ -392,7 +393,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           }
           details={is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space'}
           offset={
-            props.is_copy_only || (props.is_web_mode && !props.is_connected)
+            props.is_copy_only || (props.is_web_target && !props.is_connected)
               ? 12
               : 28
           }
@@ -560,11 +561,11 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         )}
 
         <div className={styles['footer__right__submit']} ref={dropdown_ref}>
-          {props.mode && props.on_mode_change && (
-            <div className={styles['footer__right__mode-switch']}>
-              {is_mode_switch_hovered && (
+          {props.target && props.on_target_change && (
+            <div className={styles['footer__right__target-switch']}>
+              {is_target_switch_hovered && (
                 <Tooltip
-                  message={props.translations.mode}
+                  message={props.translations.target}
                   details={is_mac ? '⌥' : 'Alt'}
                   align="center"
                 />
@@ -573,25 +574,27 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 <button
                   className={cn(
                     styles['footer__right__submit__button'],
-                    styles['footer__right__mode-switch__button']
+                    styles['footer__right__target-switch__button']
                   )}
                   onClick={(e) => {
                     e.stopPropagation()
-                    props.on_mode_change!(
-                      props.mode == MODE.WEB ? MODE.API : MODE.WEB
+                    props.on_target_change!(
+                      props.target == TARGET.WEB ? TARGET.API : TARGET.WEB
                     )
                   }}
-                  onMouseEnter={() => set_is_mode_switch_hovered(true)}
-                  onMouseLeave={() => set_is_mode_switch_hovered(false)}
+                  onMouseEnter={() => set_is_target_switch_hovered(true)}
+                  onMouseLeave={() => set_is_target_switch_hovered(false)}
                 >
-                  <span className={styles['footer__right__mode-switch__label']}>
-                    {(props.mode == MODE.WEB ? 'WEB' : 'API')
+                  <span
+                    className={styles['footer__right__target-switch__label']}
+                  >
+                    {(props.target == TARGET.WEB ? 'WEB' : 'API')
                       .split('')
                       .map((char, index) => (
                         <span
                           key={index}
                           className={
-                            styles['footer__right__mode-switch__label-char']
+                            styles['footer__right__target-switch__label-char']
                           }
                           style={{ animationDelay: `${index * 0.05}s` }}
                         >
@@ -604,8 +607,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             </div>
           )}
           {!props.is_copy_only &&
-            (!props.is_web_mode ||
-              (props.is_web_mode && props.is_connected)) && (
+            (!props.is_web_target ||
+              (props.is_web_target && props.is_connected)) && (
               <>
                 {props.is_recording ? (
                   <button
@@ -676,7 +679,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   anchor_ref={chevron_button_ref}
                   is_open={is_dropdown_open}
                   items={[
-                    ...(!props.value && props.is_web_mode
+                    ...(!props.value && props.is_web_target
                       ? [
                           {
                             label: props.translations.send,
@@ -724,7 +727,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               </>
             )}
           {(props.is_copy_only ||
-            (props.is_web_mode && !props.is_connected)) && (
+            (props.is_web_target && !props.is_connected)) && (
             <>
               {props.is_recording ? (
                 <button
@@ -842,7 +845,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       >
         <div className={styles['input-wrapper']}>
           <div className={styles['top-right']}>
-            {!!props.value && props.prompt_token_count > 0 && (
+            {!!props.value && props.prompt_token_count > 1000 && (
               <div className={styles['top-right__prompt-token-count']}>
                 {display_token_count(props.prompt_token_count)}
               </div>

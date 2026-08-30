@@ -965,7 +965,7 @@
           "scope": "resource",
           "default": true
         },
-        "codeWebChat.synchronizeEditFormatBetweenModes": {
+        "codeWebChat.synchronizeEditFormatBetweenTargets": {
           "type": "boolean",
           "scope": "resource",
           "default": true

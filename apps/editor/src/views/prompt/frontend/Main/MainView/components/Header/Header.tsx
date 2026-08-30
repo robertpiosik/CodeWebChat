@@ -1,4 +1,4 @@
-import { MODE, Mode } from '@shared/types/mode'
+import { TARGET, Target } from '@shared/types/mode'
 import { use_compacting } from '@shared/hooks'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { IconAccentButton as UiIconAccentButton } from '@ui/components/editor/prompt/IconAccentButton'
@@ -13,7 +13,7 @@ import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { use_translation } from '@/views/prompt/frontend/i18n/use-translation'
 
 type Props = {
-  mode: Mode
+  target: Target
   on_show_home: () => void
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
@@ -27,7 +27,7 @@ export const Header: React.FC<Props> = (props) => {
   const { container_ref, compact_step } = use_compacting()
 
   const { is_alt_pressed } = use_keyboard_shortcuts({
-    mode: props.mode,
+    target: props.target,
     on_web_prompt_type_change: props.on_web_prompt_type_change,
     on_api_prompt_type_change: props.on_api_prompt_type_change,
     on_show_home: props.on_show_home,
@@ -42,7 +42,7 @@ export const Header: React.FC<Props> = (props) => {
           on_click={props.on_show_home}
           title={`${t('header.return')} (Esc)`}
         />
-        {props.mode == MODE.WEB && (
+        {props.target == TARGET.WEB && (
           <>
             <UiKeycapWrapper char={is_alt_pressed ? 'E' : undefined}>
               <UiIconAccentButton
@@ -76,7 +76,7 @@ export const Header: React.FC<Props> = (props) => {
             </UiKeycapWrapper>
           </>
         )}
-        {props.mode == MODE.API && (
+        {props.target == TARGET.API && (
           <UiIconAccentButton
             label={api_prompt_type_labels['edit-files']}
             icon="edit-sparkle"

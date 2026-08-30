@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import type { PromptFieldProps, EditFormat } from '../PromptField'
-import { MODE } from '@shared/types/mode'
+import { TARGET } from '@shared/types/mode'
 
 export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
   const [is_alt_pressed, set_is_alt_pressed] = useState(false)
@@ -31,8 +31,10 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
       if (e.altKey && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
         if (e.code == 'Escape') {
           e.preventDefault()
-          if (props.on_mode_change) {
-            props.on_mode_change(props.mode == MODE.WEB ? MODE.API : MODE.WEB)
+          if (props.on_target_change) {
+            props.on_target_change(
+              props.target == TARGET.WEB ? TARGET.API : TARGET.WEB
+            )
           }
           return
         }

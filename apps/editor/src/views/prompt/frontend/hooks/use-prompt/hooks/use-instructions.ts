@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { BackendMessage, InstructionsState } from '../../../../types/messages'
 import { post_message } from '../../../utils/post-message'
-import { Mode, MODE } from '@shared/types/mode'
+import { Target, TARGET } from '@shared/types/mode'
 import { WebPromptType, ApiPromptType } from '@shared/types/prompt-types'
 
 export const use_instructions = (
   vscode: any,
-  mode: Mode | undefined,
+  target: Target | undefined,
   web_prompt_type: WebPromptType | undefined,
   api_prompt_type: ApiPromptType | undefined
 ) => {
@@ -53,7 +53,7 @@ export const use_instructions = (
 
   const handle_tab_change = (index: number) => {
     const prompt_type = (
-      mode == MODE.WEB ? web_prompt_type : api_prompt_type
+      target == TARGET.WEB ? web_prompt_type : api_prompt_type
     ) as any
     const update = (
       state: InstructionsState | undefined,
@@ -80,7 +80,7 @@ export const use_instructions = (
 
   const handle_new_tab = () => {
     const prompt_type = (
-      mode == MODE.WEB ? web_prompt_type : api_prompt_type
+      target == TARGET.WEB ? web_prompt_type : api_prompt_type
     ) as any
     const update = (
       state: InstructionsState | undefined,
@@ -110,7 +110,7 @@ export const use_instructions = (
 
   const handle_tab_delete = (index: number) => {
     const prompt_type = (
-      mode == MODE.WEB ? web_prompt_type : api_prompt_type
+      target == TARGET.WEB ? web_prompt_type : api_prompt_type
     ) as any
     const update = (
       state: InstructionsState | undefined,
@@ -148,7 +148,7 @@ export const use_instructions = (
 
   const handle_tabs_reorder = (new_order: number[]) => {
     const prompt_type = (
-      mode == MODE.WEB ? web_prompt_type : api_prompt_type
+      target == TARGET.WEB ? web_prompt_type : api_prompt_type
     ) as any
     const update = (
       state: InstructionsState | undefined,

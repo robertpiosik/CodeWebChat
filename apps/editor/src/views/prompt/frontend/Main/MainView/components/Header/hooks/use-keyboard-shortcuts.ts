@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from 'react'
-import { MODE, Mode } from '@shared/types/mode'
+import { TARGET, Target } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
 export const use_keyboard_shortcuts = (params: {
-  mode: Mode
+  target: Target
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
   on_show_home: () => void
@@ -102,7 +102,7 @@ export const use_keyboard_shortcuts = (params: {
       if (event.code == 'KeyE') {
         event.preventDefault()
 
-        if (params.mode == MODE.API) {
+        if (params.target == TARGET.API) {
           params.on_api_prompt_type_change('edit-files')
         } else {
           params.on_web_prompt_type_change('edit-files')
@@ -110,7 +110,7 @@ export const use_keyboard_shortcuts = (params: {
         return
       }
 
-      if (event.code == 'KeyA' && params.mode == MODE.WEB) {
+      if (event.code == 'KeyA' && params.target == TARGET.WEB) {
         event.preventDefault()
         params.on_web_prompt_type_change('ask-about-files')
         return
@@ -123,7 +123,7 @@ export const use_keyboard_shortcuts = (params: {
       window.removeEventListener('keydown', handle_key_down)
     }
   }, [
-    params.mode,
+    params.target,
     params.on_web_prompt_type_change,
     params.on_api_prompt_type_change,
     params.is_disabled

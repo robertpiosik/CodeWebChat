@@ -27,10 +27,11 @@ export const DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY =
   'duplicate-workspace-context'
 
 export const EDIT_FORMAT_STATE_KEY = 'edit-format'
-export const get_edit_format_state_key = (mode: string) => `edit-format-${mode}`
-export const WEB_MODE_STATE_KEY = 'web-mode'
-export const API_MODE_STATE_KEY = 'api-mode'
-export const PROMPT_VIEW_MODE_STATE_KEY = 'prompt-view-mode'
+export const get_edit_format_state_key = (target: string) =>
+  `edit-format-${target}`
+export const WEB_TARGET_STATE_KEY = 'web-target'
+export const API_TARGET_STATE_KEY = 'api-target'
+export const PROMPT_VIEW_TARGET_STATE_KEY = 'prompt-view-target'
 
 export const INSTRUCTIONS_EDIT_FILES_STATE_KEY = 'instructions-edit-files'
 export const INSTRUCTIONS_ASK_STATE_KEY = 'instructions-ask'

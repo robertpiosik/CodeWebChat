@@ -264,7 +264,7 @@
       }
     }
 
-    &__mode-switch {
+    &__target-switch {
       position: relative;
 
       &__button {
@@ -274,8 +274,8 @@
         padding: 0 4px;
 
         &:hover {
-          .footer__right__mode-switch__label-char {
-            animation: mode-switch-wave 0.5s ease-in-out;
+          .footer__right__target-switch__label-char {
+            animation: target-switch-wave 0.5s ease-in-out;
           }
         }
       }
@@ -418,7 +418,7 @@
   }
 }
 
-@keyframes mode-switch-wave {
+@keyframes target-switch-wave {
   0%,
   100% {
     transform: translateY(0);

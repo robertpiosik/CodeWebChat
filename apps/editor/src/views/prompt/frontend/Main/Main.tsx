@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { MainView } from './MainView'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { EditFormat } from '@shared/types/edit-format'
-import { MODE, Mode } from '@shared/types/mode'
+import { TARGET, Target } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import {
   BackendMessage,
@@ -34,10 +34,10 @@ type Props = {
     value: string,
     prompt_type: 'ask-about-files' | 'edit-files'
   ) => void
-  mode: Mode
+  target: Target
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
-  on_mode_change: (mode: Mode) => void
+  on_target_change: (target: Target) => void
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
   currently_open_file_path?: string
@@ -162,7 +162,7 @@ export const Main: React.FC<Props> = (props) => {
   }, [])
 
   const current_prompt_type =
-    props.mode == MODE.WEB ? props.web_prompt_type : props.api_prompt_type
+    props.target == TARGET.WEB ? props.web_prompt_type : props.api_prompt_type
 
   const update_chat_history = (instruction: string) => {
     if (!instruction.trim()) {
@@ -457,7 +457,7 @@ export const Main: React.FC<Props> = (props) => {
     selected_web_configuration_name_by_mode?.[props.web_prompt_type]
 
   const api_configurations =
-    props.mode == MODE.API && all_api_configurations
+    props.target == TARGET.API && all_api_configurations
       ? all_api_configurations
       : []
 
@@ -508,8 +508,8 @@ export const Main: React.FC<Props> = (props) => {
       instructions={instructions}
       set_instructions={set_instructions}
       on_caret_position_change={handle_caret_position_change}
-      mode={props.mode}
-      on_mode_change={props.on_mode_change}
+      target={props.target}
+      on_target_change={props.on_target_change}
       on_make_api_call={handle_make_api_call}
       caret_position_to_set={caret_position_to_set}
       on_caret_position_set={() => set_caret_position_to_set(undefined)}

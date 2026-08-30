@@ -63,7 +63,7 @@
     white-space: nowrap;
   }
 
-  &__modes {
+  &__targets {
     position: absolute;
     inset: 0;
     display: flex;
@@ -111,7 +111,7 @@
     margin: 0;
   }
 
-  &__mode {
+  &__target {
     position: relative;
     display: flex;
     background-color: var(--vscode-sideBar-background);

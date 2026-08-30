@@ -4,7 +4,7 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { SelectEditFormatInstructionsMessage } from '@/views/prompt/types/messages'
 import { EditFormat } from '@shared/types/edit-format'
 import { t } from '@/i18n'
-import { MODE } from '@shared/types/mode'
+import { TARGET } from '@shared/types/mode'
 
 export const handle_select_edit_format_instructions = async (
   prompt_view_provider: PromptViewProvider,
@@ -101,7 +101,7 @@ export const handle_select_edit_format_instructions = async (
 
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const synchronize = config.get<boolean>(
-    'synchronizeEditFormatBetweenModes',
+    'synchronizeEditFormatBetweenTargets',
     true
   )
 
@@ -112,29 +112,29 @@ export const handle_select_edit_format_instructions = async (
     prompt_view_provider.api_edit_format = selection.value
     await Promise.all([
       prompt_view_provider.extension_context.workspaceState.update(
-        get_edit_format_state_key(MODE.WEB),
+        get_edit_format_state_key(TARGET.WEB),
         selection.value
       ),
       prompt_view_provider.extension_context.globalState.update(
-        get_edit_format_state_key(MODE.WEB),
+        get_edit_format_state_key(TARGET.WEB),
         selection.value
       ),
       prompt_view_provider.extension_context.workspaceState.update(
-        get_edit_format_state_key(MODE.API),
+        get_edit_format_state_key(TARGET.API),
         selection.value
       ),
       prompt_view_provider.extension_context.globalState.update(
-        get_edit_format_state_key(MODE.API),
+        get_edit_format_state_key(TARGET.API),
         selection.value
       )
     ])
   } else {
     await prompt_view_provider.extension_context.workspaceState.update(
-      get_edit_format_state_key(prompt_view_provider.mode),
+      get_edit_format_state_key(prompt_view_provider.target),
       selection.value
     )
     await prompt_view_provider.extension_context.globalState.update(
-      get_edit_format_state_key(prompt_view_provider.mode),
+      get_edit_format_state_key(prompt_view_provider.target),
       selection.value
     )
   }

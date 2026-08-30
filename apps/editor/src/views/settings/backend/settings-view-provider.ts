@@ -33,8 +33,8 @@ import {
   handle_update_attach_ascii_tree_of_context,
   handle_update_use_context_files_in_commit_message_prompt,
   handle_update_include_prompts_in_commit_messages,
-  handle_get_synchronize_edit_format_between_modes,
-  handle_update_synchronize_edit_format_between_modes,
+  handle_get_synchronize_edit_format_between_targets,
+  handle_update_synchronize_edit_format_between_targets,
   handle_update_edit_files_system_instructions,
   handle_update_gemini_user_id,
   handle_update_ai_studio_user_id,
@@ -216,13 +216,13 @@ export class SettingsViewProvider {
         ) {
           await handle_get_include_prompts_in_commit_messages(this)
         } else if (
-          message.command == 'GET_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_MODES'
+          message.command == 'GET_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_TARGETS'
         ) {
-          await handle_get_synchronize_edit_format_between_modes(this)
+          await handle_get_synchronize_edit_format_between_targets(this)
         } else if (
-          message.command == 'UPDATE_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_MODES'
+          message.command == 'UPDATE_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_TARGETS'
         ) {
-          await handle_update_synchronize_edit_format_between_modes(message)
+          await handle_update_synchronize_edit_format_between_targets(message)
         } else if (
           message.command ==
           'UPDATE_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
@@ -331,7 +331,7 @@ export class SettingsViewProvider {
           void handle_get_attach_ascii_tree_of_context(this)
           void handle_get_use_context_files_in_commit_message_prompt(this)
           void handle_get_include_prompts_in_commit_messages(this)
-          void handle_get_synchronize_edit_format_between_modes(this)
+          void handle_get_synchronize_edit_format_between_targets(this)
           void handle_get_clear_checks_in_workspace_behavior(this)
           void handle_get_are_automatic_checkpoints_disabled(this)
           void handle_get_checkpoint_lifespan(this)

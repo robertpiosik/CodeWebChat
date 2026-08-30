@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { PromptField, type EditFormat } from './PromptField'
-import { MODE } from '@shared/types/mode'
+import { TARGET } from '@shared/types/mode'
 
 export default {
   component: PromptField
@@ -18,9 +18,9 @@ export const Empty = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    is_web_mode={false}
-    mode={MODE.API}
-    on_mode_change={(mode) => console.log('Mode changed:', mode)}
+    is_web_target={false}
+    target={TARGET.API}
+    on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -68,7 +68,7 @@ export const Empty = () => (
       more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      mode: 'Mode'
+      target: 'Target'
     }}
   />
 )
@@ -85,9 +85,9 @@ export const WithText = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    is_web_mode={false}
-    mode={MODE.API}
-    on_mode_change={(mode) => console.log('Mode changed:', mode)}
+    is_web_target={false}
+    target={TARGET.API}
+    on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -135,7 +135,7 @@ export const WithText = () => (
       more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      mode: 'Mode'
+      target: 'Target'
     }}
   />
 )
@@ -153,9 +153,9 @@ export const LongText = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    is_web_mode={false}
-    mode={MODE.API}
-    on_mode_change={(mode) => console.log('Mode changed:', mode)}
+    is_web_target={false}
+    target={TARGET.API}
+    on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -202,7 +202,7 @@ export const LongText = () => (
       more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      mode: 'Mode'
+      target: 'Target'
     }}
   />
 )
@@ -219,11 +219,11 @@ export const WithPlaceholderSavedContext = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    mode={MODE.API}
-    on_mode_change={(mode) => console.log('Mode changed:', mode)}
+    target={TARGET.API}
+    on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    is_web_mode={false}
+    is_web_target={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     selected_files={[]}
     on_go_to_file={(path) => console.log('Go to file:', path)}
@@ -269,7 +269,7 @@ export const WithPlaceholderSavedContext = () => (
       more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      mode: 'Mode'
+      target: 'Target'
     }}
   />
 )
@@ -292,11 +292,11 @@ export const WithPlaceholderSelection = () => (
     }}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    mode={MODE.API}
-    on_mode_change={(mode) => console.log('Mode changed:', mode)}
+    target={TARGET.API}
+    on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    is_web_mode={false}
+    is_web_target={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     selected_files={[]}
     on_go_to_file={(path) => console.log('Go to file:', path)}
@@ -342,7 +342,7 @@ export const WithPlaceholderSelection = () => (
       more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      mode: 'Mode'
+      target: 'Target'
     }}
   />
 )
@@ -359,11 +359,11 @@ export const WithCommit = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    mode={MODE.API}
-    on_mode_change={(mode) => console.log('Mode changed:', mode)}
+    target={TARGET.API}
+    on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    is_web_mode={false}
+    is_web_target={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     selected_files={[]}
     on_go_to_file={(path) => console.log('Go to file:', path)}
@@ -409,7 +409,7 @@ export const WithCommit = () => (
       more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      mode: 'Mode'
+      target: 'Target'
     }}
   />
 )
@@ -425,11 +425,11 @@ export const WithCommitWithQuotes = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    mode={MODE.API}
-    on_mode_change={(mode) => console.log('Mode changed:', mode)}
+    target={TARGET.API}
+    on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    is_web_mode={false}
+    is_web_target={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     selected_files={[]}
     on_go_to_file={(path) => console.log('Go to file:', path)}
@@ -475,7 +475,7 @@ export const WithCommitWithQuotes = () => (
       more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      mode: 'Mode'
+      target: 'Target'
     }}
   />
 )
@@ -494,9 +494,9 @@ export const WithEditFormatSelector = () => {
       current_selection={null}
       currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-      is_web_mode={false}
-      mode={MODE.API}
-      on_mode_change={(mode) => console.log('Mode changed:', mode)}
+      is_web_target={false}
+      target={TARGET.API}
+      on_target_change={(target) => console.log('Target changed:', target)}
       on_at_sign_click={() => console.log('@ clicked')}
       on_hash_sign_click={() => console.log('# clicked')}
       on_submit_with_control={() => console.log('Submitted with control')}
@@ -549,7 +549,7 @@ export const WithEditFormatSelector = () => {
         more_actions: 'More actions',
         send: 'Send',
         attach_selected_files: 'Attach selected files',
-        mode: 'Mode'
+        target: 'Target'
       }}
     />
   )
@@ -567,9 +567,9 @@ export const WithFilePaths = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    is_web_mode={false}
-    mode={MODE.API}
-    on_mode_change={(mode) => console.log('Mode changed:', mode)}
+    is_web_target={false}
+    target={TARGET.API}
+    on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -617,7 +617,7 @@ export const WithFilePaths = () => (
       more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      mode: 'Mode'
+      target: 'Target'
     }}
   />
 )
@@ -662,9 +662,9 @@ export const WithTabs = () => {
       current_selection={null}
       currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-      is_web_mode={false}
-      mode={MODE.API}
-      on_mode_change={(mode) => console.log('Mode changed:', mode)}
+      is_web_target={false}
+      target={TARGET.API}
+      on_target_change={(target) => console.log('Target changed:', target)}
       on_at_sign_click={() => console.log('@ clicked')}
       on_hash_sign_click={() => console.log('# clicked')}
       on_submit_with_control={() => console.log('Submitted with control')}
@@ -712,7 +712,7 @@ export const WithTabs = () => {
         more_actions: 'More actions',
         send: 'Send',
         attach_selected_files: 'Attach selected files',
-        mode: 'Mode'
+        target: 'Target'
       }}
     />
   )
@@ -730,9 +730,9 @@ export const WithWarning = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    is_web_mode={true}
-    mode={MODE.WEB}
-    on_mode_change={(mode) => console.log('Mode changed:', mode)}
+    is_web_target={true}
+    target={TARGET.WEB}
+    on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -778,7 +778,7 @@ export const WithWarning = () => (
       more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      mode: 'Mode'
+      target: 'Target'
     }}
     warning="Add a configuration"
   />

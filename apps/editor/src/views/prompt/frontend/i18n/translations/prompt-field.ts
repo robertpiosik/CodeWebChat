@@ -377,22 +377,22 @@ export const prompt_field = {
     hu: 'Kiválasztott fájlok csatolása',
     bg: 'Прикачване на избраните файлове'
   },
-  'prompt-field.mode': {
-    en: 'Mode',
-    pl: 'Tryb',
-    'zh-cn': '模式',
-    ja: 'モード',
-    'zh-tw': '模式',
-    de: 'Modus',
-    es: 'Modo',
-    fr: 'Mode',
-    'pt-br': 'Modo',
-    ru: 'Режим',
-    ko: '모드',
-    it: 'Modalità',
-    tr: 'Mod',
-    cs: 'Režim',
-    hu: 'Mód',
-    bg: 'Режим'
+  'prompt-field.target': {
+    en: 'Target',
+    pl: 'Cel',
+    'zh-cn': '目标',
+    ja: 'ターゲット',
+    'zh-tw': '目標',
+    de: 'Ziel',
+    es: 'Objetivo',
+    fr: 'Cible',
+    'pt-br': 'Alvo',
+    ru: 'Цель',
+    ko: '대상',
+    it: 'Destinazione',
+    tr: 'Hedef',
+    cs: 'Cíl',
+    hu: 'Cél',
+    bg: 'Цел'
   }
 } as const

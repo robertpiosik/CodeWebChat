@@ -114,12 +114,18 @@ export const parse_response = (params: {
   const diff_header_regex = /^---\s+.+\n\+\+\+\s+.+/m
   const git_diff_header_regex = /^diff --git /m
 
+  const has_search_replace_markers =
+    processed_response.includes('<<<<<<<') &&
+    processed_response.includes('=======') &&
+    processed_response.includes('>>>>>>>')
+
   if (
-    hunk_header_regex.test(processed_response) ||
-    diff_header_regex.test(processed_response) ||
-    git_diff_header_regex.test(processed_response) ||
-    processed_response.includes('```diff') ||
-    processed_response.includes('```patch')
+    !has_search_replace_markers &&
+    (hunk_header_regex.test(processed_response) ||
+      diff_header_regex.test(processed_response) ||
+      git_diff_header_regex.test(processed_response) ||
+      processed_response.includes('```diff') ||
+      processed_response.includes('```patch'))
   ) {
     const patches_or_text = extract_diffs({
       response_text: processed_response,

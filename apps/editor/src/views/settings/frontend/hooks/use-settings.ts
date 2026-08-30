@@ -23,8 +23,8 @@ export const use_settings = (vscode: any) => {
   const [commit_message_instructions, set_commit_message_instructions] =
     useState<string | undefined>(undefined)
   const [
-    synchronize_edit_format_between_modes,
-    set_synchronize_edit_format_between_modes
+    synchronize_edit_format_between_targets,
+    set_synchronize_edit_format_between_targets
   ] = useState<boolean | undefined>(undefined)
   const [attach_ascii_tree_of_context, set_attach_ascii_tree_of_context] =
     useState<'ask' | 'always' | 'never' | undefined>(undefined)
@@ -96,7 +96,7 @@ export const use_settings = (vscode: any) => {
       command: 'GET_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
     })
     post_message(vscode, {
-      command: 'GET_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_MODES'
+      command: 'GET_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_TARGETS'
     })
     post_message(vscode, { command: 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED' })
     post_message(vscode, { command: 'GET_CHECKPOINT_LIFESPAN' })
@@ -127,8 +127,8 @@ export const use_settings = (vscode: any) => {
         set_intelligent_file_search_instructions(message.instructions)
       } else if (message.command == 'COMMIT_MESSAGE_INSTRUCTIONS') {
         set_commit_message_instructions(message.instructions)
-      } else if (message.command == 'SYNCHRONIZE_EDIT_FORMAT_BETWEEN_MODES') {
-        set_synchronize_edit_format_between_modes(message.enabled)
+      } else if (message.command == 'SYNCHRONIZE_EDIT_FORMAT_BETWEEN_TARGETS') {
+        set_synchronize_edit_format_between_targets(message.enabled)
       } else if (message.command == 'ATTACH_ASCII_TREE_OF_CONTEXT') {
         set_attach_ascii_tree_of_context(message.value)
       } else if (
@@ -275,12 +275,12 @@ export const use_settings = (vscode: any) => {
       instructions
     })
 
-  const handle_synchronize_edit_format_between_modes_change = (
+  const handle_synchronize_edit_format_between_targets_change = (
     enabled: boolean
   ) => {
-    set_synchronize_edit_format_between_modes(enabled)
+    set_synchronize_edit_format_between_targets(enabled)
     post_message(vscode, {
-      command: 'UPDATE_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_MODES',
+      command: 'UPDATE_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_TARGETS',
       enabled
     })
   }
@@ -469,7 +469,7 @@ export const use_settings = (vscode: any) => {
     web_configurations,
     set_web_configurations,
     defaults,
-    synchronize_edit_format_between_modes,
+    synchronize_edit_format_between_targets,
     commit_message_instructions,
     attach_ascii_tree_of_context,
     use_context_files_in_commit_message_prompt,
@@ -497,7 +497,7 @@ export const use_settings = (vscode: any) => {
     handle_reorder_web_configurations,
     handle_add_web_configuration,
     handle_delete_web_configuration,
-    handle_synchronize_edit_format_between_modes_change,
+    handle_synchronize_edit_format_between_targets_change,
     handle_commit_instructions_change,
     handle_attach_ascii_tree_of_context_change,
     handle_use_context_files_in_commit_message_prompt_change,
