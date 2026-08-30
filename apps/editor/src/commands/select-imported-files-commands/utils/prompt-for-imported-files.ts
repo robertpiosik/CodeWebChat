@@ -104,7 +104,7 @@ export const prompt_for_imported_files = async (params: {
 
   const search_button = {
     iconPath: new vscode.ThemeIcon('search'),
-    tooltip: t('feature.imported-files.search')
+    tooltip: t('common.search-in-selected-results')
   }
 
   const deep_search_button = {

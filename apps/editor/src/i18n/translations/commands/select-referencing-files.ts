@@ -89,24 +89,6 @@ export const translations = {
     hu: 'Hivatkozó fájlok',
     bg: 'Рефериращи файлове'
   },
-  'command.select-referencing-files.search': {
-    en: 'Search',
-    pl: 'Szukaj',
-    'zh-cn': '搜索',
-    ja: '検索',
-    'zh-tw': '搜尋',
-    de: 'Suchen',
-    es: 'Buscar',
-    fr: 'Rechercher',
-    'pt-br': 'Pesquisar',
-    ru: 'Поиск',
-    ko: '검색',
-    it: 'Cerca',
-    tr: 'Ara',
-    cs: 'Hledat',
-    hu: 'Keresés',
-    bg: 'Търсене'
-  },
   'command.select-referencing-files.error-opening': {
     en: 'Error opening file: {error}',
     pl: 'Błąd otwierania pliku: {error}',

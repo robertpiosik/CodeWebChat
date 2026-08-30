@@ -104,7 +104,7 @@ export const prompt_for_referencing_files = async (params: {
     }
     const search_button = {
       iconPath: new vscode.ThemeIcon('search'),
-      tooltip: t('command.select-referencing-files.search')
+      tooltip: t('common.search-in-selected-results')
     }
     quick_pick.buttons = [search_button, close_button]
 

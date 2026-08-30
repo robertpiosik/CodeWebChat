@@ -17,24 +17,6 @@ export const translations = {
     hu: 'Importálások feldolgozása...',
     bg: 'Обработка на импортиранията...'
   },
-  'feature.imported-files.search': {
-    en: 'Search',
-    pl: 'Szukaj',
-    'zh-cn': '搜索',
-    ja: '検索',
-    'zh-tw': '搜尋',
-    de: 'Suchen',
-    es: 'Buscar',
-    fr: 'Rechercher',
-    'pt-br': 'Pesquisar',
-    ru: 'Поиск',
-    ko: '검색',
-    it: 'Cerca',
-    tr: 'Ara',
-    cs: 'Hledat',
-    hu: 'Keresés',
-    bg: 'Търсене'
-  },
   'feature.imported-files.deep-search': {
     en: 'Deep Search Imports',
     pl: 'Głębokie wyszukiwanie importów',
