@@ -16,6 +16,15 @@
   }
 }
 
+.attach {
+  margin-right: 4px;
+
+  span::before {
+    font-size: 15px;
+    line-height: 24px;
+  }
+}
+
 .label {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -25,32 +34,6 @@
   display: block;
   line-height: var(--height);
   color: var(--cwc-text-color);
-}
-
-.warning {
-  display: inline-block;
-  color: var(--cwc-text-color-orange);
-  margin-right: 5px;
-  vertical-align: middle;
-
-  span::before {
-    font-size: 15px;
-    line-height: 24px;
-  }
-}
-
-.attach {
-  margin-right: 5px;
-
-  span::before {
-    font-size: 15px;
-    line-height: 24px;
-  }
-}
-
-.wont-send {
-  color: var(--cwc-text-color-dimmed);
-  font-style: italic;
 }
 
 .tokens {
