@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './SelectedFiles.module.scss'
 import { display_token_count } from '@shared/utils/display-token-count'
 
@@ -11,6 +11,12 @@ type Props = {
 }
 
 export const SelectedFiles: React.FC<Props> = (props) => {
+  const [files_ount, set_files_count] = useState(props.files_count)
+
+  useEffect(() => {
+    set_files_count(props.files_count)
+  }, [props.token_count])
+
   return (
     <div className={styles.container}>
       <span className={styles.attach}>
@@ -20,7 +26,7 @@ export const SelectedFiles: React.FC<Props> = (props) => {
         <span>
           {props.translations.attaching_files.replace(
             '{files}',
-            String(props.files_count)
+            String(files_ount)
           )}
         </span>
         {props.token_count > 0 && (
