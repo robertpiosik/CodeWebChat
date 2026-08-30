@@ -58,7 +58,19 @@ const start_recording = (prompt_view_provider: PromptViewProvider) => {
           )
         }
 
-        vscode.window.showErrorMessage(error_message)
+        const learn_more = t(
+          'views.prompt.handlers.voice-input.button.learn-more'
+        )
+
+        vscode.window
+          .showErrorMessage(error_message, learn_more)
+          .then((selection) => {
+            if (selection === learn_more) {
+              vscode.env.openExternal(
+                vscode.Uri.parse('https://sourceforge.net/projects/sox/')
+              )
+            }
+          })
       } else {
         vscode.window.showErrorMessage(
           t('views.prompt.handlers.voice-input.error.start-failed', {
