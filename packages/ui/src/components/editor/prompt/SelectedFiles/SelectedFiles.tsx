@@ -11,11 +11,21 @@ type Props = {
 }
 
 export const SelectedFiles: React.FC<Props> = (props) => {
-  const [files_ount, set_files_count] = useState(props.files_count)
+  const [displayed_state, set_displayed_state] = useState({
+    token_count: props.token_count,
+    files_count: props.files_count
+  })
 
   useEffect(() => {
-    set_files_count(props.files_count)
-  }, [props.token_count])
+    const timeout = setTimeout(() => {
+      set_displayed_state({
+        token_count: props.token_count,
+        files_count: props.files_count
+      })
+    }, 50)
+
+    return () => clearTimeout(timeout)
+  }, [props.token_count, props.files_count])
 
   return (
     <div className={styles.container}>
@@ -26,12 +36,12 @@ export const SelectedFiles: React.FC<Props> = (props) => {
         <span>
           {props.translations.attaching_files.replace(
             '{files}',
-            String(files_ount)
+            String(displayed_state.files_count)
           )}
         </span>
-        {props.token_count > 0 && (
+        {displayed_state.token_count > 0 && (
           <span className={styles.tokens}>
-            {display_token_count(props.token_count)}
+            {display_token_count(displayed_state.token_count)}
           </span>
         )}
       </label>

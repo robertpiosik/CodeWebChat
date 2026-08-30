@@ -854,6 +854,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_pick_tasks_workspace(this, message)
           } else if (message.command == 'GET_TOKEN_COUNT') {
             this.send_token_count()
+          } else if (message.command == 'GET_SELECTED_FILES') {
+            this.send_selected_files()
           } else if (message.command == 'PREVIEW_PROMPT') {
             await handle_preview_prompt({
               prompt_view_provider: this

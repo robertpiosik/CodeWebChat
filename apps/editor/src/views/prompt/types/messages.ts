@@ -508,6 +508,10 @@ export interface GetTokenCountMessage extends BaseMessage {
   command: 'GET_TOKEN_COUNT'
 }
 
+export interface GetSelectedFilesMessage extends BaseMessage {
+  command: 'GET_SELECTED_FILES'
+}
+
 export interface PreviewPromptMessage extends BaseMessage {
   command: 'PREVIEW_PROMPT'
 }
@@ -600,6 +604,7 @@ export type FrontendMessage =
   | PickTasksWorkspaceMessage
   | GetIsModernUiMessage
   | GetTokenCountMessage
+  | GetSelectedFilesMessage
   | PreviewPromptMessage
 
 // === FROM BACKEND TO FRONTEND ===

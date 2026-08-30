@@ -40,7 +40,7 @@ export class TokenCalculator implements vscode.Disposable {
   private _notified_roots: Set<string> = new Set()
 
   private _progress_stack: {
-    progress: vscode.Progress<{ message?: string; increment?: number }>
+    progress?: vscode.Progress<{ message?: string; increment?: number }>
     total_files: number
     processed_files: number
   }[] = []
@@ -171,7 +171,9 @@ export class TokenCalculator implements vscode.Disposable {
       if (state.total_files > 0) {
         state.processed_files++
         const increment = (1 / state.total_files) * 100
-        state.progress.report({ increment })
+        if (state.progress) {
+          state.progress.report({ increment })
+        }
       }
     }
   }
@@ -274,30 +276,75 @@ export class TokenCalculator implements vscode.Disposable {
       return params.task()
     }
 
-    return vscode.window.withProgress(
-      {
-        location: vscode.ProgressLocation.Notification,
-        title: t('context.crunching-token-counts'),
-        cancellable: false
-      },
-      async (progress) => {
-        const progress_state = {
-          progress,
-          total_files: total_uncached,
-          processed_files: 0
-        }
-        this._progress_stack.push(progress_state)
+    const progress_state: {
+      progress?: vscode.Progress<{ message?: string; increment?: number }>
+      total_files: number
+      processed_files: number
+    } = {
+      total_files: total_uncached,
+      processed_files: 0
+    }
+    this._progress_stack.push(progress_state)
 
-        try {
-          return await params.task()
-        } finally {
-          const index = this._progress_stack.indexOf(progress_state)
-          if (index !== -1) {
-            this._progress_stack.splice(index, 1)
+    const task_promise = params.task()
+
+    let timeout_handle: NodeJS.Timeout
+    const timeout_promise = new Promise<void>((resolve) => {
+      timeout_handle = setTimeout(() => resolve(), 3000)
+    })
+
+    let is_completed = false
+    task_promise.finally(() => {
+      is_completed = true
+      clearTimeout(timeout_handle)
+    })
+
+    try {
+      await Promise.race([task_promise, timeout_promise])
+    } catch (error) {
+      const index = this._progress_stack.indexOf(progress_state)
+      if (index !== -1) {
+        this._progress_stack.splice(index, 1)
+      }
+      throw error
+    }
+
+    if (!is_completed) {
+      return vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: t('context.crunching-token-counts'),
+          cancellable: false
+        },
+        async (progress) => {
+          progress_state.progress = progress
+          if (
+            progress_state.total_files > 0 &&
+            progress_state.processed_files > 0
+          ) {
+            progress.report({
+              increment:
+                (progress_state.processed_files / progress_state.total_files) *
+                100
+            })
+          }
+          try {
+            return await task_promise
+          } finally {
+            const index = this._progress_stack.indexOf(progress_state)
+            if (index !== -1) {
+              this._progress_stack.splice(index, 1)
+            }
           }
         }
+      )
+    } else {
+      const index = this._progress_stack.indexOf(progress_state)
+      if (index !== -1) {
+        this._progress_stack.splice(index, 1)
       }
-    )
+      return task_promise
+    }
   }
 
   public invalidate_token_counts_for_file(changed_file_path: string) {
