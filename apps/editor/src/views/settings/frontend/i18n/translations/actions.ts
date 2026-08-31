@@ -1,7 +1,7 @@
 export const translations = {
   'action.add-new': {
     en: 'Add New',
-    pl: 'Dodaj...',
+    pl: 'Utwórz...',
     'zh-cn': '添加新的',
     ja: '新規追加',
     'zh-tw': '新增',

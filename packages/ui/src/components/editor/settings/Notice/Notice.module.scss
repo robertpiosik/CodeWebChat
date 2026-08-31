@@ -1,18 +1,10 @@
 .container {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
-  padding: 9px 12px;
+  padding: 9px 9px 9px 12px;
   border-radius: 10px;
-
-  a {
-    text-decoration: underline;
-  }
-
-  > span:first-child {
-    transform: translateY(1px);
-    align-self: flex-start;
-  }
 
   &--info {
     color: var(--cwc-text-color-blue);
@@ -30,5 +22,29 @@
     a {
       color: var(--cwc-text-color-orange);
     }
+  }
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &--warning {
+    > span:first-child {
+      transform: translateY(1px);
+    }
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  > span:first-child {
+    align-self: flex-start;
+  }
+
+  .content {
+    flex: 1;
   }
 }

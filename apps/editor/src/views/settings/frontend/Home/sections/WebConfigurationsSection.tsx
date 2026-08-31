@@ -5,6 +5,7 @@ import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
+import { Button } from '@ui/components/editor/common/Button'
 import { SortableList } from '@ui/components/editor/settings/SortableList'
 import { IconButton } from '@ui/components/editor/common/IconButton'
 import { WebConfiguration } from '@shared/types/web-configuration'
@@ -126,11 +127,20 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             title={t('chatbots.configurations.title')}
             notice_slot={
               !props.web_configurations.length ? (
-                <UiNotice type="warning">{t('common.notice.missing')}</UiNotice>
+                <UiNotice
+                  type="warning"
+                  slot_right={
+                    <Button on_click={() => props.on_add_web_configuration()}>
+                      {t('action.add-new')}
+                    </Button>
+                  }
+                >
+                  {t('common.notice.missing')}
+                </UiNotice>
               ) : null
             }
           >
-            {props.web_configurations && (
+            {props.web_configurations.length > 0 && (
               <SortableList
                 items={props.web_configurations.map((c, index) => ({
                   ...c,

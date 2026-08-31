@@ -73,24 +73,6 @@ export const translations = {
     hu: 'A hitelesítő adatok biztonságosan vannak tárolva a {link} a gépén.',
     bg: 'Идентификационните данни се съхраняват сигурно в {link} на вашата машина.'
   },
-  'api-calls.model-providers.notice.missing': {
-    en: 'Missing model provider.',
-    pl: 'Brak dostawcy modelu.',
-    'zh-cn': '缺少模型提供商。',
-    ja: 'モデルプロバイダーがありません。',
-    'zh-tw': '缺少模型供應商。',
-    de: 'Fehlender Modellanbieter.',
-    es: 'Falta el proveedor de modelos.',
-    fr: 'Fournisseur de modèles manquant.',
-    'pt-br': 'Provedor de modelo ausente.',
-    ru: 'Провайдер модели отсутствует.',
-    ko: '모델 제공자가 누락되었습니다.',
-    it: 'Fornitore di modelli mancante.',
-    tr: 'Eksik model sağlayıcı.',
-    cs: 'Chybějící poskytovatel modelu.',
-    hu: 'Hiányzó modell szolgáltató.',
-    bg: 'Липсващ доставчик.'
-  },
   'api-calls.model-providers.action.insert': {
     en: 'Insert a new provider below/above',
     pl: 'Wstaw nowego dostawcę poniżej/powyżej',

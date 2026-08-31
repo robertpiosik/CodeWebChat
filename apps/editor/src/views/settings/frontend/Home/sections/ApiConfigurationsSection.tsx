@@ -4,12 +4,12 @@ import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
 import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
+import { Button } from '@ui/components/editor/common/Button'
 import { DefaultConfigurationSelector } from '@ui/components/editor/settings/DefaultConfigurationSelector'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { ApiConfiguration, Provider } from '@/views/settings/types/messages'
 import { ApiFeature } from '@/views/shared/types/api-features'
 import { Translation, use_translation } from '../../i18n/use-translation'
-import { ModelProvidersSection } from './ModelProvidersSection'
 import { SortableList } from '@ui/components/editor/settings/SortableList'
 import { IconButton } from '@ui/components/editor/common/IconButton'
 import { NavItem } from '../Home'
@@ -93,33 +93,98 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             }}
           />
         </UiNotice>
-        <div
-          ref={(el) =>
-            props.set_section_ref('section:api-calls:group:model-providers', el)
-          }
-        >
-          <UiGroup
-            title={t('api-calls.model-providers.title')}
-            notice_slot={
-              !props.providers.length ? (
-                <UiNotice type="warning">
-                  {t('api-calls.model-providers.notice.missing')}
-                </UiNotice>
-              ) : null
+        {props.providers.length > 0 && (
+          <div
+            ref={(el) =>
+              props.set_section_ref(
+                'section:api-calls:group:model-providers',
+                el
+              )
             }
           >
-            <ModelProvidersSection
-              providers={props.providers}
-              on_reorder={(reordered) => {
-                props.set_providers(reordered)
-                props.on_reorder_providers(reordered)
-              }}
-              on_add_provider={props.on_add_provider}
-              on_delete_provider={props.on_delete_provider}
-              on_edit_provider={props.on_edit_provider}
-            />
-          </UiGroup>
-        </div>
+            <UiGroup title={t('api-calls.model-providers.title')}>
+              <SortableList
+                items={props.providers.map((p) => ({ ...p, id: p.name }))}
+                on_reorder={(reordered) => {
+                  const reordered_providers = reordered.map(
+                    ({ id: _id, ...rest }) => rest as Provider
+                  )
+                  props.set_providers(reordered_providers)
+                  props.on_reorder_providers(reordered_providers)
+                }}
+                on_add={props.on_add_provider}
+                translations={{
+                  add_title: t('action.add-new'),
+                  item_text: t('api-calls.model-providers.item'),
+                  items_text: t('api-calls.model-providers.items')
+                }}
+                render_content={(provider) => {
+                  const is_localhost =
+                    provider.base_url.includes('localhost') ||
+                    provider.base_url.includes('127.0.0.1')
+
+                  return (
+                    <>
+                      <div
+                        style={{
+                          width: 90,
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }}
+                      >
+                        {provider.name}
+                      </div>
+                      <div
+                        style={{
+                          width: 50,
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }}
+                      >
+                        {is_localhost ? '⠀⠀—' : provider.api_key_mask}
+                      </div>
+                      <div
+                        style={{
+                          flex: 1,
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }}
+                      >
+                        {provider.base_url}
+                      </div>
+                    </>
+                  )
+                }}
+                render_actions={(provider, index) => {
+                  return (
+                    <>
+                      <IconButton
+                        codicon_icon="insert"
+                        title={t('api-calls.model-providers.action.insert')}
+                        on_click={() =>
+                          props.on_add_provider({ insertion_index: index })
+                        }
+                      />
+                      <IconButton
+                        codicon_icon="edit"
+                        title={t('api-calls.model-providers.action.edit')}
+                        on_click={() => props.on_edit_provider(provider.name)}
+                      />
+                      <IconButton
+                        codicon_icon="trash"
+                        title={t('api-calls.model-providers.action.delete')}
+                        on_click={() => props.on_delete_provider(provider.name)}
+                      />
+                    </>
+                  )
+                }}
+              />
+            </UiGroup>
+          </div>
+        )}
 
         <div
           ref={(el) =>
@@ -133,11 +198,20 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             title={t('api-calls.configurations.title')}
             notice_slot={
               !props.api_configurations.length ? (
-                <UiNotice type="warning">{t('common.notice.missing')}</UiNotice>
+                <UiNotice
+                  type="warning"
+                  slot_right={
+                    <Button on_click={() => props.on_add_api_configuration()}>
+                      {t('action.add-new')}
+                    </Button>
+                  }
+                >
+                  {t('common.notice.missing')}
+                </UiNotice>
               ) : null
             }
           >
-            {props.api_configurations && (
+            {props.api_configurations.length > 0 && (
               <SortableList
                 items={props.api_configurations}
                 on_reorder={(reordered) => {

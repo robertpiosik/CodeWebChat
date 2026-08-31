@@ -228,9 +228,7 @@ export const Home: React.FC<Props> = (props) => {
   const [edit_files_instructions, set_edit_files_instructions] = useState('')
 
   const get_has_warning = (id: NavItem): boolean => {
-    if (id == 'section:api-calls:group:model-providers') {
-      return props.providers.length == 0
-    } else if (id == 'section:api-calls:group:api-configurations') {
+    if (id == 'section:api-calls:group:api-configurations') {
       return props.api_configurations.length == 0
     } else if (id == 'section:chatbots:group:web-configurations') {
       return props.web_configurations.length == 0
@@ -265,6 +263,12 @@ export const Home: React.FC<Props> = (props) => {
       let new_active_id = NAV_ITEMS_CONFIG[0].id
 
       for (const item of NAV_ITEMS_CONFIG) {
+        if (
+          item.id === 'section:api-calls:group:model-providers' &&
+          props.providers.length === 0
+        ) {
+          continue
+        }
         const el = section_refs.current[item.id]
         if (el) {
           const rect = el.getBoundingClientRect()
@@ -287,7 +291,7 @@ export const Home: React.FC<Props> = (props) => {
       scroll_container.removeEventListener('scroll', handle_scroll)
       window.removeEventListener('resize', handle_scroll)
     }
-  }, [])
+  }, [props.providers.length])
 
   useEffect(() => {
     set_commit_instructions(props.commit_message_instructions || '')
@@ -357,6 +361,12 @@ export const Home: React.FC<Props> = (props) => {
           }[] = []
 
           for (const item of NAV_ITEMS_CONFIG) {
+            if (
+              item.id == 'section:api-calls:group:model-providers' &&
+              props.providers.length == 0
+            ) {
+              continue
+            }
             if (
               item.id.startsWith('section:') &&
               !item.id.includes(':group:')
