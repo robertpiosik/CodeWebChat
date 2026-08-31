@@ -155,18 +155,18 @@ export const use_handlers = (
   ])
 
   useEffect(() => {
-    if (params.input_ref.current) {
+    if (params.input_ref.current && !props_ref.current.warning) {
       requestAnimationFrame(() => {
-        if (!params.input_ref.current) return
+        if (!params.input_ref.current || props_ref.current.warning) return
         params.input_ref.current.focus({ preventScroll: true })
       })
     }
   }, [props.focus_key])
 
   useEffect(() => {
-    if (params.input_ref.current) {
+    if (params.input_ref.current && !props_ref.current.warning) {
       requestAnimationFrame(() => {
-        if (!params.input_ref.current) return
+        if (!params.input_ref.current || props_ref.current.warning) return
         params.input_ref.current.focus({ preventScroll: true })
         const selection = window.getSelection()
         if (selection) {

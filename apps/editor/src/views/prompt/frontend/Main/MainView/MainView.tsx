@@ -142,6 +142,17 @@ export const MainView: React.FC<Props> = (props) => {
     (props.target == TARGET.WEB && props.web_prompt_type == 'edit-files') ||
     (props.target == TARGET.API && props.api_prompt_type == 'edit-files')
 
+  let warning: string | undefined
+  if (
+    props.target == TARGET.API &&
+    props.api_prompt_type == 'edit-files' &&
+    props.api_configurations.length == 0
+  ) {
+    warning = 'Missing configuration'
+  } else if (show_edit_format_selector && props.selected_files.length == 0) {
+    warning = 'Select files'
+  }
+
   const handle_input_change = (value: string) => {
     props.set_instructions(value)
   }
@@ -271,6 +282,7 @@ export const MainView: React.FC<Props> = (props) => {
             is_copy_only={
               props.target == TARGET.WEB && props.web_configurations.length == 0
             }
+            warning={warning}
             value={props.instructions}
             chat_history={props.chat_history}
             on_change={handle_input_change}
@@ -374,7 +386,7 @@ export const MainView: React.FC<Props> = (props) => {
         {props.target == TARGET.WEB && (
           <UiConfigurations
             configurations={web_configurations}
-            disable_invocation={!props.is_connected}
+            disable_invocation={!!warning || !props.is_connected}
             on_create={(params) => {
               props.on_create_web_configuration(params)
             }}
@@ -415,7 +427,7 @@ export const MainView: React.FC<Props> = (props) => {
         {props.target == TARGET.API && (
           <UiConfigurations
             configurations={api_configurations_ui}
-            disable_invocation={!props.api_configurations.length}
+            disable_invocation={!!warning || !props.api_configurations.length}
             on_configuration_click={props.on_api_configuration_click}
             on_reorder={(reordered) =>
               props.on_api_configurations_reorder(reordered)

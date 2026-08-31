@@ -78,6 +78,7 @@ export type PromptFieldProps = {
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
   on_tabs_reorder?: (new_order: number[]) => void
+  warning?: string
   voice_input_push_to_talk?: boolean
   prompt_token_count: number
   is_copy_only?: boolean
@@ -179,6 +180,16 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     props.is_connected,
     props.prompt_type
   ])
+
+  useEffect(() => {
+    if (props.warning && input_ref.current) {
+      input_ref.current.blur()
+      const selection = window.getSelection()
+      if (selection) {
+        selection.removeAllRanges()
+      }
+    }
+  }, [props.warning])
 
   const { is_alt_pressed, handle_container_key_down } =
     use_keyboard_shortcuts(props)
@@ -291,7 +302,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           raw_text: props.value,
           context_file_paths: props.selected_files ?? []
         })
-        input_ref.current.focus()
+        if (!props.warning) {
+          input_ref.current.focus()
+        }
         set_caret_position_for_div(input_ref.current, display_pos)
       } else if (is_focused) {
         set_caret_position_for_div(input_ref.current, selection_start)
@@ -327,7 +340,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     <div
       className={styles.footer}
       onClick={() => {
-        if (input_ref.current) {
+        if (input_ref.current && !props.warning) {
           input_ref.current.focus()
           const selection = window.getSelection()
           if (selection) {
@@ -815,13 +828,20 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   return (
     <div className={styles.container}>
+      {props.warning ? (
+        <div className={styles.warning}>
+          <div className={styles.warning__inner}>{props.warning}</div>
+        </div>
+      ) : null}
+
       <div
         ref={container_inner_ref}
         className={cn(styles.container__inner, {
+          [styles['container__inner--disabled']]: !!props.warning,
           [styles['container__inner--selecting']]: is_text_selecting
         })}
         onKeyDown={handle_container_key_down}
-        onClick={() => input_ref.current?.focus()}
+        onClick={() => !props.warning && input_ref.current?.focus()}
       >
         <div className={styles['input-wrapper']}>
           <div className={styles['top-right']}>
