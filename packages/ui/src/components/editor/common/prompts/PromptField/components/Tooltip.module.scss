@@ -16,14 +16,6 @@
   box-shadow: 0 0 10px var(--vscode-widget-shadow);
   pointer-events: none;
 
-  &--warning {
-    &::before {
-      font-family: 'codicon';
-      content: '\ea6c';
-      color: var(--vscode-problemsWarningIcon-foreground);
-    }
-  }
-
   &::after {
     content: '';
     position: absolute;

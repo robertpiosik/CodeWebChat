@@ -29,6 +29,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
   EDIT_FORMAT_INSTRUCTIONS_WHOLE
 } from '@/constants/edit-format-instructions'
+import { open_settings } from '@/views/settings/helpers/open-settings'
 
 const get_last_used_config_id_key = () => {
   return LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
@@ -49,7 +50,7 @@ const get_api_configuration = async (params: {
     await params.model_providers_manager.get_api_configurations()
 
   if (api_configurations.length == 0) {
-    vscode.commands.executeCommand('codeWebChat.settings')
+    open_settings.api_calls.api_configurations()
     vscode.window.showInformationMessage(t('common.no-configurations-found'))
     return
   }

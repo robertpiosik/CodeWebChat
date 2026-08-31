@@ -25,6 +25,7 @@ import { WebSocketManager } from '@/services/websocket-manager'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 import { normalize_path } from '@/utils/normalize-path'
+import { open_settings } from '@/views/settings/helpers/open-settings'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
@@ -279,7 +280,7 @@ export const run_generate_action = async (params: {
           )
 
           if (valid_web_configurations.length == 0) {
-            vscode.commands.executeCommand('codeWebChat.settings')
+            open_settings.chatbots.web_configurations()
             vscode.window.showInformationMessage('No configurations found.')
             current_action = undefined
             continue

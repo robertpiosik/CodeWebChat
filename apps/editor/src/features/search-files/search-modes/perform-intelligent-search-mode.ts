@@ -23,6 +23,7 @@ import {
   intelligent_file_search_instructions,
   intelligent_file_search_format_for_prompt_view
 } from '@/constants/instructions'
+import { open_settings } from '@/views/settings/helpers/open-settings'
 
 export const perform_intelligent_search_mode = async (params: {
   files: string[]
@@ -300,7 +301,7 @@ export const perform_intelligent_search_mode = async (params: {
             )
 
             if (valid_web_configurations.length == 0) {
-              vscode.commands.executeCommand('codeWebChat.settings')
+              open_settings.chatbots.web_configurations()
               vscode.window.showInformationMessage('No configurations found.')
               go_back_to_action = true
               continue

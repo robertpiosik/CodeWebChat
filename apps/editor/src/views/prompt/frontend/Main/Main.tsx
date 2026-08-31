@@ -6,7 +6,6 @@ import { TARGET, Target } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import {
   BackendMessage,
-  ApiConfigurationsMessage,
   WebConfigurationsMessage,
   FrontendMessage,
   SelectionState
@@ -17,6 +16,8 @@ import { Configurations as UiConfigurations } from '@ui/components/editor/prompt
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 
 type Props = {
+  api_configurations?: ApiConfiguration[]
+  set_api_configurations: (configs: ApiConfiguration[]) => void
   scroll_reset_key: number
   response_history: ResponseHistoryItem[]
   selected_history_item_created_at?: number
@@ -82,8 +83,6 @@ export const Main: React.FC<Props> = (props) => {
     selected_web_configuration_name_by_mode,
     set_selected_web_configuration_name_by_mode
   ] = useState<{ [T in WebPromptType]?: string }>()
-  const [all_api_configurations, set_all_api_configurations] =
-    useState<ApiConfiguration[]>()
   const [
     selected_api_configuration_id_by_prompt_type,
     set_selected_api_configuration_id_by_prompt_type
@@ -111,11 +110,6 @@ export const Main: React.FC<Props> = (props) => {
           set_selected_api_configuration_id_by_prompt_type(
             (message as WebConfigurationsMessage)
               .selected_api_configuration_id_by_prompt_type
-          )
-          break
-        case 'API_CONFIGURATIONS':
-          set_all_api_configurations(
-            (message as ApiConfigurationsMessage).configurations
           )
           break
         case 'CHAT_HISTORY':
@@ -153,8 +147,7 @@ export const Main: React.FC<Props> = (props) => {
       { command: 'GET_WEB_CONFIGURATIONS' },
       { command: 'GET_HISTORY' },
       { command: 'GET_INSTRUCTIONS' },
-      { command: 'GET_EDIT_FORMAT' },
-      { command: 'GET_API_CONFIGURATIONS' }
+      { command: 'GET_EDIT_FORMAT' }
     ]
     initial_messages.forEach((message) => post_message(props.vscode, message))
 
@@ -277,18 +270,18 @@ export const Main: React.FC<Props> = (props) => {
   const handle_api_configurations_reorder = (
     reordered_configs: (UiConfigurations.Configuration & { id: string })[]
   ) => {
-    if (all_api_configurations) {
+    if (props.api_configurations) {
       const reordered_api_configs = reordered_configs
         .map((ui_config) => {
-          return all_api_configurations.find((c) => c.id == ui_config.id)!
+          return props.api_configurations!.find((c) => c.id == ui_config.id)!
         })
         .filter(Boolean)
 
-      if (reordered_api_configs.length != all_api_configurations.length) {
+      if (reordered_api_configs.length != props.api_configurations.length) {
         return
       }
 
-      set_all_api_configurations(reordered_api_configs)
+      props.set_api_configurations(reordered_api_configs)
 
       post_message(props.vscode, {
         command: 'REORDER_API_CONFIGURATIONS',
@@ -298,7 +291,7 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_edit_api_configuration = (id: string) => {
-    const config = all_api_configurations?.find((c) => c.id == id)
+    const config = props.api_configurations?.find((c) => c.id == id)
     if (config) props.on_api_configuration_edit(config)
   }
 
@@ -444,7 +437,7 @@ export const Main: React.FC<Props> = (props) => {
 
   if (
     all_web_configurations === undefined ||
-    all_api_configurations === undefined ||
+    props.api_configurations === undefined ||
     ask_about_files_history === undefined ||
     edit_files_history === undefined ||
     instructions === undefined ||
@@ -457,8 +450,8 @@ export const Main: React.FC<Props> = (props) => {
     selected_web_configuration_name_by_mode?.[props.web_prompt_type]
 
   const api_configurations =
-    props.target == TARGET.API && all_api_configurations
-      ? all_api_configurations
+    props.target == TARGET.API && props.api_configurations
+      ? props.api_configurations
       : []
 
   return (

@@ -9,6 +9,7 @@
   overflow: hidden;
   flex: 1;
   position: relative;
+  cursor: pointer;
 
   &--compact {
     height: 100%;
@@ -19,7 +20,7 @@
     }
   }
 
-  &:hover {
+  &:not(:disabled):hover {
     background-color: var(--vscode-toolbar-hoverBackground);
     border-color: transparent;
 
@@ -28,8 +29,13 @@
     }
   }
 
-  &--compact:hover .button__label-char {
+  &--compact:not(:disabled):hover .button__label-char {
     animation-name: small-wave;
+  }
+
+  &:disabled {
+    opacity: var(--disabled-opacity);
+    cursor: default;
   }
 
   &__label {

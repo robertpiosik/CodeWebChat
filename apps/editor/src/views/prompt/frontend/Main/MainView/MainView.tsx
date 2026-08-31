@@ -142,11 +142,6 @@ export const MainView: React.FC<Props> = (props) => {
     (props.target == TARGET.WEB && props.web_prompt_type == 'edit-files') ||
     (props.target == TARGET.API && props.api_prompt_type == 'edit-files')
 
-  let warning: string | undefined
-  if (props.target == TARGET.API && props.api_configurations.length == 0) {
-    warning = 'Add a configuration'
-  }
-
   const handle_input_change = (value: string) => {
     props.set_instructions(value)
   }
@@ -333,7 +328,6 @@ export const MainView: React.FC<Props> = (props) => {
             on_new_tab={props.on_new_tab}
             on_tab_delete={props.on_tab_delete}
             on_tabs_reorder={props.on_tabs_reorder}
-            warning={warning}
             voice_input_push_to_talk={props.voice_input_push_to_talk}
             currently_open_file_path={props.currently_open_file_path}
             translations={{
@@ -380,7 +374,7 @@ export const MainView: React.FC<Props> = (props) => {
         {props.target == TARGET.WEB && (
           <UiConfigurations
             configurations={web_configurations}
-            disable_invocation={!!warning || !props.is_connected}
+            disable_invocation={!props.is_connected}
             on_create={(params) => {
               props.on_create_web_configuration(params)
             }}
@@ -421,7 +415,7 @@ export const MainView: React.FC<Props> = (props) => {
         {props.target == TARGET.API && (
           <UiConfigurations
             configurations={api_configurations_ui}
-            disable_invocation={!!warning}
+            disable_invocation={!props.api_configurations.length}
             on_configuration_click={props.on_api_configuration_click}
             on_reorder={(reordered) =>
               props.on_api_configurations_reorder(reordered)

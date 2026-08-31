@@ -5,6 +5,7 @@ type Props = {
   label: string
   on_click: () => void
   is_compact?: boolean
+  disabled?: boolean
 }
 
 export const TargetButton: React.FC<Props> = (props) => {
@@ -13,7 +14,8 @@ export const TargetButton: React.FC<Props> = (props) => {
       className={cn(styles.button, {
         [styles['button--compact']]: props.is_compact
       })}
-      onClick={props.on_click}
+      onClick={props.disabled ? undefined : props.on_click}
+      disabled={props.disabled}
     >
       <div className={styles['button__label']}>
         {props.label.split('').map((char, index) => (

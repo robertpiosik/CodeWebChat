@@ -4,6 +4,7 @@ import { TARGET } from '@shared/types/mode'
 import { get_last_used_template_key } from '@/constants/state-keys'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { t } from '@/i18n'
+import { open_settings } from '../../../settings/helpers/open-settings'
 
 type Template = {
   name?: string
@@ -47,10 +48,7 @@ export const handle_template_quick_pick = async (
       selection ==
       t('views.prompt.handlers.handle-template-quick-pick.open-settings')
     ) {
-      vscode.commands.executeCommand(
-        'codeWebChat.settings',
-        'section:general:group:prompt-field'
-      )
+      open_settings.general.prompt_field()
     }
     return
   }

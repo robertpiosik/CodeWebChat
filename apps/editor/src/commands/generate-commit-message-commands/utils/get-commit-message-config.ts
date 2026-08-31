@@ -7,6 +7,7 @@ import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
+import { open_settings } from '@/views/settings/helpers/open-settings'
 
 export interface CommitMessageApiConfiguration {
   model_provider_name: string
@@ -41,7 +42,7 @@ export const get_commit_message_api_configuration = async (
       await model_providers_manager.get_api_configurations()
 
     if (api_configurations.length == 0) {
-      vscode.commands.executeCommand('codeWebChat.settings')
+      open_settings.api_calls.api_configurations()
       vscode.window.showInformationMessage(t('common.no-configurations-found'))
       return null
     }

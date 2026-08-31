@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import {
   BackendMessage,
   FrontendMessage,
-  SetupProgress
+  SetupProgress,
+  ApiConfiguration
 } from '../../../types/messages'
 import { Target, TARGET } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
@@ -31,6 +32,8 @@ export const use_prompt = (vscode: any) => {
     useState<number>(0)
   const [ask_instructions_token_count, set_ask_instructions_token_count] =
     useState<number>(0)
+  const [api_configurations, set_api_configurations] =
+    useState<ApiConfiguration[]>()
 
   const {
     ask_about_context_instructions,
@@ -135,6 +138,8 @@ export const use_prompt = (vscode: any) => {
         set_ask_instructions_token_count(message.ask_instructions_token_count)
       } else if (message.command == 'IS_MODERN_UI') {
         set_is_modern_ui(message.is_modern_ui)
+      } else if (message.command == 'API_CONFIGURATIONS') {
+        set_api_configurations((message as any).configurations)
       }
     }
     window.addEventListener('message', handle_message)
@@ -151,7 +156,8 @@ export const use_prompt = (vscode: any) => {
       { command: 'GET_VOICE_INPUT_PUSH_TO_TALK' },
       { command: 'GET_IS_MODERN_UI' },
       { command: 'GET_TOKEN_COUNT' },
-      { command: 'GET_SELECTED_FILES' }
+      { command: 'GET_SELECTED_FILES' },
+      { command: 'GET_API_CONFIGURATIONS' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -256,6 +262,8 @@ export const use_prompt = (vscode: any) => {
     selected_files_token_count,
     edit_instructions_token_count,
     ask_instructions_token_count,
-    handle_preview_prompt
+    handle_preview_prompt,
+    api_configurations,
+    set_api_configurations
   }
 }

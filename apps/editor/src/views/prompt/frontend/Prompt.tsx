@@ -76,7 +76,9 @@ export const Prompt = () => {
     selected_files_token_count,
     edit_instructions_token_count,
     ask_instructions_token_count,
-    handle_preview_prompt
+    handle_preview_prompt,
+    api_configurations,
+    set_api_configurations
   } = use_panel(vscode)
 
   const {
@@ -266,6 +268,8 @@ export const Prompt = () => {
               })}
             >
               <Main
+                api_configurations={api_configurations}
+                set_api_configurations={set_api_configurations}
                 bottom_spacer_height={bottom_spacer_height}
                 scroll_reset_key={main_view_scroll_reset_key}
                 are_keyboard_shortcuts_disabled={
@@ -397,6 +401,7 @@ export const Prompt = () => {
                 }
                 is_setup_complete={is_setup_complete}
                 on_donate_click={() => set_viewing_donations(true)}
+                api_configurations={api_configurations}
               />
             </div>
           </Layout>

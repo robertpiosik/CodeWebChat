@@ -32,7 +32,8 @@
     "../shared/src/*.ts",
     "../shared/src/*.tsx",
     "../../apps/editor/src/**/*.ts",
-    "../../apps/editor/src/**/*.tsx"
+    "../../apps/editor/src/**/*.tsx",
+    "../../apps/editor/src/views/settings/helpers/open-settings.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }

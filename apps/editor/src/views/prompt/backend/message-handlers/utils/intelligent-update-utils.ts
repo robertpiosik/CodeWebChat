@@ -16,6 +16,7 @@ import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
+import { open_settings } from '@/views/settings/helpers/open-settings'
 
 export const get_intelligent_update_config = async (
   model_providers_manager: ModelProvidersManager,
@@ -29,7 +30,7 @@ export const get_intelligent_update_config = async (
     await model_providers_manager.get_api_configurations()
 
   if (intelligent_update_api_configurations.length == 0) {
-    vscode.commands.executeCommand('codeWebChat.settings')
+    open_settings.api_calls.api_configurations()
     vscode.window.showInformationMessage(t('common.no-configurations-found'))
     return
   }

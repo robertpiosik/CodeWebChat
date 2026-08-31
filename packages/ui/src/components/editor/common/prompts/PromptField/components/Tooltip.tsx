@@ -5,7 +5,6 @@ import styles from './Tooltip.module.scss'
 export type TooltipProps = {
   message: React.ReactNode
   align: 'left' | 'right' | 'center'
-  is_warning?: boolean
   details?: React.ReactNode
   offset?: number
 }
@@ -15,8 +14,7 @@ export const Tooltip: React.FC<TooltipProps> = (params) => (
     className={cn(styles.tooltip, {
       [styles['tooltip--align-left']]: params.align == 'left',
       [styles['tooltip--align-right']]: params.align == 'right',
-      [styles['tooltip--align-center']]: params.align == 'center',
-      [styles['tooltip--warning']]: params.is_warning
+      [styles['tooltip--align-center']]: params.align == 'center'
     })}
     style={
       params.offset !== undefined
