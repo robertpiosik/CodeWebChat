@@ -26,15 +26,15 @@ export type NavItem =
   | 'section:general:group:prompt-field'
   | 'section:general:group:history'
   | 'section:general:group:commit-messages'
-  | 'section:chatbots'
-  | 'section:chatbots:group:web-configurations'
-  | 'section:chatbots:group:chatbots-other'
-  | 'section:api-calls'
-  | 'section:api-calls:group:model-providers'
-  | 'section:api-calls:group:api-configurations'
-  | 'section:api-calls:group:api-defaults'
-  | 'section:api-calls:group:api-behavior'
-  | 'section:api-calls:group:system-instructions'
+  | 'section:web'
+  | 'section:web:group:web-configurations'
+  | 'section:web:group:chatbots-other'
+  | 'section:api'
+  | 'section:api:group:model-providers'
+  | 'section:api:group:api-configurations'
+  | 'section:api:group:api-defaults'
+  | 'section:api:group:api-behavior'
+  | 'section:api:group:system-instructions'
 
 type NavConfigItem = { id: NavItem; label: TranslationKey }
 
@@ -64,39 +64,39 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'general.commit-messages.title'
   },
   {
-    id: 'section:chatbots',
+    id: 'section:web',
     label: 'web.title'
   },
   {
-    id: 'section:chatbots:group:web-configurations',
+    id: 'section:web:group:web-configurations',
     label: 'chatbots.configurations.title'
   },
   {
-    id: 'section:chatbots:group:chatbots-other',
+    id: 'section:web:group:chatbots-other',
     label: 'chatbots.behavior.title'
   },
   {
-    id: 'section:api-calls',
+    id: 'section:api',
     label: 'api.title'
   },
   {
-    id: 'section:api-calls:group:model-providers',
+    id: 'section:api:group:model-providers',
     label: 'api-calls.model-providers.title'
   },
   {
-    id: 'section:api-calls:group:api-configurations',
+    id: 'section:api:group:api-configurations',
     label: 'api-calls.configurations.title'
   },
   {
-    id: 'section:api-calls:group:api-defaults',
+    id: 'section:api:group:api-defaults',
     label: 'api-calls.default-configurations.title'
   },
   {
-    id: 'section:api-calls:group:api-behavior',
+    id: 'section:api:group:api-behavior',
     label: 'api-calls.behavior.title'
   },
   {
-    id: 'section:api-calls:group:system-instructions',
+    id: 'section:api:group:system-instructions',
     label: 'api-calls.system-instructions.title'
   }
 ]
@@ -202,15 +202,15 @@ export const Home: React.FC<Props> = (props) => {
     'section:general:group:prompt-field': null,
     'section:general:group:history': null,
     'section:general:group:commit-messages': null,
-    'section:chatbots': null,
-    'section:chatbots:group:web-configurations': null,
-    'section:chatbots:group:chatbots-other': null,
-    'section:api-calls': null,
-    'section:api-calls:group:model-providers': null,
-    'section:api-calls:group:api-configurations': null,
-    'section:api-calls:group:api-defaults': null,
-    'section:api-calls:group:api-behavior': null,
-    'section:api-calls:group:system-instructions': null
+    'section:web': null,
+    'section:web:group:web-configurations': null,
+    'section:web:group:chatbots-other': null,
+    'section:api': null,
+    'section:api:group:model-providers': null,
+    'section:api:group:api-configurations': null,
+    'section:api:group:api-defaults': null,
+    'section:api:group:api-behavior': null,
+    'section:api:group:system-instructions': null
   })
 
   const set_section_ref = useCallback(
@@ -228,9 +228,9 @@ export const Home: React.FC<Props> = (props) => {
   const [edit_files_instructions, set_edit_files_instructions] = useState('')
 
   const get_has_warning = (id: NavItem): boolean => {
-    if (id == 'section:api-calls:group:api-configurations') {
+    if (id == 'section:api:group:api-configurations') {
       return props.api_configurations.length == 0
-    } else if (id == 'section:chatbots:group:web-configurations') {
+    } else if (id == 'section:web:group:web-configurations') {
       return props.web_configurations.length == 0
     } else {
       return false
@@ -240,6 +240,85 @@ export const Home: React.FC<Props> = (props) => {
   const [active_nav_item_id, set_active_nav_item_id] = useState<NavItem>(
     NAV_ITEMS_CONFIG[0].id
   )
+
+  const last_rendered_item_id = useMemo(() => {
+    let last_id = NAV_ITEMS_CONFIG[0].id
+    for (const item of NAV_ITEMS_CONFIG) {
+      if (
+        item.id === 'section:api:group:model-providers' &&
+        props.providers.length === 0
+      ) {
+        continue
+      }
+      if (
+        item.id === 'section:web:group:chatbots-other' &&
+        props.web_configurations.length === 0
+      ) {
+        continue
+      }
+      if (
+        [
+          'section:api:group:api-defaults',
+          'section:api:group:api-behavior',
+          'section:api:group:system-instructions'
+        ].includes(item.id) &&
+        props.api_configurations.length === 0
+      ) {
+        continue
+      }
+      last_id = item.id
+    }
+    return last_id
+  }, [
+    props.providers.length,
+    props.web_configurations.length,
+    props.api_configurations.length
+  ])
+
+  useEffect(() => {
+    const scroll_container = scroll_container_ref.current
+    const el = section_refs.current[last_rendered_item_id]
+    if (!scroll_container || !el) return
+
+    let last_el_content_height = 0
+    let last_container_height = 0
+
+    const update = () => {
+      if (last_el_content_height && last_container_height) {
+        const is_subsection = NAV_ITEMS_CONFIG.find(
+          (i) => i.id === last_rendered_item_id
+        )?.id.includes(':group:')
+        const target_y = is_subsection ? SECTION_HEADER_HEIGHT : 0
+        const required = Math.max(
+          0,
+          last_container_height - target_y - last_el_content_height
+        )
+        el.style.paddingBottom = `${required}px`
+      }
+    }
+
+    const observer = new ResizeObserver((entries) => {
+      let changed = false
+      for (const entry of entries) {
+        if (entry.target === el) {
+          last_el_content_height = entry.contentRect.height
+          changed = true
+        } else if (entry.target === scroll_container) {
+          last_container_height = entry.contentRect.height
+          changed = true
+        }
+      }
+      if (changed) update()
+    })
+
+    observer.observe(scroll_container)
+    observer.observe(el)
+
+    return () => {
+      observer.disconnect()
+      if (el) el.style.paddingBottom = ''
+    }
+  }, [last_rendered_item_id])
 
   const active_parent_id = useMemo(() => {
     let current_parent: NavItem | null = null
@@ -264,8 +343,24 @@ export const Home: React.FC<Props> = (props) => {
 
       for (const item of NAV_ITEMS_CONFIG) {
         if (
-          item.id === 'section:api-calls:group:model-providers' &&
+          item.id === 'section:api:group:model-providers' &&
           props.providers.length === 0
+        ) {
+          continue
+        }
+        if (
+          item.id === 'section:web:group:chatbots-other' &&
+          props.web_configurations.length === 0
+        ) {
+          continue
+        }
+        if (
+          [
+            'section:api:group:api-defaults',
+            'section:api:group:api-behavior',
+            'section:api:group:system-instructions'
+          ].includes(item.id) &&
+          props.api_configurations.length === 0
         ) {
           continue
         }
@@ -291,7 +386,11 @@ export const Home: React.FC<Props> = (props) => {
       scroll_container.removeEventListener('scroll', handle_scroll)
       window.removeEventListener('resize', handle_scroll)
     }
-  }, [props.providers.length])
+  }, [
+    props.providers.length,
+    props.web_configurations.length,
+    props.api_configurations.length
+  ])
 
   useEffect(() => {
     set_commit_instructions(props.commit_message_instructions || '')
@@ -362,8 +461,24 @@ export const Home: React.FC<Props> = (props) => {
 
           for (const item of NAV_ITEMS_CONFIG) {
             if (
-              item.id == 'section:api-calls:group:model-providers' &&
-              props.providers.length == 0
+              item.id === 'section:api:group:model-providers' &&
+              props.providers.length === 0
+            ) {
+              continue
+            }
+            if (
+              item.id === 'section:web:group:chatbots-other' &&
+              props.web_configurations.length === 0
+            ) {
+              continue
+            }
+            if (
+              [
+                'section:api:group:api-defaults',
+                'section:api:group:api-behavior',
+                'section:api:group:system-instructions'
+              ].includes(item.id) &&
+              props.api_configurations.length === 0
             ) {
               continue
             }
@@ -517,7 +632,7 @@ export const Home: React.FC<Props> = (props) => {
         />
 
         <WebConfigurationsSection
-          ref={(el) => set_section_ref('section:chatbots', el)}
+          ref={(el) => set_section_ref('section:web', el)}
           set_section_ref={set_section_ref}
           web_configurations={props.web_configurations}
           set_web_configurations={props.set_web_configurations}
@@ -534,7 +649,7 @@ export const Home: React.FC<Props> = (props) => {
         />
 
         <ApiConfigurationsSection
-          ref={(el) => set_section_ref('section:api-calls', el)}
+          ref={(el) => set_section_ref('section:api', el)}
           set_section_ref={set_section_ref}
           providers={props.providers}
           set_providers={props.set_providers}

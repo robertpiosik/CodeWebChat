@@ -42,7 +42,7 @@ export const get_commit_message_api_configuration = async (
       await model_providers_manager.get_api_configurations()
 
     if (api_configurations.length == 0) {
-      open_settings.api_calls.api_configurations()
+      open_settings.api.api_configurations()
       vscode.window.showInformationMessage(t('common.no-configurations-found'))
       return null
     }

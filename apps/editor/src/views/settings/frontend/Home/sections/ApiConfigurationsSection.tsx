@@ -96,10 +96,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
         {props.providers.length > 0 && (
           <div
             ref={(el) =>
-              props.set_section_ref(
-                'section:api-calls:group:model-providers',
-                el
-              )
+              props.set_section_ref('section:api:group:model-providers', el)
             }
           >
             <UiGroup title={t('api-calls.model-providers.title')}>
@@ -188,10 +185,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
 
         <div
           ref={(el) =>
-            props.set_section_ref(
-              'section:api-calls:group:api-configurations',
-              el
-            )
+            props.set_section_ref('section:api:group:api-configurations', el)
           }
         >
           <UiGroup
@@ -288,161 +282,179 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
           </UiGroup>
         </div>
 
-        <div
-          ref={(el) =>
-            props.set_section_ref('section:api-calls:group:api-defaults', el)
-          }
-        >
-          <UiGroup title={t('api-calls.default-configurations.title')}>
-            <DefaultConfigurationSelector
-              title={t(
-                'api-calls.default-configurations.tool.intelligent-update'
-              )}
-              value={props.defaults['intelligent-update'] || null}
-              configurations={selector_configurations}
-              on_unset={() =>
-                props.on_set_default_api_configuration(
-                  'intelligent-update',
-                  null
-                )
+        {props.api_configurations.length > 0 && (
+          <>
+            <div
+              ref={(el) =>
+                props.set_section_ref('section:api:group:api-defaults', el)
               }
-              on_select={() =>
-                props.on_select_default_api_configuration('intelligent-update')
-              }
-              translations={{
-                select: t('api-calls.configurations.action.select-default'),
-                unset: t('api-calls.configurations.action.unset-default')
-              }}
-            />
-            <DefaultConfigurationSelector
-              title={t('api-calls.default-configurations.tool.code-at-cursor')}
-              value={props.defaults['code-at-cursor'] || null}
-              configurations={selector_configurations}
-              on_unset={() =>
-                props.on_set_default_api_configuration('code-at-cursor', null)
-              }
-              on_select={() =>
-                props.on_select_default_api_configuration('code-at-cursor')
-              }
-              translations={{
-                select: t('api-calls.configurations.action.select-default'),
-                unset: t('api-calls.configurations.action.unset-default')
-              }}
-            />
-            <DefaultConfigurationSelector
-              title={t('api-calls.default-configurations.tool.commit-messages')}
-              value={props.defaults['commit-messages'] || null}
-              configurations={selector_configurations}
-              on_unset={() =>
-                props.on_set_default_api_configuration('commit-messages', null)
-              }
-              on_select={() =>
-                props.on_select_default_api_configuration('commit-messages')
-              }
-              translations={{
-                select: t('api-calls.configurations.action.select-default'),
-                unset: t('api-calls.configurations.action.unset-default')
-              }}
-            />
-            <DefaultConfigurationSelector
-              title={t(
-                'api-calls.default-configurations.tool.intelligent-file-search'
-              )}
-              value={props.defaults['intelligent-file-search'] || null}
-              configurations={selector_configurations}
-              on_unset={() =>
-                props.on_set_default_api_configuration(
-                  'intelligent-file-search',
-                  null
-                )
-              }
-              on_select={() =>
-                props.on_select_default_api_configuration(
-                  'intelligent-file-search'
-                )
-              }
-              translations={{
-                select: t('api-calls.configurations.action.select-default'),
-                unset: t('api-calls.configurations.action.unset-default')
-              }}
-            />
-
-            <DefaultConfigurationSelector
-              title={t('api-calls.default-configurations.tool.voice-input')}
-              value={props.defaults['voice-input'] || null}
-              configurations={selector_configurations}
-              on_unset={() =>
-                props.on_set_default_api_configuration('voice-input', null)
-              }
-              on_select={() =>
-                props.on_select_default_api_configuration('voice-input')
-              }
-              translations={{
-                select: t('api-calls.configurations.action.select-default'),
-                unset: t('api-calls.configurations.action.unset-default')
-              }}
-            />
-          </UiGroup>
-        </div>
-
-        <div
-          ref={(el) =>
-            props.set_section_ref('section:api-calls:group:api-behavior', el)
-          }
-        >
-          <UiGroup title={t('api-calls.behavior.title')}>
-            <UiItem
-              title={t('api-calls.behavior.intelligent-update.auto-run.title')}
-              description={t(
-                'api-calls.behavior.intelligent-update.auto-run.description'
-              )}
-              slot_right={
-                <UiToggler
-                  is_on={props.auto_run_intelligent_update}
-                  on_toggle={props.on_auto_run_intelligent_update_change}
-                />
-              }
-            />
-          </UiGroup>
-        </div>
-
-        <div
-          ref={(el) =>
-            props.set_section_ref(
-              'section:api-calls:group:system-instructions',
-              el
-            )
-          }
-        >
-          <UiGroup title={t('api-calls.system-instructions.title')} is_last>
-            <UiItem
-              title={t('api-calls.system-instructions.edit-files.title')}
-              description={t(
-                'api-calls.system-instructions.edit-files.description'
-              )}
-              is_toggleable
-              translations={{
-                expand: t('common.expand'),
-                collapse: t('common.collapse')
-              }}
             >
-              <UiTextarea
-                value={props.edit_files_instructions}
-                min_rows={3}
-                on_change={props.set_edit_files_instructions}
-                on_blur={props.on_edit_files_instructions_blur}
-                action_icon={
-                  props.edit_files_instructions !==
-                  props.default_edit_files_instructions
-                    ? 'discard'
-                    : undefined
-                }
-                action_title={t('general.action.restore-default')}
-                on_action_click={props.on_restore_edit_files_instructions}
-              />
-            </UiItem>
-          </UiGroup>
-        </div>
+              <UiGroup title={t('api-calls.default-configurations.title')}>
+                <DefaultConfigurationSelector
+                  title={t(
+                    'api-calls.default-configurations.tool.intelligent-update'
+                  )}
+                  value={props.defaults['intelligent-update'] || null}
+                  configurations={selector_configurations}
+                  on_unset={() =>
+                    props.on_set_default_api_configuration(
+                      'intelligent-update',
+                      null
+                    )
+                  }
+                  on_select={() =>
+                    props.on_select_default_api_configuration(
+                      'intelligent-update'
+                    )
+                  }
+                  translations={{
+                    select: t('api-calls.configurations.action.select-default'),
+                    unset: t('api-calls.configurations.action.unset-default')
+                  }}
+                />
+                <DefaultConfigurationSelector
+                  title={t(
+                    'api-calls.default-configurations.tool.code-at-cursor'
+                  )}
+                  value={props.defaults['code-at-cursor'] || null}
+                  configurations={selector_configurations}
+                  on_unset={() =>
+                    props.on_set_default_api_configuration(
+                      'code-at-cursor',
+                      null
+                    )
+                  }
+                  on_select={() =>
+                    props.on_select_default_api_configuration('code-at-cursor')
+                  }
+                  translations={{
+                    select: t('api-calls.configurations.action.select-default'),
+                    unset: t('api-calls.configurations.action.unset-default')
+                  }}
+                />
+                <DefaultConfigurationSelector
+                  title={t(
+                    'api-calls.default-configurations.tool.commit-messages'
+                  )}
+                  value={props.defaults['commit-messages'] || null}
+                  configurations={selector_configurations}
+                  on_unset={() =>
+                    props.on_set_default_api_configuration(
+                      'commit-messages',
+                      null
+                    )
+                  }
+                  on_select={() =>
+                    props.on_select_default_api_configuration('commit-messages')
+                  }
+                  translations={{
+                    select: t('api-calls.configurations.action.select-default'),
+                    unset: t('api-calls.configurations.action.unset-default')
+                  }}
+                />
+                <DefaultConfigurationSelector
+                  title={t(
+                    'api-calls.default-configurations.tool.intelligent-file-search'
+                  )}
+                  value={props.defaults['intelligent-file-search'] || null}
+                  configurations={selector_configurations}
+                  on_unset={() =>
+                    props.on_set_default_api_configuration(
+                      'intelligent-file-search',
+                      null
+                    )
+                  }
+                  on_select={() =>
+                    props.on_select_default_api_configuration(
+                      'intelligent-file-search'
+                    )
+                  }
+                  translations={{
+                    select: t('api-calls.configurations.action.select-default'),
+                    unset: t('api-calls.configurations.action.unset-default')
+                  }}
+                />
+
+                <DefaultConfigurationSelector
+                  title={t('api-calls.default-configurations.tool.voice-input')}
+                  value={props.defaults['voice-input'] || null}
+                  configurations={selector_configurations}
+                  on_unset={() =>
+                    props.on_set_default_api_configuration('voice-input', null)
+                  }
+                  on_select={() =>
+                    props.on_select_default_api_configuration('voice-input')
+                  }
+                  translations={{
+                    select: t('api-calls.configurations.action.select-default'),
+                    unset: t('api-calls.configurations.action.unset-default')
+                  }}
+                />
+              </UiGroup>
+            </div>
+
+            <div
+              ref={(el) =>
+                props.set_section_ref('section:api:group:api-behavior', el)
+              }
+            >
+              <UiGroup title={t('api-calls.behavior.title')}>
+                <UiItem
+                  title={t(
+                    'api-calls.behavior.intelligent-update.auto-run.title'
+                  )}
+                  description={t(
+                    'api-calls.behavior.intelligent-update.auto-run.description'
+                  )}
+                  slot_right={
+                    <UiToggler
+                      is_on={props.auto_run_intelligent_update}
+                      on_toggle={props.on_auto_run_intelligent_update_change}
+                    />
+                  }
+                />
+              </UiGroup>
+            </div>
+
+            <div
+              ref={(el) =>
+                props.set_section_ref(
+                  'section:api:group:system-instructions',
+                  el
+                )
+              }
+            >
+              <UiGroup title={t('api-calls.system-instructions.title')}>
+                <UiItem
+                  title={t('api-calls.system-instructions.edit-files.title')}
+                  description={t(
+                    'api-calls.system-instructions.edit-files.description'
+                  )}
+                  is_toggleable
+                  translations={{
+                    expand: t('common.expand'),
+                    collapse: t('common.collapse')
+                  }}
+                >
+                  <UiTextarea
+                    value={props.edit_files_instructions}
+                    min_rows={3}
+                    on_change={props.set_edit_files_instructions}
+                    on_blur={props.on_edit_files_instructions_blur}
+                    action_icon={
+                      props.edit_files_instructions !==
+                      props.default_edit_files_instructions
+                        ? 'discard'
+                        : undefined
+                    }
+                    action_title={t('general.action.restore-default')}
+                    on_action_click={props.on_restore_edit_files_instructions}
+                  />
+                </UiItem>
+              </UiGroup>
+            </div>
+          </>
+        )}
       </UiSection>
     )
   }

@@ -8,19 +8,19 @@ export const open_settings = {
         'section:general:group:prompt-field'
       )
   },
-  chatbots: {
+  web: {
     web_configurations: () => {
       vscode.commands.executeCommand(
         'codeWebChat.settings',
-        'section:chatbots:group:web-configurations'
+        'section:web:group:web-configurations'
       )
     }
   },
-  api_calls: {
+  api: {
     api_configurations: () => {
       vscode.commands.executeCommand(
         'codeWebChat.settings',
-        'section:api-calls:group:api-configurations'
+        'section:api:group:api-configurations'
       )
     }
   }

@@ -117,10 +117,7 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
         </div>
         <div
           ref={(el) =>
-            props.set_section_ref(
-              'section:chatbots:group:web-configurations',
-              el
-            )
+            props.set_section_ref('section:web:group:web-configurations', el)
           }
         >
           <UiGroup
@@ -300,24 +297,26 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             )}
           </UiGroup>
         </div>
-        <div
-          ref={(el) =>
-            props.set_section_ref('section:chatbots:group:chatbots-other', el)
-          }
-        >
-          <UiGroup title={t('chatbots.behavior.title')}>
-            <UiItem
-              title={t('chatbots.behavior.reuse-last-tab.title')}
-              description={t('chatbots.behavior.reuse-last-tab.description')}
-              slot_right={
-                <UiToggler
-                  is_on={props.reuse_last_tab}
-                  on_toggle={props.on_reuse_last_tab_change}
-                />
-              }
-            />
-          </UiGroup>
-        </div>
+        {props.web_configurations.length > 0 && (
+          <div
+            ref={(el) =>
+              props.set_section_ref('section:web:group:chatbots-other', el)
+            }
+          >
+            <UiGroup title={t('chatbots.behavior.title')}>
+              <UiItem
+                title={t('chatbots.behavior.reuse-last-tab.title')}
+                description={t('chatbots.behavior.reuse-last-tab.description')}
+                slot_right={
+                  <UiToggler
+                    is_on={props.reuse_last_tab}
+                    on_toggle={props.on_reuse_last_tab_change}
+                  />
+                }
+              />
+            </UiGroup>
+          </div>
+        )}
       </UiSection>
     )
   }

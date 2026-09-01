@@ -285,7 +285,7 @@ export const perform_code_at_cursor = async (params: {
       )
 
       if (valid_web_configurations.length == 0) {
-        open_settings.chatbots.web_configurations()
+        open_settings.web.web_configurations()
         vscode.window.showInformationMessage('No configurations found.')
         return
       }

@@ -301,7 +301,7 @@ export const perform_intelligent_search_mode = async (params: {
             )
 
             if (valid_web_configurations.length == 0) {
-              open_settings.chatbots.web_configurations()
+              open_settings.web.web_configurations()
               vscode.window.showInformationMessage('No configurations found.')
               go_back_to_action = true
               continue
