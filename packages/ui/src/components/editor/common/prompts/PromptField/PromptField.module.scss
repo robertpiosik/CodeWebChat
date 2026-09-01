@@ -226,21 +226,6 @@
         display: inline-block;
         position: relative;
       }
-
-      &__indicator {
-        width: 5px;
-        height: 5px;
-        border-radius: 50%;
-        margin-left: 5px;
-
-        &--connected {
-          background-color: var(--cwc-text-color-green);
-        }
-
-        &--disconnected {
-          background-color: var(--cwc-text-color-red);
-        }
-      }
     }
 
     &__submit {
