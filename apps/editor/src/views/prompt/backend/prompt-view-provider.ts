@@ -378,7 +378,10 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           this.send_web_configurations_to_webview(this.webview_view.webview)
         }
 
-        if (event.affectsConfiguration('codeWebChat.apiConfigurations')) {
+        if (
+          event.affectsConfiguration('codeWebChat.modelProviders') ||
+          event.affectsConfiguration('codeWebChat.apiConfigurations')
+        ) {
           handle_get_api_configurations(this)
         }
 

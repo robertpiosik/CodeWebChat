@@ -140,7 +140,9 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                           textOverflow: 'ellipsis'
                         }}
                       >
-                        {is_localhost ? '⠀⠀—' : provider.api_key_mask}
+                        {is_localhost || !provider.api_key_mask
+                          ? '⠀⠀—'
+                          : provider.api_key_mask}
                       </div>
                       <div
                         style={{
