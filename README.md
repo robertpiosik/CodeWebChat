@@ -76,9 +76,9 @@ Plan features or get explanations.
 
 </details>
 
-### TAB completions
+### Code at cursor
 
-Quality autocomplete with SOTA reasoning models.
+TAB completions from SOTA reasoning models.
 
 <details>
 <summary>Structure of the constructed prompt</summary>
