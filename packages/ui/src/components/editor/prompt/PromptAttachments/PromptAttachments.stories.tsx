@@ -1,16 +1,16 @@
-import { PromptNotice } from './PromptNotice'
+import { PromptAttachments } from './PromptAttachments'
 
 export default {
-  component: PromptNotice
+  component: PromptAttachments
 }
 
 export const Default = () => {
   return (
-    <PromptNotice
-      warning="Select context to edit"
+    <PromptAttachments
       token_count={12500}
       files_count={5}
       translations={{
+        warning: 'Select context to edit',
         attaching_files: 'Attaching {files} files'
       }}
     />
@@ -18,12 +18,19 @@ export const Default = () => {
 }
 
 export const OnlyWarning = () => {
-  return <PromptNotice warning="Select context to edit" />
+  return (
+    <PromptAttachments
+      translations={{
+        warning: 'Select context to edit',
+        attaching_files: 'Attaching {files} files'
+      }}
+    />
+  )
 }
 
 export const OnlyFiles = () => {
   return (
-    <PromptNotice
+    <PromptAttachments
       token_count={12500}
       files_count={5}
       translations={{

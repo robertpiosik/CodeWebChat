@@ -1,7 +1,7 @@
 import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/prompt/Configurations'
 import { PromptField as UiPromptField } from '@ui/components/editor/common/prompts/PromptField'
-import { PromptNotice as UiPromptNotice } from '@ui/components/editor/prompt/PromptNotice'
+import { PromptAttachments as UiPromptAttachments } from '@ui/components/editor/prompt/PromptAttachments'
 import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { Responses as UiResponses } from '@ui/components/editor/prompt/Responses'
@@ -364,70 +364,70 @@ export const MainView: React.FC<Props> = (props) => {
             />
           </div>
 
-          <UiPromptNotice
-            warning={
-              context_is_empty_warning
-                ? t('common.context-is-empty')
-                : undefined
-            }
+          <UiPromptAttachments
             token_count={props.selected_files_token_count}
             files_count={
               context_is_empty_warning ? undefined : props.selected_files.length
             }
             translations={{
+              warning: context_is_empty_warning
+                ? t('common.context-is-empty')
+                : undefined,
               attaching_files: t('selected-files.attaching-files')
             }}
           />
 
           <UiSeparator height={6} />
 
-          {props.target == TARGET.WEB &&
-            (props.is_connected ? (
-              <UiConfigurations
-                configurations={web_configurations}
-                disable_invocation={
-                  context_is_empty_warning || !props.is_connected
-                }
-                on_create={(params) => {
-                  props.on_create_web_configuration(params)
-                }}
-                on_configuration_click={(id) => {
-                  props.initialize_chats({
-                    web_configuration_name: id,
-                    show_quick_pick: false
-                  })
-                }}
-                on_edit={(id) => props.on_web_configuration_edit(id)}
-                on_reorder={(reordered) => {
-                  const new_web_configurations = reordered.map((c) => {
-                    return props.web_configurations.find(
-                      (p, i) => (p.name ?? `unnamed-${i}`) == c.id
-                    )!
-                  })
-                  props.on_web_configurations_reorder(new_web_configurations)
-                }}
-                on_delete={(id) => {
-                  props.on_delete_web_configuration(id)
-                }}
-                on_toggle_pinned={(id) => {
-                  props.on_toggle_web_configuration_pinned(id)
-                }}
-                selected_configuration_id={
-                  props.selected_web_configuration_name
-                }
-                translations={{
-                  empty: t('configurations.empty'),
-                  add_new: t('action.add-new'),
-                  pin: t('action.pin'),
-                  unpin: t('action.unpin'),
-                  insert: t('action.insert-configuration'),
-                  edit: t('action.edit'),
-                  delete: t('action.delete')
-                }}
-              />
-            ) : (
+          {props.target == TARGET.WEB && !props.is_connected && (
+            <>
               <UiBrowserExtensionMessage />
-            ))}
+              <UiSeparator height={6} />
+            </>
+          )}
+
+          {props.target == TARGET.WEB && (
+            <UiConfigurations
+              configurations={web_configurations}
+              disable_invocation={
+                context_is_empty_warning || !props.is_connected
+              }
+              on_create={(params) => {
+                props.on_create_web_configuration(params)
+              }}
+              on_configuration_click={(id) => {
+                props.initialize_chats({
+                  web_configuration_name: id,
+                  show_quick_pick: false
+                })
+              }}
+              on_edit={(id) => props.on_web_configuration_edit(id)}
+              on_reorder={(reordered) => {
+                const new_web_configurations = reordered.map((c) => {
+                  return props.web_configurations.find(
+                    (p, i) => (p.name ?? `unnamed-${i}`) == c.id
+                  )!
+                })
+                props.on_web_configurations_reorder(new_web_configurations)
+              }}
+              on_delete={(id) => {
+                props.on_delete_web_configuration(id)
+              }}
+              on_toggle_pinned={(id) => {
+                props.on_toggle_web_configuration_pinned(id)
+              }}
+              selected_configuration_id={props.selected_web_configuration_name}
+              translations={{
+                empty: t('configurations.empty'),
+                add_new: t('action.add-new'),
+                pin: t('action.pin'),
+                unpin: t('action.unpin'),
+                insert: t('action.insert-configuration'),
+                edit: t('action.edit'),
+                delete: t('action.delete')
+              }}
+            />
+          )}
 
           {props.target == TARGET.API && (
             <UiConfigurations
