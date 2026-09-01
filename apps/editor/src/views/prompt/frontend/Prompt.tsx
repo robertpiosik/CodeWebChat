@@ -419,11 +419,16 @@ export const Prompt = () => {
               }
               title="Edit Configuration"
               header_slot={
-                is_connected && (
-                  <UiTextButton on_click={handle_preview_web_configuration}>
-                    Preview
-                  </UiTextButton>
-                )
+                <UiTextButton
+                  on_click={handle_preview_web_configuration}
+                  disabled={
+                    !is_connected ||
+                    (web_prompt_type == 'edit-files' &&
+                      selected_files.length == 0)
+                  }
+                >
+                  Preview
+                </UiTextButton>
               }
             >
               <EditWebConfigurationForm

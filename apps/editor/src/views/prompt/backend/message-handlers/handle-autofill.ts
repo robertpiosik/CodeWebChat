@@ -16,7 +16,7 @@ import {
 import { handle_update_last_used_web_configuration } from './handle-update-last-used-web-configuration'
 import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
 import { PromptBuilder } from '@/utils/prompt-builder'
-import { open_settings } from '@/views/settings/helpers/open-settings'
+import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 
 export const handle_autofill = async (params: {
   prompt_view_provider: PromptViewProvider
@@ -136,8 +136,7 @@ const show_web_configuration_quick_pick = async (params: {
   const valid_web_configurations = web_configurations.filter((c) => c.chatbot)
 
   if (valid_web_configurations.length == 0) {
-    open_settings.web.web_configurations()
-    vscode.window.showInformationMessage('No configurations found.')
+    show_no_configurations_warning('web')
     return null
   }
 

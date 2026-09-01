@@ -23,7 +23,7 @@ import {
   intelligent_file_search_instructions,
   intelligent_file_search_format_for_prompt_view
 } from '@/constants/instructions'
-import { open_settings } from '@/views/settings/helpers/open-settings'
+import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 
 export const perform_intelligent_search_mode = async (params: {
   files: string[]
@@ -301,8 +301,7 @@ export const perform_intelligent_search_mode = async (params: {
             )
 
             if (valid_web_configurations.length == 0) {
-              open_settings.web.web_configurations()
-              vscode.window.showInformationMessage('No configurations found.')
+              show_no_configurations_warning('web')
               go_back_to_action = true
               continue
             }

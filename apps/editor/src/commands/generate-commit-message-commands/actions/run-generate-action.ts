@@ -25,7 +25,7 @@ import { WebSocketManager } from '@/services/websocket-manager'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 import { normalize_path } from '@/utils/normalize-path'
-import { open_settings } from '@/views/settings/helpers/open-settings'
+import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
@@ -280,8 +280,7 @@ export const run_generate_action = async (params: {
           )
 
           if (valid_web_configurations.length == 0) {
-            open_settings.web.web_configurations()
-            vscode.window.showInformationMessage('No configurations found.')
+            show_no_configurations_warning('web')
             current_action = undefined
             continue
           }

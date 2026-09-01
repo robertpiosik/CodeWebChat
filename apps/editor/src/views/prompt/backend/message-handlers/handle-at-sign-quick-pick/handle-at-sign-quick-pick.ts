@@ -260,7 +260,7 @@ const at_sign_quick_pick = async (params: {
     }
 
     const separator_item = {
-      label: 'files in context',
+      label: 'selected files',
       kind: vscode.QuickPickItemKind.Separator
     } as any
 
