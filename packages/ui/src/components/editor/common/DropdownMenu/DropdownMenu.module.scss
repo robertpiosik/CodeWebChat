@@ -75,9 +75,14 @@
     background-color: var(--vscode-list-inactiveSelectionBackground);
   }
 
-  &:hover {
+  &:not(&--disabled):hover {
     background-color: var(--vscode-list-activeSelectionBackground);
     color: var(--vscode-list-activeSelectionForeground);
+  }
+
+  &--disabled {
+    opacity: var(--disabled-opacity);
+    cursor: not-allowed;
   }
 }
 

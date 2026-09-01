@@ -617,7 +617,6 @@ export const WithWarning = () => (
       attach_selected_files: 'Attach selected files',
       target: 'Target'
     }}
-    warning="Select context to edit"
   />
 )
 

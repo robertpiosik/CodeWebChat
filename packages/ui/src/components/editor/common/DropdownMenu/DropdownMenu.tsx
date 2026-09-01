@@ -1,4 +1,5 @@
 import { useState, useLayoutEffect, useRef } from 'react'
+import cn from 'classnames'
 import { Scrollable } from '../Scrollable'
 import styles from './DropdownMenu.module.scss'
 
@@ -9,6 +10,7 @@ export namespace DropdownMenu {
     on_click: () => void
     is_checked?: boolean
     is_active?: boolean
+    is_disabled?: boolean
   }
 
   export type Props = {
@@ -81,8 +83,14 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
         return (
           <div
             key={index}
-            className={styles.item}
-            onClick={item.on_click}
+            className={cn(styles.item, {
+              [styles['item--disabled']]: item.is_disabled
+            })}
+            onClick={() => {
+              if (!item.is_disabled) {
+                item.on_click()
+              }
+            }}
             data-active={item.is_active}
           >
             <div className={styles.item__left}>

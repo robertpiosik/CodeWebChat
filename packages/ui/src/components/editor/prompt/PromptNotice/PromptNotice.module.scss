@@ -1,14 +1,9 @@
 .container {
-  --height: 24px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
-  color: var(--cwc-text-color);
-  background-color: var(--cwc-bg-tertiary);
   overflow: hidden;
-  height: var(--height);
-  padding: 0 8px 0 5px;
   margin: 0 20px;
 
   :global([data-modern-ui='true']) & {
@@ -16,7 +11,25 @@
   }
 }
 
-.attach {
+.notice {
+  --height: 24px;
+  display: flex;
+  align-items: center;
+  height: var(--height);
+  padding: 0 8px 0 5px;
+}
+
+.warning {
+  color: var(--cwc-text-color-orange);
+  background-color: var(--cwc-bg-orange);
+}
+
+.files {
+  color: var(--cwc-text-color);
+  background-color: var(--cwc-bg-tertiary);
+}
+
+.icon {
   margin-right: 4px;
 
   span::before {
@@ -33,7 +46,14 @@
   height: 100%;
   display: block;
   line-height: var(--height);
+}
+
+.files .label {
   color: var(--cwc-text-color);
+}
+
+.warning .label {
+  font-weight: 500;
 }
 
 .tokens {

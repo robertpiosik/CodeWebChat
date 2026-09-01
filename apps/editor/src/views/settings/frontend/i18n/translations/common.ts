@@ -35,7 +35,7 @@ export const translations = {
     hu: 'Összecsukás',
     bg: 'Свиване'
   },
-  'common.notice.missing': {
+  'common.missing-configuration': {
     en: 'Missing configuration.',
     pl: 'Brak konfiguracji.',
     'zh-cn': '缺少配置。',

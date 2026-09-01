@@ -401,7 +401,6 @@ export const Prompt = () => {
                 }
                 is_setup_complete={is_setup_complete}
                 on_donate_click={() => set_viewing_donations(true)}
-                api_configurations={api_configurations}
               />
             </div>
           </Layout>

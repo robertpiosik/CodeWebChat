@@ -20,23 +20,6 @@ export const AsciiArtEffect = ({ density = 1 }: Props) => {
     }
 
     const handle_mouse_move = (e: MouseEvent) => {
-      const disabled_elements = parent.querySelectorAll(
-        ':disabled, [disabled], [aria-disabled="true"], [data-disabled="true"]'
-      )
-
-      for (let i = 0; i < disabled_elements.length; i++) {
-        const disabled_rect = disabled_elements[i].getBoundingClientRect()
-        if (
-          e.clientX >= disabled_rect.left &&
-          e.clientX <= disabled_rect.right &&
-          e.clientY >= disabled_rect.top &&
-          e.clientY <= disabled_rect.bottom
-        ) {
-          handle_mouse_leave()
-          return
-        }
-      }
-
       const rect = parent.getBoundingClientRect()
       const x = e.clientX - rect.left
       const y = e.clientY - rect.top

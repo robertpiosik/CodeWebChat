@@ -206,7 +206,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                     </Button>
                   }
                 >
-                  {t('common.notice.missing')}
+                  {t('common.missing-configuration')}
                 </UiNotice>
               ) : null
             }

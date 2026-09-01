@@ -9,6 +9,7 @@ import { selected_files } from './selected-files'
 
 import { footer } from './footer'
 import { modals } from './modals'
+import { common } from './common'
 
 export const translations = {
   ...header,
@@ -20,5 +21,6 @@ export const translations = {
   ...footer,
   ...modals,
   ...main,
-  ...selected_files
+  ...selected_files,
+  ...common
 }

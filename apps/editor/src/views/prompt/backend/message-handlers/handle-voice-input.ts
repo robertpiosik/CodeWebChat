@@ -17,6 +17,7 @@ import {
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
 import { t } from '@/i18n'
+import { open_settings } from '@/views/settings/helpers/open-settings'
 
 const MIN_RECORDING_DURATION = 1000
 
@@ -268,15 +269,7 @@ export const handle_voice_input = async (
       await model_providers_manager.get_api_configurations()
 
     if (api_configurations.length == 0) {
-      vscode.window.showWarningMessage(
-        t('views.prompt.handlers.voice-input.warning.no-config.title'),
-        {
-          modal: true,
-          detail: t(
-            'views.prompt.handlers.voice-input.warning.no-config.detail'
-          )
-        }
-      )
+      open_settings.api_calls.api_configurations()
       prompt_view_provider.send_message({
         command: 'RECORDING_STATE',
         is_recording: false

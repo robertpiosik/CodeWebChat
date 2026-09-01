@@ -1,7 +1,7 @@
 import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/prompt/Configurations'
 import { PromptField as UiPromptField } from '@ui/components/editor/common/prompts/PromptField'
-import { SelectedFiles as UiSelectedFiles } from '@ui/components/editor/prompt/SelectedFiles'
+import { PromptNotice as UiPromptNotice } from '@ui/components/editor/prompt/PromptNotice'
 import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { Responses as UiResponses } from '@ui/components/editor/prompt/Responses'
@@ -148,9 +148,9 @@ export const MainView: React.FC<Props> = (props) => {
     props.api_prompt_type == 'edit-files' &&
     props.api_configurations.length == 0
   ) {
-    warning = 'Missing configuration'
+    warning = t('common.missing-configuration')
   } else if (show_edit_format_selector && props.selected_files.length == 0) {
-    warning = 'Select files'
+    warning = t('common.context-is-empty')
   }
 
   const handle_input_change = (value: string) => {
@@ -282,7 +282,6 @@ export const MainView: React.FC<Props> = (props) => {
             is_copy_only={
               props.target == TARGET.WEB && props.web_configurations.length == 0
             }
-            warning={warning}
             value={props.instructions}
             chat_history={props.chat_history}
             on_change={handle_input_change}
@@ -373,9 +372,14 @@ export const MainView: React.FC<Props> = (props) => {
           />
         </div>
 
-        <UiSelectedFiles
+        <UiPromptNotice
+          warning={warning}
           token_count={props.selected_files_token_count}
-          files_count={props.selected_files.length}
+          files_count={
+            warning == t('common.context-is-empty')
+              ? undefined
+              : props.selected_files.length
+          }
           translations={{
             attaching_files: t('selected-files.attaching-files')
           }}

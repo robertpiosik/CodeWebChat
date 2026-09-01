@@ -10,7 +10,7 @@ import { use_drag_drop } from './hooks/use-drag-drop'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { DropdownMenu } from '../../DropdownMenu'
 import { use_is_mac } from '@shared/hooks'
-import { Tooltip } from './components'
+import { Tooltip } from '../../Tooltip'
 import { KeycapWrapper } from '../../../prompt/KeycapWrapper'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { TARGET, Target } from '@shared/types/mode'
@@ -78,7 +78,6 @@ export type PromptFieldProps = {
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
   on_tabs_reorder?: (new_order: number[]) => void
-  warning?: string
   voice_input_push_to_talk?: boolean
   prompt_token_count: number
   is_copy_only?: boolean
@@ -181,16 +180,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     props.prompt_type
   ])
 
-  useEffect(() => {
-    if (props.warning && input_ref.current) {
-      input_ref.current.blur()
-      const selection = window.getSelection()
-      if (selection) {
-        selection.removeAllRanges()
-      }
-    }
-  }, [props.warning])
-
   const { is_alt_pressed, handle_container_key_down } =
     use_keyboard_shortcuts(props)
 
@@ -262,6 +251,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   const is_mac = use_is_mac()
 
+  const is_action_disabled =
+    props.prompt_type === 'edit-files' &&
+    (props.selected_files ?? []).length === 0
+
   const highlighted_html = useMemo(() => {
     return get_highlighted_text({
       text: props.value,
@@ -302,9 +295,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           raw_text: props.value,
           context_file_paths: props.selected_files ?? []
         })
-        if (!props.warning) {
-          input_ref.current.focus()
-        }
+        input_ref.current.focus()
         set_caret_position_for_div(input_ref.current, display_pos)
       } else if (is_focused) {
         set_caret_position_for_div(input_ref.current, selection_start)
@@ -340,7 +331,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     <div
       className={styles.footer}
       onClick={() => {
-        if (input_ref.current && !props.warning) {
+        if (input_ref.current) {
           input_ref.current.focus()
           const selection = window.getSelection()
           if (selection) {
@@ -601,6 +592,21 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                           {char}
                         </span>
                       ))}
+                    {props.target == TARGET.WEB && (
+                      <span
+                        className={cn(
+                          styles['footer__right__target-switch__indicator'],
+                          {
+                            [styles[
+                              'footer__right__target-switch__indicator--connected'
+                            ]]: props.is_connected,
+                            [styles[
+                              'footer__right__target-switch__indicator--disconnected'
+                            ]]: !props.is_connected
+                          }
+                        )}
+                      />
+                    )}
                   </span>
                 </button>
               </KeycapWrapper>
@@ -654,6 +660,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     onClick={handle_submit}
                     onMouseEnter={() => set_show_submit_tooltip(true)}
                     onMouseLeave={() => set_show_submit_tooltip(false)}
+                    disabled={is_action_disabled}
                   />
                 )}
                 <button
@@ -689,19 +696,22 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                                 stopPropagation: () => {}
                               } as any)
                               close_dropdown()
-                            }
+                            },
+                            is_disabled: is_action_disabled
                           }
                         ]
                       : []),
                     {
                       label: props.translations.send_with_ellipsis,
                       shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
-                      on_click: handle_select_click
+                      on_click: handle_select_click,
+                      is_disabled: is_action_disabled
                     },
                     {
                       label: props.translations.copy_prompt,
                       shortcut: is_mac ? '⌘C' : 'Ctrl+C',
-                      on_click: handle_copy_click
+                      on_click: handle_copy_click,
+                      is_disabled: is_action_disabled
                     },
                     ...(props.value
                       ? [
@@ -720,7 +730,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       on_click: () => {
                         props.on_preview_prompt?.()
                         close_dropdown()
-                      }
+                      },
+                      is_disabled: is_action_disabled
                     }
                   ]}
                 />
@@ -776,6 +787,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       props.on_copy()
                     }}
                     title={props.translations.copy_prompt}
+                    disabled={is_action_disabled}
                   />
                   <button
                     ref={disconnected_chevron_button_ref}
@@ -813,7 +825,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         on_click: () => {
                           props.on_preview_prompt?.()
                           close_dropdown()
-                        }
+                        },
+                        is_disabled: is_action_disabled
                       }
                     ]}
                   />
@@ -828,20 +841,13 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   return (
     <div className={styles.container}>
-      {props.warning ? (
-        <div className={styles.warning}>
-          <div className={styles.warning__inner}>{props.warning}</div>
-        </div>
-      ) : null}
-
       <div
         ref={container_inner_ref}
         className={cn(styles.container__inner, {
-          [styles['container__inner--disabled']]: !!props.warning,
           [styles['container__inner--selecting']]: is_text_selecting
         })}
         onKeyDown={handle_container_key_down}
-        onClick={() => !props.warning && input_ref.current?.focus()}
+        onClick={() => input_ref.current?.focus()}
       >
         <div className={styles['input-wrapper']}>
           <div className={styles['top-right']}>

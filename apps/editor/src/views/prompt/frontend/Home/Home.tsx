@@ -36,7 +36,6 @@ type Props = {
   is_connected: boolean
   on_donate_click: () => void
   bottom_spacer_height?: number
-  api_configurations?: any[]
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -139,9 +138,7 @@ export const Home: React.FC<Props> = (props) => {
     is_active: props.is_active,
     on_go_forward: props.on_go_forward,
     on_chatbots_click: props.on_chatbots_click,
-    on_api_calls_click: props.api_configurations?.length
-      ? props.on_api_calls_click
-      : () => {}
+    on_api_calls_click: props.on_api_calls_click
   })
 
   return (
@@ -191,19 +188,11 @@ export const Home: React.FC<Props> = (props) => {
             />
           </UiKeycapWrapper>
           <div className={styles['header__targets-divider']} />
-          <UiKeycapWrapper
-            char={
-              is_alt_pressed && props.api_configurations?.length
-                ? '2'
-                : undefined
-            }
-            full_width
-          >
+          <UiKeycapWrapper char={is_alt_pressed ? '2' : undefined} full_width>
             <UiTargetButton
               label={TARGET.API}
               on_click={props.on_api_calls_click}
               is_compact
-              disabled={props.api_configurations?.length == 0}
             />
           </UiKeycapWrapper>
         </div>
@@ -244,17 +233,12 @@ export const Home: React.FC<Props> = (props) => {
                 />
               </UiKeycapWrapper>
               <UiKeycapWrapper
-                char={
-                  is_alt_pressed && props.api_configurations?.length
-                    ? '2'
-                    : undefined
-                }
+                char={is_alt_pressed ? '2' : undefined}
                 full_width
               >
                 <UiTargetButton
                   label={TARGET.API}
                   on_click={props.on_api_calls_click}
-                  disabled={props.api_configurations?.length == 0}
                 />
               </UiKeycapWrapper>
             </div>

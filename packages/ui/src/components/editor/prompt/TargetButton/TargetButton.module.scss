@@ -1,3 +1,14 @@
+.wrapper {
+  position: relative;
+  display: flex;
+  flex: 1;
+  width: 100%;
+
+  &--compact {
+    height: 100%;
+  }
+}
+
 .button {
   display: flex;
   align-items: center;

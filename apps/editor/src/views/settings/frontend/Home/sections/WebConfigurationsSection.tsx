@@ -135,7 +135,7 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                     </Button>
                   }
                 >
-                  {t('common.notice.missing')}
+                  {t('common.missing-configuration')}
                 </UiNotice>
               ) : null
             }

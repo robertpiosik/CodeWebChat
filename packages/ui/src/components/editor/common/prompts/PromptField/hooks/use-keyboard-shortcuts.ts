@@ -123,7 +123,11 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
       return
     }
     if (e.key == 'c' && e.altKey && (e.ctrlKey || e.metaKey)) {
-      if (props.on_copy) {
+      const is_action_disabled =
+        props.prompt_type === 'edit-files' &&
+        (props.selected_files ?? []).length === 0
+
+      if (!is_action_disabled && props.on_copy) {
         e.stopPropagation()
         e.preventDefault()
         props.on_copy()
