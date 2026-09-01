@@ -14,7 +14,18 @@ export const chatgpt: Chatbot = {
           'div#prompt-textarea'
         ) as HTMLElement
 
-        if (input_element) {
+        const thread_header_button = document.querySelector(
+          'div[data-testid="thread-header-right-actions"] > div:first-child button'
+        )
+
+        const reasoning_effort_button = document.querySelector(
+          'div[data-composer-transition-slot="trailing"] > div:first-child button'
+        )
+
+        const is_ready =
+          thread_header_button !== null || reasoning_effort_button !== null
+
+        if (input_element && is_ready) {
           input_element.innerText = ' '
           input_element.dispatchEvent(new Event('input', { bubbles: true }))
 
@@ -28,6 +39,128 @@ export const chatgpt: Chatbot = {
       }
       check_for_element()
     })
+    await new Promise((resolve) => setTimeout(resolve, 500))
+  },
+  set_reasoning_effort: async (chat) => {
+    const reasoning_effort = chat.reasoning_effort
+    if (!reasoning_effort) return
+
+    const reasoning_effort_values: Record<string, number> = {
+      instant: 0,
+      medium: 1,
+      high: 2
+    }
+
+    const target_value = reasoning_effort_values[reasoning_effort.toLowerCase()]
+
+    if (target_value === undefined) {
+      report_initialization_error({
+        function_name: 'set_reasoning_effort',
+        log_message: `Unsupported reasoning effort "${reasoning_effort}"`
+      })
+      return
+    }
+
+    const reasoning_effort_button = document.querySelector(
+      'div[data-composer-transition-slot="trailing"] > div:first-child button'
+    ) as HTMLButtonElement
+
+    if (!reasoning_effort_button) {
+      report_initialization_error({
+        function_name: 'set_reasoning_effort',
+        log_message: 'Reasoning effort button not found'
+      })
+      return
+    }
+
+    reasoning_effort_button.dispatchEvent(
+      new PointerEvent('pointerdown', {
+        bubbles: true
+      })
+    )
+
+    await new Promise((resolve) => setTimeout(resolve, 500))
+
+    const slider = await new Promise<HTMLElement | null>((resolve) => {
+      let attempts = 0
+
+      const check_for_slider = () => {
+        const element = document.querySelector(
+          '[data-model-reasoning-effort-slider] [role="slider"]'
+        ) as HTMLElement
+
+        if (element) {
+          resolve(element)
+          return
+        }
+
+        attempts++
+
+        if (attempts >= 20) {
+          resolve(null)
+          return
+        }
+
+        setTimeout(check_for_slider, 50)
+      }
+
+      check_for_slider()
+    })
+
+    if (!slider) {
+      report_initialization_error({
+        function_name: 'set_reasoning_effort',
+        log_message: 'Reasoning effort slider not found'
+      })
+      return
+    }
+
+    const slider_control = slider.closest('[role="menuitem"]') as HTMLElement
+
+    if (!slider_control) {
+      report_initialization_error({
+        function_name: 'set_reasoning_effort',
+        log_message: 'Reasoning effort slider control not found'
+      })
+      return
+    }
+
+    const current_value = Number(slider.getAttribute('aria-valuenow'))
+
+    if (Number.isNaN(current_value)) {
+      report_initialization_error({
+        function_name: 'set_reasoning_effort',
+        log_message: 'Current reasoning effort value not found'
+      })
+      return
+    }
+
+    slider_control.focus()
+
+    const difference = target_value - current_value
+    const key = difference > 0 ? 'ArrowRight' : 'ArrowLeft'
+
+    for (let i = 0; i < Math.abs(difference); i++) {
+      slider_control.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key,
+          bubbles: true,
+          cancelable: true
+        })
+      )
+
+      await new Promise((resolve) => requestAnimationFrame(resolve))
+    }
+
+    slider_control.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: 'Escape',
+        bubbles: true,
+        cancelable: true
+      })
+    )
+
+    await new Promise((resolve) => requestAnimationFrame(resolve))
   },
   set_options: async (chat) => {
     const options = chat.options
