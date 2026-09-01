@@ -115,20 +115,20 @@
 }
 
 .empty {
-  padding: 0 16px;
+  padding: 0 12px;
   color: var(--cwc-text-color-dimmed);
 
   :global([data-modern-ui='true']) & {
-    padding: 0 12px;
+    padding: 0 10px;
   }
 }
 
 .footer {
   display: flex;
-  padding: 10px 12px 12px 12px;
+  padding: 10px 12px 0 12px;
 
   :global([data-modern-ui='true']) & {
-    padding: 9px 10px 10px 10px;
+    padding: 9px 10px 0 10px;
   }
 
   > button {

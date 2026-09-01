@@ -33,7 +33,7 @@ export const PromptNotice: React.FC<Props> = (props) => {
   }
 
   return (
-    <div className={styles.container}>
+    <>
       {props.warning && (
         <div className={`${styles.notice} ${styles.warning}`}>
           <span className={styles.icon}>
@@ -64,6 +64,6 @@ export const PromptNotice: React.FC<Props> = (props) => {
           </label>
         </div>
       )}
-    </div>
+    </>
   )
 }

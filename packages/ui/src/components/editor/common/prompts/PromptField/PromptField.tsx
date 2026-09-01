@@ -12,7 +12,6 @@ import { DropdownMenu } from '../../DropdownMenu'
 import { use_is_mac } from '@shared/hooks'
 import { Tooltip } from '../../Tooltip'
 import { KeycapWrapper } from '../../../prompt/KeycapWrapper'
-import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { TARGET, Target } from '@shared/types/mode'
 import { display_token_count } from '@shared/utils/display-token-count'
 import {
@@ -40,7 +39,8 @@ export type PromptFieldProps = {
   on_submit_with_control: () => void
   on_copy: () => void
   is_connected: boolean
-  prompt_type: WebPromptType | ApiPromptType
+  is_action_disabled?: boolean
+  is_preview_disabled?: boolean
   current_selection?: SelectionState | null
   on_caret_position_change: (caret_position: number) => void
   is_web_target: boolean
@@ -162,7 +162,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     props.is_recording,
     props.is_web_target,
     props.is_connected,
-    props.prompt_type,
     props.is_copy_only
   ])
 
@@ -172,13 +171,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     if (!has_mic_button) {
       set_is_recording_hovered(false)
     }
-  }, [
-    props.value,
-    props.is_recording,
-    props.is_web_target,
-    props.is_connected,
-    props.prompt_type
-  ])
+  }, [props.value, props.is_recording, props.is_web_target, props.is_connected])
 
   const { is_alt_pressed, handle_container_key_down } =
     use_keyboard_shortcuts(props)
@@ -251,9 +244,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   const is_mac = use_is_mac()
 
-  const is_action_disabled =
-    props.prompt_type === 'edit-files' &&
-    (props.selected_files ?? []).length === 0
+  const is_action_disabled = props.is_action_disabled ?? false
 
   const highlighted_html = useMemo(() => {
     return get_highlighted_text({
@@ -268,7 +259,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     })
   }, [
     props.value,
-    props.prompt_type,
     props.current_selection,
     props.selected_files,
     props.is_web_target,
@@ -312,7 +302,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     return props.chat_history.length > 0
       ? props.translations.placeholder_history
       : props.translations.placeholder_default
-  }, [props.prompt_type, props.chat_history])
+  }, [props.chat_history])
 
   useEffect(() => {
     if (props.is_recording) {
@@ -707,12 +697,16 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       on_click: handle_select_click,
                       is_disabled: is_action_disabled
                     },
-                    {
-                      label: props.translations.copy_prompt,
-                      shortcut: is_mac ? '⌘C' : 'Ctrl+C',
-                      on_click: handle_copy_click,
-                      is_disabled: is_action_disabled
-                    },
+                    ...(props.target == TARGET.WEB
+                      ? [
+                          {
+                            label: props.translations.copy_prompt,
+                            shortcut: is_mac ? '⌘C' : 'Ctrl+C',
+                            on_click: handle_copy_click,
+                            is_disabled: is_action_disabled
+                          }
+                        ]
+                      : []),
                     ...(props.value
                       ? [
                           {
@@ -731,7 +725,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         props.on_preview_prompt?.()
                         close_dropdown()
                       },
-                      is_disabled: is_action_disabled
+                      is_disabled:
+                        props.is_preview_disabled ?? is_action_disabled
                     }
                   ]}
                 />
@@ -826,7 +821,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                           props.on_preview_prompt?.()
                           close_dropdown()
                         },
-                        is_disabled: is_action_disabled
+                        is_disabled:
+                          props.is_preview_disabled ?? is_action_disabled
                       }
                     ]}
                   />

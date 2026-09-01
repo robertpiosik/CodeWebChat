@@ -1,4 +1,12 @@
-.chat-input-container {
+.container {
+  padding: 4px 0 12px 0;
+
+  :global([data-modern-ui='true']) & {
+    padding: 4px 0 10px 0;
+  }
+}
+
+.chat-input {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -6,5 +14,18 @@
 
   :global([data-modern-ui='true']) & {
     margin: 0 10px;
+  }
+}
+
+.notices {
+  display: flex;
+  flex-direction: column;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  overflow: hidden;
+  margin: 0 20px;
+
+  :global([data-modern-ui='true']) & {
+    margin: 0 18px;
   }
 }

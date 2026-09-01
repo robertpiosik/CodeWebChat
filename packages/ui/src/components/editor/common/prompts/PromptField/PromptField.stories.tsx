@@ -14,7 +14,7 @@ export const Empty = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    prompt_type="edit-files"
+    is_action_disabled={false}
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -81,7 +81,7 @@ export const WithText = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    prompt_type="edit-files"
+    is_action_disabled={false}
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -149,7 +149,7 @@ export const LongText = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    prompt_type="edit-files"
+    is_action_disabled={false}
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -215,7 +215,7 @@ export const WithPlaceholderSavedContext = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    prompt_type="edit-files"
+    is_action_disabled={false}
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -282,7 +282,7 @@ export const WithPlaceholderSelection = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    prompt_type="edit-files"
+    is_action_disabled={false}
     current_selection={{
       text: 'Selected text content',
       start_line: 1,
@@ -355,7 +355,7 @@ export const WithCommit = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    prompt_type="edit-files"
+    is_action_disabled={false}
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -421,7 +421,7 @@ export const WithCommitWithQuotes = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    prompt_type="edit-files"
+    is_action_disabled={false}
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -490,7 +490,7 @@ export const WithEditFormatSelector = () => {
       on_submit={() => console.log('Submitted')}
       on_copy={() => console.log('Copied')}
       is_connected={true}
-      prompt_type="edit-files"
+      is_action_disabled={false}
       current_selection={null}
       currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -563,7 +563,7 @@ export const WithWarning = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    prompt_type="ask-about-files"
+    is_action_disabled={false}
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -628,7 +628,7 @@ export const WithFilePaths = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    prompt_type="edit-files"
+    is_action_disabled={false}
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -723,7 +723,7 @@ export const WithTabs = () => {
       on_submit={() => console.log('Submitted:', tabs[active_index])}
       on_copy={() => console.log('Copied')}
       is_connected={true}
-      prompt_type="edit-files"
+      is_action_disabled={false}
       current_selection={null}
       currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}

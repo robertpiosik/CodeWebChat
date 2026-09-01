@@ -10,11 +10,7 @@ export const create_handle_submit =
   ) => {
     e.stopPropagation()
 
-    const is_action_disabled =
-      props.prompt_type === 'edit-files' &&
-      (props.selected_files ?? []).length === 0
-
-    if (is_action_disabled) {
+    if (props.is_action_disabled) {
       return
     }
 

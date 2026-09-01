@@ -1040,11 +1040,11 @@
           "default": [
             {
               "name": "(0)",
-              "chatbot": "Gemini"
+              "chatbot": "ChatGPT"
             },
             {
               "name": "(1)",
-              "chatbot": "ChatGPT"
+              "chatbot": "Gemini"
             },
             {
               "name": "(2)",

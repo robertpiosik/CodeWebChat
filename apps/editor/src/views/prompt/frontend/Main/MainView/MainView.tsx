@@ -142,16 +142,8 @@ export const MainView: React.FC<Props> = (props) => {
     (props.target == TARGET.WEB && props.web_prompt_type == 'edit-files') ||
     (props.target == TARGET.API && props.api_prompt_type == 'edit-files')
 
-  let warning: string | undefined
-  if (
-    props.target == TARGET.API &&
-    props.api_prompt_type == 'edit-files' &&
-    props.api_configurations.length == 0
-  ) {
-    warning = t('common.missing-configuration')
-  } else if (show_edit_format_selector && props.selected_files.length == 0) {
-    warning = t('common.context-is-empty')
-  }
+  const context_is_empty_warning =
+    show_edit_format_selector && props.selected_files.length == 0
 
   const handle_input_change = (value: string) => {
     props.set_instructions(value)
@@ -253,211 +245,230 @@ export const MainView: React.FC<Props> = (props) => {
         are_keyboard_shortcuts_disabled={props.are_keyboard_shortcuts_disabled}
       />
       <UiScrollable scroll_to_top_key={props.scroll_reset_key} top_shadow>
-        <UiSeparator height={4} />
-
-        {!props.is_connected &&
-          props.target == TARGET.WEB &&
-          props.web_configurations.length > 0 && <UiBrowserExtensionMessage />}
-
-        {props.response_history.length > 0 && (
-          <UiResponses
-            response_history={props.response_history}
-            on_response_history_item_click={
-              props.on_response_history_item_click
-            }
-            selected_history_item_created_at={
-              props.selected_history_item_created_at
-            }
-            on_selected_history_item_change={
-              props.on_selected_history_item_change
-            }
-            on_response_history_item_remove={
-              props.on_response_history_item_remove
-            }
-          />
-        )}
-
-        <div className={styles['chat-input-container']}>
-          <UiPromptField
-            is_copy_only={
-              props.target == TARGET.WEB && props.web_configurations.length == 0
-            }
-            value={props.instructions}
-            chat_history={props.chat_history}
-            on_change={handle_input_change}
-            on_submit={handle_submit}
-            on_submit_with_control={handle_submit_with_control}
-            on_copy={props.on_copy}
-            on_at_sign_click={props.on_at_sign_click}
-            on_hash_sign_click={props.on_hash_sign_click}
-            on_slash_click={props.on_slash_click}
-            is_web_target={props.target == TARGET.WEB}
-            is_connected={props.is_connected}
-            prompt_type={
-              props.target == TARGET.WEB
-                ? props.web_prompt_type
-                : props.api_prompt_type
-            }
-            current_selection={props.current_selection}
-            send_with_shift_enter={props.send_with_shift_enter}
-            currently_open_file_text={props.currently_open_file_text}
-            on_caret_position_change={props.on_caret_position_change}
-            caret_position_to_set={props.caret_position_to_set}
-            prompt_token_count={
-              (props.target == TARGET.WEB
-                ? props.web_prompt_type
-                : props.api_prompt_type) == 'edit-files'
-                ? props.edit_instructions_token_count
-                : props.ask_instructions_token_count
-            }
-            on_caret_position_set={props.on_caret_position_set}
-            focus_and_select_key={props.chat_input_focus_and_select_key}
-            focus_key={props.chat_input_focus_key}
-            last_choice_tooltip={last_choice_tooltip}
-            show_edit_format_selector={show_edit_format_selector}
-            edit_format={props.edit_format}
-            on_edit_format_change={props.on_edit_format_change}
-            selected_files={props.selected_files}
-            on_go_to_file={props.on_go_to_file}
-            on_pasted_lines_click={props.on_pasted_lines_click}
-            on_open_url={props.on_open_url}
-            on_open_website={props.on_open_website}
-            target={props.target}
-            on_target_change={(target) => props.on_target_change(target)}
-            on_paste_image={props.on_paste_image}
-            on_open_image={props.on_open_image}
-            on_paste_long_text={props.on_paste_long_text}
-            on_open_pasted_text={props.on_open_pasted_text}
-            on_paste_url={props.on_paste_url}
-            on_preview_prompt={props.on_preview_prompt}
-            is_recording={props.is_recording}
-            on_recording_started={props.on_recording_started}
-            on_recording_finished={props.on_recording_finished}
-            tabs_count={props.tabs_count}
-            active_tab_index={props.active_tab_index}
-            on_tab_change={props.on_tab_change}
-            on_new_tab={props.on_new_tab}
-            on_tab_delete={props.on_tab_delete}
-            on_tabs_reorder={props.on_tabs_reorder}
-            voice_input_push_to_talk={props.voice_input_push_to_talk}
-            currently_open_file_path={props.currently_open_file_path}
-            translations={{
-              voice_input: t('prompt-field.voice-input'),
-              stop_recording: t('prompt-field.stop-recording'),
-              reference_file: t('prompt-field.reference-file'),
-              insert_symbol: t('prompt-field.insert-symbol'),
-              use_template: t('prompt-field.use-template'),
-              edit_format: t('prompt-field.edit-format'),
-              edit_format_whole: t('prompt-field.edit-format.whole'),
-              edit_format_search_replace: t(
-                'prompt-field.edit-format.search-replace'
-              ),
-              edit_format_diff: t('prompt-field.edit-format.diff'),
-              edit_format_truncated: t('prompt-field.edit-format.truncated'),
-              placeholder_code_history: t(
-                'prompt-field.placeholder.code-history'
-              ),
-              placeholder_code: t('prompt-field.placeholder.code'),
-              placeholder_history: t('prompt-field.placeholder.history'),
-              placeholder_default: t('prompt-field.placeholder.default'),
-              send_with: t('prompt-field.action.send-with'),
-              send_with_ellipsis: t('prompt-field.action.send-with-ellipsis'),
-              copy_prompt: t('prompt-field.action.copy-prompt'),
-              preview_prompt: t('prompt-field.action.preview-prompt'),
-              more_actions: t('prompt-field.action.more-actions'),
-              send: t('prompt-field.action.send'),
-              attach_selected_files: t('prompt-field.attach-selected-files'),
-              target: t('prompt-field.target')
-            }}
-          />
-        </div>
-
-        <UiPromptNotice
-          warning={warning}
-          token_count={props.selected_files_token_count}
-          files_count={
-            warning == t('common.context-is-empty')
-              ? undefined
-              : props.selected_files.length
-          }
-          translations={{
-            attaching_files: t('selected-files.attaching-files')
-          }}
-        />
-
-        <UiSeparator height={6} />
-
-        {props.target == TARGET.WEB && (
-          <UiConfigurations
-            configurations={web_configurations}
-            disable_invocation={!!warning || !props.is_connected}
-            on_create={(params) => {
-              props.on_create_web_configuration(params)
-            }}
-            on_configuration_click={(id) => {
-              props.initialize_chats({
-                web_configuration_name: id,
-                show_quick_pick: false
-              })
-            }}
-            on_edit={(id) => props.on_web_configuration_edit(id)}
-            on_reorder={(reordered) => {
-              const new_web_configurations = reordered.map((c) => {
-                return props.web_configurations.find(
-                  (p, i) => (p.name ?? `unnamed-${i}`) == c.id
-                )!
-              })
-              props.on_web_configurations_reorder(new_web_configurations)
-            }}
-            on_delete={(id) => {
-              props.on_delete_web_configuration(id)
-            }}
-            on_toggle_pinned={(id) => {
-              props.on_toggle_web_configuration_pinned(id)
-            }}
-            selected_configuration_id={props.selected_web_configuration_name}
-            translations={{
-              empty: t('configurations.empty'),
-              add_new: t('action.add-new'),
-              pin: t('action.pin'),
-              unpin: t('action.unpin'),
-              insert: t('action.insert-configuration'),
-              edit: t('action.edit'),
-              delete: t('action.delete')
-            }}
-          />
-        )}
-
-        {props.target == TARGET.API && (
-          <UiConfigurations
-            configurations={api_configurations_ui}
-            disable_invocation={!!warning || !props.api_configurations.length}
-            on_configuration_click={props.on_api_configuration_click}
-            on_reorder={(reordered) =>
-              props.on_api_configurations_reorder(reordered)
-            }
-            on_toggle_pinned={props.on_toggle_pinned_api_configuration}
-            on_edit={props.on_edit_api_configuration}
-            on_delete={props.on_delete_api_configuration}
-            selected_configuration_id={props.selected_api_configuration_id}
-            on_create={props.on_create_api_configuration}
-            translations={{
-              empty: t('configurations.empty'),
-              add_new: t('action.add-new'),
-              pin: t('action.pin'),
-              unpin: t('action.unpin'),
-              insert: t('action.insert-configuration'),
-              edit: t('action.edit'),
-              delete: t('action.delete')
-            }}
-          />
-        )}
-        {props.bottom_spacer_height !== undefined &&
-          props.bottom_spacer_height > 0 && (
-            <div
-              style={{ height: props.bottom_spacer_height, flexShrink: 0 }}
+        <div className={styles.container}>
+          {props.response_history.length > 0 && (
+            <UiResponses
+              response_history={props.response_history}
+              on_response_history_item_click={
+                props.on_response_history_item_click
+              }
+              selected_history_item_created_at={
+                props.selected_history_item_created_at
+              }
+              on_selected_history_item_change={
+                props.on_selected_history_item_change
+              }
+              on_response_history_item_remove={
+                props.on_response_history_item_remove
+              }
             />
           )}
+
+          <div className={styles['chat-input']}>
+            <UiPromptField
+              is_copy_only={
+                props.target == TARGET.WEB &&
+                props.web_configurations.length == 0
+              }
+              is_action_disabled={
+                (props.target == TARGET.WEB
+                  ? props.web_prompt_type
+                  : props.api_prompt_type) == 'edit-files' &&
+                props.selected_files.length == 0
+              }
+              is_preview_disabled={
+                (props.target == TARGET.WEB
+                  ? props.web_prompt_type
+                  : props.api_prompt_type) == 'edit-files' &&
+                props.selected_files.length == 0
+              }
+              value={props.instructions}
+              chat_history={props.chat_history}
+              on_change={handle_input_change}
+              on_submit={handle_submit}
+              on_submit_with_control={handle_submit_with_control}
+              on_copy={props.on_copy}
+              on_at_sign_click={props.on_at_sign_click}
+              on_hash_sign_click={props.on_hash_sign_click}
+              on_slash_click={props.on_slash_click}
+              is_web_target={props.target == TARGET.WEB}
+              is_connected={props.is_connected}
+              current_selection={props.current_selection}
+              send_with_shift_enter={props.send_with_shift_enter}
+              currently_open_file_text={props.currently_open_file_text}
+              on_caret_position_change={props.on_caret_position_change}
+              caret_position_to_set={props.caret_position_to_set}
+              prompt_token_count={
+                (props.target == TARGET.WEB
+                  ? props.web_prompt_type
+                  : props.api_prompt_type) == 'edit-files'
+                  ? props.edit_instructions_token_count
+                  : props.ask_instructions_token_count
+              }
+              on_caret_position_set={props.on_caret_position_set}
+              focus_and_select_key={props.chat_input_focus_and_select_key}
+              focus_key={props.chat_input_focus_key}
+              last_choice_tooltip={last_choice_tooltip}
+              show_edit_format_selector={show_edit_format_selector}
+              edit_format={props.edit_format}
+              on_edit_format_change={props.on_edit_format_change}
+              selected_files={props.selected_files}
+              on_go_to_file={props.on_go_to_file}
+              on_pasted_lines_click={props.on_pasted_lines_click}
+              on_open_url={props.on_open_url}
+              on_open_website={props.on_open_website}
+              target={props.target}
+              on_target_change={(target) => props.on_target_change(target)}
+              on_paste_image={props.on_paste_image}
+              on_open_image={props.on_open_image}
+              on_paste_long_text={props.on_paste_long_text}
+              on_open_pasted_text={props.on_open_pasted_text}
+              on_paste_url={props.on_paste_url}
+              on_preview_prompt={props.on_preview_prompt}
+              is_recording={props.is_recording}
+              on_recording_started={props.on_recording_started}
+              on_recording_finished={props.on_recording_finished}
+              tabs_count={props.tabs_count}
+              active_tab_index={props.active_tab_index}
+              on_tab_change={props.on_tab_change}
+              on_new_tab={props.on_new_tab}
+              on_tab_delete={props.on_tab_delete}
+              on_tabs_reorder={props.on_tabs_reorder}
+              voice_input_push_to_talk={props.voice_input_push_to_talk}
+              currently_open_file_path={props.currently_open_file_path}
+              translations={{
+                voice_input: t('prompt-field.voice-input'),
+                stop_recording: t('prompt-field.stop-recording'),
+                reference_file: t('prompt-field.reference-file'),
+                insert_symbol: t('prompt-field.insert-symbol'),
+                use_template: t('prompt-field.use-template'),
+                edit_format: t('prompt-field.edit-format'),
+                edit_format_whole: t('prompt-field.edit-format.whole'),
+                edit_format_search_replace: t(
+                  'prompt-field.edit-format.search-replace'
+                ),
+                edit_format_diff: t('prompt-field.edit-format.diff'),
+                edit_format_truncated: t('prompt-field.edit-format.truncated'),
+                placeholder_code_history: t(
+                  'prompt-field.placeholder.code-history'
+                ),
+                placeholder_code: t('prompt-field.placeholder.code'),
+                placeholder_history: t('prompt-field.placeholder.history'),
+                placeholder_default: t('prompt-field.placeholder.default'),
+                send_with: t('prompt-field.action.send-with'),
+                send_with_ellipsis: t('prompt-field.action.send-with-ellipsis'),
+                copy_prompt: t('prompt-field.action.copy-prompt'),
+                preview_prompt: t('prompt-field.action.preview-prompt'),
+                more_actions: t('prompt-field.action.more-actions'),
+                send: t('prompt-field.action.send'),
+                attach_selected_files: t('prompt-field.attach-selected-files'),
+                target: t('prompt-field.target')
+              }}
+            />
+          </div>
+
+          <div className={styles['notices']}>
+            <UiPromptNotice
+              warning={
+                context_is_empty_warning
+                  ? t('common.context-is-empty')
+                  : undefined
+              }
+              token_count={props.selected_files_token_count}
+              files_count={
+                context_is_empty_warning
+                  ? undefined
+                  : props.selected_files.length
+              }
+              translations={{
+                attaching_files: t('selected-files.attaching-files')
+              }}
+            />
+          </div>
+
+          <UiSeparator height={6} />
+
+          {props.target == TARGET.WEB &&
+            (props.is_connected ? (
+              <UiConfigurations
+                configurations={web_configurations}
+                disable_invocation={
+                  context_is_empty_warning || !props.is_connected
+                }
+                on_create={(params) => {
+                  props.on_create_web_configuration(params)
+                }}
+                on_configuration_click={(id) => {
+                  props.initialize_chats({
+                    web_configuration_name: id,
+                    show_quick_pick: false
+                  })
+                }}
+                on_edit={(id) => props.on_web_configuration_edit(id)}
+                on_reorder={(reordered) => {
+                  const new_web_configurations = reordered.map((c) => {
+                    return props.web_configurations.find(
+                      (p, i) => (p.name ?? `unnamed-${i}`) == c.id
+                    )!
+                  })
+                  props.on_web_configurations_reorder(new_web_configurations)
+                }}
+                on_delete={(id) => {
+                  props.on_delete_web_configuration(id)
+                }}
+                on_toggle_pinned={(id) => {
+                  props.on_toggle_web_configuration_pinned(id)
+                }}
+                selected_configuration_id={
+                  props.selected_web_configuration_name
+                }
+                translations={{
+                  empty: t('configurations.empty'),
+                  add_new: t('action.add-new'),
+                  pin: t('action.pin'),
+                  unpin: t('action.unpin'),
+                  insert: t('action.insert-configuration'),
+                  edit: t('action.edit'),
+                  delete: t('action.delete')
+                }}
+              />
+            ) : (
+              <UiBrowserExtensionMessage />
+            ))}
+
+          {props.target == TARGET.API && (
+            <UiConfigurations
+              configurations={api_configurations_ui}
+              disable_invocation={
+                context_is_empty_warning || !props.api_configurations.length
+              }
+              on_configuration_click={props.on_api_configuration_click}
+              on_reorder={(reordered) =>
+                props.on_api_configurations_reorder(reordered)
+              }
+              on_toggle_pinned={props.on_toggle_pinned_api_configuration}
+              on_edit={props.on_edit_api_configuration}
+              on_delete={props.on_delete_api_configuration}
+              selected_configuration_id={props.selected_api_configuration_id}
+              on_create={props.on_create_api_configuration}
+              translations={{
+                empty: t('configurations.empty'),
+                add_new: t('action.add-new'),
+                pin: t('action.pin'),
+                unpin: t('action.unpin'),
+                insert: t('action.insert-configuration'),
+                edit: t('action.edit'),
+                delete: t('action.delete')
+              }}
+            />
+          )}
+          {props.bottom_spacer_height !== undefined &&
+            props.bottom_spacer_height > 0 && (
+              <div
+                style={{ height: props.bottom_spacer_height, flexShrink: 0 }}
+              />
+            )}
+        </div>
       </UiScrollable>
     </>
   )
