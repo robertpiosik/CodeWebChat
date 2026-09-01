@@ -4,7 +4,7 @@
   "name": "Autofill for Code Web Chat",
   "short_name": "CWC",
   "description": "Got tired with copy and paste? Enable prompt autofill!",
-  "version": "2026.8.5",
+  "version": "2026.9.6",
   "homepage_url": "https://github.com/robertpiosik/CodeWebChat",
   "icons": {
     "16": "icons/icon-16.png",
