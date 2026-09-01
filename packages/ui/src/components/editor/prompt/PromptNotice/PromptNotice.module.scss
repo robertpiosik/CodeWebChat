@@ -4,6 +4,13 @@
   align-items: center;
   height: var(--height);
   padding: 0 8px 0 5px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  margin: 0 20px;
+
+  :global([data-modern-ui='true']) & {
+    margin: 0 18px;
+  }
 }
 
 .warning {

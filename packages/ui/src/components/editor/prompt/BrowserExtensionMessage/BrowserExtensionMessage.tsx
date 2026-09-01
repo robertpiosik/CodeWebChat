@@ -1,7 +1,7 @@
 import { use_compacting } from '@shared/hooks/use-compacting'
-import styles from './BrowserExtensionNotice.module.scss'
+import styles from './BrowserExtensionMessage.module.scss'
 
-export const BrowserExtensionNotice: React.FC = () => {
+export const BrowserExtensionMessage: React.FC = () => {
   const { container_ref, compact_step } = use_compacting()
 
   return (
