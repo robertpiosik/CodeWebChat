@@ -81,31 +81,9 @@ export const chatgpt: Chatbot = {
 
     await new Promise((resolve) => setTimeout(resolve, 500))
 
-    const slider = await new Promise<HTMLElement | null>((resolve) => {
-      let attempts = 0
-
-      const check_for_slider = () => {
-        const element = document.querySelector(
-          '[data-model-reasoning-effort-slider] [role="slider"]'
-        ) as HTMLElement
-
-        if (element) {
-          resolve(element)
-          return
-        }
-
-        attempts++
-
-        if (attempts >= 20) {
-          resolve(null)
-          return
-        }
-
-        setTimeout(check_for_slider, 50)
-      }
-
-      check_for_slider()
-    })
+    const slider = document.querySelector(
+      '[data-model-reasoning-effort-slider] [role="slider"]'
+    ) as HTMLElement
 
     if (!slider) {
       report_initialization_error({
