@@ -63,7 +63,7 @@ export const Header: React.FC<Props> = (props) => {
                 label={web_prompt_type_labels['ask-about-files']}
                 icon="chat-sparkle"
                 is_active={props.web_prompt_type == 'ask-about-files'}
-                active_color="orange"
+                active_color="green"
                 is_compact={
                   props.web_prompt_type == 'ask-about-files'
                     ? compact_step >= 2
