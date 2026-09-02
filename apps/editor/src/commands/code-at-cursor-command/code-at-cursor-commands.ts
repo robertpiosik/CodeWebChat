@@ -137,7 +137,7 @@ export const code_at_cursor_commands = (params: {
         extension_context: params.extension_context,
         websocket_manager: params.websocket_manager,
         with_completion_instructions: false,
-        force_quick_pick: false
+        show_quick_pick: false
       })
     ),
     vscode.commands.registerCommand(
@@ -149,7 +149,7 @@ export const code_at_cursor_commands = (params: {
           extension_context: params.extension_context,
           websocket_manager: params.websocket_manager,
           with_completion_instructions: true,
-          force_quick_pick: false
+          show_quick_pick: false
         })
     ),
     vscode.commands.registerCommand('codeWebChat.codeAtCursorUsing', async () =>
@@ -159,7 +159,7 @@ export const code_at_cursor_commands = (params: {
         extension_context: params.extension_context,
         websocket_manager: params.websocket_manager,
         with_completion_instructions: false,
-        force_quick_pick: true
+        show_quick_pick: true
       })
     ),
     vscode.commands.registerCommand(
@@ -171,7 +171,7 @@ export const code_at_cursor_commands = (params: {
           extension_context: params.extension_context,
           websocket_manager: params.websocket_manager,
           with_completion_instructions: true,
-          force_quick_pick: true
+          show_quick_pick: true
         })
     )
   ]

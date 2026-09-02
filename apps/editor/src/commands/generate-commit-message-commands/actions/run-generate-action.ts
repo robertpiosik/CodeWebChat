@@ -51,7 +51,7 @@ export const run_generate_action = async (params: {
 
   let files_staged_by_action = false
   let is_single_change_flow = false
-  let force_quick_pick = false
+  let show_quick_pick = false
   const selection_state: { files?: string[] } = {}
 
   const repository = await get_repository_for_commit(params.source_control)
@@ -506,10 +506,10 @@ export const run_generate_action = async (params: {
             await get_commit_message_api_configuration({
               extension_context: params.extension_context,
               show_back_button: true,
-              force_quick_pick
+              show_quick_pick
             })
 
-          force_quick_pick = false
+          show_quick_pick = false
 
           if (api_configuration_data == 'back') {
             current_action = undefined
@@ -536,7 +536,7 @@ export const run_generate_action = async (params: {
               axios.isCancel(error) ||
               error?.message == 'Operation cancelled by user'
             ) {
-              force_quick_pick = true
+              show_quick_pick = true
               continue
             } else {
               if (error?.message == 'API request returned an empty response') {
@@ -544,7 +544,7 @@ export const run_generate_action = async (params: {
                   t('command.generate-commit-message.error.empty-response')
                 )
               }
-              force_quick_pick = true
+              show_quick_pick = true
               continue
             }
           }
@@ -901,7 +901,7 @@ export const run_generate_action = async (params: {
     }
 
     if (go_back) {
-      force_quick_pick = true
+      show_quick_pick = true
       continue
     }
 

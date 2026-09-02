@@ -21,7 +21,7 @@ import { show_no_configurations_warning } from '@/utils/show-no-configurations-w
 export const handle_autofill = async (params: {
   prompt_view_provider: PromptViewProvider
   web_configuration_name?: string
-  force_quick_pick?: boolean
+  show_quick_pick?: boolean
 }): Promise<void> => {
   if (
     params.prompt_view_provider.target == TARGET.WEB &&
@@ -37,7 +37,7 @@ export const handle_autofill = async (params: {
     prompt_view_provider: params.prompt_view_provider,
     web_configuration_name: params.web_configuration_name,
     extension_context: params.prompt_view_provider.extension_context,
-    force_quick_pick: params.force_quick_pick
+    show_quick_pick: params.show_quick_pick
   })
 
   if (!resolution.web_configuration_name) {
@@ -207,7 +207,7 @@ const show_web_configuration_quick_pick = async (params: {
 const resolve_web_configuration = async (params: {
   prompt_view_provider: PromptViewProvider
   web_configuration_name?: string
-  force_quick_pick?: boolean
+  show_quick_pick?: boolean
   extension_context: vscode.ExtensionContext
 }): Promise<{ web_configuration_name: string | undefined }> => {
   const recents_key = get_last_used_web_configuration_key(
@@ -237,7 +237,7 @@ const resolve_web_configuration = async (params: {
     }
   }
 
-  if (!params.force_quick_pick && params.web_configuration_name === undefined) {
+  if (!params.show_quick_pick && params.web_configuration_name === undefined) {
     // Try to use last selection if "Send" button is clicked without specific preset
     const last_selected_name =
       params.extension_context.workspaceState.get<string>(recents_key) ??

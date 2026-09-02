@@ -18,7 +18,7 @@ export interface CommitMessageApiConfiguration {
 export const get_commit_message_api_configuration = async (params: {
   extension_context: vscode.ExtensionContext
   show_back_button?: boolean
-  force_quick_pick?: boolean
+  show_quick_pick?: boolean
 }): Promise<
   | {
       api_configuration: CommitMessageApiConfiguration
@@ -31,14 +31,14 @@ export const get_commit_message_api_configuration = async (params: {
   const model_providers_manager = new ModelProvidersManager(
     params.extension_context
   )
-  const force_quick_pick = params.force_quick_pick ?? false
+  const show_quick_pick = params.show_quick_pick ?? false
   const show_back_button = params.show_back_button ?? true
 
   let commit_message_api_configuration:
     | CommitMessageApiConfiguration
     | null
     | undefined
-    | 'back' = force_quick_pick
+    | 'back' = show_quick_pick
     ? undefined
     : await model_providers_manager.get_default_commit_messages_api_configuration()
 
@@ -51,7 +51,7 @@ export const get_commit_message_api_configuration = async (params: {
       return null
     }
 
-    if (api_configurations.length == 1 && !force_quick_pick) {
+    if (api_configurations.length == 1 && !show_quick_pick) {
       commit_message_api_configuration = api_configurations[0]
     } else if (api_configurations.length >= 1) {
       const last_selected_id =

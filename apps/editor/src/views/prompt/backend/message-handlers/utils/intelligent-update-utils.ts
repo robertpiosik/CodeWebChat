@@ -20,7 +20,7 @@ import { show_no_configurations_warning } from '@/utils/show-no-configurations-w
 
 export const get_intelligent_update_config = async (params: {
   model_providers_manager: ModelProvidersManager
-  force_quick_pick?: boolean
+  show_quick_pick?: boolean
   extension_context: vscode.ExtensionContext
 }): Promise<
   | { model_provider: ModelProvider; api_configuration: ApiConfiguration }
@@ -36,7 +36,7 @@ export const get_intelligent_update_config = async (params: {
 
   let selected_api_configuration: ApiConfiguration | undefined
 
-  if (!params.force_quick_pick) {
+  if (!params.show_quick_pick) {
     selected_api_configuration =
       await params.model_providers_manager.get_default_intelligent_update_api_configuration()
 
@@ -48,7 +48,7 @@ export const get_intelligent_update_config = async (params: {
     }
   }
 
-  if (!selected_api_configuration || params.force_quick_pick) {
+  if (!selected_api_configuration || params.show_quick_pick) {
     const last_selected_id =
       params.extension_context.workspaceState.get<string>(
         LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY

@@ -32,7 +32,7 @@ export const perform_code_at_cursor = async (params: {
   extension_context: vscode.ExtensionContext
   websocket_manager: WebSocketManager
   with_completion_instructions: boolean
-  force_quick_pick?: boolean
+  show_quick_pick?: boolean
   completion_instructions?: string
   api_configuration_id?: string
 }) => {
@@ -118,7 +118,7 @@ export const perform_code_at_cursor = async (params: {
       )
     }
 
-    if (params.force_quick_pick) {
+    if (params.show_quick_pick) {
       const api_configurations =
         await model_providers_manager.get_api_configurations()
       const has_api_configurations = api_configurations.length > 0
@@ -364,14 +364,14 @@ export const perform_code_at_cursor = async (params: {
     }
   }
 
-  let force_quick_pick = params.force_quick_pick || false
+  let show_quick_pick = params.show_quick_pick || false
   let current_api_configuration_id = params.api_configuration_id
 
   while (true) {
     const api_configuration_result = await get_code_at_cursor_api_configuration(
       {
         model_providers_manager,
-        force_quick_pick,
+        show_quick_pick,
         extension_context: params.extension_context,
         api_configuration_id: current_api_configuration_id
       }
@@ -381,7 +381,7 @@ export const perform_code_at_cursor = async (params: {
       return
     }
 
-    force_quick_pick = false
+    show_quick_pick = false
     current_api_configuration_id = undefined
 
     const {
@@ -397,7 +397,7 @@ export const perform_code_at_cursor = async (params: {
         function_name: 'perform_code_at_cursor',
         message: 'API provider is not specified for Code at Cursor tool.'
       })
-      force_quick_pick = true
+      show_quick_pick = true
       continue
     } else if (!code_at_cursor_api_configuration.model) {
       vscode.window.showErrorMessage(
@@ -407,7 +407,7 @@ export const perform_code_at_cursor = async (params: {
         function_name: 'perform_code_at_cursor',
         message: 'Model is not specified for Code at Cursor tool.'
       })
-      force_quick_pick = true
+      show_quick_pick = true
       continue
     }
 
@@ -572,7 +572,7 @@ export const perform_code_at_cursor = async (params: {
         }
         break
       } else {
-        force_quick_pick = true
+        show_quick_pick = true
         continue
       }
     } catch (err: any) {
@@ -580,7 +580,7 @@ export const perform_code_at_cursor = async (params: {
         if (err.message == t('command.code-at-cursor.cancel.cursor-moved')) {
           break
         }
-        force_quick_pick = true
+        show_quick_pick = true
         continue
       }
 
@@ -589,7 +589,7 @@ export const perform_code_at_cursor = async (params: {
         message: 'Completion error',
         data: err
       })
-      force_quick_pick = true
+      show_quick_pick = true
       continue
     } finally {
       cursor_listener.dispose()

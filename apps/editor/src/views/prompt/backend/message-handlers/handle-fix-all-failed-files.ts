@@ -20,7 +20,7 @@ import { set_file_applied_with_intelligent_update } from '@/commands/apply-respo
 export const handle_fix_all_failed_files = async (params: {
   prompt_view_provider: PromptViewProvider
   files_to_fix: { file_path: string; workspace_name?: string }[]
-  force_quick_pick?: boolean
+  show_quick_pick?: boolean
 }): Promise<void> => {
   const original_states =
     params.prompt_view_provider.extension_context.workspaceState.get<
@@ -62,7 +62,7 @@ export const handle_fix_all_failed_files = async (params: {
   )
   const api_configuration_result = await get_intelligent_update_config({
     model_providers_manager,
-    force_quick_pick: params.force_quick_pick ?? false,
+    show_quick_pick: params.show_quick_pick ?? false,
     extension_context: params.prompt_view_provider.extension_context
   })
   if (!api_configuration_result) return
@@ -298,7 +298,7 @@ export const handle_fix_all_failed_files = async (params: {
       await handle_fix_all_failed_files({
         prompt_view_provider: params.prompt_view_provider,
         files_to_fix: remaining_files,
-        force_quick_pick: true
+        show_quick_pick: true
       })
     }
   }
