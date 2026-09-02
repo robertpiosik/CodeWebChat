@@ -15,11 +15,11 @@ export interface CommitMessageApiConfiguration {
   reasoning_effort?: string
 }
 
-export const get_commit_message_api_configuration = async (
-  extension_context: vscode.ExtensionContext,
-  show_back_button: boolean = true,
-  force_quick_pick: boolean = false
-): Promise<
+export const get_commit_message_api_configuration = async (params: {
+  extension_context: vscode.ExtensionContext
+  show_back_button?: boolean
+  force_quick_pick?: boolean
+}): Promise<
   | {
       api_configuration: CommitMessageApiConfiguration
       model_provider: any
@@ -28,7 +28,12 @@ export const get_commit_message_api_configuration = async (
   | 'back'
   | null
 > => {
-  const model_providers_manager = new ModelProvidersManager(extension_context)
+  const model_providers_manager = new ModelProvidersManager(
+    params.extension_context
+  )
+  const force_quick_pick = params.force_quick_pick ?? false
+  const show_back_button = params.show_back_button ?? true
+
   let commit_message_api_configuration:
     | CommitMessageApiConfiguration
     | null
@@ -49,9 +54,10 @@ export const get_commit_message_api_configuration = async (
     if (api_configurations.length == 1 && !force_quick_pick) {
       commit_message_api_configuration = api_configurations[0]
     } else if (api_configurations.length >= 1) {
-      const last_selected_id = extension_context.workspaceState.get<string>(
-        LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY
-      )
+      const last_selected_id =
+        params.extension_context.workspaceState.get<string>(
+          LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY
+        )
 
       const placeholder = t('common.config.placeholder')
 
@@ -66,7 +72,7 @@ export const get_commit_message_api_configuration = async (
       if (result == 'back' || !result) {
         commit_message_api_configuration = 'back'
       } else {
-        extension_context.workspaceState.update(
+        params.extension_context.workspaceState.update(
           LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY,
           result.id
         )

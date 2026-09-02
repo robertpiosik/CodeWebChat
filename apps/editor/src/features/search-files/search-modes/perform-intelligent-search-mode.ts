@@ -388,7 +388,7 @@ export const perform_intelligent_search_mode = async (params: {
         }
 
         if (action == 'make-api') {
-          let force_prompt = false
+          let force_quick_pick = false
           let break_outer = false
           let final_result:
             | {
@@ -408,11 +408,11 @@ export const perform_intelligent_search_mode = async (params: {
                 extension_context: params.extension_context,
                 api_configurations,
                 tokens_to_process,
-                force_prompt
+                force_quick_pick
               }
             )
 
-            force_prompt = false
+            force_quick_pick = false
 
             if (api_configuration_result == 'back') {
               go_back_to_action = true
@@ -435,7 +435,7 @@ export const perform_intelligent_search_mode = async (params: {
 
             if (api_result == 'cancel') return undefined
             if (api_result == 'error') {
-              force_prompt = true
+              force_quick_pick = true
               continue
             }
             if (api_result == 'error_no_files') {

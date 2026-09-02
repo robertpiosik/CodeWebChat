@@ -18,16 +18,16 @@ import {
 } from '@/utils/show-configuration-quick-pick'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 
-export const get_intelligent_update_config = async (
-  model_providers_manager: ModelProvidersManager,
-  show_quick_pick: boolean = false,
+export const get_intelligent_update_config = async (params: {
+  model_providers_manager: ModelProvidersManager
+  force_quick_pick?: boolean
   extension_context: vscode.ExtensionContext
-): Promise<
+}): Promise<
   | { model_provider: ModelProvider; api_configuration: ApiConfiguration }
   | undefined
 > => {
   const intelligent_update_api_configurations =
-    await model_providers_manager.get_api_configurations()
+    await params.model_providers_manager.get_api_configurations()
 
   if (intelligent_update_api_configurations.length == 0) {
     show_no_configurations_warning('api')
@@ -36,9 +36,9 @@ export const get_intelligent_update_config = async (
 
   let selected_api_configuration: ApiConfiguration | undefined
 
-  if (!show_quick_pick) {
+  if (!params.force_quick_pick) {
     selected_api_configuration =
-      await model_providers_manager.get_default_intelligent_update_api_configuration()
+      await params.model_providers_manager.get_default_intelligent_update_api_configuration()
 
     if (
       !selected_api_configuration &&
@@ -48,10 +48,11 @@ export const get_intelligent_update_config = async (
     }
   }
 
-  if (!selected_api_configuration || show_quick_pick) {
-    const last_selected_id = extension_context.workspaceState.get<string>(
-      LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY
-    )
+  if (!selected_api_configuration || params.force_quick_pick) {
+    const last_selected_id =
+      params.extension_context.workspaceState.get<string>(
+        LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY
+      )
 
     const result = await show_configuration_quick_pick({
       items: intelligent_update_api_configurations,
@@ -66,7 +67,7 @@ export const get_intelligent_update_config = async (
 
     const { item: api_configuration, id } = result
 
-    extension_context.workspaceState.update(
+    params.extension_context.workspaceState.update(
       LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY,
       id
     )
@@ -74,9 +75,10 @@ export const get_intelligent_update_config = async (
     selected_api_configuration = api_configuration
   }
 
-  const model_provider = await model_providers_manager.get_model_provider(
-    selected_api_configuration.model_provider_name
-  )
+  const model_provider =
+    await params.model_providers_manager.get_model_provider(
+      selected_api_configuration.model_provider_name
+    )
 
   if (!model_provider) {
     vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))

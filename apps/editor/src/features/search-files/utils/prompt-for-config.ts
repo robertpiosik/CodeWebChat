@@ -18,7 +18,7 @@ export const prompt_for_api_configuration = async (params: {
   extension_context: vscode.ExtensionContext
   api_configurations: ApiConfiguration[]
   tokens_to_process: number
-  force_prompt?: boolean
+  force_quick_pick?: boolean
 }): Promise<
   | {
       api_configuration: ApiConfiguration
@@ -31,7 +31,7 @@ export const prompt_for_api_configuration = async (params: {
   let selected_api_configuration: ApiConfiguration | undefined = undefined
   let skipped = false
 
-  if (!params.force_prompt) {
+  if (!params.force_quick_pick) {
     const default_api_configuration =
       await params.model_providers_manager.get_default_intelligent_file_search_api_configuration()
 

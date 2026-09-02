@@ -98,11 +98,11 @@ export const handle_intelligent_update_file_in_preview = async (
   const model_providers_manager = new ModelProvidersManager(
     prompt_view_provider.extension_context
   )
-  const api_configuration_result = await get_intelligent_update_config(
+  const api_configuration_result = await get_intelligent_update_config({
     model_providers_manager,
-    force_model_selection ?? false,
-    prompt_view_provider.extension_context
-  )
+    force_quick_pick: force_model_selection ?? false,
+    extension_context: prompt_view_provider.extension_context
+  })
   if (!api_configuration_result) return
 
   const {

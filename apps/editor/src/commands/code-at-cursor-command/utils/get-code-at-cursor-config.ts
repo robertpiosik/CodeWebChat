@@ -15,7 +15,7 @@ import { show_no_configurations_warning } from '@/utils/show-no-configurations-w
 
 export const get_code_at_cursor_api_configuration = async (params: {
   model_providers_manager: ModelProvidersManager
-  show_quick_pick?: boolean
+  force_quick_pick?: boolean
   extension_context: vscode.ExtensionContext
   api_configuration_id?: string
 }): Promise<{ model_provider: any; api_configuration: any } | undefined> => {
@@ -34,15 +34,17 @@ export const get_code_at_cursor_api_configuration = async (params: {
       code_at_cursor_api_configurations.find(
         (c) => get_api_configuration_id(c) === params.api_configuration_id
       ) || null
-  } else if (!params.show_quick_pick) {
+  } else if (!params.force_quick_pick) {
     const default_api_configuration =
       await params.model_providers_manager.get_default_code_at_cursor_api_configuration()
     if (default_api_configuration) {
       selected_api_configuration = default_api_configuration
+    } else if (code_at_cursor_api_configurations.length == 1) {
+      selected_api_configuration = code_at_cursor_api_configurations[0]
     }
   }
 
-  if (!selected_api_configuration || params.show_quick_pick) {
+  if (!selected_api_configuration || params.force_quick_pick) {
     const last_selected_id =
       params.extension_context.workspaceState.get<string>(
         LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY

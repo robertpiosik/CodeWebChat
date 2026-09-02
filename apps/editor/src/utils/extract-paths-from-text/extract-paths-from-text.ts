@@ -42,14 +42,18 @@ export const extract_paths_from_text = (params: {
   const matched_files_with_index = new Map<string, number>()
 
   for (const original_p of found_paths) {
+    const is_relative_dot = original_p.startsWith('./')
     let p = original_p
     if (p.startsWith('./')) {
       p = p.substring(2)
     } else if (p.startsWith('/')) {
       p = p.substring(1)
     }
+    while (p.startsWith('/')) {
+      p = p.substring(1)
+    }
 
-    if (!p) continue
+    if (!p || p === '.' || p === '..') continue
 
     let idx = params.text.indexOf(original_p)
     if (idx == -1) {
@@ -57,9 +61,18 @@ export const extract_paths_from_text = (params: {
     }
     const safe_idx = idx != -1 ? idx : Infinity
 
-    if (workspace_files_set.has(p)) {
-      const current_idx = matched_files_with_index.get(p) ?? Infinity
-      matched_files_with_index.set(p, Math.min(current_idx, safe_idx))
+    if (is_relative_dot) {
+      for (const file of params.workspace_files) {
+        if (file === p || file.endsWith('/' + p)) {
+          const current_idx = matched_files_with_index.get(file) ?? Infinity
+          matched_files_with_index.set(file, Math.min(current_idx, safe_idx))
+        }
+      }
+    } else {
+      if (workspace_files_set.has(p)) {
+        const current_idx = matched_files_with_index.get(p) ?? Infinity
+        matched_files_with_index.set(p, Math.min(current_idx, safe_idx))
+      }
     }
   }
 

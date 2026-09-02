@@ -21,7 +21,7 @@ import { show_no_configurations_warning } from '@/utils/show-no-configurations-w
 export const handle_autofill = async (params: {
   prompt_view_provider: PromptViewProvider
   web_configuration_name?: string
-  show_quick_pick?: boolean
+  force_quick_pick?: boolean
 }): Promise<void> => {
   if (
     params.prompt_view_provider.target == TARGET.WEB &&
@@ -37,7 +37,7 @@ export const handle_autofill = async (params: {
     prompt_view_provider: params.prompt_view_provider,
     web_configuration_name: params.web_configuration_name,
     extension_context: params.prompt_view_provider.extension_context,
-    show_quick_pick: params.show_quick_pick
+    force_quick_pick: params.force_quick_pick
   })
 
   if (!resolution.web_configuration_name) {
@@ -207,7 +207,7 @@ const show_web_configuration_quick_pick = async (params: {
 const resolve_web_configuration = async (params: {
   prompt_view_provider: PromptViewProvider
   web_configuration_name?: string
-  show_quick_pick?: boolean
+  force_quick_pick?: boolean
   extension_context: vscode.ExtensionContext
 }): Promise<{ web_configuration_name: string | undefined }> => {
   const recents_key = get_last_used_web_configuration_key(
@@ -237,7 +237,7 @@ const resolve_web_configuration = async (params: {
     }
   }
 
-  if (!params.show_quick_pick && params.web_configuration_name === undefined) {
+  if (!params.force_quick_pick && params.web_configuration_name === undefined) {
     // Try to use last selection if "Send" button is clicked without specific preset
     const last_selected_name =
       params.extension_context.workspaceState.get<string>(recents_key) ??
@@ -245,7 +245,7 @@ const resolve_web_configuration = async (params: {
 
     if (last_selected_name) {
       const item = all_web_configurations.find(
-        (p) => p.name === last_selected_name
+        (p) => p.name == last_selected_name
       )
       if (item) {
         if (item.chatbot) {
@@ -256,6 +256,17 @@ const resolve_web_configuration = async (params: {
           }
         }
       }
+    }
+
+    const valid_web_configurations = all_web_configurations.filter(
+      (c) => c.chatbot
+    )
+    if (valid_web_configurations.length == 1) {
+      const web_configuration = valid_web_configurations[0]
+      if (get_is_web_configuration_disabled(web_configuration)) {
+        return { web_configuration_name: undefined }
+      }
+      return { web_configuration_name: web_configuration.name }
     }
   }
 

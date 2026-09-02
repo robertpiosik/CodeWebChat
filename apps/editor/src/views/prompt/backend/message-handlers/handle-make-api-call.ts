@@ -36,7 +36,7 @@ const get_last_used_config_id_key = () => {
 
 const get_api_configuration = async (params: {
   model_providers_manager: ModelProvidersManager
-  show_quick_pick?: boolean
+  force_quick_pick?: boolean
   extension_context: vscode.ExtensionContext
   prompt_view_provider: PromptViewProvider
   api_configuration_id?: string
@@ -74,7 +74,7 @@ const get_api_configuration = async (params: {
         })
       }
     }
-  } else if (!params.show_quick_pick) {
+  } else if (!params.force_quick_pick) {
     const last_selected_id =
       params.extension_context.workspaceState.get<string>(last_used_key)
 
@@ -84,9 +84,13 @@ const get_api_configuration = async (params: {
           (c) => get_api_configuration_id(c) == last_selected_id
         ) || null
     }
+
+    if (!selected_api_configuration && api_configurations.length == 1) {
+      selected_api_configuration = api_configurations[0]
+    }
   }
 
-  if (!selected_api_configuration || params.show_quick_pick) {
+  if (!selected_api_configuration || params.force_quick_pick) {
     const last_selected_id =
       params.extension_context.workspaceState.get<string>(last_used_key)
 
@@ -183,12 +187,12 @@ export const handle_make_api_call = async (
   }
 
   let current_api_configuration_id = message.api_configuration_id
-  let should_show_quick_pick = message.use_quick_pick
+  let force_quick_pick = message.use_quick_pick
 
   while (true) {
     const api_configuration_result = await get_api_configuration({
       model_providers_manager,
-      show_quick_pick: should_show_quick_pick,
+      force_quick_pick,
       extension_context: prompt_view_provider.extension_context,
       prompt_view_provider,
       api_configuration_id: current_api_configuration_id,
@@ -291,7 +295,7 @@ export const handle_make_api_call = async (
         }
         return
       } else {
-        should_show_quick_pick = true
+        force_quick_pick = true
         current_api_configuration_id = undefined
       }
     } catch (error) {

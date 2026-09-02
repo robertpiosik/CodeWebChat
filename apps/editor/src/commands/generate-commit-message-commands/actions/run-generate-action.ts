@@ -503,11 +503,11 @@ export const run_generate_action = async (params: {
           action_completed = true
         } else {
           const api_configuration_data =
-            await get_commit_message_api_configuration(
-              params.extension_context,
-              true,
+            await get_commit_message_api_configuration({
+              extension_context: params.extension_context,
+              show_back_button: true,
               force_quick_pick
-            )
+            })
 
           force_quick_pick = false
 

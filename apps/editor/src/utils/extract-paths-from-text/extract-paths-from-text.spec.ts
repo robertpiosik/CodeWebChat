@@ -111,4 +111,24 @@ Lorem ipsum.`
     )
     expect(result).not.toContain('other-file.ts')
   })
+
+  it('matches relative ./ paths to workspace files with folder prefixes', () => {
+    const text = 'Console error at ./src/services/logger.ts:14:2'
+    const workspace_files = [
+      'apps/app/src/services/logger.ts',
+      'apps/app/src/services/helper.ts'
+    ]
+    const result = extract_paths_from_text({ text, workspace_files })
+
+    expect(result).toContain('apps/app/src/services/logger.ts')
+    expect(result).not.toContain('apps/app/src/services/helper.ts')
+  })
+
+  it('does not match non-./ paths to workspace files with folder prefixes', () => {
+    const text = 'Check src/services/logger.ts for details'
+    const workspace_files = ['apps/app/src/services/logger.ts']
+    const result = extract_paths_from_text({ text, workspace_files })
+
+    expect(result).toEqual([])
+  })
 })

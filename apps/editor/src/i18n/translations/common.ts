@@ -324,7 +324,7 @@ export const translations = {
     bg: 'Изтриване'
   },
   'common.search-in-selected-results': {
-    en: 'Search in selected results',
+    en: 'Search in the selected results',
     pl: 'Szukaj w wybranych wynikach',
     'zh-cn': '在选中的结果中搜索',
     ja: '選択した結果内を検索',
