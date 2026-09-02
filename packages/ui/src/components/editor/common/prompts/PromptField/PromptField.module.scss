@@ -237,7 +237,7 @@
       flex-shrink: 0;
 
       &:hover {
-        background-color: var(--vscode-toolbar-hoverBackground);
+        background-color: var(--cwc-bg-secondary);
       }
 
       &__button {
@@ -253,7 +253,7 @@
         }
 
         &:hover:enabled {
-          background-color: var(--vscode-toolbar-hoverBackground);
+          background-color: var(--cwc-bg-secondary);
         }
 
         &:disabled {

@@ -4,7 +4,7 @@
   align-items: center;
   gap: 14px;
   margin: 0 12px;
-  border-bottom: 1px solid var(--cwc-border-color);
+  border-bottom: 1px solid var(--cwc-bg-red);
 
   :global([data-modern-ui='true']) & {
     margin: 0 10px;
@@ -41,10 +41,13 @@
     }
 
     &--active {
-      color: var(--cwc-text-color);
-      border-color: var(--cwc-border-color);
-      border-bottom-color: transparent;
-      background-color: var(--vscode-sideBar-background);
+      color: var(--cwc-text-color-red);
+      border-bottom-color: var(--cwc-bg-red);
+      background-color: var(--cwc-bg-red);
+
+      &:hover {
+        color: var(--cwc-text-color-red);
+      }
     }
   }
 

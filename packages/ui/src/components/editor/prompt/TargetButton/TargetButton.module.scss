@@ -17,6 +17,7 @@
   padding: 0 12px;
   height: 80px;
   width: 100%;
+  border-radius: 10px;
   overflow: hidden;
   flex: 1;
   position: relative;
@@ -25,6 +26,7 @@
   &--compact {
     height: 100%;
     gap: 8px;
+    border-radius: 0;
 
     .button__label {
       font-size: 18px;
@@ -32,8 +34,8 @@
   }
 
   &:not(:disabled):hover {
-    background-color: var(--vscode-toolbar-hoverBackground);
-    border-color: transparent;
+    background-color: var(--cwc-bg-purple);
+    color: var(--cwc-text-color-purple);
 
     .button__label-char {
       animation: wave 0.5s ease-in-out;

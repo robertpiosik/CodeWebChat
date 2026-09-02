@@ -87,7 +87,7 @@
     &-divider {
       width: 1px;
       height: 16px;
-      background-color: var(--cwc-border-color-dimmed);
+      background-color: var(--cwc-bg-purple);
     }
   }
 }
@@ -114,12 +114,7 @@
   &__target {
     position: relative;
     display: flex;
-    background-color: var(--vscode-sideBar-background);
-    border-radius: 10px;
-    border: 1px solid var(--cwc-border-color);
     margin: 0 12px;
-    z-index: 1;
-    overflow: hidden;
 
     :global([data-modern-ui='true']) & {
       margin: 0 10px;
@@ -137,7 +132,7 @@
       transform: translate(-50%, -50%);
       width: 1px;
       height: 35px;
-      background-color: var(--cwc-border-color-dimmed);
+      background-color: var(--cwc-bg-purple);
       pointer-events: none;
     }
   }
