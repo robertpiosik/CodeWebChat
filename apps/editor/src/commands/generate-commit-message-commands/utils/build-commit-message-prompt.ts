@@ -6,11 +6,13 @@ import {
 import type { GitRepository } from '@/utils/git-repository-utils'
 import { MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE } from '@/constants/values'
 import { PromptBuilder } from '@/utils/prompt-builder'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 
 export const build_commit_message_prompt = async (
   diff: string,
   repository: GitRepository,
-  context_files: string[] = []
+  context_files: string[] = [],
+  workspace_provider?: WorkspaceProvider
 ): Promise<{ api_prompt: string; chatbot_prompt: string }> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const instructions = config.get<string>('commitMessageInstructions')
@@ -98,7 +100,29 @@ export const build_commit_message_prompt = async (
         }
       }
 
+      let should_include_full_content = true
+
       if (!is_deleted && file_path && !is_binary) {
+        if (workspace_provider) {
+          const absolute_path = vscode.Uri.joinPath(
+            repository.rootUri,
+            file_path
+          ).fsPath
+          if (
+            workspace_provider.is_ignored_by_patterns(absolute_path) ||
+            workspace_provider.is_excluded(file_path)
+          ) {
+            should_include_full_content = false
+          }
+        }
+      }
+
+      if (
+        !is_deleted &&
+        file_path &&
+        !is_binary &&
+        should_include_full_content
+      ) {
         try {
           let full_content = ''
           try {
@@ -133,6 +157,19 @@ export const build_commit_message_prompt = async (
   }
 
   for (const file_path of context_files) {
+    if (workspace_provider) {
+      const absolute_path = vscode.Uri.joinPath(
+        repository.rootUri,
+        file_path
+      ).fsPath
+      if (
+        workspace_provider.is_ignored_by_patterns(absolute_path) ||
+        workspace_provider.is_excluded(file_path)
+      ) {
+        continue
+      }
+    }
+
     try {
       const uri = vscode.Uri.joinPath(repository.rootUri, file_path)
       const content_uint8 = await vscode.workspace.fs.readFile(uri)

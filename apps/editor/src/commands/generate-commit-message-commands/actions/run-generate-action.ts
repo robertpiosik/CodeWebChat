@@ -14,7 +14,8 @@ import { AsciiTree } from '../../../utils/ascii-tree'
 import {
   LAST_ATTACH_ASCII_TREE_STATE_KEY,
   get_last_used_web_configuration_key,
-  LAST_USED_COMMIT_MESSAGE_ACTION_STATE_KEY
+  LAST_USED_COMMIT_MESSAGE_ACTION_STATE_KEY,
+  LAST_USE_CONTEXT_FILES_STATE_KEY
 } from '@/constants/state-keys'
 import { get_prompt_data } from './get-prompt-data'
 import { display_token_count } from '@shared/utils/display-token-count'
@@ -70,24 +71,24 @@ export const run_generate_action = async (params: {
       skip_context_prompt: params.provided_text !== undefined
     })
 
-    if (data === 'back') {
-      files_staged_by_action = false
-      is_single_change_flow = false
-      continue
-    }
     if (!data) return
 
     const {
-      api_prompt,
-      chatbot_prompt,
+      prompt_without_context,
+      prompt_with_context,
+      setting,
       is_single_change,
       staged_files,
-      was_context_prompt_shown,
       was_empty_stage
     } = data
 
-    // token count for the prompt, used in the config UI
-    const token_count = Math.ceil(api_prompt.length / 4)
+    // token count for the prompt, used in the config UI placeholder
+    let base_token_count = Math.ceil(
+      prompt_without_context.api_prompt.length / 4
+    )
+    if (setting === 'always' && prompt_with_context) {
+      base_token_count = Math.ceil(prompt_with_context.api_prompt.length / 4)
+    }
 
     if (was_empty_stage) {
       files_staged_by_action = true
@@ -100,8 +101,7 @@ export const run_generate_action = async (params: {
       commit_message = params.provided_text
     } else {
       const show_back_button =
-        was_context_prompt_shown ||
-        (was_empty_stage && !is_single_change_flow && !params.source_control)
+        was_empty_stage && !is_single_change_flow && !params.source_control
 
       const action_make_api = t(
         'command.generate-commit-message.action.make-api-call'
@@ -126,9 +126,14 @@ export const run_generate_action = async (params: {
       let current_action: string | undefined = undefined
       let go_back_to_prompt_data = false
       let action_completed = false
+      let final_api_prompt: string | undefined = undefined
+      let final_chatbot_prompt: string | undefined = undefined
 
       while (!action_completed) {
         if (!current_action) {
+          final_api_prompt = undefined
+          final_chatbot_prompt = undefined
+
           current_action = await new Promise<string | undefined | 'back'>(
             (resolve) => {
               const quick_pick = vscode.window.createQuickPick<
@@ -165,7 +170,7 @@ export const run_generate_action = async (params: {
               )
               quick_pick.placeholder = t(
                 'command.generate-commit-message.action-quick-pick.placeholder',
-                { tokens: display_token_count(token_count) }
+                { tokens: display_token_count(base_token_count) }
               )
 
               const close_button = {
@@ -210,11 +215,6 @@ export const run_generate_action = async (params: {
           )
 
           if (current_action == 'back') {
-            if (was_context_prompt_shown) {
-              go_back_to_prompt_data = true
-              break
-            }
-
             if (was_empty_stage) {
               if (!show_back_button) {
                 await vscode.commands.executeCommand(
@@ -248,11 +248,137 @@ export const run_generate_action = async (params: {
 
         const action = current_action
 
+        if (action !== 'manual' && !final_api_prompt) {
+          final_api_prompt = prompt_without_context.api_prompt
+          final_chatbot_prompt = prompt_without_context.chatbot_prompt
+
+          if (prompt_with_context) {
+            if (setting === 'always') {
+              final_api_prompt = prompt_with_context.api_prompt
+              final_chatbot_prompt = prompt_with_context.chatbot_prompt
+            } else if (setting === 'ask') {
+              const skip_tokens = Math.ceil(
+                prompt_without_context.api_prompt.length / 4
+              )
+              const additional_tokens =
+                Math.ceil(prompt_with_context.api_prompt.length / 4) -
+                skip_tokens
+
+              const attach_label = t(
+                'command.generate-commit-message.attach-context-files.attach'
+              )
+              const skip_label = t(
+                'command.generate-commit-message.attach-context-files.skip'
+              )
+              const last_selected_id =
+                params.extension_context.workspaceState.get<string>(
+                  LAST_USE_CONTEXT_FILES_STATE_KEY,
+                  'attach'
+                )
+
+              const answer = await new Promise<string | undefined | 'back'>(
+                (resolve) => {
+                  const quick_pick = vscode.window.createQuickPick<
+                    vscode.QuickPickItem & { id: string }
+                  >()
+                  quick_pick.items = [
+                    {
+                      label: skip_label,
+                      description: `${display_token_count(skip_tokens)} tokens`,
+                      id: 'skip'
+                    },
+                    {
+                      label: attach_label,
+                      description: `+${display_token_count(additional_tokens)} tokens`,
+                      id: 'attach'
+                    }
+                  ]
+                  quick_pick.activeItems = [
+                    quick_pick.items.find((i) => i.id === last_selected_id) ||
+                      quick_pick.items[1]
+                  ]
+                  quick_pick.title = t(
+                    'command.generate-commit-message.attach-context-files.title'
+                  )
+                  quick_pick.placeholder = t(
+                    'command.generate-commit-message.attach-context-files.placeholder'
+                  )
+                  quick_pick.ignoreFocusOut = true
+                  const close_button = {
+                    iconPath: new vscode.ThemeIcon('close'),
+                    tooltip: t('common.close')
+                  }
+                  quick_pick.buttons = [
+                    vscode.QuickInputButtons.Back,
+                    close_button
+                  ]
+
+                  let is_resolved = false
+
+                  quick_pick.onDidTriggerButton((button) => {
+                    if (button === vscode.QuickInputButtons.Back) {
+                      is_resolved = true
+                      resolve('back')
+                      quick_pick.hide()
+                    } else if (button === close_button) {
+                      is_resolved = true
+                      resolve(undefined)
+                      quick_pick.hide()
+                    }
+                  })
+
+                  quick_pick.onDidAccept(() => {
+                    is_resolved = true
+                    resolve(quick_pick.selectedItems[0]?.id)
+                    quick_pick.hide()
+                  })
+
+                  quick_pick.onDidHide(() => {
+                    if (!is_resolved) {
+                      resolve(undefined)
+                    }
+                    quick_pick.dispose()
+                  })
+
+                  quick_pick.show()
+                }
+              )
+
+              if (answer === 'back') {
+                current_action = undefined
+                continue
+              }
+
+              if (answer === undefined) {
+                if (was_empty_stage) {
+                  await vscode.commands.executeCommand(
+                    'git.unstageAll',
+                    repository
+                  )
+                }
+                return
+              }
+
+              params.extension_context.workspaceState.update(
+                LAST_USE_CONTEXT_FILES_STATE_KEY,
+                answer
+              )
+
+              if (answer === 'attach') {
+                final_api_prompt = prompt_with_context.api_prompt
+                final_chatbot_prompt = prompt_with_context.chatbot_prompt
+              }
+            }
+          }
+        }
+
         if (action == 'copy') {
-          await vscode.env.clipboard.writeText(chatbot_prompt)
+          await vscode.env.clipboard.writeText(final_chatbot_prompt!)
           vscode.window.showInformationMessage(
             t('command.generate-commit-message.copied', {
-              tokens: display_token_count(token_count)
+              tokens: display_token_count(
+                Math.ceil(final_api_prompt!.length / 4)
+              )
             })
           )
           if (was_empty_stage) {
@@ -355,7 +481,7 @@ export const run_generate_action = async (params: {
 
           if (selected_web_configuration_name) {
             const sent = await params.websocket_manager.initialize_chat({
-              text: chatbot_prompt,
+              text: final_chatbot_prompt!,
               web_configuration_name: selected_web_configuration_name,
               inject_apply_response_button: true
             })
@@ -402,7 +528,7 @@ export const run_generate_action = async (params: {
               base_url: api_configuration_data.base_url,
               model_provider: api_configuration_data.model_provider,
               api_configuration: api_configuration_data.api_configuration,
-              message: api_prompt
+              message: final_api_prompt!
             })
             action_completed = true
           } catch (error: any) {
