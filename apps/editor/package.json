@@ -1236,7 +1236,7 @@
     "@joplin/turndown-plugin-gfm": "^1.0.63",
     "@mozilla/readability": "^0.6.0",
     "@svgr/webpack": "^8.1.0",
-    "@vscode/codicons": "^0.0.45",
+    "@vscode/codicons": "^0.0.46-38",
     "axios": "^1.18.1",
     "bufferutil": "^4.0.9",
     "classnames": "^2.5.1",
