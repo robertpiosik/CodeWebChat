@@ -184,18 +184,27 @@ export type Skill = {
 export const parse_skill_md = (file_path: string): Skill | null => {
   try {
     const content = fs.readFileSync(file_path, 'utf-8')
-    const match = content.match(/^---\s*\n([\s\S]*?)\n---/)
+    const match = content.match(/^---\s*\r?\n([\s\S]*?)\r?\n---/)
     if (!match) return null
     const frontmatter = match[1]
 
-    const name_match = frontmatter.match(/name:\s*(.*)/)
-    const desc_match = frontmatter.match(/description:\s*(.*)/)
+    const name_match = frontmatter.match(/^name:\s*(.*)$/m)
+    const desc_match = frontmatter.match(
+      /^description:\s*(?:(?:>|\|)[ \t]*\r?\n)?([\s\S]*?)(?=\r?\n[a-zA-Z0-9_-]+:|$)/m
+    )
 
     if (!name_match || !desc_match) return null
 
+    let name = name_match[1].trim()
+    name = name.replace(/^["']|["']$/g, '')
+
+    let description = desc_match[1].trim()
+    description = description.replace(/\s+/g, ' ')
+    description = description.replace(/^["']|["']$/g, '')
+
     return {
-      name: name_match[1].trim(),
-      description: desc_match[1].trim(),
+      name,
+      description,
       path: path.dirname(file_path)
     }
   } catch {
@@ -339,7 +348,7 @@ export const handle_skill_item = async (): Promise<
     const skill_pick = vscode.window.createQuickPick()
 
     const open_source_button: vscode.QuickInputButton = {
-      iconPath: new vscode.ThemeIcon('link-external'),
+      iconPath: new vscode.ThemeIcon('globe'),
       tooltip: 'View on skills.sh'
     }
 
