@@ -875,7 +875,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 className={cn(
                   styles['top-right__clear-button'],
                   'codicon',
-                  'codicon-close'
+                  'codicon-close-small'
                 )}
                 data-role="clear-button"
                 onClick={handle_input_click}
