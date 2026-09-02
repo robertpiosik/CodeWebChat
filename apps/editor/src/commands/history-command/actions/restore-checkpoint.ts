@@ -52,10 +52,12 @@ export const restore_checkpoint = async (params: {
   const main_task = async (
     progress: vscode.Progress<{ message?: string; increment?: number }>
   ) => {
-    if (
-      params.checkpoint.trigger == 'response-accepted' &&
-      params.checkpoint.description
-    ) {
+    params.workspace_provider.pause_file_watcher()
+    try {
+      if (
+        params.checkpoint.trigger == 'response-accepted' &&
+        params.checkpoint.description
+      ) {
       CommitMessageDetails.remove({
         extension_context: params.extension_context,
         prompt: params.checkpoint.description
@@ -522,6 +524,10 @@ export const restore_checkpoint = async (params: {
     }
 
     return temp_checkpoint
+    } finally {
+      params.workspace_provider.resume_file_watcher()
+      params.workspace_provider.refresh()
+    }
   }
 
   let temp_check: Checkpoint | undefined

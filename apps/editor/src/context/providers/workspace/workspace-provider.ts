@@ -32,6 +32,9 @@ export interface IWorkspaceProvider {
     checked_timestamps: Record<string, number>
   }
   get_all_files_for_uri(uri: vscode.Uri): Promise<vscode.Uri[]>
+  pause_file_watcher(): void
+  resume_file_watcher(): void
+  refresh(): void
 }
 
 export class WorkspaceProvider
@@ -77,6 +80,7 @@ export class WorkspaceProvider
     vscode.TreeItemCollapsibleState.Expanded
   private _workspace_view_collapsible_state: vscode.TreeItemCollapsibleState =
     vscode.TreeItemCollapsibleState.Collapsed
+  private _is_file_watcher_paused = false
 
   public set_selected_files_view_collapsible_state(
     state: vscode.TreeItemCollapsibleState
@@ -360,11 +364,21 @@ export class WorkspaceProvider
     return path.basename(root_path)
   }
 
+  public pause_file_watcher(): void {
+    this._is_file_watcher_paused = true
+  }
+
+  public resume_file_watcher(): void {
+    this._is_file_watcher_paused = false
+  }
+
   public invalidate_token_counts_for_file(changed_file_path: string) {
     this._token_calculator.invalidate_token_counts_for_file(changed_file_path)
   }
 
   private _on_file_system_changed(changed_file_path?: string) {
+    if (this._is_file_watcher_paused) return
+
     if (!changed_file_path) return
 
     const workspace_root = this.get_workspace_root_for_file(changed_file_path)
@@ -403,6 +417,8 @@ export class WorkspaceProvider
   }
 
   private async _handle_file_create(created_file_path?: string): Promise<void> {
+    if (this._is_file_watcher_paused) return
+
     if (!created_file_path) return
 
     const workspace_root = this.get_workspace_root_for_file(created_file_path)
@@ -796,6 +812,8 @@ export class WorkspaceProvider
     return items
   }
   public async load_all_ranges(): Promise<void> {
+    if (this._is_file_watcher_paused) return
+
     this._file_ranges.clear()
     for (const workspace_root of this._workspace_roots) {
       const ranges_file_path = path.join(
@@ -1366,6 +1384,8 @@ export class WorkspaceProvider
   }
 
   private async _load_all_gitignore_files(): Promise<void> {
+    if (this._is_file_watcher_paused) return
+
     const gitignore_files: string[] = []
     const visited = new Set<string>()
 
