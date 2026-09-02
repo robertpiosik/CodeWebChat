@@ -1,0 +1,126 @@
+.container {
+  --height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--height);
+  padding: 0 0 0 5px;
+  overflow: hidden;
+  margin: 0 20px;
+
+  :global([data-modern-ui='true']) & {
+    margin: 0 18px;
+  }
+}
+
+.placement-top {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.placement-bottom {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.theme-default {
+  color: var(--cwc-text-color);
+  background-color: var(--cwc-bg-tertiary);
+
+  .action:hover {
+    background-color: var(--cwc-bg-tertiary);
+  }
+}
+
+.theme-warning {
+  color: var(--cwc-text-color-yellow);
+  background-color: var(--cwc-bg-yellow);
+
+  .label {
+    font-weight: 500;
+  }
+
+  .action:hover {
+    background-color: var(--cwc-bg-yellow);
+  }
+}
+
+.theme-success {
+  color: var(--cwc-text-color-green);
+  background-color: var(--cwc-bg-green);
+
+  .action:hover {
+    background-color: var(--cwc-bg-green);
+  }
+}
+
+.theme-error {
+  color: var(--cwc-text-color-red);
+  background-color: var(--cwc-bg-red);
+
+  .action:hover {
+    background-color: var(--cwc-bg-red);
+  }
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  flex: 1;
+
+  &:last-child {
+    padding-right: 8px;
+  }
+}
+
+.icon {
+  margin-right: 4px;
+
+  span::before {
+    font-size: 15px;
+    line-height: 24px;
+  }
+}
+
+.label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  height: 100%;
+  display: block;
+  line-height: var(--height);
+}
+
+.description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  height: 100%;
+  display: block;
+  line-height: var(--height);
+  opacity: var(--cwc-text-color-dimmed);
+  margin-left: 6px;
+}
+
+.actions {
+  display: flex;
+  height: 100%;
+}
+
+.action {
+  display: flex;
+  font-size: 12px;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  color: var(--vscode-textLink-foreground);
+  padding: 0 6px 0 3px;
+
+  &:hover {
+    background-color: var(--vscode-list-hoverBackground);
+  }
+}

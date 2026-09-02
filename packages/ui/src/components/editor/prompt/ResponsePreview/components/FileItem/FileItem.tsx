@@ -4,6 +4,7 @@ import { FileInPreview } from '@shared/types/file-in-preview'
 import styles from './FileItem.module.scss'
 import { Checkbox } from '../../../../common/Checkbox'
 import { IconButton } from '../../../../common/IconButton'
+import { StatusBar } from '../../../StatusBar'
 
 type Props = {
   file: FileInPreview
@@ -227,60 +228,69 @@ export const FileItem: FC<Props> = (props) => {
           )}
         </div>
       </div>
-      {message_obj && (
-        <div
-          className={cn(styles.message, {
-            [styles['message--error']]: message_obj.type == 'error',
-            [styles['message--warning']]: message_obj.type == 'warning',
-            [styles['message--success']]: message_obj.type == 'success',
-            [styles['message--loading']]: message_obj.type == 'loading'
-          })}
-        >
-          <div className={styles['message__content']}>
-            {message_obj.type == 'success' && (
-              <span className="codicon codicon-check" />
-            )}
-            {message_obj.type == 'error' && (
-              <span className="codicon codicon-error" />
-            )}
-            {message_obj.type == 'warning' && (
-              <span className="codicon codicon-warning" />
-            )}
-            {message_obj.type == 'loading' && (
-              <span className="codicon codicon-loading codicon-modifier-spin" />
-            )}
-            <span>{message_obj.text}</span>
-          </div>
-          <div className={styles['message__actions']}>
-            {!props.file.is_applying && (
-              <div
-                className={styles['message__actions__item']}
-                onClick={() =>
-                  props.on_intelligent_update(
-                    !!props.file.applied_with_intelligent_update
-                  )
-                }
-                title="Apply with Intelligent Update API tool"
-              >
-                <span className="codicon codicon-sparkle" />
-                <span>
-                  {props.file.applied_with_intelligent_update ? 'Retry' : 'Fix'}
-                </span>
-              </div>
-            )}
-            {props.file.ai_content && (
-              <div
-                className={styles['message__actions__item']}
-                onClick={props.on_preview_generated_code}
-                title="Preview generated code"
-              >
-                <span className="codicon codicon-open-preview" />
-                <span>Preview</span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {message_obj &&
+        (() => {
+          let statusBarTheme: 'success' | 'error' | 'warning' | 'default' =
+            'default'
+          let statusBarIcon = ''
+          let statusBarIconSpin = false
+
+          if (message_obj.type === 'success') {
+            statusBarTheme = 'success'
+            statusBarIcon = 'codicon-check'
+          } else if (message_obj.type === 'error') {
+            statusBarTheme = 'error'
+            statusBarIcon = 'codicon-error'
+          } else if (message_obj.type === 'warning') {
+            statusBarTheme = 'warning'
+            statusBarIcon = 'codicon-warning'
+          } else if (message_obj.type === 'loading') {
+            statusBarTheme = 'default'
+            statusBarIcon = 'codicon-loading'
+            statusBarIconSpin = true
+          }
+
+          const message_actions = []
+          if (!props.file.is_applying) {
+            message_actions.push({
+              id: 'fix',
+              icon: 'codicon-sparkle',
+              label: props.file.applied_with_intelligent_update
+                ? 'Retry'
+                : 'Fix',
+              title: 'Apply with Intelligent Update API tool',
+              on_click: (e: React.MouseEvent) => {
+                e.stopPropagation()
+                props.on_intelligent_update(
+                  !!props.file.applied_with_intelligent_update
+                )
+              }
+            })
+          }
+          if (props.file.ai_content) {
+            message_actions.push({
+              id: 'preview',
+              icon: 'codicon-open-preview',
+              label: 'Preview',
+              title: 'Preview generated code',
+              on_click: (e: React.MouseEvent) => {
+                e.stopPropagation()
+                props.on_preview_generated_code()
+              }
+            })
+          }
+
+          return (
+            <StatusBar
+              placement="bottom"
+              theme={statusBarTheme}
+              icon={statusBarIcon}
+              icon_spin={statusBarIconSpin}
+              label={message_obj.text}
+              actions={message_actions}
+            />
+          )
+        })()}
     </div>
   )
 }

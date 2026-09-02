@@ -1,7 +1,7 @@
 import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/prompt/Configurations'
 import { PromptField as UiPromptField } from '@ui/components/editor/common/prompts/PromptField'
-import { PromptAttachments as UiPromptAttachments } from '@ui/components/editor/prompt/PromptAttachments'
+import { PromptAttachments as UiPromptAttachments } from './components/PromptAttachments'
 import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { Responses as UiResponses } from '@ui/components/editor/prompt/Responses'
@@ -10,7 +10,7 @@ import { EditFormat } from '@shared/types/edit-format'
 import { TARGET, Target } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
-import { BrowserConnectionStatus as UiBrowserConnectionStatus } from '@ui/components/editor/prompt/BrowserConnectionStatus'
+import { BrowserConnectionStatus as UiBrowserConnectionStatus } from './components/BrowserConnectionStatus'
 import { ApiConfiguration } from '@/views/prompt/types/messages'
 import { use_last_choice_tooltip } from './hooks/use-last-choice-tooltip'
 import { Header } from './components/Header'
@@ -250,6 +250,7 @@ export const MainView: React.FC<Props> = (props) => {
           {props.target == TARGET.WEB && (
             <UiBrowserConnectionStatus
               is_connected={props.is_connected}
+              has_responses={props.response_history.length > 0}
               on_install={props.on_install_browser_extension}
               translations={{
                 connected: 'Connected!',
