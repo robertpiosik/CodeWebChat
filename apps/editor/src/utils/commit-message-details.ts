@@ -90,9 +90,12 @@ export namespace CommitMessageDetails {
     const files_to_add = params.files.map(normalize)
     const selected_files_to_add = params.selected_files.map(normalize)
 
-    const existing = all_prompts[params.workspace_root].find(
-      (p) => p.prompt == simplified_prompt
-    )
+    const existing = all_prompts[params.workspace_root].find((p) => {
+      if (simplified_prompt !== '') {
+        return p.prompt == simplified_prompt
+      }
+      return p.prompt == '' && p.files.some((f) => files_to_add.includes(f))
+    })
 
     if (existing) {
       existing.files = Array.from(new Set([...existing.files, ...files_to_add]))
