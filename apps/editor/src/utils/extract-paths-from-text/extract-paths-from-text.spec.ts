@@ -124,11 +124,11 @@ Lorem ipsum.`
     expect(result).not.toContain('apps/app/src/services/helper.ts')
   })
 
-  it('does not match non-./ paths to workspace files with folder prefixes', () => {
+  it('matches non-./ paths to workspace files with folder prefixes', () => {
     const text = 'Check src/services/logger.ts for details'
     const workspace_files = ['apps/app/src/services/logger.ts']
     const result = extract_paths_from_text({ text, workspace_files })
 
-    expect(result).toEqual([])
+    expect(result).toContain('apps/app/src/services/logger.ts')
   })
 })
