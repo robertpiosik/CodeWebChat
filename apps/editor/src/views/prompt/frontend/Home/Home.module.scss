@@ -115,9 +115,6 @@
     position: relative;
     display: flex;
     margin: 0 12px;
-    border-radius: 10px;
-    box-shadow: inset 0 0 0 1px var(--cwc-bg-purple);
-    overflow: hidden;
 
     :global([data-modern-ui='true']) & {
       margin: 0 10px;
