@@ -1,9 +1,5 @@
 .container {
   padding: 4px 0 12px 0;
-
-  :global([data-modern-ui='true']) & {
-    padding: 4px 0 10px 0;
-  }
 }
 
 .chat-input {
