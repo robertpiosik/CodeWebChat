@@ -91,14 +91,9 @@
 }
 
 .description {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   font-size: 12px;
-  height: 100%;
-  display: block;
   line-height: var(--height);
-  opacity: var(--cwc-text-color-dimmed);
+  color: var(--cwc-text-color-dimmed);
   margin-left: 6px;
 }
 

@@ -387,6 +387,7 @@ export const MainView: React.FC<Props> = (props) => {
               warning: context_is_empty_warning
                 ? t('common.context-is-empty')
                 : undefined,
+              attaching_file: t('selected-files.attaching-file'),
               attaching_files: t('selected-files.attaching-files')
             }}
           />

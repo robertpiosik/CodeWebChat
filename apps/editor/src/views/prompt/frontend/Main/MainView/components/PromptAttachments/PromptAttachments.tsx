@@ -7,6 +7,7 @@ type Props = {
   files_count?: number
   translations: {
     warning?: string
+    attaching_file: string
     attaching_files: string
   }
 }
@@ -15,6 +16,12 @@ export const PromptAttachments: React.FC<Props> = (props) => {
   if (!props.translations.warning && props.files_count === undefined) {
     return null
   }
+
+  const attaching_files_label = (
+    props.files_count == 1
+      ? props.translations.attaching_file
+      : props.translations.attaching_files
+  ).replace('{count}', String(props.files_count))
 
   return (
     <>
@@ -31,10 +38,7 @@ export const PromptAttachments: React.FC<Props> = (props) => {
           placement="bottom"
           theme="default"
           icon="codicon-attach"
-          label={props.translations.attaching_files.replace(
-            '{files}',
-            String(props.files_count)
-          )}
+          label={attaching_files_label}
           description={
             (props.token_count ?? 0) > 0
               ? display_token_count(props.token_count ?? 0)
