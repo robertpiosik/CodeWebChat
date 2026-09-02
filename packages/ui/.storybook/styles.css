@@ -8,7 +8,7 @@
   --cwc-text-color-green: var(
     --vscode-gitDecoration-untrackedResourceForeground
   );
-  --cwc-text-color-orange: var(
+  --cwc-text-color-yellow: var(
     --vscode-gitDecoration-modifiedResourceForeground
   );
   --cwc-text-color-red: var(--vscode-gitDecoration-deletedResourceForeground);

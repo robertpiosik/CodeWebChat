@@ -362,6 +362,7 @@ export const prepare_staged_changes = async (params: {
         }
 
         quick_pick.canSelectMany = true
+        quick_pick.matchOnDescription = true
         quick_pick.title = t('command.generate-commit-message.unstaged-files')
         quick_pick.placeholder = t(
           'command.generate-commit-message.select-files'

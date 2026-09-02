@@ -102,7 +102,7 @@ export const FileItem: FC<Props> = (props) => {
             }}
             title="Cancel"
           >
-            <span className="codicon codicon-close" />
+            <span className="codicon codicon-close-small" />
           </div>
         )}
       </div>

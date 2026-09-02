@@ -57,15 +57,15 @@
     }
 
     &.button--orange {
-      background-color: var(--cwc-bg-orange);
+      background-color: var(--cwc-bg-yellow);
 
       .button__icon,
       .button__label {
-        color: var(--cwc-text-color-orange);
+        color: var(--cwc-text-color-yellow);
       }
 
       &:hover {
-        background-color: var(--cwc-bg-orange);
+        background-color: var(--cwc-bg-yellow);
       }
     }
 

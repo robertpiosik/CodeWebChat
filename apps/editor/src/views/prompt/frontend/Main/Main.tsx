@@ -391,6 +391,12 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
+  const handle_install_browser_extension = () => {
+    post_message(props.vscode, {
+      command: 'INSTALL_BROWSER_EXTENSION'
+    })
+  }
+
   const handle_api_configuration_click = (id: string) => {
     const instruction = get_current_instructions()
 
@@ -539,6 +545,7 @@ export const Main: React.FC<Props> = (props) => {
       voice_input_push_to_talk={props.voice_input_push_to_talk}
       bottom_spacer_height={props.bottom_spacer_height}
       on_preview_prompt={props.on_preview_prompt}
+      on_install_browser_extension={handle_install_browser_extension}
     />
   )
 }

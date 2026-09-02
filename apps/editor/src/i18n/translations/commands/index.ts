@@ -12,6 +12,7 @@ import { translations as new_file } from './new-file'
 import { translations as new_folder } from './new-folder'
 import { translations as rename } from './rename'
 import { translations as rate_extension } from './rate-extension'
+import { translations as install_browser_extension } from './install-browser-extension'
 import { translations as select_unstaged_files } from './select-unstaged-files'
 import { translations as select_files_of_commit } from './select-files-of-commit'
 import { translations as history } from './history'
@@ -36,6 +37,7 @@ export const translations = {
   ...new_folder,
   ...rename,
   ...rate_extension,
+  ...install_browser_extension,
   ...select_unstaged_files,
   ...select_files_of_commit,
   ...history,

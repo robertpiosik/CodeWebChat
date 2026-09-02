@@ -6,10 +6,10 @@
     transparent
   );
   --cwc-text-color-green: var(--vscode-charts-green);
-  --cwc-text-color-orange: var(--vscode-list-warningForeground);
   --cwc-text-color-red: var(--vscode-list-errorForeground);
   --cwc-text-color-blue: var(--vscode-charts-blue);
   --cwc-text-color-purple: var(--vscode-charts-purple);
+  --cwc-text-color-yellow: var(--vscode-charts-yellow);
 
   --cwc-bg-primary: color-mix(
     in srgb,
@@ -53,11 +53,6 @@
     var(--cwc-text-color-red) 24%,
     transparent
   );
-  --cwc-bg-orange: color-mix(
-    in srgb,
-    var(--cwc-text-color-orange) 12%,
-    transparent
-  );
   --cwc-bg-blue: color-mix(
     in srgb,
     var(--cwc-text-color-blue) 12%,
@@ -66,6 +61,11 @@
   --cwc-bg-purple: color-mix(
     in srgb,
     var(--cwc-text-color-purple) 12%,
+    transparent
+  );
+  --cwc-bg-yellow: color-mix(
+    in srgb,
+    var(--cwc-text-color-yellow) 12%,
     transparent
   );
 }

@@ -80,7 +80,8 @@ import {
   handle_update_last_used_web_configuration,
   handle_request_return_home,
   handle_pick_tasks_workspace,
-  handle_preview_prompt
+  handle_preview_prompt,
+  handle_install_browser_extension
 } from './message-handlers'
 import { handle_update_api_configuration } from './message-handlers/handle-update-api-configuration'
 import { handle_pick_model_provider } from './message-handlers/handle-pick-model-provider'
@@ -863,6 +864,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_preview_prompt({
               prompt_view_provider: this
             })
+          } else if (message.command == 'INSTALL_BROWSER_EXTENSION') {
+            await handle_install_browser_extension()
           }
         } catch (error: any) {
           Logger.error({

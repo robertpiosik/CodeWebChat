@@ -10,7 +10,7 @@ import { EditFormat } from '@shared/types/edit-format'
 import { TARGET, Target } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
-import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/prompt/BrowserExtensionMessage'
+import { BrowserConnectionStatus as UiBrowserConnectionStatus } from '@ui/components/editor/prompt/BrowserConnectionStatus'
 import { ApiConfiguration } from '@/views/prompt/types/messages'
 import { use_last_choice_tooltip } from './hooks/use-last-choice-tooltip'
 import { Header } from './components/Header'
@@ -110,6 +110,7 @@ type Props = {
   voice_input_push_to_talk: boolean
   bottom_spacer_height?: number
   on_preview_prompt: () => void
+  on_install_browser_extension: () => void
 }
 
 const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
@@ -246,6 +247,19 @@ export const MainView: React.FC<Props> = (props) => {
       />
       <UiScrollable scroll_to_top_key={props.scroll_reset_key} top_shadow>
         <div className={styles.container}>
+          {props.target == TARGET.WEB && (
+            <UiBrowserConnectionStatus
+              is_connected={props.is_connected}
+              on_install={props.on_install_browser_extension}
+              translations={{
+                connected: 'Connected!',
+                not_connected: 'Not connected',
+                install: 'Install',
+                hide: 'Hide'
+              }}
+            />
+          )}
+
           {props.response_history.length > 0 && (
             <UiResponses
               response_history={props.response_history}
@@ -378,13 +392,6 @@ export const MainView: React.FC<Props> = (props) => {
           />
 
           <UiSeparator height={6} />
-
-          {props.target == TARGET.WEB && !props.is_connected && (
-            <>
-              <UiBrowserExtensionMessage />
-              <UiSeparator height={6} />
-            </>
-          )}
 
           {props.target == TARGET.WEB && (
             <UiConfigurations

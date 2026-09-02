@@ -113,7 +113,7 @@ export const Responses: React.FC<Props> = (props) => {
               }}
               title="Reject"
             >
-              <span className="codicon codicon-close" />
+              <span className="codicon codicon-close-small" />
             </button>
           </div>
         </div>

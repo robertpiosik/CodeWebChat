@@ -33,15 +33,15 @@
   }
 
   &--accent-orange {
-    border-color: var(--cwc-bg-orange);
+    border-color: var(--cwc-bg-yellow);
     .group__header {
-      background-color: var(--cwc-bg-orange);
+      background-color: var(--cwc-bg-yellow);
       .group__icon,
       .group__label {
-        color: var(--cwc-text-color-orange);
+        color: var(--cwc-text-color-yellow);
       }
       &:hover {
-        background-color: var(--cwc-bg-orange);
+        background-color: var(--cwc-bg-yellow);
       }
     }
   }

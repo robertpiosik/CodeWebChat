@@ -142,11 +142,11 @@
   }
 
   &--warning {
-    color: var(--cwc-text-color-orange);
-    background-color: var(--cwc-bg-orange);
+    color: var(--cwc-text-color-yellow);
+    background-color: var(--cwc-bg-yellow);
 
     .message__actions__item:hover {
-      background-color: var(--cwc-bg-orange);
+      background-color: var(--cwc-bg-yellow);
     }
   }
 

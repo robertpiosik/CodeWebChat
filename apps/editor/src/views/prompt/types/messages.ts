@@ -516,6 +516,10 @@ export interface PreviewPromptMessage extends BaseMessage {
   command: 'PREVIEW_PROMPT'
 }
 
+export interface InstallBrowserExtensionMessage extends BaseMessage {
+  command: 'INSTALL_BROWSER_EXTENSION'
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -606,6 +610,7 @@ export type FrontendMessage =
   | GetTokenCountMessage
   | GetSelectedFilesMessage
   | PreviewPromptMessage
+  | InstallBrowserExtensionMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {

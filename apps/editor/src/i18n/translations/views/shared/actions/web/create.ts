@@ -54,21 +54,21 @@ export const translations = {
     bg: 'Чатботове'
   },
   'views.shared.actions.web.create.chatbots.placeholder': {
-    en: 'Choose a chatbot for the new web configuration',
-    pl: 'Wybierz chatbota dla nowej konfiguracji sieci Web',
-    'zh-cn': '为新的 Web 配置选择一个聊天机器人',
-    ja: '新しいWeb構成用のチャットボットを選択',
-    'zh-tw': '為新的 Web 配置選擇一個聊天機器人',
-    de: 'Wählen Sie einen Chatbot für die neue Web-Konfiguration',
-    es: 'Elige un chatbot para la nueva configuración web',
-    fr: 'Choisissez un chatbot pour la nouvelle configuration web',
-    'pt-br': 'Escolha um chatbot para a nova configuração web',
-    ru: 'Выберите чат-бота для новой веб-конфигурации',
-    ko: '새 웹 구성에 사용할 챗봇 선택',
-    it: 'Scegli un chatbot per la nuova configurazione web',
-    tr: 'Yeni web yapılandırması için bir sohbet robotu seçin',
-    cs: 'Vyberte chatbota pro novou webovou konfiguraci',
-    hu: 'Válasszon chatbotot az új webes konfigurációhoz',
-    bg: 'Изберете чатбот за новата уеб конфигурация'
+    en: 'Choose a chatbot for the new configuration',
+    pl: 'Wybierz chatbota dla nowej konfiguracji',
+    'zh-cn': '为新配置选择一个聊天机器人',
+    ja: '新しい構成用のチャットボットを選択してください',
+    'zh-tw': '為新設定選擇一個聊天機器人',
+    de: 'Wählen Sie einen Chatbot für die neue Konfiguration',
+    es: 'Elige un chatbot para la nueva configuración',
+    fr: 'Choisissez un chatbot pour la nouvelle configuration',
+    'pt-br': 'Escolha um chatbot para a nova configuração',
+    ru: 'Выберите чат-бота для новой конфигурации',
+    ko: '새 구성에 사용할 챗봇을 선택하세요',
+    it: 'Scegli un chatbot per la nuova configurazione',
+    tr: 'Yeni yapılandırma için bir sohbet robotu seçin',
+    cs: 'Vyberte chatbota pro novou konfiguraci',
+    hu: 'Válasszon egy chatbotot az új konfigurációhoz',
+    bg: 'Изберете чатбот за новата конфигурация'
   }
 } as const
