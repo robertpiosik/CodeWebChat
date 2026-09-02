@@ -32,7 +32,7 @@ export const BrowserConnectionStatus: React.FC<Props> = (props) => {
   if (!props.is_connected) {
     actions.push({
       id: 'install',
-      icon: 'codicon-desktop-download',
+      icon: 'codicon-add',
       label: props.translations.install,
       title: props.translations.install,
       on_click: props.on_install
@@ -50,7 +50,7 @@ export const BrowserConnectionStatus: React.FC<Props> = (props) => {
   return (
     <StatusBar
       placement="top"
-      theme={props.is_connected ? 'success' : 'warning'}
+      theme={props.is_connected ? 'success' : 'default'}
       icon={
         props.is_connected
           ? 'codicon-debug-connected'
