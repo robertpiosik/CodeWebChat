@@ -371,7 +371,6 @@ export const MainView: React.FC<Props> = (props) => {
                 send_with_ellipsis: t('prompt-field.action.send-with-ellipsis'),
                 copy_prompt: t('prompt-field.action.copy-prompt'),
                 preview_prompt: t('prompt-field.action.preview-prompt'),
-                more_actions: t('prompt-field.action.more-actions'),
                 send: t('prompt-field.action.send'),
                 attach_selected_files: t('prompt-field.attach-selected-files'),
                 target: t('prompt-field.target')

@@ -102,7 +102,6 @@ export type PromptFieldProps = {
     send_with_ellipsis: string
     copy_prompt: string
     preview_prompt: string
-    more_actions: string
     send: string
     attach_selected_files: string
     target: string
@@ -155,13 +154,13 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       !props.is_copy_only &&
       (!props.is_web_target || (props.is_web_target && props.is_connected)) &&
       !props.is_recording &&
-      has_content
+      !!props.value
 
     if (!has_submit_button) {
       set_show_submit_tooltip(false)
     }
   }, [
-    has_content,
+    props.value,
     props.is_recording,
     props.is_web_target,
     props.is_connected,
@@ -169,12 +168,12 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   ])
 
   useEffect(() => {
-    const has_mic_button = props.is_recording || !has_content
+    const has_mic_button = props.is_recording || !props.value
 
     if (!has_mic_button) {
       set_is_recording_hovered(false)
     }
-  }, [has_content, props.is_recording, props.is_web_target, props.is_connected])
+  }, [props.value, props.is_recording, props.is_web_target, props.is_connected])
 
   const { is_alt_pressed, handle_container_key_down } =
     use_keyboard_shortcuts(props)
@@ -321,92 +320,98 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   }, [props.is_recording])
 
   const render_footer = () => {
-    const primary_dropdown_items = [
-      ...(!has_content
-        ? [
+    const primary_dropdown_items =
+      props.target == TARGET.API && !props.value
+        ? []
+        : [
+            ...(!props.value
+              ? [
+                  {
+                    label: props.translations.send,
+                    shortcut: is_mac ? '↩' : 'Enter',
+                    on_click: () => {
+                      handle_submit({
+                        stopPropagation: () => {}
+                      } as any)
+                      close_dropdown()
+                    },
+                    is_disabled: is_action_disabled
+                  }
+                ]
+              : []),
             {
-              label: props.translations.send,
-              shortcut: is_mac ? '↩' : 'Enter',
+              label: props.translations.send_with_ellipsis,
+              shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
+              on_click: handle_select_click,
+              is_disabled: is_action_disabled
+            },
+            ...(props.target == TARGET.WEB
+              ? [
+                  {
+                    label: props.translations.copy_prompt,
+                    shortcut: is_mac ? '⌘C' : 'Ctrl+C',
+                    on_click: handle_copy_click,
+                    is_disabled: is_action_disabled
+                  }
+                ]
+              : []),
+            ...(props.value
+              ? [
+                  {
+                    label: props.translations.voice_input,
+                    shortcut: is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space',
+                    on_click: () => {
+                      props.on_recording_started()
+                      close_dropdown()
+                    }
+                  }
+                ]
+              : []),
+            {
+              label: props.translations.preview_prompt,
               on_click: () => {
-                handle_submit({
-                  stopPropagation: () => {}
-                } as any)
+                props.on_preview_prompt?.()
                 close_dropdown()
               },
-              is_disabled: is_action_disabled
+              is_disabled: props.is_preview_disabled ?? is_action_disabled
             }
-          ]
-        : []),
-      {
-        label: props.translations.send_with_ellipsis,
-        shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
-        on_click: handle_select_click,
-        is_disabled: is_action_disabled
-      },
-      ...(props.target == TARGET.WEB
-        ? [
-            {
-              label: props.translations.copy_prompt,
-              shortcut: is_mac ? '⌘C' : 'Ctrl+C',
-              on_click: handle_copy_click,
-              is_disabled: is_action_disabled
-            }
-          ]
-        : []),
-      ...(has_content
-        ? [
-            {
-              label: props.translations.voice_input,
-              shortcut: is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space',
-              on_click: () => {
-                props.on_recording_started()
-                close_dropdown()
-              }
-            }
-          ]
-        : []),
-      {
-        label: props.translations.preview_prompt,
-        on_click: () => {
-          props.on_preview_prompt?.()
-          close_dropdown()
-        },
-        is_disabled: props.is_preview_disabled ?? is_action_disabled
-      }
-    ].filter((item) => !(!has_content && item.is_disabled))
+          ].filter((item) => !(!has_content && item.is_disabled))
 
-    const disconnected_dropdown_items = [
-      ...(!has_content
-        ? [
+    const disconnected_dropdown_items =
+      props.target == TARGET.API && !props.value
+        ? []
+        : [
+            ...(!props.value
+              ? [
+                  {
+                    label: props.translations.copy_prompt,
+                    shortcut: is_mac ? '⌘C' : 'Ctrl+C',
+                    on_click: handle_copy_click,
+                    is_disabled: is_action_disabled
+                  }
+                ]
+              : []),
+            ...(props.value
+              ? [
+                  {
+                    label: props.translations.voice_input,
+                    shortcut: is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space',
+                    on_click: () => {
+                      props.on_recording_started()
+                      close_dropdown()
+                    }
+                  }
+                ]
+              : []),
             {
-              label: props.translations.copy_prompt,
-              shortcut: is_mac ? '⌘C' : 'Ctrl+C',
-              on_click: handle_copy_click,
-              is_disabled: is_action_disabled
-            }
-          ]
-        : []),
-      ...(has_content
-        ? [
-            {
-              label: props.translations.voice_input,
-              shortcut: is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space',
+              label: props.translations.preview_prompt,
               on_click: () => {
-                props.on_recording_started()
+                props.on_preview_prompt?.()
                 close_dropdown()
-              }
+              },
+              is_disabled: props.is_preview_disabled ?? is_action_disabled
             }
-          ]
-        : []),
-      {
-        label: props.translations.preview_prompt,
-        on_click: () => {
-          props.on_preview_prompt?.()
-          close_dropdown()
-        },
-        is_disabled: props.is_preview_disabled ?? is_action_disabled
-      }
-    ].filter((item) => !(!has_content && item.is_disabled))
+          ].filter((item) => !(!has_content && item.is_disabled))
 
     return (
       <div
@@ -465,9 +470,12 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             }
             details={is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space'}
             offset={
-              props.is_copy_only || (props.is_web_target && !props.is_connected)
-                ? 12
-                : 28
+              !props.is_copy_only &&
+              (!props.is_web_target ||
+                (props.is_web_target && props.is_connected)) &&
+              primary_dropdown_items.length > 0
+                ? 28
+                : 12
             }
             align="right"
           />
@@ -702,7 +710,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       onMouseEnter={() => set_is_recording_hovered(true)}
                       onMouseLeave={() => set_is_recording_hovered(false)}
                     />
-                  ) : !has_content ? (
+                  ) : !props.value ? (
                     <button
                       className={cn(
                         styles['footer__right__submit__button'],
@@ -739,7 +747,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         onClick={() => {
                           toggle_dropdown()
                         }}
-                        title={props.translations.more_actions}
                       >
                         <span
                           className={cn(
@@ -783,7 +790,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     onMouseEnter={() => set_is_recording_hovered(true)}
                     onMouseLeave={() => set_is_recording_hovered(false)}
                   />
-                ) : !has_content ? (
+                ) : !props.value ? (
                   <button
                     className={cn(
                       styles['footer__right__submit__button'],
@@ -822,7 +829,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                           onClick={() => {
                             toggle_dropdown()
                           }}
-                          title={props.translations.more_actions}
                         >
                           <span
                             className={cn(

@@ -65,7 +65,6 @@ export const Empty = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       preview_prompt: 'Preview prompt',
-      more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
       target: 'Target'
@@ -132,7 +131,6 @@ export const WithText = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       preview_prompt: 'Preview prompt',
-      more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
       target: 'Target'
@@ -199,7 +197,6 @@ export const LongText = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       preview_prompt: 'Preview prompt',
-      more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
       target: 'Target'
@@ -266,7 +263,6 @@ export const WithPlaceholderSavedContext = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       preview_prompt: 'Preview prompt',
-      more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
       target: 'Target'
@@ -339,7 +335,6 @@ export const WithPlaceholderSelection = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       preview_prompt: 'Preview prompt',
-      more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
       target: 'Target'
@@ -406,7 +401,6 @@ export const WithCommit = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       preview_prompt: 'Preview prompt',
-      more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
       target: 'Target'
@@ -472,7 +466,6 @@ export const WithCommitWithQuotes = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       preview_prompt: 'Preview prompt',
-      more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
       target: 'Target'
@@ -546,7 +539,6 @@ export const WithEditFormatSelector = () => {
         send_with_ellipsis: 'Send with...',
         copy_prompt: 'Copy prompt',
         preview_prompt: 'Preview prompt',
-        more_actions: 'More actions',
         send: 'Send',
         attach_selected_files: 'Attach selected files',
         target: 'Target'
@@ -612,7 +604,6 @@ export const WithWarning = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       preview_prompt: 'Preview prompt',
-      more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
       target: 'Target'
@@ -679,7 +670,6 @@ export const WithFilePaths = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       preview_prompt: 'Preview prompt',
-      more_actions: 'More actions',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
       target: 'Target'
@@ -774,7 +764,6 @@ export const WithTabs = () => {
         send_with_ellipsis: 'Send with...',
         copy_prompt: 'Copy prompt',
         preview_prompt: 'Preview prompt',
-        more_actions: 'More actions',
         send: 'Send',
         attach_selected_files: 'Attach selected files',
         target: 'Target'

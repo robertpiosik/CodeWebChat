@@ -323,24 +323,6 @@ export const prompt_field = {
     hu: 'Prompt előnézete',
     bg: 'Преглед на промпта'
   },
-  'prompt-field.action.more-actions': {
-    en: 'More actions',
-    pl: 'Więcej akcji',
-    'zh-cn': '更多操作',
-    ja: 'その他の操作',
-    'zh-tw': '更多操作',
-    de: 'Weitere Aktionen',
-    es: 'Más acciones',
-    fr: 'Plus d’actions',
-    'pt-br': 'Mais ações',
-    ru: 'Дополнительные действия',
-    ko: '추가 작업',
-    it: 'Altre azioni',
-    tr: 'Diğer eylemler',
-    cs: 'Další akce',
-    hu: 'További műveletek',
-    bg: 'Още действия'
-  },
   'prompt-field.action.send': {
     en: 'Send',
     pl: 'Wyślij',
