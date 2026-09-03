@@ -3,7 +3,7 @@ import { t } from '@/i18n'
 
 export const prompt_for_search_term = async (
   initial_search_term: string,
-  mode: 'phrase' | 'keywords' | 'intelligent',
+  mode: 'phrase' | 'keywords' | 'intelligent' | 'agent',
   keywords_target: 'contents' | 'filenames' | 'both' | undefined,
   on_change?: (value: string) => void
 ): Promise<{ value: string | undefined; back?: boolean }> => {
@@ -18,15 +18,17 @@ export const prompt_for_search_term = async (
       ? keywords_target == 'filenames'
         ? t('feature.search-files.title.filename')
         : t('feature.search-files.title.keywords')
-      : mode == 'intelligent'
-        ? t('feature.search-files.title.intelligent')
-        : t('feature.search-files.title.phrase')
+      : mode == 'agent'
+        ? t('feature.search-files.title.agent')
+        : mode == 'intelligent'
+          ? t('feature.search-files.title.intelligent')
+          : t('feature.search-files.title.phrase')
   input_box.prompt =
     mode == 'keywords'
       ? keywords_target == 'filenames'
         ? t('feature.search-files.prompt.filename')
         : t('feature.search-files.prompt.keywords')
-      : mode == 'intelligent'
+      : mode == 'intelligent' || mode == 'agent'
         ? t('feature.search-files.prompt.intelligent')
         : t('feature.search-files.prompt')
   input_box.placeholder =

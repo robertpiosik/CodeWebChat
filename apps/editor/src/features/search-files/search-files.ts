@@ -6,6 +6,7 @@ import { prompt_for_search_mode } from './utils/prompt-for-search-mode'
 import { perform_phrase_search_mode } from './search-modes/perform-phrase-search-mode'
 import { perform_keywords_search_mode } from './search-modes/perform-keywords-search-mode'
 import { perform_intelligent_search_mode } from './search-modes/perform-intelligent-search-mode'
+import { perform_agent_search_mode } from './search-modes/perform-agent-search-mode'
 import { Logger } from '@shared/utils/logger'
 import { WebSocketManager } from '@/services/websocket-manager'
 
@@ -18,6 +19,7 @@ export const search_files = async (params: {
   is_sub_search?: boolean
   is_search_in_selected?: boolean
   folder_path?: string
+  is_workspace_action?: boolean
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | undefined
@@ -25,7 +27,7 @@ export const search_files = async (params: {
 > => {
   let initial_search_mode =
     params.extension_context.workspaceState.get<
-      'phrase' | 'keywords' | 'intelligent'
+      'phrase' | 'keywords' | 'intelligent' | 'agent'
     >(LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY) || 'phrase'
 
   let _resolved_files: string[] | undefined
@@ -53,7 +55,8 @@ export const search_files = async (params: {
     try {
       const mode_result = await prompt_for_search_mode(
         initial_search_mode,
-        params.show_back_button
+        params.show_back_button,
+        params.is_workspace_action
       )
 
       if (mode_result == 'back') return 'back'
@@ -96,6 +99,14 @@ export const search_files = async (params: {
           search_in_results,
           is_search_in_selected: params.is_search_in_selected,
           folder_path: params.folder_path
+        })
+      } else if (search_mode == 'agent') {
+        flow_result = await perform_agent_search_mode({
+          workspace_provider: params.workspace_provider,
+          extension_context: params.extension_context,
+          show_back_button: params.show_back_button,
+          search_in_results,
+          is_search_in_selected: params.is_search_in_selected
         })
       }
 
