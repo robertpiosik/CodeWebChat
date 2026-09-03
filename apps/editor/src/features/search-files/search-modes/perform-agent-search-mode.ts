@@ -75,7 +75,7 @@ export const perform_agent_search_mode = async (params: {
         label: 'Codex',
         cmd: 'codex',
         executable: 'codex',
-        args: ['e']
+        args: ['exec']
       })
     }
 
@@ -84,7 +84,7 @@ export const perform_agent_search_mode = async (params: {
         label: 'Claude Code',
         cmd: 'claude',
         executable: 'claude',
-        args: ['-p']
+        args: ['--bare', '-p']
       })
     }
 
@@ -336,6 +336,10 @@ export const perform_agent_search_mode = async (params: {
 
         if (executable == 'agy') {
           args.push('--output-format', 'stream-json', '--dangerously-skip-permissions')
+        } else if (executable == 'codex') {
+          args.push('--json')
+        } else if (executable == 'claude') {
+          args.push('--output-format', 'stream-json', '--verbose', '--permission-mode', 'auto', '--include-partial-messages')
         }
 
         let agent_output = ''
@@ -354,12 +358,13 @@ export const perform_agent_search_mode = async (params: {
               return new Promise<void>((resolve, reject) => {
                 const child = spawn(executable, args, {
                   cwd: selected_root,
-                  shell: false // Prevents syntax breakage and command injection from newlines/quotes
+                  shell: false, // Prevents syntax breakage and command injection from newlines/quotes
+                  stdio: ['ignore', 'pipe', 'pipe']
                 })
 
                 child.stdout.on('data', (data) => {
                   const chunk = data.toString()
-                  if (executable == 'agy') {
+                  if (executable == 'agy' || executable == 'codex' || executable == 'claude') {
                     raw_stream_output += chunk
                     const lines = raw_stream_output.split('\n')
                     raw_stream_output = lines.pop() || ''
@@ -368,41 +373,76 @@ export const perform_agent_search_mode = async (params: {
                       if (!trimmed) continue
                       try {
                         const parsed = JSON.parse(trimmed)
-                        if (parsed.event == 'step_update' && parsed.step_update) {
-                          const step = parsed.step_update
-                          if (step.step_type == 'tool') {
-                            const tool_name = step.tool_name || step.tool_info?.name
-                            if (tool_name) {
-                              let msg = `Using ${tool_name.replace(/_/g, ' ')}...`
-                              const params = step.tool_info?.parameters
-                              
-                              if (params) {
-                                if (tool_name == 'run_command' && (params.CommandLine || params.command)) {
-                                  msg = `Running: ${params.CommandLine || params.command}`
-                                } else if (tool_name == 'read_file' && params.path) {
-                                  msg = `Reading: ${params.path}`
-                                } else if ((tool_name == 'write_file' || tool_name == 'write_to_file') && params.path) {
-                                  msg = `Writing: ${params.path}`
-                                } else if (tool_name == 'list_directory' && params.path) {
-                                  msg = `Listing: ${params.path}`
-                                } else if (tool_name == 'search_files' && (params.query || params.pattern)) {
-                                  msg = `Searching: ${params.query || params.pattern}`
+                        if (executable == 'agy') {
+                          if (parsed.event == 'step_update' && parsed.step_update) {
+                            const step = parsed.step_update
+                            if (step.step_type == 'tool') {
+                              const tool_name = step.tool_name || step.tool_info?.name
+                              if (tool_name) {
+                                let msg = `Using ${tool_name.replace(/_/g, ' ')}...`
+                                const params = step.tool_info?.parameters
+                                
+                                if (params) {
+                                  if (tool_name == 'run_command' && (params.CommandLine || params.command)) {
+                                    msg = `Running: ${params.CommandLine || params.command}`
+                                  } else if (tool_name == 'read_file' && params.path) {
+                                    msg = `Reading: ${params.path}`
+                                  } else if ((tool_name == 'write_file' || tool_name == 'write_to_file') && params.path) {
+                                    msg = `Writing: ${params.path}`
+                                  } else if (tool_name == 'list_directory' && params.path) {
+                                    msg = `Listing: ${params.path}`
+                                  } else if (tool_name == 'search_files' && (params.query || params.pattern)) {
+                                    msg = `Searching: ${params.query || params.pattern}`
+                                  }
                                 }
+                                
+                                if (msg.length > 60) {
+                                  msg = msg.substring(0, 57) + '...'
+                                }
+                                progress.report({ message: msg })
                               }
-                              
+                            } else if (step.subagent_info?.subagents?.length > 0) {
+                              const subagent = step.subagent_info.subagents[0]
+                              progress.report({ message: `Delegating to ${subagent.role || subagent.type_name}...` })
+                            } else if (step.step_type == 'agent_response') {
+                              progress.report({ message: 'Synthesizing results...' })
+                            }
+                          } else if (parsed.event == 'result' && parsed.result) {
+                            agent_output = parsed.result.response || ''
+                          }
+                        } else if (executable == 'codex') {
+                          if (parsed.type == 'item.started' && parsed.item) {
+                            const item = parsed.item
+                            let msg = ''
+                            if (item.type == 'command_execution' && item.command) {
+                              msg = `Running: ${item.command}`
+                            } else if (item.type) {
+                              msg = `Running ${item.type.replace(/_/g, ' ')}...`
+                            }
+                            if (msg) {
                               if (msg.length > 60) {
                                 msg = msg.substring(0, 57) + '...'
                               }
                               progress.report({ message: msg })
                             }
-                          } else if (step.subagent_info?.subagents?.length > 0) {
-                            const subagent = step.subagent_info.subagents[0]
-                            progress.report({ message: `Delegating to ${subagent.role || subagent.type_name}...` })
-                          } else if (step.step_type == 'agent_response') {
-                            progress.report({ message: 'Synthesizing results...' })
+                          } else if (parsed.type == 'item.completed' && parsed.item) {
+                            if (parsed.item.type == 'agent_message' && parsed.item.text) {
+                              agent_output = parsed.item.text
+                            }
                           }
-                        } else if (parsed.event == 'result' && parsed.result) {
-                          agent_output = parsed.result.response || ''
+                        } else if (executable == 'claude') {
+                          if (parsed.type == 'stream_event' && parsed.event) {
+                            if (parsed.event.type == 'content_block_start' && parsed.event.content_block?.type == 'tool_use') {
+                              const tool_name = parsed.event.content_block.name
+                              if (tool_name) {
+                                progress.report({ message: `Using ${tool_name.replace(/_/g, ' ')}...` })
+                              }
+                            }
+                          } else if (parsed.type == 'result' && parsed.result) {
+                            agent_output = typeof parsed.result === 'string' ? parsed.result : (parsed.result.text || '')
+                          } else if (parsed.result) {
+                            agent_output = typeof parsed.result === 'string' ? parsed.result : (parsed.result.text || '')
+                          }
                         }
                       } catch (e) {
                         // Ignore parse errors for partial chunks
@@ -424,13 +464,25 @@ export const perform_agent_search_mode = async (params: {
                 })
 
                 child.on('close', () => {
-                  if (executable == 'agy' && raw_stream_output.trim()) {
+                  if ((executable == 'agy' || executable == 'codex' || executable == 'claude') && raw_stream_output.trim()) {
                     try {
                       const parsed = JSON.parse(raw_stream_output.trim())
-                      if (parsed.event == 'result' && parsed.result) {
-                        agent_output = parsed.result.response || ''
-                      } else if (parsed.response) {
-                        agent_output = parsed.response || ''
+                      if (executable == 'agy') {
+                        if (parsed.event == 'result' && parsed.result) {
+                          agent_output = parsed.result.response || ''
+                        } else if (parsed.response) {
+                          agent_output = parsed.response || ''
+                        }
+                      } else if (executable == 'codex') {
+                        if (parsed.type == 'item.completed' && parsed.item?.type == 'agent_message' && parsed.item.text) {
+                          agent_output = parsed.item.text
+                        }
+                      } else if (executable == 'claude') {
+                        if (parsed.type == 'result' && parsed.result) {
+                          agent_output = typeof parsed.result === 'string' ? parsed.result : (parsed.result.text || '')
+                        } else if (parsed.result) {
+                          agent_output = typeof parsed.result === 'string' ? parsed.result : (parsed.result.text || '')
+                        }
                       }
                     } catch (e) {
                       // Ignore
