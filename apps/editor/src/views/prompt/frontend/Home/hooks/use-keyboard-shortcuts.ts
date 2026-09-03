@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 type Params = {
   is_active: boolean
@@ -8,6 +8,8 @@ type Params = {
 }
 
 export const use_keyboard_shortcuts = (params: Params) => {
+  const left_alt_pressed_ref = useRef(false)
+
   useEffect(() => {
     const handle_mouse_up = (event: MouseEvent) => {
       if (params.is_active && event.button == 4) {
@@ -16,9 +18,13 @@ export const use_keyboard_shortcuts = (params: Params) => {
     }
 
     const handle_key_down = (event: KeyboardEvent) => {
+      if (event.code == 'AltLeft') {
+        left_alt_pressed_ref.current = true
+      }
+
       if (!params.is_active) return
 
-      if (event.altKey && !event.shiftKey && !event.metaKey && !event.ctrlKey) {
+      if (event.altKey && left_alt_pressed_ref.current && !event.shiftKey && !event.metaKey && !event.ctrlKey) {
         if (event.code == 'Digit1') {
           event.preventDefault()
           params.on_chatbots_click()
@@ -29,11 +35,25 @@ export const use_keyboard_shortcuts = (params: Params) => {
       }
     }
 
+    const handle_key_up = (event: KeyboardEvent) => {
+      if (event.code == 'AltLeft') {
+        left_alt_pressed_ref.current = false
+      }
+    }
+
+    const handle_blur = () => {
+      left_alt_pressed_ref.current = false
+    }
+
     window.addEventListener('mouseup', handle_mouse_up)
     window.addEventListener('keydown', handle_key_down)
+    window.addEventListener('keyup', handle_key_up)
+    window.addEventListener('blur', handle_blur)
     return () => {
       window.removeEventListener('mouseup', handle_mouse_up)
       window.removeEventListener('keydown', handle_key_down)
+      window.removeEventListener('keyup', handle_key_up)
+      window.removeEventListener('blur', handle_blur)
     }
   }, [
     params.is_active,

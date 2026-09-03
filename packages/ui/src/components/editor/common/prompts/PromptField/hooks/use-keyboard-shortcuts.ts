@@ -6,6 +6,7 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
   const [is_alt_pressed, set_is_alt_pressed] = useState(false)
   const is_alt_pressed_raw_ref = useRef(false)
   const pending_edit_format_ref = useRef<EditFormat | null>(null)
+  const left_alt_pressed_ref = useRef(false)
 
   const update_alt_pressed = (val: boolean) => {
     is_alt_pressed_raw_ref.current = val
@@ -27,8 +28,12 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
 
   useEffect(() => {
     const handle_key_down = (e: KeyboardEvent) => {
+      if (e.code == 'AltLeft') {
+        left_alt_pressed_ref.current = true
+      }
+
       let format: EditFormat | undefined
-      if (e.altKey && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
+      if (e.altKey && left_alt_pressed_ref.current && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
         if (e.code == 'Escape') {
           e.preventDefault()
           if (props.on_target_change) {
@@ -57,7 +62,7 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
         }
       }
 
-      if (e.key == 'Alt' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
+      if (e.code == 'AltLeft' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
         if (!alt_interrupted_ref.current) {
           update_alt_pressed(true)
         }
@@ -81,13 +86,17 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
       }
     }
     const handle_key_up = (e: KeyboardEvent) => {
+      if (e.code == 'AltLeft') {
+        left_alt_pressed_ref.current = false
+      }
       if (!e.altKey) {
         alt_interrupted_ref.current = false
-      } else if (e.key != 'Alt') {
+      } else if (e.code != 'AltLeft') {
         alt_interrupted_ref.current = true
       }
       update_alt_pressed(
         e.altKey &&
+          left_alt_pressed_ref.current &&
           !alt_interrupted_ref.current &&
           !e.shiftKey &&
           !e.ctrlKey &&
@@ -97,6 +106,7 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
     const handle_blur = () => {
       update_alt_pressed(false)
       alt_interrupted_ref.current = false
+      left_alt_pressed_ref.current = false
     }
     window.addEventListener('keydown', handle_key_down)
     window.addEventListener('keyup', handle_key_up)
@@ -122,7 +132,7 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
       e.stopPropagation()
       return
     }
-    if (e.key == 'c' && e.altKey && (e.ctrlKey || e.metaKey)) {
+    if (e.key == 'c' && e.altKey && left_alt_pressed_ref.current && (e.ctrlKey || e.metaKey)) {
       if (
         !props.is_action_disabled &&
         props.on_copy &&

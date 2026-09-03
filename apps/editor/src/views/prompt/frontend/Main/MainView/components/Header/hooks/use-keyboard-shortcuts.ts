@@ -12,6 +12,7 @@ export const use_keyboard_shortcuts = (params: {
   const [is_alt_pressed, set_is_alt_pressed] = useState(false)
   const alt_interrupted_ref = useRef(false)
   const is_alt_pressed_raw_ref = useRef(false)
+  const left_alt_pressed_ref = useRef(false)
 
   const update_alt_pressed = (val: boolean) => {
     is_alt_pressed_raw_ref.current = val
@@ -20,8 +21,12 @@ export const use_keyboard_shortcuts = (params: {
 
   useEffect(() => {
     const handle_key_down = (event: KeyboardEvent) => {
+      if (event.code == 'AltLeft') {
+        left_alt_pressed_ref.current = true
+      }
+
       if (
-        event.key == 'Alt' &&
+        event.code == 'AltLeft' &&
         !event.shiftKey &&
         !event.ctrlKey &&
         !event.metaKey
@@ -51,13 +56,18 @@ export const use_keyboard_shortcuts = (params: {
     }
 
     const handle_key_up = (event: KeyboardEvent) => {
+      if (event.code == 'AltLeft') {
+        left_alt_pressed_ref.current = false
+      }
+
       if (!event.altKey) {
         alt_interrupted_ref.current = false
-      } else if (event.key != 'Alt') {
+      } else if (event.code != 'AltLeft') {
         alt_interrupted_ref.current = true
       }
       update_alt_pressed(
         event.altKey &&
+          left_alt_pressed_ref.current &&
           !alt_interrupted_ref.current &&
           !event.shiftKey &&
           !event.ctrlKey &&
@@ -66,6 +76,7 @@ export const use_keyboard_shortcuts = (params: {
     }
 
     const handle_blur = () => {
+      left_alt_pressed_ref.current = false
       update_alt_pressed(false)
       alt_interrupted_ref.current = false
     }
@@ -95,7 +106,7 @@ export const use_keyboard_shortcuts = (params: {
     const handle_key_down = (event: KeyboardEvent) => {
       if (params.is_disabled) return
 
-      if (!event.altKey || event.shiftKey || event.metaKey || event.ctrlKey) {
+      if (!event.altKey || !left_alt_pressed_ref.current || event.shiftKey || event.metaKey || event.ctrlKey) {
         return
       }
 
