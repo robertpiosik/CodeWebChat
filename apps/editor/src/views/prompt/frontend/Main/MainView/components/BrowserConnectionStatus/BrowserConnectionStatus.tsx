@@ -15,14 +15,25 @@ type Props = {
 
 export const BrowserConnectionStatus: React.FC<Props> = (props) => {
   const [is_closed, setIsClosed] = useState(false)
+  const [has_been_closed, setHasBeenClosed] = useState(false)
 
   useEffect(() => {
     if (props.has_responses) {
       setIsClosed(true)
+      setHasBeenClosed(true)
     } else if (!props.is_connected) {
       setIsClosed(false)
     }
   }, [props.has_responses, props.is_connected])
+
+  useEffect(() => {
+    if (props.is_connected && !is_closed && has_been_closed) {
+      const timer = setTimeout(() => {
+        setIsClosed(true)
+      }, 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [props.is_connected, is_closed, has_been_closed])
 
   if (is_closed || props.has_responses) {
     return null
@@ -43,7 +54,10 @@ export const BrowserConnectionStatus: React.FC<Props> = (props) => {
       icon: 'codicon-close-small',
       label: props.translations.hide,
       title: props.translations.hide,
-      on_click: () => setIsClosed(true)
+      on_click: () => {
+        setIsClosed(true)
+        setHasBeenClosed(true)
+      }
     })
   }
 
