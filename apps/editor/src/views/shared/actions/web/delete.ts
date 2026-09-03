@@ -52,7 +52,7 @@ export const remove = async (params: { name: string }): Promise<void> => {
       vscode.ConfigurationTarget.Global
     )
 
-    const undo_action = t('views.shared.actions.web.delete.undo')
+    const undo_action = t('common.undo')
     const choice = await vscode.window.showInformationMessage(
       t('views.shared.actions.web.delete.deleted'),
       undo_action

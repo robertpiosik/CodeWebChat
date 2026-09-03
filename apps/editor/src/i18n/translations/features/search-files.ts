@@ -1133,6 +1133,42 @@ export const translations = {
     hu: 'Tudjon meg többet',
     bg: 'Научете повече'
   },
+  'feature.search-files.agent.add-flags': {
+    en: 'Add flags',
+    pl: 'Dodaj flagi',
+    'zh-cn': '添加标志',
+    ja: 'フラグを追加',
+    'zh-tw': '新增標誌',
+    de: 'Flags hinzufügen',
+    es: 'Añadir banderas',
+    fr: 'Ajouter des drapeaux',
+    'pt-br': 'Adicionar flags',
+    ru: 'Добавить флаги',
+    ko: '플래그 추가',
+    it: 'Aggiungi flag',
+    tr: 'Bayrak ekle',
+    cs: 'Přidat příznaky',
+    hu: 'Jelzők hozzáadása',
+    bg: 'Добавяне на флагове'
+  },
+  'feature.search-files.agent.delete-flags': {
+    en: 'Delete flags',
+    pl: 'Usuń flagi',
+    'zh-cn': '删除标志',
+    ja: 'フラグを削除',
+    'zh-tw': '刪除標誌',
+    de: 'Flags löschen',
+    es: 'Eliminar banderas',
+    fr: 'Supprimer les drapeaux',
+    'pt-br': 'Excluir flags',
+    ru: 'Удалить флаги',
+    ko: '플래그 삭제',
+    it: 'Elimina flag',
+    tr: 'Bayrakları sil',
+    cs: 'Smazat příznaky',
+    hu: 'Jelzők törlése',
+    bg: 'Изтриване на флагове'
+  },
   'feature.search-files.agent.edit-flags': {
     en: 'Edit flags',
     pl: 'Edytuj flagi',
@@ -1186,5 +1222,23 @@ export const translations = {
     cs: 'Příznaky',
     hu: 'Jelzők',
     bg: 'Флагове'
+  },
+  'feature.search-files.agent.deleted': {
+    en: 'Flags deleted.',
+    pl: 'Flagi usunięte.',
+    'zh-cn': '标志已删除。',
+    ja: 'フラグが削除されました。',
+    'zh-tw': '標誌已刪除。',
+    de: 'Flags gelöscht.',
+    es: 'Banderas eliminadas.',
+    fr: 'Drapeaux supprimés.',
+    'pt-br': 'Flags excluídas.',
+    ru: 'Флаги удалены.',
+    ko: '플래그가 삭제되었습니다.',
+    it: 'Flag eliminati.',
+    tr: 'Bayraklar silindi.',
+    cs: 'Příznaky smazány.',
+    hu: 'Jelzők törölve.',
+    bg: 'Флаговете са изтрити.'
   }
 } as const

@@ -239,24 +239,7 @@ export const translations = {
     hu: 'Ellenőrzőpont törölve.',
     bg: 'Контролната точка е изтрита.'
   },
-  'command.history.action.undo': {
-    en: 'Undo',
-    pl: 'Cofnij',
-    'zh-cn': '撤销',
-    ja: '元に戻す',
-    'zh-tw': '復原',
-    de: 'Rückgängig',
-    es: 'Deshacer',
-    fr: 'Annuler',
-    'pt-br': 'Desfazer',
-    ru: 'Отменить',
-    ko: '실행 취소',
-    it: 'Annulla',
-    tr: 'Geri Al',
-    cs: 'Zpět',
-    hu: 'Visszavonás',
-    bg: 'Отмяна'
-  },
+
   'command.history.error.could-not-undo': {
     en: 'Could not undo. Another checkpoint was deleted.',
     pl: 'Nie można cofnąć. Usunięto inny punkt kontrolny.',

@@ -45,9 +45,7 @@ export const handle_delete_model_provider = async (
   )
   await providers_manager.save_model_providers(updated_model_providers)
 
-  const undo_action = t(
-    'views.settings.handlers.handle-delete-model-provider.undo'
-  )
+  const undo_action = t('common.undo')
   const choice = await vscode.window.showInformationMessage(
     t('views.settings.handlers.handle-delete-model-provider.deleted'),
     undo_action

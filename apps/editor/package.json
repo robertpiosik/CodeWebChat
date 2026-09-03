@@ -1044,6 +1044,34 @@
           "scope": "resource",
           "default": false
         },
+        "codeWebChat.agenticSearchAntigravityFlags": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          }
+        },
+        "codeWebChat.agenticSearchClaudeFlags": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          }
+        },
+        "codeWebChat.agenticSearchCodexFlags": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          }
+        },
+        "codeWebChat.agenticSearchOpencodeFlags": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          }
+        },
         "codeWebChat.webConfigurations": {
           "type": "array",
           "scope": "resource",

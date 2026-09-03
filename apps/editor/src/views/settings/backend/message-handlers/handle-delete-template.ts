@@ -39,7 +39,7 @@ export const handle_delete_template = async (
     vscode.ConfigurationTarget.Global
   )
 
-  const undo_action = t('views.settings.handlers.handle-delete-template.undo')
+  const undo_action = t('common.undo')
   const choice = await vscode.window.showInformationMessage(
     t('views.settings.handlers.handle-delete-template.deleted'),
     undo_action

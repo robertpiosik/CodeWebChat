@@ -44,7 +44,7 @@ export const remove = async (params: {
   )
   await providers_manager.save_api_configurations(updated_api_configurations)
 
-  const undo_action = t('views.shared.actions.api.delete.undo')
+  const undo_action = t('common.undo')
   const choice = await vscode.window.showInformationMessage(
     t('views.shared.actions.api.delete.deleted'),
     undo_action

@@ -70,23 +70,5 @@ export const translations = {
     cs: 'Šablona smazána.',
     hu: 'Sablon törölve.',
     bg: 'Шаблонът е изтрит.'
-  },
-  'views.settings.handlers.handle-delete-template.undo': {
-    en: 'Undo',
-    pl: 'Cofnij',
-    'zh-cn': '撤销',
-    ja: '元に戻す',
-    'zh-tw': '復原',
-    de: 'Rückgängig machen',
-    es: 'Deshacer',
-    fr: 'Annuler',
-    'pt-br': 'Desfazer',
-    ru: 'Отменить',
-    ko: '실행 취소',
-    it: 'Annulla',
-    tr: 'Geri Al',
-    cs: 'Zpět',
-    hu: 'Visszavonás',
-    bg: 'Отмяна'
   }
 } as const
