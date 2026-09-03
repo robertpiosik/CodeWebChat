@@ -344,12 +344,6 @@
         "icon": "$(search)"
       },
       {
-        "command": "codeWebChat.searchFilesWorkspaceAction",
-        "title": "%codeWebChat.searchFiles.title%",
-        "category": "Code Web Chat",
-        "icon": "$(search)"
-      },
-      {
         "command": "codeWebChat.searchSelectedFiles",
         "title": "%codeWebChat.searchSelectedFiles.title%",
         "category": "Code Web Chat",
@@ -583,10 +577,6 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.searchFilesWorkspaceAction",
-          "when": "false"
-        },
-        {
           "command": "codeWebChat.searchFilesFromDirectory",
           "when": "false"
         },
@@ -686,7 +676,7 @@
           "group": "navigation@2"
         },
         {
-          "command": "codeWebChat.searchFilesWorkspaceAction",
+          "command": "codeWebChat.searchFiles",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@5"
         },
