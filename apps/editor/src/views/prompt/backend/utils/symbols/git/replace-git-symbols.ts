@@ -86,15 +86,11 @@ const build_changes_markdown = (
       : undefined
 
     let file_path: string | undefined
-    let is_deleted = false
 
     if (new_path && new_path != '/dev/null') {
       file_path = new_path
     } else if (old_path && old_path != '/dev/null') {
       file_path = old_path
-      if (new_path == '/dev/null') {
-        is_deleted = true
-      }
     }
 
     if (file_path) {
@@ -103,26 +99,6 @@ const build_changes_markdown = (
         : file_path
 
       changes_content += `### File: \`${display_path}\`\n\n`
-
-      let file_content = ''
-      try {
-        // Get the file content from the git revision we're diffing against.
-        file_content = execSync(`git show ${diff_base}:"./${file_path}"`, {
-          cwd,
-          encoding: 'utf-8',
-          stdio: ['pipe', 'pipe', 'ignore'] // Prevent git errors from crashing (e.g., file not on branch)
-        })
-      } catch (e) {
-        // File likely did not exist on the branch (i.e., it's a new file).
-        // In this case, the original content is correctly an empty string.
-        if (!is_deleted) {
-          Logger.warn({
-            function_name: 'build_changes_markdown',
-            message: `Could not get file content from git base ${diff_base} for path ${file_path}. Assuming it's a new file.`,
-            data: e
-          })
-        }
-      }
 
       if (path_prefix) {
         full_file_diff = patch_diff_paths(
@@ -137,9 +113,6 @@ const build_changes_markdown = (
       full_file_diff = clean_git_diff(full_file_diff)
 
       changes_content += `\`\`\`\n${full_file_diff}\n\`\`\`\n\n`
-      if (file_content) {
-        changes_content += `\`\`\`\n${file_content}\n\`\`\`\n\n`
-      }
     }
   }
 
@@ -449,15 +422,11 @@ const build_commit_changes_markdown = (
       : undefined
 
     let file_path: string | undefined
-    let is_deleted = false
 
     if (new_path && new_path != '/dev/null') {
       file_path = new_path
     } else if (old_path && old_path != '/dev/null') {
       file_path = old_path
-      if (new_path == '/dev/null') {
-        is_deleted = true
-      }
     }
 
     if (file_path) {
@@ -466,23 +435,6 @@ const build_commit_changes_markdown = (
         : file_path
 
       changes_content += `### File: \`${display_path}\`\n\n`
-
-      let file_content = ''
-      if (!is_deleted) {
-        try {
-          file_content = execSync(`git show ${commit_hash}:"./${file_path}"`, {
-            cwd,
-            encoding: 'utf-8',
-            stdio: ['pipe', 'pipe', 'ignore']
-          })
-        } catch (e) {
-          Logger.error({
-            function_name: 'build_commit_changes_markdown',
-            message: `Could not read file for diff from commit: ${file_path}`,
-            data: e
-          })
-        }
-      }
 
       if (path_prefix) {
         full_file_diff = patch_diff_paths(
@@ -497,9 +449,6 @@ const build_commit_changes_markdown = (
       full_file_diff = clean_git_diff(full_file_diff)
 
       changes_content += `\`\`\`\n${full_file_diff}\n\`\`\`\n\n`
-      if (file_content) {
-        changes_content += `\`\`\`\n${file_content}\n\`\`\`\n\n`
-      }
     }
   }
 
