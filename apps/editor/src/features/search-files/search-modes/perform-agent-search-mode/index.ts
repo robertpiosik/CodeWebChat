@@ -6,7 +6,8 @@ import * as path from 'path'
 import * as fs from 'fs'
 import {
   LAST_SELECTED_WORKSPACE_IN_AGENT_SEARCH_STATE_KEY,
-  LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY
+  LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY,
+  get_agent_flags_state_key
 } from '@/constants/state-keys'
 import { extract_paths_from_text } from '@/utils/extract-paths-from-text'
 import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-files'
@@ -62,18 +63,22 @@ export const perform_agent_search_mode = async (params: {
       return undefined
     }
 
+    const edit_button = {
+      iconPath: new vscode.ThemeIcon('flag'),
+      tooltip: t('feature.search-files.agent.edit-flags')
+    }
+    const doc_button = {
+      iconPath: new vscode.ThemeIcon('globe'),
+      tooltip: t('feature.search-files.agent.learn-more')
+    }
+
     const agent_picks = available_agents.map((a) => {
       const pick: vscode.QuickPickItem & { cmd: string } = {
         label: a.label,
         cmd: a.cmd
       }
 
-      pick.buttons = [
-        {
-          iconPath: new vscode.ThemeIcon('globe'),
-          tooltip: t('feature.search-files.agent.learn-more')
-        }
-      ]
+      pick.buttons = [edit_button, doc_button]
 
       return pick
     })
@@ -94,32 +99,39 @@ export const perform_agent_search_mode = async (params: {
     agent_quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
     agent_quick_pick.ignoreFocusOut = true
 
-    const selected_agent_cmd = await new Promise<string | undefined | 'back'>(
-      (resolve) => {
-        let is_resolved = false
+    const selected_agent_cmd = await new Promise<
+      string | undefined | 'back' | { edit_agent: string }
+    >((resolve) => {
+      let is_resolved = false
 
-        agent_quick_pick.onDidTriggerButton((button) => {
-          if (button === vscode.QuickInputButtons.Back) {
-            is_resolved = true
-            resolve('back')
-            agent_quick_pick.hide()
-          } else if (button === close_button) {
-            is_resolved = true
-            resolve(undefined)
-            agent_quick_pick.hide()
-          }
-        })
+      agent_quick_pick.onDidTriggerButton((button) => {
+        if (button === vscode.QuickInputButtons.Back) {
+          is_resolved = true
+          resolve('back')
+          agent_quick_pick.hide()
+        } else if (button === close_button) {
+          is_resolved = true
+          resolve(undefined)
+          agent_quick_pick.hide()
+        }
+      })
 
-        agent_quick_pick.onDidTriggerItemButton((e) => {
+      agent_quick_pick.onDidTriggerItemButton((e) => {
+        if (e.button === doc_button) {
           const agent = available_agents.find((a) => a.cmd == e.item.cmd)
           if (agent) {
             vscode.env.openExternal(
               vscode.Uri.parse(agent.get_documentation_url())
             )
           }
-        })
+        } else if (e.button === edit_button) {
+          is_resolved = true
+          resolve({ edit_agent: e.item.cmd })
+          agent_quick_pick.hide()
+        }
+      })
 
-        agent_quick_pick.onDidAccept(() => {
+      agent_quick_pick.onDidAccept(() => {
           const selected = agent_quick_pick.selectedItems[0]
           if (selected) {
             is_resolved = true
@@ -145,6 +157,29 @@ export const perform_agent_search_mode = async (params: {
 
     if (!selected_agent_cmd) {
       return undefined
+    }
+
+    if (
+      typeof selected_agent_cmd === 'object' &&
+      'edit_agent' in selected_agent_cmd
+    ) {
+      const cmd = selected_agent_cmd.edit_agent
+      const key = get_agent_flags_state_key(cmd)
+      const current_flags =
+        params.extension_context.globalState.get<string>(key) || ''
+
+      const new_flags = await vscode.window.showInputBox({
+        title: t('feature.search-files.agent.edit-flags'),
+        prompt: t('feature.search-files.agent.edit-flags-prompt'),
+        placeHolder: t('feature.search-files.agent.edit-flags-placeholder'),
+        value: current_flags,
+        ignoreFocusOut: true
+      })
+
+      if (new_flags !== undefined) {
+        await params.extension_context.globalState.update(key, new_flags)
+      }
+      continue
     }
 
     let go_back_to_agent = false
@@ -293,7 +328,23 @@ export const perform_agent_search_mode = async (params: {
         if (!agent_info) break
 
         const executable = agent_info.cmd
-        const args = agent_info.get_args(query)
+        const base_args = agent_info.get_args(query)
+
+        const flags_string =
+          params.extension_context.globalState.get<string>(
+            get_agent_flags_state_key(executable)
+          ) || ''
+
+        const custom_args: string[] = []
+        if (flags_string.trim()) {
+          const regex = /([^\s'"]+)|"([^"]*)"|'([^']*)'/g
+          let match
+          while ((match = regex.exec(flags_string)) !== null) {
+            custom_args.push(match[1] || match[2] || match[3])
+          }
+        }
+
+        const args = [...base_args, ...custom_args]
 
         let agent_output = ''
         let raw_stream_output = ''
