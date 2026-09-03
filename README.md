@@ -29,6 +29,19 @@
 
 **CWC** constructs unified prompts with all relevant files and instructions, so the model has everything it needs from the start. Steer it with examples, focus its attention on specific code, and make simple instructions just work!
 
+## Agentic search
+
+**CWC** can search context files using your favorite CLI in a headless mode.
+
+**Supported agents:**
+
+- Claude Code
+- Codex
+- Cursor
+- Grok Build
+- Antigravity
+- OpenCode
+
 ## Features
 
 **CWC** helps with all common use-cases like multi-file editing, planning, generating code at cursor or commit messages.
