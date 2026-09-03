@@ -46,16 +46,14 @@ const create_turndown_service = () => {
       )
     }
   })
-  // Convert math blocks to markdown
   turndown_service.addRule('multiplemath', {
     filter(node) {
       return (
         node.nodeName == 'SPAN' &&
         (node as HTMLElement).classList.contains('katex-display')
-      ) // Check if it's a display math block that centers equation
+      )
     },
     replacement(_, node) {
-      // "<annotation>" element holds expression string, right for markdown
       const annotation = (node as HTMLElement).querySelector(
         'annotation'
       )?.textContent
@@ -121,6 +119,43 @@ export const fetch_and_save_website = async (
       const clean_html = DOMPurify.sanitize(html)
       const dom = new JSDOM(clean_html, { url })
       const doc = dom.window.document
+
+      doc.querySelectorAll('pre').forEach((pre) => {
+        const code = pre.querySelector('code')
+        const language = (code?.className.match(/language-(\S+)/) ||
+          pre.className.match(/language-(\S+)/) || [null, ''])[1]
+
+        let text = ''
+        const lines = pre.querySelectorAll('.line')
+        if (lines.length > 0) {
+          text = Array.from(lines)
+            .map((l) => l.textContent)
+            .join('\n')
+        } else {
+          text = pre.textContent || ''
+        }
+
+        pre.innerHTML = ''
+        const new_code = doc.createElement('code')
+        if (language) {
+          new_code.className = `language-${language}`
+        }
+        new_code.textContent = text
+        pre.appendChild(new_code)
+
+        let current: Element = pre
+        while (
+          current.parentElement &&
+          current.parentElement.tagName == 'DIV' &&
+          current.parentElement.textContent?.trim() == pre.textContent?.trim()
+        ) {
+          current = current.parentElement
+        }
+        if (current !== pre && current.parentElement) {
+          current.parentElement.insertBefore(pre, current)
+          current.remove()
+        }
+      })
 
       if (isProbablyReaderable(doc)) {
         const reader = new Readability(doc, { keepClasses: true })
