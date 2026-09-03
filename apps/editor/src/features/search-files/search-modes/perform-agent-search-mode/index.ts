@@ -1,32 +1,31 @@
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { t } from '@/i18n'
-import { execSync, spawn } from 'child_process'
-import * as os from 'os'
+import { spawn } from 'child_process'
 import * as path from 'path'
 import * as fs from 'fs'
 import {
   LAST_SELECTED_WORKSPACE_IN_AGENT_SEARCH_STATE_KEY,
   LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY
 } from '@/constants/state-keys'
-import { agentic_file_search_instructions } from '@/constants/instructions'
 import { extract_paths_from_text } from '@/utils/extract-paths-from-text'
 import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-files'
 import { Logger } from '@shared/utils/logger'
-import { show_search_results_quick_pick } from '../utils/show-search-results-quick-pick'
-import { prompt_for_search_term } from '../utils/prompt-for-search-term'
+import { show_search_results_quick_pick } from '../../utils/show-search-results-quick-pick'
+import { prompt_for_search_term } from '../../utils/prompt-for-search-term'
 
-const check_command_exists = (cmd: string): boolean => {
-  try {
-    const is_windows = os.platform() == 'win32'
-    execSync(`${is_windows ? 'where' : 'command -v'} ${cmd}`, {
-      stdio: 'ignore'
-    })
-    return true
-  } catch (e) {
-    return false
-  }
-}
+import { antigravity_agent } from './agents/antigravity'
+import { claude_agent } from './agents/claude'
+import { codex_agent } from './agents/codex'
+import { opencode_agent } from './agents/opencode'
+import { CodingAgent } from './types'
+
+const AGENTS: CodingAgent[] = [
+  antigravity_agent,
+  codex_agent,
+  claude_agent,
+  opencode_agent
+]
 
 export const perform_agent_search_mode = async (params: {
   workspace_provider: WorkspaceProvider
@@ -54,39 +53,7 @@ export const perform_agent_search_mode = async (params: {
   }
 
   while (true) {
-    const available_agents: {
-      label: string
-      cmd: string
-      executable: string
-      args: string[]
-    }[] = []
-
-    if (check_command_exists('agy')) {
-      available_agents.push({
-        label: 'Antigravity',
-        cmd: 'agy',
-        executable: 'agy',
-        args: ['-p']
-      })
-    }
-
-    if (check_command_exists('codex')) {
-      available_agents.push({
-        label: 'Codex',
-        cmd: 'codex',
-        executable: 'codex',
-        args: ['exec']
-      })
-    }
-
-    if (check_command_exists('claude')) {
-      available_agents.push({
-        label: 'Claude Code',
-        cmd: 'claude',
-        executable: 'claude',
-        args: ['--bare', '-p']
-      })
-    }
+    const available_agents = AGENTS.filter((a) => a.is_installed())
 
     if (available_agents.length == 0) {
       vscode.window.showInformationMessage(
@@ -127,7 +94,7 @@ export const perform_agent_search_mode = async (params: {
     agent_quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
     agent_quick_pick.ignoreFocusOut = true
 
-    const selected_agent = await new Promise<string | undefined | 'back'>(
+    const selected_agent_cmd = await new Promise<string | undefined | 'back'>(
       (resolve) => {
         let is_resolved = false
 
@@ -144,17 +111,10 @@ export const perform_agent_search_mode = async (params: {
         })
 
         agent_quick_pick.onDidTriggerItemButton((e) => {
-          if (e.item.cmd == 'agy') {
+          const agent = available_agents.find((a) => a.cmd == e.item.cmd)
+          if (agent) {
             vscode.env.openExternal(
-              vscode.Uri.parse('https://antigravity.google/docs/cli/headless/')
-            )
-          } else if (e.item.cmd == 'claude') {
-            vscode.env.openExternal(
-              vscode.Uri.parse('https://code.claude.com/docs/en/headless')
-            )
-          } else if (e.item.cmd == 'codex') {
-            vscode.env.openExternal(
-              vscode.Uri.parse('https://learn.chatgpt.com/docs/non-interactive-mode')
+              vscode.Uri.parse(agent.get_documentation_url())
             )
           }
         })
@@ -179,11 +139,11 @@ export const perform_agent_search_mode = async (params: {
       }
     )
 
-    if (selected_agent == 'back') {
+    if (selected_agent_cmd == 'back') {
       return 'back'
     }
 
-    if (!selected_agent) {
+    if (!selected_agent_cmd) {
       return undefined
     }
 
@@ -205,7 +165,7 @@ export const perform_agent_search_mode = async (params: {
           LAST_SELECTED_WORKSPACE_IN_AGENT_SEARCH_STATE_KEY
         )
         const active_item =
-          picks.find((p) => p.root === last_selected_root) || picks[0]
+          picks.find((p) => p.root == last_selected_root) || picks[0]
 
         const quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & { root: string }
@@ -221,39 +181,41 @@ export const perform_agent_search_mode = async (params: {
         quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
         quick_pick.ignoreFocusOut = true
 
-        const res = await new Promise<string | undefined | 'back'>((resolve) => {
-          let is_resolved = false
+        const res = await new Promise<string | undefined | 'back'>(
+          (resolve) => {
+            let is_resolved = false
 
-          quick_pick.onDidTriggerButton((button) => {
-            if (button === vscode.QuickInputButtons.Back) {
-              is_resolved = true
-              resolve('back')
-              quick_pick.hide()
-            } else if (button === close_button) {
-              is_resolved = true
-              resolve(undefined)
-              quick_pick.hide()
-            }
-          })
+            quick_pick.onDidTriggerButton((button) => {
+              if (button === vscode.QuickInputButtons.Back) {
+                is_resolved = true
+                resolve('back')
+                quick_pick.hide()
+              } else if (button === close_button) {
+                is_resolved = true
+                resolve(undefined)
+                quick_pick.hide()
+              }
+            })
 
-          quick_pick.onDidAccept(() => {
-            const selected = quick_pick.selectedItems[0]
-            if (selected) {
-              is_resolved = true
-              resolve(selected.root)
-              quick_pick.hide()
-            }
-          })
+            quick_pick.onDidAccept(() => {
+              const selected = quick_pick.selectedItems[0]
+              if (selected) {
+                is_resolved = true
+                resolve(selected.root)
+                quick_pick.hide()
+              }
+            })
 
-          quick_pick.onDidHide(() => {
-            if (!is_resolved) {
-              resolve(undefined)
-            }
-            quick_pick.dispose()
-          })
+            quick_pick.onDidHide(() => {
+              if (!is_resolved) {
+                resolve(undefined)
+              }
+              quick_pick.dispose()
+            })
 
-          quick_pick.show()
-        })
+            quick_pick.show()
+          }
+        )
 
         if (res == 'back') {
           go_back_to_agent = true
@@ -325,22 +287,13 @@ export const perform_agent_search_mode = async (params: {
           )
         }
 
-        const agent_info = available_agents.find((a) => a.cmd === selected_agent)
+        const agent_info = available_agents.find(
+          (a) => a.cmd == selected_agent_cmd
+        )
         if (!agent_info) break
 
         const executable = agent_info.executable
-        const args = [...agent_info.args]
-
-        const full_prompt = `${agentic_file_search_instructions}\n\n${query}`
-        args.push(full_prompt)
-
-        if (executable == 'agy') {
-          args.push('--output-format', 'stream-json', '--dangerously-skip-permissions')
-        } else if (executable == 'codex') {
-          args.push('--json')
-        } else if (executable == 'claude') {
-          args.push('--output-format', 'stream-json', '--verbose', '--permission-mode', 'auto', '--include-partial-messages')
-        }
+        const args = agent_info.get_args(query)
 
         let agent_output = ''
         let raw_stream_output = ''
@@ -353,7 +306,9 @@ export const perform_agent_search_mode = async (params: {
               cancellable: true
             },
             async (progress, token) => {
-              progress.report({ message: t('feature.search-files.progress.searching') })
+              progress.report({
+                message: t('feature.search-files.progress.searching')
+              })
 
               return new Promise<void>((resolve, reject) => {
                 const child = spawn(executable, args, {
@@ -364,7 +319,7 @@ export const perform_agent_search_mode = async (params: {
 
                 child.stdout.on('data', (data) => {
                   const chunk = data.toString()
-                  if (executable == 'agy' || executable == 'codex' || executable == 'claude') {
+                  if (agent_info.parse_stream_line) {
                     raw_stream_output += chunk
                     const lines = raw_stream_output.split('\n')
                     raw_stream_output = lines.pop() || ''
@@ -373,76 +328,15 @@ export const perform_agent_search_mode = async (params: {
                       if (!trimmed) continue
                       try {
                         const parsed = JSON.parse(trimmed)
-                        if (executable == 'agy') {
-                          if (parsed.event == 'step_update' && parsed.step_update) {
-                            const step = parsed.step_update
-                            if (step.step_type == 'tool') {
-                              const tool_name = step.tool_name || step.tool_info?.name
-                              if (tool_name) {
-                                let msg = `Using ${tool_name.replace(/_/g, ' ')}...`
-                                const params = step.tool_info?.parameters
-                                
-                                if (params) {
-                                  if (tool_name == 'run_command' && (params.CommandLine || params.command)) {
-                                    msg = `Running: ${params.CommandLine || params.command}`
-                                  } else if (tool_name == 'read_file' && params.path) {
-                                    msg = `Reading: ${params.path}`
-                                  } else if ((tool_name == 'write_file' || tool_name == 'write_to_file') && params.path) {
-                                    msg = `Writing: ${params.path}`
-                                  } else if (tool_name == 'list_directory' && params.path) {
-                                    msg = `Listing: ${params.path}`
-                                  } else if (tool_name == 'search_files' && (params.query || params.pattern)) {
-                                    msg = `Searching: ${params.query || params.pattern}`
-                                  }
-                                }
-                                
-                                if (msg.length > 60) {
-                                  msg = msg.substring(0, 57) + '...'
-                                }
-                                progress.report({ message: msg })
-                              }
-                            } else if (step.subagent_info?.subagents?.length > 0) {
-                              const subagent = step.subagent_info.subagents[0]
-                              progress.report({ message: `Delegating to ${subagent.role || subagent.type_name}...` })
-                            } else if (step.step_type == 'agent_response') {
-                              progress.report({ message: 'Synthesizing results...' })
-                            }
-                          } else if (parsed.event == 'result' && parsed.result) {
-                            agent_output = parsed.result.response || ''
+                        const result = agent_info.parse_stream_line(
+                          parsed,
+                          (msg) => {
+                            progress.report({ message: msg })
                           }
-                        } else if (executable == 'codex') {
-                          if (parsed.type == 'item.started' && parsed.item) {
-                            const item = parsed.item
-                            let msg = ''
-                            if (item.type == 'command_execution' && item.command) {
-                              msg = `Running: ${item.command}`
-                            } else if (item.type) {
-                              msg = `Running ${item.type.replace(/_/g, ' ')}...`
-                            }
-                            if (msg) {
-                              if (msg.length > 60) {
-                                msg = msg.substring(0, 57) + '...'
-                              }
-                              progress.report({ message: msg })
-                            }
-                          } else if (parsed.type == 'item.completed' && parsed.item) {
-                            if (parsed.item.type == 'agent_message' && parsed.item.text) {
-                              agent_output = parsed.item.text
-                            }
-                          }
-                        } else if (executable == 'claude') {
-                          if (parsed.type == 'stream_event' && parsed.event) {
-                            if (parsed.event.type == 'content_block_start' && parsed.event.content_block?.type == 'tool_use') {
-                              const tool_name = parsed.event.content_block.name
-                              if (tool_name) {
-                                progress.report({ message: `Using ${tool_name.replace(/_/g, ' ')}...` })
-                              }
-                            }
-                          } else if (parsed.type == 'result' && parsed.result) {
-                            agent_output = typeof parsed.result === 'string' ? parsed.result : (parsed.result.text || '')
-                          } else if (parsed.result) {
-                            agent_output = typeof parsed.result === 'string' ? parsed.result : (parsed.result.text || '')
-                          }
+                        )
+
+                        if (result?.output !== undefined) {
+                          agent_output = result.output
                         }
                       } catch (e) {
                         // Ignore parse errors for partial chunks
@@ -464,26 +358,15 @@ export const perform_agent_search_mode = async (params: {
                 })
 
                 child.on('close', () => {
-                  if ((executable == 'agy' || executable == 'codex' || executable == 'claude') && raw_stream_output.trim()) {
+                  if (
+                    agent_info.parse_final_output &&
+                    raw_stream_output.trim()
+                  ) {
                     try {
                       const parsed = JSON.parse(raw_stream_output.trim())
-                      if (executable == 'agy') {
-                        if (parsed.event == 'result' && parsed.result) {
-                          agent_output = parsed.result.response || ''
-                        } else if (parsed.response) {
-                          agent_output = parsed.response || ''
-                        }
-                      } else if (executable == 'codex') {
-                        if (parsed.type == 'item.completed' && parsed.item?.type == 'agent_message' && parsed.item.text) {
-                          agent_output = parsed.item.text
-                        }
-                      } else if (executable == 'claude') {
-                        if (parsed.type == 'result' && parsed.result) {
-                          agent_output = typeof parsed.result === 'string' ? parsed.result : (parsed.result.text || '')
-                        } else if (parsed.result) {
-                          agent_output = typeof parsed.result === 'string' ? parsed.result : (parsed.result.text || '')
-                        }
-                      }
+                      agent_output =
+                        agent_info.parse_final_output(parsed, agent_output) ??
+                        agent_output
                     } catch (e) {
                       // Ignore
                     }
@@ -514,7 +397,9 @@ export const perform_agent_search_mode = async (params: {
         }
 
         if (agent_output.trim() == '') {
-          vscode.window.showInformationMessage(t('feature.search-files.no-files'))
+          vscode.window.showInformationMessage(
+            t('feature.search-files.no-files')
+          )
           continue
         }
 
@@ -526,10 +411,16 @@ export const perform_agent_search_mode = async (params: {
         let prefix = ''
 
         if (roots.length > 1 && selected_root) {
-          const workspace_name = params.workspace_provider.get_workspace_name(selected_root)
+          const workspace_name = params.workspace_provider.get_workspace_name(
+            selected_root
+          )
           prefix = `${workspace_name}/`
-          const root_files = workspace_files.filter((f) => f.startsWith(prefix))
-          const stripped_files = root_files.map((f) => f.substring(prefix.length))
+          const root_files = workspace_files.filter((f) =>
+            f.startsWith(prefix)
+          )
+          const stripped_files = root_files.map((f) =>
+            f.substring(prefix.length)
+          )
           workspace_files = [...root_files, ...stripped_files]
         }
 
@@ -541,14 +432,19 @@ export const perform_agent_search_mode = async (params: {
         const absolute_paths = Array.from(
           new Set(
             valid_paths.map((p) => {
-              const relative_path = prefix && p.startsWith(prefix) ? p.substring(prefix.length) : p
+              const relative_path =
+                prefix && p.startsWith(prefix)
+                  ? p.substring(prefix.length)
+                  : p
               return path.join(selected_root!, relative_path)
             })
           )
         ).filter((p) => fs.existsSync(p))
 
         if (absolute_paths.length === 0) {
-          vscode.window.showInformationMessage(t('feature.search-files.no-files'))
+          vscode.window.showInformationMessage(
+            t('feature.search-files.no-files')
+          )
           continue
         }
 
