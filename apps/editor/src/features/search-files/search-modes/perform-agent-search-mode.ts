@@ -95,10 +95,21 @@ export const perform_agent_search_mode = async (params: {
       return undefined
     }
 
-    const agent_picks = available_agents.map((a) => ({
-      label: a.label,
-      cmd: a.cmd
-    }))
+    const agent_picks = available_agents.map((a) => {
+      const pick: vscode.QuickPickItem & { cmd: string } = {
+        label: a.label,
+        cmd: a.cmd
+      }
+
+      pick.buttons = [
+        {
+          iconPath: new vscode.ThemeIcon('globe'),
+          tooltip: t('feature.search-files.agent.learn-more')
+        }
+      ]
+
+      return pick
+    })
 
     const close_button = {
       iconPath: new vscode.ThemeIcon('close'),
@@ -129,6 +140,22 @@ export const perform_agent_search_mode = async (params: {
             is_resolved = true
             resolve(undefined)
             agent_quick_pick.hide()
+          }
+        })
+
+        agent_quick_pick.onDidTriggerItemButton((e) => {
+          if (e.item.cmd == 'agy') {
+            vscode.env.openExternal(
+              vscode.Uri.parse('https://antigravity.google/docs/cli/headless/')
+            )
+          } else if (e.item.cmd == 'claude') {
+            vscode.env.openExternal(
+              vscode.Uri.parse('https://code.claude.com/docs/en/headless')
+            )
+          } else if (e.item.cmd == 'codex') {
+            vscode.env.openExternal(
+              vscode.Uri.parse('https://learn.chatgpt.com/docs/non-interactive-mode')
+            )
           }
         })
 

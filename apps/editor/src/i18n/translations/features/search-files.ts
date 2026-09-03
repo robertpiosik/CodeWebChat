@@ -1084,5 +1084,23 @@ export const translations = {
     cs: 'Nebyli nalezeni žádní agenti v cestě (např. agy, codex, claude).',
     hu: 'Nem találhatók ügynökök a PATH-ban (pl. agy, codex, claude).',
     bg: 'Не са намерени агенти в PATH (напр. agy, codex, claude).'
+  },
+  'feature.search-files.agent.learn-more': {
+    en: 'Learn more',
+    pl: 'Dowiedz się więcej',
+    'zh-cn': '了解更多',
+    ja: '詳細を見る',
+    'zh-tw': '了解更多',
+    de: 'Mehr erfahren',
+    es: 'Más información',
+    fr: 'En savoir plus',
+    'pt-br': 'Saiba mais',
+    ru: 'Подробнее',
+    ko: '자세히 알아보기',
+    it: 'Scopri di più',
+    tr: 'Daha fazla bilgi edinin',
+    cs: 'Další informace',
+    hu: 'Tudjon meg többet',
+    bg: 'Научете повече'
   }
 } as const
