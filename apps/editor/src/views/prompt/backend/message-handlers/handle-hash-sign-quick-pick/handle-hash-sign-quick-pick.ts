@@ -20,6 +20,7 @@ const clipboard_paths_label = `$(clippy) ${t('views.prompt.handlers.hash-sign.qu
 
 const hash_sign_quick_pick = async (params: {
   extension_context: vscode.ExtensionContext
+  on_insert: (text: string) => void
 }): Promise<string | undefined> => {
   const items: vscode.QuickPickItem[] = [
     {
@@ -138,10 +139,13 @@ const hash_sign_quick_pick = async (params: {
         result = await handle_selection_item()
         break
       case changes_label:
-        result = await handle_changes_item()
+        result = await handle_changes_item(params.extension_context)
         break
       case commit_label:
-        result = await handle_commit_item(params.extension_context)
+        result = await handle_commit_item(
+          params.extension_context,
+          params.on_insert
+        )
         break
       case saved_context_label:
         result = await handle_saved_context_item(params.extension_context)
@@ -168,26 +172,32 @@ export const handle_hash_sign_quick_pick = async (
   prompt_view_provider: PromptViewProvider,
   extension_context: vscode.ExtensionContext
 ): Promise<void> => {
-  const replacement = await hash_sign_quick_pick({
-    extension_context
-  })
+  let first_insert = true
 
-  if (!replacement) {
-    prompt_view_provider.send_message({
-      command: 'FOCUS_PROMPT_FIELD'
-    })
-    return
+  const on_insert = (replacement: string) => {
+    if (first_insert) {
+      const current_text = prompt_view_provider.current_instructions
+      const is_after_hash_sign = current_text
+        .slice(0, prompt_view_provider.caret_position)
+        .endsWith('#')
+      if (is_after_hash_sign) {
+        prompt_view_provider.add_text_at_cursor_position(replacement, 1)
+      } else {
+        prompt_view_provider.add_text_at_cursor_position(replacement)
+      }
+      first_insert = false
+    } else {
+      prompt_view_provider.add_text_at_cursor_position(replacement)
+    }
   }
 
-  const current_text = prompt_view_provider.current_instructions
+  const replacement = await hash_sign_quick_pick({
+    extension_context,
+    on_insert
+  })
 
-  const is_after_hash_sign = current_text
-    .slice(0, prompt_view_provider.caret_position)
-    .endsWith('#')
-  if (is_after_hash_sign) {
-    prompt_view_provider.add_text_at_cursor_position(replacement, 1)
-  } else {
-    prompt_view_provider.add_text_at_cursor_position(replacement)
+  if (replacement) {
+    on_insert(replacement)
   }
 
   prompt_view_provider.send_message({

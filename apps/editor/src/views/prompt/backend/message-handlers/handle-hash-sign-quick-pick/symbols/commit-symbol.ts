@@ -7,10 +7,14 @@ import {
 } from '@/constants/state-keys'
 import { GIT_LOG_SINCE_DURATION } from '@/constants/values'
 import { t } from '@/i18n'
+import { display_token_count } from '@shared/utils/display-token-count'
+import { AsciiTree } from '@/utils/ascii-tree/ascii-tree'
+import { build_commit_changes_markdown } from '../../../utils/symbols/git/replace-git-symbols'
 
 export const handle_commit_item = async (
-  extension_context: vscode.ExtensionContext
-): Promise<string | 'continue' | undefined> => {
+  extension_context: vscode.ExtensionContext,
+  on_insert: (text: string) => void
+): Promise<'continue' | undefined> => {
   try {
     const workspace_folders = vscode.workspace.workspaceFolders
     if (!workspace_folders || workspace_folders.length == 0) {
@@ -143,6 +147,7 @@ export const handle_commit_item = async (
       }
 
       let go_back_to_folders = false
+      let last_selected_commit: vscode.QuickPickItem | undefined
 
       while (true) {
         const quick_pick = vscode.window.createQuickPick()
@@ -151,6 +156,15 @@ export const handle_commit_item = async (
         quick_pick.title = 'Commits'
         quick_pick.buttons = [vscode.QuickInputButtons.Back]
         quick_pick.matchOnDetail = true
+
+        if (last_selected_commit) {
+          const active = commit_items.find(
+            (item) => item.label === last_selected_commit?.label
+          )
+          if (active) {
+            quick_pick.activeItems = [active]
+          }
+        }
 
         const selected_commit = await new Promise<
           vscode.QuickPickItem | 'back' | undefined
@@ -191,13 +205,57 @@ export const handle_commit_item = async (
           return 'continue'
         }
 
+        last_selected_commit = selected_commit
+        const commit_hash = selected_commit.label
+        let diff_token_count = 0
+        let msg_token_count = 0
+
+        try {
+          let commit_message_body = ''
+          const raw_msg = execSync(`git show -s --format=%B ${commit_hash}`, {
+            cwd: selected_folder.uri.fsPath,
+            encoding: 'utf-8'
+          }).toString()
+          commit_message_body = AsciiTree.strip_from_text(raw_msg)
+
+          if (commit_message_body) {
+            msg_token_count = Math.ceil(
+              `---\n\n${commit_message_body}\n\n---\n\n`.length / 4
+            )
+          }
+
+          const diff = execSync(`git show ${commit_hash}`, {
+            cwd: selected_folder.uri.fsPath,
+            encoding: 'utf-8'
+          }).toString()
+
+          const replacement_text = build_commit_changes_markdown(
+            diff,
+            selected_folder.uri.fsPath,
+            commit_hash,
+            workspace_folders.length > 1 ? selected_folder.name : undefined,
+            commit_message_body
+          )
+          diff_token_count = Math.ceil(replacement_text.length / 4)
+        } catch (error) {
+          // ignore
+        }
+
         const action_quick_pick = vscode.window.createQuickPick()
         const action_items = [
           {
-            label: 'Diff with commit message'
+            label: 'Diff with commit message',
+            description:
+              diff_token_count > 0
+                ? display_token_count(diff_token_count)
+                : undefined
           },
           {
-            label: 'Commit message only'
+            label: 'Commit message only',
+            description:
+              msg_token_count > 0
+                ? display_token_count(msg_token_count)
+                : undefined
           }
         ]
         action_quick_pick.items = action_items
@@ -244,12 +302,8 @@ export const handle_commit_item = async (
           action_quick_pick.show()
         })
 
-        if (selected_action == 'back') {
+        if (!selected_action || selected_action == 'back') {
           continue
-        }
-
-        if (!selected_action) {
-          return 'continue'
         }
 
         await extension_context.workspaceState.update(
@@ -262,7 +316,12 @@ export const handle_commit_item = async (
             ? 'CommitMessage'
             : 'Commit'
         const message = (selected_commit.detail || '').replace(/"/g, '\\"')
-        return `#${symbol}(${selected_folder.name}:${selected_commit.label} "${message}")`
+        
+        on_insert(
+          `#${symbol}(${selected_folder.name}:${selected_commit.label} "${message}") `
+        )
+        
+        continue
       }
 
       if (go_back_to_folders) {

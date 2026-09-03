@@ -57,7 +57,7 @@ const clean_git_diff = (diff_text: string): string => {
     .join('\n')
 }
 
-const build_changes_markdown = (
+export const build_changes_markdown = (
   diff: string,
   cwd: string,
   diff_base: string,
@@ -393,7 +393,7 @@ export const replace_changes_symbol = async (params: {
   return { instruction: result_instruction, changes_definitions }
 }
 
-const build_commit_changes_markdown = (
+export const build_commit_changes_markdown = (
   diff: string,
   cwd: string,
   commit_hash: string,
