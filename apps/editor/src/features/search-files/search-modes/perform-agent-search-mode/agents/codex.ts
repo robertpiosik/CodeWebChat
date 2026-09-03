@@ -6,7 +6,6 @@ export const codex_agent: CodingAgent = {
   id: 'codex',
   label: 'Codex',
   cmd: 'codex',
-  executable: 'codex',
   is_installed: () => check_command_exists('codex'),
   get_documentation_url: () =>
     'https://learn.chatgpt.com/docs/non-interactive-mode',

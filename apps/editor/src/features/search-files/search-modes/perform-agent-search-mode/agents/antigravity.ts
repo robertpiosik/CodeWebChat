@@ -6,7 +6,6 @@ export const antigravity_agent: CodingAgent = {
   id: 'antigravity',
   label: 'Antigravity',
   cmd: 'agy',
-  executable: 'agy',
   is_installed: () => check_command_exists('agy'),
   get_documentation_url: () => 'https://antigravity.google/docs/cli/headless/',
   get_args: (query: string) => [

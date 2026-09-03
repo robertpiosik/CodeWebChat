@@ -292,7 +292,7 @@ export const perform_agent_search_mode = async (params: {
         )
         if (!agent_info) break
 
-        const executable = agent_info.executable
+        const executable = agent_info.cmd
         const args = agent_info.get_args(query)
 
         let agent_output = ''

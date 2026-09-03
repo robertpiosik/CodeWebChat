@@ -6,9 +6,8 @@ export const opencode_agent: CodingAgent = {
   id: 'opencode',
   label: 'OpenCode',
   cmd: 'opencode',
-  executable: 'opencode',
   is_installed: () => check_command_exists('opencode'),
-  get_documentation_url: () => 'https://github.com/opencode/opencode',
+  get_documentation_url: () => 'https://opencode.ai/docs/cli/',
   get_args: (query: string) => [
     'run',
     `${agentic_file_search_instructions}\n\n${query}`,

@@ -6,7 +6,6 @@ export const claude_agent: CodingAgent = {
   id: 'claude',
   label: 'Claude Code',
   cmd: 'claude',
-  executable: 'claude',
   is_installed: () => check_command_exists('claude'),
   get_documentation_url: () => 'https://code.claude.com/docs/en/headless',
   get_args: (query: string) => [
