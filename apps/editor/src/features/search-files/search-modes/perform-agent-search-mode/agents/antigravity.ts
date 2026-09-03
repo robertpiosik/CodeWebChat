@@ -21,44 +21,47 @@ export const antigravity_agent: CodingAgent = {
       if (step.step_type == 'tool') {
         const tool_name = step.tool_name || step.tool_info?.name
         if (tool_name) {
-          let msg = `Using ${tool_name.replace(/_/g, ' ')}...`
+          let msg = tool_name
           const params = step.tool_info?.parameters
 
           if (params) {
+            const formatted_name = tool_name.toLowerCase()
+            
             if (
-              tool_name == 'run_command' &&
-              (params.CommandLine || params.command)
+              (formatted_name.includes('run') ||
+                formatted_name.includes('command') ||
+                formatted_name.includes('bash')) &&
+              (params.CommandLine || params.command || params.cmd)
             ) {
-              msg = `Running: ${params.CommandLine || params.command}`
-            } else if (tool_name == 'read_file' && params.path) {
-              msg = `Reading: ${params.path}`
+              msg = params.CommandLine || params.command || params.cmd
+            } else if (formatted_name.includes('read') && params.path) {
+              msg = params.path
             } else if (
-              (tool_name == 'write_file' || tool_name == 'write_to_file') &&
+              (formatted_name.includes('write') || formatted_name.includes('edit')) &&
               params.path
             ) {
-              msg = `Writing: ${params.path}`
-            } else if (tool_name == 'list_directory' && params.path) {
-              msg = `Listing: ${params.path}`
+              msg = params.path
+            } else if (formatted_name.includes('list') && params.path) {
+              msg = params.path
             } else if (
-              tool_name == 'search_files' &&
-              (params.query || params.pattern)
+              (formatted_name.includes('search') ||
+                formatted_name.includes('find') ||
+                formatted_name.includes('grep')) &&
+              (params.query || params.pattern || params.description || params.keyword)
             ) {
-              msg = `Searching: ${params.query || params.pattern}`
+              msg = params.query || params.pattern || params.description || params.keyword
+            } else if (params.path) {
+              msg = params.path
+            } else if (params.command || params.cmd || params.CommandLine) {
+              msg = params.command || params.cmd || params.CommandLine
             }
           }
 
-          if (msg.length > 60) {
-            msg = msg.substring(0, 57) + '...'
-          }
           report_progress(msg)
         }
       } else if (step.subagent_info?.subagents?.length > 0) {
         const subagent = step.subagent_info.subagents[0]
-        report_progress(
-          `Delegating to ${subagent.role || subagent.type_name}...`
-        )
-      } else if (step.step_type == 'agent_response') {
-        report_progress('Synthesizing results...')
+        report_progress(subagent.role || subagent.type_name)
       }
     } else if (parsed.event == 'result' && parsed.result) {
       return { output: parsed.result.response || '' }

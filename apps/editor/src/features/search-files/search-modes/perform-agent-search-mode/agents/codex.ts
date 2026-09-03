@@ -17,17 +17,10 @@ export const codex_agent: CodingAgent = {
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type == 'item.started' && parsed.item) {
       const item = parsed.item
-      let msg = ''
       if (item.type == 'command_execution' && item.command) {
-        msg = `Running: ${item.command}`
+        report_progress(item.command)
       } else if (item.type) {
-        msg = `Running ${item.type.replace(/_/g, ' ')}...`
-      }
-      if (msg) {
-        if (msg.length > 60) {
-          msg = msg.substring(0, 57) + '...'
-        }
-        report_progress(msg)
+        report_progress(item.type)
       }
     } else if (parsed.type == 'item.completed' && parsed.item) {
       if (parsed.item.type == 'agent_message' && parsed.item.text) {

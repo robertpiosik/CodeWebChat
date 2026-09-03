@@ -20,6 +20,7 @@ import { codex_agent } from './agents/codex'
 import { cursor_agent } from './agents/cursor'
 import { opencode_agent } from './agents/opencode'
 import { CodingAgent } from './types'
+import { format_duration } from './utils'
 
 const AGENTS: CodingAgent[] = [
   antigravity_agent,
@@ -200,32 +201,39 @@ export const perform_agent_search_mode = async (params: {
               .get<string[]>(e.item.configKey, [])
               .filter((f) => f.trim() !== '')
             const deleted_flag = flags[e.item.flag_index]
-            const new_flags_array = flags.filter((_, i) => i !== e.item.flag_index)
-            
-            config.update(
-              e.item.configKey,
-              new_flags_array,
-              vscode.ConfigurationTarget.Global
-            ).then(() => {
-              const undo_action = t('common.undo')
-              vscode.window.showInformationMessage(
-                t('feature.search-files.agent.deleted' as any),
-                undo_action
-              ).then((choice) => {
-                if (choice === undo_action) {
-                  const current_config = vscode.workspace.getConfiguration('codeWebChat')
-                  const current_flags = current_config
-                    .get<string[]>(e.item.configKey, [])
-                    .filter((f) => f.trim() !== '')
-                  current_flags.splice(e.item.flag_index, 0, deleted_flag)
-                  current_config.update(
-                    e.item.configKey,
-                    current_flags,
-                    vscode.ConfigurationTarget.Global
+            const new_flags_array = flags.filter(
+              (_, i) => i !== e.item.flag_index
+            )
+
+            config
+              .update(
+                e.item.configKey,
+                new_flags_array,
+                vscode.ConfigurationTarget.Global
+              )
+              .then(() => {
+                const undo_action = t('common.undo')
+                vscode.window
+                  .showInformationMessage(
+                    t('feature.search-files.agent.deleted'),
+                    undo_action
                   )
-                }
+                  .then((choice) => {
+                    if (choice === undo_action) {
+                      const current_config =
+                        vscode.workspace.getConfiguration('codeWebChat')
+                      const current_flags = current_config
+                        .get<string[]>(e.item.configKey, [])
+                        .filter((f) => f.trim() !== '')
+                      current_flags.splice(e.item.flag_index, 0, deleted_flag)
+                      current_config.update(
+                        e.item.configKey,
+                        current_flags,
+                        vscode.ConfigurationTarget.Global
+                      )
+                    }
+                  })
               })
-            })
           }
         })
 
@@ -331,9 +339,10 @@ export const perform_agent_search_mode = async (params: {
           root
         }))
 
-        const last_selected_root = params.extension_context.workspaceState.get<string>(
-          LAST_SELECTED_WORKSPACE_IN_AGENT_SEARCH_STATE_KEY
-        )
+        const last_selected_root =
+          params.extension_context.workspaceState.get<string>(
+            LAST_SELECTED_WORKSPACE_IN_AGENT_SEARCH_STATE_KEY
+          )
         const active_item =
           picks.find((p) => p.root == last_selected_root) || picks[0]
 
@@ -479,6 +488,7 @@ export const perform_agent_search_mode = async (params: {
         let agent_output = ''
         let raw_stream_output = ''
         let is_cancelled = false
+        const start_time = Date.now()
 
         try {
           await vscode.window.withProgress(
@@ -488,7 +498,7 @@ export const perform_agent_search_mode = async (params: {
             },
             async (progress, token) => {
               progress.report({
-                message: t('feature.search-files.progress.searching')
+                message: t('feature.search-files.agent.waiting-for-agent')
               })
 
               return new Promise<void>((resolve, reject) => {
@@ -577,6 +587,11 @@ export const perform_agent_search_mode = async (params: {
           continue
         }
 
+        const duration = format_duration(Date.now() - start_time)
+        vscode.window.showInformationMessage(
+          t('feature.search-files.agent.finished', { duration })
+        )
+
         if (agent_output.trim() == '') {
           vscode.window.showInformationMessage(
             t('feature.search-files.no-files')
@@ -592,13 +607,10 @@ export const perform_agent_search_mode = async (params: {
         let prefix = ''
 
         if (roots.length > 1 && selected_root) {
-          const workspace_name = params.workspace_provider.get_workspace_name(
-            selected_root
-          )
+          const workspace_name =
+            params.workspace_provider.get_workspace_name(selected_root)
           prefix = `${workspace_name}/`
-          const root_files = workspace_files.filter((f) =>
-            f.startsWith(prefix)
-          )
+          const root_files = workspace_files.filter((f) => f.startsWith(prefix))
           const stripped_files = root_files.map((f) =>
             f.substring(prefix.length)
           )
@@ -614,9 +626,7 @@ export const perform_agent_search_mode = async (params: {
           new Set(
             valid_paths.map((p) => {
               const relative_path =
-                prefix && p.startsWith(prefix)
-                  ? p.substring(prefix.length)
-                  : p
+                prefix && p.startsWith(prefix) ? p.substring(prefix.length) : p
               return path.join(selected_root!, relative_path)
             })
           )
@@ -637,7 +647,8 @@ export const perform_agent_search_mode = async (params: {
           | undefined
 
         while (true) {
-          const currently_checked = params.workspace_provider.get_checked_files()
+          const currently_checked =
+            params.workspace_provider.get_checked_files()
           const unmatched_checked_files =
             restored_unmatched_paths ??
             (params.is_search_in_selected

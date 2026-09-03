@@ -27,7 +27,7 @@ export const claude_agent: CodingAgent = {
       ) {
         const tool_name = parsed.event.content_block.name
         if (tool_name) {
-          report_progress(`Using ${tool_name.replace(/_/g, ' ')}...`)
+          report_progress(tool_name)
         }
       }
     } else if (parsed.type == 'result' && parsed.result) {

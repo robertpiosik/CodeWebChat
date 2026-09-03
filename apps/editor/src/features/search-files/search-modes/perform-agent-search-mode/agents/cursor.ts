@@ -22,9 +22,9 @@ export const cursor_agent: CodingAgent = {
         if (tool_call) {
           let msg = ''
           if (tool_call.readToolCall?.args?.path) {
-            msg = `Reading: ${tool_call.readToolCall.args.path}`
+            msg = tool_call.readToolCall.args.path
           } else if (tool_call.writeToolCall?.args?.path) {
-            msg = `Writing: ${tool_call.writeToolCall.args.path}`
+            msg = tool_call.writeToolCall.args.path
           } else {
             const key = Object.keys(tool_call)[0]
             if (key) {
@@ -42,31 +42,28 @@ export const cursor_agent: CodingAgent = {
                   formatted_name.includes('bash')) &&
                 (args?.command || args?.cmd || args?.CommandLine)
               ) {
-                msg = `Running: ${args.command || args.cmd || args.CommandLine}`
+                msg = args.command || args.cmd || args.CommandLine
               } else if (
                 (formatted_name.includes('search') ||
                   formatted_name.includes('grep') ||
                   formatted_name.includes('find')) &&
                 (args?.query || args?.pattern)
               ) {
-                msg = `Searching: ${args.query || args.pattern}`
+                msg = args.query || args.pattern
               } else if (
                 formatted_name.includes('list') &&
                 args?.path
               ) {
-                msg = `Listing: ${args.path}`
+                msg = args.path
               } else if (args?.path) {
-                msg = `Accessing: ${args.path}`
+                msg = args.path
               } else {
-                msg = `Using ${formatted_name.replace(/_/g, ' ').trim()}...`
+                msg = key
               }
             }
           }
 
           if (msg) {
-            if (msg.length > 60) {
-              msg = msg.substring(0, 57) + '...'
-            }
             report_progress(msg)
           }
         }

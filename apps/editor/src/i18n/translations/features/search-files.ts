@@ -1240,5 +1240,41 @@ export const translations = {
     cs: 'Příznaky smazány.',
     hu: 'Jelzők törölve.',
     bg: 'Флаговете са изтрити.'
+  },
+  'feature.search-files.agent.finished': {
+    en: 'Finished in {duration}.',
+    pl: 'Ukończono w {duration}.',
+    'zh-cn': '已完成，耗时 {duration}。',
+    ja: '{duration} で完了しました。',
+    'zh-tw': '已完成，耗時 {duration}。',
+    de: 'In {duration} abgeschlossen.',
+    es: 'Finalizado en {duration}.',
+    fr: 'Terminé en {duration}.',
+    'pt-br': 'Concluído em {duration}.',
+    ru: 'Завершено за {duration}.',
+    ko: '{duration} 만에 완료되었습니다.',
+    it: 'Completato in {duration}.',
+    tr: '{duration} içinde tamamlandı.',
+    cs: 'Dokončeno za {duration}.',
+    hu: 'Befejezve {duration} alatt.',
+    bg: 'Завършено за {duration}.'
+  },
+  'feature.search-files.agent.waiting-for-agent': {
+    en: 'Waiting for agent...',
+    pl: 'Oczekiwanie na agenta...',
+    'zh-cn': '等待代理...',
+    ja: 'エージェントを待機中...',
+    'zh-tw': '等待代理...',
+    de: 'Warten auf Agent...',
+    es: 'Esperando al agente...',
+    fr: "En attente de l'agent...",
+    'pt-br': 'Aguardando o agente...',
+    ru: 'Ожидание агента...',
+    ko: '에이전트 대기 중...',
+    it: "In attesa dell'agente...",
+    tr: 'Ajan bekleniyor...',
+    cs: 'Čekání na agenta...',
+    hu: 'Várakozás az ügynökre...',
+    bg: 'Изчакване на агента...'
   }
 } as const

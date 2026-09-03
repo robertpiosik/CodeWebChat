@@ -17,7 +17,7 @@ export const opencode_agent: CodingAgent = {
   ],
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type == 'tool_call' && parsed.tool) {
-      report_progress(`Using ${parsed.tool}...`)
+      report_progress(parsed.tool)
     } else if (parsed.type == 'result' && parsed.result) {
       return {
         output:

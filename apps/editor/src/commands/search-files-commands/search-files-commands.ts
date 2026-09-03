@@ -197,7 +197,6 @@ export const search_files_commands = (
     }
 
     const folder_path = await get_target_folder_path(item)
-    const is_workspace_action = options?.is_workspace_action ?? !folder_path
 
     let all_files: string[] | undefined
 
@@ -225,7 +224,7 @@ export const search_files_commands = (
         extension_context,
         websocket_manager,
         folder_path,
-        is_workspace_action
+        is_workspace_action: options?.is_workspace_action
       })
 
       if (!result || result == 'back') return
@@ -301,7 +300,6 @@ export const search_files_commands = (
           is_workspace_action?: boolean
         }
       ) => {
-        let actual_item = item
         let actual_options = options
         if (
           item &&
@@ -312,10 +310,15 @@ export const search_files_commands = (
             item.is_workspace_action !== undefined)
         ) {
           actual_options = item
-          actual_item = undefined
         }
-        return search_handler(actual_item, actual_options)
+        return search_handler(undefined, {
+          ...(actual_options || {}),
+          is_workspace_action: actual_options?.is_workspace_action ?? true
+        })
       }
+    ),
+    vscode.commands.registerCommand('codeWebChat.searchFilesWorkspaceAction', () =>
+      search_handler(undefined, { is_workspace_action: true })
     ),
     vscode.commands.registerCommand('codeWebChat.searchSelectedFiles', () =>
       search_selected_files_handler()
