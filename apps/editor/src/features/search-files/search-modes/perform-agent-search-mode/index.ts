@@ -17,6 +17,7 @@ import { prompt_for_search_term } from '../../utils/prompt-for-search-term'
 import { antigravity_agent } from './agents/antigravity'
 import { claude_agent } from './agents/claude'
 import { codex_agent } from './agents/codex'
+import { cursor_agent } from './agents/cursor'
 import { opencode_agent } from './agents/opencode'
 import { CodingAgent } from './types'
 
@@ -24,6 +25,7 @@ const AGENTS: CodingAgent[] = [
   antigravity_agent,
   codex_agent,
   claude_agent,
+  cursor_agent,
   opencode_agent
 ]
 
