@@ -100,6 +100,11 @@ export const perform_agent_search_mode = async (params: {
       cmd: a.cmd
     }))
 
+    const close_button = {
+      iconPath: new vscode.ThemeIcon('close'),
+      tooltip: t('common.close')
+    }
+
     const agent_quick_pick = vscode.window.createQuickPick<
       vscode.QuickPickItem & { cmd: string }
     >()
@@ -108,9 +113,7 @@ export const perform_agent_search_mode = async (params: {
     agent_quick_pick.placeholder = t(
       'feature.search-files.agent.select-agent-placeholder'
     )
-    agent_quick_pick.buttons = params.show_back_button
-      ? [vscode.QuickInputButtons.Back]
-      : []
+    agent_quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
     agent_quick_pick.ignoreFocusOut = true
 
     const selected_agent = await new Promise<string | undefined | 'back'>(
@@ -121,6 +124,10 @@ export const perform_agent_search_mode = async (params: {
           if (button === vscode.QuickInputButtons.Back) {
             is_resolved = true
             resolve('back')
+            agent_quick_pick.hide()
+          } else if (button === close_button) {
+            is_resolved = true
+            resolve(undefined)
             agent_quick_pick.hide()
           }
         })
@@ -184,7 +191,7 @@ export const perform_agent_search_mode = async (params: {
         quick_pick.placeholder = t(
           'feature.search-files.agent.select-workspace-placeholder'
         )
-        quick_pick.buttons = [vscode.QuickInputButtons.Back]
+        quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
         quick_pick.ignoreFocusOut = true
 
         const res = await new Promise<string | undefined | 'back'>((resolve) => {
@@ -194,6 +201,10 @@ export const perform_agent_search_mode = async (params: {
             if (button === vscode.QuickInputButtons.Back) {
               is_resolved = true
               resolve('back')
+              quick_pick.hide()
+            } else if (button === close_button) {
+              is_resolved = true
+              resolve(undefined)
               quick_pick.hide()
             }
           })
