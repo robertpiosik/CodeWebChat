@@ -188,6 +188,8 @@ export const handle_intelligent_update_file_in_preview = async (
     on_thinking_chunk
   })
 
+  let should_retry = false
+
   try {
     const updated_content = await content_promise
 
@@ -235,13 +237,9 @@ export const handle_intelligent_update_file_in_preview = async (
         data: { error, file_path }
       })
       vscode.window.showErrorMessage(error.message)
-
-      await handle_intelligent_update_file_in_preview(prompt_view_provider, {
-        ...message,
-        force_model_selection: true
-      })
-      return
     }
+
+    should_retry = true
   } finally {
     const index =
       prompt_view_provider.intelligent_update_abort_controllers.findIndex(
@@ -255,6 +253,13 @@ export const handle_intelligent_update_file_in_preview = async (
       file_path,
       workspace_name,
       is_applying: false
+    })
+  }
+
+  if (should_retry) {
+    await handle_intelligent_update_file_in_preview(prompt_view_provider, {
+      ...message,
+      force_model_selection: true
     })
   }
 }

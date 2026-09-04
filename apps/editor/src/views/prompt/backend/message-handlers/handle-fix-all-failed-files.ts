@@ -243,7 +243,8 @@ export const handle_fix_all_failed_files = async (params: {
         } catch (error: any) {
           if (
             !axios.isCancel(error) &&
-            error.message != 'User cancelled the operation'
+            error.message != 'User cancelled the operation' &&
+            error.message != 'Batch operation failed, triggering configuration selection.'
           ) {
             Logger.error({
               function_name: 'handle_fix_all_failed_files',
@@ -251,20 +252,20 @@ export const handle_fix_all_failed_files = async (params: {
               data: { error, file_path }
             })
 
-            batch_abort_controllers.forEach((controller) => {
-              controller.abort(
-                'Batch operation failed, triggering configuration selection.'
-              )
-            })
-
             vscode.window.showErrorMessage(
               dictionary.error_message.APPLYING_CHANGES_GENERIC_ERROR(
                 error.message
               )
             )
-
-            throw error
           }
+
+          batch_abort_controllers.forEach((controller) => {
+            controller.abort(
+              'Batch operation failed, triggering configuration selection.'
+            )
+          })
+
+          throw error
         } finally {
           params.prompt_view_provider.send_message({
             command: 'UPDATE_FILE_PROGRESS',
