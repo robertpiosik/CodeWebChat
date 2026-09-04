@@ -19,7 +19,13 @@
 
 ## Introduction
 
-**CWC** provides developers with a complete and free toolkit for pair programming with AI that augments, rather than replaces, traditional coding.
+**CWC** provides developers with a complete and free toolkit for pair programming with AI.
+
+**The static context workflow:**
+
+1. Ask an agent of choice for task-relevant files
+2. Make your own informed decisions on example inclusion
+3. Prompt surgically for easy to iterate-on and review code
 
 ## Privacy
 
