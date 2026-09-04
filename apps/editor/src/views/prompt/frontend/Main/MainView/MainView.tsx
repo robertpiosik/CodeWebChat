@@ -248,19 +248,20 @@ export const MainView: React.FC<Props> = (props) => {
       <UiScrollable scroll_to_top_key={props.scroll_reset_key} top_shadow>
         <div className={styles.container}>
           {props.target == TARGET.WEB && (
-            <BrowserConnectionStatus
-              is_connected={props.is_connected}
-              on_install={props.on_install_browser_extension}
-              translations={{
-                connected: t('main.browser-connection.connected'),
-                not_connected: t('main.browser-connection.not-connected'),
-                install: t('main.browser-connection.install'),
-                hide: t('main.browser-connection.hide')
-              }}
-            />
+            <>
+              <BrowserConnectionStatus
+                is_connected={props.is_connected}
+                on_install={props.on_install_browser_extension}
+                translations={{
+                  connected: t('main.browser-connection.connected'),
+                  not_connected: t('main.browser-connection.not-connected'),
+                  install: t('main.browser-connection.install'),
+                  hide: t('main.browser-connection.hide')
+                }}
+              />
+              <UiSeparator height={6} />
+            </>
           )}
-
-          <UiSeparator height={6} />
 
           {props.response_history.length > 0 && (
             <UiResponses
