@@ -57,6 +57,11 @@ type Props = {
   on_intelligent_file_search_instructions_blur: () => void
   default_intelligent_file_search_instructions: string
   on_restore_intelligent_file_search_instructions: () => void
+  agentic_file_search_instructions: string
+  set_agentic_file_search_instructions: (instructions: string) => void
+  on_agentic_file_search_instructions_blur: () => void
+  default_agentic_file_search_instructions: string
+  on_restore_agentic_file_search_instructions: () => void
   on_open_external_url: (url: string) => void
   templates: Record<string, Template[]>
   on_update_templates: (key: string, templates: Template[]) => void
@@ -218,6 +223,36 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 action_title={t('general.action.restore-default')}
                 on_action_click={
                   props.on_restore_intelligent_file_search_instructions
+                }
+              />
+            </UiItem>
+            <UiItem
+              title={t(
+                'general.context.agentic-file-search-instructions.title'
+              )}
+              description={t(
+                'general.context.agentic-file-search-instructions.description'
+              )}
+              is_toggleable
+              translations={{
+                expand: t('common.expand'),
+                collapse: t('common.collapse')
+              }}
+            >
+              <UiTextarea
+                value={props.agentic_file_search_instructions}
+                min_rows={3}
+                on_change={props.set_agentic_file_search_instructions}
+                on_blur={props.on_agentic_file_search_instructions_blur}
+                action_icon={
+                  props.agentic_file_search_instructions !=
+                  props.default_agentic_file_search_instructions
+                    ? 'discard'
+                    : undefined
+                }
+                action_title={t('general.action.restore-default')}
+                on_action_click={
+                  props.on_restore_agentic_file_search_instructions
                 }
               />
             </UiItem>

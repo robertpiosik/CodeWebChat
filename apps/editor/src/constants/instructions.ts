@@ -5,9 +5,7 @@ export const code_at_cursor_instructions_for_chatbots = (params: {
   file_path: string
   row: number
   column: number
-}) => `# Output formatting
-
-Your response must begin with a markdown heading identifying the file and the cursor position, followed by a markdown code block containing the replacement text, followed by a brief explanation. The heading must be: "### Code at cursor: \`${
+}) => `Your response must begin with a markdown heading identifying the file and the cursor position, followed by a markdown code block containing the replacement text, followed by a brief explanation. The heading must be: "### Code at cursor: \`${
   params.file_path
 }\` (${params.row + 1}:${
   params.column + 1
@@ -53,11 +51,9 @@ export const commit_message_format = `Your response must begin with "**Commit me
 **Commit message:** Bump version to 1.0.1`
 
 export const intelligent_file_search_instructions =
-  'Find a complete set of files relevant to the following query. Include the primary files as well as any structural files.'
+  'In the project, find the complete set of primary and structural files relevant to the query.'
 
-export const intelligent_file_search_format = `# Output formatting
-
-Your response must contain paths of relevant files enclosed in "intelligent-file-search-results" and "file-path" XML tags. Don't send anything else. Example:
+export const intelligent_file_search_format = `Your response must contain paths of relevant files enclosed in "intelligent-file-search-results" and "file-path" XML tags. Don't send anything else. Example:
 
 <intelligent-file-search-results>
 <file-path>src/index.ts</file-path>
@@ -67,9 +63,7 @@ Your response must contain paths of relevant files enclosed in "intelligent-file
 
 export const intelligent_file_search_format_for_prompt_view = (
   metadata?: string
-) => `# Output formatting
-
-Your response must begin with "**Intelligent file search results${
+) => `Your response must begin with "**Intelligent file search results${
   metadata || ''
 }:**", then list paths one under another, followed by a brief explanation. Example:
 
@@ -85,7 +79,7 @@ export const voice_input_instructions =
   'Respond with a transcription of the following audio recording or text "INAUDIBLE", and nothing else.'
 
 export const agentic_file_search_task_instructions =
-  'In the project, find the complete set of primary and structural file paths relevant to the query.'
+  'In the project, find the complete set of primary and structural files relevant to the query.'
 
 export const agentic_file_search_format_instructions =
   'Output strictly as a bulleted list of file paths without explanations or any other text (e.g., - path/to/file.ext).'

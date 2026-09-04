@@ -87,7 +87,7 @@ export const FileItem: FC<Props> = (props) => {
     let status_text = ''
     if (props.file.apply_status == 'receiving') {
       const tps = props.file.apply_tokens_per_second
-      if (tps) status_text = `${tps} tokens/s`
+      if (tps) status_text = `${tps} t/s`
     }
 
     return (

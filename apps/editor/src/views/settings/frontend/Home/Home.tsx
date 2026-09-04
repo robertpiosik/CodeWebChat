@@ -16,6 +16,7 @@ import { use_translation, TranslationKey } from '../i18n/use-translation'
 import { WebConfigurationsSection } from './sections/WebConfigurationsSection'
 import { commit_message_instructions as default_commit_message_instructions } from '@/constants/instructions'
 import { intelligent_file_search_instructions as default_intelligent_file_search_instructions } from '@/constants/instructions'
+import { agentic_file_search_task_instructions as default_agentic_file_search_instructions } from '@/constants/instructions'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { GROUP_TITLE_HEIGHT, SECTION_HEADER_HEIGHT } from '@ui/constants/sizes'
 
@@ -108,6 +109,7 @@ type Props = {
   defaults: Record<ApiFeature, string | null>
   edit_files_system_instructions: string
   intelligent_file_search_instructions: string
+  agentic_file_search_instructions: string
   commit_message_instructions: string
   synchronize_edit_format_between_targets: boolean
   attach_ascii_tree_of_context: 'ask' | 'always' | 'never'
@@ -146,6 +148,7 @@ type Props = {
   ) => void
   on_edit_files_system_instructions_change: (instructions: string) => void
   on_intelligent_file_search_instructions_change: (instructions: string) => void
+  on_agentic_file_search_instructions_change: (instructions: string) => void
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number | undefined) => void
   on_gemini_user_id_change: (id: number | null) => void
@@ -224,6 +227,10 @@ export const Home: React.FC<Props> = (props) => {
   const [
     intelligent_file_search_instructions,
     set_intelligent_file_search_instructions
+  ] = useState('')
+  const [
+    agentic_file_search_instructions,
+    set_agentic_file_search_instructions
   ] = useState('')
   const [edit_files_instructions, set_edit_files_instructions] = useState('')
 
@@ -401,6 +408,12 @@ export const Home: React.FC<Props> = (props) => {
       props.intelligent_file_search_instructions || ''
     )
   }, [props.intelligent_file_search_instructions])
+
+  useEffect(() => {
+    set_agentic_file_search_instructions(
+      props.agentic_file_search_instructions || ''
+    )
+  }, [props.agentic_file_search_instructions])
 
   useEffect(() => {
     set_edit_files_instructions(props.edit_files_system_instructions || '')
@@ -621,6 +634,37 @@ export const Home: React.FC<Props> = (props) => {
             )
             props.on_intelligent_file_search_instructions_change(
               default_intelligent_file_search_instructions
+            )
+          }}
+          agentic_file_search_instructions={
+            agentic_file_search_instructions
+          }
+          set_agentic_file_search_instructions={
+            set_agentic_file_search_instructions
+          }
+          on_agentic_file_search_instructions_blur={() => {
+            props.on_agentic_file_search_instructions_change(
+              agentic_file_search_instructions
+            )
+            if (
+              agentic_file_search_instructions == '' &&
+              props.agentic_file_search_instructions ==
+                default_agentic_file_search_instructions
+            ) {
+              set_agentic_file_search_instructions(
+                default_agentic_file_search_instructions
+              )
+            }
+          }}
+          default_agentic_file_search_instructions={
+            default_agentic_file_search_instructions
+          }
+          on_restore_agentic_file_search_instructions={() => {
+            set_agentic_file_search_instructions(
+              default_agentic_file_search_instructions
+            )
+            props.on_agentic_file_search_instructions_change(
+              default_agentic_file_search_instructions
             )
           }}
           on_open_external_url={props.on_open_external_url}

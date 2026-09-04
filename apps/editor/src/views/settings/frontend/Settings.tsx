@@ -88,6 +88,7 @@ export const Settings = () => {
       settings_hook.defaults !== undefined &&
       settings_hook.edit_files_system_instructions !== undefined &&
       settings_hook.intelligent_file_search_instructions !== undefined &&
+      settings_hook.agentic_file_search_instructions !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
       settings_hook.synchronize_edit_format_between_targets !== undefined &&
       settings_hook.attach_ascii_tree_of_context !== undefined &&
@@ -140,6 +141,9 @@ export const Settings = () => {
         }
         intelligent_file_search_instructions={
           settings_hook.intelligent_file_search_instructions!
+        }
+        agentic_file_search_instructions={
+          settings_hook.agentic_file_search_instructions!
         }
         synchronize_edit_format_between_targets={
           settings_hook.synchronize_edit_format_between_targets!
@@ -200,6 +204,9 @@ export const Settings = () => {
         }
         on_intelligent_file_search_instructions_change={
           settings_hook.handle_intelligent_file_search_instructions_change
+        }
+        on_agentic_file_search_instructions_change={
+          settings_hook.handle_agentic_file_search_instructions_change
         }
         on_automatic_checkpoints_toggle={
           settings_hook.handle_automatic_checkpoints_toggle

@@ -982,6 +982,43 @@ export const translations = {
     hu: 'Adjon meg egy előtag-utasítást az intelligens fájlkereséshez.',
     bg: 'Посочете префиксна инструкция за интелигентното търсене на файлове.'
   },
+  'general.context.agentic-file-search-instructions.title': {
+    en: 'Agentic File Search Instructions',
+    pl: 'Instrukcje agentowego wyszukiwania plików',
+    'zh-cn': '代理文件搜索说明',
+    ja: 'エージェントファイル検索の指示',
+    'zh-tw': '代理檔案搜尋說明',
+    de: 'Anweisungen zur agentenbasierten Dateisuche',
+    es: 'Instrucciones de búsqueda de archivos basada en agentes',
+    fr: 'Instructions de recherche de fichiers basée sur un agent',
+    'pt-br': 'Instruções de pesquisa de arquivos baseada em agente',
+    ru: 'Инструкции для агентного поиска файлов',
+    ko: '에이전트 파일 검색 지침',
+    it: 'Istruzioni per la ricerca dei file basata su agenti',
+    tr: 'Aracı Dosya Arama Talimatları',
+    cs: 'Pokyny pro vyhledávání souborů pomocí agentů',
+    hu: 'Ügynökalapú fájlkeresési utasítások',
+    bg: 'Инструкции за търсене на файлове от агенти'
+  },
+  'general.context.agentic-file-search-instructions.description': {
+    en: 'Specify a prefix instruction for the agentic file search.',
+    pl: 'Określ instrukcję początkową dla agentowego wyszukiwania plików.',
+    'zh-cn': '为代理文件搜索指定前缀指令。',
+    ja: 'エージェントファイル検索のプレフィックス指示を指定します。',
+    'zh-tw': '為代理檔案搜尋指定前綴指令。',
+    de: 'Geben Sie eine Präfix-Anweisung für die agentenbasierte Dateisuche an.',
+    es: 'Especifica una instrucción de prefijo para la búsqueda de archivos basada en agentes.',
+    fr: 'Spécifiez une instruction de préfixe pour la recherche de fichiers basée sur un agent.',
+    'pt-br':
+      'Especifique uma instrução de prefixo para a pesquisa de arquivos baseada em agente.',
+    ru: 'Укажите начальную инструкцию (префикс) для агентного поиска файлов.',
+    ko: '에이전트 파일 검색을 위한 접두사 지침을 지정하세요.',
+    it: "Specifica un'istruzione di prefisso per la ricerca dei file basata su agenti.",
+    tr: 'Aracı dosya araması için bir önek talimatı belirtin.',
+    cs: 'Zadejte prefixovou instrukci pro vyhledávání souborů pomocí agentů.',
+    hu: 'Adjon meg egy előtag-utasítást az ügynökalapú fájlkereséshez.',
+    bg: 'Посочете префиксна инструкция за търсене на файлове от агенти.'
+  },
   'general.action.restore-default': {
     en: 'Restore default',
     pl: 'Przywróć domyślne',

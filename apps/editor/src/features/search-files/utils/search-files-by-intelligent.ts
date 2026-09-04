@@ -31,7 +31,7 @@ export const search_files_by_intelligent = async (
     config.get<string>('intelligentFileSearchInstructions') ||
     intelligent_file_search_instructions
 
-  const part2 = `${intelligent_file_search_format}\n\n${base_instructions}\n\n${instructions}`
+  const part2 = `# Task\n\n${base_instructions}\n\n# Output formatting\n\n${intelligent_file_search_format}\n\n# Query\n\n${instructions}`
   const user_content = build_user_content({
     model_provider,
     part1: xml_files,

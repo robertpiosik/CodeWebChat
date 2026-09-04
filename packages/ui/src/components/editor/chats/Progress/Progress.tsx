@@ -56,7 +56,7 @@ export const Progress: React.FC<Props> = (props) => {
               <div className={styles.item__bottom__status}>{item.status}</div>
               <div className={styles.item__bottom__right}>
                 {item.tokens_per_second !== undefined && (
-                  <div>{format_tokens(item.tokens_per_second)} tokens/s</div>
+                  <div>{format_tokens(item.tokens_per_second)} t/s</div>
                 )}
                 {item.total_tokens !== undefined && (
                   <div>({format_tokens(item.total_tokens)})</div>

@@ -1035,6 +1035,10 @@
           "type": "string",
           "scope": "resource"
         },
+        "codeWebChat.agenticFileSearchInstructions": {
+          "type": "string",
+          "scope": "resource"
+        },
         "codeWebChat.editFilesSystemInstructions": {
           "type": "string",
           "scope": "resource"

@@ -276,7 +276,7 @@ export const perform_intelligent_search_mode = async (params: {
           const format_instructions =
             intelligent_file_search_format_for_prompt_view(metadata)
 
-          const chatbot_prompt = `# Files\n\n${md_files}# Task\n\n${base_instructions}\n\n${search_term}\n\n${format_instructions}`
+          const chatbot_prompt = `# Files\n\n${md_files}# Task\n\n${base_instructions}\n\n# Output formatting\n\n${format_instructions}\n\n# Query\n\n${search_term}`
 
           if (action == 'copy') {
             await vscode.env.clipboard.writeText(chatbot_prompt)

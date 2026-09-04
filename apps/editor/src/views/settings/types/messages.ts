@@ -106,6 +106,15 @@ export interface UpdateIntelligentFileSearchInstructionsMessage {
   instructions: string
 }
 
+export interface GetAgenticFileSearchInstructionsMessage {
+  command: 'GET_AGENTIC_FILE_SEARCH_INSTRUCTIONS'
+}
+
+export interface UpdateAgenticFileSearchInstructionsMessage {
+  command: 'UPDATE_AGENTIC_FILE_SEARCH_INSTRUCTIONS'
+  instructions: string
+}
+
 export interface GetEditFilesSystemInstructionsMessage {
   command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS'
 }
@@ -381,6 +390,8 @@ export type FrontendMessage =
   | GetEditFilesSystemInstructionsMessage
   | GetIntelligentFileSearchInstructionsMessage
   | UpdateIntelligentFileSearchInstructionsMessage
+  | GetAgenticFileSearchInstructionsMessage
+  | UpdateAgenticFileSearchInstructionsMessage
   | UpdateEditFilesSystemInstructionsMessage
   | SettingsUiReadyMessage
   | GetAreAutomaticCheckpointsDisabledMessage
@@ -472,6 +483,11 @@ export interface EditFilesSystemInstructionsMessage {
 
 export interface IntelligentFileSearchInstructionsMessage {
   command: 'INTELLIGENT_FILE_SEARCH_INSTRUCTIONS'
+  instructions: string
+}
+
+export interface AgenticFileSearchInstructionsMessage {
+  command: 'AGENTIC_FILE_SEARCH_INSTRUCTIONS'
   instructions: string
 }
 
@@ -618,6 +634,7 @@ export type BackendMessage =
   | SelectAllPromptsInCommitMessagesByDefaultMessage
   | EditFilesSystemInstructionsMessage
   | IntelligentFileSearchInstructionsMessage
+  | AgenticFileSearchInstructionsMessage
   | AreAutomaticCheckpointsDisabledMessage
   | CheckpointLifespanMessage
   | GeminiUserIdMessage

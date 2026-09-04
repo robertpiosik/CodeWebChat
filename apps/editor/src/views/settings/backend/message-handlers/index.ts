@@ -1,5 +1,7 @@
 export * from './handle-get-intelligent-file-search-instructions'
 export * from './handle-update-intelligent-file-search-instructions'
+export * from './handle-get-agentic-file-search-instructions'
+export * from './handle-update-agentic-file-search-instructions'
 export * from './handle-get-templates'
 export * from './handle-update-templates'
 export * from './handle-create-template'
