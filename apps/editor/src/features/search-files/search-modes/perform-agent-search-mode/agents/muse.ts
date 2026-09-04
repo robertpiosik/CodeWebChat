@@ -1,6 +1,5 @@
-import { agentic_file_search_instructions } from '@/constants/instructions'
 import { CodingAgent } from '../types'
-import { check_command_exists } from '../utils'
+import { build_agent_prompt, check_command_exists } from '../utils'
 
 let accumulated_output = ''
 
@@ -16,7 +15,7 @@ export const muse_agent: CodingAgent = {
       'exec',
       '--json',
       '--yolo',
-      `${agentic_file_search_instructions}\n\n${query}`
+      build_agent_prompt(query)
     ]
   },
   parse_stream_line: (parsed, report_progress) => {

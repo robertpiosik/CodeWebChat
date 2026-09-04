@@ -1,6 +1,5 @@
-import { agentic_file_search_instructions } from '@/constants/instructions'
 import { CodingAgent } from '../types'
-import { check_command_exists } from '../utils'
+import { build_agent_prompt, check_command_exists } from '../utils'
 
 export const codex_agent: CodingAgent = {
   id: 'codex',
@@ -11,7 +10,7 @@ export const codex_agent: CodingAgent = {
     'https://learn.chatgpt.com/docs/non-interactive-mode',
   get_args: (query: string) => [
     'exec',
-    `${agentic_file_search_instructions}\n\n${query}`,
+    build_agent_prompt(query),
     '--json'
   ],
   parse_stream_line: (parsed, report_progress) => {

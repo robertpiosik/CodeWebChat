@@ -84,4 +84,8 @@ These files contain the core greeting logic and module exports.`
 export const voice_input_instructions =
   'Respond with a transcription of the following audio recording or text "INAUDIBLE", and nothing else.'
 
-export const agentic_file_search_instructions = `In the project, find the complete set of primary and structural file paths relevant to the query, and output strictly as a bulleted list of file paths without explanations or any other text (e.g., - path/to/file.ext).`
+export const agentic_file_search_task_instructions =
+  'In the project, find the complete set of primary and structural file paths relevant to the query.'
+
+export const agentic_file_search_format_instructions =
+  'Output strictly as a bulleted list of file paths without explanations or any other text (e.g., - path/to/file.ext).'

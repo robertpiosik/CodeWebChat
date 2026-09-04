@@ -1,6 +1,5 @@
-import { agentic_file_search_instructions } from '@/constants/instructions'
 import { CodingAgent } from '../types'
-import { check_command_exists } from '../utils'
+import { build_agent_prompt, check_command_exists } from '../utils'
 
 let accumulated_output = ''
 
@@ -14,7 +13,7 @@ export const grok_agent: CodingAgent = {
     accumulated_output = ''
     return [
       '-p',
-      `${agentic_file_search_instructions}\n\n${query}`,
+      build_agent_prompt(query),
       '--output-format',
       'streaming-json',
       '--always-approve',

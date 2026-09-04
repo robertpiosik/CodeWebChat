@@ -1,6 +1,5 @@
-import { agentic_file_search_instructions } from '@/constants/instructions'
 import { CodingAgent } from '../types'
-import { check_command_exists } from '../utils'
+import { build_agent_prompt, check_command_exists } from '../utils'
 
 export const opencode_agent: CodingAgent = {
   id: 'opencode',
@@ -10,7 +9,7 @@ export const opencode_agent: CodingAgent = {
   get_documentation_url: () => 'https://opencode.ai/docs/cli/',
   get_args: (query: string) => [
     'run',
-    `${agentic_file_search_instructions}\n\n${query}`,
+    build_agent_prompt(query),
     '--format',
     'json',
     '--auto'

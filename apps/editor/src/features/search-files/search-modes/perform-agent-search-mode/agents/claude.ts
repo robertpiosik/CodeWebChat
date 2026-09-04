@@ -1,6 +1,5 @@
-import { agentic_file_search_instructions } from '@/constants/instructions'
 import { CodingAgent } from '../types'
-import { check_command_exists } from '../utils'
+import { build_agent_prompt, check_command_exists } from '../utils'
 
 export const claude_agent: CodingAgent = {
   id: 'claude',
@@ -11,7 +10,7 @@ export const claude_agent: CodingAgent = {
   get_args: (query: string) => [
     '--bare',
     '-p',
-    `${agentic_file_search_instructions}\n\n${query}`,
+    build_agent_prompt(query),
     '--output-format',
     'stream-json',
     '--verbose',
