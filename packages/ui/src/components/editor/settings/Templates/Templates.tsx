@@ -15,7 +15,7 @@ export namespace Templates {
       key: string
       label: string
       icon?: string
-      accent_color?: 'blue' | 'orange' | 'red'
+      accent_color?: 'blue' | 'orange' | 'red' | 'green'
       items: Template[]
     }[]
     on_reorder: (key: string, templates: Template[]) => void

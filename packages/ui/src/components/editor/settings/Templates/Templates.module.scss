@@ -46,6 +46,20 @@
     }
   }
 
+  &--accent-green {
+    border-color: var(--cwc-bg-green);
+    .group__header {
+      background-color: var(--cwc-bg-green);
+      .group__icon,
+      .group__label {
+        color: var(--cwc-text-color-green);
+      }
+      &:hover {
+        background-color: var(--cwc-bg-green);
+      }
+    }
+  }
+
   &--accent-red {
     border-color: var(--cwc-bg-red);
     .group__header {
