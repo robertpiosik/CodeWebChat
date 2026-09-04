@@ -4,6 +4,7 @@ import { Separator } from '@ui/components/editor/prompt/Separator'
 
 type Props = {
   is_connected: boolean
+  is_visible: boolean
   translations: {
     connected: string
     not_connected: string
@@ -32,7 +33,7 @@ export const BrowserConnectionStatus: React.FC<Props> = (props) => {
     }
   }, [props.is_connected, is_closed, has_been_closed])
 
-  if (is_closed) {
+  if (is_closed || !props.is_visible) {
     return null
   }
 
