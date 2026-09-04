@@ -164,7 +164,6 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
       prompt_view_provider.send_message({
         command: 'SHOW_PROGRESS',
         title: t('views.prompt.handlers.voice-input.progress.transcribing'),
-        show_elapsed_time: true,
         cancellable: true
       })
 

@@ -51,7 +51,6 @@ export const WithProgress = () => {
       subtitle="Receiving..."
       progress={progress}
       tokens_per_second={250}
-      show_elapsed_time={true}
       on_cancel={handle_cancel}
     />
   ) : null

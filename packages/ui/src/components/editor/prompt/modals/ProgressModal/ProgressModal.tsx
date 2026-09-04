@@ -9,7 +9,6 @@ type Props = {
   on_cancel?: () => void
   progress?: number
   tokens_per_second?: number
-  show_elapsed_time?: boolean
   delay_visibility?: boolean
 }
 
@@ -51,7 +50,6 @@ export const ProgressModal: React.FC<Props> = (props) => {
     >
       <Modal
         title={props.title}
-        show_elapsed_time={props.show_elapsed_time}
         content_slot={
           <div className={styles.content}>
             {props.subtitle && (

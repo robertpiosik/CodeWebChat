@@ -37,7 +37,6 @@ export const handle_paste_url = async (
     prompt_view_provider.send_message({
       command: 'SHOW_PROGRESS',
       title: 'Fetching website...',
-      show_elapsed_time: true,
       cancellable: true
     })
 

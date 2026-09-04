@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import cn from 'classnames'
 import { Scrollable } from '../../../common/Scrollable'
 import styles from './Modal.module.scss'
@@ -10,33 +9,14 @@ type Props = {
   content_max_height?: string
   use_full_width?: boolean
   on_background_click?: () => void
-  show_elapsed_time?: boolean
 }
 
 export const Modal: React.FC<Props> = (props) => {
-  const [elapsed_time, set_elapsed_time] = useState(0)
-
   const handle_background_click = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target == e.currentTarget) {
       props.on_background_click?.()
     }
   }
-
-  useEffect(() => {
-    let elapsed_time_timer: NodeJS.Timeout | undefined
-
-    if (props.show_elapsed_time) {
-      set_elapsed_time(0)
-      const start_time = Date.now()
-      elapsed_time_timer = setInterval(() => {
-        set_elapsed_time((Date.now() - start_time) / 1000)
-      }, 100)
-    }
-
-    return () => {
-      if (elapsed_time_timer) clearInterval(elapsed_time_timer)
-    }
-  }, [props.show_elapsed_time])
 
   return (
     <div className={styles.overlay} onClick={handle_background_click}>
@@ -52,12 +32,6 @@ export const Modal: React.FC<Props> = (props) => {
             })}
           >
             <div className={styles.title}>{props.title}</div>
-          </div>
-        )}
-
-        {props.show_elapsed_time && (
-          <div className={styles['elapsed-time']}>
-            {elapsed_time.toFixed(1)}s
           </div>
         )}
 

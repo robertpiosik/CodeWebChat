@@ -721,7 +721,6 @@ export const Prompt = () => {
               subtitle={progress_state.subtitle}
               progress={progress_state.progress}
               tokens_per_second={progress_state.tokens_per_second}
-              show_elapsed_time={progress_state.show_elapsed_time}
               delay_visibility={progress_state.delay_visibility}
               on_cancel={
                 progress_state.cancellable

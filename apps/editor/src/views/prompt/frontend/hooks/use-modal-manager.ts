@@ -8,7 +8,6 @@ export const use_modal_manager = () => {
     progress?: number
     tokens_per_second?: number
     cancellable?: boolean
-    show_elapsed_time?: boolean
     delay_visibility?: boolean
   }>()
 
@@ -54,7 +53,6 @@ export const use_modal_manager = () => {
           progress: message.progress,
           tokens_per_second: message.tokens_per_second,
           cancellable: message.cancellable ?? false,
-          show_elapsed_time: message.show_elapsed_time,
           delay_visibility: message.delay_visibility
         })
       } else if (message.command == 'HIDE_PROGRESS') {

@@ -777,7 +777,6 @@ export interface ShowProgressMessage extends BaseMessage {
   progress?: number
   tokens_per_second?: number
   cancellable?: boolean
-  show_elapsed_time?: boolean
   delay_visibility?: boolean
 }
 
