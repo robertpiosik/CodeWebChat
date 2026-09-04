@@ -250,7 +250,6 @@ export const MainView: React.FC<Props> = (props) => {
           {props.target == TARGET.WEB && (
             <BrowserConnectionStatus
               is_connected={props.is_connected}
-              has_responses={props.response_history.length > 0}
               on_install={props.on_install_browser_extension}
               translations={{
                 connected: t('main.browser-connection.connected'),
@@ -260,6 +259,8 @@ export const MainView: React.FC<Props> = (props) => {
               }}
             />
           )}
+
+          <UiSeparator height={6} />
 
           {props.response_history.length > 0 && (
             <UiResponses

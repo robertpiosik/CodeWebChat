@@ -36,7 +36,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({
       className={cn(
         styles.container,
         styles[`theme-${theme}`],
-        placement && styles[`placement-${placement}`],
+        placement ? styles[`placement-${placement}`] : styles.rounded,
         className
       )}
     >

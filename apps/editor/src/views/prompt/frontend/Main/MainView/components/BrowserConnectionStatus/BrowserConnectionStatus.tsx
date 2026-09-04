@@ -3,7 +3,6 @@ import { StatusBar } from '@ui/components/editor/prompt/StatusBar'
 
 type Props = {
   is_connected: boolean
-  has_responses: boolean
   translations: {
     connected: string
     not_connected: string
@@ -18,13 +17,10 @@ export const BrowserConnectionStatus: React.FC<Props> = (props) => {
   const [has_been_closed, setHasBeenClosed] = useState(false)
 
   useEffect(() => {
-    if (props.has_responses) {
-      setIsClosed(true)
-      setHasBeenClosed(true)
-    } else if (!props.is_connected) {
+    if (!props.is_connected) {
       setIsClosed(false)
     }
-  }, [props.has_responses, props.is_connected])
+  }, [props.is_connected])
 
   useEffect(() => {
     if (props.is_connected && !is_closed && has_been_closed) {
@@ -35,7 +31,7 @@ export const BrowserConnectionStatus: React.FC<Props> = (props) => {
     }
   }, [props.is_connected, is_closed, has_been_closed])
 
-  if (is_closed || props.has_responses) {
+  if (is_closed) {
     return null
   }
 
@@ -63,7 +59,6 @@ export const BrowserConnectionStatus: React.FC<Props> = (props) => {
 
   return (
     <StatusBar
-      placement="top"
       theme={props.is_connected ? 'success' : 'default'}
       icon={
         props.is_connected
