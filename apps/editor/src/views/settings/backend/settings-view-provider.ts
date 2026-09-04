@@ -7,7 +7,6 @@ import {
   handle_add_model_provider,
   handle_update_model_provider,
   handle_delete_model_provider,
-  handle_get_check_new_files,
   handle_get_clear_checks_in_workspace_behavior,
   handle_get_are_automatic_checkpoints_disabled,
   handle_get_api_configurations,
@@ -26,7 +25,6 @@ import {
   handle_reorder_model_providers,
   handle_set_default_api_configuration,
   handle_select_default_api_configuration,
-  handle_update_check_new_files,
   handle_update_clear_checks_in_workspace_behavior,
   handle_update_are_automatic_checkpoints_disabled,
   handle_update_commit_message_instructions,
@@ -260,10 +258,6 @@ export class SettingsViewProvider {
           await handle_get_send_with_shift_enter(this)
         } else if (message.command == 'UPDATE_SEND_WITH_SHIFT_ENTER') {
           await handle_update_send_with_shift_enter(message)
-        } else if (message.command == 'GET_CHECK_NEW_FILES') {
-          await handle_get_check_new_files(this)
-        } else if (message.command == 'UPDATE_CHECK_NEW_FILES') {
-          await handle_update_check_new_files(message)
         } else if (message.command == 'GET_REUSE_LAST_TAB') {
           await handle_get_reuse_last_tab(this)
         } else if (message.command == 'UPDATE_REUSE_LAST_TAB') {
@@ -349,7 +343,6 @@ export class SettingsViewProvider {
           void handle_get_gemini_user_id(this)
           void handle_get_ai_studio_user_id(this)
           void handle_get_send_with_shift_enter(this)
-          void handle_get_check_new_files(this)
           void handle_get_reuse_last_tab(this)
           void handle_get_auto_run_intelligent_update(this)
           void handle_get_templates(this)

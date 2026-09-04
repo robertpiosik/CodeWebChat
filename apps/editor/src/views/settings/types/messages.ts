@@ -185,15 +185,6 @@ export interface UpdateSendWithShiftEnterMessage {
   enabled: boolean
 }
 
-export interface GetCheckNewFilesMessage {
-  command: 'GET_CHECK_NEW_FILES'
-}
-
-export interface UpdateCheckNewFilesMessage {
-  command: 'UPDATE_CHECK_NEW_FILES'
-  enabled: boolean
-}
-
 export interface GetReuseLastTabMessage {
   command: 'GET_REUSE_LAST_TAB'
 }
@@ -404,8 +395,6 @@ export type FrontendMessage =
   | UpdateAiStudioUserIdMessage
   | GetSendWithShiftEnterMessage
   | UpdateSendWithShiftEnterMessage
-  | GetCheckNewFilesMessage
-  | UpdateCheckNewFilesMessage
   | GetReuseLastTabMessage
   | UpdateReuseLastTabMessage
   | GetClearChecksInWorkspaceBehaviorMessage
@@ -513,11 +502,6 @@ export interface AiStudioUserIdMessage {
 
 export interface SendWithShiftEnterMessage {
   command: 'SEND_WITH_SHIFT_ENTER'
-  enabled: boolean
-}
-
-export interface CheckNewFilesMessage {
-  command: 'CHECK_NEW_FILES'
   enabled: boolean
 }
 
@@ -640,7 +624,6 @@ export type BackendMessage =
   | GeminiUserIdMessage
   | AiStudioUserIdMessage
   | SendWithShiftEnterMessage
-  | CheckNewFilesMessage
   | ReuseLastTabMessage
   | ClearChecksInWorkspaceBehaviorMessage
   | ShowSectionMessage

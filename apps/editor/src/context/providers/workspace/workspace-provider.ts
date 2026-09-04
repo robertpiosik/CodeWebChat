@@ -447,28 +447,22 @@ export class WorkspaceProvider
       await this._load_all_gitignore_files()
     }
 
-    const check_new_files = vscode.workspace
-      .getConfiguration('codeWebChat')
-      .get<boolean>('checkNewFiles')
-
     if (!this.is_excluded(is_directory ? relative_path + '/' : relative_path)) {
-      if (check_new_files) {
-        this._checked_items.set(
-          created_file_path,
-          vscode.TreeItemCheckboxState.Checked
-        )
-        this._checked_timestamps.set(
-          created_file_path,
-          Math.floor(Date.now() / 1000)
-        )
+      this._checked_items.set(
+        created_file_path,
+        vscode.TreeItemCheckboxState.Checked
+      )
+      this._checked_timestamps.set(
+        created_file_path,
+        Math.floor(Date.now() / 1000)
+      )
 
-        if (is_directory) {
-          await this._update_directory_check_state(
-            created_file_path,
-            vscode.TreeItemCheckboxState.Checked,
-            false
-          )
-        }
+      if (is_directory) {
+        await this._update_directory_check_state(
+          created_file_path,
+          vscode.TreeItemCheckboxState.Checked,
+          false
+        )
       }
 
       let dir_path = parent_dir

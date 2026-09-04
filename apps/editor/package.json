@@ -993,11 +993,6 @@
           "scope": "resource",
           "default": false
         },
-        "codeWebChat.checkNewFiles": {
-          "type": "boolean",
-          "default": true,
-          "scope": "resource"
-        },
         "codeWebChat.sendWithShiftEnter": {
           "type": "boolean",
           "scope": "resource",

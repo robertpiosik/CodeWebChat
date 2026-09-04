@@ -19,12 +19,10 @@ type Props = {
   are_automatic_checkpoints_disabled: boolean
   synchronize_edit_format_between_targets: boolean
   send_with_shift_enter: boolean
-  check_new_files: boolean
   checkpoint_lifespan: number
   on_synchronize_edit_format_between_targets_change: (enabled: boolean) => void
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
-  on_check_new_files_change: (enabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number | undefined) => void
   clear_checks_in_workspace_behavior: ClearChecksBehavior
   on_clear_checks_in_workspace_behavior_change: (
@@ -160,16 +158,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           }
         >
           <UiGroup title={t('general.context.title')}>
-            <UiItem
-              title={t('general.context.check-new-files.title')}
-              description={t('general.context.check-new-files.description')}
-              slot_right={
-                <UiToggler
-                  is_on={props.check_new_files}
-                  on_toggle={props.on_check_new_files_change}
-                />
-              }
-            />
             <UiItem
               title={t(
                 'general.context.clear-checks-in-workspace-behavior.title'

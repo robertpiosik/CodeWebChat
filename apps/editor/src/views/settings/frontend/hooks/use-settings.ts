@@ -62,9 +62,6 @@ export const use_settings = (vscode: any) => {
   const [send_with_shift_enter, set_send_with_shift_enter] = useState<
     boolean | undefined
   >(undefined)
-  const [check_new_files, set_check_new_files] = useState<boolean | undefined>(
-    undefined
-  )
   const [reuse_last_tab, set_reuse_last_tab] = useState<boolean | undefined>(
     undefined
   )
@@ -110,7 +107,6 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_GEMINI_USER_ID' })
     post_message(vscode, { command: 'GET_AI_STUDIO_USER_ID' })
     post_message(vscode, { command: 'GET_SEND_WITH_SHIFT_ENTER' })
-    post_message(vscode, { command: 'GET_CHECK_NEW_FILES' })
     post_message(vscode, { command: 'GET_REUSE_LAST_TAB' })
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
     post_message(vscode, { command: 'GET_AUTO_RUN_INTELLIGENT_UPDATE' })
@@ -158,8 +154,6 @@ export const use_settings = (vscode: any) => {
         set_ai_studio_user_id(message.aiStudioUserId)
       } else if (message.command == 'SEND_WITH_SHIFT_ENTER') {
         set_send_with_shift_enter(message.enabled)
-      } else if (message.command == 'CHECK_NEW_FILES') {
-        set_check_new_files(message.enabled)
       } else if (message.command == 'REUSE_LAST_TAB') {
         set_reuse_last_tab(message.enabled)
       } else if (message.command == 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR') {
@@ -389,14 +383,6 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_check_new_files_change = (enabled: boolean) => {
-    set_check_new_files(enabled)
-    post_message(vscode, {
-      command: 'UPDATE_CHECK_NEW_FILES',
-      enabled
-    })
-  }
-
   const handle_reuse_last_tab_change = (enabled: boolean) => {
     set_reuse_last_tab(enabled)
     post_message(vscode, {
@@ -499,7 +485,6 @@ export const use_settings = (vscode: any) => {
     gemini_user_id,
     ai_studio_user_id,
     send_with_shift_enter,
-    check_new_files,
     reuse_last_tab,
     clear_checks_in_workspace_behavior,
     auto_run_intelligent_update,
@@ -531,7 +516,6 @@ export const use_settings = (vscode: any) => {
     handle_gemini_user_id_change,
     handle_ai_studio_user_id_change,
     handle_send_with_shift_enter_change,
-    handle_check_new_files_change,
     handle_reuse_last_tab_change,
     handle_clear_checks_in_workspace_behavior_change,
     handle_auto_run_intelligent_update_change,
