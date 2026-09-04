@@ -1260,21 +1260,21 @@ export const translations = {
     bg: 'Завършено за {duration}.'
   },
   'feature.search-files.agent.waiting-for-agent': {
-    en: 'Waiting for agent...',
-    pl: 'Oczekiwanie na agenta...',
+    en: 'waiting for agent...',
+    pl: 'oczekiwanie na agenta...',
     'zh-cn': '等待代理...',
-    ja: 'エージェントを待機中...',
+    ja: 'エージェントを待機しています...',
     'zh-tw': '等待代理...',
-    de: 'Warten auf Agent...',
-    es: 'Esperando al agente...',
-    fr: "En attente de l'agent...",
-    'pt-br': 'Aguardando o agente...',
-    ru: 'Ожидание агента...',
+    de: 'warten auf Agent...',
+    es: 'esperando al agente...',
+    fr: "en attente de l'agent...",
+    'pt-br': 'esperando pelo agente...',
+    ru: 'ожидание агента...',
     ko: '에이전트 대기 중...',
-    it: "In attesa dell'agente...",
-    tr: 'Ajan bekleniyor...',
-    cs: 'Čekání na agenta...',
-    hu: 'Várakozás az ügynökre...',
-    bg: 'Изчакване на агента...'
+    it: "in attesa dell'agente...",
+    tr: 'ajan bekleniyor...',
+    cs: 'čekání na agenta...',
+    hu: 'várakozás az ügynökre...',
+    bg: 'изчакване на агент...'
   }
 } as const
