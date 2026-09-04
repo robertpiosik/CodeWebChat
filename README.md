@@ -37,15 +37,7 @@
 
 Ask your favorite agent for file selection utilizing its one-off prompt (headless) mode.
 
-**Supported CLIs:**
-
-- Claude Code
-- Codex
-- Cursor
-- Grok Build
-- Antigravity
-- OpenCode
-- Muse Code
+**Supported CLIs:** Claude Code, Codex, Cursor, Grok Build, Antigravity, OpenCode, Muse Code.
 
 ### File editing
 
