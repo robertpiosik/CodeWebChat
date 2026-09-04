@@ -35,9 +35,9 @@
 
 ### Agentic search
 
-**CWC** can search context files using your favorite CLI in a headless mode.
+Ask your favorite agent for file selection utilizing its one-off prompt (headless) mode.
 
-**Supported agents:**
+**Supported CLIs:**
 
 - Claude Code
 - Codex
