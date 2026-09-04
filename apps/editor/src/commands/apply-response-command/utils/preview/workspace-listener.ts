@@ -768,10 +768,15 @@ export const setup_workspace_listeners = (params: {
 
     const proposed = file_to_discard.previewable_file.proposed_content
 
-    await vscode.workspace.fs.writeFile(
-      vscode.Uri.file(file_to_discard.sanitized_path),
-      Buffer.from(proposed, 'utf8')
-    )
+    params.workspace_provider.pause_file_watcher()
+    try {
+      await vscode.workspace.fs.writeFile(
+        vscode.Uri.file(file_to_discard.sanitized_path),
+        Buffer.from(proposed, 'utf8')
+      )
+    } finally {
+      params.workspace_provider.resume_file_watcher()
+    }
   }
 
   toggle_file_preview_state = async ({
@@ -819,57 +824,62 @@ export const setup_workspace_listeners = (params: {
       )!
     }
 
-    if (!is_checked) {
-      // Before reverting, capture current content if file exists
-      if (fs.existsSync(file_to_toggle.sanitized_path)) {
-        const document = await vscode.workspace.openTextDocument(
-          vscode.Uri.file(file_to_toggle.sanitized_path)
-        )
-        const current_content = document.getText()
-        file_to_toggle.content_to_restore = current_content
-      }
-
-      if (file_to_toggle.previewable_file.file_state == 'new') {
-        try {
-          if (fs.existsSync(file_to_toggle.sanitized_path)) {
-            await vscode.workspace.fs.delete(
-              vscode.Uri.file(file_to_toggle.sanitized_path)
-            )
-            await remove_directory_if_empty({
-              dir_path: path.dirname(file_to_toggle.sanitized_path),
-              workspace_root
-            })
-          }
-        } catch (e) {}
-      } else {
-        await vscode.workspace.fs.writeFile(
-          vscode.Uri.file(file_to_toggle.sanitized_path),
-          Buffer.from(file_to_toggle.original_content, 'utf8')
-        )
-      }
-    } else {
-      if (file_to_toggle.previewable_file.file_state == 'deleted') {
-        try {
-          if (fs.existsSync(file_to_toggle.sanitized_path)) {
-            await vscode.workspace.fs.delete(
-              vscode.Uri.file(file_to_toggle.sanitized_path)
-            )
-            await remove_directory_if_empty({
-              dir_path: path.dirname(file_to_toggle.sanitized_path),
-              workspace_root
-            })
-          }
-        } catch (e) {}
-      } else {
-        await vscode.workspace.fs.writeFile(
-          vscode.Uri.file(file_to_toggle.sanitized_path),
-          Buffer.from(
-            file_to_toggle.content_to_restore ??
-              file_to_toggle.previewable_file.content,
-            'utf8'
+    params.workspace_provider.pause_file_watcher()
+    try {
+      if (!is_checked) {
+        // Before reverting, capture current content if file exists
+        if (fs.existsSync(file_to_toggle.sanitized_path)) {
+          const document = await vscode.workspace.openTextDocument(
+            vscode.Uri.file(file_to_toggle.sanitized_path)
           )
-        )
+          const current_content = document.getText()
+          file_to_toggle.content_to_restore = current_content
+        }
+
+        if (file_to_toggle.previewable_file.file_state == 'new') {
+          try {
+            if (fs.existsSync(file_to_toggle.sanitized_path)) {
+              await vscode.workspace.fs.delete(
+                vscode.Uri.file(file_to_toggle.sanitized_path)
+              )
+              await remove_directory_if_empty({
+                dir_path: path.dirname(file_to_toggle.sanitized_path),
+                workspace_root
+              })
+            }
+          } catch (e) {}
+        } else {
+          await vscode.workspace.fs.writeFile(
+            vscode.Uri.file(file_to_toggle.sanitized_path),
+            Buffer.from(file_to_toggle.original_content, 'utf8')
+          )
+        }
+      } else {
+        if (file_to_toggle.previewable_file.file_state == 'deleted') {
+          try {
+            if (fs.existsSync(file_to_toggle.sanitized_path)) {
+              await vscode.workspace.fs.delete(
+                vscode.Uri.file(file_to_toggle.sanitized_path)
+              )
+              await remove_directory_if_empty({
+                dir_path: path.dirname(file_to_toggle.sanitized_path),
+                workspace_root
+              })
+            }
+          } catch (e) {}
+        } else {
+          await vscode.workspace.fs.writeFile(
+            vscode.Uri.file(file_to_toggle.sanitized_path),
+            Buffer.from(
+              file_to_toggle.content_to_restore ??
+                file_to_toggle.previewable_file.content,
+              'utf8'
+            )
+          )
+        }
       }
+    } finally {
+      params.workspace_provider.resume_file_watcher()
     }
   }
 

@@ -526,7 +526,6 @@ export const restore_checkpoint = async (params: {
     return temp_checkpoint
     } finally {
       params.workspace_provider.resume_file_watcher()
-      params.workspace_provider.refresh()
     }
   }
 

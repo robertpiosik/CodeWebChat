@@ -70,7 +70,13 @@ export const process_response = async (params: {
       (f) => f.type === 'file'
     ) as FileInPreview[]
     if (files.length > 0) {
-      const result = await handle_restore_preview(files)
+      params.workspace_provider.pause_file_watcher()
+      let result: { success: boolean; original_states?: OriginalFileState[] }
+      try {
+        result = await handle_restore_preview(files)
+      } finally {
+        params.workspace_provider.resume_file_watcher()
+      }
       if (result.success && result.original_states) {
         const augmented_states = result.original_states.map((state) => {
           const file_in_preview = files.find(
@@ -292,8 +298,10 @@ export const process_response = async (params: {
 
     const total_patches = patches.length
 
-    for (let i = 0; i < total_patches; i++) {
-      on_progress(Math.round((i / total_patches) * 100))
+    params.workspace_provider.pause_file_watcher()
+    try {
+      for (let i = 0; i < total_patches; i++) {
+        on_progress(Math.round((i / total_patches) * 100))
       const patch = patches[i]
       let workspace_path = default_workspace
 
@@ -342,27 +350,30 @@ export const process_response = async (params: {
       }
     }
 
-    if (all_original_states.length > 0) {
-      all_original_states =
-        set_new_paths_in_original_states(all_original_states)
-      await apply_file_relocations(all_original_states)
-      update_undo_button_state({
-        extension_context: params.extension_context,
-        prompt_view_provider: params.prompt_view_provider,
-        states: all_original_states,
-        applied_content: params.response,
-        original_editor_state: params.args?.original_editor_state
-      })
-    }
-
-    if (all_original_states.length > 0) {
-      return {
-        original_states: all_original_states,
-        response: params.response
+      if (all_original_states.length > 0) {
+        all_original_states =
+          set_new_paths_in_original_states(all_original_states)
+        await apply_file_relocations(all_original_states)
+        update_undo_button_state({
+          extension_context: params.extension_context,
+          prompt_view_provider: params.prompt_view_provider,
+          states: all_original_states,
+          applied_content: params.response,
+          original_editor_state: params.args?.original_editor_state
+        })
       }
-    }
 
-    return null
+      if (all_original_states.length > 0) {
+        return {
+          original_states: all_original_states,
+          response: params.response
+        }
+      }
+
+      return null
+    } finally {
+      params.workspace_provider.resume_file_watcher()
+    }
   } else {
     const files = params.response_items.filter(
       (item): item is FileItem => item.type == 'file'
@@ -405,18 +416,20 @@ export const process_response = async (params: {
     let final_original_states: OriginalFileState[] | null = null
     let operation_success = false
 
-    if (selected_mode_label == 'Fast replace') {
-      const result = await handle_fast_replace({ files, on_progress })
-      if (result.success && result.original_states) {
-        final_original_states = result.original_states
-        operation_success = true
-      }
-      Logger.info({
-        function_name: 'process_response',
-        message: 'Fast replace handler finished.',
-        data: { success: result.success }
-      })
-    } else if (selected_mode_label == 'Truncated') {
+    params.workspace_provider.pause_file_watcher()
+    try {
+      if (selected_mode_label == 'Fast replace') {
+        const result = await handle_fast_replace({ files, on_progress })
+        if (result.success && result.original_states) {
+          final_original_states = result.original_states
+          operation_success = true
+        }
+        Logger.info({
+          function_name: 'process_response',
+          message: 'Fast replace handler finished.',
+          data: { success: result.success }
+        })
+      } else if (selected_mode_label == 'Truncated') {
       const result = await handle_truncated_edit({ files, on_progress })
       const successful_states = result.original_states || []
       const failed_files = result.failed_files || []
@@ -483,12 +496,15 @@ export const process_response = async (params: {
         message: 'Conflict markers handler finished.',
         data: { success: result.success }
       })
-    } else {
-      Logger.error({
-        function_name: 'process_response',
-        message: 'No valid mode selected or determined.'
-      })
-      return null
+      } else {
+        Logger.error({
+          function_name: 'process_response',
+          message: 'No valid mode selected or determined.'
+        })
+        return null
+      }
+    } finally {
+      params.workspace_provider.resume_file_watcher()
     }
 
     if (operation_success && final_original_states) {

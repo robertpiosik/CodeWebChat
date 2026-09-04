@@ -84,9 +84,14 @@ export const preview_handler = async (params: {
           })
         }
       }
-      await undo_files({
-        original_states: params.original_states
-      })
+      params.workspace_provider.pause_file_watcher()
+      try {
+        await undo_files({
+          original_states: params.original_states
+        })
+      } finally {
+        params.workspace_provider.resume_file_watcher()
+      }
       update_undo_button_state({
         extension_context: params.extension_context,
         prompt_view_provider: params.prompt_view_provider,
@@ -96,9 +101,14 @@ export const preview_handler = async (params: {
     }
 
     if (preview_result.rejected_states.length > 0) {
-      await undo_files({
-        original_states: preview_result.rejected_states
-      })
+      params.workspace_provider.pause_file_watcher()
+      try {
+        await undo_files({
+          original_states: preview_result.rejected_states
+        })
+      } finally {
+        params.workspace_provider.resume_file_watcher()
+      }
     }
 
     const accepted_states = params.original_states.filter((state) =>

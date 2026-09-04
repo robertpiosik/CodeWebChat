@@ -370,6 +370,7 @@ export class WorkspaceProvider
 
   public resume_file_watcher(): void {
     this._is_file_watcher_paused = false
+    this.refresh()
   }
 
   public invalidate_token_counts_for_file(changed_file_path: string) {

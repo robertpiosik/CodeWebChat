@@ -27,7 +27,6 @@ const format_tokens = (tokens: number): string => {
 
 export const OngoingApiCallsModal: React.FC<Props> = (props) => {
   const { start_times, now } = use_progress_times(props.progress_items)
-  const [window_width, set_window_width] = useState(window.innerWidth)
   const container_ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -46,14 +45,6 @@ export const OngoingApiCallsModal: React.FC<Props> = (props) => {
       props.on_height_change?.(0)
     }
   }, [props.on_height_change])
-
-  useEffect(() => {
-    const handle_resize = () => set_window_width(window.innerWidth)
-    window.addEventListener('resize', handle_resize)
-    return () => {
-      window.removeEventListener('resize', handle_resize)
-    }
-  }, [])
 
   return (
     <div
@@ -99,8 +90,7 @@ export const OngoingApiCallsModal: React.FC<Props> = (props) => {
                     <div className={styles.item__bottom__right}>
                       {item.tokens_per_second !== undefined && (
                         <div>
-                          {format_tokens(item.tokens_per_second)}{' '}
-                          {window_width < 340 ? 't/s' : 'tokens/s'}
+                          {`${format_tokens(item.tokens_per_second)} t/s`}
                         </div>
                       )}
                       {item.total_tokens !== undefined && (
