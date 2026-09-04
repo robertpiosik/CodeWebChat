@@ -47,6 +47,10 @@ export const Primary = () => {
       on_response_history_item_remove={(created_at) => {
         console.log('remove item', created_at)
       }}
+      translations={{
+        applied_manually: 'Applied manually',
+        reject: 'Reject'
+      }}
     />
   )
 }

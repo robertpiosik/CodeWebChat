@@ -278,6 +278,10 @@ export const MainView: React.FC<Props> = (props) => {
               on_response_history_item_remove={
                 props.on_response_history_item_remove
               }
+              translations={{
+                applied_manually: t('common.applied-manually'),
+                reject: t('action.reject')
+              }}
             />
           )}
 

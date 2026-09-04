@@ -160,5 +160,23 @@ export const actions = {
     cs: 'Použít',
     hu: 'Alkalmaz',
     bg: 'Приложи'
+  },
+  'action.reject': {
+    en: 'Reject',
+    pl: 'Odrzuć',
+    'zh-cn': '拒绝',
+    ja: '拒否',
+    'zh-tw': '拒絕',
+    de: 'Ablehnen',
+    es: 'Rechazar',
+    fr: 'Rejeter',
+    'pt-br': 'Rejeitar',
+    ru: 'Отклонить',
+    ko: '거부',
+    it: 'Rifiuta',
+    tr: 'Reddet',
+    cs: 'Odmítnout',
+    hu: 'Elutasít',
+    bg: 'Отхвърляне'
   }
 } as const

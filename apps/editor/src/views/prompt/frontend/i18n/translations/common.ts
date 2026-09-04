@@ -34,5 +34,23 @@ export const common = {
     cs: 'Kontext je prázdný',
     hu: 'A kontextus üres',
     bg: 'Контекстът е празен'
+  },
+  'common.applied-manually': {
+    en: 'Applied manually',
+    pl: 'Zastosowano ręcznie',
+    'zh-cn': '手动应用',
+    ja: '手動で適用',
+    'zh-tw': '手動應用',
+    de: 'Manuell angewendet',
+    es: 'Aplicado manualmente',
+    fr: 'Appliqué manuellement',
+    'pt-br': 'Aplicado manualmente',
+    ru: 'Применено вручную',
+    ko: '수동으로 적용됨',
+    it: 'Applicato manualmente',
+    tr: 'Manuel olarak uygulandı',
+    cs: 'Ručně aplikováno',
+    hu: 'Manuálisan alkalmazva',
+    bg: 'Приложено ръчно'
   }
 } as const
