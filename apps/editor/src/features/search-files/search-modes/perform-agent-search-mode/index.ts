@@ -20,6 +20,7 @@ import { codex_agent } from './agents/codex'
 import { cursor_agent } from './agents/cursor'
 import { opencode_agent } from './agents/opencode'
 import { grok_agent } from './agents/grok'
+import { muse_agent } from './agents/muse'
 import { CodingAgent } from './types'
 import { format_duration } from './utils'
 
@@ -29,6 +30,7 @@ const AGENTS: CodingAgent[] = [
   claude_agent,
   cursor_agent,
   grok_agent,
+  muse_agent,
   opencode_agent
 ]
 

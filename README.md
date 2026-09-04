@@ -45,6 +45,7 @@
 - Grok Build
 - Antigravity
 - OpenCode
+- Muse Code
 
 ### File editing
 
