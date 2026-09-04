@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import axios from 'axios'
 import { send_llm_message } from '@/utils/send-llm-message'
 import {
-  intelligent_file_search_instructions,
+  ai_file_search_task_instructions,
   intelligent_file_search_format
 } from '@/constants/instructions'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
@@ -29,7 +29,7 @@ export const search_files_by_intelligent = async (
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const base_instructions =
     config.get<string>('intelligentFileSearchInstructions') ||
-    intelligent_file_search_instructions
+    ai_file_search_task_instructions
 
   const part2 = `# Task\n\n${base_instructions}\n\n# Output formatting\n\n${intelligent_file_search_format}\n\n# Query\n\n${instructions}`
   const user_content = build_user_content({

@@ -50,7 +50,7 @@ export const commit_message_format = `Your response must begin with "**Commit me
 
 **Commit message:** Bump version to 1.0.1`
 
-export const intelligent_file_search_instructions =
+export const ai_file_search_task_instructions =
   'In the project, find the complete set of primary and structural files relevant to the query.'
 
 export const intelligent_file_search_format = `Your response must contain paths of relevant files enclosed in "intelligent-file-search-results" and "file-path" XML tags. Don't send anything else. Example:
@@ -77,9 +77,6 @@ These files contain the core greeting logic and module exports.`
 
 export const voice_input_instructions =
   'Respond with a transcription of the following audio recording or text "INAUDIBLE", and nothing else.'
-
-export const agentic_file_search_task_instructions =
-  'In the project, find the complete set of primary and structural files relevant to the query.'
 
 export const agentic_file_search_format_instructions =
   'Output strictly as a bulleted list of file paths without explanations or any other text (e.g., - path/to/file.ext).'

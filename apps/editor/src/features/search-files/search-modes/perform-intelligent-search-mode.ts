@@ -20,7 +20,7 @@ import { display_token_count } from '@shared/utils/display-token-count'
 import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import {
-  intelligent_file_search_instructions,
+  ai_file_search_task_instructions,
   intelligent_file_search_format_for_prompt_view
 } from '@/constants/instructions'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
@@ -241,7 +241,7 @@ export const perform_intelligent_search_mode = async (params: {
           const config = vscode.workspace.getConfiguration('codeWebChat')
           const base_instructions =
             config.get<string>('intelligentFileSearchInstructions') ||
-            intelligent_file_search_instructions
+            ai_file_search_task_instructions
 
           let display_folder_path = params.folder_path
           if (params.folder_path) {
