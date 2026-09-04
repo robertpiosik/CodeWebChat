@@ -67,8 +67,8 @@ export const intelligent_file_search_format_for_prompt_view = (
 ) => {
   const prefix = folder_path && folder_path != '.' ? `${folder_path}/` : ''
   return `Your response must begin with "**Intelligent file search results${
-  metadata || ''
-}:**", then list paths one under another, followed by a brief explanation. Example:
+    metadata || ''
+  }:**", then a bulleted list of file paths, followed by a brief explanation. Example:
 
 **Intelligent file search results${metadata || ''}:**
 
@@ -82,5 +82,8 @@ These files contain the core greeting logic and module exports.`
 export const voice_input_instructions =
   'Respond with a transcription of the following audio recording or text "INAUDIBLE", and nothing else.'
 
-export const agentic_file_search_format_instructions =
-  'Output strictly as a bulleted list of file paths without explanations or any other text (e.g., - path/to/file.ext).'
+export const agentic_file_search_format_instructions = `Output strictly as a bulleted list of file paths without explanations or any other text. Example:
+  
+- \`src/index.ts\`
+- \`src/greetings/hello.ts\`
+- \`src/greetings/welcome.ts\``

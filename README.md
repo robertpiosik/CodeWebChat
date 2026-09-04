@@ -19,13 +19,7 @@
 
 ## Introduction
 
-**CWC** provides developers with a complete and free toolkit for pair programming with AI.
-
-**The static context workflow:**
-
-1. Ask an agent of choice for task-relevant files
-2. Make your own informed decisions on example inclusion
-3. Prompt surgically for easy to iterate-on and review code
+**CWC** provides developers with a complete and free toolkit for pair programming with AI in all popular VS Code-based code editors.
 
 ## Privacy
 
@@ -41,7 +35,7 @@
 
 ### Agentic search
 
-Ask your favorite agent for file selection utilizing its one-off prompt (headless) mode.
+Query your favorite agent for task-relevant file selection utilizing its one-off prompt (headless) mode.
 
 **Supported CLIs:**
 
@@ -59,11 +53,11 @@ Ask your favorite agent for file selection utilizing its one-off prompt (headles
 ```
 # Task
 
-[INSTRUCTIONS]
+In the project, find the complete set of primary and structural files relevant to the query.
 
 # Output formatting
 
-Output strictly as a bulleted list of file paths without explanations or any other text (e.g., - path/to/file.ext).
+Output strictly as a bulleted list of file paths without explanations or any other text (e.g., - `path/to/file.ext`).
 
 # Query
 
