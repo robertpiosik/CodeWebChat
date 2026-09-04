@@ -159,11 +159,35 @@
     width: 100%;
     border-radius: 2px;
     overflow: hidden;
+    position: relative;
 
     &__fill {
       height: 100%;
       background-color: var(--vscode-focusBorder);
+      transition: width var(--transition-duration-150)
+        var(--transition-timing-function);
+
+      &--indeterminate {
+        height: 100%;
+        background-color: var(--vscode-focusBorder);
+        position: absolute;
+        animation: fix-all-indeterminate-progress 1.5s infinite linear;
+      }
     }
+  }
+}
+
+@keyframes fix-all-indeterminate-progress {
+  from {
+    left: -50px;
+    width: 10px;
+  }
+  50% {
+    width: 50px;
+  }
+  to {
+    left: 100%;
+    width: 10px;
   }
 }
 

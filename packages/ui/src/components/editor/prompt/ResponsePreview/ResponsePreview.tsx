@@ -258,10 +258,16 @@ export const ResponsePreview: FC<Props> = (props) => {
                   </span>
                 </div>
                 <div className={styles['fix-all-progress__bar']}>
-                  <div
-                    className={styles['fix-all-progress__bar__fill']}
-                    style={{ width: `${file.apply_progress || 0}%` }}
-                  />
+                  {file.apply_progress !== undefined ? (
+                    <div
+                      className={styles['fix-all-progress__bar__fill']}
+                      style={{ width: `${file.apply_progress}%` }}
+                    />
+                  ) : (
+                    <div
+                      className={styles['fix-all-progress__bar__fill--indeterminate']}
+                    />
+                  )}
                 </div>
               </div>
             ))}
