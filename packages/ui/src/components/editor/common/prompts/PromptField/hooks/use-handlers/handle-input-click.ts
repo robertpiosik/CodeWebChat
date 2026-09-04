@@ -49,10 +49,12 @@ export const create_handle_input_click = ({
       )
       if (pasted_lines_symbol_element) {
         const path = pasted_lines_symbol_element.dataset.path
-        const start = pasted_lines_symbol_element.dataset.start
-        const end = pasted_lines_symbol_element.dataset.end
-        if (path) {
-          props.on_pasted_lines_click(path, start, end)
+        const start_line = pasted_lines_symbol_element.dataset.startLine
+        const start_col = pasted_lines_symbol_element.dataset.startCol
+        const end_line = pasted_lines_symbol_element.dataset.endLine
+        const end_col = pasted_lines_symbol_element.dataset.endCol
+        if (path && start_line && start_col && end_line && end_col) {
+          props.on_pasted_lines_click(path, `${start_line}:${start_col}`, `${end_line}:${end_col}`)
         }
       }
 

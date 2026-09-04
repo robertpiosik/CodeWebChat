@@ -85,31 +85,22 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
       }
     } else if (el.dataset.type == 'pasted-lines-symbol') {
       const path = el.dataset.path
-      const content = el.dataset.content
-      const start = el.dataset.start
-      const end = el.dataset.end
-      if (!path || content === undefined) return ''
-
-      let attributes = `path="${path}"`
-      if (start) attributes += ` start="${start}"`
-      if (end) attributes += ` end="${end}"`
-
-      const is_multiline = content.includes('\n')
-      const formatted_content = is_multiline
-        ? `\n\`\`\`\n${content}\n\`\`\`\n`
-        : `\`\`\`${content}\`\`\``
-      const line_count = is_multiline ? content.split('\n').length : 1
-      const lines_text = line_count === 1 ? 'line' : 'lines'
-      const label = `Pasted ${line_count} ${lines_text}`
-      const index = inner_content.indexOf(label)
-
-      if (index != -1) {
-        const prefix = inner_content.substring(0, index)
-        const suffix = inner_content.substring(index + label.length)
-        return `${prefix}<fragment ${attributes}>${formatted_content}</fragment>${suffix}`
+      const start_line = el.dataset.startLine
+      const start_col = el.dataset.startCol
+      const end_line = el.dataset.endLine
+      const end_col = el.dataset.endCol
+      if (!path || !start_line || !start_col || !end_line || !end_col) return ''
+      
+      const regex = /Pasted \d+ lines?/
+      const match = inner_content.match(regex)
+      
+      if (match && match.index !== undefined) {
+        const prefix = inner_content.substring(0, match.index)
+        const suffix = inner_content.substring(match.index + match[0].length)
+        return `${prefix}#Fragment(${path}:${start_line}:${start_col}-${end_line}:${end_col})${suffix}`
       }
 
-      return `<fragment ${attributes}>${formatted_content}</fragment>`
+      return `#Fragment(${path}:${start_line}:${start_col}-${end_line}:${end_col})`
     } else if (el.dataset.type == 'skill-symbol') {
       const agent = el.dataset.agent
       const repo = el.dataset.repo

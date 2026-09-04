@@ -61,7 +61,7 @@ export const get_highlighted_text = (params: {
     '#(?:Commit|CommitMessage)\\([^:]+:[^\\s"]+ "(?:\\\\.|[^"\\\\])*"\\)'
 
   const fragment_regex_part =
-    '<fragment path="[^"]+"(?: [^>]+)?>[\\s\\S]*?<\\/fragment>'
+    '#Fragment\\(.+?:\\d+:\\d+-\\d+:\\d+\\)'
 
   const skill_regex_part = '#Skill\\([^)]+\\)'
 
@@ -81,44 +81,27 @@ export const get_highlighted_text = (params: {
   let result = parts
     .map((part) => {
       const fragment_match = part.match(
-        /^<fragment path="([^"]+)"(?: start="([^"]+)")?(?: end="([^"]+)")?>([\s\S]*?)<\/fragment>$/
+        /^#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\)$/
       )
       if (part && fragment_match) {
         const path = fragment_match[1]
-        const start = fragment_match[2]
-        const end = fragment_match[3]
-        let content = fragment_match[4]
+        const start_line = parseInt(fragment_match[2], 10)
+        const start_col = parseInt(fragment_match[3], 10)
+        const end_line = parseInt(fragment_match[4], 10)
+        const end_col = parseInt(fragment_match[5], 10)
 
-        if (content.startsWith('\n```\n') && content.endsWith('\n```\n')) {
-          content = content.slice(5, -5)
-        } else if (content.startsWith('```\n') && content.endsWith('\n```')) {
-          content = content.slice(4, -4)
-        } else if (content.startsWith('```') && content.endsWith('```')) {
-          content = content.slice(3, -3)
-        } else if (content.startsWith('\n') && content.endsWith('\n')) {
-          content = content.slice(1, -1)
-        }
-
-        const line_count = content.split('\n').length
+        const line_count = Math.max(1, end_line - start_line + 1)
         const lines_text = line_count == 1 ? 'line' : 'lines'
 
         const is_error = !params.context_file_paths.includes(path)
-
-        const title = is_error
-          ? 'File of the selection is not in context'
-          : content
 
         return `<span class="${cn(
           styles['symbol'],
           styles['symbol--pasted-lines'],
           { [styles['symbol--error']]: is_error }
-        )}" data-type="pasted-lines-symbol" title="${escape_html(
-          title
-        )}" data-path="${escape_html(path)}" data-content="${escape_html(
-          content
-        )}"${start ? ` data-start="${escape_html(start)}"` : ''}${
-          end ? ` data-end="${escape_html(end)}"` : ''
-        }><span class="${
+        )}" data-type="pasted-lines-symbol"${
+          is_error ? ' title="File with selection is not selected"' : ''
+        } data-path="${escape_html(path)}" data-start-line="${start_line}" data-start-col="${start_col}" data-end-line="${end_line}" data-end-col="${end_col}"><span class="${
           styles['symbol__icon']
         }" data-role="symbol-icon"></span><span class="${
           styles['symbol__text']

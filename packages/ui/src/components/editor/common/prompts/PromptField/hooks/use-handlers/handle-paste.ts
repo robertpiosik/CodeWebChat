@@ -47,11 +47,7 @@ export const create_perform_paste =
     ) {
       const { start_line, start_col, end_line, end_col } =
         props.current_selection
-      const is_multiline = text.includes('\n')
-      const formatted_text = is_multiline
-        ? `\n\`\`\`\n${text}\n\`\`\`\n`
-        : `\`\`\`${text}\`\`\``
-      text_to_insert = `<fragment path="${props.currently_open_file_path}" start="${start_line}:${start_col}" end="${end_line}:${end_col}">${formatted_text}</fragment>`
+      text_to_insert = `#Fragment(${props.currently_open_file_path}:${start_line}:${start_col}-${end_line}:${end_col})`
     }
 
     const new_value =

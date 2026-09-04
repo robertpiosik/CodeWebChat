@@ -135,30 +135,15 @@ export const use_symbol_deletion = (params: {
       }
     } else if (symbol_type == 'pasted-lines-symbol') {
       const path = symbol_element.dataset.path
-      const content = symbol_element.dataset.content
-      const start = symbol_element.dataset.start
-      const end = symbol_element.dataset.end
-      if (!path || content === undefined) return
+      const start_line = symbol_element.dataset.startLine
+      const start_col = symbol_element.dataset.startCol
+      const end_line = symbol_element.dataset.endLine
+      const end_col = symbol_element.dataset.endCol
+      if (!path || !start_line || !start_col || !end_line || !end_col) return
 
-      let attributes = `path="${path}"`
-      if (start) attributes += ` start="${start}"`
-      if (end) attributes += ` end="${end}"`
-
-      const is_multiline = content.includes('\n')
-      const formatted_content = is_multiline
-        ? `\n\`\`\`\n${content}\n\`\`\`\n`
-        : `\`\`\`${content}\`\`\``
-
-      const search_pattern_new = `<fragment ${attributes}>${formatted_content}</fragment>`
-      const search_pattern_old = `<fragment ${attributes}>\n${content}\n</fragment>`
-
-      let search_pattern = search_pattern_new
-      let start_index = get_start_index(symbol_element, search_pattern)
-
-      if (start_index == -1) {
-        search_pattern = search_pattern_old
-        start_index = get_start_index(symbol_element, search_pattern)
-      }
+      const search_pattern = `#Fragment(${path}:${start_line}:${start_col}-${end_line}:${end_col})`
+      
+      const start_index = get_start_index(symbol_element, search_pattern)
 
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
@@ -358,7 +343,7 @@ export const use_symbol_deletion = (params: {
   const handle_pasted_lines_symbol_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = params.value.substring(0, raw_pos)
 
-    const regex = /<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>/g
+    const regex = /#Fragment\(.+?:\d+:\d+-\d+:\d+\)/g
     let match
     let last_match: RegExpExecArray | null = null
 

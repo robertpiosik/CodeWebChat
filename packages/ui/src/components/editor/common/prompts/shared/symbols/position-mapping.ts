@@ -8,7 +8,7 @@ export const map_display_pos_to_raw_pos = (params: {
   let last_raw_index = 0
 
   const regex =
-    /`([^`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))|(#ClipboardPaths)/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))|(#ClipboardPaths)/g
   let match
 
   while ((match = regex.exec(params.raw_text)) !== null) {
@@ -20,12 +20,13 @@ export const map_display_pos_to_raw_pos = (params: {
     const commit_symbol = match[6]
     const commit_hash = match[7]
     const fragment_symbol = match[8]
-    let fragment_content = match[9]
-    const skill_symbol = match[10]
-    const image_symbol = match[11]
-    const pasted_text_symbol = match[12]
-    const website_symbol = match[13]
-    const clipboard_paths_symbol = match[14]
+    const fragment_start_line = match[10] ? parseInt(match[10], 10) : 0
+    const fragment_end_line = match[12] ? parseInt(match[12], 10) : 0
+    const skill_symbol = match[14]
+    const image_symbol = match[15]
+    const pasted_text_symbol = match[16]
+    const website_symbol = match[17]
+    const clipboard_paths_symbol = match[18]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -52,28 +53,7 @@ export const map_display_pos_to_raw_pos = (params: {
       display_match_length = short_hash.length
       is_replacement_match = true
     } else if (fragment_symbol) {
-      if (
-        fragment_content.startsWith('\n```\n') &&
-        fragment_content.endsWith('\n```\n')
-      ) {
-        fragment_content = fragment_content.slice(5, -5)
-      } else if (
-        fragment_content.startsWith('```\n') &&
-        fragment_content.endsWith('\n```')
-      ) {
-        fragment_content = fragment_content.slice(4, -4)
-      } else if (
-        fragment_content.startsWith('```') &&
-        fragment_content.endsWith('```')
-      ) {
-        fragment_content = fragment_content.slice(3, -3)
-      } else if (
-        fragment_content.startsWith('\n') &&
-        fragment_content.endsWith('\n')
-      ) {
-        fragment_content = fragment_content.slice(1, -1)
-      }
-      const line_count = fragment_content.split('\n').length
+      const line_count = Math.max(1, fragment_end_line - fragment_start_line + 1)
       const lines_text = line_count === 1 ? 'line' : 'lines'
       display_match_length = `Pasted ${line_count} ${lines_text}`.length
       is_replacement_match = true
@@ -152,7 +132,7 @@ export const map_raw_pos_to_display_pos = (params: {
   let last_raw_index = 0
 
   const regex =
-    /`([^`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))|(#ClipboardPaths)/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))|(#ClipboardPaths)/g
   let match
 
   while ((match = regex.exec(params.raw_text)) !== null) {
@@ -164,12 +144,13 @@ export const map_raw_pos_to_display_pos = (params: {
     const commit_symbol = match[6]
     const commit_hash = match[7]
     const fragment_symbol = match[8]
-    let fragment_content = match[9]
-    const skill_symbol = match[10]
-    const image_symbol = match[11]
-    const pasted_text_symbol = match[12]
-    const website_symbol = match[13]
-    const clipboard_paths_symbol = match[14]
+    const fragment_start_line = match[10] ? parseInt(match[10], 10) : 0
+    const fragment_end_line = match[12] ? parseInt(match[12], 10) : 0
+    const skill_symbol = match[14]
+    const image_symbol = match[15]
+    const pasted_text_symbol = match[16]
+    const website_symbol = match[17]
+    const clipboard_paths_symbol = match[18]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -196,29 +177,8 @@ export const map_raw_pos_to_display_pos = (params: {
       display_match_length = short_hash.length
       is_replacement_match = true
     } else if (fragment_symbol) {
-      if (
-        fragment_content.startsWith('\n```\n') &&
-        fragment_content.endsWith('\n```\n')
-      ) {
-        fragment_content = fragment_content.slice(5, -5)
-      } else if (
-        fragment_content.startsWith('```\n') &&
-        fragment_content.endsWith('\n```')
-      ) {
-        fragment_content = fragment_content.slice(4, -4)
-      } else if (
-        fragment_content.startsWith('```') &&
-        fragment_content.endsWith('```')
-      ) {
-        fragment_content = fragment_content.slice(3, -3)
-      } else if (
-        fragment_content.startsWith('\n') &&
-        fragment_content.endsWith('\n')
-      ) {
-        fragment_content = fragment_content.slice(1, -1)
-      }
-      const line_count = fragment_content.split('\n').length
-      const lines_text = line_count == 1 ? 'line' : 'lines'
+      const line_count = Math.max(1, fragment_end_line - fragment_start_line + 1)
+      const lines_text = line_count === 1 ? 'line' : 'lines'
       display_match_length = `Pasted ${line_count} ${lines_text}`.length
       is_replacement_match = true
     } else if (skill_symbol) {

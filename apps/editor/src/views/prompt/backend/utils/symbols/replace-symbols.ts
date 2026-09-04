@@ -99,8 +99,11 @@ export const replace_symbols = async (params: {
     })
   }
 
-  if (processed_instructions.includes('<fragment')) {
-    processed_instructions = replace_fragment_symbol(processed_instructions)
+  if (processed_instructions.includes('#Fragment(')) {
+    processed_instructions = await replace_fragment_symbol({
+      instruction: processed_instructions,
+      workspace_provider: params.workspace_provider
+    })
   }
 
   return { instructions: processed_instructions, skill_definitions }
