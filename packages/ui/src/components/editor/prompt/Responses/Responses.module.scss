@@ -97,11 +97,11 @@
           flex-shrink: 0;
 
           &__added {
-            color: var(--vscode-gitDecoration-addedResourceForeground);
+            color: var(--cwc-text-color-green);
           }
 
           &__removed {
-            color: var(--vscode-gitDecoration-deletedResourceForeground);
+            color: var(--cwc-text-color-red);
           }
         }
       }
