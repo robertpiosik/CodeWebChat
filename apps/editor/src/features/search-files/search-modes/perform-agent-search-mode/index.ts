@@ -498,6 +498,7 @@ export const perform_agent_search_mode = async (params: {
           await vscode.window.withProgress(
             {
               location: vscode.ProgressLocation.Notification,
+              title: t('feature.search-files.title.agent'),
               cancellable: true
             },
             async (progress, token) => {
