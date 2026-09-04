@@ -43,6 +43,7 @@
   "codeWebChat.generateCommitMessageAndCommit.title": "Зафиксировать изменения",
   "codeWebChat.setRanges.title": "Установить диапазоны...",
   "codeWebChat.searchFiles.title": "Поиск файлов...",
+  "codeWebChat.searchFilesWorkspaceAction.title": "Поиск файлов...",
   "codeWebChat.searchSelectedFiles.title": "Поиск в выбранных файлах...",
   "codeWebChat.searchFilesFromDirectory.title": "Поиск файлов...",
   "codeWebChat.searchSelectedFilesFromDirectory.title": "Поиск в выбранных файлах...",

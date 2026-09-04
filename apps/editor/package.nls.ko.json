@@ -43,6 +43,7 @@
   "codeWebChat.generateCommitMessageAndCommit.title": "변경 사항 커밋",
   "codeWebChat.setRanges.title": "범위 설정...",
   "codeWebChat.searchFiles.title": "파일 검색...",
+  "codeWebChat.searchFilesWorkspaceAction.title": "파일 검색...",
   "codeWebChat.searchSelectedFiles.title": "선택한 파일에서 검색...",
   "codeWebChat.searchFilesFromDirectory.title": "파일 검색...",
   "codeWebChat.searchSelectedFilesFromDirectory.title": "선택한 파일에서 검색...",

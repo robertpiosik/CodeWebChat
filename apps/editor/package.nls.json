@@ -43,6 +43,7 @@
   "codeWebChat.generateCommitMessageAndCommit.title": "Commit Changes",
   "codeWebChat.setRanges.title": "Set Ranges...",
   "codeWebChat.searchFiles.title": "Search Files...",
+  "codeWebChat.searchFilesWorkspaceAction.title": "Search Files...",
   "codeWebChat.searchSelectedFiles.title": "Search in Selected Files...",
   "codeWebChat.searchFilesFromDirectory.title": "Search Files...",
   "codeWebChat.searchSelectedFilesFromDirectory.title": "Search in Selected Files...",

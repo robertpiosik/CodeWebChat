@@ -43,6 +43,7 @@
   "codeWebChat.generateCommitMessageAndCommit.title": "変更をコミット",
   "codeWebChat.setRanges.title": "範囲を設定...",
   "codeWebChat.searchFiles.title": "ファイルを検索...",
+  "codeWebChat.searchFilesWorkspaceAction.title": "ファイルを検索...",
   "codeWebChat.searchSelectedFiles.title": "選択したファイル内を検索...",
   "codeWebChat.searchFilesFromDirectory.title": "ファイルを検索...",
   "codeWebChat.searchSelectedFilesFromDirectory.title": "選択したファイル内を検索...",

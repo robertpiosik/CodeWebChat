@@ -43,6 +43,7 @@
   "codeWebChat.generateCommitMessageAndCommit.title": "提交變更",
   "codeWebChat.setRanges.title": "設定範圍...",
   "codeWebChat.searchFiles.title": "搜尋檔案...",
+  "codeWebChat.searchFilesWorkspaceAction.title": "搜尋檔案...",
   "codeWebChat.searchSelectedFiles.title": "在選取的檔案中搜尋...",
   "codeWebChat.searchFilesFromDirectory.title": "搜尋檔案...",
   "codeWebChat.searchSelectedFilesFromDirectory.title": "在選取的檔案中搜尋...",
