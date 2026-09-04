@@ -53,6 +53,25 @@ Ask your favorite agent for file selection utilizing its one-off prompt (headles
 - Muse Code
 - OpenCode
 
+<details>
+<summary>Structure of the constructed prompt</summary>
+
+```
+# Task
+
+[INSTRUCTIONS]
+
+# Output formatting
+
+Output strictly as a bulleted list of file paths without explanations or any other text (e.g., - path/to/file.ext).
+
+# Query
+
+[PROMPT]
+```
+
+</details>
+
 ### File editing
 
 Implement new features, fix bugs and refactor code across many files.
