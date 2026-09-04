@@ -57,23 +57,27 @@ export const intelligent_file_search_format = `Your response must contain paths 
 
 <intelligent-file-search-results>
 <file-path>src/index.ts</file-path>
-<file-path>src/hello.ts</file-path>
-<file-path>src/welcome.ts</file-path>
+<file-path>src/greetings/hello.ts</file-path>
+<file-path>src/greetings/welcome.ts</file-path>
 </intelligent-file-search-results>`
 
 export const intelligent_file_search_format_for_prompt_view = (
-  metadata?: string
-) => `Your response must begin with "**Intelligent file search results${
+  metadata?: string,
+  folder_path?: string
+) => {
+  const prefix = folder_path && folder_path != '.' ? `${folder_path}/` : ''
+  return `Your response must begin with "**Intelligent file search results${
   metadata || ''
 }:**", then list paths one under another, followed by a brief explanation. Example:
 
 **Intelligent file search results${metadata || ''}:**
 
-- \`src/index.ts\`
-- \`src/hello.ts\`
-- \`src/welcome.ts\`
+- \`${prefix || 'src/'}index.ts\`
+- \`${prefix || 'src/'}greetings/hello.ts\`
+- \`${prefix || 'src/'}greetings/welcome.ts\`
 
 These files contain the core greeting logic and module exports.`
+}
 
 export const voice_input_instructions =
   'Respond with a transcription of the following audio recording or text "INAUDIBLE", and nothing else.'
