@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StatusBar } from '@ui/components/editor/prompt/StatusBar'
+import { Separator } from '@ui/components/editor/prompt/Separator'
 
 type Props = {
   is_connected: boolean
@@ -58,19 +59,23 @@ export const BrowserConnectionStatus: React.FC<Props> = (props) => {
   }
 
   return (
-    <StatusBar
-      theme={props.is_connected ? 'success' : 'default'}
-      icon={
-        props.is_connected
-          ? 'codicon-debug-connected'
-          : 'codicon-debug-disconnect'
-      }
-      label={
-        props.is_connected
-          ? props.translations.connected
-          : props.translations.not_connected
-      }
-      actions={actions}
-    />
+    <>
+      <StatusBar
+        theme={props.is_connected ? 'success' : 'default'}
+        icon={
+          props.is_connected
+            ? 'codicon-debug-connected'
+            : 'codicon-debug-disconnect'
+        }
+        label={
+          props.is_connected
+            ? props.translations.connected
+            : props.translations.not_connected
+        }
+        actions={actions}
+      />
+      <Separator height={6} />
+    </>
   )
 }
+
