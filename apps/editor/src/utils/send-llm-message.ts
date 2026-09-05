@@ -308,7 +308,6 @@ export const send_llm_message = async (params: {
         if (new_reasoning_content) {
           api_thoughts += new_reasoning_content
           handle_thinking_chunk(new_reasoning_content)
-          handle_chunk_metrics(new_reasoning_content)
         }
 
         process_content(new_content)
@@ -344,7 +343,6 @@ export const send_llm_message = async (params: {
                 if (typeof reasoning_content == 'string') {
                   api_thoughts += reasoning_content
                   handle_thinking_chunk(reasoning_content)
-                  handle_chunk_metrics(reasoning_content)
                 }
               }
             }
