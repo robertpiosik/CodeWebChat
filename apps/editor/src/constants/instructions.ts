@@ -50,8 +50,11 @@ export const commit_message_format = `Your response must begin with "**Commit me
 
 **Commit message:** Bump version to 1.0.1`
 
-export const ai_file_search_task_instructions =
+export const agentic_search_task_instructions =
   'In the project, find the complete set of primary and structural files relevant to the query.'
+
+export const intelligent_search_task_instructions =
+  'Among the attached files, find the complete set of primary and structural files relevant to the query.'
 
 export const ai_file_search_format_instructions = `Output strictly as a bulleted list of file paths without explanations or any other text. Example:
   
