@@ -15,9 +15,11 @@ const process_stream_chunk = (params: {
 }): {
   updated_buffer: string
   new_content: string
+  new_reasoning_content: string
 } => {
   let updated_buffer = params.buffer
   let new_content = ''
+  let new_reasoning_content = ''
   try {
     updated_buffer += params.chunk
     const lines = updated_buffer.split('\n')
@@ -34,9 +36,13 @@ const process_stream_chunk = (params: {
 
           const json_data = JSON.parse(json_string)
           const content = json_data.choices?.[0]?.delta?.content
+          const reasoning_content = json_data.choices?.[0]?.delta?.reasoning_content
 
           if (typeof content == 'string') {
             new_content += content
+          }
+          if (typeof reasoning_content == 'string') {
+            new_reasoning_content += reasoning_content
           }
         } catch (parse_error) {
           Logger.warn({
@@ -57,7 +63,8 @@ const process_stream_chunk = (params: {
 
   return {
     updated_buffer,
-    new_content
+    new_content,
+    new_reasoning_content
   }
 }
 
@@ -130,6 +137,7 @@ export const send_llm_message = async (params: {
     let in_think_block = false
     let think_block_closed = false
     let processed_think_content_length = 0
+    let api_thoughts = ''
 
     let last_log_time = Date.now()
     let logged_content_length = 0
@@ -291,11 +299,18 @@ export const send_llm_message = async (params: {
       let stream_closed = false
 
       response.data.on('data', async (chunk: string) => {
-        const { updated_buffer, new_content } = process_stream_chunk({
+        const { updated_buffer, new_content, new_reasoning_content } = process_stream_chunk({
           chunk,
           buffer
         })
         buffer = updated_buffer
+
+        if (new_reasoning_content) {
+          api_thoughts += new_reasoning_content
+          handle_thinking_chunk(new_reasoning_content)
+          handle_chunk_metrics(new_reasoning_content)
+        }
+
         process_content(new_content)
 
         const current_time = Date.now()
@@ -321,9 +336,15 @@ export const send_llm_message = async (params: {
               if (json_string && json_string !== DONE_TOKEN) {
                 const json_data = JSON.parse(json_string)
                 const content = json_data.choices?.[0]?.delta?.content
+                const reasoning_content = json_data.choices?.[0]?.delta?.reasoning_content
 
                 if (typeof content == 'string') {
                   process_content(content)
+                }
+                if (typeof reasoning_content == 'string') {
+                  api_thoughts += reasoning_content
+                  handle_thinking_chunk(reasoning_content)
+                  handle_chunk_metrics(reasoning_content)
                 }
               }
             }
@@ -339,30 +360,37 @@ export const send_llm_message = async (params: {
         let thoughts: string | undefined = undefined
         let final_content = content_for_client
 
-        const start_match = full_response.match(/<(?:think|thought)>/)
-        const end_match = full_response.match(/<\/(?:think|thought)>/)
+        if (api_thoughts) {
+          thoughts = api_thoughts
+          if (!think_block_closed) {
+            final_content = full_response
+          }
+        } else {
+          const start_match = full_response.match(/<(?:think|thought)>/)
+          const end_match = full_response.match(/<\/(?:think|thought)>/)
 
-        if (start_match && end_match && end_match.index! > start_match.index!) {
-          const content_start = start_match.index! + start_match[0].length
-          thoughts = full_response
-            .substring(content_start, end_match.index!)
-            .trim()
-        } else if (start_match && !end_match) {
-          const content_start = start_match.index! + start_match[0].length
-          thoughts = full_response.substring(content_start).trim()
-        } else if (
-          end_match &&
-          (!start_match || start_match.index! > end_match.index!)
-        ) {
-          thoughts = full_response.substring(0, end_match.index!).trim()
-          final_content = full_response
-            .substring(end_match.index! + end_match[0].length)
-            .trim()
-          Logger.info({
-            function_name: 'send_llm_message',
-            message:
-              'Detected closing tag without opening tag (or before opening tag), stripped content before'
-          })
+          if (start_match && end_match && end_match.index! > start_match.index!) {
+            const content_start = start_match.index! + start_match[0].length
+            thoughts = full_response
+              .substring(content_start, end_match.index!)
+              .trim()
+          } else if (start_match && !end_match) {
+            const content_start = start_match.index! + start_match[0].length
+            thoughts = full_response.substring(content_start).trim()
+          } else if (
+            end_match &&
+            (!start_match || start_match.index! > end_match.index!)
+          ) {
+            thoughts = full_response.substring(0, end_match.index!).trim()
+            final_content = full_response
+              .substring(end_match.index! + end_match[0].length)
+              .trim()
+            Logger.info({
+              function_name: 'send_llm_message',
+              message:
+                'Detected closing tag without opening tag (or before opening tag), stripped content before'
+            })
+          }
         }
 
         Logger.info({
@@ -370,7 +398,7 @@ export const send_llm_message = async (params: {
           message: 'Combined code received (full response):',
           data: full_response
         })
-        if (in_think_block) {
+        if (in_think_block || api_thoughts) {
           Logger.info({
             function_name: 'send_llm_message',
             message: 'Combined code received (for client):',
