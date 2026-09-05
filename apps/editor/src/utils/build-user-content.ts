@@ -5,7 +5,6 @@ export const build_user_content = (params: {
   model_provider: ModelProvider
   part1: string
   part2: string
-  is_explicit_cache_enabled?: boolean
 }): any => {
   const parse_text_with_images = (text: string) => {
     if (!text.includes('<cwc-image>')) {
@@ -38,15 +37,13 @@ export const build_user_content = (params: {
   if (is_anthropic || is_openai) {
     const cache_config: any = {}
 
-    if (params.is_explicit_cache_enabled) {
-      if (is_anthropic) {
-        cache_config.cache_control = { type: 'ephemeral' }
-        if (params.model_provider.extended_cache) {
-          cache_config.cache_control.ttl = '1h'
-        }
-      } else if (is_openai) {
-        cache_config.prompt_cache_breakpoint = { mode: 'explicit' }
+    if (is_anthropic) {
+      cache_config.cache_control = { type: 'ephemeral' }
+      if (params.model_provider.extended_cache) {
+        cache_config.cache_control.ttl = '1h'
       }
+    } else if (is_openai) {
+      cache_config.prompt_cache_breakpoint = { mode: 'explicit' }
     }
 
     const user_content: any[] = [
