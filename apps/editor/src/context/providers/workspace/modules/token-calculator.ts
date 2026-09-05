@@ -128,11 +128,6 @@ export class TokenCalculator implements vscode.Disposable {
 
       try {
         await fs.promises.writeFile(cache_path, JSON.stringify(cache_to_write))
-
-        Logger.info({
-          function_name: '_update_token_counts_cache',
-          message: 'Token counts cache updated'
-        })
         this._has_token_counts_cache_updated_once = true
       } catch (error) {
         Logger.error({
