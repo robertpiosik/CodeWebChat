@@ -34,6 +34,7 @@ type Props = {
   }) => void
   on_delete_api_configuration: (id: string) => void
   on_edit_api_configuration: (id: string) => void
+  on_toggle_pinned_api_configuration: (config: ApiConfiguration) => void
   on_set_default_api_configuration: (
     api_feature: ApiFeature,
     api_configuration_id: string | null
@@ -162,7 +163,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                     <>
                       <IconButton
                         codicon_icon="insert"
-                        title={t('api-calls.model-providers.action.insert')}
+                        title={t('action.insert')}
                         on_click={() =>
                           props.on_add_provider({ insertion_index: index })
                         }
@@ -254,8 +255,16 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                 render_actions={(config, index) => (
                   <>
                     <IconButton
+                      codicon_icon={config.is_pinned ? 'pinned' : 'pin'}
+                      title={config.is_pinned ? t('action.unpin') : t('action.pin')}
+                      on_click={(e) => {
+                        e.stopPropagation()
+                        props.on_toggle_pinned_api_configuration(config)
+                      }}
+                    />
+                    <IconButton
                       codicon_icon="insert"
-                      title={t('api-calls.configurations.action.insert')}
+                      title={t('action.insert')}
                       on_click={() =>
                         props.on_add_api_configuration({
                           insertion_index: index

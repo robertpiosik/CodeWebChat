@@ -181,6 +181,7 @@ type Props = {
   }) => void
   on_edit_api_configuration: (id: string) => void
   on_delete_api_configuration: (id: string) => void
+  on_toggle_pinned_api_configuration: (config: ApiConfiguration) => void
   on_reorder_web_configurations: (reordered: WebConfiguration[]) => void
   on_add_web_configuration: (params?: {
     insertion_index?: number
@@ -188,6 +189,7 @@ type Props = {
   }) => void
   on_edit_web_configuration: (id: string) => void
   on_delete_web_configuration: (name: string) => void
+  on_toggle_pinned_web_configuration: (config: WebConfiguration) => void
   on_open_external_url: (url: string) => void
   scroll_to_section_on_load?: NavItem
 }
@@ -680,6 +682,7 @@ export const Home: React.FC<Props> = (props) => {
           on_add_web_configuration={props.on_add_web_configuration}
           on_edit_web_configuration={props.on_edit_web_configuration}
           on_delete_web_configuration={props.on_delete_web_configuration}
+          on_toggle_pinned_web_configuration={props.on_toggle_pinned_web_configuration}
           reuse_last_tab={props.reuse_last_tab}
           on_reuse_last_tab_change={props.on_reuse_last_tab_change}
           gemini_user_id={props.gemini_user_id}
@@ -715,6 +718,7 @@ export const Home: React.FC<Props> = (props) => {
           on_add_api_configuration={props.on_add_api_configuration}
           on_edit_api_configuration={props.on_edit_api_configuration}
           on_delete_api_configuration={props.on_delete_api_configuration}
+          on_toggle_pinned_api_configuration={props.on_toggle_pinned_api_configuration}
           edit_files_instructions={edit_files_instructions}
           set_edit_files_instructions={set_edit_files_instructions}
           on_edit_files_instructions_blur={() => {

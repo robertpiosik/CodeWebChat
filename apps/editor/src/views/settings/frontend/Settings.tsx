@@ -268,6 +268,9 @@ export const Settings = () => {
         on_delete_api_configuration={
           settings_hook.handle_delete_api_configuration
         }
+        on_toggle_pinned_api_configuration={
+          settings_hook.handle_toggle_pinned_api_configuration
+        }
         web_configurations={settings_hook.web_configurations!}
         set_web_configurations={settings_hook.set_web_configurations}
         on_reorder_web_configurations={
@@ -286,6 +289,9 @@ export const Settings = () => {
         }}
         on_delete_web_configuration={
           settings_hook.handle_delete_web_configuration
+        }
+        on_toggle_pinned_web_configuration={
+          settings_hook.handle_toggle_pinned_web_configuration
         }
         on_open_external_url={settings_hook.handle_open_external_url}
         scroll_to_section_on_load={scroll_to_section_on_load}

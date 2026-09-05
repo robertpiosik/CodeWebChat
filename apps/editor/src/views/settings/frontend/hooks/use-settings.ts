@@ -464,6 +464,24 @@ export const use_settings = (vscode: any) => {
     })
   }
 
+  const handle_toggle_pinned_api_configuration = (config: ApiConfiguration) => {
+    post_message(vscode, {
+      command: 'UPDATE_API_CONFIGURATION',
+      updating_api_configuration: config,
+      updated_api_configuration: { ...config, is_pinned: !config.is_pinned },
+      origin: 'save'
+    })
+  }
+
+  const handle_toggle_pinned_web_configuration = (config: WebConfiguration) => {
+    post_message(vscode, {
+      command: 'UPDATE_WEB_CONFIGURATION',
+      updating_web_configuration: config,
+      updated_web_configuration: { ...config, is_pinned: !config.is_pinned },
+      origin: 'save'
+    })
+  }
+
   return {
     providers,
     set_providers,
@@ -500,6 +518,8 @@ export const use_settings = (vscode: any) => {
     handle_reorder_web_configurations,
     handle_add_web_configuration,
     handle_delete_web_configuration,
+    handle_toggle_pinned_api_configuration,
+    handle_toggle_pinned_web_configuration,
     handle_synchronize_edit_format_between_targets_change,
     handle_commit_instructions_change,
     handle_attach_ascii_tree_of_context_change,

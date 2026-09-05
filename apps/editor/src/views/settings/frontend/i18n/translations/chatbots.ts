@@ -72,24 +72,6 @@ export const translations = {
     hu: 'A böngészővel való kommunikáció helyi WebSocketeket használ.',
     bg: 'Комуникацията с браузъра използва локални WebSocket.'
   },
-  'chatbots.configurations.action.insert': {
-    en: 'Insert a new configuration below/above',
-    pl: 'Wstaw nową konfigurację poniżej/powyżej',
-    'zh-cn': '在下方/上方插入新配置',
-    ja: '下/上に新しい設定を挿入',
-    'zh-tw': '在下方/上方插入新設定',
-    de: 'Neue Konfiguration darunter/darüber einfügen',
-    es: 'Insertar una nueva configuración debajo/arriba',
-    fr: 'Insérer une nouvelle configuration en dessous/au-dessus',
-    'pt-br': 'Inserir uma nova configuração abaixo/acima',
-    ru: 'Вставить новую конфигурацию ниже/выше',
-    ko: '아래/위에 새 구성 삽입',
-    it: 'Inserisci una nuova configurazione sotto/sopra',
-    tr: 'Aşağıya/yukarıya yeni bir yapılandırma ekle',
-    cs: 'Vložit novou konfiguraci pod/nad',
-    hu: 'Új konfiguráció beszúrása alá/fölé',
-    bg: 'Вмъкване на нова конфигурация отдолу/отгоре'
-  },
   'chatbots.configurations.action.edit': {
     en: 'Edit configuration',
     pl: 'Edytuj konfigurację',

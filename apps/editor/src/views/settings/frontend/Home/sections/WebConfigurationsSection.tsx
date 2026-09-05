@@ -24,6 +24,7 @@ type Props = {
   }) => void
   on_edit_web_configuration: (id: string) => void
   on_delete_web_configuration: (name: string) => void
+  on_toggle_pinned_web_configuration: (config: WebConfiguration) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
   reuse_last_tab: boolean
   on_reuse_last_tab_change: (enabled: boolean) => void
@@ -234,8 +235,16 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                 render_actions={(config, index) => (
                   <>
                     <IconButton
+                      codicon_icon={config.is_pinned ? 'pinned' : 'pin'}
+                      title={config.is_pinned ? t('action.unpin') : t('action.pin')}
+                      on_click={(e) => {
+                        e.stopPropagation()
+                        props.on_toggle_pinned_web_configuration(config)
+                      }}
+                    />
+                    <IconButton
                       codicon_icon="insert"
-                      title={t('chatbots.configurations.action.insert')}
+                      title={t('action.insert')}
                       on_click={() =>
                         props.on_add_web_configuration({
                           insertion_index: index

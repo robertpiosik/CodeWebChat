@@ -73,24 +73,6 @@ export const translations = {
     hu: 'A hitelesítő adatok biztonságosan vannak tárolva a {link} a gépén.',
     bg: 'Идентификационните данни се съхраняват сигурно в {link} на вашата машина.'
   },
-  'api-calls.model-providers.action.insert': {
-    en: 'Insert a new provider below/above',
-    pl: 'Wstaw nowego dostawcę poniżej/powyżej',
-    'zh-cn': '在下方/上方插入新提供商',
-    ja: '下/上に新しいプロバイダーを挿入',
-    'zh-tw': '在下方/上方插入新供應商',
-    de: 'Neuen Anbieter darunter/darüber einfügen',
-    es: 'Insertar un nuevo proveedor debajo/arriba',
-    fr: 'Insérer un nouveau fournisseur en dessous/au-dessus',
-    'pt-br': 'Inserir um novo provedor abaixo/acima',
-    ru: 'Вставить нового провайдера ниже/выше',
-    ko: '아래/위에 새 제공자 삽입',
-    it: 'Inserisci un nuovo fornitore sotto/sopra',
-    tr: 'Aşağıya/yukarıya yeni bir sağlayıcı ekle',
-    cs: 'Vložit nového poskytovatele pod/nad',
-    hu: 'Új szolgáltató beszúrása alá/fölé',
-    bg: 'Вмъкване на нов доставчик отдолу/отгоре'
-  },
   'api-calls.model-providers.action.edit': {
     en: 'Edit provider',
     pl: 'Edytuj dostawcę',
@@ -198,24 +180,6 @@ export const translations = {
     cs: 'Odesílejte prompty přímo z editoru.',
     hu: 'Küldjön promptokat a szerkesztőből.',
     bg: 'Изпращайте промптове от самия редактор.'
-  },
-  'api-calls.configurations.action.insert': {
-    en: 'Insert a new configuration below/above',
-    pl: 'Wstaw nową konfigurację poniżej/powyżej',
-    'zh-cn': '在下方/上方插入新配置',
-    ja: '下/上に新しい設定を挿入',
-    'zh-tw': '在下方/上方插入新設定',
-    de: 'Neue Konfiguration darunter/darüber einfügen',
-    es: 'Insertar una nueva configuración debajo/arriba',
-    fr: 'Insérer une nouvelle configuration en dessous/au-dessus',
-    'pt-br': 'Inserir uma nova configuração abaixo/acima',
-    ru: 'Вставить новую конфигурацию ниже/выше',
-    ko: '아래/위에 새 구성 삽입',
-    it: 'Inserisci una nuova configurazione sotto/sopra',
-    tr: 'Aşağıya/yukarıya yeni bir yapılandırma ekle',
-    cs: 'Vložit novou konfiguraci pod/nad',
-    hu: 'Új konfiguráció beszúrása alá/fölé',
-    bg: 'Вмъкване на нова конфигурация отдолу/отгоре'
   },
   'api-calls.configurations.action.edit': {
     en: 'Edit configuration',
