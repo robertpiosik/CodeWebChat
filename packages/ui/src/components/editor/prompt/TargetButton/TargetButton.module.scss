@@ -34,8 +34,7 @@
   }
 
   &:not(:disabled):hover {
-    background-color: var(--cwc-purple-background);
-    color: var(--cwc-purple-foreground);
+    background-color: var(--vscode-toolbar-hoverBackground);
 
     .button__label-char {
       animation: wave 0.5s ease-in-out;
