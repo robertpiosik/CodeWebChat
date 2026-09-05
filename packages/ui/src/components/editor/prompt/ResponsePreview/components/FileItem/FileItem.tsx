@@ -203,8 +203,8 @@ export const FileItem: FC<Props> = (props) => {
                 {props.file.file_state != 'new' &&
                   props.file.file_state != 'deleted' && (
                     <IconButton
-                      codicon_icon="sparkle"
-                      title="Apply with Intelligent Update API tool"
+                      codicon_icon="edit-sparkle"
+                      title="Edit with Intelligent Update"
                       on_click={(e) => {
                         e.stopPropagation()
                         props.on_intelligent_update(
@@ -258,7 +258,7 @@ export const FileItem: FC<Props> = (props) => {
               label: props.file.applied_with_intelligent_update
                 ? 'Retry'
                 : 'Fix',
-              title: 'Apply with Intelligent Update API tool',
+              title: 'Edit with Intelligent Update',
               on_click: (e: React.MouseEvent) => {
                 e.stopPropagation()
                 props.on_intelligent_update(
