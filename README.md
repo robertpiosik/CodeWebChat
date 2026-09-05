@@ -27,7 +27,7 @@
 
 ## Prompts
 
-**CWC** helps construct prompts for common tasks like relevant-file searching, multi-file editing, asking about file selection, generating code at cursor or commit messages.
+**CWC** helps construct prompts for common tasks like relevant-file searching, multi-file editing, planning features, getting explanations, generating code at cursor or commit messages.
 
 ### Agentic search
 
