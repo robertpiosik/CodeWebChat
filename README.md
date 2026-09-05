@@ -31,7 +31,7 @@
 
 ### Agentic search
 
-Query your favorite agent for task-relevant file selection utilizing its one-off prompt (headless) mode.
+Task-relevant files directly from your favorite agent utilizing its one-off prompt (headless) mode.
 
 **Supported CLIs:** Antigravity, Claude Code, Codex, Cursor, Grok Build, Muse Code, OpenCode.
 
@@ -56,7 +56,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 ### Intelligent search
 
-Search for task-relevant files with a single message. Invokable on overall workspace, a single folder, or across all selected files.
+Quick task-relevant files from a single message. Invokable on overall workspace, a single folder, or across all selected files.
 
 <details>
 <summary>Structure of the constructed prompt</summary>
@@ -87,7 +87,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 ### Multi-file editing
 
-Implement new features, fix bugs and refactor code across many files.
+Implementing new features, bug fixing and code refactors across many files.
 
 <details>
 <summary>Structure of the constructed prompt</summary>
@@ -111,7 +111,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 ### Asking about file selection
 
-Plan features or get explanations.
+Feature planning and getting general assistance.
 
 <details>
 <summary>Structure of the constructed prompt</summary>
