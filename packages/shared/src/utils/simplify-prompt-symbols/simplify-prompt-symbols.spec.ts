@@ -8,17 +8,8 @@ describe('simplify_prompt_symbols', () => {
     )
   })
 
-  it('should replace <fragment> tags', () => {
-    const prompt =
-      'Fix this code:\n<fragment path="test.ts" start="1:1" end="2:2">\nconsole.log("test")\n</fragment>\nplease'
-    expect(simplify_prompt_symbols({ prompt })).toBe(
-      'Fix this code:\n[Fragment]\nplease'
-    )
-  })
-
-  it('should replace <fragment> tags with code block', () => {
-    const prompt =
-      'Fix this code: <fragment path="test.ts">\n```\nconsole.log("hello");\n```\n</fragment> please'
+  it('should replace #Fragment', () => {
+    const prompt = 'Fix this code: #Fragment(test.ts:1:1-2:2) please'
     expect(simplify_prompt_symbols({ prompt })).toBe(
       'Fix this code: [Fragment] please'
     )
@@ -66,7 +57,7 @@ describe('simplify_prompt_symbols', () => {
 
   it('should handle multiple replacements', () => {
     const prompt =
-      '#Selection and <fragment path="a.ts">code</fragment> with #Changes(dev)'
+      '#Selection and #Fragment(a.ts:1:1-2:2) with #Changes(dev)'
     expect(simplify_prompt_symbols({ prompt })).toBe(
       '[Selection] and [Fragment] with [Changes]'
     )

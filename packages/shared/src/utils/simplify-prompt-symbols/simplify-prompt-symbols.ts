@@ -4,7 +4,7 @@ export const simplify_prompt_symbols = (params: { prompt: string }): string => {
   let simplified = params.prompt
 
   simplified = simplified.replace(
-    /<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>/g,
+    /#Fragment\(.+?:\d+:\d+-\d+:\d+\)/g,
     '[Fragment]'
   )
   simplified = simplified.replace(/#Selection/g, '[Selection]')
