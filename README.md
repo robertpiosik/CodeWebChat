@@ -31,7 +31,7 @@
 
 ### Agentic search
 
-Task-relevant files from your favorite coding agent, utilizing its one-off prompt (headless) mode.
+_Task-relevant files from your favorite coding agent, utilizing its one-off prompt (headless) mode._
 
 **Supported CLIs:**
 
@@ -64,7 +64,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 ### Intelligent search
 
-A quick way for task-relevant files from a single llm message. Files can be sent in full or stripped from function bodies. Invokable on overall workspace, a single folder, or can narrow down current file selection.
+_A quick way for task-relevant files from a single llm message. Files can be sent in full or stripped from function bodies. Invokable on overall workspace, a single folder, or can narrow down current file selection._
 
 <details>
 <summary>Structure of the constructed prompt</summary>
@@ -95,7 +95,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 ### Multi-file editing
 
-Implementing new features, fixing bugs or doing refactors.
+_Implementing new features, fixing bugs or doing refactors._
 
 <details>
 <summary>Structure of the constructed prompt</summary>
@@ -119,7 +119,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 ### Asking about file selection
 
-Getting general assistance.
+_Explanations, planning, code reviews, you name it._
 
 <details>
 <summary>Structure of the constructed prompt</summary>
@@ -138,7 +138,7 @@ Getting general assistance.
 
 ### Code at cursor
 
-TAB completions from SOTA reasoning models.
+_TAB completions from SOTA reasoning models._
 
 <details>
 <summary>Structure of the constructed prompt</summary>
@@ -171,7 +171,7 @@ Find correct replacement text for the <missing_text> symbol.
 
 ### Commit messages
 
-Generate commit messages based on staged changes and context files.
+_Generate commit messages based on staged changes and context files._
 
 <details>
 <summary>Structure of the constructed prompt</summary>
