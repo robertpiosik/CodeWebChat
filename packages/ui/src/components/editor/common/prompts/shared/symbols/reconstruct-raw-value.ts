@@ -1,3 +1,5 @@
+import { display_token_count } from '@shared/utils/display-token-count'
+
 export const reconstruct_raw_value_from_node = (node: Node): string => {
   if (node.nodeType == Node.TEXT_NODE) {
     return node.textContent || ''
@@ -126,15 +128,16 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
       }
     } else if (el.dataset.type == 'pasted-text-symbol') {
       const hash = el.dataset.hash
-      const token_count = el.dataset.tokenCount
-      if (!hash || !token_count) return ''
+      const token_count_str = el.dataset.tokenCount
+      if (!hash || !token_count_str) return ''
 
-      const expected_text = `Pasted ${token_count} tokens`
+      const token_count = parseInt(token_count_str)
+      const expected_text = `Pasted ${display_token_count(token_count)} tokens`
       const index = inner_content.indexOf(expected_text)
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
-        return `${prefix}#PastedText(${hash}:${token_count})${suffix}`
+        return `${prefix}#PastedText(${hash}:${token_count_str})${suffix}`
       }
     } else if (el.dataset.type == 'website-symbol') {
       const url = el.dataset.url

@@ -2,6 +2,7 @@ import cn from 'classnames'
 import styles from './prompt-symbols.module.scss'
 import pfStyles from '../../PromptField/PromptField.module.scss'
 import { SelectionState } from '../../PromptField'
+import { display_token_count } from '@shared/utils/display-token-count'
 
 const escape_html = (str: string): string => {
   if (!str) return ''
@@ -256,12 +257,13 @@ export const get_highlighted_text = (params: {
       )
       if (part && pasted_text_match) {
         const hash = pasted_text_match[1]
-        const token_count = pasted_text_match[2]
-        const label = `Pasted ${token_count} tokens`
+        const token_count_str = pasted_text_match[2]
+        const token_count = parseInt(token_count_str)
+        const label = `Pasted ${display_token_count(token_count)} tokens`
         return `<span class="${cn(
           styles['symbol'],
           styles['symbol--pasted-text']
-        )}" data-type="pasted-text-symbol" data-hash="${hash}" data-token-count="${token_count}"><span class="${
+        )}" data-type="pasted-text-symbol" data-hash="${hash}" data-token-count="${token_count_str}"><span class="${
           styles['symbol__icon']
         }" data-role="symbol-icon"></span><span class="${
           styles['symbol__text']

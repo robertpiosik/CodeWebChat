@@ -1,3 +1,5 @@
+import { display_token_count } from '@shared/utils/display-token-count'
+
 export const map_display_pos_to_raw_pos = (params: {
   display_pos: number
   raw_text: string
@@ -70,9 +72,9 @@ export const map_display_pos_to_raw_pos = (params: {
       const match = pasted_text_symbol.match(
         /^#PastedText\(([a-fA-F0-9]+):(\d+)\)$/
       )
-      const token_count = match ? match[2] : null
+      const token_count = match ? parseInt(match[2]) : null
       display_match_length = token_count
-        ? `Pasted ${token_count} tokens`.length
+        ? `Pasted ${display_token_count(token_count)} tokens`.length
         : 0
       is_replacement_match = true
     } else if (website_symbol) {
@@ -194,9 +196,9 @@ export const map_raw_pos_to_display_pos = (params: {
       const match = pasted_text_symbol.match(
         /^#PastedText\(([a-fA-F0-9]+):(\d+)\)$/
       )
-      const token_count = match ? match[2] : null
+      const token_count = match ? parseInt(match[2]) : null
       display_match_length = token_count
-        ? `Pasted ${token_count} tokens`.length
+        ? `Pasted ${display_token_count(token_count)} tokens`.length
         : 0
       is_replacement_match = true
     } else if (website_symbol) {
