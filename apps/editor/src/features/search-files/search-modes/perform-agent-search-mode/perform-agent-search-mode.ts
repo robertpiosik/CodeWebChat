@@ -59,413 +59,409 @@ export const perform_agent_search_mode = async (params: {
   }
 
   while (true) {
-    const available_agents = AGENTS.filter((a) => a.is_installed())
+    const initial_query =
+      local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY] !== undefined
+        ? local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY]
+        : params.show_back_button
+          ? ''
+          : params.extension_context.workspaceState.get<string>(
+              LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY
+            ) || ''
 
-    if (available_agents.length == 0) {
-      vscode.window.showInformationMessage(
-        t('feature.search-files.agent.no-agents')
-      )
-      return undefined
-    }
-
-    const add_button = {
-      iconPath: new vscode.ThemeIcon('flag'),
-      tooltip: t('feature.search-files.agent.add-flags')
-    }
-    const edit_button = {
-      iconPath: new vscode.ThemeIcon('edit'),
-      tooltip: t('feature.search-files.agent.edit-flags')
-    }
-    const delete_button = {
-      iconPath: new vscode.ThemeIcon('trash'),
-      tooltip: t('feature.search-files.agent.delete-flags')
-    }
-    const doc_button = {
-      iconPath: new vscode.ThemeIcon('question'),
-      tooltip: t('feature.search-files.agent.learn-more')
-    }
-
-    type AgentPickItem = vscode.QuickPickItem & {
-      cmd: string
-      agent_id: string
-      flag_index: number
-      flag_value: string
-      configKey: string
-    }
-
-    const build_agent_picks = (): AgentPickItem[] => {
-      const agent_picks: AgentPickItem[] = []
-
-      for (const a of available_agents) {
-        const configKey = `agenticSearch${
-          a.id.charAt(0).toUpperCase() + a.id.slice(1)
-        }Flags`
-        const config = vscode.workspace.getConfiguration('codeWebChat')
-        let flags = config.get<string[]>(configKey)
-        if (!Array.isArray(flags)) {
-          flags = []
+    const query_result = await prompt_for_search_term(
+      initial_query,
+      'agent',
+      undefined,
+      (value) => {
+        local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY] = value
+        if (!params.show_back_button) {
+          params.extension_context.workspaceState.update(
+            LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY,
+            value
+          )
         }
-
-        const custom_flags = flags.filter((f) => f.trim() !== '')
-        const display_flags = ['', ...custom_flags]
-
-        display_flags.forEach((flag, index) => {
-          const buttons: vscode.QuickInputButton[] = []
-          if (index === 0) {
-            buttons.push(add_button)
-            buttons.push(doc_button)
-          } else {
-            buttons.push(edit_button)
-            buttons.push(delete_button)
-          }
-
-          agent_picks.push({
-            label: a.label,
-            description: flag ? flag : undefined,
-            cmd: a.cmd,
-            agent_id: a.id,
-            flag_index: index > 0 ? index - 1 : -1,
-            flag_value: flag,
-            configKey,
-            buttons
-          })
-        })
-      }
-      return agent_picks
-    }
-
-    const close_button = {
-      iconPath: new vscode.ThemeIcon('close'),
-      tooltip: t('common.close')
-    }
-
-    const agent_quick_pick = vscode.window.createQuickPick<AgentPickItem>()
-    agent_quick_pick.items = build_agent_picks()
-    agent_quick_pick.title = t('feature.search-files.agent.select-agent')
-    agent_quick_pick.placeholder = t(
-      'feature.search-files.agent.select-agent-placeholder'
-    )
-    agent_quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
-    agent_quick_pick.ignoreFocusOut = true
-
-    const config_listener = vscode.workspace.onDidChangeConfiguration((e) => {
-      if (e.affectsConfiguration('codeWebChat')) {
-        agent_quick_pick.items = build_agent_picks()
-      }
-    })
-
-    type AgentSelectionResult =
-      | 'back'
-      | undefined
-      | { action: 'run'; cmd: string; flag_value: string }
-      | { action: 'edit'; configKey: string; index: number; value: string }
-      | { action: 'add'; configKey: string }
-
-    const agent_selection_result = await new Promise<AgentSelectionResult>(
-      (resolve) => {
-        let is_resolved = false
-
-        agent_quick_pick.onDidTriggerButton((button) => {
-          if (button === vscode.QuickInputButtons.Back) {
-            is_resolved = true
-            resolve('back')
-            agent_quick_pick.hide()
-          } else if (button === close_button) {
-            is_resolved = true
-            resolve(undefined)
-            agent_quick_pick.hide()
-          }
-        })
-
-        agent_quick_pick.onDidTriggerItemButton((e) => {
-          if (e.button === doc_button) {
-            const agent = available_agents.find((a) => a.cmd == e.item.cmd)
-            if (agent) {
-              vscode.env.openExternal(
-                vscode.Uri.parse(agent.get_documentation_url())
-              )
-            }
-          } else if (e.button === edit_button) {
-            is_resolved = true
-            resolve({
-              action: 'edit',
-              configKey: e.item.configKey,
-              index: e.item.flag_index,
-              value: e.item.flag_value
-            })
-            agent_quick_pick.hide()
-          } else if (e.button === add_button) {
-            is_resolved = true
-            resolve({ action: 'add', configKey: e.item.configKey })
-            agent_quick_pick.hide()
-          } else if (e.button === delete_button) {
-            const config = vscode.workspace.getConfiguration('codeWebChat')
-            const flags = config
-              .get<string[]>(e.item.configKey, [])
-              .filter((f) => f.trim() !== '')
-            const deleted_flag = flags[e.item.flag_index]
-            const new_flags_array = flags.filter(
-              (_, i) => i !== e.item.flag_index
-            )
-
-            config
-              .update(
-                e.item.configKey,
-                new_flags_array,
-                vscode.ConfigurationTarget.Global
-              )
-              .then(() => {
-                const undo_action = t('common.undo')
-                vscode.window
-                  .showInformationMessage(
-                    t('feature.search-files.agent.deleted'),
-                    undo_action
-                  )
-                  .then((choice) => {
-                    if (choice === undo_action) {
-                      const current_config =
-                        vscode.workspace.getConfiguration('codeWebChat')
-                      const current_flags = current_config
-                        .get<string[]>(e.item.configKey, [])
-                        .filter((f) => f.trim() !== '')
-                      current_flags.splice(e.item.flag_index, 0, deleted_flag)
-                      current_config.update(
-                        e.item.configKey,
-                        current_flags,
-                        vscode.ConfigurationTarget.Global
-                      )
-                    }
-                  })
-              })
-          }
-        })
-
-        agent_quick_pick.onDidAccept(() => {
-          const selected = agent_quick_pick.selectedItems[0]
-          if (selected) {
-            is_resolved = true
-            resolve({
-              action: 'run',
-              cmd: selected.cmd,
-              flag_value: selected.flag_value
-            })
-            agent_quick_pick.hide()
-          }
-        })
-
-        agent_quick_pick.onDidHide(() => {
-          if (!is_resolved) {
-            resolve(undefined)
-          }
-          config_listener.dispose()
-          agent_quick_pick.dispose()
-        })
-
-        agent_quick_pick.show()
       }
     )
 
-    if (agent_selection_result == 'back') {
+    if (query_result.back) {
       return 'back'
     }
 
-    if (!agent_selection_result) {
+    if (query_result.value === undefined) {
       return undefined
     }
 
-    if (agent_selection_result.action === 'add') {
-      const { configKey } = agent_selection_result
-      const new_flags = await vscode.window.showInputBox({
-        title: t('feature.search-files.agent.add-flags'),
-        prompt: t('feature.search-files.agent.edit-flags-prompt'),
-        placeHolder: t('feature.search-files.agent.edit-flags-placeholder'),
-        value: '',
-        ignoreFocusOut: true
-      })
-      if (new_flags !== undefined && new_flags.trim() !== '') {
-        const config = vscode.workspace.getConfiguration('codeWebChat')
-        const flags = config
-          .get<string[]>(configKey, [])
-          .filter((f) => f.trim() !== '')
-        await config.update(
-          configKey,
-          [...flags, new_flags],
-          vscode.ConfigurationTarget.Global
-        )
-      }
+    const query = query_result.value
+
+    if (query.trim() == '') {
       continue
     }
 
-    if (agent_selection_result.action === 'edit') {
-      const { configKey, index, value } = agent_selection_result
-      const new_flags = await vscode.window.showInputBox({
-        title: t('feature.search-files.agent.edit-flags'),
-        prompt: t('feature.search-files.agent.edit-flags-prompt'),
-        placeHolder: t('feature.search-files.agent.edit-flags-placeholder'),
-        value: value,
-        ignoreFocusOut: true
-      })
-      if (new_flags !== undefined) {
-        const config = vscode.workspace.getConfiguration('codeWebChat')
-        const flags = config
-          .get<string[]>(configKey, [])
-          .filter((f) => f.trim() !== '')
-        const new_flags_array = [...flags]
-        if (new_flags.trim() !== '') {
-          new_flags_array[index] = new_flags
-        } else {
-          new_flags_array.splice(index, 1)
-        }
-        await config.update(
-          configKey,
-          new_flags_array,
-          vscode.ConfigurationTarget.Global
-        )
-      }
-      continue
+    local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY] = query
+    if (!params.show_back_button) {
+      await params.extension_context.workspaceState.update(
+        LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY,
+        query
+      )
     }
 
-    const selected_agent_cmd = agent_selection_result.cmd
-    const flags_string = agent_selection_result.flag_value
-
-    let go_back_to_agent = false
+    let go_back_to_query = false
 
     while (true) {
-      let selected_root: string | undefined
+      const available_agents = AGENTS.filter((a) => a.is_installed())
 
-      if (roots.length == 1) {
-        selected_root = roots[0]
-      } else {
-        const picks = roots.map((root) => ({
-          label: params.workspace_provider.get_workspace_name(root),
-          description: root,
-          root
-        }))
-
-        const last_selected_root =
-          params.extension_context.workspaceState.get<string>(
-            LAST_SELECTED_WORKSPACE_IN_AGENT_SEARCH_STATE_KEY
-          )
-        const active_item =
-          picks.find((p) => p.root == last_selected_root) || picks[0]
-
-        const quick_pick = vscode.window.createQuickPick<
-          vscode.QuickPickItem & { root: string }
-        >()
-        quick_pick.items = picks
-        if (active_item) {
-          quick_pick.activeItems = [active_item]
-        }
-        quick_pick.title = t('feature.search-files.agent.select-workspace')
-        quick_pick.placeholder = t(
-          'feature.search-files.agent.select-workspace-placeholder'
+      if (available_agents.length == 0) {
+        vscode.window.showInformationMessage(
+          t('feature.search-files.agent.no-agents')
         )
-        quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
-        quick_pick.ignoreFocusOut = true
-
-        const res = await new Promise<string | undefined | 'back'>(
-          (resolve) => {
-            let is_resolved = false
-
-            quick_pick.onDidTriggerButton((button) => {
-              if (button === vscode.QuickInputButtons.Back) {
-                is_resolved = true
-                resolve('back')
-                quick_pick.hide()
-              } else if (button === close_button) {
-                is_resolved = true
-                resolve(undefined)
-                quick_pick.hide()
-              }
-            })
-
-            quick_pick.onDidAccept(() => {
-              const selected = quick_pick.selectedItems[0]
-              if (selected) {
-                is_resolved = true
-                resolve(selected.root)
-                quick_pick.hide()
-              }
-            })
-
-            quick_pick.onDidHide(() => {
-              if (!is_resolved) {
-                resolve(undefined)
-              }
-              quick_pick.dispose()
-            })
-
-            quick_pick.show()
-          }
-        )
-
-        if (res == 'back') {
-          go_back_to_agent = true
-          break
-        }
-
-        if (!res) {
-          return undefined
-        }
-
-        selected_root = res
-        await params.extension_context.workspaceState.update(
-          LAST_SELECTED_WORKSPACE_IN_AGENT_SEARCH_STATE_KEY,
-          selected_root
-        )
+        return undefined
       }
 
-      let go_back_to_workspace = false
+      const add_button = {
+        iconPath: new vscode.ThemeIcon('flag'),
+        tooltip: t('feature.search-files.agent.add-flags')
+      }
+      const edit_button = {
+        iconPath: new vscode.ThemeIcon('edit'),
+        tooltip: t('feature.search-files.agent.edit-flags')
+      }
+      const delete_button = {
+        iconPath: new vscode.ThemeIcon('trash'),
+        tooltip: t('feature.search-files.agent.delete-flags')
+      }
+      const doc_button = {
+        iconPath: new vscode.ThemeIcon('question'),
+        tooltip: t('feature.search-files.agent.learn-more')
+      }
+
+      type AgentPickItem = vscode.QuickPickItem & {
+        cmd: string
+        agent_id: string
+        flag_index: number
+        flag_value: string
+        configKey: string
+      }
+
+      const build_agent_picks = (): AgentPickItem[] => {
+        const agent_picks: AgentPickItem[] = []
+
+        for (const a of available_agents) {
+          const configKey = `agenticSearch${
+            a.id.charAt(0).toUpperCase() + a.id.slice(1)
+          }Flags`
+          const config = vscode.workspace.getConfiguration('codeWebChat')
+          let flags = config.get<string[]>(configKey)
+          if (!Array.isArray(flags)) {
+            flags = []
+          }
+
+          const custom_flags = flags.filter((f) => f.trim() !== '')
+          const display_flags = ['', ...custom_flags]
+
+          display_flags.forEach((flag, index) => {
+            const buttons: vscode.QuickInputButton[] = []
+            if (index === 0) {
+              buttons.push(add_button)
+              buttons.push(doc_button)
+            } else {
+              buttons.push(edit_button)
+              buttons.push(delete_button)
+            }
+
+            agent_picks.push({
+              label: a.label,
+              description: flag ? flag : undefined,
+              cmd: a.cmd,
+              agent_id: a.id,
+              flag_index: index > 0 ? index - 1 : -1,
+              flag_value: flag,
+              configKey,
+              buttons
+            })
+          })
+        }
+        return agent_picks
+      }
+
+      const close_button = {
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: t('common.close')
+      }
+
+      const agent_quick_pick = vscode.window.createQuickPick<AgentPickItem>()
+      agent_quick_pick.items = build_agent_picks()
+      agent_quick_pick.title = t('feature.search-files.agent.select-agent')
+      agent_quick_pick.placeholder = t(
+        'feature.search-files.agent.select-agent-placeholder'
+      )
+      agent_quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
+      agent_quick_pick.ignoreFocusOut = true
+
+      const config_listener = vscode.workspace.onDidChangeConfiguration((e) => {
+        if (e.affectsConfiguration('codeWebChat')) {
+          agent_quick_pick.items = build_agent_picks()
+        }
+      })
+
+      type AgentSelectionResult =
+        | 'back'
+        | undefined
+        | { action: 'run'; cmd: string; flag_value: string }
+        | { action: 'edit'; configKey: string; index: number; value: string }
+        | { action: 'add'; configKey: string }
+
+      const agent_selection_result = await new Promise<AgentSelectionResult>(
+        (resolve) => {
+          let is_resolved = false
+
+          agent_quick_pick.onDidTriggerButton((button) => {
+            if (button === vscode.QuickInputButtons.Back) {
+              is_resolved = true
+              resolve('back')
+              agent_quick_pick.hide()
+            } else if (button === close_button) {
+              is_resolved = true
+              resolve(undefined)
+              agent_quick_pick.hide()
+            }
+          })
+
+          agent_quick_pick.onDidTriggerItemButton((e) => {
+            if (e.button === doc_button) {
+              const agent = available_agents.find((a) => a.cmd == e.item.cmd)
+              if (agent) {
+                vscode.env.openExternal(
+                  vscode.Uri.parse(agent.get_documentation_url())
+                )
+              }
+            } else if (e.button === edit_button) {
+              is_resolved = true
+              resolve({
+                action: 'edit',
+                configKey: e.item.configKey,
+                index: e.item.flag_index,
+                value: e.item.flag_value
+              })
+              agent_quick_pick.hide()
+            } else if (e.button === add_button) {
+              is_resolved = true
+              resolve({ action: 'add', configKey: e.item.configKey })
+              agent_quick_pick.hide()
+            } else if (e.button === delete_button) {
+              const config = vscode.workspace.getConfiguration('codeWebChat')
+              const flags = config
+                .get<string[]>(e.item.configKey, [])
+                .filter((f) => f.trim() !== '')
+              const deleted_flag = flags[e.item.flag_index]
+              const new_flags_array = flags.filter(
+                (_, i) => i !== e.item.flag_index
+              )
+
+              config
+                .update(
+                  e.item.configKey,
+                  new_flags_array,
+                  vscode.ConfigurationTarget.Global
+                )
+                .then(() => {
+                  const undo_action = t('common.undo')
+                  vscode.window
+                    .showInformationMessage(
+                      t('feature.search-files.agent.deleted'),
+                      undo_action
+                    )
+                    .then((choice) => {
+                      if (choice === undo_action) {
+                        const current_config =
+                          vscode.workspace.getConfiguration('codeWebChat')
+                        const current_flags = current_config
+                          .get<string[]>(e.item.configKey, [])
+                          .filter((f) => f.trim() !== '')
+                        current_flags.splice(e.item.flag_index, 0, deleted_flag)
+                        current_config.update(
+                          e.item.configKey,
+                          current_flags,
+                          vscode.ConfigurationTarget.Global
+                        )
+                      }
+                    })
+                })
+            }
+          })
+
+          agent_quick_pick.onDidAccept(() => {
+            const selected = agent_quick_pick.selectedItems[0]
+            if (selected) {
+              is_resolved = true
+              resolve({
+                action: 'run',
+                cmd: selected.cmd,
+                flag_value: selected.flag_value
+              })
+              agent_quick_pick.hide()
+            }
+          })
+
+          agent_quick_pick.onDidHide(() => {
+            if (!is_resolved) {
+              resolve(undefined)
+            }
+            config_listener.dispose()
+            agent_quick_pick.dispose()
+          })
+
+          agent_quick_pick.show()
+        }
+      )
+
+      if (agent_selection_result == 'back') {
+        go_back_to_query = true
+        break
+      }
+
+      if (!agent_selection_result) {
+        return undefined
+      }
+
+      if (agent_selection_result.action === 'add') {
+        const { configKey } = agent_selection_result
+        const new_flags = await vscode.window.showInputBox({
+          title: t('feature.search-files.agent.add-flags'),
+          prompt: t('feature.search-files.agent.edit-flags-prompt'),
+          placeHolder: t('feature.search-files.agent.edit-flags-placeholder'),
+          value: '',
+          ignoreFocusOut: true
+        })
+        if (new_flags !== undefined && new_flags.trim() !== '') {
+          const config = vscode.workspace.getConfiguration('codeWebChat')
+          const flags = config
+            .get<string[]>(configKey, [])
+            .filter((f) => f.trim() !== '')
+          await config.update(
+            configKey,
+            [...flags, new_flags],
+            vscode.ConfigurationTarget.Global
+          )
+        }
+        continue
+      }
+
+      if (agent_selection_result.action === 'edit') {
+        const { configKey, index, value } = agent_selection_result
+        const new_flags = await vscode.window.showInputBox({
+          title: t('feature.search-files.agent.edit-flags'),
+          prompt: t('feature.search-files.agent.edit-flags-prompt'),
+          placeHolder: t('feature.search-files.agent.edit-flags-placeholder'),
+          value: value,
+          ignoreFocusOut: true
+        })
+        if (new_flags !== undefined) {
+          const config = vscode.workspace.getConfiguration('codeWebChat')
+          const flags = config
+            .get<string[]>(configKey, [])
+            .filter((f) => f.trim() !== '')
+          const new_flags_array = [...flags]
+          if (new_flags.trim() !== '') {
+            new_flags_array[index] = new_flags
+          } else {
+            new_flags_array.splice(index, 1)
+          }
+          await config.update(
+            configKey,
+            new_flags_array,
+            vscode.ConfigurationTarget.Global
+          )
+        }
+        continue
+      }
+
+      const selected_agent_cmd = agent_selection_result.cmd
+      const flags_string = agent_selection_result.flag_value
+
+      let go_back_to_agent = false
 
       while (true) {
-        const initial_query =
-          local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY] !== undefined
-            ? local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY]
-            : params.show_back_button
-              ? ''
-              : params.extension_context.workspaceState.get<string>(
-                  LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY
-                ) || ''
+        let selected_root: string | undefined
 
-        const query_result = await prompt_for_search_term(
-          initial_query,
-          'agent',
-          undefined,
-          (value) => {
-            local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY] = value
-            if (!params.show_back_button) {
-              params.extension_context.workspaceState.update(
-                LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY,
-                value
-              )
+        if (roots.length == 1) {
+          selected_root = roots[0]
+        } else {
+          const picks = roots.map((root) => ({
+            label: params.workspace_provider.get_workspace_name(root),
+            description: root,
+            root
+          }))
+
+          const last_selected_root =
+            params.extension_context.workspaceState.get<string>(
+              LAST_SELECTED_WORKSPACE_IN_AGENT_SEARCH_STATE_KEY
+            )
+          const active_item =
+            picks.find((p) => p.root == last_selected_root) || picks[0]
+
+          const quick_pick = vscode.window.createQuickPick<
+            vscode.QuickPickItem & { root: string }
+          >()
+          quick_pick.items = picks
+          if (active_item) {
+            quick_pick.activeItems = [active_item]
+          }
+          quick_pick.title = t('feature.search-files.agent.select-workspace')
+          quick_pick.placeholder = t(
+            'feature.search-files.agent.select-workspace-placeholder'
+          )
+          quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
+          quick_pick.ignoreFocusOut = true
+
+          const res = await new Promise<string | undefined | 'back'>(
+            (resolve) => {
+              let is_resolved = false
+
+              quick_pick.onDidTriggerButton((button) => {
+                if (button === vscode.QuickInputButtons.Back) {
+                  is_resolved = true
+                  resolve('back')
+                  quick_pick.hide()
+                } else if (button === close_button) {
+                  is_resolved = true
+                  resolve(undefined)
+                  quick_pick.hide()
+                }
+              })
+
+              quick_pick.onDidAccept(() => {
+                const selected = quick_pick.selectedItems[0]
+                if (selected) {
+                  is_resolved = true
+                  resolve(selected.root)
+                  quick_pick.hide()
+                }
+              })
+
+              quick_pick.onDidHide(() => {
+                if (!is_resolved) {
+                  resolve(undefined)
+                }
+                quick_pick.dispose()
+              })
+
+              quick_pick.show()
             }
-          }
-        )
+          )
 
-        if (query_result.back) {
-          if (roots.length > 1) {
-            go_back_to_workspace = true
-          } else {
+          if (res == 'back') {
             go_back_to_agent = true
+            break
           }
-          break
-        }
 
-        if (query_result.value === undefined) {
-          return undefined
-        }
+          if (!res) {
+            return undefined
+          }
 
-        const query = query_result.value
-
-        if (query.trim() == '') {
-          continue
-        }
-
-        local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY] = query
-        if (!params.show_back_button) {
+          selected_root = res
           await params.extension_context.workspaceState.update(
-            LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY,
-            query
+            LAST_SELECTED_WORKSPACE_IN_AGENT_SEARCH_STATE_KEY,
+            selected_root
           )
         }
 
@@ -589,11 +585,13 @@ export const perform_agent_search_mode = async (params: {
           vscode.window.showErrorMessage(
             t('feature.search-files.failed', { error: String(err) })
           )
-          continue
+          go_back_to_query = true
+          break
         }
 
         if (is_cancelled) {
-          continue
+          go_back_to_query = true
+          break
         }
 
         const duration = format_duration(Date.now() - start_time)
@@ -605,7 +603,8 @@ export const perform_agent_search_mode = async (params: {
           vscode.window.showInformationMessage(
             t('feature.search-files.no-files')
           )
-          continue
+          go_back_to_query = true
+          break
         }
 
         const all_workspace_files = await get_all_workspace_files({
@@ -637,10 +636,11 @@ export const perform_agent_search_mode = async (params: {
           vscode.window.showInformationMessage(
             t('feature.search-files.no-files')
           )
-          continue
+          go_back_to_query = true
+          break
         }
 
-        let should_go_back_to_query = false
+        let should_go_back_to_workspace = false
         let restored_selected_paths: string[] | undefined = undefined
         let restored_unmatched_paths: string[] | undefined = undefined
         let final_decision:
@@ -666,7 +666,7 @@ export const perform_agent_search_mode = async (params: {
           })) as any
 
           if (selected_items == 'back') {
-            should_go_back_to_query = true
+            should_go_back_to_workspace = true
             break
           }
 
@@ -691,8 +691,13 @@ export const perform_agent_search_mode = async (params: {
           break
         }
 
-        if (should_go_back_to_query) {
-          continue
+        if (should_go_back_to_workspace) {
+          if (roots.length > 1) {
+            continue
+          } else {
+            go_back_to_agent = true
+            break
+          }
         }
 
         if (final_decision) {
@@ -700,13 +705,17 @@ export const perform_agent_search_mode = async (params: {
         }
       }
 
-      if (go_back_to_workspace) {
+      if (go_back_to_query) {
+        break
+      }
+
+      if (go_back_to_agent) {
         continue
       }
       break
     }
 
-    if (go_back_to_agent) {
+    if (go_back_to_query) {
       continue
     }
 
