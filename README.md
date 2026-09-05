@@ -17,35 +17,19 @@
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
-## Introduction
-
-**CWC** provides developers with a complete and free toolkit for pair programming with AI in all popular VS Code-based code editors.
-
 ## Privacy
 
 **CWC** operates 100% on your machine—no code, prompts or usage data are collected.
 
-## Static context
+## Prompts
 
-**CWC** constructs unified prompts with all relevant files and instructions, so the model has everything it needs from the start. Steer it with examples, focus its attention on specific code, and make simple instructions just work!
-
-## Features
-
-**CWC** helps with all common use-cases like multi-file editing, planning, generating code at cursor or commit messages.
+**CWC** helps construct prompts for common tasks like relevant-file searching, multi-file editing, asking about file selection, generating code at cursor or commit messages.
 
 ### Agentic search
 
 Query your favorite agent for task-relevant file selection utilizing its one-off prompt (headless) mode.
 
-**Supported CLIs:**
-
-- Antigravity
-- Claude Code
-- Codex
-- Cursor
-- Grok Build
-- Muse Code
-- OpenCode
+**Supported CLIs:** Antigravity, Claude Code, Codex, Cursor, Grok Build, Muse Code, OpenCode.
 
 <details>
 <summary>Structure of the constructed prompt</summary>
@@ -66,7 +50,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 </details>
 
-### File editing
+### Multi-file editing
 
 Implement new features, fix bugs and refactor code across many files.
 
