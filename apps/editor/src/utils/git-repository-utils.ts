@@ -6,6 +6,9 @@ import { t } from '@/i18n'
 import { MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE } from '@/constants/values'
 import { PromptBuilder } from './prompt-builder'
 import { display_token_count } from '@shared/utils/display-token-count'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
+import { WebSocketManager } from '@/services/websocket-manager'
+import { search_files } from '@/features/search-files'
 
 export type GitRepository = {
   rootUri: vscode.Uri
@@ -210,6 +213,9 @@ export const prepare_staged_changes = async (params: {
   repository: GitRepository
   stage_all_if_none_staged?: boolean
   selection_state?: { files?: string[] }
+  workspace_provider?: WorkspaceProvider
+  extension_context?: vscode.ExtensionContext
+  websocket_manager?: WebSocketManager
 }): Promise<string | null> => {
   await params.repository.status()
   const staged_changes = params.repository.state.indexChanges || []
@@ -349,76 +355,114 @@ export const prepare_staged_changes = async (params: {
         })
       )
 
-      const selected = await new Promise<any[] | undefined>((resolve) => {
-        const quick_pick = vscode.window.createQuickPick<any>()
-        quick_pick.items = items
+      let current_selected_fs_paths = params.selection_state?.files || items.map((i) => i.fsPath)
 
-        if (params.selection_state?.files) {
-          quick_pick.selectedItems = items.filter((i) =>
-            params.selection_state!.files!.includes(i.fsPath)
-          )
-        } else {
-          quick_pick.selectedItems = items
-        }
+      while (true) {
+        const selected = await new Promise<any[] | undefined | 'search'>((resolve) => {
+          const quick_pick = vscode.window.createQuickPick<any>()
+          quick_pick.items = items
+          quick_pick.selectedItems = items.filter((i) => current_selected_fs_paths.includes(i.fsPath))
 
-        quick_pick.canSelectMany = true
-        quick_pick.matchOnDescription = true
-        quick_pick.title = t('command.generate-commit-message.unstaged-files')
-        quick_pick.placeholder = t(
-          'command.generate-commit-message.select-files'
-        )
-        quick_pick.ignoreFocusOut = true
-        quick_pick.buttons = [
-          {
+          quick_pick.canSelectMany = true
+          quick_pick.matchOnDescription = true
+          quick_pick.title = t('command.generate-commit-message.unstaged-files')
+          quick_pick.placeholder = t('command.generate-commit-message.select-files')
+          quick_pick.ignoreFocusOut = true
+
+          const close_button = {
             iconPath: new vscode.ThemeIcon('close'),
             tooltip: t('common.close')
           }
-        ]
+          const search_button = {
+            iconPath: new vscode.ThemeIcon('search'),
+            tooltip: t('common.search-in-selected-results')
+          }
 
-        quick_pick.onDidTriggerButton((button) => {
-          if (button.tooltip == t('common.close')) {
-            resolve(undefined)
+          quick_pick.buttons = params.workspace_provider && params.extension_context && params.websocket_manager
+            ? [search_button, close_button]
+            : [close_button]
+
+          quick_pick.onDidTriggerButton((button) => {
+            if (button.tooltip == t('common.close')) {
+              resolve(undefined)
+              quick_pick.hide()
+            } else if (button.tooltip == t('common.search-in-selected-results')) {
+              current_selected_fs_paths = Array.from(quick_pick.selectedItems).map((i: any) => i.fsPath)
+              if (current_selected_fs_paths.length == 0) {
+                vscode.window.showInformationMessage(t('common.info.select-files-to-search'))
+                return
+              }
+              resolve('search')
+              quick_pick.hide()
+            }
+          })
+
+          quick_pick.onDidTriggerItemButton(async (event) => {
+            if (event.button.tooltip == t('common.go-to-file')) {
+              const uri = vscode.Uri.file(event.item.fsPath)
+              vscode.window.showTextDocument(uri, { preview: true })
+            } else if (event.button.tooltip == t('command.generate-commit-message.show-diff')) {
+              const uri = vscode.Uri.file(event.item.fsPath)
+              await vscode.commands.executeCommand('git.openChange', uri)
+            }
+          })
+
+          quick_pick.onDidAccept(() => {
+            const selected_items = Array.from(quick_pick.selectedItems)
+            current_selected_fs_paths = selected_items.map((i: any) => i.fsPath)
+            resolve(selected_items)
             quick_pick.hide()
-          }
+          })
+
+          quick_pick.onDidHide(() => {
+            resolve(undefined)
+            quick_pick.dispose()
+          })
+
+          quick_pick.show()
         })
 
-        quick_pick.onDidTriggerItemButton(async (event) => {
-          if (event.button.tooltip == t('common.go-to-file')) {
-            const uri = vscode.Uri.file(event.item.fsPath)
-            vscode.window.showTextDocument(uri, { preview: true })
-          } else if (
-            event.button.tooltip ==
-            t('command.generate-commit-message.show-diff')
-          ) {
-            const uri = vscode.Uri.file(event.item.fsPath)
-            await vscode.commands.executeCommand('git.openChange', uri)
-          }
-        })
+        if (!selected) {
+          return null
+        }
 
-        quick_pick.onDidAccept(() => {
-          const selected_items = Array.from(quick_pick.selectedItems)
+        if (selected === 'search') {
+          if (!params.workspace_provider || !params.extension_context || !params.websocket_manager) {
+            continue
+          }
+
+          const search_result = await search_files({
+            get_files: async () => current_selected_fs_paths,
+            workspace_provider: params.workspace_provider,
+            extension_context: params.extension_context,
+            websocket_manager: params.websocket_manager,
+            show_back_button: true
+          })
+
+          if (search_result === 'back') {
+            continue
+          }
+
+          if (!search_result || search_result.selected_paths.length === 0) {
+            return null
+          }
+
+          files_to_stage = search_result.selected_paths
           if (params.selection_state) {
-            params.selection_state.files = selected_items.map(
-              (i: any) => i.fsPath
-            )
+            params.selection_state.files = files_to_stage
           }
-          resolve(selected_items)
-          quick_pick.hide()
-        })
-
-        quick_pick.onDidHide(() => {
-          resolve(undefined)
-          quick_pick.dispose()
-        })
-
-        quick_pick.show()
-      })
-
-      if (!selected || selected.length == 0) {
-        return null
+          break
+        } else {
+          if (selected.length === 0) {
+            return null
+          }
+          files_to_stage = selected.map((item) => item.fsPath)
+          if (params.selection_state) {
+            params.selection_state.files = files_to_stage
+          }
+          break
+        }
       }
-
-      files_to_stage = selected.map((item) => item.fsPath)
     }
 
     const file_args = files_to_stage

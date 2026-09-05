@@ -9,6 +9,7 @@ import { CommitMessageDetails } from '../../../utils/commit-message-details'
 import { normalize_path } from '@/utils/normalize-path'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { FilesCollector } from '@/utils/files-collector'
+import { WebSocketManager } from '@/services/websocket-manager'
 
 export const get_prompt_data = async (params: {
   repository: GitRepository
@@ -16,6 +17,7 @@ export const get_prompt_data = async (params: {
   selection_state?: { files?: string[] }
   extension_context: vscode.ExtensionContext
   workspace_provider: WorkspaceProvider
+  websocket_manager: WebSocketManager
   files_staged_by_action?: boolean
   is_single_change_flow?: boolean
   skip_context_prompt?: boolean
@@ -33,7 +35,10 @@ export const get_prompt_data = async (params: {
   const diff = await prepare_staged_changes({
     repository: params.repository,
     stage_all_if_none_staged: params.stage_all_if_none_staged,
-    selection_state: params.selection_state
+    selection_state: params.selection_state,
+    workspace_provider: params.workspace_provider,
+    extension_context: params.extension_context,
+    websocket_manager: params.websocket_manager
   })
   if (!diff) return null
 

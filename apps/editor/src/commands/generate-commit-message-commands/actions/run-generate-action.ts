@@ -64,6 +64,7 @@ export const run_generate_action = async (params: {
       selection_state,
       extension_context: params.extension_context,
       workspace_provider: params.workspace_provider,
+      websocket_manager: params.websocket_manager,
       files_staged_by_action,
       is_single_change_flow: files_staged_by_action
         ? is_single_change_flow
