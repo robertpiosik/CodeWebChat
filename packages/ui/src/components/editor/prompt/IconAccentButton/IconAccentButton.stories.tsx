@@ -49,16 +49,6 @@ export const ActiveGreen = () => (
   />
 )
 
-export const ActiveOrange = () => (
-  <IconAccentButton
-    label="Active Orange Button"
-    icon="check"
-    is_active
-    active_color="orange"
-    on_click={() => console.log('Clicked')}
-  />
-)
-
 export const ActiveRed = () => (
   <IconAccentButton
     label="Active Red Button"
