@@ -19,7 +19,7 @@
 
 ## Introduction
 
-**CWC** is built with an incredible care, for developers who know good software from bad anytime they use anything. In the new AI era, it lets you work on your ideas at the speed of thought without compromising code quality.
+**CWC** is built with an incredible care, for developers who know good software from bad anytime they use anything. In the new AI era, it lets you work on your ideas at the speed of thought without compromising on code quality or privacy.
 
 ## Privacy
 
