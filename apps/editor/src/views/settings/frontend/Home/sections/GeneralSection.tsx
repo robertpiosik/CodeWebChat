@@ -270,7 +270,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                     key: 'templatesForAskAboutFiles',
                     label: 'Ask',
                     icon: 'chat-sparkle',
-                    accent_color: 'green',
+                    accent_color: 'purple',
                     items: props.templates.templatesForAskAboutFiles || []
                   }
                 ]}
