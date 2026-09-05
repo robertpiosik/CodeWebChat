@@ -19,7 +19,7 @@
 
 ## Introduction
 
-**CWC** is built with care for developers who can tell good software from bad whenever they use it. It lets you work on your ideas at the speed of thought without compromising on code quality or privacy.
+**CWC** is built with care for developers who can tell good software from bad whenever they use it. Designed to let you work on your ideas at the speed of thought without compromising on code quality, privacy, or cost-efficiency.
 
 ## Privacy
 
@@ -27,7 +27,7 @@
 
 ## Prompts
 
-**CWC** helps construct prompts for common tasks like task-relevant file searching, multi-file editing, getting general assistance, generating code at cursor or commit messages.
+**CWC** helps construct prompts for day-to-day coding tasks for results in a matter of seconds.
 
 ### Agentic search
 
@@ -56,7 +56,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 ### Intelligent search
 
-A quick way for task-relevant files with a single llm message. Files can be sent in full or stripped from function bodies. Invokable on overall workspace, a single folder, or can narrow down current file selection.
+A quick way for task-relevant files from a single llm message. Files can be sent in full or stripped from function bodies. Invokable on overall workspace, a single folder, or can narrow down current file selection.
 
 <details>
 <summary>Structure of the constructed prompt</summary>
@@ -87,7 +87,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 ### Multi-file editing
 
-Implementing new features, bug fixing and code refactors across many files.
+Implementing new features, fixing bugs or doing refactors.
 
 <details>
 <summary>Structure of the constructed prompt</summary>
