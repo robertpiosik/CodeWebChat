@@ -4,7 +4,7 @@
   align-items: center;
   gap: 14px;
   margin: 0 12px;
-  border-bottom: 1px solid var(--cwc-bg-red);
+  border-bottom: 1px solid var(--cwc-red-background);
 
   :global([data-modern-ui='true']) & {
     margin: 0 10px;
@@ -41,12 +41,12 @@
     }
 
     &--active {
-      color: var(--cwc-text-color-red);
-      border-bottom-color: var(--cwc-bg-red);
-      background-color: var(--cwc-bg-red);
+      color: var(--cwc-red-foreground);
+      border-bottom-color: var(--cwc-red-background);
+      background-color: var(--cwc-red-background);
 
       &:hover {
-        color: var(--cwc-text-color-red);
+        color: var(--cwc-red-foreground);
       }
     }
   }

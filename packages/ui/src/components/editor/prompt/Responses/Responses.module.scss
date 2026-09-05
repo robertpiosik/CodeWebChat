@@ -97,11 +97,11 @@
           flex-shrink: 0;
 
           &__added {
-            color: var(--cwc-text-color-green);
+            color: var(--cwc-green-foreground);
           }
 
           &__removed {
-            color: var(--cwc-text-color-red);
+            color: var(--cwc-red-foreground);
           }
         }
       }

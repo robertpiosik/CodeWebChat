@@ -83,6 +83,7 @@ export type PromptFieldProps = {
   is_copy_only?: boolean
   target: Target
   on_target_change: (target: Target) => void
+  active_border_color?: 'blue' | 'purple'
   translations: {
     voice_input: string
     stop_recording: string
@@ -864,7 +865,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       <div
         ref={container_inner_ref}
         className={cn(styles.container__inner, {
-          [styles['container__inner--selecting']]: is_text_selecting
+          [styles['container__inner--selecting']]: is_text_selecting,
+          [styles['container__inner--active-border-blue']]: props.active_border_color === 'blue',
+          [styles['container__inner--active-border-purple']]: props.active_border_color === 'purple'
         })}
         onKeyDown={handle_container_key_down}
         onClick={() => input_ref.current?.focus()}

@@ -87,7 +87,7 @@
     &-divider {
       width: 1px;
       height: 16px;
-      background-color: var(--cwc-bg-purple);
+      background-color: var(--cwc-purple-background);
     }
   }
 }
@@ -132,7 +132,7 @@
       transform: translate(-50%, -50%);
       width: 1px;
       height: 35px;
-      background-color: var(--cwc-bg-purple);
+      background-color: var(--cwc-purple-background);
       pointer-events: none;
     }
   }

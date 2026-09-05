@@ -19,57 +19,57 @@
   }
 
   &--accent-blue {
-    border-color: var(--cwc-bg-blue);
+    border-color: var(--cwc-blue-background);
     .group__header {
-      background-color: var(--cwc-bg-blue);
+      background-color: var(--cwc-blue-background);
       .group__icon,
       .group__label {
-        color: var(--cwc-text-color-blue);
+        color: var(--cwc-blue-foreground);
       }
       &:hover {
-        background-color: var(--cwc-bg-blue);
+        background-color: var(--cwc-blue-background);
       }
     }
   }
 
   &--accent-orange {
-    border-color: var(--cwc-bg-yellow);
+    border-color: var(--cwc-yellow-background);
     .group__header {
-      background-color: var(--cwc-bg-yellow);
+      background-color: var(--cwc-yellow-background);
       .group__icon,
       .group__label {
-        color: var(--cwc-text-color-yellow);
+        color: var(--cwc-yellow-foreground);
       }
       &:hover {
-        background-color: var(--cwc-bg-yellow);
+        background-color: var(--cwc-yellow-background);
       }
     }
   }
 
   &--accent-green {
-    border-color: var(--cwc-bg-green);
+    border-color: var(--cwc-green-background);
     .group__header {
-      background-color: var(--cwc-bg-green);
+      background-color: var(--cwc-green-background);
       .group__icon,
       .group__label {
-        color: var(--cwc-text-color-green);
+        color: var(--cwc-green-foreground);
       }
       &:hover {
-        background-color: var(--cwc-bg-green);
+        background-color: var(--cwc-green-background);
       }
     }
   }
 
   &--accent-red {
-    border-color: var(--cwc-bg-red);
+    border-color: var(--cwc-red-background);
     .group__header {
-      background-color: var(--cwc-bg-red);
+      background-color: var(--cwc-red-background);
       .group__icon,
       .group__label {
-        color: var(--cwc-text-color-red);
+        color: var(--cwc-red-foreground);
       }
       &:hover {
-        background-color: var(--cwc-bg-red);
+        background-color: var(--cwc-red-background);
       }
     }
   }

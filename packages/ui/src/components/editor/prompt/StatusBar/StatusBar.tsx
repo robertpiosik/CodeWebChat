@@ -10,8 +10,8 @@ export type StatusBarAction = {
   on_click: (e: React.MouseEvent) => void
 }
 
-export type StatusBarProps = {
-  theme?: 'default' | 'warning' | 'success' | 'error'
+export type Props = {
+  theme?: 'default' | 'warning' | 'success' | 'error' | 'blue' | 'purple'
   placement?: 'top' | 'bottom'
   icon?: string
   icon_spin?: boolean
@@ -21,7 +21,7 @@ export type StatusBarProps = {
   className?: string
 }
 
-export const StatusBar: React.FC<StatusBarProps> = ({
+export const StatusBar: React.FC<Props> = ({
   theme = 'default',
   placement,
   icon,

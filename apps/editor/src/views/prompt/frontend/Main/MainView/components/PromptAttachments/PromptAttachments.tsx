@@ -5,6 +5,7 @@ import { display_token_count } from '@shared/utils/display-token-count'
 type Props = {
   token_count?: number
   files_count?: number
+  theme?: 'default' | 'warning' | 'success' | 'error' | 'blue' | 'purple'
   translations: {
     warning?: string
     attaching_file: string
@@ -36,7 +37,7 @@ export const PromptAttachments: React.FC<Props> = (props) => {
       {props.files_count !== undefined && (
         <StatusBar
           placement="bottom"
-          theme="default"
+          theme={props.theme ?? 'default'}
           icon="codicon-attach"
           label={attaching_files_label}
           description={

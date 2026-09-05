@@ -5,11 +5,36 @@
     var(--vscode-foreground) 75%,
     transparent
   );
-  --cwc-text-color-green: var(--vscode-charts-green);
-  --cwc-text-color-red: var(--vscode-list-errorForeground);
-  --cwc-text-color-blue: var(--vscode-charts-blue);
-  --cwc-text-color-purple: var(--vscode-charts-purple);
-  --cwc-text-color-yellow: var(--vscode-charts-yellow);
+  --cwc-green-foreground: var(--vscode-charts-green);
+  --cwc-green-foreground-dimmed: color-mix(
+    in srgb,
+    var(--cwc-green-foreground) 75%,
+    transparent
+  );
+  --cwc-red-foreground: var(--vscode-list-errorForeground);
+  --cwc-red-foreground-dimmed: color-mix(
+    in srgb,
+    var(--cwc-red-foreground) 75%,
+    transparent
+  );
+  --cwc-blue-foreground: var(--vscode-charts-blue);
+  --cwc-blue-foreground-dimmed: color-mix(
+    in srgb,
+    var(--cwc-blue-foreground) 75%,
+    transparent
+  );
+  --cwc-purple-foreground: var(--vscode-charts-purple);
+  --cwc-purple-foreground-dimmed: color-mix(
+    in srgb,
+    var(--cwc-purple-foreground) 75%,
+    transparent
+  );
+  --cwc-yellow-foreground: var(--vscode-charts-yellow);
+  --cwc-yellow-foreground-dimmed: color-mix(
+    in srgb,
+    var(--cwc-yellow-foreground) 75%,
+    transparent
+  );
   --cwc-bg-primary: color-mix(
     in srgb,
     var(--vscode-foreground) 20%,
@@ -41,30 +66,30 @@
     transparent
   );
 
-  --cwc-bg-green: color-mix(
+  --cwc-green-background: color-mix(
     in srgb,
-    var(--cwc-text-color-green) 12%,
+    var(--cwc-green-foreground) 12%,
     transparent
   );
-  --cwc-bg-red: color-mix(in srgb, var(--cwc-text-color-red) 12%, transparent);
-  --cwc-bg-red-dark: color-mix(
+  --cwc-red-background: color-mix(in srgb, var(--cwc-red-foreground) 12%, transparent);
+  --cwc-red-background-dark: color-mix(
     in srgb,
-    var(--cwc-text-color-red) 24%,
+    var(--cwc-red-foreground) 24%,
     transparent
   );
-  --cwc-bg-blue: color-mix(
+  --cwc-blue-background: color-mix(
     in srgb,
-    var(--cwc-text-color-blue) 12%,
+    var(--cwc-blue-foreground) 12%,
     transparent
   );
-  --cwc-bg-purple: color-mix(
+  --cwc-purple-background: color-mix(
     in srgb,
-    var(--cwc-text-color-purple) 12%,
+    var(--cwc-purple-foreground) 12%,
     transparent
   );
-  --cwc-bg-yellow: color-mix(
+  --cwc-yellow-background: color-mix(
     in srgb,
-    var(--cwc-text-color-yellow) 12%,
+    var(--cwc-yellow-foreground) 12%,
     transparent
   );
 }

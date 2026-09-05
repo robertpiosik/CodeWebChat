@@ -8,7 +8,7 @@
     border-radius: 10px;
     background-color: var(--vscode-input-background);
     cursor: text;
-    border: 1px solid var(--cwc-border-color);
+    border: 0.5px solid var(--cwc-border-color);
     position: relative;
 
     &:hover {
@@ -17,6 +17,18 @@
 
     &:focus-within {
       border-color: var(--vscode-focusBorder);
+    }
+
+    &--active-border-blue {
+      &:focus-within {
+        border-color: var(--cwc-blue-foreground);
+      }
+    }
+
+    &--active-border-purple {
+      &:focus-within {
+        border-color: var(--cwc-purple-foreground);
+      }
     }
 
     &--selecting {
@@ -269,14 +281,14 @@
         }
 
         &--recording {
-          background-color: var(--cwc-bg-red);
+          background-color: var(--cwc-red-background);
 
           &:hover {
-            background-color: var(--cwc-bg-red-dark) !important;
+            background-color: var(--cwc-red-background-dark) !important;
           }
 
           &::before {
-            color: var(--cwc-text-color-red);
+            color: var(--cwc-red-foreground);
           }
         }
 

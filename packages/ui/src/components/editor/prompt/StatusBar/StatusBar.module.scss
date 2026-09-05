@@ -31,6 +31,7 @@
 .theme-default {
   color: var(--cwc-text-color);
   background-color: var(--cwc-bg-tertiary);
+  --theme-description-color: var(--cwc-text-color-dimmed);
 
   .action:hover {
     background-color: var(--cwc-bg-tertiary);
@@ -38,29 +39,52 @@
 }
 
 .theme-warning {
-  color: var(--cwc-text-color-yellow);
-  background-color: var(--cwc-bg-yellow);
+  color: var(--cwc-yellow-foreground);
+  background-color: var(--cwc-yellow-background);
+  --theme-description-color: var(--cwc-yellow-foreground-dimmed);
 
   .action:hover {
-    background-color: var(--cwc-bg-yellow);
+    background-color: var(--cwc-yellow-background);
   }
 }
 
 .theme-success {
-  color: var(--cwc-text-color-green);
-  background-color: var(--cwc-bg-green);
+  color: var(--cwc-green-foreground);
+  background-color: var(--cwc-green-background);
+  --theme-description-color: var(--cwc-green-foreground-dimmed);
 
   .action:hover {
-    background-color: var(--cwc-bg-green);
+    background-color: var(--cwc-green-background);
   }
 }
 
 .theme-error {
-  color: var(--cwc-text-color-red);
-  background-color: var(--cwc-bg-red);
+  color: var(--cwc-red-foreground);
+  background-color: var(--cwc-red-background);
+  --theme-description-color: var(--cwc-red-foreground-dimmed);
 
   .action:hover {
-    background-color: var(--cwc-bg-red);
+    background-color: var(--cwc-red-background);
+  }
+}
+
+.theme-blue {
+  color: var(--cwc-blue-foreground);
+  background-color: var(--cwc-blue-background);
+  --theme-description-color: var(--cwc-blue-foreground-dimmed);
+
+  .action:hover {
+    background-color: var(--cwc-blue-background);
+  }
+}
+
+.theme-purple {
+  color: var(--cwc-purple-foreground);
+  background-color: var(--cwc-purple-background);
+  --theme-description-color: var(--cwc-purple-foreground-dimmed);
+
+  .action:hover {
+    background-color: var(--cwc-purple-background);
   }
 }
 
@@ -97,7 +121,7 @@
 .description {
   font-size: 12px;
   line-height: var(--height);
-  color: var(--cwc-text-color-dimmed);
+  color: var(--theme-description-color, var(--cwc-text-color-dimmed));
   margin-left: 6px;
 }
 

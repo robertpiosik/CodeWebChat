@@ -336,6 +336,15 @@ export const MainView: React.FC<Props> = (props) => {
             on_open_website={props.on_open_website}
             target={props.target}
             on_target_change={(target) => props.on_target_change(target)}
+            active_border_color={
+              props.target == TARGET.WEB
+                ? props.web_prompt_type == 'edit-files'
+                  ? 'blue'
+                  : 'purple'
+                : props.api_prompt_type == 'edit-files'
+                ? 'blue'
+                : 'purple'
+            }
             on_paste_image={props.on_paste_image}
             on_open_image={props.on_open_image}
             on_paste_long_text={props.on_paste_long_text}
@@ -387,6 +396,15 @@ export const MainView: React.FC<Props> = (props) => {
           token_count={props.selected_files_token_count}
           files_count={
             context_is_empty_warning ? undefined : props.selected_files.length
+          }
+          theme={
+            props.target == TARGET.WEB
+              ? props.web_prompt_type == 'edit-files'
+                ? 'blue'
+                : 'purple'
+              : props.api_prompt_type == 'edit-files'
+              ? 'blue'
+              : 'purple'
           }
           translations={{
             warning: context_is_empty_warning

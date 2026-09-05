@@ -7,20 +7,20 @@
   border-radius: 10px;
 
   &--info {
-    color: var(--cwc-text-color-blue);
-    background-color: var(--cwc-bg-blue);
+    color: var(--cwc-blue-foreground);
+    background-color: var(--cwc-blue-background);
 
     a {
-      color: var(--cwc-text-color-blue);
+      color: var(--cwc-blue-foreground);
     }
   }
 
   &--warning {
-    color: var(--cwc-text-color-yellow);
-    background-color: var(--cwc-bg-yellow);
+    color: var(--cwc-yellow-foreground);
+    background-color: var(--cwc-yellow-background);
 
     a {
-      color: var(--cwc-text-color-yellow);
+      color: var(--cwc-yellow-foreground);
     }
   }
 }
