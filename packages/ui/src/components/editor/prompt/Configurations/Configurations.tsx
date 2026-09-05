@@ -54,7 +54,6 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         key={configuration.id}
         className={cn(styles.configurations__item, {
           [styles['configurations__item--highlighted']]:
-            !props.disable_invocation &&
             active_configuration_id == configuration.id,
           [styles['configurations__item--disabled-invocation']]:
             props.disable_invocation
