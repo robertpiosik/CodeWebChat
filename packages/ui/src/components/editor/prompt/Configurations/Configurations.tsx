@@ -41,6 +41,8 @@ export namespace Configurations {
 
 export const Configurations: React.FC<Configurations.Props> = (props) => {
   const pinned_configurations = props.configurations.filter((c) => c.is_pinned)
+  const active_configuration_id =
+    props.selected_configuration_id ?? props.configurations[0]?.id
 
   const render_configuration_item = (
     configuration: Configurations.Configuration,
@@ -53,7 +55,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         className={cn(styles.configurations__item, {
           [styles['configurations__item--highlighted']]:
             !props.disable_invocation &&
-            props.selected_configuration_id == configuration.id,
+            active_configuration_id == configuration.id,
           [styles['configurations__item--disabled-invocation']]:
             props.disable_invocation
         })}
