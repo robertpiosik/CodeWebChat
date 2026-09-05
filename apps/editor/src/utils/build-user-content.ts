@@ -1,3 +1,4 @@
+import { PROVIDERS } from '@/constants/providers'
 import { ModelProvider } from '@/services/model-providers-manager'
 
 export const build_user_content = (params: {
@@ -30,20 +31,29 @@ export const build_user_content = (params: {
     return parsed
   }
 
-  if (
-    params.model_provider.name == 'Anthropic' ||
-    params.model_provider.base_url.includes('api.anthropic.com')
-  ) {
-    const cache_control: any = { type: 'ephemeral' }
-    if (params.model_provider.extended_cache) {
-      cache_control.ttl = '1h'
+  const is_anthropic =
+    params.model_provider.base_url == PROVIDERS.Anthropic.base_url
+  const is_openai = params.model_provider.base_url == PROVIDERS.OpenAI.base_url
+
+  if (is_anthropic || is_openai) {
+    const cache_config: any = {}
+
+    if (!params.disable_cache) {
+      if (is_anthropic) {
+        cache_config.cache_control = { type: 'ephemeral' }
+        if (params.model_provider.extended_cache) {
+          cache_config.cache_control.ttl = '1h'
+        }
+      } else if (is_openai) {
+        cache_config.prompt_cache_breakpoint = { mode: 'explicit' }
+      }
     }
 
     const user_content: any[] = [
       {
         type: 'text',
         text: params.part1,
-        ...(!params.disable_cache && { cache_control })
+        ...cache_config
       }
     ]
 

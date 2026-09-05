@@ -29,6 +29,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
   EDIT_FORMAT_INSTRUCTIONS_WHOLE
 } from '@/constants/edit-format-instructions'
+import { PROVIDERS } from '@/constants/providers'
 
 const get_last_used_config_id_key = () => {
   return LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
@@ -254,6 +255,12 @@ export const handle_make_api_call = async (
     const body: { [key: string]: any } = {
       messages,
       model: api_configuration.model
+    }
+
+    const is_openai =
+      model_provider.base_url == PROVIDERS.OpenAI.base_url
+    if (is_openai) {
+      body.prompt_cache_options = { mode: 'explicit' }
     }
 
     apply_reasoning_effort({
