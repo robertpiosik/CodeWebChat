@@ -33,7 +33,15 @@
 
 Task-relevant files from your favorite coding agent, utilizing its one-off prompt (headless) mode.
 
-**Supported CLIs:** Antigravity, Claude Code, Codex, Cursor, Grok Build, Muse Code, OpenCode.
+**Supported CLIs:**
+
+- Antigravity
+- Claude Code
+- Codex
+- Cursor
+- Grok Build
+- Muse Code
+- OpenCode
 
 <details>
 <summary>Structure of the constructed prompt</summary>
