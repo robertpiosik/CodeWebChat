@@ -909,7 +909,7 @@ export const translations = {
     hu: 'Kontextus',
     bg: 'Контекст'
   },
-  'general.context.intelligent-file-search-instructions.title': {
+  'general.context.intelligent-search-instructions.title': {
     en: 'Intelligent File Search Instructions',
     pl: 'Instrukcje inteligentnego wyszukiwania plików',
     'zh-cn': '智能文件搜索说明',
@@ -927,7 +927,7 @@ export const translations = {
     hu: 'Intelligens fájlkeresési utasítások',
     bg: 'Инструкции за интелигентно търсене на файлове'
   },
-  'general.context.intelligent-file-search-instructions.description': {
+  'general.context.intelligent-search-instructions.description': {
     en: 'Specify a prefix instruction for the intelligent file search.',
     pl: 'Określ instrukcję początkową dla inteligentnego wyszukiwania plików.',
     'zh-cn': '为智能文件搜索指定前缀指令。',
@@ -946,7 +946,7 @@ export const translations = {
     hu: 'Adjon meg egy előtag-utasítást az intelligens fájlkereséshez.',
     bg: 'Посочете префиксна инструкция за интелигентното търсене на файлове.'
   },
-  'general.context.agentic-file-search-instructions.title': {
+  'general.context.agentic-search-instructions.title': {
     en: 'Agentic File Search Instructions',
     pl: 'Instrukcje agentowego wyszukiwania plików',
     'zh-cn': '代理文件搜索说明',
@@ -964,7 +964,7 @@ export const translations = {
     hu: 'Ügynökalapú fájlkeresési utasítások',
     bg: 'Инструкции за търсене на файлове от агенти'
   },
-  'general.context.agentic-file-search-instructions.description': {
+  'general.context.agentic-search-instructions.description': {
     en: 'Specify a prefix instruction for the agentic file search.',
     pl: 'Określ instrukcję początkową dla agentowego wyszukiwania plików.',
     'zh-cn': '为代理文件搜索指定前缀指令。',

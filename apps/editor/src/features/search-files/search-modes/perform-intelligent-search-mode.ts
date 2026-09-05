@@ -240,7 +240,7 @@ export const perform_intelligent_search_mode = async (params: {
 
           const config = vscode.workspace.getConfiguration('codeWebChat')
           const base_instructions =
-            config.get<string>('intelligentFileSearchInstructions') ||
+            config.get<string>('intelligentSearchInstructions') ||
             intelligent_search_task_instructions
 
           let display_folder_path = params.folder_path

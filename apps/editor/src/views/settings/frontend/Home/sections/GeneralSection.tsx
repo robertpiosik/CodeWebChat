@@ -50,16 +50,16 @@ type Props = {
   on_commit_instructions_blur: () => void
   default_commit_instructions: string
   on_restore_commit_instructions: () => void
-  intelligent_file_search_instructions: string
-  set_intelligent_file_search_instructions: (instructions: string) => void
-  on_intelligent_file_search_instructions_blur: () => void
-  default_intelligent_file_search_instructions: string
-  on_restore_intelligent_file_search_instructions: () => void
-  agentic_file_search_instructions: string
-  set_agentic_file_search_instructions: (instructions: string) => void
-  on_agentic_file_search_instructions_blur: () => void
-  default_agentic_file_search_instructions: string
-  on_restore_agentic_file_search_instructions: () => void
+  intelligent_search_instructions: string
+  set_intelligent_search_instructions: (instructions: string) => void
+  on_intelligent_search_instructions_blur: () => void
+  default_intelligent_search_instructions: string
+  on_restore_intelligent_search_instructions: () => void
+  agentic_search_instructions: string
+  set_agentic_search_instructions: (instructions: string) => void
+  on_agentic_search_instructions_blur: () => void
+  default_agentic_search_instructions: string
+  on_restore_agentic_search_instructions: () => void
   on_open_external_url: (url: string) => void
   templates: Record<string, Template[]>
   on_update_templates: (key: string, templates: Template[]) => void
@@ -186,10 +186,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             />
             <UiItem
               title={t(
-                'general.context.intelligent-file-search-instructions.title'
+                'general.context.intelligent-search-instructions.title'
               )}
               description={t(
-                'general.context.intelligent-file-search-instructions.description'
+                'general.context.intelligent-search-instructions.description'
               )}
               is_toggleable
               translations={{
@@ -198,28 +198,28 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               }}
             >
               <UiTextarea
-                value={props.intelligent_file_search_instructions}
+                value={props.intelligent_search_instructions}
                 min_rows={3}
-                on_change={props.set_intelligent_file_search_instructions}
-                on_blur={props.on_intelligent_file_search_instructions_blur}
+                on_change={props.set_intelligent_search_instructions}
+                on_blur={props.on_intelligent_search_instructions_blur}
                 action_icon={
-                  props.intelligent_file_search_instructions !=
-                  props.default_intelligent_file_search_instructions
+                  props.intelligent_search_instructions !=
+                  props.default_intelligent_search_instructions
                     ? 'discard'
                     : undefined
                 }
                 action_title={t('general.action.restore-default')}
                 on_action_click={
-                  props.on_restore_intelligent_file_search_instructions
+                  props.on_restore_intelligent_search_instructions
                 }
               />
             </UiItem>
             <UiItem
               title={t(
-                'general.context.agentic-file-search-instructions.title'
+                'general.context.agentic-search-instructions.title'
               )}
               description={t(
-                'general.context.agentic-file-search-instructions.description'
+                'general.context.agentic-search-instructions.description'
               )}
               is_toggleable
               translations={{
@@ -228,19 +228,19 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               }}
             >
               <UiTextarea
-                value={props.agentic_file_search_instructions}
+                value={props.agentic_search_instructions}
                 min_rows={3}
-                on_change={props.set_agentic_file_search_instructions}
-                on_blur={props.on_agentic_file_search_instructions_blur}
+                on_change={props.set_agentic_search_instructions}
+                on_blur={props.on_agentic_search_instructions_blur}
                 action_icon={
-                  props.agentic_file_search_instructions !=
-                  props.default_agentic_file_search_instructions
+                  props.agentic_search_instructions !=
+                  props.default_agentic_search_instructions
                     ? 'discard'
                     : undefined
                 }
                 action_title={t('general.action.restore-default')}
                 on_action_click={
-                  props.on_restore_agentic_file_search_instructions
+                  props.on_restore_agentic_search_instructions
                 }
               />
             </UiItem>

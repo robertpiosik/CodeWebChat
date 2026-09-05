@@ -29,7 +29,7 @@ export const search_files_by_intelligent = async (
 
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const base_instructions =
-    config.get<string>('intelligentFileSearchInstructions') ||
+    config.get<string>('intelligentSearchInstructions') ||
     intelligent_search_task_instructions
 
   const part1 = `# Files\n\n${md_files}`

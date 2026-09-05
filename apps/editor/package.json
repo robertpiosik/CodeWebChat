@@ -1026,11 +1026,11 @@
             "type": "string"
           }
         },
-        "codeWebChat.intelligentFileSearchInstructions": {
+        "codeWebChat.intelligentSearchInstructions": {
           "type": "string",
           "scope": "resource"
         },
-        "codeWebChat.agenticFileSearchInstructions": {
+        "codeWebChat.agenticSearchInstructions": {
           "type": "string",
           "scope": "resource"
         },

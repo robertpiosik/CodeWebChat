@@ -1,14 +1,14 @@
 import * as vscode from 'vscode'
 import { agentic_search_task_instructions } from '@/constants/instructions'
-import { UpdateAgenticFileSearchInstructionsMessage } from '../../types/messages'
+import { UpdateAgenticSearchInstructionsMessage } from '../../types/messages'
 
-export const handle_update_agentic_file_search_instructions = async (
-  message: UpdateAgenticFileSearchInstructionsMessage
+export const handle_update_agentic_search_instructions = async (
+  message: UpdateAgenticSearchInstructionsMessage
 ): Promise<void> => {
   await vscode.workspace
     .getConfiguration('codeWebChat')
     .update(
-      'agenticFileSearchInstructions',
+      'agenticSearchInstructions',
       message.instructions == '' ||
         message.instructions == agentic_search_task_instructions
         ? undefined

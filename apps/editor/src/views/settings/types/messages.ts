@@ -97,21 +97,21 @@ export interface UpdateSelectAllPromptsInCommitMessagesByDefaultMessage {
   enabled: boolean
 }
 
-export interface GetIntelligentFileSearchInstructionsMessage {
-  command: 'GET_INTELLIGENT_FILE_SEARCH_INSTRUCTIONS'
+export interface GetIntelligentSearchInstructionsMessage {
+  command: 'GET_INTELLIGENT_SEARCH_INSTRUCTIONS'
 }
 
-export interface UpdateIntelligentFileSearchInstructionsMessage {
-  command: 'UPDATE_INTELLIGENT_FILE_SEARCH_INSTRUCTIONS'
+export interface UpdateIntelligentSearchInstructionsMessage {
+  command: 'UPDATE_INTELLIGENT_SEARCH_INSTRUCTIONS'
   instructions: string
 }
 
-export interface GetAgenticFileSearchInstructionsMessage {
-  command: 'GET_AGENTIC_FILE_SEARCH_INSTRUCTIONS'
+export interface GetAgenticSearchInstructionsMessage {
+  command: 'GET_AGENTIC_SEARCH_INSTRUCTIONS'
 }
 
-export interface UpdateAgenticFileSearchInstructionsMessage {
-  command: 'UPDATE_AGENTIC_FILE_SEARCH_INSTRUCTIONS'
+export interface UpdateAgenticSearchInstructionsMessage {
+  command: 'UPDATE_AGENTIC_SEARCH_INSTRUCTIONS'
   instructions: string
 }
 
@@ -379,10 +379,10 @@ export type FrontendMessage =
   | GetSelectAllPromptsInCommitMessagesByDefaultMessage
   | UpdateSelectAllPromptsInCommitMessagesByDefaultMessage
   | GetEditFilesSystemInstructionsMessage
-  | GetIntelligentFileSearchInstructionsMessage
-  | UpdateIntelligentFileSearchInstructionsMessage
-  | GetAgenticFileSearchInstructionsMessage
-  | UpdateAgenticFileSearchInstructionsMessage
+  | GetIntelligentSearchInstructionsMessage
+  | UpdateIntelligentSearchInstructionsMessage
+  | GetAgenticSearchInstructionsMessage
+  | UpdateAgenticSearchInstructionsMessage
   | UpdateEditFilesSystemInstructionsMessage
   | SettingsUiReadyMessage
   | GetAreAutomaticCheckpointsDisabledMessage
@@ -470,13 +470,13 @@ export interface EditFilesSystemInstructionsMessage {
   instructions: string
 }
 
-export interface IntelligentFileSearchInstructionsMessage {
-  command: 'INTELLIGENT_FILE_SEARCH_INSTRUCTIONS'
+export interface IntelligentSearchInstructionsMessage {
+  command: 'INTELLIGENT_SEARCH_INSTRUCTIONS'
   instructions: string
 }
 
-export interface AgenticFileSearchInstructionsMessage {
-  command: 'AGENTIC_FILE_SEARCH_INSTRUCTIONS'
+export interface AgenticSearchInstructionsMessage {
+  command: 'AGENTIC_SEARCH_INSTRUCTIONS'
   instructions: string
 }
 
@@ -617,8 +617,8 @@ export type BackendMessage =
   | UseContextFilesInCommitMessagePromptMessage
   | SelectAllPromptsInCommitMessagesByDefaultMessage
   | EditFilesSystemInstructionsMessage
-  | IntelligentFileSearchInstructionsMessage
-  | AgenticFileSearchInstructionsMessage
+  | IntelligentSearchInstructionsMessage
+  | AgenticSearchInstructionsMessage
   | AreAutomaticCheckpointsDisabledMessage
   | CheckpointLifespanMessage
   | GeminiUserIdMessage

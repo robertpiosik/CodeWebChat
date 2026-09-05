@@ -108,8 +108,8 @@ type Props = {
   web_configurations: WebConfiguration[]
   defaults: Record<ApiFeature, string | null>
   edit_files_system_instructions: string
-  intelligent_file_search_instructions: string
-  agentic_file_search_instructions: string
+  intelligent_search_instructions: string
+  agentic_search_instructions: string
   commit_message_instructions: string
   synchronize_edit_format_between_targets: boolean
   attach_ascii_tree_of_context: 'ask' | 'always' | 'never'
@@ -146,8 +146,8 @@ type Props = {
     enabled: boolean
   ) => void
   on_edit_files_system_instructions_change: (instructions: string) => void
-  on_intelligent_file_search_instructions_change: (instructions: string) => void
-  on_agentic_file_search_instructions_change: (instructions: string) => void
+  on_intelligent_search_instructions_change: (instructions: string) => void
+  on_agentic_search_instructions_change: (instructions: string) => void
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number | undefined) => void
   on_gemini_user_id_change: (id: number | null) => void
@@ -225,12 +225,12 @@ export const Home: React.FC<Props> = (props) => {
 
   const [commit_instructions, set_commit_instructions] = useState('')
   const [
-    intelligent_file_search_instructions,
-    set_intelligent_file_search_instructions
+    intelligent_search_instructions,
+    set_intelligent_search_instructions
   ] = useState('')
   const [
-    agentic_file_search_instructions,
-    set_agentic_file_search_instructions
+    agentic_search_instructions,
+    set_agentic_search_instructions
   ] = useState('')
   const [edit_files_instructions, set_edit_files_instructions] = useState('')
 
@@ -404,16 +404,16 @@ export const Home: React.FC<Props> = (props) => {
   }, [props.commit_message_instructions])
 
   useEffect(() => {
-    set_intelligent_file_search_instructions(
-      props.intelligent_file_search_instructions || ''
+    set_intelligent_search_instructions(
+      props.intelligent_search_instructions || ''
     )
-  }, [props.intelligent_file_search_instructions])
+  }, [props.intelligent_search_instructions])
 
   useEffect(() => {
-    set_agentic_file_search_instructions(
-      props.agentic_file_search_instructions || ''
+    set_agentic_search_instructions(
+      props.agentic_search_instructions || ''
     )
-  }, [props.agentic_file_search_instructions])
+  }, [props.agentic_search_instructions])
 
   useEffect(() => {
     set_edit_files_instructions(props.edit_files_system_instructions || '')
@@ -603,65 +603,65 @@ export const Home: React.FC<Props> = (props) => {
               default_commit_message_instructions
             )
           }}
-          intelligent_file_search_instructions={
-            intelligent_file_search_instructions
+          intelligent_search_instructions={
+            intelligent_search_instructions
           }
-          set_intelligent_file_search_instructions={
-            set_intelligent_file_search_instructions
+          set_intelligent_search_instructions={
+            set_intelligent_search_instructions
           }
-          on_intelligent_file_search_instructions_blur={() => {
-            props.on_intelligent_file_search_instructions_change(
-              intelligent_file_search_instructions
+          on_intelligent_search_instructions_blur={() => {
+            props.on_intelligent_search_instructions_change(
+              intelligent_search_instructions
             )
             if (
-              intelligent_file_search_instructions == '' &&
-              props.intelligent_file_search_instructions ==
+              intelligent_search_instructions == '' &&
+              props.intelligent_search_instructions ==
                 default_intelligent_file_search_instructions
             ) {
-              set_intelligent_file_search_instructions(
+              set_intelligent_search_instructions(
                 default_intelligent_file_search_instructions
               )
             }
           }}
-          default_intelligent_file_search_instructions={
+          default_intelligent_search_instructions={
             default_intelligent_file_search_instructions
           }
-          on_restore_intelligent_file_search_instructions={() => {
-            set_intelligent_file_search_instructions(
+          on_restore_intelligent_search_instructions={() => {
+            set_intelligent_search_instructions(
               default_intelligent_file_search_instructions
             )
-            props.on_intelligent_file_search_instructions_change(
+            props.on_intelligent_search_instructions_change(
               default_intelligent_file_search_instructions
             )
           }}
-          agentic_file_search_instructions={
-            agentic_file_search_instructions
+          agentic_search_instructions={
+            agentic_search_instructions
           }
-          set_agentic_file_search_instructions={
-            set_agentic_file_search_instructions
+          set_agentic_search_instructions={
+            set_agentic_search_instructions
           }
-          on_agentic_file_search_instructions_blur={() => {
-            props.on_agentic_file_search_instructions_change(
-              agentic_file_search_instructions
+          on_agentic_search_instructions_blur={() => {
+            props.on_agentic_search_instructions_change(
+              agentic_search_instructions
             )
             if (
-              agentic_file_search_instructions == '' &&
-              props.agentic_file_search_instructions ==
+              agentic_search_instructions == '' &&
+              props.agentic_search_instructions ==
                 default_agentic_file_search_instructions
             ) {
-              set_agentic_file_search_instructions(
+              set_agentic_search_instructions(
                 default_agentic_file_search_instructions
               )
             }
           }}
-          default_agentic_file_search_instructions={
+          default_agentic_search_instructions={
             default_agentic_file_search_instructions
           }
-          on_restore_agentic_file_search_instructions={() => {
-            set_agentic_file_search_instructions(
+          on_restore_agentic_search_instructions={() => {
+            set_agentic_search_instructions(
               default_agentic_file_search_instructions
             )
-            props.on_agentic_file_search_instructions_change(
+            props.on_agentic_search_instructions_change(
               default_agentic_file_search_instructions
             )
           }}
