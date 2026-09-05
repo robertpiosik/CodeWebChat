@@ -50,6 +50,37 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 </details>
 
+### Intelligent search
+
+Search for task-relevant files with a single message. Invokable on overall workspace, a single folder, or across all selected files.
+
+<details>
+<summary>Structure of the constructed prompt</summary>
+
+```
+# Files
+
+[WORKSPACE FILES]
+
+# Task
+
+In the project, find the complete set of primary and structural files relevant to the query.
+
+# Output formatting
+
+Output strictly as a bulleted list of file paths without explanations or any other text. Example:
+
+- `src/index.ts`
+- `src/greetings/hello.ts`
+- `src/greetings/welcome.ts`
+
+# Query
+
+[PROMPT]
+```
+
+</details>
+
 ### Multi-file editing
 
 Implement new features, fix bugs and refactor code across many files.
@@ -100,7 +131,7 @@ TAB completions from SOTA reasoning models.
 <details>
 <summary>Structure of the constructed prompt</summary>
 
-````
+```
 # Files
 
 [SELECTED FILES]
@@ -108,7 +139,9 @@ TAB completions from SOTA reasoning models.
 - File `[ACTIVE FILE PATH]`:
 
 ```
+
 [PREFIX]<missing_text>[PROMPT]</missing_text>[SUFFIX]
+
 ```
 
 # Output formatting
@@ -120,7 +153,7 @@ Your response must begin with a markdown heading identifying the file and the cu
 ---
 
 Find correct replacement text for the <missing_text> symbol.
-````
+```
 
 </details>
 
