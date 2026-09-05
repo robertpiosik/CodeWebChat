@@ -3,10 +3,11 @@ import axios from 'axios'
 import { send_llm_message } from '@/utils/send-llm-message'
 import {
   ai_file_search_task_instructions,
-  intelligent_file_search_format
+  ai_file_search_format_instructions
 } from '@/constants/instructions'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { build_user_content } from '@/utils/build-user-content'
+import { extract_paths_from_bullet_list } from '@/utils/extract-paths-from-bullet-list'
 import { Logger } from '@shared/utils/logger'
 import { FileData } from './analyze-files'
 import { ModelProvider } from '@/services/model-providers-manager'
@@ -19,22 +20,23 @@ export const search_files_by_intelligent = async (
   model_provider: ModelProvider,
   selected_config: any
 ): Promise<string[] | 'cancel' | 'error_no_files' | 'error'> => {
-  let xml_files = `<files>\n`
+  let md_files = ''
   for (const file of files_data) {
     const content_to_use = shrink_result ? file.shrunk_content : file.content
-    xml_files += `<file path="${file.display_path}">\n\`\`\`\n${content_to_use}\n\`\`\`\n</file>\n`
+    const backticks = content_to_use.includes('```') ? '````' : '```'
+    md_files += `### File: \`${file.display_path}\`\n\n${backticks}\n${content_to_use}\n${backticks}\n\n`
   }
-  xml_files += `</files>`
 
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const base_instructions =
     config.get<string>('intelligentFileSearchInstructions') ||
     ai_file_search_task_instructions
 
-  const part2 = `# Task\n\n${base_instructions}\n\n# Output formatting\n\n${intelligent_file_search_format}\n\n# Query\n\n${instructions}`
+  const part1 = `# Files\n\n${md_files}`
+  const part2 = `# Task\n\n${base_instructions}\n\n# Output formatting\n\n${ai_file_search_format_instructions}\n\n# Query\n\n${instructions}`
   const user_content = build_user_content({
     model_provider,
-    part1: xml_files,
+    part1,
     part2
   })
 
@@ -78,14 +80,10 @@ export const search_files_by_intelligent = async (
     )
 
     if (completion_result) {
-      const match = completion_result.response.match(
-        /<intelligent-file-search-results>([\s\S]*?)<\/intelligent-file-search-results>/
-      )
-      const extracted_files: string[] = []
-      if (match && match[1]) {
-        const file_matches = match[1].matchAll(/<file-path>(.*?)<\/file-path>/g)
-        for (const m of file_matches) extracted_files.push(m[1].trim())
-      }
+      const extracted_files = extract_paths_from_bullet_list({
+        text: completion_result.response,
+        workspace_files: files_data.map((f) => f.display_path)
+      })
       return extracted_files.length == 0 ? 'error_no_files' : extracted_files
     }
     return 'error'
