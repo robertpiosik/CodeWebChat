@@ -240,7 +240,12 @@ export const handle_make_api_call = async (
         user_instructions: processed_instructions,
         separator: true
       })
-      user_content = build_user_content({ model_provider, part1, part2 })
+      user_content = build_user_content({
+        model_provider,
+        part1,
+        part2,
+        is_explicit_cache_enabled: true
+      })
     }
 
     const messages = [

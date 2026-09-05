@@ -430,7 +430,8 @@ export const perform_code_at_cursor = async (params: {
     const user_content = build_user_content({
       model_provider,
       part1,
-      part2
+      part2,
+      is_explicit_cache_enabled: true
     })
 
     const messages = [

@@ -35,8 +35,7 @@ export const search_files_by_intelligent = async (
   const user_content = build_user_content({
     model_provider,
     part1: xml_files,
-    part2,
-    disable_cache: true
+    part2
   })
 
   const messages = [{ role: 'user', content: user_content }]
