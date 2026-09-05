@@ -9,7 +9,8 @@ export const edit_reasoning_effort_for_api_config = async (
     { label: 'Minimal' },
     { label: 'Low' },
     { label: 'Medium' },
-    { label: 'High' }
+    { label: 'High' },
+    { label: 'Max' }
   ]
 
   return await new Promise<string | undefined>((resolve) => {

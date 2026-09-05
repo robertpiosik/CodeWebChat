@@ -566,6 +566,11 @@ export const perform_agent_search_mode = async (params: {
                       // Ignore
                     }
                   }
+                  Logger.info({
+                    function_name: 'perform_agent_search_mode',
+                    message: "Agent's response",
+                    data: agent_output
+                  })
                   resolve()
                 })
 
