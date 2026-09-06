@@ -76,7 +76,7 @@ _A quick way for task-relevant files from a single llm message._
 
 # Task
 
-In the project, find the complete set of primary and structural files relevant to the query.
+Among the attached files, find the complete set of primary and structural files relevant to the query.
 
 # Output formatting
 
