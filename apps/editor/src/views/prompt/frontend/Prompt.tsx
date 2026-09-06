@@ -386,19 +386,6 @@ export const Prompt = () => {
                   set_chat_input_focus_key((k) => k + 1)
                 }}
                 version={version}
-                response_history={response_history}
-                on_response_history_item_click={
-                  handle_response_history_item_click
-                }
-                selected_history_item_created_at={
-                  selected_history_item_created_at
-                }
-                on_selected_history_item_change={
-                  set_selected_history_item_created_at
-                }
-                on_response_history_item_remove={
-                  handle_remove_response_history_item
-                }
                 is_setup_complete={is_setup_complete}
                 on_donate_click={() => set_viewing_donations(true)}
               />

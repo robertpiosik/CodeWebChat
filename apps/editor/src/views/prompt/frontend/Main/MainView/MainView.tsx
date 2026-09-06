@@ -274,27 +274,30 @@ export const MainView: React.FC<Props> = (props) => {
 
         <UiSeparator height={2} />
 
-        {props.response_history.length > 0 && (
-          <UiResponses
-            response_history={props.response_history}
-            on_response_history_item_click={
-              props.on_response_history_item_click
-            }
-            selected_history_item_created_at={
-              props.selected_history_item_created_at
-            }
-            on_selected_history_item_change={
-              props.on_selected_history_item_change
-            }
-            on_response_history_item_remove={
-              props.on_response_history_item_remove
-            }
-            translations={{
-              applied_manually: t('common.applied-manually'),
-              reject: t('action.reject')
-            }}
-          />
-        )}
+        {props.response_history.length > 0 &&
+          (props.target == TARGET.WEB
+            ? props.web_prompt_type
+            : props.api_prompt_type) == 'edit-files' && (
+            <UiResponses
+              response_history={props.response_history}
+              on_response_history_item_click={
+                props.on_response_history_item_click
+              }
+              selected_history_item_created_at={
+                props.selected_history_item_created_at
+              }
+              on_selected_history_item_change={
+                props.on_selected_history_item_change
+              }
+              on_response_history_item_remove={
+                props.on_response_history_item_remove
+              }
+              translations={{
+                applied_manually: t('common.applied-manually'),
+                reject: t('action.reject')
+              }}
+            />
+          )}
 
         <div className={styles['chat-input']}>
           <UiPromptField

@@ -3,7 +3,6 @@ import { useState, useRef, useCallback } from 'react'
 export const use_has_scrolled_past_target_button = (is_active: boolean) => {
   const [state, set_state] = useState<'normal' | 'sticky'>('normal')
   const normal_height = useRef(0)
-  const responses_ref = useRef<HTMLDivElement>(null)
   const target_ref = useRef<HTMLDivElement>(null)
 
   const has_scrolled_past_target_button = state !== 'normal'
@@ -12,7 +11,6 @@ export const use_has_scrolled_past_target_button = (is_active: boolean) => {
     (top: number) => {
       if (!is_active) return
 
-      const r_height = responses_ref.current?.clientHeight || 0
       const m_height = target_ref.current?.offsetHeight || 0
 
       if (m_height == 0) return
@@ -24,7 +22,7 @@ export const use_has_scrolled_past_target_button = (is_active: boolean) => {
       const height_to_use = has_scrolled_past_target_button
         ? normal_height.current
         : m_height
-      const is_past = top > r_height + height_to_use + 4
+      const is_past = top > height_to_use + 4
 
       set_state((prev) => {
         if (!is_past) {
@@ -41,7 +39,6 @@ export const use_has_scrolled_past_target_button = (is_active: boolean) => {
 
   return {
     has_scrolled_past_target_button,
-    responses_ref,
     target_ref,
     handle_scroll
   }

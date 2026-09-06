@@ -7,8 +7,6 @@ import { KeycapWrapper as UiKeycapWrapper } from '@ui/components/editor/prompt/K
 import cn from 'classnames'
 import { post_message } from '../utils/post-message'
 import { BackendMessage } from '@/views/prompt/types/messages'
-import { Responses as UiResponses } from '@ui/components/editor/prompt/Responses'
-import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
 import { AsciiArtEffect } from '@ui/components/editor/prompt/AsciiArtEffect'
 import { Translation, use_translation } from '../i18n/use-translation'
@@ -27,11 +25,6 @@ type Props = {
   on_chatbots_click: () => void
   on_api_calls_click: () => void
   version: string
-  response_history: ResponseHistoryItem[]
-  on_response_history_item_click: (item: ResponseHistoryItem) => void
-  selected_history_item_created_at?: number
-  on_selected_history_item_change: (created_at: number) => void
-  on_response_history_item_remove: (created_at: number) => void
   is_setup_complete: boolean
   is_connected: boolean
   on_donate_click: () => void
@@ -43,7 +36,6 @@ export const Home: React.FC<Props> = (props) => {
   const [active_workspace_root, set_active_workspace_root] = useState<string>()
   const {
     has_scrolled_past_target_button,
-    responses_ref,
     target_ref,
     handle_scroll
   } = use_has_scrolled_past_target_button(props.is_active)
@@ -201,30 +193,6 @@ export const Home: React.FC<Props> = (props) => {
       <UiScrollable on_scroll={handle_scroll} top_shadow>
         <div className={styles.content}>
           <div className={styles.inner}>
-            {props.response_history.length > 0 && (
-              <div className={styles.inner__responses} ref={responses_ref}>
-                <UiResponses
-                  response_history={props.response_history}
-                  on_response_history_item_click={
-                    props.on_response_history_item_click
-                  }
-                  selected_history_item_created_at={
-                    props.selected_history_item_created_at
-                  }
-                  on_selected_history_item_change={
-                    props.on_selected_history_item_change
-                  }
-                  on_response_history_item_remove={
-                    props.on_response_history_item_remove
-                  }
-                  translations={{
-                    applied_manually: t('common.applied-manually'),
-                    reject: t('action.reject')
-                  }}
-                />
-              </div>
-            )}
-
             <div className={styles.inner__target} ref={target_ref}>
               <AsciiArtEffect />
               <UiKeycapWrapper
