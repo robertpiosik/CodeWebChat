@@ -27,7 +27,7 @@
 
 ## Prompts
 
-**CWC** helps construct prompts for day-to-day coding tasks for results in a matter of seconds.
+**CWC** helps construct prompts for all day-to-day coding tasks.
 
 ### Agentic search
 
@@ -64,7 +64,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 ### Intelligent search
 
-_A quick way for task-relevant files from a single llm message. Files can be sent in full or stripped from function bodies. Invokable on overall workspace, a single folder, or can narrow down current file selection._
+_A quick way for task-relevant files from a single llm message._
 
 <details>
 <summary>Structure of the constructed prompt</summary>
@@ -72,7 +72,7 @@ _A quick way for task-relevant files from a single llm message. Files can be sen
 ```
 # Files
 
-[WORKSPACE FILES]
+[WORKSPACE FILES/SPECIFIC FOLDER/SELECTED FILES]
 
 # Task
 
@@ -106,6 +106,7 @@ _Implementing new features, fixing bugs or doing refactors._
 [SELECTED FILES]
 
 # Output formatting
+
 Whenever showing a new, updated, renamed, or deleted file, provide a brief explanation, then print the path in a markdown heading (e.g. ### New file: `src/examples/hello.py`, ### Updated file: `src/examples/hello.py`, ### Renamed file: `src/examples/hello.py` (old) `src/welcome.py` (new), ### Deleted file: `src/examples/hello.py`), followed by a markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
 
 [EXAMPLE]
@@ -148,7 +149,7 @@ _TAB completions from SOTA reasoning models._
 
 [SELECTED FILES]
 
-- File `[ACTIVE FILE PATH]`:
+### File `[ACTIVE FILE PATH]`
 
 ```
 
