@@ -116,7 +116,7 @@ export const create_handle_paste =
 
     if (
       !refs.is_shift_pressed_ref.current &&
-      (text.includes('\n') || text.length > 100) &&
+      text.trim().length > 0 &&
       !is_fragment_paste &&
       !has_symbols
     ) {
