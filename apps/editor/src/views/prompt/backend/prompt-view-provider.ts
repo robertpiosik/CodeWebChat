@@ -91,7 +91,6 @@ import { handle_select_edit_format_instructions } from './message-handlers/handl
 import { SelectionState } from '../types/messages'
 import {
   EDIT_FORMAT_STATE_KEY,
-  get_edit_format_state_key,
   API_TARGET_STATE_KEY,
   INSTRUCTIONS_ASK_STATE_KEY,
   INSTRUCTIONS_EDIT_FILES_STATE_KEY,
@@ -139,24 +138,9 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     active_index: 0
   }
   public web_prompt_type: WebPromptType
-  public web_edit_format: EditFormat
-  public api_edit_format: EditFormat
+  public edit_format: EditFormat
   public api_prompt_type: ApiPromptType
   public target: Target = TARGET.WEB
-
-  public get edit_format(): EditFormat {
-    return this.target == TARGET.WEB
-      ? this.web_edit_format
-      : this.api_edit_format
-  }
-
-  public set edit_format(value: EditFormat) {
-    if (this.target == TARGET.WEB) {
-      this.web_edit_format = value
-    } else {
-      this.api_edit_format = value
-    }
-  }
   public intelligent_update_abort_controllers: {
     controller: AbortController
     file_path: string
@@ -303,28 +287,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       INSTRUCTIONS_ASK_STATE_KEY
     )
 
-    this.web_edit_format =
-      this.extension_context.workspaceState.get<EditFormat>(
-        get_edit_format_state_key(TARGET.WEB)
-      ) ??
-      this.extension_context.globalState.get<EditFormat>(
-        get_edit_format_state_key(TARGET.WEB)
-      ) ??
-      this.extension_context.workspaceState.get<EditFormat>(
-        EDIT_FORMAT_STATE_KEY
-      ) ??
-      this.extension_context.globalState.get<EditFormat>(
-        EDIT_FORMAT_STATE_KEY
-      ) ??
-      'whole'
-
-    this.api_edit_format =
-      this.extension_context.workspaceState.get<EditFormat>(
-        get_edit_format_state_key(TARGET.API)
-      ) ??
-      this.extension_context.globalState.get<EditFormat>(
-        get_edit_format_state_key(TARGET.API)
-      ) ??
+    this.edit_format =
       this.extension_context.workspaceState.get<EditFormat>(
         EDIT_FORMAT_STATE_KEY
       ) ??

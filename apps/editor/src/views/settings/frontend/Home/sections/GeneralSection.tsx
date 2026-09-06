@@ -17,10 +17,8 @@ type ClearChecksBehavior = 'ignore-open-editors' | 'uncheck-all'
 
 type Props = {
   are_automatic_checkpoints_disabled: boolean
-  synchronize_edit_format_between_targets: boolean
   send_with_shift_enter: boolean
   checkpoint_lifespan: number
-  on_synchronize_edit_format_between_targets_change: (enabled: boolean) => void
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number | undefined) => void
@@ -301,20 +299,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 <UiToggler
                   is_on={props.send_with_shift_enter}
                   on_toggle={props.on_send_with_shift_enter_change}
-                />
-              }
-            />
-            <UiItem
-              title={t('general.prompt-field.synchronize-edit-format.title')}
-              description={t(
-                'general.prompt-field.synchronize-edit-format.description'
-              )}
-              slot_right={
-                <UiToggler
-                  is_on={props.synchronize_edit_format_between_targets}
-                  on_toggle={
-                    props.on_synchronize_edit_format_between_targets_change
-                  }
                 />
               }
             />

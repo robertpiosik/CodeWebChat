@@ -61,15 +61,6 @@ export interface UpdateCommitMessageInstructionsMessage {
   instructions: string
 }
 
-export interface GetSynchronizeEditFormatBetweenTargetsMessage {
-  command: 'GET_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_TARGETS'
-}
-
-export interface UpdateSynchronizeEditFormatBetweenTargetsMessage {
-  command: 'UPDATE_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_TARGETS'
-  enabled: boolean
-}
-
 export interface GetAttachAsciiTreeOfContextMessage {
   command: 'GET_ATTACH_ASCII_TREE_OF_CONTEXT'
 }
@@ -370,8 +361,6 @@ export type FrontendMessage =
   | SelectDefaultApiConfigurationMessage
   | GetCommitMessageInstructionsMessage
   | UpdateCommitMessageInstructionsMessage
-  | GetSynchronizeEditFormatBetweenTargetsMessage
-  | UpdateSynchronizeEditFormatBetweenTargetsMessage
   | GetAttachAsciiTreeOfContextMessage
   | UpdateAttachAsciiTreeOfContextMessage
   | GetUseContextFilesInCommitMessagePromptMessage
@@ -443,11 +432,6 @@ export interface ApiConfigurationsMessage {
 export interface CommitMessageInstructionsMessage {
   command: 'COMMIT_MESSAGE_INSTRUCTIONS'
   instructions: string
-}
-
-export interface SynchronizeEditFormatBetweenTargetsMessage {
-  command: 'SYNCHRONIZE_EDIT_FORMAT_BETWEEN_TARGETS'
-  enabled: boolean
 }
 
 export interface AttachAsciiTreeOfContextMessage {
@@ -611,7 +595,6 @@ export interface StartTemplateCreationMessage {
 export type BackendMessage =
   | ModelProvidersMessage
   | ApiConfigurationsMessage
-  | SynchronizeEditFormatBetweenTargetsMessage
   | CommitMessageInstructionsMessage
   | AttachAsciiTreeOfContextMessage
   | UseContextFilesInCommitMessagePromptMessage

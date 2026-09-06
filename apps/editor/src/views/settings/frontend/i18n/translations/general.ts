@@ -582,43 +582,6 @@ export const translations = {
     hu: 'Minden Kijelölés Törlése',
     bg: 'Размаркиране на всички'
   },
-  'general.prompt-field.synchronize-edit-format.title': {
-    en: 'Synchronize Edit Format Between Targets',
-    pl: 'Synchronizuj format edycji między celami',
-    'zh-cn': '在目标之间同步编辑格式',
-    ja: 'ターゲット間で編集フォーマットを同期する',
-    'zh-tw': '在目標之間同步編輯格式',
-    de: 'Bearbeitungsformat zwischen Zielen synchronisieren',
-    es: 'Sincronizar formato de edición entre objetivos',
-    fr: "Synchroniser le format d'édition entre les cibles",
-    'pt-br': 'Sincronizar formato de edição entre alvos',
-    ru: 'Синхронизировать формат редактирования между целями',
-    ko: '대상 간 편집 형식 동기화',
-    it: 'Sincronizza il formato di modifica tra le destinazioni',
-    tr: 'Düzenleme formatını hedefler arasında senkronize et',
-    cs: 'Synchronizovat formát úprav mezi cíli',
-    hu: 'Szerkesztési formátum szinkronizálása a célok között',
-    bg: 'Синхронизиране на формат за редактиране между целите'
-  },
-  'general.prompt-field.synchronize-edit-format.description': {
-    en: 'Makes the selected edit format shared between targets.',
-    pl: 'Sprawia, że wybrany format edycji jest współdzielony między celami.',
-    'zh-cn': '使选定的编辑格式在目标之间共享。',
-    ja: '選択した編集フォーマットをターゲット間で共有します。',
-    'zh-tw': '使選定的編輯格式在目標之間共享。',
-    de: 'Teilt das ausgewählte Bearbeitungsformat zwischen den Zielen.',
-    es: 'Hace que el formato de edición seleccionado se comparta entre los objetivos.',
-    fr: "Partage le format d'édition sélectionné entre les cibles.",
-    'pt-br':
-      'Torna o formato de edição selecionado compartilhado entre os alvos.',
-    ru: 'Делает выбранный формат редактирования общим для всех целей.',
-    ko: '선택한 편집 형식을 대상 간에 공유하도록 합니다.',
-    it: 'Rende il formato di modifica selezionato condiviso tra le destinazioni.',
-    tr: 'Seçilen düzenleme formatının hedefler arasında paylaşılmasını sağlar.',
-    cs: 'Nastaví vybraný formát úprav jako sdílený mezi cíli.',
-    hu: 'A kiválasztott szerkesztési formátumot megosztottá teszi a célok között.',
-    bg: 'Прави избрания формат за редактиране споделен между целите.'
-  },
   'general.prompt-field.title': {
     en: 'Prompt Field',
     pl: 'Pole promptu',

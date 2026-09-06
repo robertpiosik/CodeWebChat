@@ -32,44 +32,16 @@
     }
   }
 
-  &--accent-orange {
-    border-color: var(--cwc-yellow-background);
+  &--accent-purple {
+    border-color: var(--cwc-purple-background);
     .group__header {
-      background-color: var(--cwc-yellow-background);
+      background-color: var(--cwc-purple-background);
       .group__icon,
       .group__label {
-        color: var(--cwc-yellow-foreground);
+        color: var(--cwc-purple-foreground);
       }
       &:hover {
-        background-color: var(--cwc-yellow-background);
-      }
-    }
-  }
-
-  &--accent-green {
-    border-color: var(--cwc-green-background);
-    .group__header {
-      background-color: var(--cwc-green-background);
-      .group__icon,
-      .group__label {
-        color: var(--cwc-green-foreground);
-      }
-      &:hover {
-        background-color: var(--cwc-green-background);
-      }
-    }
-  }
-
-  &--accent-red {
-    border-color: var(--cwc-red-background);
-    .group__header {
-      background-color: var(--cwc-red-background);
-      .group__icon,
-      .group__label {
-        color: var(--cwc-red-foreground);
-      }
-      &:hover {
-        background-color: var(--cwc-red-background);
+        background-color: var(--cwc-purple-background);
       }
     }
   }
