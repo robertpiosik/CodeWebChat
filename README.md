@@ -144,7 +144,7 @@ _TAB completions from SOTA reasoning models._
 <details>
 <summary>Structure of the constructed prompt</summary>
 
-```
+````
 # Files
 
 [SELECTED FILES]
@@ -166,7 +166,7 @@ Your response must begin with a markdown heading identifying the file and the cu
 ---
 
 Find correct replacement text for the <missing_text> symbol.
-```
+````
 
 </details>
 
