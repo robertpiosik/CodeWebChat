@@ -25,7 +25,6 @@ export type NavItem =
   | 'section:general:group:open-links'
   | 'section:general:group:context'
   | 'section:general:group:prompt-field'
-  | 'section:general:group:history'
   | 'section:general:group:commit-messages'
   | 'section:web'
   | 'section:web:group:web-configurations'
@@ -55,10 +54,6 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     id: 'section:general:group:prompt-field',
     label: 'general.prompt-field.title'
-  },
-  {
-    id: 'section:general:group:history',
-    label: 'general.history.title'
   },
   {
     id: 'section:general:group:commit-messages',
@@ -118,8 +113,6 @@ type Props = {
   ai_studio_user_id: number | null
   send_with_shift_enter: boolean
   reuse_last_tab: boolean
-  are_automatic_checkpoints_disabled: boolean
-  checkpoint_lifespan: number
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
   auto_run_patch_repair: boolean
   templates: Record<string, Template[]>
@@ -146,8 +139,6 @@ type Props = {
   on_edit_files_system_instructions_change: (instructions: string) => void
   on_intelligent_search_instructions_change: (instructions: string) => void
   on_agentic_search_instructions_change: (instructions: string) => void
-  on_automatic_checkpoints_toggle: (disabled: boolean) => void
-  on_checkpoint_lifespan_change: (hours: number | undefined) => void
   on_gemini_user_id_change: (id: number | null) => void
   on_ai_studio_user_id_change: (id: number | null) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
@@ -201,7 +192,6 @@ export const Home: React.FC<Props> = (props) => {
     'section:general:group:open-links': null,
     'section:general:group:context': null,
     'section:general:group:prompt-field': null,
-    'section:general:group:history': null,
     'section:general:group:commit-messages': null,
     'section:web': null,
     'section:web:group:web-configurations': null,
@@ -544,14 +534,6 @@ export const Home: React.FC<Props> = (props) => {
           on_clear_checks_in_workspace_behavior_change={
             props.on_clear_checks_in_workspace_behavior_change
           }
-          are_automatic_checkpoints_disabled={
-            props.are_automatic_checkpoints_disabled
-          }
-          on_automatic_checkpoints_toggle={
-            props.on_automatic_checkpoints_toggle
-          }
-          checkpoint_lifespan={props.checkpoint_lifespan}
-          on_checkpoint_lifespan_change={props.on_checkpoint_lifespan_change}
           on_open_editor_settings={props.on_open_editor_settings}
           on_open_ignore_patterns_settings={
             props.on_open_ignore_patterns_settings

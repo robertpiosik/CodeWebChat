@@ -42,13 +42,6 @@ export const use_settings = (vscode: any) => {
     agentic_search_instructions,
     set_agentic_search_instructions
   ] = useState<string | undefined>(undefined)
-  const [
-    are_automatic_checkpoints_disabled,
-    set_are_automatic_checkpoints_disabled
-  ] = useState<boolean | undefined>(undefined)
-  const [checkpoint_lifespan, set_checkpoint_lifespan] = useState<
-    number | undefined
-  >(undefined)
   const [gemini_user_id, set_gemini_user_id] = useState<
     number | null | undefined
   >(undefined)
@@ -95,8 +88,6 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, {
       command: 'GET_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
     })
-    post_message(vscode, { command: 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED' })
-    post_message(vscode, { command: 'GET_CHECKPOINT_LIFESPAN' })
     post_message(vscode, { command: 'GET_GEMINI_USER_ID' })
     post_message(vscode, { command: 'GET_AI_STUDIO_USER_ID' })
     post_message(vscode, { command: 'GET_SEND_WITH_SHIFT_ENTER' })
@@ -135,10 +126,6 @@ export const use_settings = (vscode: any) => {
         message.command == 'SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
       ) {
         set_select_all_prompts_in_commit_messages_by_default(message.enabled)
-      } else if (message.command == 'ARE_AUTOMATIC_CHECKPOINTS_DISABLED') {
-        set_are_automatic_checkpoints_disabled(message.disabled)
-      } else if (message.command == 'CHECKPOINT_LIFESPAN') {
-        set_checkpoint_lifespan(message.hours)
       } else if (message.command == 'GEMINI_USER_ID') {
         set_gemini_user_id(message.geminiUserId)
       } else if (message.command == 'AI_STUDIO_USER_ID') {
@@ -330,20 +317,6 @@ export const use_settings = (vscode: any) => {
   const handle_open_allow_patterns_settings = () =>
     post_message(vscode, { command: 'OPEN_ALLOW_PATTERNS_SETTINGS' })
 
-  const handle_automatic_checkpoints_toggle = (disabled: boolean) => {
-    set_are_automatic_checkpoints_disabled(disabled)
-    post_message(vscode, {
-      command: 'UPDATE_ARE_AUTOMATIC_CHECKPOINTS_DISABLED',
-      disabled
-    })
-  }
-
-  const handle_checkpoint_lifespan_change = (hours: number | undefined) =>
-    post_message(vscode, {
-      command: 'UPDATE_CHECKPOINT_LIFESPAN',
-      hours: hours ?? null
-    })
-
   const handle_gemini_user_id_change = (geminiUserId: number | null) =>
     post_message(vscode, {
       command: 'UPDATE_GEMINI_USER_ID',
@@ -478,8 +451,6 @@ export const use_settings = (vscode: any) => {
     edit_files_system_instructions,
     intelligent_search_instructions,
     agentic_search_instructions,
-    are_automatic_checkpoints_disabled,
-    checkpoint_lifespan,
     gemini_user_id,
     ai_studio_user_id,
     send_with_shift_enter,
@@ -510,8 +481,6 @@ export const use_settings = (vscode: any) => {
     handle_open_editor_settings,
     handle_open_ignore_patterns_settings,
     handle_open_allow_patterns_settings,
-    handle_automatic_checkpoints_toggle,
-    handle_checkpoint_lifespan_change,
     handle_gemini_user_id_change,
     handle_ai_studio_user_id_change,
     handle_send_with_shift_enter_change,

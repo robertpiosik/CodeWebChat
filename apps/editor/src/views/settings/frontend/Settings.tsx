@@ -94,8 +94,6 @@ export const Settings = () => {
       settings_hook.use_context_files_in_commit_message_prompt !== undefined &&
       settings_hook.select_all_prompts_in_commit_messages_by_default !==
         undefined &&
-      settings_hook.are_automatic_checkpoints_disabled !== undefined &&
-      settings_hook.checkpoint_lifespan !== undefined &&
       settings_hook.gemini_user_id !== undefined &&
       settings_hook.ai_studio_user_id !== undefined &&
       settings_hook.send_with_shift_enter !== undefined &&
@@ -153,10 +151,6 @@ export const Settings = () => {
           settings_hook.select_all_prompts_in_commit_messages_by_default!
         }
         commit_message_instructions={settings_hook.commit_message_instructions!}
-        are_automatic_checkpoints_disabled={
-          settings_hook.are_automatic_checkpoints_disabled!
-        }
-        checkpoint_lifespan={settings_hook.checkpoint_lifespan!}
         gemini_user_id={settings_hook.gemini_user_id!}
         ai_studio_user_id={settings_hook.ai_studio_user_id!}
         send_with_shift_enter={settings_hook.send_with_shift_enter!}
@@ -198,12 +192,6 @@ export const Settings = () => {
         }
         on_agentic_search_instructions_change={
           settings_hook.handle_agentic_search_instructions_change
-        }
-        on_automatic_checkpoints_toggle={
-          settings_hook.handle_automatic_checkpoints_toggle
-        }
-        on_checkpoint_lifespan_change={
-          settings_hook.handle_checkpoint_lifespan_change
         }
         on_clear_checks_in_workspace_behavior_change={
           settings_hook.handle_clear_checks_in_workspace_behavior_change

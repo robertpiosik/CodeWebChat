@@ -8,10 +8,7 @@ import { CHECKPOINT_DEFAULT_LIFESPAN } from '@/constants/values'
 export const remove_old_checkpoints = async (
   checkpoints: Checkpoint[]
 ): Promise<Checkpoint[]> => {
-  const config = vscode.workspace.getConfiguration('codeWebChat')
-  const checkpoint_lifespan_hours =
-    config.get<number>('checkpointLifespan') || CHECKPOINT_DEFAULT_LIFESPAN
-  const checkpoint_lifespan_ms = checkpoint_lifespan_hours * 60 * 60 * 1000
+  const checkpoint_lifespan_ms = CHECKPOINT_DEFAULT_LIFESPAN * 60 * 60 * 1000
 
   const now = Date.now()
   const cutoff_time = now - checkpoint_lifespan_ms

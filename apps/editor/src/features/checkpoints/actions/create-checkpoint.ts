@@ -32,19 +32,6 @@ export const create_checkpoint = async (params: {
 }): Promise<Checkpoint | undefined> => {
   try {
     const trigger = params.trigger ?? 'manual'
-    const are_automatic_checkpoints_disabled = vscode.workspace
-      .getConfiguration('codeWebChat')
-      .get<boolean>('areAutomaticCheckpointsDisabled', false)
-    const is_automatic_checkpoint = trigger != 'manual'
-
-    if (are_automatic_checkpoints_disabled && is_automatic_checkpoint) {
-      Logger.info({
-        function_name: 'create_checkpoint',
-        message: 'Automatic checkpoint creation is disabled. Skipping.',
-        data: { trigger }
-      })
-      return undefined
-    }
 
     const operation_in_progress =
       params.extension_context.workspaceState.get<number>(

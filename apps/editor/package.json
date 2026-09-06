@@ -979,15 +979,6 @@
           "type": "boolean",
           "scope": "resource"
         },
-        "codeWebChat.checkpointLifespan": {
-          "type": "number",
-          "scope": "resource"
-        },
-        "codeWebChat.areAutomaticCheckpointsDisabled": {
-          "type": "boolean",
-          "scope": "resource",
-          "default": false
-        },
         "codeWebChat.sendWithShiftEnter": {
           "type": "boolean",
           "scope": "resource",

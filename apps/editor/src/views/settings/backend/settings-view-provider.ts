@@ -8,7 +8,6 @@ import {
   handle_update_model_provider,
   handle_delete_model_provider,
   handle_get_clear_checks_in_workspace_behavior,
-  handle_get_are_automatic_checkpoints_disabled,
   handle_get_api_configurations,
   handle_get_commit_message_instructions,
   handle_get_attach_ascii_tree_of_context,
@@ -20,13 +19,10 @@ import {
   handle_get_model_providers,
   handle_get_send_with_shift_enter,
   handle_get_reuse_last_tab,
-  handle_update_checkpoint_lifespan,
-  handle_get_checkpoint_lifespan,
   handle_reorder_model_providers,
   handle_set_default_api_configuration,
   handle_select_default_api_configuration,
   handle_update_clear_checks_in_workspace_behavior,
-  handle_update_are_automatic_checkpoints_disabled,
   handle_update_commit_message_instructions,
   handle_update_attach_ascii_tree_of_context,
   handle_update_use_context_files_in_commit_message_prompt,
@@ -242,8 +238,6 @@ export class SettingsViewProvider {
           await handle_get_ai_studio_user_id(this)
         } else if (message.command == 'UPDATE_AI_STUDIO_USER_ID') {
           await handle_update_ai_studio_user_id(message)
-        } else if (message.command == 'GET_CHECKPOINT_LIFESPAN') {
-          await handle_get_checkpoint_lifespan(this)
         } else if (message.command == 'GET_SEND_WITH_SHIFT_ENTER') {
           await handle_get_send_with_shift_enter(this)
         } else if (message.command == 'UPDATE_SEND_WITH_SHIFT_ENTER') {
@@ -252,16 +246,6 @@ export class SettingsViewProvider {
           await handle_get_reuse_last_tab(this)
         } else if (message.command == 'UPDATE_REUSE_LAST_TAB') {
           await handle_update_reuse_last_tab(message)
-        } else if (
-          message.command == 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
-        ) {
-          await handle_get_are_automatic_checkpoints_disabled(this)
-        } else if (
-          message.command == 'UPDATE_ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
-        ) {
-          await handle_update_are_automatic_checkpoints_disabled(message)
-        } else if (message.command == 'UPDATE_CHECKPOINT_LIFESPAN') {
-          await handle_update_checkpoint_lifespan(message)
         } else if (message.command == 'OPEN_EDITOR_SETTINGS') {
           await vscode.commands.executeCommand('workbench.action.openSettings')
         } else if (message.command == 'OPEN_IGNORE_PATTERNS_SETTINGS') {
@@ -327,8 +311,6 @@ export class SettingsViewProvider {
           void handle_get_use_context_files_in_commit_message_prompt(this)
           void handle_get_include_prompts_in_commit_messages(this)
           void handle_get_clear_checks_in_workspace_behavior(this)
-          void handle_get_are_automatic_checkpoints_disabled(this)
-          void handle_get_checkpoint_lifespan(this)
           void handle_get_gemini_user_id(this)
           void handle_get_ai_studio_user_id(this)
           void handle_get_send_with_shift_enter(this)

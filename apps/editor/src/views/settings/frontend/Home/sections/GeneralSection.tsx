@@ -7,7 +7,6 @@ import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
 import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
-import { CHECKPOINT_DEFAULT_LIFESPAN } from '@/constants/values'
 import { use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
 import { Templates } from '@ui/components/editor/settings/Templates'
@@ -16,12 +15,8 @@ import { Template } from '@/views/settings/types/messages'
 type ClearChecksBehavior = 'ignore-open-editors' | 'uncheck-all'
 
 type Props = {
-  are_automatic_checkpoints_disabled: boolean
   send_with_shift_enter: boolean
-  checkpoint_lifespan: number
-  on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
-  on_checkpoint_lifespan_change: (hours: number | undefined) => void
   clear_checks_in_workspace_behavior: ClearChecksBehavior
   on_clear_checks_in_workspace_behavior_change: (
     value: ClearChecksBehavior
@@ -72,20 +67,6 @@ type Props = {
 export const GeneralSection = forwardRef<HTMLDivElement, Props>(
   (props, ref) => {
     const { t } = use_translation()
-    const [checkpoint_lifespan, set_checkpoint_lifespan] = useState<number>()
-
-    useEffect(() => {
-      set_checkpoint_lifespan(props.checkpoint_lifespan)
-    }, [props.checkpoint_lifespan])
-
-    const handle_checkpoint_lifespan_blur = () => {
-      if (checkpoint_lifespan && checkpoint_lifespan > 0) {
-        props.on_checkpoint_lifespan_change(checkpoint_lifespan)
-      } else {
-        props.on_checkpoint_lifespan_change(undefined)
-        set_checkpoint_lifespan(CHECKPOINT_DEFAULT_LIFESPAN)
-      }
-    }
 
     return (
       <UiSection
@@ -299,46 +280,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 <UiToggler
                   is_on={props.send_with_shift_enter}
                   on_toggle={props.on_send_with_shift_enter_change}
-                />
-              }
-            />
-          </UiGroup>
-        </div>
-
-        <div
-          ref={(el) =>
-            props.set_section_ref('section:general:group:history', el)
-          }
-        >
-          <UiGroup title={t('general.history.title')}>
-            <UiItem
-              title={t('general.history.automatic-checkpoints.title')}
-              description={t(
-                'general.history.automatic-checkpoints.description'
-              )}
-              slot_right={
-                <UiToggler
-                  is_on={!props.are_automatic_checkpoints_disabled}
-                  on_toggle={(is_on) =>
-                    props.on_automatic_checkpoints_toggle(!is_on)
-                  }
-                />
-              }
-            />
-            <UiItem
-              title={t('general.history.checkpoint-lifespan.title')}
-              description={t('general.history.checkpoint-lifespan.description')}
-              slot_right={
-                <UiInput
-                  type="number"
-                  value={checkpoint_lifespan?.toString() || ''}
-                  on_change={(val) =>
-                    set_checkpoint_lifespan(
-                      val == '' ? undefined : parseInt(val, 10)
-                    )
-                  }
-                  on_blur={handle_checkpoint_lifespan_blur}
-                  max_width={100}
                 />
               }
             />

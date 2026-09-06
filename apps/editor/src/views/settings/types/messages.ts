@@ -131,24 +131,6 @@ export interface OpenAllowPatternsSettingsMessage {
   command: 'OPEN_ALLOW_PATTERNS_SETTINGS'
 }
 
-export interface GetAreAutomaticCheckpointsDisabledMessage {
-  command: 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
-}
-
-export interface UpdateAreAutomaticCheckpointsDisabledMessage {
-  command: 'UPDATE_ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
-  disabled: boolean
-}
-
-export interface GetCheckpointLifespanMessage {
-  command: 'GET_CHECKPOINT_LIFESPAN'
-}
-
-export interface UpdateCheckpointLifespanMessage {
-  command: 'UPDATE_CHECKPOINT_LIFESPAN'
-  hours: number | null
-}
-
 export interface GetGeminiUserIdMessage {
   command: 'GET_GEMINI_USER_ID'
 }
@@ -374,10 +356,6 @@ export type FrontendMessage =
   | UpdateAgenticSearchInstructionsMessage
   | UpdateEditFilesSystemInstructionsMessage
   | SettingsUiReadyMessage
-  | GetAreAutomaticCheckpointsDisabledMessage
-  | UpdateAreAutomaticCheckpointsDisabledMessage
-  | GetCheckpointLifespanMessage
-  | UpdateCheckpointLifespanMessage
   | GetGeminiUserIdMessage
   | UpdateGeminiUserIdMessage
   | GetAiStudioUserIdMessage
@@ -462,16 +440,6 @@ export interface IntelligentSearchInstructionsMessage {
 export interface AgenticSearchInstructionsMessage {
   command: 'AGENTIC_SEARCH_INSTRUCTIONS'
   instructions: string
-}
-
-export interface AreAutomaticCheckpointsDisabledMessage {
-  command: 'ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
-  disabled: boolean
-}
-
-export interface CheckpointLifespanMessage {
-  command: 'CHECKPOINT_LIFESPAN'
-  hours: number
 }
 
 export interface GeminiUserIdMessage {
@@ -602,8 +570,6 @@ export type BackendMessage =
   | EditFilesSystemInstructionsMessage
   | IntelligentSearchInstructionsMessage
   | AgenticSearchInstructionsMessage
-  | AreAutomaticCheckpointsDisabledMessage
-  | CheckpointLifespanMessage
   | GeminiUserIdMessage
   | AiStudioUserIdMessage
   | SendWithShiftEnterMessage
