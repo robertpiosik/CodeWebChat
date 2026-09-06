@@ -180,7 +180,7 @@ _Generate commit messages based on staged changes and context files._
 ```
 # Files
 
-[SELECTED FILES OF ACCEPTED EDITS]
+[SELECTED FILES WHEN EDITS WERE ACCEPTED]
 
 # Changes
 
@@ -188,7 +188,9 @@ _Generate commit messages based on staged changes and context files._
 
 # Output formatting
 
-[FORMATTING INSTRUCTIONS]
+Your response must begin with "**Commit message:**", then proceed with the message. Example:
+
+**Commit message:** Bump version to 1.0.1
 
 # Task
 
