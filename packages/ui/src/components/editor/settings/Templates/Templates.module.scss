@@ -8,7 +8,7 @@
 .group {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--cwc-border-color-dimmed);
+  border: 0.5px solid var(--cwc-border-color-dimmed);
   border-radius: 6px;
   overflow: hidden;
 
@@ -19,7 +19,7 @@
   }
 
   &--accent-blue {
-    border-color: var(--cwc-blue-background);
+    border-color: var(--cwc-blue-foreground);
     .group__header {
       background-color: var(--cwc-blue-background);
       .group__icon,
@@ -33,7 +33,7 @@
   }
 
   &--accent-purple {
-    border-color: var(--cwc-purple-background);
+    border-color: var(--cwc-purple-foreground);
     .group__header {
       background-color: var(--cwc-purple-background);
       .group__icon,
