@@ -46,7 +46,7 @@ export const prompt_for_shrink_mode = async (params: {
     })
     shrink_quick_pick.onDidHide(() => {
       if (!is_resolved) {
-        resolve('cancel')
+        resolve('back')
       }
       shrink_quick_pick.dispose()
     })

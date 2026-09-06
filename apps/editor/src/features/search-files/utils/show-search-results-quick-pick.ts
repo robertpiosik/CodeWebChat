@@ -187,7 +187,7 @@ export const show_search_results_quick_pick = async (params: {
     quick_pick.onDidHide(() => {
       if (is_showing_folder_quick_pick) return
       if (!is_resolved) {
-        resolve(params.resolve_hide_as)
+        resolve(params.resolve_hide_as ?? 'back')
       }
       quick_pick.dispose()
     })

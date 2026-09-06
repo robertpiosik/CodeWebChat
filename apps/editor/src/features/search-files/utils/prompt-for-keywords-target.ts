@@ -69,7 +69,7 @@ export const prompt_for_keywords_target = async (
 
     quick_pick.onDidHide(() => {
       if (!is_resolved) {
-        resolve(undefined)
+        resolve('back')
       }
       quick_pick.dispose()
     })

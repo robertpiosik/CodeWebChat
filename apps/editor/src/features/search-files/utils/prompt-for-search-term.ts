@@ -76,7 +76,7 @@ export const prompt_for_search_term = async (
         }),
         input_box.onDidHide(() => {
           if (!is_resolved) {
-            resolve({ value: undefined })
+            resolve({ value: undefined, back: true })
           }
           disposables.forEach((d) => d.dispose())
           input_box.dispose()

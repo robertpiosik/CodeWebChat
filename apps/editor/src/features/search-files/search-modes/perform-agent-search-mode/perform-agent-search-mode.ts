@@ -304,7 +304,7 @@ export const perform_agent_search_mode = async (params: {
 
           agent_quick_pick.onDidHide(() => {
             if (!is_resolved) {
-              resolve(undefined)
+              resolve('back')
             }
             config_listener.dispose()
             agent_quick_pick.dispose()
@@ -440,7 +440,7 @@ export const perform_agent_search_mode = async (params: {
 
               quick_pick.onDidHide(() => {
                 if (!is_resolved) {
-                  resolve(undefined)
+                  resolve('back')
                 }
                 quick_pick.dispose()
               })

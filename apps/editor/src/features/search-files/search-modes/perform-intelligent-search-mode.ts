@@ -207,7 +207,7 @@ export const perform_intelligent_search_mode = async (params: {
 
             quick_pick.onDidHide(() => {
               if (!is_resolved) {
-                resolve(undefined)
+                resolve('back')
               }
               quick_pick.dispose()
             })

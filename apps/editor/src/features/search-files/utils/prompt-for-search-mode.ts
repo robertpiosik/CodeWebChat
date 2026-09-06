@@ -82,7 +82,7 @@ export const prompt_for_search_mode = async (
 
     quick_pick.onDidHide(() => {
       if (!is_resolved) {
-        resolve(undefined)
+        resolve(show_back_button ? 'back' : undefined)
       }
       quick_pick.dispose()
     })
