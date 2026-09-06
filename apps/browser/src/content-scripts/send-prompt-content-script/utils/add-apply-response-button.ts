@@ -63,6 +63,10 @@ export function add_apply_response_button(params: {
 
   params.insert_button(params.footer, apply_response_button)
   apply_response_button.focus({ preventScroll: true })
+  apply_response_button.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center'
+  })
 }
 
 let active_observer: MutationObserver | null = null
