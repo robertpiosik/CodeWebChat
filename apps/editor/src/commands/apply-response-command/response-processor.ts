@@ -60,7 +60,8 @@ export const process_response = async (params: {
   const on_progress = (progress: number) => {
     params.prompt_view_provider.send_message({
       command: 'SHOW_PROGRESS',
-      title: t('common.progress.preparing-preview'),
+      title: t('common.progress.response-preview'),
+      subtitle: t('command.apply-response.progress.applying-edits'),
       progress
     })
   }
@@ -302,53 +303,53 @@ export const process_response = async (params: {
     try {
       for (let i = 0; i < total_patches; i++) {
         on_progress(Math.round((i / total_patches) * 100))
-      const patch = patches[i]
-      let workspace_path = default_workspace
+        const patch = patches[i]
+        let workspace_path = default_workspace
 
-      if (patch.workspace_name && workspace_map.has(patch.workspace_name)) {
-        workspace_path = workspace_map.get(patch.workspace_name)!
-      }
+        if (patch.workspace_name && workspace_map.has(patch.workspace_name)) {
+          workspace_path = workspace_map.get(patch.workspace_name)!
+        }
 
-      const sanitized_patch_content = sanitize_patch_content(
-        patch.content,
-        patch.workspace_name
-      )
-      const result = await apply_git_patch(
-        sanitized_patch_content,
-        workspace_path,
-        patch.workspace_name,
-        patch
-      )
+        const sanitized_patch_content = sanitize_patch_content(
+          patch.content,
+          patch.workspace_name
+        )
+        const result = await apply_git_patch(
+          sanitized_patch_content,
+          workspace_path,
+          patch.workspace_name,
+          patch
+        )
 
-      if (result.success) {
-        if (result.diff_application_method && result.original_states) {
-          for (const state of result.original_states) {
-            state.diff_application_method = result.diff_application_method
-            state.ai_content = sanitized_patch_content
+        if (result.success) {
+          if (result.diff_application_method && result.original_states) {
+            for (const state of result.original_states) {
+              state.diff_application_method = result.diff_application_method
+              state.ai_content = sanitized_patch_content
+            }
+          }
+          if (result.original_states) {
+            all_original_states = all_original_states.concat(
+              result.original_states
+            )
+            applied_patches.push({
+              patch,
+              original_states: result.original_states,
+              diff_application_method: result.diff_application_method
+            })
+          }
+        } else {
+          if (result.original_states) {
+            for (const state of result.original_states) {
+              state.apply_failed = true
+              state.ai_content = sanitized_patch_content
+            }
+            all_original_states = all_original_states.concat(
+              result.original_states
+            )
           }
         }
-        if (result.original_states) {
-          all_original_states = all_original_states.concat(
-            result.original_states
-          )
-          applied_patches.push({
-            patch,
-            original_states: result.original_states,
-            diff_application_method: result.diff_application_method
-          })
-        }
-      } else {
-        if (result.original_states) {
-          for (const state of result.original_states) {
-            state.apply_failed = true
-            state.ai_content = sanitized_patch_content
-          }
-          all_original_states = all_original_states.concat(
-            result.original_states
-          )
-        }
       }
-    }
 
       if (all_original_states.length > 0) {
         all_original_states =
@@ -430,72 +431,72 @@ export const process_response = async (params: {
           data: { success: result.success }
         })
       } else if (selected_mode_label == 'Truncated') {
-      const result = await handle_truncated_edit({ files, on_progress })
-      const successful_states = result.original_states || []
-      const failed_files = result.failed_files || []
+        const result = await handle_truncated_edit({ files, on_progress })
+        const successful_states = result.original_states || []
+        const failed_files = result.failed_files || []
 
-      if (failed_files.length > 0) {
-        const workspace_map = new Map<string, string>()
-        vscode.workspace.workspaceFolders!.forEach((folder) => {
-          workspace_map.set(folder.name, folder.uri.fsPath)
+        if (failed_files.length > 0) {
+          const workspace_map = new Map<string, string>()
+          vscode.workspace.workspaceFolders!.forEach((folder) => {
+            workspace_map.set(folder.name, folder.uri.fsPath)
+          })
+          const default_workspace =
+            vscode.workspace.workspaceFolders![0].uri.fsPath
+
+          failed_files.forEach((file) => {
+            successful_states.push(
+              create_failed_file_state({
+                file,
+                default_workspace,
+                workspace_map
+              })
+            )
+          })
+        }
+
+        if (successful_states.length > 0) {
+          final_original_states = successful_states
+          operation_success = true
+        }
+        Logger.info({
+          function_name: 'process_response',
+          message: 'Truncated handler finished.',
+          data: { success: result.success }
         })
-        const default_workspace =
-          vscode.workspace.workspaceFolders![0].uri.fsPath
+      } else if (selected_mode_label == 'Conflict markers') {
+        const result = await handle_search_replace({ files, on_progress })
 
-        failed_files.forEach((file) => {
-          successful_states.push(
-            create_failed_file_state({
-              file,
-              default_workspace,
-              workspace_map
-            })
-          )
+        const successful_states = result.original_states || []
+        const failed_files: FileItem[] = result.failed_files || []
+
+        if (failed_files.length > 0) {
+          const workspace_map = new Map<string, string>()
+          vscode.workspace.workspaceFolders!.forEach((folder) => {
+            workspace_map.set(folder.name, folder.uri.fsPath)
+          })
+          const default_workspace =
+            vscode.workspace.workspaceFolders![0].uri.fsPath
+
+          failed_files.forEach((file) => {
+            successful_states.push(
+              create_failed_file_state({
+                file,
+                default_workspace,
+                workspace_map
+              })
+            )
+          })
+        }
+
+        if (successful_states.length > 0) {
+          final_original_states = successful_states
+          operation_success = true
+        }
+        Logger.info({
+          function_name: 'process_response',
+          message: 'Conflict markers handler finished.',
+          data: { success: result.success }
         })
-      }
-
-      if (successful_states.length > 0) {
-        final_original_states = successful_states
-        operation_success = true
-      }
-      Logger.info({
-        function_name: 'process_response',
-        message: 'Truncated handler finished.',
-        data: { success: result.success }
-      })
-    } else if (selected_mode_label == 'Conflict markers') {
-      const result = await handle_search_replace({ files, on_progress })
-
-      const successful_states = result.original_states || []
-      const failed_files: FileItem[] = result.failed_files || []
-
-      if (failed_files.length > 0) {
-        const workspace_map = new Map<string, string>()
-        vscode.workspace.workspaceFolders!.forEach((folder) => {
-          workspace_map.set(folder.name, folder.uri.fsPath)
-        })
-        const default_workspace =
-          vscode.workspace.workspaceFolders![0].uri.fsPath
-
-        failed_files.forEach((file) => {
-          successful_states.push(
-            create_failed_file_state({
-              file,
-              default_workspace,
-              workspace_map
-            })
-          )
-        })
-      }
-
-      if (successful_states.length > 0) {
-        final_original_states = successful_states
-        operation_success = true
-      }
-      Logger.info({
-        function_name: 'process_response',
-        message: 'Conflict markers handler finished.',
-        data: { success: result.success }
-      })
       } else {
         Logger.error({
           function_name: 'process_response',

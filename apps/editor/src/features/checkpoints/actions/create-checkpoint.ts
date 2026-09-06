@@ -29,6 +29,7 @@ export const create_checkpoint = async (params: {
   prompt_view_provider: PromptViewProvider
   trigger?: CheckpointTrigger
   description?: string
+  hide_notification?: boolean
 }): Promise<Checkpoint | undefined> => {
   try {
     const trigger = params.trigger ?? 'manual'
@@ -215,14 +216,18 @@ export const create_checkpoint = async (params: {
       new_checkpoint = checkpoint_object
     }
 
-    await vscode.window.withProgress(
-      {
-        location: vscode.ProgressLocation.Notification,
-        title: t('feature.checkpoints.progress.creating'),
-        cancellable: false
-      },
-      create_checkpoint_task
-    )
+    if (params.hide_notification) {
+      await create_checkpoint_task()
+    } else {
+      await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: t('feature.checkpoints.progress.creating'),
+          cancellable: false
+        },
+        create_checkpoint_task
+      )
+    }
 
     return new_checkpoint
   } catch (err: any) {

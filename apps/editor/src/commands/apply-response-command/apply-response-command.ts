@@ -240,7 +240,8 @@ export const apply_response_command = (params: {
           if (has_valid_blocks && !is_code_at_cursor) {
             params.prompt_view_provider.send_message({
               command: 'SHOW_PROGRESS',
-              title: t('common.progress.preparing-preview')
+              title: t('common.progress.response-preview'),
+              subtitle: t('command.apply-response.progress.creating-checkpoint')
             })
 
             before_checkpoint = await create_checkpoint({
@@ -248,7 +249,8 @@ export const apply_response_command = (params: {
               extension_context: params.extension_context,
               prompt_view_provider: params.prompt_view_provider,
               trigger: 'before-response-previewed',
-              description: args?.raw_instructions
+              description: args?.raw_instructions,
+              hide_notification: true
             })
           }
         }
@@ -353,8 +355,7 @@ export const apply_response_command = (params: {
                 is_checked: true,
                 apply_failed: state.apply_failed,
                 ai_content: state.ai_content,
-                applied_with_patch_repair:
-                  state.applied_with_patch_repair
+                applied_with_patch_repair: state.applied_with_patch_repair
               })
 
               if (state.file_path_to_restore) {

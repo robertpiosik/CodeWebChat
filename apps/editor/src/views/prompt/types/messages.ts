@@ -775,9 +775,7 @@ export interface ShowProgressMessage extends BaseMessage {
   title: string
   subtitle?: string
   progress?: number
-  tokens_per_second?: number
   cancellable?: boolean
-  delay_visibility?: boolean
 }
 
 export interface HideProgressMessage extends BaseMessage {

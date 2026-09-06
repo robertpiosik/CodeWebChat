@@ -327,5 +327,41 @@ export const translations = {
     cs: 'Chybí text odpovědi k použití.',
     hu: 'A hiányzó válaszszöveg hiányzik.',
     bg: 'Липсва текст на отговор за прилагане.'
+  },
+  'command.apply-response.progress.applying-edits': {
+    en: 'Applying edits...',
+    pl: 'Wprowadzam zmiany...',
+    'zh-cn': '正在应用编辑...',
+    ja: '編集を適用しています...',
+    'zh-tw': '正在應用編輯...',
+    de: 'Änderungen werden angewendet...',
+    es: 'Aplicando ediciones...',
+    fr: 'Application des modifications...',
+    'pt-br': 'Aplicando edições...',
+    ru: 'Применение изменений...',
+    ko: '편집 적용 중...',
+    it: 'Applicazione delle modifiche...',
+    tr: 'Düzenlemeler uygulanıyor...',
+    cs: 'Aplikují se úpravy...',
+    hu: 'Szerkesztések alkalmazása...',
+    bg: 'Прилагане на редакциите...'
+  },
+  'command.apply-response.progress.creating-checkpoint': {
+    en: 'Creating checkpoint...',
+    pl: 'Tworzę punkt kontrolny...',
+    'zh-cn': '正在创建检查点...',
+    ja: 'チェックポイントを作成しています...',
+    'zh-tw': '正在建立檢查點...',
+    de: 'Prüfpunkt wird erstellt...',
+    es: 'Creando punto de control...',
+    fr: 'Création du point de contrôle...',
+    'pt-br': 'Criando ponto de verificação...',
+    ru: 'Создание контрольной точки...',
+    ko: '체크포인트 생성 중...',
+    it: 'Creazione punto di controllo...',
+    tr: 'Denetim noktası oluşturuluyor...',
+    cs: 'Vytváření kontrolního bodu...',
+    hu: 'Ellenőrzőpont létrehozása...',
+    bg: 'Създаване на контролна точка...'
   }
 } as const
