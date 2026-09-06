@@ -10,6 +10,7 @@ export const edit_reasoning_effort_for_api_config = async (
     { label: 'Low' },
     { label: 'Medium' },
     { label: 'High' },
+    { label: 'XHigh' },
     { label: 'Max' }
   ]
 
@@ -29,7 +30,7 @@ export const edit_reasoning_effort_for_api_config = async (
     quick_pick.buttons = [close_button]
     if (current_effort) {
       const active = effort_options.find(
-        (item) => item.label.toLowerCase() === current_effort.toLowerCase()
+        (item) => item.label.toLowerCase() == current_effort.toLowerCase()
       )
       if (active) quick_pick.activeItems = [active]
     }
