@@ -1,4 +1,5 @@
 export * from './code-at-cursor-parser'
-export * from './multiple-files-parser'
+export * from './standard-parser'
 export * from './diff-parser'
 export * from './intelligent-file-search-results-parser'
+export * from './commit-message-parser'

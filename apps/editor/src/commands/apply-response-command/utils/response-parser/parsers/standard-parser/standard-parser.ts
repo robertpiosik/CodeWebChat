@@ -4,7 +4,7 @@ import { create_or_update_file_item } from './helpers/create-or-update-file-item
 import { flush_text_block } from './helpers/flush-text-block'
 import { extract_and_set_workspace_path } from './helpers/extract-and-set-workspace-path'
 
-export const parse_multiple_files = (params: {
+export const file_blocks_parser = (params: {
   response: string
   is_single_root_folder_workspace: boolean
 }): (FileItem | TextItem | InlineFileItem)[] => {

@@ -1,8 +1,9 @@
 import {
   extract_diffs,
   parse_code_at_cursor,
-  parse_multiple_files,
-  parse_intelligent_file_search_results
+  file_blocks_parser,
+  parse_intelligent_file_search_results,
+  parse_commit_message
 } from './parsers'
 import { normalize_path } from '@/utils/normalize-path'
 
@@ -41,6 +42,11 @@ export type IntelligentFileSearchResultsItem = {
   folder_path?: string
 }
 
+export type CommitMessageItem = {
+  type: 'commit-message'
+  message: string
+}
+
 export type TextItem = {
   type: 'text'
   content: string
@@ -59,6 +65,7 @@ export type ResponseItem =
   | TextItem
   | InlineFileItem
   | IntelligentFileSearchResultsItem
+  | CommitMessageItem
 
 export const extract_workspace_and_path = (params: {
   raw_file_path: string
@@ -85,6 +92,11 @@ export const parse_response = (params: {
   is_single_root_folder_workspace?: boolean
   workspace_files?: string[]
 }): ResponseItem[] => {
+  const commit_message = parse_commit_message(params.response)
+  if (commit_message) {
+    return [commit_message]
+  }
+
   const is_single_root_folder_workspace =
     params.is_single_root_folder_workspace ?? true
 
@@ -136,7 +148,7 @@ export const parse_response = (params: {
     }
   }
 
-  const items = parse_multiple_files({
+  const items = file_blocks_parser({
     response: processed_response,
     is_single_root_folder_workspace
   })

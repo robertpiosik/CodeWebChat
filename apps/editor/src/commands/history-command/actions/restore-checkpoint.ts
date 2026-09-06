@@ -45,10 +45,6 @@ export const restore_checkpoint = async (params: {
     return
   }
 
-  const title = params.options?.skip_confirmation
-    ? t('command.history.progress.reverting')
-    : t('command.history.progress.restoring')
-
   const main_task = async (
     progress: vscode.Progress<{ message?: string; increment?: number }>
   ) => {
@@ -532,6 +528,9 @@ export const restore_checkpoint = async (params: {
     }
   }
 
+  const title = params.options?.skip_confirmation
+    ? t('command.history.progress.reverting')
+    : t('command.history.progress.restoring')
   let temp_check: Checkpoint | undefined
   try {
     temp_check = await vscode.window.withProgress(

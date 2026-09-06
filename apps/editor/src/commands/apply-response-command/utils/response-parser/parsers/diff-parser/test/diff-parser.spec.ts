@@ -10,7 +10,8 @@ describe('diff-parser', () => {
     )
   }
 
-  it('parses diff format without markdown code block or git header', () => {
+  describe('parse_response', () => {
+    it('parses diff format without markdown code block or git header', () => {
     const test_case = 'no-markdown-or-git-header'
     const text = load_test_case_file(test_case, `${test_case}.txt`)
     const result = parse_response({
@@ -960,5 +961,6 @@ describe('diff-parser', () => {
       file_path: 'src/index.ts',
       content: load_test_case_file(test_case, '1-file.txt')
     })
+  })
   })
 })
