@@ -241,10 +241,9 @@ export const handle_patch_repair_file_in_preview = async (
 
     should_retry = true
   } finally {
-    const index =
-      prompt_view_provider.patch_repair_abort_controllers.findIndex(
-        (s) => s.controller === abort_controller
-      )
+    const index = prompt_view_provider.patch_repair_abort_controllers.findIndex(
+      (s) => s.controller === abort_controller
+    )
     if (index > -1) {
       prompt_view_provider.patch_repair_abort_controllers.splice(index, 1)
     }

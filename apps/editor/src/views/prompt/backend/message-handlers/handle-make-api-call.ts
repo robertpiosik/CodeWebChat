@@ -261,8 +261,7 @@ export const handle_make_api_call = async (
       model: api_configuration.model
     }
 
-    const is_openai =
-      model_provider.base_url == PROVIDERS.OpenAI.base_url
+    const is_openai = model_provider.base_url == PROVIDERS.OpenAI.base_url
     if (is_openai) {
       body.prompt_cache_options = { mode: 'explicit' }
     }

@@ -8,11 +8,7 @@ export const codex_agent: CodingAgent = {
   is_installed: () => check_command_exists('codex'),
   get_documentation_url: () =>
     'https://learn.chatgpt.com/docs/non-interactive-mode',
-  get_args: (query: string) => [
-    'exec',
-    build_agent_prompt(query),
-    '--json'
-  ],
+  get_args: (query: string) => ['exec', build_agent_prompt(query), '--json'],
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type == 'item.started' && parsed.item) {
       const item = parsed.item

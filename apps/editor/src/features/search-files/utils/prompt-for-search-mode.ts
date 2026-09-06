@@ -5,7 +5,9 @@ export const prompt_for_search_mode = async (
   last_mode: 'phrase' | 'keywords' | 'intelligent' | 'agent',
   show_back_button?: boolean,
   is_workspace_action?: boolean
-): Promise<'phrase' | 'keywords' | 'intelligent' | 'agent' | undefined | 'back'> => {
+): Promise<
+  'phrase' | 'keywords' | 'intelligent' | 'agent' | undefined | 'back'
+> => {
   const items: (vscode.QuickPickItem & {
     mode: 'phrase' | 'keywords' | 'intelligent' | 'agent'
   })[] = [

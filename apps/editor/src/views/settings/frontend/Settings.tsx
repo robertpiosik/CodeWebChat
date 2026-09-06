@@ -138,9 +138,7 @@ export const Settings = () => {
         intelligent_search_instructions={
           settings_hook.intelligent_search_instructions!
         }
-        agentic_search_instructions={
-          settings_hook.agentic_search_instructions!
-        }
+        agentic_search_instructions={settings_hook.agentic_search_instructions!}
         attach_ascii_tree_of_context={
           settings_hook.attach_ascii_tree_of_context!
         }

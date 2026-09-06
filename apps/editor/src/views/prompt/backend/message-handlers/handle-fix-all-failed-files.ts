@@ -191,8 +191,7 @@ export const handle_fix_all_failed_files = async (params: {
             api_key: api_model_provider.api_key,
             model_provider: api_model_provider,
             model: patch_repair_api_configuration.model,
-            reasoning_effort:
-              patch_repair_api_configuration.reasoning_effort,
+            reasoning_effort: patch_repair_api_configuration.reasoning_effort,
             file_path: file_path,
             file_content: file_state.content,
             instruction: instructions,
@@ -244,7 +243,8 @@ export const handle_fix_all_failed_files = async (params: {
           if (
             !axios.isCancel(error) &&
             error.message != 'User cancelled the operation' &&
-            error.message != 'Batch operation failed, triggering configuration selection.'
+            error.message !=
+              'Batch operation failed, triggering configuration selection.'
           ) {
             Logger.error({
               function_name: 'handle_fix_all_failed_files',

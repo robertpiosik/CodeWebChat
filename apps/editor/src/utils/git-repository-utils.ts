@@ -355,79 +355,106 @@ export const prepare_staged_changes = async (params: {
         })
       )
 
-      let current_selected_fs_paths = params.selection_state?.files || items.map((i) => i.fsPath)
+      let current_selected_fs_paths =
+        params.selection_state?.files || items.map((i) => i.fsPath)
 
       while (true) {
-        const selected = await new Promise<any[] | undefined | 'search'>((resolve) => {
-          const quick_pick = vscode.window.createQuickPick<any>()
-          quick_pick.items = items
-          quick_pick.selectedItems = items.filter((i) => current_selected_fs_paths.includes(i.fsPath))
+        const selected = await new Promise<any[] | undefined | 'search'>(
+          (resolve) => {
+            const quick_pick = vscode.window.createQuickPick<any>()
+            quick_pick.items = items
+            quick_pick.selectedItems = items.filter((i) =>
+              current_selected_fs_paths.includes(i.fsPath)
+            )
 
-          quick_pick.canSelectMany = true
-          quick_pick.matchOnDescription = true
-          quick_pick.title = t('command.generate-commit-message.unstaged-files')
-          quick_pick.placeholder = t('command.generate-commit-message.select-files')
-          quick_pick.ignoreFocusOut = true
+            quick_pick.canSelectMany = true
+            quick_pick.matchOnDescription = true
+            quick_pick.title = t(
+              'command.generate-commit-message.unstaged-files'
+            )
+            quick_pick.placeholder = t(
+              'command.generate-commit-message.select-files'
+            )
+            quick_pick.ignoreFocusOut = true
 
-          const close_button = {
-            iconPath: new vscode.ThemeIcon('close'),
-            tooltip: t('common.close')
-          }
-          const search_button = {
-            iconPath: new vscode.ThemeIcon('search'),
-            tooltip: t('common.search-in-selected-results')
-          }
+            const close_button = {
+              iconPath: new vscode.ThemeIcon('close'),
+              tooltip: t('common.close')
+            }
+            const search_button = {
+              iconPath: new vscode.ThemeIcon('search'),
+              tooltip: t('common.search-in-selected-results')
+            }
 
-          quick_pick.buttons = params.workspace_provider && params.extension_context && params.websocket_manager
-            ? [search_button, close_button]
-            : [close_button]
+            quick_pick.buttons =
+              params.workspace_provider &&
+              params.extension_context &&
+              params.websocket_manager
+                ? [search_button, close_button]
+                : [close_button]
 
-          quick_pick.onDidTriggerButton((button) => {
-            if (button.tooltip == t('common.close')) {
-              resolve(undefined)
-              quick_pick.hide()
-            } else if (button.tooltip == t('common.search-in-selected-results')) {
-              current_selected_fs_paths = Array.from(quick_pick.selectedItems).map((i: any) => i.fsPath)
-              if (current_selected_fs_paths.length == 0) {
-                vscode.window.showInformationMessage(t('common.info.select-files-to-search'))
-                return
+            quick_pick.onDidTriggerButton((button) => {
+              if (button.tooltip == t('common.close')) {
+                resolve(undefined)
+                quick_pick.hide()
+              } else if (
+                button.tooltip == t('common.search-in-selected-results')
+              ) {
+                current_selected_fs_paths = Array.from(
+                  quick_pick.selectedItems
+                ).map((i: any) => i.fsPath)
+                if (current_selected_fs_paths.length == 0) {
+                  vscode.window.showInformationMessage(
+                    t('common.info.select-files-to-search')
+                  )
+                  return
+                }
+                resolve('search')
+                quick_pick.hide()
               }
-              resolve('search')
+            })
+
+            quick_pick.onDidTriggerItemButton(async (event) => {
+              if (event.button.tooltip == t('common.go-to-file')) {
+                const uri = vscode.Uri.file(event.item.fsPath)
+                vscode.window.showTextDocument(uri, { preview: true })
+              } else if (
+                event.button.tooltip ==
+                t('command.generate-commit-message.show-diff')
+              ) {
+                const uri = vscode.Uri.file(event.item.fsPath)
+                await vscode.commands.executeCommand('git.openChange', uri)
+              }
+            })
+
+            quick_pick.onDidAccept(() => {
+              const selected_items = Array.from(quick_pick.selectedItems)
+              current_selected_fs_paths = selected_items.map(
+                (i: any) => i.fsPath
+              )
+              resolve(selected_items)
               quick_pick.hide()
-            }
-          })
+            })
 
-          quick_pick.onDidTriggerItemButton(async (event) => {
-            if (event.button.tooltip == t('common.go-to-file')) {
-              const uri = vscode.Uri.file(event.item.fsPath)
-              vscode.window.showTextDocument(uri, { preview: true })
-            } else if (event.button.tooltip == t('command.generate-commit-message.show-diff')) {
-              const uri = vscode.Uri.file(event.item.fsPath)
-              await vscode.commands.executeCommand('git.openChange', uri)
-            }
-          })
+            quick_pick.onDidHide(() => {
+              resolve(undefined)
+              quick_pick.dispose()
+            })
 
-          quick_pick.onDidAccept(() => {
-            const selected_items = Array.from(quick_pick.selectedItems)
-            current_selected_fs_paths = selected_items.map((i: any) => i.fsPath)
-            resolve(selected_items)
-            quick_pick.hide()
-          })
-
-          quick_pick.onDidHide(() => {
-            resolve(undefined)
-            quick_pick.dispose()
-          })
-
-          quick_pick.show()
-        })
+            quick_pick.show()
+          }
+        )
 
         if (!selected) {
           return null
         }
 
         if (selected === 'search') {
-          if (!params.workspace_provider || !params.extension_context || !params.websocket_manager) {
+          if (
+            !params.workspace_provider ||
+            !params.extension_context ||
+            !params.websocket_manager
+          ) {
             continue
           }
 

@@ -236,7 +236,9 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                   <>
                     <IconButton
                       codicon_icon={config.is_pinned ? 'pinned' : 'pin'}
-                      title={config.is_pinned ? t('action.unpin') : t('action.pin')}
+                      title={
+                        config.is_pinned ? t('action.unpin') : t('action.pin')
+                      }
                       on_click={(e) => {
                         e.stopPropagation()
                         props.on_toggle_pinned_web_configuration(config)

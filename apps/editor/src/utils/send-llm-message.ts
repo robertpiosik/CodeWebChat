@@ -36,7 +36,8 @@ const process_stream_chunk = (params: {
 
           const json_data = JSON.parse(json_string)
           const content = json_data.choices?.[0]?.delta?.content
-          const reasoning_content = json_data.choices?.[0]?.delta?.reasoning_content
+          const reasoning_content =
+            json_data.choices?.[0]?.delta?.reasoning_content
 
           if (typeof content == 'string') {
             new_content += content
@@ -299,10 +300,11 @@ export const send_llm_message = async (params: {
       let stream_closed = false
 
       response.data.on('data', async (chunk: string) => {
-        const { updated_buffer, new_content, new_reasoning_content } = process_stream_chunk({
-          chunk,
-          buffer
-        })
+        const { updated_buffer, new_content, new_reasoning_content } =
+          process_stream_chunk({
+            chunk,
+            buffer
+          })
         buffer = updated_buffer
 
         if (new_reasoning_content) {
@@ -335,7 +337,8 @@ export const send_llm_message = async (params: {
               if (json_string && json_string !== DONE_TOKEN) {
                 const json_data = JSON.parse(json_string)
                 const content = json_data.choices?.[0]?.delta?.content
-                const reasoning_content = json_data.choices?.[0]?.delta?.reasoning_content
+                const reasoning_content =
+                  json_data.choices?.[0]?.delta?.reasoning_content
 
                 if (typeof content == 'string') {
                   process_content(content)
@@ -367,7 +370,11 @@ export const send_llm_message = async (params: {
           const start_match = full_response.match(/<(?:think|thought)>/)
           const end_match = full_response.match(/<\/(?:think|thought)>/)
 
-          if (start_match && end_match && end_match.index! > start_match.index!) {
+          if (
+            start_match &&
+            end_match &&
+            end_match.index! > start_match.index!
+          ) {
             const content_start = start_match.index! + start_match[0].length
             thoughts = full_response
               .substring(content_start, end_match.index!)

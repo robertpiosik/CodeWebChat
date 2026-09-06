@@ -62,7 +62,6 @@ export const ai_file_search_format_instructions = `Output strictly as a bulleted
 - \`src/greetings/hello.ts\`
 - \`src/greetings/welcome.ts\``
 
-
 export const intelligent_file_search_format_for_prompt_view = (
   metadata?: string,
   folder_path?: string
@@ -83,4 +82,3 @@ These files contain the core greeting logic and module exports.`
 
 export const voice_input_instructions =
   'Respond with a transcription of the following audio recording or text "INAUDIBLE", and nothing else.'
-

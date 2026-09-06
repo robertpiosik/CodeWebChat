@@ -24,7 +24,13 @@ export const use_keyboard_shortcuts = (params: Params) => {
 
       if (!params.is_active) return
 
-      if (event.altKey && left_alt_pressed_ref.current && !event.shiftKey && !event.metaKey && !event.ctrlKey) {
+      if (
+        event.altKey &&
+        left_alt_pressed_ref.current &&
+        !event.shiftKey &&
+        !event.metaKey &&
+        !event.ctrlKey
+      ) {
         if (event.code == 'Digit1') {
           event.preventDefault()
           params.on_chatbots_click()

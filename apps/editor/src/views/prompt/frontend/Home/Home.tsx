@@ -34,11 +34,8 @@ type Props = {
 export const Home: React.FC<Props> = (props) => {
   const { t } = use_translation()
   const [active_workspace_root, set_active_workspace_root] = useState<string>()
-  const {
-    has_scrolled_past_target_button,
-    target_ref,
-    handle_scroll
-  } = use_has_scrolled_past_target_button(props.is_active)
+  const { has_scrolled_past_target_button, target_ref, handle_scroll } =
+    use_has_scrolled_past_target_button(props.is_active)
 
   const {
     tasks,

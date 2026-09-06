@@ -19,7 +19,7 @@ export const replace_fragment_symbol = async (params: {
     const file_path = match[1]
     const start_line = parseInt(match[2], 10)
     const end_line = parseInt(match[4], 10)
-    
+
     let content = ''
     try {
       let absolute_path = file_path
@@ -33,12 +33,19 @@ export const replace_fragment_symbol = async (params: {
           }
 
           if (roots.length > 1) {
-            const workspace_name = params.workspace_provider.get_workspace_name(root)
+            const workspace_name =
+              params.workspace_provider.get_workspace_name(root)
             const prefix = `${workspace_name}/`
             const prefix_win = `${workspace_name}\\`
-            
-            if (file_path.startsWith(prefix) || file_path.startsWith(prefix_win)) {
-              const stripped_test_path = path.join(root, file_path.substring(prefix.length))
+
+            if (
+              file_path.startsWith(prefix) ||
+              file_path.startsWith(prefix_win)
+            ) {
+              const stripped_test_path = path.join(
+                root,
+                file_path.substring(prefix.length)
+              )
               if (fs.existsSync(stripped_test_path)) {
                 absolute_path = stripped_test_path
                 break
@@ -50,10 +57,18 @@ export const replace_fragment_symbol = async (params: {
 
       const file_uri = vscode.Uri.file(absolute_path)
       const document = await vscode.workspace.openTextDocument(file_uri)
-      
-      const start_pos = new vscode.Position(start_line - 1, parseInt(match[3], 10) - 1)
-      const end_pos = new vscode.Position(end_line - 1, parseInt(match[5], 10) - 1)
-      const valid_range = document.validateRange(new vscode.Range(start_pos, end_pos))
+
+      const start_pos = new vscode.Position(
+        start_line - 1,
+        parseInt(match[3], 10) - 1
+      )
+      const end_pos = new vscode.Position(
+        end_line - 1,
+        parseInt(match[5], 10) - 1
+      )
+      const valid_range = document.validateRange(
+        new vscode.Range(start_pos, end_pos)
+      )
       content = document.getText(valid_range)
     } catch (e) {
       content = `// Error reading file ${file_path}`
@@ -61,7 +76,7 @@ export const replace_fragment_symbol = async (params: {
 
     const range_str = ` (${start_line}-${end_line})`
     const replacement = `\n\n\`${file_path}\`${range_str}\n\n\`\`\`\n${content}\n\`\`\`\n\n`
-    
+
     result = result.replace(full_match, replacement)
   }
 

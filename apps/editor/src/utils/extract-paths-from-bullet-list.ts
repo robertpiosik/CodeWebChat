@@ -4,7 +4,7 @@ export const extract_paths_from_bullet_list = (params: {
 }): string[] => {
   const found_paths = new Set<string>()
   const lines = params.text.split('\n')
-  
+
   for (const line of lines) {
     const trimmed = line.trim()
     if (trimmed.startsWith('-') || trimmed.startsWith('*')) {

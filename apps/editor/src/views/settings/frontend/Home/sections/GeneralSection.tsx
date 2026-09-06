@@ -164,9 +164,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               }
             />
             <UiItem
-              title={t(
-                'general.context.intelligent-search-instructions.title'
-              )}
+              title={t('general.context.intelligent-search-instructions.title')}
               description={t(
                 'general.context.intelligent-search-instructions.description'
               )}
@@ -194,9 +192,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               />
             </UiItem>
             <UiItem
-              title={t(
-                'general.context.agentic-search-instructions.title'
-              )}
+              title={t('general.context.agentic-search-instructions.title')}
               description={t(
                 'general.context.agentic-search-instructions.description'
               )}
@@ -218,9 +214,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                     : undefined
                 }
                 action_title={t('general.action.restore-default')}
-                on_action_click={
-                  props.on_restore_agentic_search_instructions
-                }
+                on_action_click={props.on_restore_agentic_search_instructions}
               />
             </UiItem>
           </UiGroup>

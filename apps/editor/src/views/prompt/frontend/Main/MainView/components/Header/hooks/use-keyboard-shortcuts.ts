@@ -106,7 +106,13 @@ export const use_keyboard_shortcuts = (params: {
     const handle_key_down = (event: KeyboardEvent) => {
       if (params.is_disabled) return
 
-      if (!event.altKey || !left_alt_pressed_ref.current || event.shiftKey || event.metaKey || event.ctrlKey) {
+      if (
+        !event.altKey ||
+        !left_alt_pressed_ref.current ||
+        event.shiftKey ||
+        event.metaKey ||
+        event.ctrlKey
+      ) {
         return
       }
 

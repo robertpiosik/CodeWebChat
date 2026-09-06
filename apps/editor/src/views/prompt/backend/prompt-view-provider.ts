@@ -735,9 +735,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_discard_user_changes_in_preview(message)
           } else if (message.command == 'PATCH_REPAIR_FILE_IN_PREVIEW') {
             await handle_patch_repair_file_in_preview(this, message)
-          } else if (
-            message.command == 'CANCEL_PATCH_REPAIR_FILE_IN_PREVIEW'
-          ) {
+          } else if (message.command == 'CANCEL_PATCH_REPAIR_FILE_IN_PREVIEW') {
             handle_cancel_patch_repair_file_in_preview(this, message)
           } else if (message.command == 'RESPONSE_PREVIEW') {
             await handle_response_preview(message)

@@ -146,11 +146,10 @@ export const handle_changes_item = async (
       let go_back_to_folders = false
 
       while (true) {
-        const branch_items: vscode.QuickPickItem[] = selected_workspace.branches.map(
-          (branch) => ({
+        const branch_items: vscode.QuickPickItem[] =
+          selected_workspace.branches.map((branch) => ({
             label: branch
-          })
-        )
+          }))
 
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = branch_items
@@ -167,7 +166,9 @@ export const handle_changes_item = async (
         const calculate_tokens = async () => {
           try {
             quick_pick.busy = true
-            const current_branch = execSync('git rev-parse --abbrev-ref HEAD', { cwd })
+            const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
+              cwd
+            })
               .toString()
               .trim()
 
@@ -178,16 +179,22 @@ export const handle_changes_item = async (
               try {
                 let diff_base: string
                 if (current_branch === branch) {
-                  const { stdout } = await execAsync(`git merge-base HEAD ${branch}`, { cwd })
+                  const { stdout } = await execAsync(
+                    `git merge-base HEAD ${branch}`,
+                    { cwd }
+                  )
                   diff_base = stdout.trim()
                 } else {
                   diff_base = branch
                 }
 
-                const { stdout: diff } = await execAsync(`git diff ${diff_base}`, {
-                  cwd,
-                  maxBuffer: 1024 * 1024 * 100
-                })
+                const { stdout: diff } = await execAsync(
+                  `git diff ${diff_base}`,
+                  {
+                    cwd,
+                    maxBuffer: 1024 * 1024 * 100
+                  }
+                )
 
                 if (!diff || diff.trim().length === 0) {
                   branch_items[i].description = 'No changes'

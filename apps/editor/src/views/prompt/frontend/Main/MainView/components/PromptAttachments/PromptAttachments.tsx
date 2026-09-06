@@ -13,8 +13,6 @@ type Props = {
 }
 
 export const PromptAttachments: React.FC<Props> = (props) => {
-  
-
   const attaching_files_label = (
     props.files_count == 1
       ? props.translations.attaching_file

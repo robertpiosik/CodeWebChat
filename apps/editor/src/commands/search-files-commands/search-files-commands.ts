@@ -317,8 +317,9 @@ export const search_files_commands = (
         })
       }
     ),
-    vscode.commands.registerCommand('codeWebChat.searchFilesWorkspaceAction', () =>
-      search_handler(undefined, { is_workspace_action: true })
+    vscode.commands.registerCommand(
+      'codeWebChat.searchFilesWorkspaceAction',
+      () => search_handler(undefined, { is_workspace_action: true })
     ),
     vscode.commands.registerCommand('codeWebChat.searchSelectedFiles', () =>
       search_selected_files_handler()

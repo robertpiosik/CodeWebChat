@@ -256,7 +256,9 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                   <>
                     <IconButton
                       codicon_icon={config.is_pinned ? 'pinned' : 'pin'}
-                      title={config.is_pinned ? t('action.unpin') : t('action.pin')}
+                      title={
+                        config.is_pinned ? t('action.unpin') : t('action.pin')
+                      }
                       on_click={(e) => {
                         e.stopPropagation()
                         props.on_toggle_pinned_api_configuration(config)
@@ -308,15 +310,10 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                   value={props.defaults['patch-repair'] || null}
                   configurations={selector_configurations}
                   on_unset={() =>
-                    props.on_set_default_api_configuration(
-                      'patch-repair',
-                      null
-                    )
+                    props.on_set_default_api_configuration('patch-repair', null)
                   }
                   on_select={() =>
-                    props.on_select_default_api_configuration(
-                      'patch-repair'
-                    )
+                    props.on_select_default_api_configuration('patch-repair')
                   }
                   translations={{
                     select: t('api-calls.configurations.action.select-default'),
@@ -411,9 +408,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             >
               <UiGroup title={t('api-calls.behavior.title')}>
                 <UiItem
-                  title={t(
-                    'api-calls.behavior.patch-repair.auto-run.title'
-                  )}
+                  title={t('api-calls.behavior.patch-repair.auto-run.title')}
                   description={t(
                     'api-calls.behavior.patch-repair.auto-run.description'
                   )}

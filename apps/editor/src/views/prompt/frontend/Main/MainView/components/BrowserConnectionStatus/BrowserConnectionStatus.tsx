@@ -79,4 +79,3 @@ export const BrowserConnectionStatus: React.FC<Props> = (props) => {
     </>
   )
 }
-

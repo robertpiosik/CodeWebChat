@@ -316,11 +316,11 @@ export const handle_commit_item = async (
             ? 'CommitMessage'
             : 'Commit'
         const message = (selected_commit.detail || '').replace(/"/g, '\\"')
-        
+
         on_insert(
           `#${symbol}(${selected_folder.name}:${selected_commit.label} "${message}") `
         )
-        
+
         continue
       }
 

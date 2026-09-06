@@ -34,14 +34,10 @@ export const use_settings = (vscode: any) => {
   ] = useState<boolean | undefined>(undefined)
   const [edit_files_system_instructions, set_edit_files_system_instructions] =
     useState<string | undefined>(undefined)
-  const [
-    intelligent_search_instructions,
-    set_intelligent_search_instructions
-  ] = useState<string | undefined>(undefined)
-  const [
-    agentic_search_instructions,
-    set_agentic_search_instructions
-  ] = useState<string | undefined>(undefined)
+  const [intelligent_search_instructions, set_intelligent_search_instructions] =
+    useState<string | undefined>(undefined)
+  const [agentic_search_instructions, set_agentic_search_instructions] =
+    useState<string | undefined>(undefined)
   const [gemini_user_id, set_gemini_user_id] = useState<
     number | null | undefined
   >(undefined)
@@ -58,8 +54,9 @@ export const use_settings = (vscode: any) => {
     clear_checks_in_workspace_behavior,
     set_clear_checks_in_workspace_behavior
   ] = useState<'ignore-open-editors' | 'uncheck-all' | undefined>(undefined)
-  const [auto_run_patch_repair, set_auto_run_patch_repair] =
-    useState<boolean | undefined>(undefined)
+  const [auto_run_patch_repair, set_auto_run_patch_repair] = useState<
+    boolean | undefined
+  >(undefined)
   const [is_modern_ui, set_is_modern_ui] = useState<boolean | undefined>(
     undefined
   )
@@ -300,9 +297,7 @@ export const use_settings = (vscode: any) => {
       instructions
     })
 
-  const handle_agentic_search_instructions_change = (
-    instructions: string
-  ) =>
+  const handle_agentic_search_instructions_change = (instructions: string) =>
     post_message(vscode, {
       command: 'UPDATE_AGENTIC_SEARCH_INSTRUCTIONS',
       instructions

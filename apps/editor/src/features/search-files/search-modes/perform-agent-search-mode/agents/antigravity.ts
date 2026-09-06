@@ -25,7 +25,7 @@ export const antigravity_agent: CodingAgent = {
 
           if (params) {
             const formatted_name = tool_name.toLowerCase()
-            
+
             if (
               (formatted_name.includes('run') ||
                 formatted_name.includes('command') ||
@@ -36,7 +36,8 @@ export const antigravity_agent: CodingAgent = {
             } else if (formatted_name.includes('read') && params.path) {
               msg = params.path
             } else if (
-              (formatted_name.includes('write') || formatted_name.includes('edit')) &&
+              (formatted_name.includes('write') ||
+                formatted_name.includes('edit')) &&
               params.path
             ) {
               msg = params.path
@@ -46,9 +47,16 @@ export const antigravity_agent: CodingAgent = {
               (formatted_name.includes('search') ||
                 formatted_name.includes('find') ||
                 formatted_name.includes('grep')) &&
-              (params.query || params.pattern || params.description || params.keyword)
+              (params.query ||
+                params.pattern ||
+                params.description ||
+                params.keyword)
             ) {
-              msg = params.query || params.pattern || params.description || params.keyword
+              msg =
+                params.query ||
+                params.pattern ||
+                params.description ||
+                params.keyword
             } else if (params.path) {
               msg = params.path
             } else if (params.command || params.cmd || params.CommandLine) {

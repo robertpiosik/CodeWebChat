@@ -8,15 +8,11 @@ export const muse_agent: CodingAgent = {
   label: 'Muse Code',
   cmd: 'muse',
   is_installed: () => check_command_exists('muse'),
-  get_documentation_url: () => 'https://dev.meta.ai/docs/muse-code/extending#headless',
+  get_documentation_url: () =>
+    'https://dev.meta.ai/docs/muse-code/extending#headless',
   get_args: (query: string) => {
     accumulated_output = ''
-    return [
-      'exec',
-      '--json',
-      '--yolo',
-      build_agent_prompt(query)
-    ]
+    return ['exec', '--json', '--yolo', build_agent_prompt(query)]
   },
   parse_stream_line: (parsed, report_progress) => {
     const payload = parsed.payload || parsed
@@ -27,7 +23,8 @@ export const muse_agent: CodingAgent = {
       payload.type === 'tool_call'
     ) {
       const tool = payload.tool_name || payload.tool || payload.name
-      if (tool) report_progress(typeof tool === 'string' ? tool : JSON.stringify(tool))
+      if (tool)
+        report_progress(typeof tool === 'string' ? tool : JSON.stringify(tool))
     } else if (
       parsed.type === 'status' ||
       payload.type === 'status' ||

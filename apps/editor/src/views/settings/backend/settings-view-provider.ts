@@ -166,21 +166,15 @@ export class SettingsViewProvider {
           await handle_delete_template(this, message)
         } else if (message.command == 'GET_API_CONFIGURATIONS') {
           await handle_get_api_configurations(this)
-        } else if (
-          message.command == 'GET_INTELLIGENT_SEARCH_INSTRUCTIONS'
-        ) {
+        } else if (message.command == 'GET_INTELLIGENT_SEARCH_INSTRUCTIONS') {
           await handle_get_intelligent_search_instructions(this)
         } else if (
           message.command == 'UPDATE_INTELLIGENT_SEARCH_INSTRUCTIONS'
         ) {
           await handle_update_intelligent_search_instructions(message)
-        } else if (
-          message.command == 'GET_AGENTIC_SEARCH_INSTRUCTIONS'
-        ) {
+        } else if (message.command == 'GET_AGENTIC_SEARCH_INSTRUCTIONS') {
           await handle_get_agentic_search_instructions(this)
-        } else if (
-          message.command == 'UPDATE_AGENTIC_SEARCH_INSTRUCTIONS'
-        ) {
+        } else if (message.command == 'UPDATE_AGENTIC_SEARCH_INSTRUCTIONS') {
           await handle_update_agentic_search_instructions(message)
         } else if (message.command == 'SET_DEFAULT_API_CONFIGURATION') {
           await handle_set_default_api_configuration(

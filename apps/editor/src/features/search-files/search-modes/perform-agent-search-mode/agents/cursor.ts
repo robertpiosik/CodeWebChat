@@ -49,10 +49,7 @@ export const cursor_agent: CodingAgent = {
                 (args?.query || args?.pattern)
               ) {
                 msg = args.query || args.pattern
-              } else if (
-                formatted_name.includes('list') &&
-                args?.path
-              ) {
+              } else if (formatted_name.includes('list') && args?.path) {
                 msg = args.path
               } else if (args?.path) {
                 msg = args.path

@@ -9,8 +9,7 @@ export const use_preview_manager = (vscode: any) => {
   const [raw_instructions, set_raw_instructions] = useState<string>()
   const [preview_item_created_at, set_preview_item_created_at] =
     useState<number>()
-  const [auto_run_patch_repair, set_auto_run_patch_repair] =
-    useState(false)
+  const [auto_run_patch_repair, set_auto_run_patch_repair] = useState(false)
   const [url, set_url] = useState<string>()
   const [recent_api_configuration, set_recent_api_configuration] =
     useState<RecentApiConfiguration>()
@@ -33,9 +32,7 @@ export const use_preview_manager = (vscode: any) => {
         set_items_in_preview(message.items)
         set_raw_instructions(message.raw_instructions)
         set_preview_item_created_at(message.created_at)
-        set_auto_run_patch_repair(
-          message.auto_run_patch_repair ?? false
-        )
+        set_auto_run_patch_repair(message.auto_run_patch_repair ?? false)
         set_url(message.url)
         set_recent_api_configuration(message.recent_api_configuration)
       } else if (message.command == 'UPDATE_FILE_IN_PREVIEW') {

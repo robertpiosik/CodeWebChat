@@ -883,10 +883,7 @@ export const setup_workspace_listeners = (params: {
     }
   }
 
-  set_file_applied_with_patch_repair = ({
-    file_path,
-    workspace_name
-  }) => {
+  set_file_applied_with_patch_repair = ({ file_path, workspace_name }) => {
     const file = params.prepared_files.find(
       (f) =>
         f.previewable_file.file_path == file_path &&

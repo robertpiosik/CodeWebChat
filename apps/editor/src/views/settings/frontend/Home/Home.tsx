@@ -212,14 +212,10 @@ export const Home: React.FC<Props> = (props) => {
   )
 
   const [commit_instructions, set_commit_instructions] = useState('')
-  const [
-    intelligent_search_instructions,
-    set_intelligent_search_instructions
-  ] = useState('')
-  const [
-    agentic_search_instructions,
-    set_agentic_search_instructions
-  ] = useState('')
+  const [intelligent_search_instructions, set_intelligent_search_instructions] =
+    useState('')
+  const [agentic_search_instructions, set_agentic_search_instructions] =
+    useState('')
   const [edit_files_instructions, set_edit_files_instructions] = useState('')
 
   const get_has_warning = (id: NavItem): boolean => {
@@ -398,9 +394,7 @@ export const Home: React.FC<Props> = (props) => {
   }, [props.intelligent_search_instructions])
 
   useEffect(() => {
-    set_agentic_search_instructions(
-      props.agentic_search_instructions || ''
-    )
+    set_agentic_search_instructions(props.agentic_search_instructions || '')
   }, [props.agentic_search_instructions])
 
   useEffect(() => {
@@ -577,9 +571,7 @@ export const Home: React.FC<Props> = (props) => {
               default_commit_message_instructions
             )
           }}
-          intelligent_search_instructions={
-            intelligent_search_instructions
-          }
+          intelligent_search_instructions={intelligent_search_instructions}
           set_intelligent_search_instructions={
             set_intelligent_search_instructions
           }
@@ -608,12 +600,8 @@ export const Home: React.FC<Props> = (props) => {
               default_intelligent_file_search_instructions
             )
           }}
-          agentic_search_instructions={
-            agentic_search_instructions
-          }
-          set_agentic_search_instructions={
-            set_agentic_search_instructions
-          }
+          agentic_search_instructions={agentic_search_instructions}
+          set_agentic_search_instructions={set_agentic_search_instructions}
           on_agentic_search_instructions_blur={() => {
             props.on_agentic_search_instructions_change(
               agentic_search_instructions
@@ -656,7 +644,9 @@ export const Home: React.FC<Props> = (props) => {
           on_add_web_configuration={props.on_add_web_configuration}
           on_edit_web_configuration={props.on_edit_web_configuration}
           on_delete_web_configuration={props.on_delete_web_configuration}
-          on_toggle_pinned_web_configuration={props.on_toggle_pinned_web_configuration}
+          on_toggle_pinned_web_configuration={
+            props.on_toggle_pinned_web_configuration
+          }
           reuse_last_tab={props.reuse_last_tab}
           on_reuse_last_tab_change={props.on_reuse_last_tab_change}
           gemini_user_id={props.gemini_user_id}
@@ -692,7 +682,9 @@ export const Home: React.FC<Props> = (props) => {
           on_add_api_configuration={props.on_add_api_configuration}
           on_edit_api_configuration={props.on_edit_api_configuration}
           on_delete_api_configuration={props.on_delete_api_configuration}
-          on_toggle_pinned_api_configuration={props.on_toggle_pinned_api_configuration}
+          on_toggle_pinned_api_configuration={
+            props.on_toggle_pinned_api_configuration
+          }
           edit_files_instructions={edit_files_instructions}
           set_edit_files_instructions={set_edit_files_instructions}
           on_edit_files_instructions_blur={() => {

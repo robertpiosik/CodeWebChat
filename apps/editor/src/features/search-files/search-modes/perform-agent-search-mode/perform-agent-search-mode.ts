@@ -627,9 +627,7 @@ export const perform_agent_search_mode = async (params: {
         })
 
         const absolute_paths = Array.from(
-          new Set(
-            valid_paths.map((p) => path.join(selected_root!, p))
-          )
+          new Set(valid_paths.map((p) => path.join(selected_root!, p)))
         ).filter((p) => fs.existsSync(p))
 
         if (absolute_paths.length === 0) {
