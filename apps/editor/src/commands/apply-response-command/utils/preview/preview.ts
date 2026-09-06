@@ -124,8 +124,8 @@ export const preview = async (params: {
     }
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const auto_run_intelligent_update = config.get<boolean>(
-      'autoRunIntelligentUpdate',
+    const auto_run_patch_repair = config.get<boolean>(
+      'autoRunPatchRepair',
       false
     )
 
@@ -138,7 +138,7 @@ export const preview = async (params: {
         items: items_for_preview,
         raw_instructions: params.raw_instructions,
         created_at: params.created_at,
-        auto_run_intelligent_update,
+        auto_run_patch_repair,
         url: params.url,
         recent_api_configuration: params.recent_api_configuration
       })
@@ -301,7 +301,7 @@ export const preview = async (params: {
     cleanup_temp_files(prepared_files)
 
     if (params.prompt_view_provider) {
-      params.prompt_view_provider.cancel_all_intelligent_updates()
+      params.prompt_view_provider.cancel_all_patch_repairs()
       params.prompt_view_provider.send_message({
         command: 'RESPONSE_PREVIEW_FINISHED'
       })

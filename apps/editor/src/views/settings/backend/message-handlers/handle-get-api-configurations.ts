@@ -24,8 +24,8 @@ export const handle_get_api_configurations = async (
 
   const def_cac =
     await providers_manager.get_default_code_at_cursor_api_configuration()
-  const def_iu =
-    await providers_manager.get_default_intelligent_update_api_configuration()
+  const def_pr =
+    await providers_manager.get_default_patch_repair_api_configuration()
   const def_cm =
     await providers_manager.get_default_commit_messages_api_configuration()
   const def_ifs =
@@ -38,7 +38,7 @@ export const handle_get_api_configurations = async (
     api_configurations,
     defaults: {
       'code-at-cursor': def_cac ? get_api_configuration_id(def_cac) : null,
-      'intelligent-update': def_iu ? get_api_configuration_id(def_iu) : null,
+      'patch-repair': def_pr ? get_api_configuration_id(def_pr) : null,
       'commit-messages': def_cm ? get_api_configuration_id(def_cm) : null,
       'intelligent-file-search': def_ifs
         ? get_api_configuration_id(def_ifs)

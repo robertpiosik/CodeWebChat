@@ -5,11 +5,11 @@ import {
   ApiConfiguration,
   ModelProvider
 } from '@/services/model-providers-manager'
-import { LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
+import { LAST_USED_PATCH_REPAIR_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { Logger } from '@shared/utils/logger'
 import { send_llm_message } from '@/utils/send-llm-message'
 import { cleanup_api_response } from '@/utils/cleanup-api-response'
-import { intelligent_update_task_instructions } from '@/constants/instructions'
+import { patch_repair_task_instructions } from '@/constants/instructions'
 import { t } from '@/i18n'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import {
@@ -18,7 +18,7 @@ import {
 } from '@/utils/show-configuration-quick-pick'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 
-export const get_intelligent_update_config = async (params: {
+export const get_patch_repair_config = async (params: {
   model_providers_manager: ModelProvidersManager
   show_quick_pick?: boolean
   extension_context: vscode.ExtensionContext
@@ -26,10 +26,10 @@ export const get_intelligent_update_config = async (params: {
   | { model_provider: ModelProvider; api_configuration: ApiConfiguration }
   | undefined
 > => {
-  const intelligent_update_api_configurations =
+  const patch_repair_api_configurations =
     await params.model_providers_manager.get_api_configurations()
 
-  if (intelligent_update_api_configurations.length == 0) {
+  if (patch_repair_api_configurations.length == 0) {
     show_no_configurations_warning('api')
     return
   }
@@ -38,24 +38,24 @@ export const get_intelligent_update_config = async (params: {
 
   if (!params.show_quick_pick) {
     selected_api_configuration =
-      await params.model_providers_manager.get_default_intelligent_update_api_configuration()
+      await params.model_providers_manager.get_default_patch_repair_api_configuration()
 
     if (
       !selected_api_configuration &&
-      intelligent_update_api_configurations.length == 1
+      patch_repair_api_configurations.length == 1
     ) {
-      selected_api_configuration = intelligent_update_api_configurations[0]
+      selected_api_configuration = patch_repair_api_configurations[0]
     }
   }
 
   if (!selected_api_configuration || params.show_quick_pick) {
     const last_selected_id =
       params.extension_context.workspaceState.get<string>(
-        LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY
+        LAST_USED_PATCH_REPAIR_CONFIG_ID_STATE_KEY
       )
 
     const result = await show_configuration_quick_pick({
-      items: intelligent_update_api_configurations,
+      items: patch_repair_api_configurations,
       map_item: map_api_configuration_to_item,
       last_selected_id,
       placeholder: 'Select the Intelligent Update API tool configuration'
@@ -68,7 +68,7 @@ export const get_intelligent_update_config = async (params: {
     const { item: api_configuration, id } = result
 
     params.extension_context.workspaceState.update(
-      LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY,
+      LAST_USED_PATCH_REPAIR_CONFIG_ID_STATE_KEY,
       id
     )
 
@@ -83,7 +83,7 @@ export const get_intelligent_update_config = async (params: {
   if (!model_provider) {
     vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))
     Logger.warn({
-      function_name: 'get_intelligent_update_config',
+      function_name: 'get_patch_repair_config',
       message: 'API provider not found for Intelligent Update API tool.'
     })
     return
@@ -116,7 +116,7 @@ export const process_file = async (params: {
     }
   })
 
-  const content = `# File\n\n${params.file_content}\n\n# Task\n\n${intelligent_update_task_instructions}\n\n# Changes\n\n${params.instruction}`
+  const content = `# File\n\n${params.file_content}\n\n# Task\n\n${patch_repair_task_instructions}\n\n# Changes\n\n${params.instruction}`
 
   const messages = [
     {

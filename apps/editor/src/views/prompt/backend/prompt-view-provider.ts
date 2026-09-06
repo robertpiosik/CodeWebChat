@@ -54,7 +54,7 @@ import {
   handle_show_diff,
   handle_toggle_file_in_preview,
   handle_discard_user_changes_in_preview,
-  handle_intelligent_update_file_in_preview,
+  handle_patch_repair_file_in_preview as handle_patch_repair_file_in_preview,
   handle_response_preview,
   handle_manage_api_configurations,
   handle_undo,
@@ -64,9 +64,10 @@ import {
   handle_save_tasks,
   handle_delete_task,
   handle_fix_all_failed_files,
+  handle_cancel_patch_repair_file_in_preview as handle_cancel_patch_repair_file_in_preview,
+  handle_open_file_and_select,
   handle_open_external_url,
   handle_hash_sign_quick_pick,
-  handle_open_file_and_select,
   handle_save_prompt_image,
   handle_open_prompt_image,
   handle_save_prompt_pasted_text,
@@ -74,7 +75,6 @@ import {
   handle_paste_url,
   handle_voice_input,
   handle_open_website,
-  handle_cancel_intelligent_update_file_in_preview,
   handle_create_api_configuration,
   handle_delete_api_configuration,
   handle_update_last_used_web_configuration,
@@ -141,7 +141,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
   public edit_format: EditFormat
   public api_prompt_type: ApiPromptType
   public target: Target = TARGET.WEB
-  public intelligent_update_abort_controllers: {
+  public patch_repair_abort_controllers: {
     controller: AbortController
     file_path: string
     workspace_name?: string
@@ -504,9 +504,9 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     )
   }
 
-  public cancel_all_intelligent_updates() {
-    const controllers = [...this.intelligent_update_abort_controllers]
-    this.intelligent_update_abort_controllers = []
+  public cancel_all_patch_repairs() {
+    const controllers = [...this.patch_repair_abort_controllers]
+    this.patch_repair_abort_controllers = []
     controllers.forEach((item) => item.controller.abort('Preview finished.'))
   }
 
@@ -733,12 +733,12 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_toggle_file_in_preview(message)
           } else if (message.command == 'DISCARD_USER_CHANGES_IN_PREVIEW') {
             await handle_discard_user_changes_in_preview(message)
-          } else if (message.command == 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW') {
-            await handle_intelligent_update_file_in_preview(this, message)
+          } else if (message.command == 'PATCH_REPAIR_FILE_IN_PREVIEW') {
+            await handle_patch_repair_file_in_preview(this, message)
           } else if (
-            message.command == 'CANCEL_INTELLIGENT_UPDATE_FILE_IN_PREVIEW'
+            message.command == 'CANCEL_PATCH_REPAIR_FILE_IN_PREVIEW'
           ) {
-            handle_cancel_intelligent_update_file_in_preview(this, message)
+            handle_cancel_patch_repair_file_in_preview(this, message)
           } else if (message.command == 'RESPONSE_PREVIEW') {
             await handle_response_preview(message)
           } else if (message.command == 'REMOVE_RESPONSE_HISTORY_ITEM') {

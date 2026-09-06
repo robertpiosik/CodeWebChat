@@ -353,8 +353,8 @@ export const apply_response_command = (params: {
                 is_checked: true,
                 apply_failed: state.apply_failed,
                 ai_content: state.ai_content,
-                applied_with_intelligent_update:
-                  state.applied_with_intelligent_update
+                applied_with_patch_repair:
+                  state.applied_with_patch_repair
               })
 
               if (state.file_path_to_restore) {

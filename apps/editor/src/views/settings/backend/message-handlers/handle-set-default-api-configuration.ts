@@ -25,8 +25,8 @@ export const handle_set_default_api_configuration = async (
     await providers_manager.set_default_code_at_cursor_api_configuration(
       api_configuration_to_set
     )
-  } else if (type == 'intelligent-update') {
-    await providers_manager.set_default_intelligent_update_api_configuration(
+  } else if (type == 'patch-repair') {
+    await providers_manager.set_default_patch_repair_api_configuration(
       api_configuration_to_set
     )
   } else if (type == 'commit-messages') {

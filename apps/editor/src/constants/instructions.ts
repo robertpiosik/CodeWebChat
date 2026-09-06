@@ -23,10 +23,10 @@ The variable is possibly not defined.
 
 Find correct replacement text for the <missing_text> symbol.`
 
-export const intelligent_update_task_instructions =
+export const patch_repair_task_instructions =
   'Apply the attached changes to the file without explanations or any other text.'
 
-export const intelligent_update_edit_format_instructions = `Respond strictly with a single markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
+export const patch_repair_edit_format_instructions = `Respond strictly with a single markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
 
 \`\`\`python
 <<<<<<< SEARCH

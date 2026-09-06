@@ -1033,7 +1033,7 @@
           "type": "string",
           "scope": "resource"
         },
-        "codeWebChat.autoRunIntelligentUpdate": {
+        "codeWebChat.autoRunPatchRepair": {
           "type": "boolean",
           "scope": "resource",
           "default": false
@@ -1210,7 +1210,7 @@
               "isDefaultForIntelligentFileSearch": {
                 "type": "boolean"
               },
-              "isDefaultForIntelligentUpdate": {
+              "isDefaultForPatchRepair": {
                 "type": "boolean"
               },
               "isDefaultForCommitMessages": {

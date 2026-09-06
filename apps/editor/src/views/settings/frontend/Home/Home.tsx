@@ -121,7 +121,7 @@ type Props = {
   are_automatic_checkpoints_disabled: boolean
   checkpoint_lifespan: number
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
-  auto_run_intelligent_update: boolean
+  auto_run_patch_repair: boolean
   templates: Record<string, Template[]>
   on_update_templates: (key: string, templates: Template[]) => void
   on_edit_template: (key: string, index: number) => void
@@ -155,7 +155,7 @@ type Props = {
   on_clear_checks_in_workspace_behavior_change: (
     value: 'ignore-open-editors' | 'uncheck-all'
   ) => void
-  on_auto_run_intelligent_update_change: (enabled: boolean) => void
+  on_auto_run_patch_repair_change: (enabled: boolean) => void
   on_open_keybindings: (search?: string) => void
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
@@ -692,9 +692,9 @@ export const Home: React.FC<Props> = (props) => {
           on_delete_provider={props.on_delete_provider}
           on_edit_provider={props.on_edit_provider}
           on_reorder_providers={props.on_reorder_providers}
-          auto_run_intelligent_update={props.auto_run_intelligent_update}
-          on_auto_run_intelligent_update_change={
-            props.on_auto_run_intelligent_update_change
+          auto_run_patch_repair={props.auto_run_patch_repair}
+          on_auto_run_patch_repair_change={
+            props.on_auto_run_patch_repair_change
           }
           on_open_external_url={props.on_open_external_url}
           api_configurations={props.api_configurations}

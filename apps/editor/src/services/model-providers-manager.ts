@@ -174,8 +174,8 @@ export class ModelProvidersManager {
         new_config.isDefaultForCodeAtCursor = true
       if (old_config?.isDefaultForIntelligentFileSearch)
         new_config.isDefaultForIntelligentFileSearch = true
-      if (old_config?.isDefaultForIntelligentUpdate)
-        new_config.isDefaultForIntelligentUpdate = true
+      if (old_config?.isDefaultForPatchRepair)
+        new_config.isDefaultForPatchRepair = true
       if (old_config?.isDefaultForCommitMessages)
         new_config.isDefaultForCommitMessages = true
       if (old_config?.isDefaultForVoiceInput)
@@ -292,20 +292,20 @@ export class ModelProvidersManager {
     )
   }
 
-  public async get_default_intelligent_update_api_configuration(): Promise<
+  public async get_default_patch_repair_api_configuration(): Promise<
     ApiConfiguration | undefined
   > {
     await this._load_promise
     return this._get_default_api_configuration_from_settings(
-      'isDefaultForIntelligentUpdate'
+      'isDefaultForPatchRepair'
     )
   }
 
-  public async set_default_intelligent_update_api_configuration(
+  public async set_default_patch_repair_api_configuration(
     api_configuration: ApiConfiguration | null
   ) {
     await this._set_default_api_configuration_in_settings(
-      'isDefaultForIntelligentUpdate',
+      'isDefaultForPatchRepair',
       api_configuration
     )
   }

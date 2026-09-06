@@ -41,8 +41,8 @@ type Props = {
   ) => void
   on_select_default_api_configuration: (api_feature: ApiFeature) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
-  auto_run_intelligent_update: boolean
-  on_auto_run_intelligent_update_change: (enabled: boolean) => void
+  auto_run_patch_repair: boolean
+  on_auto_run_patch_repair_change: (enabled: boolean) => void
   on_open_external_url: (url: string) => void
   edit_files_instructions: string
   set_edit_files_instructions: (instructions: string) => void
@@ -303,19 +303,19 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
               <UiGroup title={t('api-calls.default-configurations.title')}>
                 <DefaultConfigurationSelector
                   title={t(
-                    'api-calls.default-configurations.tool.intelligent-update'
+                    'api-calls.default-configurations.tool.patch-repair'
                   )}
-                  value={props.defaults['intelligent-update'] || null}
+                  value={props.defaults['patch-repair'] || null}
                   configurations={selector_configurations}
                   on_unset={() =>
                     props.on_set_default_api_configuration(
-                      'intelligent-update',
+                      'patch-repair',
                       null
                     )
                   }
                   on_select={() =>
                     props.on_select_default_api_configuration(
-                      'intelligent-update'
+                      'patch-repair'
                     )
                   }
                   translations={{
@@ -412,15 +412,15 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
               <UiGroup title={t('api-calls.behavior.title')}>
                 <UiItem
                   title={t(
-                    'api-calls.behavior.intelligent-update.auto-run.title'
+                    'api-calls.behavior.patch-repair.auto-run.title'
                   )}
                   description={t(
-                    'api-calls.behavior.intelligent-update.auto-run.description'
+                    'api-calls.behavior.patch-repair.auto-run.description'
                   )}
                   slot_right={
                     <UiToggler
-                      is_on={props.auto_run_intelligent_update}
-                      on_toggle={props.on_auto_run_intelligent_update_change}
+                      is_on={props.auto_run_patch_repair}
+                      on_toggle={props.on_auto_run_patch_repair_change}
                     />
                   }
                 />

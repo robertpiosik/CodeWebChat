@@ -145,8 +145,8 @@ export const dictionary = {
     COULD_NOT_OPEN_FILE: (file_path: string) =>
       `Could not open file: ${file_path}.`,
     COULD_NOT_GET_GIT_API: 'Could not get Git API.',
-    INTELLIGENT_UPDATE_CONTEXT_NOT_FOUND:
-      'Could not find the context for intelligent update. Please apply the changes again.',
+    PATCH_REPAIR_CONTEXT_NOT_FOUND:
+      'Could not find the context for patch repair. Please apply the changes again.',
     ORIGINAL_STATE_FOR_FILE_NOT_FOUND: (file_name: string) =>
       `Could not find original state for file: ${file_name}.`,
     UPDATE_INSTRUCTIONS_FOR_FILE_NOT_FOUND: (file_name: string) =>

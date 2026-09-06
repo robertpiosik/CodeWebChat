@@ -12,12 +12,12 @@ type Props = {
   has_multiple_workspaces: boolean
   on_focus_file: (file: { file_path: string; workspace_name?: string }) => void
   on_go_to_file: (file: { file_path: string; workspace_name?: string }) => void
-  on_intelligent_update: (file: {
+  on_patch_repair: (file: {
     file_path: string
     workspace_name?: string
     force_model_selection?: boolean
   }) => void
-  on_cancel_intelligent_update: (file: {
+  on_cancel_patch_repair: (file: {
     file_path: string
     workspace_name?: string
   }) => void
@@ -39,7 +39,7 @@ type Props = {
     files: { file_path: string; workspace_name?: string }[]
   ) => void
   raw_instructions?: string
-  auto_run_intelligent_update?: boolean
+  auto_run_patch_repair?: boolean
   recent_api_configuration?: RecentApiConfiguration
 }
 
@@ -118,7 +118,7 @@ export const ResponsePreview: FC<Props> = (props) => {
         (f) =>
           f.type === 'file' &&
           f.diff_application_method == 'search_and_replace' &&
-          !f.applied_with_intelligent_update &&
+          !f.applied_with_patch_repair &&
           !f.is_applying
       ).length,
     [files_in_preview]
@@ -130,7 +130,7 @@ export const ResponsePreview: FC<Props> = (props) => {
         (f) =>
           f.type === 'file' &&
           f.apply_failed &&
-          !f.applied_with_intelligent_update &&
+          !f.applied_with_patch_repair &&
           !f.is_applying
       ).length,
     [files_in_preview]
@@ -138,7 +138,7 @@ export const ResponsePreview: FC<Props> = (props) => {
 
   useEffect(() => {
     if (
-      props.auto_run_intelligent_update &&
+      props.auto_run_patch_repair &&
       error_count > 0 &&
       !is_fixing_all &&
       !has_attempted_auto_fix
@@ -150,7 +150,7 @@ export const ResponsePreview: FC<Props> = (props) => {
           (f) =>
             f.type === 'file' &&
             f.apply_failed &&
-            !f.applied_with_intelligent_update
+            !f.applied_with_patch_repair
         )
         .map((f) => ({
           file_path: f.file_path,
@@ -159,7 +159,7 @@ export const ResponsePreview: FC<Props> = (props) => {
       props.on_fix_all_failed(files_to_fix)
     }
   }, [
-    props.auto_run_intelligent_update,
+    props.auto_run_patch_repair,
     error_count,
     is_fixing_all,
     has_attempted_auto_fix,
@@ -300,7 +300,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                     (f) =>
                       f.type === 'file' &&
                       f.apply_failed &&
-                      !f.applied_with_intelligent_update &&
+                      !f.applied_with_patch_repair &&
                       !f.is_applying
                   )
                   .map((f) => ({
@@ -371,15 +371,15 @@ export const ResponsePreview: FC<Props> = (props) => {
                       content: file.ai_content!
                     })
                   }
-                  on_intelligent_update={(force_model_selection) =>
-                    props.on_intelligent_update({
+                  on_patch_repair={(force_model_selection) =>
+                    props.on_patch_repair({
                       file_path: file.file_path,
                       workspace_name: file.workspace_name,
                       force_model_selection
                     })
                   }
-                  on_cancel_intelligent_update={() =>
-                    props.on_cancel_intelligent_update({
+                  on_cancel_patch_repair={() =>
+                    props.on_cancel_patch_repair({
                       file_path: file.file_path,
                       workspace_name: file.workspace_name
                     })

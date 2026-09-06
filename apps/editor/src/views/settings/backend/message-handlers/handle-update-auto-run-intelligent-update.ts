@@ -1,13 +1,13 @@
 import * as vscode from 'vscode'
-import { UpdateAutoRunIntelligentUpdateMessage } from '@/views/settings/types/messages'
+import { UpdateAutoRunPatchRepairMessage } from '@/views/settings/types/messages'
 
-export const handle_update_auto_run_intelligent_update = async (
-  message: UpdateAutoRunIntelligentUpdateMessage
+export const handle_update_auto_run_patch_repair = async (
+  message: UpdateAutoRunPatchRepairMessage
 ): Promise<void> => {
   await vscode.workspace
     .getConfiguration('codeWebChat')
     .update(
-      'autoRunIntelligentUpdate',
+      'autoRunPatchRepair',
       message.enabled || undefined,
       vscode.ConfigurationTarget.Global
     )

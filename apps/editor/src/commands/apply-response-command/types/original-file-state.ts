@@ -14,5 +14,5 @@ export type OriginalFileState = {
   proposed_content?: string
   current_content?: string
   apply_failed?: boolean
-  applied_with_intelligent_update?: boolean
+  applied_with_patch_repair?: boolean
 }

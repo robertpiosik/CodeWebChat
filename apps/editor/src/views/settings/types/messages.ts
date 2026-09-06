@@ -194,12 +194,12 @@ export interface UpdateClearChecksInWorkspaceBehaviorMessage {
   value: 'ignore-open-editors' | 'uncheck-all'
 }
 
-export interface GetAutoRunIntelligentUpdateMessage {
-  command: 'GET_AUTO_RUN_INTELLIGENT_UPDATE'
+export interface GetAutoRunPatchRepairMessage {
+  command: 'GET_AUTO_RUN_PATCH_REPAIR'
 }
 
-export interface UpdateAutoRunIntelligentUpdateMessage {
-  command: 'UPDATE_AUTO_RUN_INTELLIGENT_UPDATE'
+export interface UpdateAutoRunPatchRepairMessage {
+  command: 'UPDATE_AUTO_RUN_PATCH_REPAIR'
   enabled: boolean
 }
 
@@ -391,8 +391,8 @@ export type FrontendMessage =
   | OpenEditorSettingsMessage
   | OpenIgnorePatternsSettingsMessage
   | OpenAllowPatternsSettingsMessage
-  | GetAutoRunIntelligentUpdateMessage
-  | UpdateAutoRunIntelligentUpdateMessage
+  | GetAutoRunPatchRepairMessage
+  | UpdateAutoRunPatchRepairMessage
   | OpenKeybindingsMessage
   | OpenExternalUrlMessage
   | GetWebConfigurationsMessage
@@ -504,8 +504,8 @@ export interface ShowSectionMessage {
   section: string
 }
 
-export interface AutoRunIntelligentUpdateMessage {
-  command: 'AUTO_RUN_INTELLIGENT_UPDATE'
+export interface AutoRunPatchRepairMessage {
+  command: 'AUTO_RUN_PATCH_REPAIR'
   enabled: boolean
 }
 
@@ -610,7 +610,7 @@ export type BackendMessage =
   | ReuseLastTabMessage
   | ClearChecksInWorkspaceBehaviorMessage
   | ShowSectionMessage
-  | AutoRunIntelligentUpdateMessage
+  | AutoRunPatchRepairMessage
   | WebConfigurationsMessage
   | NewlyPickedModelMessage
   | NewlyPickedChatbotMessage

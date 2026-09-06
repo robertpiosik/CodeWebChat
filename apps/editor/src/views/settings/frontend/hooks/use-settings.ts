@@ -65,7 +65,7 @@ export const use_settings = (vscode: any) => {
     clear_checks_in_workspace_behavior,
     set_clear_checks_in_workspace_behavior
   ] = useState<'ignore-open-editors' | 'uncheck-all' | undefined>(undefined)
-  const [auto_run_intelligent_update, set_auto_run_intelligent_update] =
+  const [auto_run_patch_repair, set_auto_run_patch_repair] =
     useState<boolean | undefined>(undefined)
   const [is_modern_ui, set_is_modern_ui] = useState<boolean | undefined>(
     undefined
@@ -102,7 +102,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_SEND_WITH_SHIFT_ENTER' })
     post_message(vscode, { command: 'GET_REUSE_LAST_TAB' })
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
-    post_message(vscode, { command: 'GET_AUTO_RUN_INTELLIGENT_UPDATE' })
+    post_message(vscode, { command: 'GET_AUTO_RUN_PATCH_REPAIR' })
     post_message(vscode, { command: 'GET_IS_MODERN_UI' })
     post_message(vscode, { command: 'GET_TEMPLATES' })
   }, [vscode])
@@ -149,8 +149,8 @@ export const use_settings = (vscode: any) => {
         set_reuse_last_tab(message.enabled)
       } else if (message.command == 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR') {
         set_clear_checks_in_workspace_behavior(message.value)
-      } else if (message.command == 'AUTO_RUN_INTELLIGENT_UPDATE') {
-        set_auto_run_intelligent_update(message.enabled)
+      } else if (message.command == 'AUTO_RUN_PATCH_REPAIR') {
+        set_auto_run_patch_repair(message.enabled)
       } else if (message.command == 'IS_MODERN_UI') {
         set_is_modern_ui(message.is_modern_ui)
       } else if (message.command == 'TEMPLATES') {
@@ -382,10 +382,10 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_auto_run_intelligent_update_change = (enabled: boolean) => {
-    set_auto_run_intelligent_update(enabled)
+  const handle_auto_run_patch_repair_change = (enabled: boolean) => {
+    set_auto_run_patch_repair(enabled)
     post_message(vscode, {
-      command: 'UPDATE_AUTO_RUN_INTELLIGENT_UPDATE',
+      command: 'UPDATE_AUTO_RUN_PATCH_REPAIR',
       enabled
     })
   }
@@ -485,7 +485,7 @@ export const use_settings = (vscode: any) => {
     send_with_shift_enter,
     reuse_last_tab,
     clear_checks_in_workspace_behavior,
-    auto_run_intelligent_update,
+    auto_run_patch_repair,
     is_modern_ui,
     handle_reorder_providers,
     handle_add_provider,
@@ -517,7 +517,7 @@ export const use_settings = (vscode: any) => {
     handle_send_with_shift_enter_change,
     handle_reuse_last_tab_change,
     handle_clear_checks_in_workspace_behavior_change,
-    handle_auto_run_intelligent_update_change,
+    handle_auto_run_patch_repair_change,
     handle_open_keybindings,
     handle_open_external_url,
     templates,

@@ -379,8 +379,8 @@ export const translations = {
     hu: 'Automatikus kiegészítés',
     bg: 'Автодопълване'
   },
-  'api-calls.default-configurations.tool.intelligent-update': {
-    en: 'Intelligent Update',
+  'api-calls.default-configurations.tool.patch-repair': {
+    en: 'Patch Repair',
     pl: 'Inteligentna integracja',
     'zh-cn': '智能更新',
     ja: 'インテリジェントアップデート',
@@ -451,8 +451,8 @@ export const translations = {
     hu: 'Hangbemenet',
     bg: 'Гласово въвеждане'
   },
-  'api-calls.behavior.intelligent-update.auto-run.title': {
-    en: 'Auto-Run Intelligent Update',
+  'api-calls.behavior.patch-repair.auto-run.title': {
+    en: 'Auto-Run Patch Repair',
     pl: 'Automatycznie uruchom inteligentną integrację',
     'zh-cn': '自动运行智能更新',
     ja: 'インテリジェントアップデートを自動実行',
@@ -469,7 +469,7 @@ export const translations = {
     hu: 'Intelligens Frissítés Automatikus Futtatása',
     bg: 'Автоматично стартиране на интелигентно актуализиране'
   },
-  'api-calls.behavior.intelligent-update.auto-run.description': {
+  'api-calls.behavior.patch-repair.auto-run.description': {
     en: 'Use the default configuration to integrate failed files immediately.',
     pl: 'Użyj domyślnej konfiguracji, aby natychmiast zintegrować pliki.',
     'zh-cn': '使用默认配置立即集成失败的文件。',

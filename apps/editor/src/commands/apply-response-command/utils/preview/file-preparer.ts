@@ -96,7 +96,7 @@ export const prepare_files_from_original_states = async (params: {
       is_checked: state.is_checked ?? true,
       apply_failed: state.apply_failed,
       ai_content: state.ai_content,
-      applied_with_intelligent_update: state.applied_with_intelligent_update
+      applied_with_patch_repair: state.applied_with_patch_repair
     }
 
     prepared_files.push({

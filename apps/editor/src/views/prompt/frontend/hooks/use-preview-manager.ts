@@ -9,7 +9,7 @@ export const use_preview_manager = (vscode: any) => {
   const [raw_instructions, set_raw_instructions] = useState<string>()
   const [preview_item_created_at, set_preview_item_created_at] =
     useState<number>()
-  const [auto_run_intelligent_update, set_auto_run_intelligent_update] =
+  const [auto_run_patch_repair, set_auto_run_patch_repair] =
     useState(false)
   const [url, set_url] = useState<string>()
   const [recent_api_configuration, set_recent_api_configuration] =
@@ -33,8 +33,8 @@ export const use_preview_manager = (vscode: any) => {
         set_items_in_preview(message.items)
         set_raw_instructions(message.raw_instructions)
         set_preview_item_created_at(message.created_at)
-        set_auto_run_intelligent_update(
-          message.auto_run_intelligent_update ?? false
+        set_auto_run_patch_repair(
+          message.auto_run_patch_repair ?? false
         )
         set_url(message.url)
         set_recent_api_configuration(message.recent_api_configuration)
@@ -87,10 +87,10 @@ export const use_preview_manager = (vscode: any) => {
                 apply_status: message.apply_status,
                 apply_progress: message.apply_progress,
                 apply_tokens_per_second: message.apply_tokens_per_second,
-                applied_with_intelligent_update:
+                applied_with_patch_repair:
                   message.apply_status == 'done'
                     ? true
-                    : existing_item.applied_with_intelligent_update
+                    : existing_item.applied_with_patch_repair
               }
             }
             return new_items
@@ -116,7 +116,7 @@ export const use_preview_manager = (vscode: any) => {
     raw_instructions,
     url,
     preview_item_created_at,
-    auto_run_intelligent_update,
+    auto_run_patch_repair,
     handle_discard_user_changes_in_preview,
     recent_api_configuration
   }

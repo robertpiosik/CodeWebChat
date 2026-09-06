@@ -322,15 +322,15 @@ export interface UpdateLastUsedWebConfigurationMessage extends BaseMessage {
   web_configuration_name: string
 }
 
-export interface IntelligentUpdateFileInPreviewMessage extends BaseMessage {
-  command: 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW'
+export interface PatchRepairFileInPreviewMessage extends BaseMessage {
+  command: 'PATCH_REPAIR_FILE_IN_PREVIEW'
   file_path: string
   workspace_name?: string
   force_model_selection?: boolean
 }
 
-export interface CancelIntelligentUpdateFileInPreviewMessage extends BaseMessage {
-  command: 'CANCEL_INTELLIGENT_UPDATE_FILE_IN_PREVIEW'
+export interface CancelPatchRepairFileInPreviewMessage extends BaseMessage {
+  command: 'CANCEL_PATCH_REPAIR_FILE_IN_PREVIEW'
   file_path: string
   workspace_name?: string
 }
@@ -573,8 +573,8 @@ export type FrontendMessage =
   | ShowDiffMessage
   | OpenFileAndSelectMessage
   | GetWorkspaceStateMessage
-  | IntelligentUpdateFileInPreviewMessage
-  | CancelIntelligentUpdateFileInPreviewMessage
+  | PatchRepairFileInPreviewMessage
+  | CancelPatchRepairFileInPreviewMessage
   | UpdateLastUsedWebConfigurationMessage
   | FixAllFailedFilesMessage
   | ManageApiConfigurationsMessage
@@ -740,7 +740,7 @@ export interface ResponsePreviewStartedMessage extends BaseMessage {
   items: ItemInPreview[]
   raw_instructions?: string
   created_at?: number
-  auto_run_intelligent_update?: boolean
+  auto_run_patch_repair?: boolean
   url?: string
   recent_api_configuration?: RecentApiConfiguration
 }

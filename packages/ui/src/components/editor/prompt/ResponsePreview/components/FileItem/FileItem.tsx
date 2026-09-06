@@ -15,8 +15,8 @@ type Props = {
   on_toggle: (checked: boolean) => void
   on_discard_user_changes: () => void
   on_preview_generated_code: () => void
-  on_intelligent_update: (force_model_selection?: boolean) => void
-  on_cancel_intelligent_update: () => void
+  on_patch_repair: (force_model_selection?: boolean) => void
+  on_cancel_patch_repair: () => void
   on_go_to_file: () => void
 }
 
@@ -38,10 +38,10 @@ const get_file_message = (file: FileInPreview): FileMessage | null => {
       type: 'loading',
       text
     }
-  } else if (file.applied_with_intelligent_update) {
+  } else if (file.applied_with_patch_repair) {
     return {
       type: 'success',
-      text: 'Applied with Intelligent Update'
+      text: 'Applied with Patch Repair'
     }
   } else if (file.apply_failed) {
     return {
@@ -99,7 +99,7 @@ export const FileItem: FC<Props> = (props) => {
             className={styles.progress__cancel}
             onClick={(e) => {
               e.stopPropagation()
-              props.on_cancel_intelligent_update()
+              props.on_cancel_patch_repair()
             }}
             title="Cancel"
           >
@@ -204,11 +204,11 @@ export const FileItem: FC<Props> = (props) => {
                   props.file.file_state != 'deleted' && (
                     <IconButton
                       codicon_icon="edit-sparkle"
-                      title="Edit with Intelligent Update"
+                      title="Edit with Patch Repair"
                       on_click={(e) => {
                         e.stopPropagation()
-                        props.on_intelligent_update(
-                          !!props.file.applied_with_intelligent_update
+                        props.on_patch_repair(
+                          !!props.file.applied_with_patch_repair
                         )
                       }}
                     />
@@ -255,14 +255,14 @@ export const FileItem: FC<Props> = (props) => {
             message_actions.push({
               id: 'fix',
               icon: 'codicon-sparkle',
-              label: props.file.applied_with_intelligent_update
+              label: props.file.applied_with_patch_repair
                 ? 'Retry'
                 : 'Fix',
-              title: 'Edit with Intelligent Update',
+              title: 'Edit with Patch Repair',
               on_click: (e: React.MouseEvent) => {
                 e.stopPropagation()
-                props.on_intelligent_update(
-                  !!props.file.applied_with_intelligent_update
+                props.on_patch_repair(
+                  !!props.file.applied_with_patch_repair
                 )
               }
             })

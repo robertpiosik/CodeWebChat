@@ -10,12 +10,12 @@ import { dictionary } from '@shared/constants/dictionary'
 import { parse_response } from '@/commands/apply-response-command/utils/response-parser'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import {
-  get_intelligent_update_config,
+  get_patch_repair_config as get_patch_repair_config,
   process_file
 } from './utils/intelligent-update-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
-import { set_file_applied_with_intelligent_update } from '@/commands/apply-response-command/utils/preview'
+import { set_file_applied_with_patch_repair } from '@/commands/apply-response-command/utils/preview'
 
 export const handle_fix_all_failed_files = async (params: {
   prompt_view_provider: PromptViewProvider
@@ -33,7 +33,7 @@ export const handle_fix_all_failed_files = async (params: {
 
   if (!original_states || !last_response) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.INTELLIGENT_UPDATE_CONTEXT_NOT_FOUND
+      dictionary.error_message.PATCH_REPAIR_CONTEXT_NOT_FOUND
     )
     return
   }
@@ -60,7 +60,7 @@ export const handle_fix_all_failed_files = async (params: {
   const model_providers_manager = new ModelProvidersManager(
     params.prompt_view_provider.extension_context
   )
-  const api_configuration_result = await get_intelligent_update_config({
+  const api_configuration_result = await get_patch_repair_config({
     model_providers_manager,
     show_quick_pick: params.show_quick_pick ?? false,
     extension_context: params.prompt_view_provider.extension_context
@@ -69,7 +69,7 @@ export const handle_fix_all_failed_files = async (params: {
 
   const {
     model_provider: api_model_provider,
-    api_configuration: intelligent_update_api_configuration
+    api_configuration: patch_repair_api_configuration
   } = api_configuration_result
 
   const default_workspace_path =
@@ -138,7 +138,7 @@ export const handle_fix_all_failed_files = async (params: {
         const abort_controller = new AbortController()
         batch_abort_controllers.push(abort_controller)
 
-        params.prompt_view_provider.intelligent_update_abort_controllers.push({
+        params.prompt_view_provider.patch_repair_abort_controllers.push({
           controller: abort_controller,
           file_path,
           workspace_name
@@ -190,9 +190,9 @@ export const handle_fix_all_failed_files = async (params: {
             base_url: api_model_provider.base_url,
             api_key: api_model_provider.api_key,
             model_provider: api_model_provider,
-            model: intelligent_update_api_configuration.model,
+            model: patch_repair_api_configuration.model,
             reasoning_effort:
-              intelligent_update_api_configuration.reasoning_effort,
+              patch_repair_api_configuration.reasoning_effort,
             file_path: file_path,
             file_content: file_state.content,
             instruction: instructions,
@@ -224,8 +224,8 @@ export const handle_fix_all_failed_files = async (params: {
               final_content = updated_content.slice(0, -1)
             }
 
-            if (set_file_applied_with_intelligent_update) {
-              set_file_applied_with_intelligent_update({
+            if (set_file_applied_with_patch_repair) {
+              set_file_applied_with_patch_repair({
                 file_path,
                 workspace_name
               })
@@ -275,11 +275,11 @@ export const handle_fix_all_failed_files = async (params: {
           })
 
           const index =
-            params.prompt_view_provider.intelligent_update_abort_controllers.findIndex(
+            params.prompt_view_provider.patch_repair_abort_controllers.findIndex(
               (s) => s.controller === abort_controller
             )
           if (index > -1) {
-            params.prompt_view_provider.intelligent_update_abort_controllers.splice(
+            params.prompt_view_provider.patch_repair_abort_controllers.splice(
               index,
               1
             )

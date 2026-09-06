@@ -89,6 +89,6 @@ With CWC, you can automatically integrate multi-file changes with the codebase.
 
 Strategy depends on detected edit format:
 
-- **truncated:** Uses Intelligent Update API tool placing the original file before changes which serve as instructions for a full file rewrite.
+- **truncated:** Uses Patch Repair API tool placing the original file before changes which serve as instructions for a full file rewrite.
 - **whole:** Simply replaces original files in place.
 - **diff:** Uses the `git apply` utility before falling back to a custom diff processor.

@@ -24,7 +24,7 @@ export let discard_user_changes_in_preview:
   | ((file: { file_path: string; workspace_name?: string }) => Promise<void>)
   | undefined
 
-export let set_file_applied_with_intelligent_update:
+export let set_file_applied_with_patch_repair:
   | ((file: { file_path: string; workspace_name?: string }) => void)
   | undefined
 
@@ -757,8 +757,8 @@ export const setup_workspace_listeners = (params: {
       return
     }
 
-    if (file_to_discard.previewable_file.applied_with_intelligent_update) {
-      file_to_discard.previewable_file.applied_with_intelligent_update = false
+    if (file_to_discard.previewable_file.applied_with_patch_repair) {
+      file_to_discard.previewable_file.applied_with_patch_repair = false
       update_response_history({
         prompt_view_provider: params.prompt_view_provider,
         created_at: params.created_at,
@@ -883,7 +883,7 @@ export const setup_workspace_listeners = (params: {
     }
   }
 
-  set_file_applied_with_intelligent_update = ({
+  set_file_applied_with_patch_repair = ({
     file_path,
     workspace_name
   }) => {
@@ -893,7 +893,7 @@ export const setup_workspace_listeners = (params: {
         f.previewable_file.workspace_name == workspace_name
     )
     if (file) {
-      file.previewable_file.applied_with_intelligent_update = true
+      file.previewable_file.applied_with_patch_repair = true
       update_response_history({
         prompt_view_provider: params.prompt_view_provider,
         created_at: params.created_at,
@@ -910,7 +910,7 @@ export const setup_workspace_listeners = (params: {
     file_renamed_listener.dispose()
     toggle_file_preview_state = undefined
     discard_user_changes_in_preview = undefined
-    set_file_applied_with_intelligent_update = undefined
+    set_file_applied_with_patch_repair = undefined
   }
 
   return { dispose }

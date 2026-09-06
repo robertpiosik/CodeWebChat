@@ -123,8 +123,8 @@ export const update = async (params: {
       await providers_manager.set_default_commit_messages_api_configuration(
         new_config as any
       )
-    } else if (params.api_feature == 'intelligent-update') {
-      await providers_manager.set_default_intelligent_update_api_configuration(
+    } else if (params.api_feature == 'patch-repair') {
+      await providers_manager.set_default_patch_repair_api_configuration(
         new_config as any
       )
     } else if (params.api_feature == 'voice-input') {

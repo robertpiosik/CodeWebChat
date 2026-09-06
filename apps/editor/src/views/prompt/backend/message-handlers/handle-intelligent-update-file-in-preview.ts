@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
-import { IntelligentUpdateFileInPreviewMessage } from '@/views/prompt/types/messages'
+import { PatchRepairFileInPreviewMessage } from '@/views/prompt/types/messages'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import {
   LAST_APPLIED_CHANGES_STATE_KEY,
@@ -11,17 +11,17 @@ import { Logger } from '@shared/utils/logger'
 import { parse_response } from '@/commands/apply-response-command/utils/response-parser'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import {
-  get_intelligent_update_config,
+  get_patch_repair_config,
   process_file
 } from './utils/intelligent-update-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 import axios from 'axios'
-import { set_file_applied_with_intelligent_update } from '@/commands/apply-response-command/utils/preview'
+import { set_file_applied_with_patch_repair } from '@/commands/apply-response-command/utils/preview'
 
-export const handle_intelligent_update_file_in_preview = async (
+export const handle_patch_repair_file_in_preview = async (
   prompt_view_provider: PromptViewProvider,
-  message: IntelligentUpdateFileInPreviewMessage
+  message: PatchRepairFileInPreviewMessage
 ): Promise<void> => {
   const { file_path, workspace_name, force_model_selection } = message
   const file_name = path.basename(file_path)
@@ -37,7 +37,7 @@ export const handle_intelligent_update_file_in_preview = async (
 
   if (!original_states || !last_response) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.INTELLIGENT_UPDATE_CONTEXT_NOT_FOUND
+      dictionary.error_message.PATCH_REPAIR_CONTEXT_NOT_FOUND
     )
     return
   }
@@ -98,7 +98,7 @@ export const handle_intelligent_update_file_in_preview = async (
   const model_providers_manager = new ModelProvidersManager(
     prompt_view_provider.extension_context
   )
-  const api_configuration_result = await get_intelligent_update_config({
+  const api_configuration_result = await get_patch_repair_config({
     model_providers_manager,
     show_quick_pick: force_model_selection ?? false,
     extension_context: prompt_view_provider.extension_context
@@ -107,7 +107,7 @@ export const handle_intelligent_update_file_in_preview = async (
 
   const {
     model_provider: api_model_provider,
-    api_configuration: intelligent_update_api_configuration
+    api_configuration: patch_repair_api_configuration
   } = api_configuration_result
 
   const default_workspace_path =
@@ -126,7 +126,7 @@ export const handle_intelligent_update_file_in_preview = async (
   if (!safe_path) return
 
   const abort_controller = new AbortController()
-  prompt_view_provider.intelligent_update_abort_controllers.push({
+  prompt_view_provider.patch_repair_abort_controllers.push({
     controller: abort_controller,
     file_path,
     workspace_name
@@ -178,8 +178,8 @@ export const handle_intelligent_update_file_in_preview = async (
     base_url: api_model_provider.base_url,
     api_key: api_model_provider.api_key,
     model_provider: api_model_provider,
-    model: intelligent_update_api_configuration.model,
-    reasoning_effort: intelligent_update_api_configuration.reasoning_effort,
+    model: patch_repair_api_configuration.model,
+    reasoning_effort: patch_repair_api_configuration.reasoning_effort,
     file_path: file_path,
     file_content: file_state.content,
     instruction: instructions,
@@ -214,8 +214,8 @@ export const handle_intelligent_update_file_in_preview = async (
         final_content = updated_content.slice(0, -1)
       }
 
-      if (set_file_applied_with_intelligent_update) {
-        set_file_applied_with_intelligent_update({
+      if (set_file_applied_with_patch_repair) {
+        set_file_applied_with_patch_repair({
           file_path,
           workspace_name
         })
@@ -232,7 +232,7 @@ export const handle_intelligent_update_file_in_preview = async (
       error.message != 'User cancelled the operation'
     ) {
       Logger.error({
-        function_name: 'handle_intelligent_update_file_in_preview',
+        function_name: 'handle_patch_repair_file_in_preview',
         message: 'Error during process_file',
         data: { error, file_path }
       })
@@ -242,11 +242,11 @@ export const handle_intelligent_update_file_in_preview = async (
     should_retry = true
   } finally {
     const index =
-      prompt_view_provider.intelligent_update_abort_controllers.findIndex(
+      prompt_view_provider.patch_repair_abort_controllers.findIndex(
         (s) => s.controller === abort_controller
       )
     if (index > -1) {
-      prompt_view_provider.intelligent_update_abort_controllers.splice(index, 1)
+      prompt_view_provider.patch_repair_abort_controllers.splice(index, 1)
     }
     prompt_view_provider.send_message({
       command: 'UPDATE_FILE_PROGRESS',
@@ -257,7 +257,7 @@ export const handle_intelligent_update_file_in_preview = async (
   }
 
   if (should_retry) {
-    await handle_intelligent_update_file_in_preview(prompt_view_provider, {
+    await handle_patch_repair_file_in_preview(prompt_view_provider, {
       ...message,
       force_model_selection: true
     })

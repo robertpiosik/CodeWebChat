@@ -94,7 +94,7 @@ export const Prompt = () => {
     set_items_in_preview,
     raw_instructions,
     preview_item_created_at,
-    auto_run_intelligent_update,
+    auto_run_patch_repair,
     handle_discard_user_changes_in_preview,
     url,
     recent_api_configuration
@@ -605,7 +605,7 @@ export const Prompt = () => {
             >
               <UiResponsePreview
                 items={items_in_preview}
-                auto_run_intelligent_update={auto_run_intelligent_update}
+                auto_run_patch_repair={auto_run_patch_repair}
                 raw_instructions={raw_instructions}
                 recent_api_configuration={recent_api_configuration}
                 has_multiple_workspaces={workspace_folder_count > 1}
@@ -640,17 +640,17 @@ export const Prompt = () => {
                   })
                 }}
                 on_discard_user_changes={handle_discard_user_changes_in_preview}
-                on_intelligent_update={(file) => {
+                on_patch_repair={(file) => {
                   post_message(vscode, {
-                    command: 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW',
+                    command: 'PATCH_REPAIR_FILE_IN_PREVIEW',
                     file_path: file.file_path,
                     workspace_name: file.workspace_name,
                     force_model_selection: file.force_model_selection
                   })
                 }}
-                on_cancel_intelligent_update={(file) => {
+                on_cancel_patch_repair={(file) => {
                   post_message(vscode, {
-                    command: 'CANCEL_INTELLIGENT_UPDATE_FILE_IN_PREVIEW',
+                    command: 'CANCEL_PATCH_REPAIR_FILE_IN_PREVIEW',
                     file_path: file.file_path,
                     workspace_name: file.workspace_name
                   })
