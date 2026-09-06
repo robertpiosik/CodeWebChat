@@ -43,6 +43,16 @@
   position: relative;
 }
 
+.placeholder-mirror {
+  position: absolute;
+    width: 100%;
+}
+
+.placeholder-text {
+  padding: var(--padding);
+  color: var(--vscode-input-placeholderForeground);
+}
+
 .top-right {
   float: right;
   display: flex;
@@ -100,19 +110,6 @@
 
   &:focus {
     outline: none;
-  }
-
-  &--empty::before {
-    content: attr(data-placeholder);
-    position: absolute;
-    color: var(--vscode-input-placeholderForeground);
-    pointer-events: none;
-    padding-right: 7px;
-  }
-
-  &--empty::selection,
-  &--empty *::selection {
-    background-color: transparent;
   }
 
   & [data-type='ghost-text']::before {

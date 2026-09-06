@@ -873,6 +873,43 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         onClick={() => input_ref.current?.focus()}
       >
         <div className={styles['input-wrapper']}>
+          {!props.value && (
+            <div className={styles['placeholder-mirror']}>
+              <div className={styles['top-right']} style={{ visibility: 'hidden' }}>
+                {has_content && props.prompt_token_count > 250 && (
+                  <div className={styles['top-right__prompt-token-count']}>
+                    {display_token_count(props.prompt_token_count)}
+                  </div>
+                )}
+                {props.tabs_count > 1 && (
+                  <div
+                    className={cn(
+                      styles['top-right__clear-button'],
+                      'codicon',
+                      'codicon-close-small'
+                    )}
+                  />
+                )}
+              </div>
+              {props.tabs_count > 1 ? (
+                <div className={styles.tabs} style={{ visibility: 'hidden' }}>
+                  {tab_items.map((item) => (
+                    <div key={item.id} className={styles.tabs__tab} />
+                  ))}
+                  <div
+                    className={cn(styles.tabs__tab, styles['tabs__tab--new'])}
+                  />
+                </div>
+              ) : props.tabs_count === 1 ? (
+                <div className={styles.tabs} style={{ visibility: 'hidden' }}>
+                  <div
+                    className={cn(styles.tabs__tab, styles['tabs__tab--new'])}
+                  />
+                </div>
+              ) : null}
+              <div className={styles['placeholder-text']}>{placeholder}</div>
+            </div>
+          )}
           <div className={styles['top-right']}>
             {has_content && props.prompt_token_count > 250 && (
               <div className={styles['top-right__prompt-token-count']}>
@@ -990,7 +1027,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             className={cn(styles.input, {
               [styles['input--empty']]: !props.value
             })}
-            data-placeholder={placeholder}
           />
         </div>
 

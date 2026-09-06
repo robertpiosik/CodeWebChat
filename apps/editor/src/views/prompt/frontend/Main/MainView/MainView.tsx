@@ -5,6 +5,7 @@ import { PromptAttachments } from './components/PromptAttachments'
 import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { Responses as UiResponses } from '@ui/components/editor/prompt/Responses'
+import { StatusBar as UiStatusBar } from '@ui/components/editor/prompt/StatusBar'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { EditFormat } from '@shared/types/edit-format'
 import { TARGET, Target } from '@shared/types/mode'
@@ -260,6 +261,17 @@ export const MainView: React.FC<Props> = (props) => {
           }}
         />
 
+        {context_is_empty_warning && (
+          <>
+            <UiStatusBar
+              theme="warning"
+              icon="codicon-warning"
+              label={t('common.context-is-empty')}
+            />
+            <UiSeparator height={4} />
+          </>
+        )}
+
         <UiSeparator height={2} />
 
         {props.response_history.length > 0 && (
@@ -342,8 +354,8 @@ export const MainView: React.FC<Props> = (props) => {
                   ? 'blue'
                   : 'purple'
                 : props.api_prompt_type == 'edit-files'
-                ? 'blue'
-                : 'purple'
+                  ? 'blue'
+                  : 'purple'
             }
             on_paste_image={props.on_paste_image}
             on_open_image={props.on_open_image}
@@ -403,13 +415,10 @@ export const MainView: React.FC<Props> = (props) => {
                 ? 'blue'
                 : 'purple'
               : props.api_prompt_type == 'edit-files'
-              ? 'blue'
-              : 'purple'
+                ? 'blue'
+                : 'purple'
           }
           translations={{
-            warning: context_is_empty_warning
-              ? t('common.context-is-empty')
-              : undefined,
             attaching_file: t('selected-files.attaching-file'),
             attaching_files: t('selected-files.attaching-files')
           }}
