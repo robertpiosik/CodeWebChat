@@ -279,11 +279,7 @@ _Applying malformed edits._
 ````
 # File: `[FILE PATH]`
 
-```
-
 [MALFORMED EDITS]
-
-````
 
 # Output formatting
 
@@ -421,5 +417,7 @@ Install the browser extension and never copy and paste again ([source code](http
 Copyright © 2026 [Robert Piosik](https://x.com/robertpiosik) \
 E-mail: robertpiosik@gmail.com \
 Telegram: robertpiosik
+
 ```
-````
+
+```
