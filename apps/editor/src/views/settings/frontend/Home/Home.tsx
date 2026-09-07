@@ -3,7 +3,7 @@ import { Layout as UiLayout } from '@ui/components/editor/settings/Layout'
 import { NavigationSection as UiNavigationSection } from '@ui/components/editor/settings/NavigationSection'
 import { NavigationItemSection as UiNavigationItemSection } from '@ui/components/editor/settings/NavigationItemSection'
 import { NavigationItemGroup as UiNavigationItemGroup } from '@ui/components/editor/settings/NavigationItemGroup'
-import { ApiConfigurationsSection } from './sections/ApiConfigurationsSection'
+import { ApiSection } from './sections/ApiSection'
 import {
   ApiConfiguration,
   Provider,
@@ -13,7 +13,7 @@ import { WebConfiguration } from '@shared/types/web-configuration'
 import { GeneralSection } from './sections/GeneralSection'
 import { ApiFeature } from '@/views/shared/types/api-features'
 import { use_translation, TranslationKey } from '../i18n/use-translation'
-import { WebConfigurationsSection } from './sections/WebConfigurationsSection'
+import { WebSection } from './sections/WebSection'
 import { commit_message_instructions as default_commit_message_instructions } from '@/constants/instructions'
 import { intelligent_search_task_instructions as default_intelligent_file_search_instructions } from '@/constants/instructions'
 import { agentic_search_task_instructions as default_agentic_file_search_instructions } from '@/constants/instructions'
@@ -635,7 +635,7 @@ export const Home: React.FC<Props> = (props) => {
           on_delete_template={props.on_delete_template}
         />
 
-        <WebConfigurationsSection
+        <WebSection
           ref={(el) => set_section_ref('section:web', el)}
           set_section_ref={set_section_ref}
           web_configurations={props.web_configurations}
@@ -655,7 +655,7 @@ export const Home: React.FC<Props> = (props) => {
           on_ai_studio_user_id_change={props.on_ai_studio_user_id_change}
         />
 
-        <ApiConfigurationsSection
+        <ApiSection
           ref={(el) => set_section_ref('section:api', el)}
           set_section_ref={set_section_ref}
           providers={props.providers}

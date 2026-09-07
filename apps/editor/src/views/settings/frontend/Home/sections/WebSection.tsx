@@ -57,7 +57,7 @@ const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   Z: 'Z_AI'
 }
 
-export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
+export const WebSection = forwardRef<HTMLDivElement, Props>(
   (props, ref) => {
     const { t } = use_translation()
 
@@ -333,4 +333,4 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
   }
 )
 
-WebConfigurationsSection.displayName = 'WebConfigurationsSection'
+WebSection.displayName = 'WebSection'

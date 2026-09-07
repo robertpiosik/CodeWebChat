@@ -51,7 +51,7 @@ type Props = {
   on_restore_edit_files_instructions: () => void
 }
 
-export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
+export const ApiSection = forwardRef<HTMLDivElement, Props>(
   (props, ref) => {
     const { t } = use_translation()
 
@@ -466,4 +466,4 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
   }
 )
 
-ApiConfigurationsSection.displayName = 'ApiConfigurationsSection'
+ApiSection.displayName = 'ApiSection'
