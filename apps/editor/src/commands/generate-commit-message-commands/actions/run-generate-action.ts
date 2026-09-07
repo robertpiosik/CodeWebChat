@@ -566,7 +566,7 @@ export const run_generate_action = async (params: {
       .getConfiguration('codeWebChat')
       .get<boolean>('selectAllPromptsInCommitMessagesByDefault', true)
 
-    const relevant_prompts = all_prompts
+    const all_relevant_prompts = all_prompts
       .filter((p) =>
         p.files.some((file) => {
           const rel_path = path.isAbsolute(file)
@@ -579,14 +579,17 @@ export const run_generate_action = async (params: {
         (p, index, self) =>
           index == self.findIndex((sp) => sp.prompt == p.prompt)
       )
-      .filter((p) => p.prompt.trim() != '')
+
+    const relevant_prompts = all_relevant_prompts.filter((p) => p.prompt.trim() != '')
+    const empty_prompts = all_relevant_prompts.filter((p) => p.prompt.trim() == '')
 
     const get_tree_text_if_applicable = async (
       selected_prompts: typeof relevant_prompts,
+      empty_prompts: typeof relevant_prompts,
       show_back_button: boolean
     ): Promise<string | undefined | 'back'> => {
       const selected_files_set = new Set<string>()
-      for (const p of selected_prompts) {
+      for (const p of [...selected_prompts, ...empty_prompts]) {
         for (const f of p.selected_files || []) {
           selected_files_set.add(f)
         }
@@ -880,6 +883,7 @@ export const run_generate_action = async (params: {
           params.provided_text === undefined || can_go_back_in_wizard
         const result = await get_tree_text_if_applicable(
           selected_prompts,
+          empty_prompts,
           show_back_button
         )
         if (result == 'back') {
@@ -929,7 +933,7 @@ export const run_generate_action = async (params: {
       CommitMessageDetails.remove_committed_files({
         extension_context: params.extension_context,
         workspace_root,
-        prompts: relevant_prompts.map((p) => p.prompt),
+        prompts: all_relevant_prompts.map((p) => p.prompt),
         committed_files: staged_files
       })
 
