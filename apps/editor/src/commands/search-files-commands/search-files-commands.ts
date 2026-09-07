@@ -8,6 +8,8 @@ import { WebSocketManager } from '@/services/websocket-manager'
 import { prompt_for_provided_results } from './utils/prompt-for-provided-results'
 import { get_target_folder_path } from './utils/get-target-folder-path'
 
+let search_in_progress = false
+
 export const search_files_commands = (
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext,
@@ -114,177 +116,203 @@ export const search_files_commands = (
       is_workspace_action?: boolean
     }
   ) => {
-    if (options?.provided_files) {
-      let resolved_all_files: string[] = []
+    if (search_in_progress) {
+      vscode.window.showWarningMessage(
+        t('feature.search-files.warning.search-in-progress' as any)
+      )
+      return
+    }
+    search_in_progress = true
+    try {
+      if (options?.provided_files) {
+        let resolved_all_files: string[] = []
 
-      if (options.is_search_in_selected) {
-        const currently_checked = workspace_provider.get_checked_files()
-        if (options.folder_path) {
-          resolved_all_files = currently_checked.filter((f) => {
-            const relative = path.relative(options.folder_path!, f)
-            return !relative.startsWith('..') && !path.isAbsolute(relative)
-          })
+        if (options.is_search_in_selected) {
+          const currently_checked = workspace_provider.get_checked_files()
+          if (options.folder_path) {
+            resolved_all_files = currently_checked.filter((f) => {
+              const relative = path.relative(options.folder_path!, f)
+              return !relative.startsWith('..') && !path.isAbsolute(relative)
+            })
+          } else {
+            resolved_all_files = currently_checked
+          }
         } else {
-          resolved_all_files = currently_checked
+          if (options.folder_path) {
+            resolved_all_files = await workspace_provider.find_all_files(
+              options.folder_path
+            )
+          } else {
+            const roots = workspace_provider.get_workspace_roots()
+            for (const root of roots) {
+              const result = await workspace_provider.find_all_files(root)
+              resolved_all_files.push(...result)
+            }
+          }
         }
-      } else {
-        if (options.folder_path) {
-          resolved_all_files = await workspace_provider.find_all_files(
-            options.folder_path
-          )
+
+        let decision:
+          | {
+              selected_paths: string[]
+              matched_paths: string[]
+              title?: string
+            }
+          | undefined = undefined
+
+        let restored_selected_paths: string[] | undefined = undefined
+        let restored_unmatched_paths: string[] | undefined = undefined
+
+        while (true) {
+          const result = await prompt_for_provided_results({
+            files: options.provided_files,
+            workspace_provider,
+            restored_selected_paths,
+            restored_unmatched_paths,
+            is_search_in_selected: options.is_search_in_selected,
+            searched_files: resolved_all_files
+          })
+
+          if (!result) return
+
+          if ('action' in result) {
+            const sub_search_result = await search_files({
+              get_files: async () => result.matched_paths,
+              workspace_provider,
+              extension_context,
+              websocket_manager,
+              show_back_button: true,
+              is_sub_search: true
+            })
+
+            if (sub_search_result === 'back') {
+              restored_selected_paths = result.selected_paths
+              restored_unmatched_paths = result.unmatched_paths
+              continue
+            }
+
+            if (!sub_search_result) return
+
+            decision = sub_search_result
+            break
+          }
+
+          decision = result
+          break
+        }
+
+        await process_search_result({
+          result: decision,
+          resolved_all_files,
+          is_provided_files: true,
+          is_search_in_selected: options.is_search_in_selected,
+          folder_path: options.folder_path
+        })
+        return
+      }
+
+      const folder_path = await get_target_folder_path(item)
+
+      let all_files: string[] | undefined
+
+      const get_files_lazy = async () => {
+        if (all_files) return all_files
+        const files: string[] = []
+        if (folder_path) {
+          const result = await workspace_provider.find_all_files(folder_path)
+          files.push(...result)
         } else {
           const roots = workspace_provider.get_workspace_roots()
           for (const root of roots) {
             const result = await workspace_provider.find_all_files(root)
-            resolved_all_files.push(...result)
+            files.push(...result)
           }
         }
+        all_files = files
+        return all_files
       }
-
-      let decision:
-        | { selected_paths: string[]; matched_paths: string[]; title?: string }
-        | undefined = undefined
-
-      let restored_selected_paths: string[] | undefined = undefined
-      let restored_unmatched_paths: string[] | undefined = undefined
 
       while (true) {
-        const result = await prompt_for_provided_results({
-          files: options.provided_files,
+        const result = await search_files({
+          get_files: get_files_lazy,
           workspace_provider,
-          restored_selected_paths,
-          restored_unmatched_paths,
-          is_search_in_selected: options.is_search_in_selected,
-          searched_files: resolved_all_files
+          extension_context,
+          websocket_manager,
+          folder_path,
+          is_workspace_action: options?.is_workspace_action
         })
 
-        if (!result) return
+        if (!result || result == 'back') return
 
-        if ('action' in result) {
-          const sub_search_result = await search_files({
-            get_files: async () => result.matched_paths,
-            workspace_provider,
-            extension_context,
-            websocket_manager,
-            show_back_button: true,
-            is_sub_search: true
-          })
+        const resolved_all_files = await get_files_lazy()
 
-          if (sub_search_result === 'back') {
-            restored_selected_paths = result.selected_paths
-            restored_unmatched_paths = result.unmatched_paths
-            continue
-          }
+        await process_search_result({
+          result,
+          resolved_all_files,
+          folder_path
+        })
 
-          if (!sub_search_result) return
-
-          decision = sub_search_result
-          break
-        }
-
-        decision = result
         break
       }
-
-      await process_search_result({
-        result: decision,
-        resolved_all_files,
-        is_provided_files: true,
-        is_search_in_selected: options.is_search_in_selected,
-        folder_path: options.folder_path
-      })
-      return
-    }
-
-    const folder_path = await get_target_folder_path(item)
-
-    let all_files: string[] | undefined
-
-    const get_files_lazy = async () => {
-      if (all_files) return all_files
-      const files: string[] = []
-      if (folder_path) {
-        const result = await workspace_provider.find_all_files(folder_path)
-        files.push(...result)
-      } else {
-        const roots = workspace_provider.get_workspace_roots()
-        for (const root of roots) {
-          const result = await workspace_provider.find_all_files(root)
-          files.push(...result)
-        }
-      }
-      all_files = files
-      return all_files
-    }
-
-    while (true) {
-      const result = await search_files({
-        get_files: get_files_lazy,
-        workspace_provider,
-        extension_context,
-        websocket_manager,
-        folder_path,
-        is_workspace_action: options?.is_workspace_action
-      })
-
-      if (!result || result == 'back') return
-
-      const resolved_all_files = await get_files_lazy()
-
-      await process_search_result({
-        result,
-        resolved_all_files,
-        folder_path
-      })
-
-      break
+    } finally {
+      search_in_progress = false
     }
   }
 
   const search_selected_files_handler = async (item?: any) => {
-    const currently_checked = workspace_provider.get_checked_files()
-    if (currently_checked.length === 0) {
+    if (search_in_progress) {
+      vscode.window.showWarningMessage(
+        t('feature.search-files.warning.search-in-progress' as any)
+      )
       return
     }
+    search_in_progress = true
+    try {
+      const currently_checked = workspace_provider.get_checked_files()
+      if (currently_checked.length === 0) {
+        return
+      }
 
-    const folder_path = await get_target_folder_path(item)
+      const folder_path = await get_target_folder_path(item)
 
-    let files_to_search = currently_checked
-    if (folder_path) {
-      files_to_search = currently_checked.filter((f) => {
-        const relative = path.relative(folder_path, f)
-        return !relative.startsWith('..') && !path.isAbsolute(relative)
-      })
-    }
+      let files_to_search = currently_checked
+      if (folder_path) {
+        files_to_search = currently_checked.filter((f) => {
+          const relative = path.relative(folder_path, f)
+          return !relative.startsWith('..') && !path.isAbsolute(relative)
+        })
+      }
 
-    if (files_to_search.length === 0) {
-      return
-    }
+      if (files_to_search.length === 0) {
+        return
+      }
 
-    const get_files_lazy = async () => files_to_search
+      const get_files_lazy = async () => files_to_search
 
-    while (true) {
-      const result = await search_files({
-        get_files: get_files_lazy,
-        workspace_provider,
-        extension_context,
-        websocket_manager,
-        is_search_in_selected: true,
-        folder_path
-      })
+      while (true) {
+        const result = await search_files({
+          get_files: get_files_lazy,
+          workspace_provider,
+          extension_context,
+          websocket_manager,
+          is_search_in_selected: true,
+          folder_path
+        })
 
-      if (!result || result == 'back') return
+        if (!result || result == 'back') return
 
-      const resolved_all_files = await get_files_lazy()
+        const resolved_all_files = await get_files_lazy()
 
-      await process_search_result({
-        result,
-        resolved_all_files,
-        folder_path,
-        is_search_in_selected: true
-      })
+        await process_search_result({
+          result,
+          resolved_all_files,
+          folder_path,
+          is_search_in_selected: true
+        })
 
-      break
+        break
+      }
+    } finally {
+      search_in_progress = false
     }
   }
 

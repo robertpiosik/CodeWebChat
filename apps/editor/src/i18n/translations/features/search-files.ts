@@ -1276,5 +1276,23 @@ export const translations = {
     cs: 'čekání na agenta...',
     hu: 'várakozás az ügynökre...',
     bg: 'изчакване на агент...'
+  },
+  'feature.search-files.warning.search-in-progress': {
+    en: 'Search is already in progress.',
+    pl: 'Wyszukiwanie jest już w toku.',
+    'zh-cn': '搜索已在进行中。',
+    ja: '検索はすでに進行中です。',
+    'zh-tw': '搜尋已在進行中。',
+    de: 'Suche läuft bereits.',
+    es: 'La búsqueda ya está en curso.',
+    fr: 'La recherche est déjà en cours.',
+    'pt-br': 'A pesquisa já está em andamento.',
+    ru: 'Поиск уже выполняется.',
+    ko: '검색이 이미 진행 중입니다.',
+    it: 'La ricerca è già in corso.',
+    tr: 'Arama zaten devam ediyor.',
+    cs: 'Hledání již probíhá.',
+    hu: 'A keresés már folyamatban van.',
+    bg: 'Търсенето вече е в ход.'
   }
 } as const
