@@ -345,8 +345,6 @@ Install the browser extension and never copy and paste again ([source code](http
 ### Commit messages
 
 - `Commit Changes` - Generate commit message in your preferred style and commit.
-- `CWC: Generate Commit Message` - Generate a commit message into the SCM input.
-- `CWC: Copy Merge Commit Details` - Copy consolidated prompts and context ASCII trees of all commits between HEAD and a selected branch.
 
 ### History
 
@@ -356,8 +354,6 @@ Install the browser extension and never copy and paste again ([source code](http
 ### Actions
 
 - `Apply Chat Response` - Integrate LLM response.
-- `Reference in Prompt` - Reference the selected file in the prompt view.
-- `Set Ranges...` - Restrict context to specific line ranges.
 
 ### Misc
 
