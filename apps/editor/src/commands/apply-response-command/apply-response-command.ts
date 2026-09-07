@@ -143,6 +143,10 @@ export const apply_response_command = (params: {
         )
 
         if (is_patch_repair) {
+          if (!resolve_fn) {
+            return
+          }
+
           const workspace_map = new Map<string, string>()
           vscode.workspace.workspaceFolders!.forEach((folder) => {
             workspace_map.set(folder.name, folder.uri.fsPath)
