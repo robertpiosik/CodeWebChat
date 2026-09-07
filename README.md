@@ -69,37 +69,6 @@ _A quick way for task-relevant files from a single llm message._
 <details>
 <summary>Structure of the constructed prompt (WEB)</summary>
 
-<details>
-<summary>Structure of the constructed prompt (WEB)</summary>
-
-```
-# Files
-
-[WORKSPACE FILES/SPECIFIC FOLDER/SELECTED FILES]
-
-# Task
-
-Among the attached files, find the complete set of primary and structural files relevant to the query.
-
-# Output formatting
-
-Your response must begin with "**Intelligent file search results:**", then a bulleted list of file paths, followed by a brief explanation. Example:
-
-**Intelligent file search results:**
-
-- `src/index.ts`
-- `src/greetings/hello.ts`
-- `src/greetings/welcome.ts`
-
-These files contain the core greeting logic and module exports.
-
-# Query
-
-[PROMPT]
-```
-
-</details>
-
 ```
 # Files
 
