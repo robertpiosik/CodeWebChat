@@ -271,7 +271,7 @@ Write a brief and precise summary for the changes, limited to a single sentence.
 
 ## Prompt caching
 
-**CWC** orders context files by modification and selection recency. This, combined with instructions placement at the message's very end effecively utilizes [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) across tasks.
+**CWC** orders context files by modification and selection recency. This, combined with instructions placement at the message's very end effecively utilizes prompt caching.
 
 ## Enabling autofill
 
