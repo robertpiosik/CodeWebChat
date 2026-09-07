@@ -13,8 +13,6 @@
 
 <p align="center"><strong>CWC</strong> is a free and privacy-fist toolkit for AI coding with static context.</p>
 
-<br/>
-
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
 ## Introduction
