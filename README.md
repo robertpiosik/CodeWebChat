@@ -195,7 +195,7 @@ Structure of the constructed prompt:
 <details>
 <summary>WEB</summary>
 
-```
+````
 
 # Files
 
@@ -219,14 +219,14 @@ Your response must begin with a markdown heading identifying the file and the cu
 
 Find correct replacement text for the <missing_text> symbol.
 
-```
+````
 
 </details>
 
 <details>
 <summary>API</summary>
 
-```
+````
 
 # Files
 
@@ -246,7 +246,7 @@ Find correct replacement for the <missing_text> symbol. Respond with replacement
 Example:
 !== undefined
 
-```
+````
 
 </details>
 
