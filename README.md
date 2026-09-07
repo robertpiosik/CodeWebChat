@@ -183,7 +183,7 @@ _TAB completions from SOTA reasoning models._
 <details>
 <summary>WEB</summary>
 
-````
+```
 
 # Files
 
@@ -207,14 +207,14 @@ Your response must begin with a markdown heading identifying the file and the cu
 
 Find correct replacement text for the <missing_text> symbol.
 
-````
+```
 
 </details>
 
 <details>
 <summary>API</summary>
 
-````
+```
 
 # Files
 
@@ -234,7 +234,7 @@ Find correct replacement for the <missing_text> symbol. Respond with replacement
 Example:
 !== undefined
 
-````
+```
 
 </details>
 
@@ -266,6 +266,45 @@ Your response must begin with "**Commit message:**", then proceed with the messa
 Write a brief and precise summary for the changes, limited to a single sentence. Because the summary will be used for a commit message, don't use any markdown formatting and don't include a trailing dot. Use an imperative tone to ensure clarity and focus on the primary change or purpose.
 
 ```
+
+</details>
+
+### Patch repair
+
+_Applying malformed edits._
+
+<details>
+<summary>WEB/API</summary>
+
+````
+# File: `[FILE PATH]`
+
+```
+
+[MALFORMED EDITS]
+
+````
+
+# Output formatting
+
+Your response must begin with a markdown heading identifying the file, followed by a markdown code block containing the updated file. The heading must be: "### Patch repair: `path/to/file.ext`". Example:
+
+### Patched file: `path/to/file.ext`
+
+```python
+def add(a, b):
+  return a + b
+
+def subtract(a, b):
+  return a - b
+
+```
+
+# Task
+
+Apply the attached changes to the file without explanations or any other text.
+
+````
 
 </details>
 
@@ -382,3 +421,5 @@ Install the browser extension and never copy and paste again ([source code](http
 Copyright © 2026 [Robert Piosik](https://x.com/robertpiosik) \
 E-mail: robertpiosik@gmail.com \
 Telegram: robertpiosik
+```
+````
