@@ -47,6 +47,7 @@ _Task-relevant files from your favorite coding agent, utilizing its one-off prom
 <summary>Structure of the constructed prompt</summary>
 
 ```
+
 # Task
 
 In the project, find the complete set of primary and structural files relevant to the query.
@@ -70,6 +71,7 @@ _A quick way for task-relevant files from a single llm message._
 <summary>Structure of the constructed prompt (WEB)</summary>
 
 ```
+
 # Files
 
 [WORKSPACE FILES/SPECIFIC FOLDER/SELECTED FILES]
@@ -84,15 +86,16 @@ Your response must begin with "**Intelligent file search results:**", then a bul
 
 **Intelligent file search results:**
 
-- `src/index.ts`
-- `src/greetings/hello.ts`
-- `src/greetings/welcome.ts`
+* `src/index.ts`
+* `src/greetings/hello.ts`
+* `src/greetings/welcome.ts`
 
 These files contain the core greeting logic and module exports.
 
 # Query
 
 [PROMPT]
+
 ```
 
 </details>
@@ -101,6 +104,7 @@ These files contain the core greeting logic and module exports.
 <summary>Structure of the constructed prompt (API)</summary>
 
 ```
+
 # Files
 
 [WORKSPACE FILES/SPECIFIC FOLDER/SELECTED FILES]
@@ -113,13 +117,14 @@ Among the attached files, find the complete set of primary and structural files 
 
 Output strictly as a bulleted list of file paths without explanations or any other text. Example:
 
-- `src/index.ts`
-- `src/greetings/hello.ts`
-- `src/greetings/welcome.ts`
+* `src/index.ts`
+* `src/greetings/hello.ts`
+* `src/greetings/welcome.ts`
 
 # Query
 
 [PROMPT]
+
 ```
 
 </details>
@@ -132,6 +137,7 @@ _Implementing new features, fixing bugs or doing refactors._
 <summary>Structure of the constructed prompt</summary>
 
 ```
+
 # Files
 
 [SELECTED FILES]
@@ -145,6 +151,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 ---
 
 [PROMPT]
+
 ```
 
 </details>
@@ -157,6 +164,7 @@ _Explanations, planning, code reviews, you name it._
 <summary>Structure of the constructed prompt</summary>
 
 ```
+
 # Files
 
 [SELECTED FILES]
@@ -164,6 +172,7 @@ _Explanations, planning, code reviews, you name it._
 ---
 
 [PROMPT]
+
 ```
 
 </details>
@@ -173,9 +182,10 @@ _Explanations, planning, code reviews, you name it._
 _TAB completions from SOTA reasoning models._
 
 <details>
-<summary>Structure of the constructed prompt</summary>
+<summary>Structure of the constructed prompt (WEB)</summary>
 
-````
+```
+
 # Files
 
 [SELECTED FILES]
@@ -197,7 +207,35 @@ Your response must begin with a markdown heading identifying the file and the cu
 ---
 
 Find correct replacement text for the <missing_text> symbol.
-````
+
+```
+
+</details>
+
+<details>
+<summary>Structure of the constructed prompt (API)</summary>
+
+```
+
+# Files
+
+[SELECTED FILES]
+
+### File `[ACTIVE FILE PATH]`
+
+```
+
+[PREFIX]<missing_text>[PROMPT]</missing_text>[SUFFIX]
+
+```
+
+# Output formatting
+
+Find correct replacement for the <missing_text> symbol. Respond with replacement text within "replacement" XML tags, without explanations or any other text.
+Example:
+!== undefined
+
+```
 
 </details>
 
