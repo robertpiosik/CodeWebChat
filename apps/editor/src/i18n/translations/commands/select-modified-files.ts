@@ -71,24 +71,6 @@ export const translations = {
     hu: 'Nem találhatók módosított fájlok.',
     bg: 'Не са намерени променени файлове.'
   },
-  'command.select-modified-files.no-actionable-modified-files': {
-    en: 'No actionable modified files found',
-    pl: 'Nie znaleziono użytecznych zmodyfikowanych plików',
-    'zh-cn': '未找到可操作的修改文件',
-    ja: '操作可能な変更されたファイルが見つかりません',
-    'zh-tw': '未找到可操作的修改檔案',
-    de: 'Keine aktionsfähigen geänderten Dateien gefunden',
-    es: 'No se encontraron archivos modificados procesables',
-    fr: 'Aucun fichier modifié exploitable trouvé',
-    'pt-br': 'Nenhum arquivo modificado acionável encontrado',
-    ru: 'Не найдено доступных измененных файлов',
-    ko: '처리할 수 있는 수정된 파일을 찾을 수 없습니다',
-    it: 'Nessun file modificato azionabile trovato',
-    tr: 'İşlem yapılabilir değiştirilmiş dosya bulunamadı',
-    cs: 'Nebyly nalezeny žádné použitelné upravené soubory',
-    hu: 'Nem találhatók végrehajtható módosított fájlok',
-    bg: 'Не са намерени приложими променени файлове'
-  },
   'command.select-modified-files.show-diff': {
     en: 'Show Diff',
     pl: 'Pokaż zmiany',

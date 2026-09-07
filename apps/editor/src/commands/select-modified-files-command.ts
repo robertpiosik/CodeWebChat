@@ -48,13 +48,6 @@ export const select_modified_files_command = (
           })
         }
 
-        if (modified_file_paths.length == 0) {
-          vscode.window.showInformationMessage(
-            t('command.select-modified-files.no-modified-files') || dictionary.information_message.NO_UNSTAGED_FILES_FOUND
-          )
-          return
-        }
-
         const existing_modified_files = modified_file_paths.filter((p) => {
           try {
             return fs.existsSync(p) && fs.statSync(p).isFile()
@@ -65,7 +58,8 @@ export const select_modified_files_command = (
 
         if (existing_modified_files.length == 0) {
           vscode.window.showInformationMessage(
-            t('command.select-modified-files.no-actionable-modified-files') || dictionary.information_message.NO_ACTIONABLE_UNSTAGED_FILES_FOUND
+            t('command.select-modified-files.no-modified-files') ||
+              dictionary.information_message.NO_UNSTAGED_FILES_FOUND
           )
           return
         }
@@ -291,7 +285,8 @@ export const select_modified_files_command = (
         vscode.window.showErrorMessage(
           dictionary.error_message.FAILED_TO_SELECT_UNSTAGED_FILES?.(
             error instanceof Error ? error.message : String(error)
-          ) || `Failed to select modified files: ${error instanceof Error ? error.message : String(error)}`
+          ) ||
+            `Failed to select modified files: ${error instanceof Error ? error.message : String(error)}`
         )
         Logger.error({
           function_name: 'select_modified_files_command',
