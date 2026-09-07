@@ -43,8 +43,10 @@ _Task-relevant files from your favorite coding agent, utilizing its one-off prom
 - Muse Code
 - OpenCode
 
+Structure of the constructed prompt:
 <details>
-<summary>Structure of the constructed prompt</summary>
+<summary>WEB/API</summary>
+
 
 ```
 
@@ -59,6 +61,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 # Query
 
 [PROMPT]
+
 ```
 
 </details>
@@ -67,8 +70,10 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 _A quick way for task-relevant files from a single llm message._
 
+Structure of the constructed prompt:
 <details>
-<summary>Structure of the constructed prompt (WEB)</summary>
+<summary>WEB</summary>
+
 
 ```
 
@@ -100,8 +105,10 @@ These files contain the core greeting logic and module exports.
 
 </details>
 
+Structure of the constructed prompt:
 <details>
-<summary>Structure of the constructed prompt (API)</summary>
+<summary>API</summary>
+
 
 ```
 
@@ -133,8 +140,10 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 _Implementing new features, fixing bugs or doing refactors._
 
+Structure of the constructed prompt:
 <details>
-<summary>Structure of the constructed prompt</summary>
+<summary>WEB/API</summary>
+
 
 ```
 
@@ -160,8 +169,10 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 _Explanations, planning, code reviews, you name it._
 
+Structure of the constructed prompt:
 <details>
-<summary>Structure of the constructed prompt</summary>
+<summary>WEB/API</summary>
+
 
 ```
 
@@ -181,8 +192,10 @@ _Explanations, planning, code reviews, you name it._
 
 _TAB completions from SOTA reasoning models._
 
+Structure of the constructed prompt:
 <details>
-<summary>Structure of the constructed prompt (WEB)</summary>
+<summary>WEB</summary>
+
 
 ```
 
@@ -195,6 +208,7 @@ _TAB completions from SOTA reasoning models._
 ```
 
 [PREFIX]<missing_text>[PROMPT]</missing_text>[SUFFIX]
+
 
 ```
 
@@ -212,8 +226,10 @@ Find correct replacement text for the <missing_text> symbol.
 
 </details>
 
+Structure of the constructed prompt:
 <details>
-<summary>Structure of the constructed prompt (API)</summary>
+<summary>API</summary>
+
 
 ```
 
@@ -226,6 +242,7 @@ Find correct replacement text for the <missing_text> symbol.
 ```
 
 [PREFIX]<missing_text>[PROMPT]</missing_text>[SUFFIX]
+
 
 ```
 
@@ -243,10 +260,13 @@ Example:
 
 _Generate commit messages based on staged changes and context files._
 
+Structure of the constructed prompt:
 <details>
-<summary>Structure of the constructed prompt</summary>
+<summary>WEB/API</summary>
+
 
 ```
+
 # Files
 
 [SELECTED FILES WHEN EDITS WERE ACCEPTED]
@@ -264,6 +284,7 @@ Your response must begin with "**Commit message:**", then proceed with the messa
 # Task
 
 Write a brief and precise summary for the changes, limited to a single sentence. Because the summary will be used for a commit message, don't use any markdown formatting and don't include a trailing dot. Use an imperative tone to ensure clarity and focus on the primary change or purpose.
+
 ```
 
 </details>
