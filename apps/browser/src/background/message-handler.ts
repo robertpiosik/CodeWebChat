@@ -118,10 +118,7 @@ const process_next_chat = async () => {
 
   let tab_reused = false
 
-  if (
-    last_opened_tab_id !== undefined &&
-    is_finished_responding
-  ) {
+  if (last_opened_tab_id !== undefined && is_finished_responding) {
     try {
       const tab = await browser.tabs.get(last_opened_tab_id)
       if (tab.active) {

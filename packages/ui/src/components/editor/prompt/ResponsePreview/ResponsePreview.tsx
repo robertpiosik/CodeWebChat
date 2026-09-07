@@ -149,9 +149,7 @@ export const ResponsePreview: FC<Props> = (props) => {
       const files_to_fix = files_in_preview
         .filter(
           (f) =>
-            f.type === 'file' &&
-            f.apply_failed &&
-            !f.applied_with_patch_repair
+            f.type === 'file' && f.apply_failed && !f.applied_with_patch_repair
         )
         .map((f) => ({
           file_path: f.file_path,
@@ -266,7 +264,9 @@ export const ResponsePreview: FC<Props> = (props) => {
                     />
                   ) : (
                     <div
-                      className={styles['fix-all-progress__bar__fill--indeterminate']}
+                      className={
+                        styles['fix-all-progress__bar__fill--indeterminate']
+                      }
                     />
                   )}
                 </div>

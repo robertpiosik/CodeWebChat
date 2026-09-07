@@ -6,7 +6,9 @@ import {
 } from '../../response-parser'
 
 const extract_path = (line: string): string | null => {
-  const match = line.match(/^###\s+Patch(?:ed)?\s+(?:repair|file):\s*`?([^`]+)`?/i)
+  const match = line.match(
+    /^###\s+Patch(?:ed)?\s+(?:repair|file):\s*`?([^`]+)`?/i
+  )
   if (match && match[1]) {
     return match[1].trim()
   }
@@ -60,7 +62,8 @@ export const parse_patch_repair = (params: {
 
         const { workspace_name, relative_path } = extract_workspace_and_path({
           raw_file_path: extracted,
-          is_single_root_folder_workspace: params.is_single_root_folder_workspace
+          is_single_root_folder_workspace:
+            params.is_single_root_folder_workspace
         })
 
         const content_lines = lines.slice(

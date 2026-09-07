@@ -246,10 +246,7 @@ export const Home: React.FC<Props> = (props) => {
       last_id = item.id
     }
     return last_id
-  }, [
-    props.providers.length,
-    props.api_configurations.length
-  ])
+  }, [props.providers.length, props.api_configurations.length])
 
   useEffect(() => {
     const scroll_container = scroll_container_ref.current
@@ -324,7 +321,7 @@ export const Home: React.FC<Props> = (props) => {
         ) {
           continue
         }
-      if (
+        if (
           [
             'section:api:group:api-defaults',
             'section:api:group:api-behavior',
@@ -356,10 +353,7 @@ export const Home: React.FC<Props> = (props) => {
       scroll_container.removeEventListener('scroll', handle_scroll)
       window.removeEventListener('resize', handle_scroll)
     }
-  }, [
-    props.providers.length,
-    props.api_configurations.length
-  ])
+  }, [props.providers.length, props.api_configurations.length])
 
   useEffect(() => {
     set_commit_instructions(props.commit_message_instructions || '')

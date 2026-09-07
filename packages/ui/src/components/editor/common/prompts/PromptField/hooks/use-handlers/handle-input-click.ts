@@ -54,7 +54,11 @@ export const create_handle_input_click = ({
         const end_line = pasted_lines_symbol_element.dataset.endLine
         const end_col = pasted_lines_symbol_element.dataset.endCol
         if (path && start_line && start_col && end_line && end_col) {
-          props.on_pasted_lines_click(path, `${start_line}:${start_col}`, `${end_line}:${end_col}`)
+          props.on_pasted_lines_click(
+            path,
+            `${start_line}:${start_col}`,
+            `${end_line}:${end_col}`
+          )
         }
       }
 

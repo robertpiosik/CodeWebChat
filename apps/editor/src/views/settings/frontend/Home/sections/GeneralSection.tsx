@@ -166,9 +166,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 translations={{
                   item_text: t('general.prompt.templates.item'),
                   items_text: t('general.prompt.templates.items'),
-                  items_text_many: t(
-                    'general.prompt.templates.items-many'
-                  ),
+                  items_text_many: t('general.prompt.templates.items-many'),
                   expand: t('common.expand'),
                   collapse: t('common.collapse'),
                   add_new: t('action.add-new')

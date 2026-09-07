@@ -61,8 +61,7 @@ export const get_highlighted_text = (params: {
   const commit_regex_part =
     '#(?:Commit|CommitMessage)\\([^:]+:[^\\s"]+ "(?:\\\\.|[^"\\\\])*"\\)'
 
-  const fragment_regex_part =
-    '#Fragment\\(.+?:\\d+:\\d+-\\d+:\\d+\\)'
+  const fragment_regex_part = '#Fragment\\(.+?:\\d+:\\d+-\\d+:\\d+\\)'
 
   const skill_regex_part = '#Skill\\([^)]+\\)'
 

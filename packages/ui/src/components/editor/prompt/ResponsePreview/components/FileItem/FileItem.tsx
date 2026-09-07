@@ -255,15 +255,11 @@ export const FileItem: FC<Props> = (props) => {
             message_actions.push({
               id: 'fix',
               icon: 'codicon-sparkle',
-              label: props.file.applied_with_patch_repair
-                ? 'Retry'
-                : 'Fix',
+              label: props.file.applied_with_patch_repair ? 'Retry' : 'Fix',
               title: 'Edit with Patch Repair',
               on_click: (e: React.MouseEvent) => {
                 e.stopPropagation()
-                props.on_patch_repair(
-                  !!props.file.applied_with_patch_repair
-                )
+                props.on_patch_repair(!!props.file.applied_with_patch_repair)
               }
             })
           }

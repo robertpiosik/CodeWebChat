@@ -142,7 +142,7 @@ export const use_symbol_deletion = (params: {
       if (!path || !start_line || !start_col || !end_line || !end_col) return
 
       const search_pattern = `#Fragment(${path}:${start_line}:${start_col}-${end_line}:${end_col})`
-      
+
       const start_index = get_start_index(symbol_element, search_pattern)
 
       if (start_index != -1) {

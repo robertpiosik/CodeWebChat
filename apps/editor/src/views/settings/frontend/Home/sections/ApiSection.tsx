@@ -51,419 +51,407 @@ type Props = {
   on_restore_edit_files_instructions: () => void
 }
 
-export const ApiSection = forwardRef<HTMLDivElement, Props>(
-  (props, ref) => {
-    const { t } = use_translation()
+export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
+  const { t } = use_translation()
 
-    const selector_configurations = props.api_configurations.map((config) => {
-      const details: string[] = [config.model_provider_name]
-      if (config.reasoning_effort) {
-        details.push(config.reasoning_effort)
-      }
+  const selector_configurations = props.api_configurations.map((config) => {
+    const details: string[] = [config.model_provider_name]
+    if (config.reasoning_effort) {
+      details.push(config.reasoning_effort)
+    }
 
-      return {
-        id: config.id,
-        model: config.model,
-        description: details.join(' · ')
-      }
-    })
+    return {
+      id: config.id,
+      model: config.model,
+      description: details.join(' · ')
+    }
+  })
 
-    return (
-      <UiSection
-        ref={ref}
-        title={t('api.title')}
-        subtitle={t('api-calls.subtitle')}
-      >
-        <UiNotice type="info">
-          <Translation
-            id="api-calls.notice.credentials"
-            components={{
-              link: (
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    props.on_open_external_url(
-                      'https://code.visualstudio.com/api/references/vscode-api#SecretStorage'
-                    )
-                  }}
-                >
-                  SecretStorage
-                </a>
-              )
-            }}
-          />
-        </UiNotice>
-        {props.providers.length > 0 && (
-          <div
-            ref={(el) =>
-              props.set_section_ref('section:api:group:model-providers', el)
-            }
-          >
-            <UiGroup title={t('api-calls.model-providers.title')}>
-              <SortableList
-                items={props.providers.map((p) => ({ ...p, id: p.name }))}
-                on_reorder={(reordered) => {
-                  const reordered_providers = reordered.map(
-                    ({ id: _id, ...rest }) => rest as Provider
-                  )
-                  props.set_providers(reordered_providers)
-                  props.on_reorder_providers(reordered_providers)
-                }}
-                on_add={props.on_add_provider}
-                translations={{
-                  add_title: t('action.add-new'),
-                  item_text: t('api-calls.model-providers.item'),
-                  items_text: t('api-calls.model-providers.items')
-                }}
-                render_content={(provider) => {
-                  const is_localhost =
-                    provider.base_url.includes('localhost') ||
-                    provider.base_url.includes('127.0.0.1')
-
-                  return (
-                    <>
-                      <div
-                        style={{
-                          width: 90,
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis'
-                        }}
-                      >
-                        {provider.name}
-                      </div>
-                      <div
-                        style={{
-                          width: 50,
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis'
-                        }}
-                      >
-                        {is_localhost || !provider.api_key_mask
-                          ? '⠀⠀—'
-                          : provider.api_key_mask}
-                      </div>
-                      <div
-                        style={{
-                          flex: 1,
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis'
-                        }}
-                      >
-                        {provider.base_url}
-                      </div>
-                    </>
+  return (
+    <UiSection
+      ref={ref}
+      title={t('api.title')}
+      subtitle={t('api-calls.subtitle')}
+    >
+      <UiNotice type="info">
+        <Translation
+          id="api-calls.notice.credentials"
+          components={{
+            link: (
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault()
+                  props.on_open_external_url(
+                    'https://code.visualstudio.com/api/references/vscode-api#SecretStorage'
                   )
                 }}
-                render_actions={(provider, index) => {
-                  return (
-                    <>
-                      <IconButton
-                        codicon_icon="insert"
-                        title={t('action.insert')}
-                        on_click={() =>
-                          props.on_add_provider({ insertion_index: index })
-                        }
-                      />
-                      <IconButton
-                        codicon_icon="edit"
-                        title={t('api-calls.model-providers.action.edit')}
-                        on_click={() => props.on_edit_provider(provider.name)}
-                      />
-                      <IconButton
-                        codicon_icon="trash"
-                        title={t('api-calls.model-providers.action.delete')}
-                        on_click={() => props.on_delete_provider(provider.name)}
-                      />
-                    </>
-                  )
-                }}
-              />
-            </UiGroup>
-          </div>
-        )}
-
+              >
+                SecretStorage
+              </a>
+            )
+          }}
+        />
+      </UiNotice>
+      {props.providers.length > 0 && (
         <div
           ref={(el) =>
-            props.set_section_ref('section:api:group:api-configurations', el)
+            props.set_section_ref('section:api:group:model-providers', el)
           }
         >
-          <UiGroup
-            title={t('api-calls.configurations.title')}
-            notice_slot={
-              !props.api_configurations.length ? (
-                <UiNotice
-                  type="warning"
-                  slot_right={
-                    <Button on_click={() => props.on_add_api_configuration()}>
-                      {t('action.add-new')}
-                    </Button>
-                  }
-                >
-                  {t('common.missing-configuration')}
-                </UiNotice>
-              ) : null
-            }
-          >
-            {props.api_configurations.length > 0 && (
-              <SortableList
-                items={props.api_configurations}
-                on_reorder={(reordered) => {
-                  props.set_api_configurations(reordered)
-                  props.on_reorder_api_configurations(reordered)
-                }}
-                on_add={props.on_add_api_configuration}
-                translations={{
-                  add_title: t('action.add-new'),
-                  item_text: t('api-calls.configurations.item'),
-                  items_text: t('api-calls.configurations.items'),
-                  items_text_many: t('api-calls.configurations.items-many')
-                }}
-                render_content={(config) => {
-                  const details: string[] = [config.model_provider_name]
-                  if (config.reasoning_effort) {
-                    details.push(config.reasoning_effort)
-                  }
+          <UiGroup title={t('api-calls.model-providers.title')}>
+            <SortableList
+              items={props.providers.map((p) => ({ ...p, id: p.name }))}
+              on_reorder={(reordered) => {
+                const reordered_providers = reordered.map(
+                  ({ id: _id, ...rest }) => rest as Provider
+                )
+                props.set_providers(reordered_providers)
+                props.on_reorder_providers(reordered_providers)
+              }}
+              on_add={props.on_add_provider}
+              translations={{
+                add_title: t('action.add-new'),
+                item_text: t('api-calls.model-providers.item'),
+                items_text: t('api-calls.model-providers.items')
+              }}
+              render_content={(provider) => {
+                const is_localhost =
+                  provider.base_url.includes('localhost') ||
+                  provider.base_url.includes('127.0.0.1')
 
-                  return (
+                return (
+                  <>
                     <div
                       style={{
-                        flex: 1,
-                        overflow: 'hidden',
+                        width: 90,
                         whiteSpace: 'nowrap',
+                        overflow: 'hidden',
                         textOverflow: 'ellipsis'
                       }}
                     >
-                      <span>{config.model}</span>
-                      {details.length > 0 && (
-                        <span
-                          style={{
-                            marginLeft: '0.5em',
-                            opacity: 0.7,
-                            fontSize: '0.9em'
-                          }}
-                        >
-                          {details.join(' · ')}
-                        </span>
-                      )}
+                      {provider.name}
                     </div>
-                  )
-                }}
-                render_actions={(config, index) => (
-                  <>
-                    <IconButton
-                      codicon_icon={config.is_pinned ? 'pinned' : 'pin'}
-                      title={
-                        config.is_pinned ? t('action.unpin') : t('action.pin')
-                      }
-                      on_click={(e) => {
-                        e.stopPropagation()
-                        props.on_toggle_pinned_api_configuration(config)
+                    <div
+                      style={{
+                        width: 50,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
                       }}
-                    />
+                    >
+                      {is_localhost || !provider.api_key_mask
+                        ? '⠀⠀—'
+                        : provider.api_key_mask}
+                    </div>
+                    <div
+                      style={{
+                        flex: 1,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }}
+                    >
+                      {provider.base_url}
+                    </div>
+                  </>
+                )
+              }}
+              render_actions={(provider, index) => {
+                return (
+                  <>
                     <IconButton
                       codicon_icon="insert"
                       title={t('action.insert')}
                       on_click={() =>
-                        props.on_add_api_configuration({
-                          insertion_index: index
-                        })
+                        props.on_add_provider({ insertion_index: index })
                       }
                     />
                     <IconButton
                       codicon_icon="edit"
-                      title={t('api-calls.configurations.action.edit')}
-                      on_click={() =>
-                        props.on_edit_api_configuration(config.id)
-                      }
+                      title={t('api-calls.model-providers.action.edit')}
+                      on_click={() => props.on_edit_provider(provider.name)}
                     />
                     <IconButton
                       codicon_icon="trash"
-                      title={t('api-calls.configurations.action.delete')}
-                      on_click={(e) => {
-                        e.stopPropagation()
-                        props.on_delete_api_configuration(config.id)
-                      }}
+                      title={t('api-calls.model-providers.action.delete')}
+                      on_click={() => props.on_delete_provider(provider.name)}
                     />
                   </>
-                )}
-              />
-            )}
+                )
+              }}
+            />
           </UiGroup>
         </div>
+      )}
 
-        {props.api_configurations.length > 0 && (
-          <>
-            <div
-              ref={(el) =>
-                props.set_section_ref('section:api:group:api-defaults', el)
-              }
-            >
-              <UiGroup title={t('api-calls.default-configurations.title')}>
-                <DefaultConfigurationSelector
-                  title={t(
-                    'api-calls.default-configurations.tool.patch-repair'
-                  )}
-                  value={props.defaults['patch-repair'] || null}
-                  configurations={selector_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration('patch-repair', null)
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration('patch-repair')
-                  }
-                  translations={{
-                    select: t('api-calls.configurations.action.select-default'),
-                    unset: t('api-calls.configurations.action.unset-default')
-                  }}
-                />
-                <DefaultConfigurationSelector
-                  title={t(
-                    'api-calls.default-configurations.tool.code-at-cursor'
-                  )}
-                  value={props.defaults['code-at-cursor'] || null}
-                  configurations={selector_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration(
-                      'code-at-cursor',
-                      null
-                    )
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration('code-at-cursor')
-                  }
-                  translations={{
-                    select: t('api-calls.configurations.action.select-default'),
-                    unset: t('api-calls.configurations.action.unset-default')
-                  }}
-                />
-                <DefaultConfigurationSelector
-                  title={t(
-                    'api-calls.default-configurations.tool.commit-messages'
-                  )}
-                  value={props.defaults['commit-messages'] || null}
-                  configurations={selector_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration(
-                      'commit-messages',
-                      null
-                    )
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration('commit-messages')
-                  }
-                  translations={{
-                    select: t('api-calls.configurations.action.select-default'),
-                    unset: t('api-calls.configurations.action.unset-default')
-                  }}
-                />
-                <DefaultConfigurationSelector
-                  title={t(
-                    'api-calls.default-configurations.tool.intelligent-file-search'
-                  )}
-                  value={props.defaults['intelligent-file-search'] || null}
-                  configurations={selector_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration(
-                      'intelligent-file-search',
-                      null
-                    )
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration(
-                      'intelligent-file-search'
-                    )
-                  }
-                  translations={{
-                    select: t('api-calls.configurations.action.select-default'),
-                    unset: t('api-calls.configurations.action.unset-default')
-                  }}
-                />
+      <div
+        ref={(el) =>
+          props.set_section_ref('section:api:group:api-configurations', el)
+        }
+      >
+        <UiGroup
+          title={t('api-calls.configurations.title')}
+          notice_slot={
+            !props.api_configurations.length ? (
+              <UiNotice
+                type="warning"
+                slot_right={
+                  <Button on_click={() => props.on_add_api_configuration()}>
+                    {t('action.add-new')}
+                  </Button>
+                }
+              >
+                {t('common.missing-configuration')}
+              </UiNotice>
+            ) : null
+          }
+        >
+          {props.api_configurations.length > 0 && (
+            <SortableList
+              items={props.api_configurations}
+              on_reorder={(reordered) => {
+                props.set_api_configurations(reordered)
+                props.on_reorder_api_configurations(reordered)
+              }}
+              on_add={props.on_add_api_configuration}
+              translations={{
+                add_title: t('action.add-new'),
+                item_text: t('api-calls.configurations.item'),
+                items_text: t('api-calls.configurations.items'),
+                items_text_many: t('api-calls.configurations.items-many')
+              }}
+              render_content={(config) => {
+                const details: string[] = [config.model_provider_name]
+                if (config.reasoning_effort) {
+                  details.push(config.reasoning_effort)
+                }
 
-                <DefaultConfigurationSelector
-                  title={t('api-calls.default-configurations.tool.voice-input')}
-                  value={props.defaults['voice-input'] || null}
-                  configurations={selector_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration('voice-input', null)
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration('voice-input')
-                  }
-                  translations={{
-                    select: t('api-calls.configurations.action.select-default'),
-                    unset: t('api-calls.configurations.action.unset-default')
-                  }}
-                />
-              </UiGroup>
-            </div>
-
-            <div
-              ref={(el) =>
-                props.set_section_ref('section:api:group:api-behavior', el)
-              }
-            >
-              <UiGroup title={t('api-calls.behavior.title')}>
-                <UiItem
-                  title={t('api-calls.behavior.patch-repair.auto-run.title')}
-                  description={t(
-                    'api-calls.behavior.patch-repair.auto-run.description'
-                  )}
-                  slot_right={
-                    <UiToggler
-                      is_on={props.auto_run_patch_repair}
-                      on_toggle={props.on_auto_run_patch_repair_change}
-                    />
-                  }
-                />
-              </UiGroup>
-            </div>
-
-            <div
-              ref={(el) =>
-                props.set_section_ref(
-                  'section:api:group:system-instructions',
-                  el
+                return (
+                  <div
+                    style={{
+                      flex: 1,
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis'
+                    }}
+                  >
+                    <span>{config.model}</span>
+                    {details.length > 0 && (
+                      <span
+                        style={{
+                          marginLeft: '0.5em',
+                          opacity: 0.7,
+                          fontSize: '0.9em'
+                        }}
+                      >
+                        {details.join(' · ')}
+                      </span>
+                    )}
+                  </div>
                 )
-              }
-            >
-              <UiGroup title={t('api-calls.system-instructions.title')}>
-                <UiItem
-                  title={t('api-calls.system-instructions.edit-files.title')}
-                  description={t(
-                    'api-calls.system-instructions.edit-files.description'
-                  )}
-                  is_toggleable
-                  translations={{
-                    expand: t('common.expand'),
-                    collapse: t('common.collapse')
-                  }}
-                >
-                  <UiTextarea
-                    value={props.edit_files_instructions}
-                    min_rows={3}
-                    on_change={props.set_edit_files_instructions}
-                    on_blur={props.on_edit_files_instructions_blur}
-                    action_icon={
-                      props.edit_files_instructions !==
-                      props.default_edit_files_instructions
-                        ? 'discard'
-                        : undefined
+              }}
+              render_actions={(config, index) => (
+                <>
+                  <IconButton
+                    codicon_icon={config.is_pinned ? 'pinned' : 'pin'}
+                    title={
+                      config.is_pinned ? t('action.unpin') : t('action.pin')
                     }
-                    action_title={t('general.action.restore-default')}
-                    on_action_click={props.on_restore_edit_files_instructions}
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_toggle_pinned_api_configuration(config)
+                    }}
                   />
-                </UiItem>
-              </UiGroup>
-            </div>
-          </>
-        )}
-      </UiSection>
-    )
-  }
-)
+                  <IconButton
+                    codicon_icon="insert"
+                    title={t('action.insert')}
+                    on_click={() =>
+                      props.on_add_api_configuration({
+                        insertion_index: index
+                      })
+                    }
+                  />
+                  <IconButton
+                    codicon_icon="edit"
+                    title={t('api-calls.configurations.action.edit')}
+                    on_click={() => props.on_edit_api_configuration(config.id)}
+                  />
+                  <IconButton
+                    codicon_icon="trash"
+                    title={t('api-calls.configurations.action.delete')}
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_delete_api_configuration(config.id)
+                    }}
+                  />
+                </>
+              )}
+            />
+          )}
+        </UiGroup>
+      </div>
+
+      {props.api_configurations.length > 0 && (
+        <>
+          <div
+            ref={(el) =>
+              props.set_section_ref('section:api:group:api-defaults', el)
+            }
+          >
+            <UiGroup title={t('api-calls.default-configurations.title')}>
+              <DefaultConfigurationSelector
+                title={t('api-calls.default-configurations.tool.patch-repair')}
+                value={props.defaults['patch-repair'] || null}
+                configurations={selector_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration('patch-repair', null)
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('patch-repair')
+                }
+                translations={{
+                  select: t('api-calls.configurations.action.select-default'),
+                  unset: t('api-calls.configurations.action.unset-default')
+                }}
+              />
+              <DefaultConfigurationSelector
+                title={t(
+                  'api-calls.default-configurations.tool.code-at-cursor'
+                )}
+                value={props.defaults['code-at-cursor'] || null}
+                configurations={selector_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration('code-at-cursor', null)
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('code-at-cursor')
+                }
+                translations={{
+                  select: t('api-calls.configurations.action.select-default'),
+                  unset: t('api-calls.configurations.action.unset-default')
+                }}
+              />
+              <DefaultConfigurationSelector
+                title={t(
+                  'api-calls.default-configurations.tool.commit-messages'
+                )}
+                value={props.defaults['commit-messages'] || null}
+                configurations={selector_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration(
+                    'commit-messages',
+                    null
+                  )
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('commit-messages')
+                }
+                translations={{
+                  select: t('api-calls.configurations.action.select-default'),
+                  unset: t('api-calls.configurations.action.unset-default')
+                }}
+              />
+              <DefaultConfigurationSelector
+                title={t(
+                  'api-calls.default-configurations.tool.intelligent-file-search'
+                )}
+                value={props.defaults['intelligent-file-search'] || null}
+                configurations={selector_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration(
+                    'intelligent-file-search',
+                    null
+                  )
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration(
+                    'intelligent-file-search'
+                  )
+                }
+                translations={{
+                  select: t('api-calls.configurations.action.select-default'),
+                  unset: t('api-calls.configurations.action.unset-default')
+                }}
+              />
+
+              <DefaultConfigurationSelector
+                title={t('api-calls.default-configurations.tool.voice-input')}
+                value={props.defaults['voice-input'] || null}
+                configurations={selector_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration('voice-input', null)
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('voice-input')
+                }
+                translations={{
+                  select: t('api-calls.configurations.action.select-default'),
+                  unset: t('api-calls.configurations.action.unset-default')
+                }}
+              />
+            </UiGroup>
+          </div>
+
+          <div
+            ref={(el) =>
+              props.set_section_ref('section:api:group:api-behavior', el)
+            }
+          >
+            <UiGroup title={t('api-calls.behavior.title')}>
+              <UiItem
+                title={t('api-calls.behavior.patch-repair.auto-run.title')}
+                description={t(
+                  'api-calls.behavior.patch-repair.auto-run.description'
+                )}
+                slot_right={
+                  <UiToggler
+                    is_on={props.auto_run_patch_repair}
+                    on_toggle={props.on_auto_run_patch_repair_change}
+                  />
+                }
+              />
+            </UiGroup>
+          </div>
+
+          <div
+            ref={(el) =>
+              props.set_section_ref('section:api:group:system-instructions', el)
+            }
+          >
+            <UiGroup title={t('api-calls.system-instructions.title')}>
+              <UiItem
+                title={t('api-calls.system-instructions.edit-files.title')}
+                description={t(
+                  'api-calls.system-instructions.edit-files.description'
+                )}
+                is_toggleable
+                translations={{
+                  expand: t('common.expand'),
+                  collapse: t('common.collapse')
+                }}
+              >
+                <UiTextarea
+                  value={props.edit_files_instructions}
+                  min_rows={3}
+                  on_change={props.set_edit_files_instructions}
+                  on_blur={props.on_edit_files_instructions_blur}
+                  action_icon={
+                    props.edit_files_instructions !==
+                    props.default_edit_files_instructions
+                      ? 'discard'
+                      : undefined
+                  }
+                  action_title={t('general.action.restore-default')}
+                  on_action_click={props.on_restore_edit_files_instructions}
+                />
+              </UiItem>
+            </UiGroup>
+          </div>
+        </>
+      )}
+    </UiSection>
+  )
+})
 
 ApiSection.displayName = 'ApiSection'

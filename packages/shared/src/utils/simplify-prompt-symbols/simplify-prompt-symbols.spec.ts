@@ -56,8 +56,7 @@ describe('simplify_prompt_symbols', () => {
   })
 
   it('should handle multiple replacements', () => {
-    const prompt =
-      '#Selection and #Fragment(a.ts:1:1-2:2) with #Changes(dev)'
+    const prompt = '#Selection and #Fragment(a.ts:1:1-2:2) with #Changes(dev)'
     expect(simplify_prompt_symbols({ prompt })).toBe(
       '[Selection] and [Fragment] with [Changes]'
     )

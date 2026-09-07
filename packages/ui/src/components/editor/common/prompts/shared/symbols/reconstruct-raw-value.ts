@@ -92,10 +92,10 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
       const end_line = el.dataset.endLine
       const end_col = el.dataset.endCol
       if (!path || !start_line || !start_col || !end_line || !end_col) return ''
-      
+
       const regex = /Pasted \d+ lines?/
       const match = inner_content.match(regex)
-      
+
       if (match && match.index !== undefined) {
         const prefix = inner_content.substring(0, match.index)
         const suffix = inner_content.substring(match.index + match[0].length)

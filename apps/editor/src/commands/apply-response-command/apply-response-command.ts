@@ -96,7 +96,7 @@ export const apply_response_command = (params: {
             )
             return
           }
-        } else        if (!response) {
+        } else if (!response) {
           vscode.window.showErrorMessage(
             t('command.apply-response.error.response-missing')
           )

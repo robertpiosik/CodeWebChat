@@ -170,7 +170,9 @@ export const perform_intelligent_search_mode = async (params: {
             }
 
             quick_pick.title = t('feature.search-files.title.intelligent')
-            quick_pick.placeholder = t('common.action-quick-pick.placeholder.no-tokens')
+            quick_pick.placeholder = t(
+              'common.action-quick-pick.placeholder.no-tokens'
+            )
 
             const close_button = {
               iconPath: new vscode.ThemeIcon('close'),

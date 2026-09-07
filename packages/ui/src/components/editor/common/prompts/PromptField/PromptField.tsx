@@ -866,8 +866,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         ref={container_inner_ref}
         className={cn(styles.container__inner, {
           [styles['container__inner--selecting']]: is_text_selecting,
-          [styles['container__inner--active-border-blue']]: props.active_border_color === 'blue',
-          [styles['container__inner--active-border-purple']]: props.active_border_color === 'purple'
+          [styles['container__inner--active-border-blue']]:
+            props.active_border_color === 'blue',
+          [styles['container__inner--active-border-purple']]:
+            props.active_border_color === 'purple'
         })}
         onKeyDown={handle_container_key_down}
         onClick={() => input_ref.current?.focus()}
@@ -875,7 +877,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         <div className={styles['input-wrapper']}>
           {!props.value && (
             <div className={styles['placeholder-mirror']}>
-              <div className={styles['top-right']} style={{ visibility: 'hidden' }}>
+              <div
+                className={styles['top-right']}
+                style={{ visibility: 'hidden' }}
+              >
                 {has_content && props.prompt_token_count > 250 && (
                   <div className={styles['top-right__prompt-token-count']}>
                     {display_token_count(props.prompt_token_count)}

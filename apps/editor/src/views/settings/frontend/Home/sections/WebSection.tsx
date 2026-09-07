@@ -54,260 +54,252 @@ const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   Z: 'Z_AI'
 }
 
-export const WebSection = forwardRef<HTMLDivElement, Props>(
-  (props, ref) => {
-    const { t } = use_translation()
+export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
+  const { t } = use_translation()
 
-    const has_gemini = props.web_configurations.some(
-      (c) => c.chatbot == 'Gemini'
+  const has_gemini = props.web_configurations.some((c) => c.chatbot == 'Gemini')
+  const has_ai_studio = props.web_configurations.some(
+    (c) => c.chatbot == 'AI Studio'
+  )
+
+  const [gemini_user_id_str, set_gemini_user_id_str] = useState('')
+  const [ai_studio_user_id_str, set_ai_studio_user_id_str] = useState('')
+
+  useEffect(() => {
+    set_gemini_user_id_str(
+      props.gemini_user_id === null || props.gemini_user_id === undefined
+        ? ''
+        : String(props.gemini_user_id)
     )
-    const has_ai_studio = props.web_configurations.some(
-      (c) => c.chatbot == 'AI Studio'
+  }, [props.gemini_user_id])
+
+  useEffect(() => {
+    set_ai_studio_user_id_str(
+      props.ai_studio_user_id === null || props.ai_studio_user_id === undefined
+        ? ''
+        : String(props.ai_studio_user_id)
     )
+  }, [props.ai_studio_user_id])
 
-    const [gemini_user_id_str, set_gemini_user_id_str] = useState('')
-    const [ai_studio_user_id_str, set_ai_studio_user_id_str] = useState('')
-
-    useEffect(() => {
-      set_gemini_user_id_str(
-        props.gemini_user_id === null || props.gemini_user_id === undefined
-          ? ''
-          : String(props.gemini_user_id)
-      )
-    }, [props.gemini_user_id])
-
-    useEffect(() => {
-      set_ai_studio_user_id_str(
-        props.ai_studio_user_id === null ||
-          props.ai_studio_user_id === undefined
-          ? ''
-          : String(props.ai_studio_user_id)
-      )
-    }, [props.ai_studio_user_id])
-
-    const handle_gemini_user_id_blur = () => {
-      if (gemini_user_id_str == '') {
-        props.on_gemini_user_id_change(null)
-        return
-      }
-      const num_id = parseInt(gemini_user_id_str, 10)
-      if (!isNaN(num_id) && num_id >= 0) props.on_gemini_user_id_change(num_id)
+  const handle_gemini_user_id_blur = () => {
+    if (gemini_user_id_str == '') {
+      props.on_gemini_user_id_change(null)
+      return
     }
+    const num_id = parseInt(gemini_user_id_str, 10)
+    if (!isNaN(num_id) && num_id >= 0) props.on_gemini_user_id_change(num_id)
+  }
 
-    const handle_ai_studio_user_id_blur = () => {
-      if (ai_studio_user_id_str == '') {
-        props.on_ai_studio_user_id_change(null)
-        return
-      }
-      const num_id = parseInt(ai_studio_user_id_str, 10)
-      if (!isNaN(num_id) && num_id >= 0)
-        props.on_ai_studio_user_id_change(num_id)
+  const handle_ai_studio_user_id_blur = () => {
+    if (ai_studio_user_id_str == '') {
+      props.on_ai_studio_user_id_change(null)
+      return
     }
+    const num_id = parseInt(ai_studio_user_id_str, 10)
+    if (!isNaN(num_id) && num_id >= 0) props.on_ai_studio_user_id_change(num_id)
+  }
 
-    return (
-      <UiSection
-        ref={ref}
-        title={t('web.title')}
-        subtitle={t('chatbots.subtitle')}
+  return (
+    <UiSection
+      ref={ref}
+      title={t('web.title')}
+      subtitle={t('chatbots.subtitle')}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <UiNotice type="info">{t('chatbots.notice')}</UiNotice>
+      </div>
+      <div
+        ref={(el) =>
+          props.set_section_ref('section:web:group:web-configurations', el)
+        }
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <UiNotice type="info">{t('chatbots.notice')}</UiNotice>
-        </div>
-        <div
-          ref={(el) =>
-            props.set_section_ref('section:web:group:web-configurations', el)
+        <UiGroup
+          title={t('chatbots.configurations.title')}
+          notice_slot={
+            !props.web_configurations.length ? (
+              <UiNotice
+                type="warning"
+                slot_right={
+                  <Button on_click={() => props.on_add_web_configuration()}>
+                    {t('action.add-new')}
+                  </Button>
+                }
+              >
+                {t('common.missing-configuration')}
+              </UiNotice>
+            ) : null
           }
         >
-          <UiGroup
-            title={t('chatbots.configurations.title')}
-            notice_slot={
-              !props.web_configurations.length ? (
-                <UiNotice
-                  type="warning"
-                  slot_right={
-                    <Button on_click={() => props.on_add_web_configuration()}>
-                      {t('action.add-new')}
-                    </Button>
-                  }
-                >
-                  {t('common.missing-configuration')}
-                </UiNotice>
-              ) : null
-            }
-          >
-            {props.web_configurations.length > 0 && (
-              <SortableList
-                items={props.web_configurations.map((c, index) => ({
-                  ...c,
-                  id: c.name ?? `unnamed-${index}`
-                }))}
-                on_reorder={(reordered) => {
-                  const restored = reordered.map(
-                    ({ id: _id, ...rest }) => rest as WebConfiguration
-                  )
-                  props.set_web_configurations(restored)
-                  props.on_reorder_web_configurations(restored)
-                }}
-                on_add={props.on_add_web_configuration}
-                translations={{
-                  add_title: t('action.add-new'),
-                  item_text: t('chatbots.configurations.item'),
-                  items_text: t('chatbots.configurations.items'),
-                  items_text_many: t('chatbots.configurations.items-many')
-                }}
-                render_content={(config) => {
-                  const is_unnamed =
-                    !config.name ||
-                    config.name.startsWith('unnamed-') ||
-                    /^\(\d+\)$/.test(config.name.trim())
-                  const display_name = is_unnamed
-                    ? config.chatbot!
-                    : config.name!.replace(/ \(\d+\)$/, '')
+          {props.web_configurations.length > 0 && (
+            <SortableList
+              items={props.web_configurations.map((c, index) => ({
+                ...c,
+                id: c.name ?? `unnamed-${index}`
+              }))}
+              on_reorder={(reordered) => {
+                const restored = reordered.map(
+                  ({ id: _id, ...rest }) => rest as WebConfiguration
+                )
+                props.set_web_configurations(restored)
+                props.on_reorder_web_configurations(restored)
+              }}
+              on_add={props.on_add_web_configuration}
+              translations={{
+                add_title: t('action.add-new'),
+                item_text: t('chatbots.configurations.item'),
+                items_text: t('chatbots.configurations.items'),
+                items_text_many: t('chatbots.configurations.items-many')
+              }}
+              render_content={(config) => {
+                const is_unnamed =
+                  !config.name ||
+                  config.name.startsWith('unnamed-') ||
+                  /^\(\d+\)$/.test(config.name.trim())
+                const display_name = is_unnamed
+                  ? config.chatbot!
+                  : config.name!.replace(/ \(\d+\)$/, '')
 
-                  const get_details = (): string[] => {
-                    const { chatbot, model, reasoning_effort } = config
-                    const model_display_name =
-                      model && chatbot && CHATBOTS[chatbot]
-                        ? CHATBOTS[chatbot].models?.[model]?.label || model
-                        : null
+                const get_details = (): string[] => {
+                  const { chatbot, model, reasoning_effort } = config
+                  const model_display_name =
+                    model && chatbot && CHATBOTS[chatbot]
+                      ? CHATBOTS[chatbot].models?.[model]?.label || model
+                      : null
 
-                    const details: string[] = []
-                    if (is_unnamed) {
-                      if (model_display_name) details.push(model_display_name)
-                    } else if (model_display_name) {
-                      details.push(chatbot!, model_display_name)
-                    } else if (chatbot) {
-                      details.push(chatbot)
-                    }
-
-                    if (reasoning_effort) {
-                      details.push(reasoning_effort)
-                    }
-
-                    return details
+                  const details: string[] = []
+                  if (is_unnamed) {
+                    if (model_display_name) details.push(model_display_name)
+                  } else if (model_display_name) {
+                    details.push(chatbot!, model_display_name)
+                  } else if (chatbot) {
+                    details.push(chatbot)
                   }
 
-                  const details = get_details()
+                  if (reasoning_effort) {
+                    details.push(reasoning_effort)
+                  }
 
-                  return (
-                    <>
-                      {config.chatbot && chatbot_to_icon[config.chatbot] && (
-                        <div
-                          style={{
-                            width: 16,
-                            height: 16,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fill: 'var(--vscode-foreground)'
-                          }}
-                        >
-                          <Icon variant={chatbot_to_icon[config.chatbot]} />
-                        </div>
-                      )}
+                  return details
+                }
+
+                const details = get_details()
+
+                return (
+                  <>
+                    {config.chatbot && chatbot_to_icon[config.chatbot] && (
                       <div
                         style={{
-                          flex: 1,
-                          overflow: 'hidden',
-                          whiteSpace: 'nowrap',
-                          textOverflow: 'ellipsis'
+                          width: 16,
+                          height: 16,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fill: 'var(--vscode-foreground)'
                         }}
                       >
-                        <span>{display_name}</span>
-                        {details.length > 0 && (
-                          <span
-                            style={{
-                              marginLeft: '0.5em',
-                              opacity: 0.7,
-                              fontSize: '0.9em'
-                            }}
-                          >
-                            {details.join(' · ')}
-                          </span>
-                        )}
+                        <Icon variant={chatbot_to_icon[config.chatbot]} />
                       </div>
-                    </>
-                  )
-                }}
-                render_actions={(config, index) => (
-                  <>
-                    <IconButton
-                      codicon_icon={config.is_pinned ? 'pinned' : 'pin'}
-                      title={
-                        config.is_pinned ? t('action.unpin') : t('action.pin')
-                      }
-                      on_click={(e) => {
-                        e.stopPropagation()
-                        props.on_toggle_pinned_web_configuration(config)
+                    )}
+                    <div
+                      style={{
+                        flex: 1,
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis'
                       }}
-                    />
-                    <IconButton
-                      codicon_icon="insert"
-                      title={t('action.insert')}
-                      on_click={() =>
-                        props.on_add_web_configuration({
-                          insertion_index: index
-                        })
-                      }
-                    />
-                    <IconButton
-                      codicon_icon="edit"
-                      title={t('chatbots.configurations.action.edit')}
-                      on_click={() =>
-                        props.on_edit_web_configuration(config.id)
-                      }
-                    />
-                    <IconButton
-                      codicon_icon="trash"
-                      title={t('chatbots.configurations.action.delete')}
-                      on_click={(e) => {
-                        e.stopPropagation()
-                        props.on_delete_web_configuration(config.id)
-                      }}
-                    />
+                    >
+                      <span>{display_name}</span>
+                      {details.length > 0 && (
+                        <span
+                          style={{
+                            marginLeft: '0.5em',
+                            opacity: 0.7,
+                            fontSize: '0.9em'
+                          }}
+                        >
+                          {details.join(' · ')}
+                        </span>
+                      )}
+                    </div>
                   </>
-                )}
-              />
-            )}
-            {has_gemini && (
-              <UiItem
-                title={t('chatbots.configurations.gemini-user-id.title')}
-                description={t(
-                  'chatbots.configurations.gemini-user-id.description'
-                )}
-                slot_right={
-                  <UiInput
-                    type="number"
-                    value={gemini_user_id_str}
-                    on_change={set_gemini_user_id_str}
-                    on_blur={handle_gemini_user_id_blur}
-                    max_width={60}
+                )
+              }}
+              render_actions={(config, index) => (
+                <>
+                  <IconButton
+                    codicon_icon={config.is_pinned ? 'pinned' : 'pin'}
+                    title={
+                      config.is_pinned ? t('action.unpin') : t('action.pin')
+                    }
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_toggle_pinned_web_configuration(config)
+                    }}
                   />
-                }
-              />
-            )}
-            {has_ai_studio && (
-              <UiItem
-                title={t('chatbots.configurations.ai-studio-user-id.title')}
-                description={t(
-                  'chatbots.configurations.ai-studio-user-id.description'
-                )}
-                slot_right={
-                  <UiInput
-                    type="number"
-                    value={ai_studio_user_id_str}
-                    on_change={set_ai_studio_user_id_str}
-                    on_blur={handle_ai_studio_user_id_blur}
-                    max_width={60}
+                  <IconButton
+                    codicon_icon="insert"
+                    title={t('action.insert')}
+                    on_click={() =>
+                      props.on_add_web_configuration({
+                        insertion_index: index
+                      })
+                    }
                   />
-                }
-              />
-            )}
-          </UiGroup>
-        </div>
-      </UiSection>
-    )
-  }
-)
+                  <IconButton
+                    codicon_icon="edit"
+                    title={t('chatbots.configurations.action.edit')}
+                    on_click={() => props.on_edit_web_configuration(config.id)}
+                  />
+                  <IconButton
+                    codicon_icon="trash"
+                    title={t('chatbots.configurations.action.delete')}
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_delete_web_configuration(config.id)
+                    }}
+                  />
+                </>
+              )}
+            />
+          )}
+          {has_gemini && (
+            <UiItem
+              title={t('chatbots.configurations.gemini-user-id.title')}
+              description={t(
+                'chatbots.configurations.gemini-user-id.description'
+              )}
+              slot_right={
+                <UiInput
+                  type="number"
+                  value={gemini_user_id_str}
+                  on_change={set_gemini_user_id_str}
+                  on_blur={handle_gemini_user_id_blur}
+                  max_width={60}
+                />
+              }
+            />
+          )}
+          {has_ai_studio && (
+            <UiItem
+              title={t('chatbots.configurations.ai-studio-user-id.title')}
+              description={t(
+                'chatbots.configurations.ai-studio-user-id.description'
+              )}
+              slot_right={
+                <UiInput
+                  type="number"
+                  value={ai_studio_user_id_str}
+                  on_change={set_ai_studio_user_id_str}
+                  on_blur={handle_ai_studio_user_id_blur}
+                  max_width={60}
+                />
+              }
+            />
+          )}
+        </UiGroup>
+      </div>
+    </UiSection>
+  )
+})
 
 WebSection.displayName = 'WebSection'

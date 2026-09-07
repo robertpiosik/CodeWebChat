@@ -71,7 +71,11 @@
     var(--cwc-green-foreground) 12%,
     transparent
   );
-  --cwc-red-background: color-mix(in srgb, var(--cwc-red-foreground) 12%, transparent);
+  --cwc-red-background: color-mix(
+    in srgb,
+    var(--cwc-red-foreground) 12%,
+    transparent
+  );
   --cwc-red-background-dark: color-mix(
     in srgb,
     var(--cwc-red-foreground) 24%,

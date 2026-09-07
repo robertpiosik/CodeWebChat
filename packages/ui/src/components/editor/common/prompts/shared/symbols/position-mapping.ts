@@ -55,7 +55,10 @@ export const map_display_pos_to_raw_pos = (params: {
       display_match_length = short_hash.length
       is_replacement_match = true
     } else if (fragment_symbol) {
-      const line_count = Math.max(1, fragment_end_line - fragment_start_line + 1)
+      const line_count = Math.max(
+        1,
+        fragment_end_line - fragment_start_line + 1
+      )
       const lines_text = line_count === 1 ? 'line' : 'lines'
       display_match_length = `Pasted ${line_count} ${lines_text}`.length
       is_replacement_match = true
@@ -179,7 +182,10 @@ export const map_raw_pos_to_display_pos = (params: {
       display_match_length = short_hash.length
       is_replacement_match = true
     } else if (fragment_symbol) {
-      const line_count = Math.max(1, fragment_end_line - fragment_start_line + 1)
+      const line_count = Math.max(
+        1,
+        fragment_end_line - fragment_start_line + 1
+      )
       const lines_text = line_count === 1 ? 'line' : 'lines'
       display_match_length = `Pasted ${line_count} ${lines_text}`.length
       is_replacement_match = true

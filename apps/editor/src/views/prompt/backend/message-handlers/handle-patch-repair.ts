@@ -127,12 +127,14 @@ export const handle_patch_repair = async (params: {
     params.prompt_view_provider.extension_context
   )
 
-  const api_configurations = await model_providers_manager.get_api_configurations()
+  const api_configurations =
+    await model_providers_manager.get_api_configurations()
   const has_api_configurations = api_configurations.length > 0
 
   let skip_action_quick_pick = false
   if (params.is_auto_run) {
-    const default_config = await model_providers_manager.get_default_patch_repair_api_configuration()
+    const default_config =
+      await model_providers_manager.get_default_patch_repair_api_configuration()
     if (default_config || api_configurations.length === 1) {
       skip_action_quick_pick = true
     }
@@ -164,15 +166,15 @@ export const handle_patch_repair = async (params: {
               }
             ]
           : []),
-              {
-                label: t('common.action.copy-prompt'),
-                id: 'copy'
-              },
-              {
-                label: 'Apply from clipboard',
-                id: 'apply-from-clipboard'
-              }
-            ]
+        {
+          label: t('common.action.copy-prompt'),
+          id: 'copy'
+        },
+        {
+          label: 'Apply from clipboard',
+          id: 'apply-from-clipboard'
+        }
+      ]
 
       const last_action_id =
         params.prompt_view_provider.extension_context.workspaceState.get<string>(
@@ -193,7 +195,9 @@ export const handle_patch_repair = async (params: {
       }
 
       quick_pick.title = 'Prompt Repair'
-      quick_pick.placeholder = t('common.action-quick-pick.placeholder.no-tokens')
+      quick_pick.placeholder = t(
+        'common.action-quick-pick.placeholder.no-tokens'
+      )
 
       let is_resolved = false
 
@@ -234,9 +238,10 @@ export const handle_patch_repair = async (params: {
     let chatbot_prompt = ''
     for (const item of files_to_process) {
       const backticks = item.file_state.content.includes('```') ? '````' : '```'
-      const display_path = !is_single_root_folder_workspace && item.file_state.workspace_name
-        ? `${item.file_state.workspace_name}/${item.file_state.file_path}`
-        : item.file_state.file_path
+      const display_path =
+        !is_single_root_folder_workspace && item.file_state.workspace_name
+          ? `${item.file_state.workspace_name}/${item.file_state.file_path}`
+          : item.file_state.file_path
       chatbot_prompt += `# File: \`${display_path}\`\n\n${backticks}\n${item.file_state.content}\n${backticks}\n\n${item.instructions}\n\n`
     }
     chatbot_prompt += `# Output formatting\n\n`
@@ -267,8 +272,12 @@ export const handle_patch_repair = async (params: {
     } else {
       const recents_key = get_last_used_web_configuration_key('patch-repair')
       const last_selected_name =
-        params.prompt_view_provider.extension_context.workspaceState.get<string>(recents_key) ??
-        params.prompt_view_provider.extension_context.globalState.get<string>(recents_key)
+        params.prompt_view_provider.extension_context.workspaceState.get<string>(
+          recents_key
+        ) ??
+        params.prompt_view_provider.extension_context.globalState.get<string>(
+          recents_key
+        )
 
       const result = await show_configuration_quick_pick({
         items: valid_web_configurations,
@@ -319,24 +328,32 @@ export const handle_patch_repair = async (params: {
     if (selected_web_configuration_name) {
       let chatbot_prompt = ''
       for (const item of files_to_process) {
-        const backticks = item.file_state.content.includes('```') ? '````' : '```'
-        const display_path = !is_single_root_folder_workspace && item.file_state.workspace_name
-          ? `${item.file_state.workspace_name}/${item.file_state.file_path}`
-          : item.file_state.file_path
+        const backticks = item.file_state.content.includes('```')
+          ? '````'
+          : '```'
+        const display_path =
+          !is_single_root_folder_workspace && item.file_state.workspace_name
+            ? `${item.file_state.workspace_name}/${item.file_state.file_path}`
+            : item.file_state.file_path
         chatbot_prompt += `# File: \`${display_path}\`\n\n${backticks}\n${item.file_state.content}\n${backticks}\n\n${item.instructions}\n\n`
       }
       chatbot_prompt += `# Output formatting\n\n`
       chatbot_prompt += `${patch_repair_format_instructions}\n\n`
       chatbot_prompt += `# Task\n\n${patch_repair_task_instructions}`
 
-      const sent = await params.prompt_view_provider.websocket_server_instance.initialize_chat({
-        text: chatbot_prompt,
-        web_configuration_name: selected_web_configuration_name,
-        inject_apply_response_button: true
-      })
+      const sent =
+        await params.prompt_view_provider.websocket_server_instance.initialize_chat(
+          {
+            text: chatbot_prompt,
+            web_configuration_name: selected_web_configuration_name,
+            inject_apply_response_button: true
+          }
+        )
 
       if (sent) {
-        vscode.window.showInformationMessage('Continue in the connected browser')
+        vscode.window.showInformationMessage(
+          'Continue in the connected browser'
+        )
       }
     }
 

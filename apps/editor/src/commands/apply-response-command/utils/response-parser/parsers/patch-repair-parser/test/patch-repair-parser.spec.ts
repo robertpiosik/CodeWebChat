@@ -3,7 +3,8 @@ import { parse_response } from '../../..'
 describe('patch-repair-parser', () => {
   describe('parse_response', () => {
     it('parses patch repair format with file path', () => {
-      const text = '### Patch repair: `src/index.ts`\n\n```typescript\nconsole.log("hello");\n```\n'
+      const text =
+        '### Patch repair: `src/index.ts`\n\n```typescript\nconsole.log("hello");\n```\n'
       const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
@@ -18,7 +19,8 @@ describe('patch-repair-parser', () => {
     })
 
     it('parses patched file format with file path and surrounding text', () => {
-      const text = 'Before.\n\n### Patched file: `src/index.ts`\n\n```typescript\nconsole.log("hello");\n```\n\nAfter.'
+      const text =
+        'Before.\n\n### Patched file: `src/index.ts`\n\n```typescript\nconsole.log("hello");\n```\n\nAfter.'
       const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true

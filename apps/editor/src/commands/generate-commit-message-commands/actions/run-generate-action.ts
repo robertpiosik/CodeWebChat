@@ -52,6 +52,7 @@ export const run_generate_action = async (params: {
   let files_staged_by_action = false
   let is_single_change_flow = false
   let show_quick_pick = false
+  let current_action: string | undefined = undefined
   const selection_state: { files?: string[] } = {}
 
   const repository = await get_repository_for_commit(params.source_control)
@@ -116,7 +117,6 @@ export const run_generate_action = async (params: {
         await model_providers_manager.get_api_configurations()
       const has_api_configurations = api_configurations.length > 0
 
-      let current_action: string | undefined = undefined
       let go_back_to_prompt_data = false
       let action_completed = false
       let final_api_prompt: string | undefined = undefined
@@ -208,6 +208,7 @@ export const run_generate_action = async (params: {
           )
 
           if (current_action == 'back') {
+            current_action = undefined
             if (was_empty_stage) {
               if (!show_back_button) {
                 await vscode.commands.executeCommand(
@@ -898,7 +899,11 @@ export const run_generate_action = async (params: {
     }
 
     if (go_back) {
-      show_quick_pick = true
+      if (current_action === 'make-api') {
+        show_quick_pick = true
+      } else {
+        current_action = undefined
+      }
       continue
     }
 

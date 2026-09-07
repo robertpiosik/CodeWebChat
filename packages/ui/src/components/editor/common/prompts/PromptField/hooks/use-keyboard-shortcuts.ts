@@ -33,7 +33,13 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
       }
 
       let format: EditFormat | undefined
-      if (e.altKey && left_alt_pressed_ref.current && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
+      if (
+        e.altKey &&
+        left_alt_pressed_ref.current &&
+        !e.shiftKey &&
+        !e.ctrlKey &&
+        !e.metaKey
+      ) {
         if (e.code == 'Escape') {
           e.preventDefault()
           if (props.on_target_change) {
@@ -132,7 +138,12 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
       e.stopPropagation()
       return
     }
-    if (e.key == 'c' && e.altKey && left_alt_pressed_ref.current && (e.ctrlKey || e.metaKey)) {
+    if (
+      e.key == 'c' &&
+      e.altKey &&
+      left_alt_pressed_ref.current &&
+      (e.ctrlKey || e.metaKey)
+    ) {
       if (
         !props.is_action_disabled &&
         props.on_copy &&
