@@ -1,5 +1,4 @@
-import { forwardRef, useEffect, useState } from 'react'
-import { Input as UiInput } from '@ui/components/editor/common/Input'
+import { forwardRef } from 'react'
 import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { Dropdown as UiDropdown } from '@ui/components/editor/common/Dropdown'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
@@ -133,6 +132,66 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
 
         <div
           ref={(el) =>
+            props.set_section_ref('section:general:group:prompt', el)
+          }
+        >
+          <UiGroup title={t('general.prompt.title')}>
+            <UiItem
+              title={t('general.prompt.templates.title')}
+              description={t('general.prompt.templates.description')}
+            >
+              <Templates
+                templates={[
+                  {
+                    key: 'templatesForEditFiles',
+                    label: 'Edit',
+                    icon: 'edit-sparkle',
+                    accent_color: 'blue',
+                    items: props.templates.templatesForEditFiles || []
+                  },
+                  {
+                    key: 'templatesForAskAboutFiles',
+                    label: 'Ask',
+                    icon: 'chat-sparkle',
+                    accent_color: 'purple',
+                    items: props.templates.templatesForAskAboutFiles || []
+                  }
+                ]}
+                on_reorder={(key, templates) =>
+                  props.on_update_templates(key, templates)
+                }
+                on_delete={props.on_delete_template}
+                on_edit={props.on_edit_template}
+                on_add={props.on_add_template}
+                translations={{
+                  item_text: t('general.prompt.templates.item'),
+                  items_text: t('general.prompt.templates.items'),
+                  items_text_many: t(
+                    'general.prompt.templates.items-many'
+                  ),
+                  expand: t('common.expand'),
+                  collapse: t('common.collapse'),
+                  add_new: t('action.add-new')
+                }}
+              />
+            </UiItem>
+            <UiItem
+              title={t('general.prompt.send-with-shift-enter.title')}
+              description={t(
+                'general.prompt.send-with-shift-enter.description'
+              )}
+              slot_right={
+                <UiToggler
+                  is_on={props.send_with_shift_enter}
+                  on_toggle={props.on_send_with_shift_enter_change}
+                />
+              }
+            />
+          </UiGroup>
+        </div>
+
+        <div
+          ref={(el) =>
             props.set_section_ref('section:general:group:context', el)
           }
         >
@@ -217,66 +276,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 on_action_click={props.on_restore_agentic_search_instructions}
               />
             </UiItem>
-          </UiGroup>
-        </div>
-
-        <div
-          ref={(el) =>
-            props.set_section_ref('section:general:group:prompt-field', el)
-          }
-        >
-          <UiGroup title={t('general.prompt-field.title')}>
-            <UiItem
-              title={t('general.prompt-field.templates.title')}
-              description={t('general.prompt-field.templates.description')}
-            >
-              <Templates
-                templates={[
-                  {
-                    key: 'templatesForEditFiles',
-                    label: 'Edit',
-                    icon: 'edit-sparkle',
-                    accent_color: 'blue',
-                    items: props.templates.templatesForEditFiles || []
-                  },
-                  {
-                    key: 'templatesForAskAboutFiles',
-                    label: 'Ask',
-                    icon: 'chat-sparkle',
-                    accent_color: 'purple',
-                    items: props.templates.templatesForAskAboutFiles || []
-                  }
-                ]}
-                on_reorder={(key, templates) =>
-                  props.on_update_templates(key, templates)
-                }
-                on_delete={props.on_delete_template}
-                on_edit={props.on_edit_template}
-                on_add={props.on_add_template}
-                translations={{
-                  item_text: t('general.prompt-field.templates.item'),
-                  items_text: t('general.prompt-field.templates.items'),
-                  items_text_many: t(
-                    'general.prompt-field.templates.items-many'
-                  ),
-                  expand: t('common.expand'),
-                  collapse: t('common.collapse'),
-                  add_new: t('action.add-new')
-                }}
-              />
-            </UiItem>
-            <UiItem
-              title={t('general.prompt-field.send-with-shift-enter.title')}
-              description={t(
-                'general.prompt-field.send-with-shift-enter.description'
-              )}
-              slot_right={
-                <UiToggler
-                  is_on={props.send_with_shift_enter}
-                  on_toggle={props.on_send_with_shift_enter_change}
-                />
-              }
-            />
           </UiGroup>
         </div>
 

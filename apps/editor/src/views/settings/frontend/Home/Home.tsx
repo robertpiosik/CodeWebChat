@@ -24,7 +24,7 @@ export type NavItem =
   | 'section:general'
   | 'section:general:group:open-links'
   | 'section:general:group:context'
-  | 'section:general:group:prompt-field'
+  | 'section:general:group:prompt'
   | 'section:general:group:commit-messages'
   | 'section:web'
   | 'section:web:group:web-configurations'
@@ -48,12 +48,12 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'general.open-links.title'
   },
   {
-    id: 'section:general:group:context',
-    label: 'general.context.title'
+    id: 'section:general:group:prompt',
+    label: 'general.prompt.title'
   },
   {
-    id: 'section:general:group:prompt-field',
-    label: 'general.prompt-field.title'
+    id: 'section:general:group:context',
+    label: 'general.context.title'
   },
   {
     id: 'section:general:group:commit-messages',
@@ -190,8 +190,8 @@ export const Home: React.FC<Props> = (props) => {
   const section_refs = useRef<Record<NavItem, HTMLDivElement | null>>({
     'section:general': null,
     'section:general:group:open-links': null,
+    'section:general:group:prompt': null,
     'section:general:group:context': null,
-    'section:general:group:prompt-field': null,
     'section:general:group:commit-messages': null,
     'section:web': null,
     'section:web:group:web-configurations': null,

@@ -199,7 +199,7 @@ export const translations = {
     hu: 'Beállításfájl Megnyitása',
     bg: 'Отваряне на файла с настройки'
   },
-  'general.prompt-field.send-with-shift-enter.title': {
+  'general.prompt.send-with-shift-enter.title': {
     en: 'Send with Shift+Enter',
     pl: 'Wyślij za pomocą Shift+Enter',
     'zh-cn': '使用 Shift+Enter 发送',
@@ -217,7 +217,7 @@ export const translations = {
     hu: 'Küldés Shift+Enterrel',
     bg: 'Изпращане с Shift+Enter'
   },
-  'general.prompt-field.send-with-shift-enter.description': {
+  'general.prompt.send-with-shift-enter.description': {
     en: 'Use Shift+Enter to send messages and Enter to insert a new line.',
     pl: 'Użyj Shift+Enter, aby wysłać wiadomość, a Enter, aby wstawić nowy wiersz.',
     'zh-cn': '使用 Shift+Enter 发送消息，使用 Enter 插入新行。',
@@ -582,23 +582,23 @@ export const translations = {
     hu: 'Minden Kijelölés Törlése',
     bg: 'Размаркиране на всички'
   },
-  'general.prompt-field.title': {
-    en: 'Prompt Field',
-    pl: 'Pole promptu',
-    'zh-cn': '提示字段',
-    ja: 'プロンプトフィールド',
-    'zh-tw': '提示欄位',
-    de: 'Prompt-Feld',
-    es: 'Campo de prompt',
-    fr: 'Champ de prompt',
-    'pt-br': 'Campo de Prompt',
-    ru: 'Поле промпта',
-    ko: '프롬프트 필드',
-    it: 'Campo prompt',
-    tr: 'İstem Alanı',
-    cs: 'Pole promptu',
-    hu: 'Prompt mező',
-    bg: 'Поле за промпт'
+  'general.prompt.title': {
+    en: 'Prompt',
+    pl: 'Prompt',
+    'zh-cn': '提示',
+    ja: 'プロンプト',
+    'zh-tw': '提示',
+    de: 'Prompt',
+    es: 'Prompt',
+    fr: 'Prompt',
+    'pt-br': 'Prompt',
+    ru: 'Промпт',
+    ko: '프롬프트',
+    it: 'Prompt',
+    tr: 'İstem',
+    cs: 'Prompt',
+    hu: 'Prompt',
+    bg: 'Промпт'
   },
   'general.edit-formats.title': {
     en: 'Edit Formats',
@@ -927,7 +927,7 @@ export const translations = {
     hu: 'Billentyűparancsok Megnyitása',
     bg: 'Отваряне на клавишни комбинации'
   },
-  'general.prompt-field.templates.title': {
+  'general.prompt.templates.title': {
     en: 'Templates',
     pl: 'Szablony',
     'zh-cn': '模板',
@@ -945,7 +945,7 @@ export const translations = {
     hu: 'Sablonok',
     bg: 'Шаблони'
   },
-  'general.prompt-field.templates.description': {
+  'general.prompt.templates.description': {
     en: 'Manage templates of each prompt type.',
     pl: 'Zarządzaj szablonami dla każdego typu promptu.',
     'zh-cn': '管理每种提示类型的模板。',
@@ -963,7 +963,7 @@ export const translations = {
     hu: 'Kezelje az egyes prompttípusok sablonjait.',
     bg: 'Управлявайте шаблони за всеки тип промпт.'
   },
-  'general.prompt-field.templates.item': {
+  'general.prompt.templates.item': {
     en: 'template',
     pl: 'szablon',
     'zh-cn': '模板',
@@ -981,7 +981,7 @@ export const translations = {
     hu: 'sablon',
     bg: 'шаблон'
   },
-  'general.prompt-field.templates.items': {
+  'general.prompt.templates.items': {
     en: 'templates',
     pl: 'szablony',
     'zh-cn': '模板',
@@ -999,7 +999,7 @@ export const translations = {
     hu: 'sablonok',
     bg: 'шаблони'
   },
-  'general.prompt-field.templates.items-many': {
+  'general.prompt.templates.items-many': {
     en: 'templates',
     pl: 'szablonów',
     'zh-cn': '模板',
