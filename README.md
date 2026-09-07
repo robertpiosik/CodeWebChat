@@ -19,7 +19,7 @@
 
 ## Introduction
 
-**CWC** is built with care for developers who can tell good software from bad whenever they use it. Designed to let you work on your ideas at the speed of thought without compromising on code quality, privacy, or cost-efficiency.
+**CWC** is built for developers who can tell good software from bad whenever they use it. Designed to let you work on your ideas at the speed of thought without compromising on code quality, privacy, or cost-efficiency.
 
 ## Privacy
 
