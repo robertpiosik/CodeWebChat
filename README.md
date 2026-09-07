@@ -277,7 +277,7 @@ _Applying malformed edits._
 <summary>WEB/API</summary>
 
 ````
-# File: `[FILE PATH]`
+[ORIGINAL FILE]
 
 [MALFORMED EDITS]
 
