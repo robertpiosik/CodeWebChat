@@ -44,7 +44,7 @@ _Task-relevant files from your favorite coding agent, utilizing its one-off prom
 - OpenCode
 
 <details>
-<summary>WEB/API</summary>
+<summary>AGENT</summary>
 
 ```
 
