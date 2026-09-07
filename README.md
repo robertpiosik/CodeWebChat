@@ -43,8 +43,6 @@ _Task-relevant files from your favorite coding agent, utilizing its one-off prom
 - Muse Code
 - OpenCode
 
-Structure of the constructed prompt:
-
 <details>
 <summary>WEB/API</summary>
 
@@ -69,8 +67,6 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 ### Intelligent search
 
 _A quick way for task-relevant files from a single llm message._
-
-Structure of the constructed prompt:
 
 <details>
 <summary>WEB</summary>
@@ -138,8 +134,6 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 _Implementing new features, fixing bugs or doing refactors._
 
-Structure of the constructed prompt:
-
 <details>
 <summary>WEB/API</summary>
 
@@ -167,8 +161,6 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 _Explanations, planning, code reviews, you name it._
 
-Structure of the constructed prompt:
-
 <details>
 <summary>WEB/API</summary>
 
@@ -189,8 +181,6 @@ Structure of the constructed prompt:
 ### Code at cursor
 
 _TAB completions from SOTA reasoning models._
-
-Structure of the constructed prompt:
 
 <details>
 <summary>WEB</summary>
@@ -253,8 +243,6 @@ Example:
 ### Commit messages
 
 _Generate commit messages based on staged changes and context files._
-
-Structure of the constructed prompt:
 
 <details>
 <summary>WEB/API</summary>
