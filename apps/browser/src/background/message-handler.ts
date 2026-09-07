@@ -120,7 +120,6 @@ const process_next_chat = async () => {
 
   if (
     last_opened_tab_id !== undefined &&
-    current_chat_message.reuse_last_tab &&
     is_finished_responding
   ) {
     try {

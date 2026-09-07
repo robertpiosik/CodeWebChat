@@ -158,15 +158,6 @@ export interface UpdateSendWithShiftEnterMessage {
   enabled: boolean
 }
 
-export interface GetReuseLastTabMessage {
-  command: 'GET_REUSE_LAST_TAB'
-}
-
-export interface UpdateReuseLastTabMessage {
-  command: 'UPDATE_REUSE_LAST_TAB'
-  enabled: boolean
-}
-
 export interface GetClearChecksInWorkspaceBehaviorMessage {
   command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
 }
@@ -362,8 +353,6 @@ export type FrontendMessage =
   | UpdateAiStudioUserIdMessage
   | GetSendWithShiftEnterMessage
   | UpdateSendWithShiftEnterMessage
-  | GetReuseLastTabMessage
-  | UpdateReuseLastTabMessage
   | GetClearChecksInWorkspaceBehaviorMessage
   | UpdateClearChecksInWorkspaceBehaviorMessage
   | OpenEditorSettingsMessage
@@ -454,11 +443,6 @@ export interface AiStudioUserIdMessage {
 
 export interface SendWithShiftEnterMessage {
   command: 'SEND_WITH_SHIFT_ENTER'
-  enabled: boolean
-}
-
-export interface ReuseLastTabMessage {
-  command: 'REUSE_LAST_TAB'
   enabled: boolean
 }
 
@@ -573,7 +557,6 @@ export type BackendMessage =
   | GeminiUserIdMessage
   | AiStudioUserIdMessage
   | SendWithShiftEnterMessage
-  | ReuseLastTabMessage
   | ClearChecksInWorkspaceBehaviorMessage
   | ShowSectionMessage
   | AutoRunPatchRepairMessage

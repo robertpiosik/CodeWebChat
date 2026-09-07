@@ -376,7 +376,6 @@ export class WebSocketManager {
       config.get<ConfigWebConfigurationFormat[]>('webConfigurations') ?? []
     const gemini_user_id = config.get<number | null>('geminiUserId')
     const ai_studio_user_id = config.get<number | null>('aiStudioUserId')
-    const reuse_last_tab = config.get<boolean>('reuseLastTab', false)
 
     const target_browser_id = await this._select_browser()
     if (target_browser_id === undefined) {
@@ -451,7 +450,6 @@ export class WebSocketManager {
       options: web_configuration.options,
       client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
       raw_instructions: params.raw_instructions,
-      reuse_last_tab,
       inject_apply_response_button: params.inject_apply_response_button
     }
 
@@ -484,7 +482,6 @@ export class WebSocketManager {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const gemini_user_number = config.get<number | null>('geminiUserNumber')
     const ai_studio_user_id = config.get<number | null>('aiStudioUserId')
-    const reuse_last_tab = config.get<boolean>('reuseLastTab', false)
 
     const chatbot =
       CHATBOTS[params.web_configuration.chatbot as keyof typeof CHATBOTS]
@@ -555,7 +552,6 @@ export class WebSocketManager {
       options: params.web_configuration.options,
       client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
       raw_instructions: params.raw_instructions,
-      reuse_last_tab,
       inject_apply_response_button: params.inject_apply_response_button
     }
 

@@ -18,7 +18,6 @@ import {
   handle_get_ai_studio_user_id,
   handle_get_model_providers,
   handle_get_send_with_shift_enter,
-  handle_get_reuse_last_tab,
   handle_reorder_model_providers,
   handle_set_default_api_configuration,
   handle_select_default_api_configuration,
@@ -31,7 +30,6 @@ import {
   handle_update_gemini_user_id,
   handle_update_ai_studio_user_id,
   handle_update_send_with_shift_enter,
-  handle_update_reuse_last_tab,
   handle_open_ignore_patterns_settings,
   handle_open_allow_patterns_settings,
   handle_get_auto_run_patch_repair as handle_get_auto_run_patch_repair,
@@ -236,10 +234,6 @@ export class SettingsViewProvider {
           await handle_get_send_with_shift_enter(this)
         } else if (message.command == 'UPDATE_SEND_WITH_SHIFT_ENTER') {
           await handle_update_send_with_shift_enter(message)
-        } else if (message.command == 'GET_REUSE_LAST_TAB') {
-          await handle_get_reuse_last_tab(this)
-        } else if (message.command == 'UPDATE_REUSE_LAST_TAB') {
-          await handle_update_reuse_last_tab(message)
         } else if (message.command == 'OPEN_EDITOR_SETTINGS') {
           await vscode.commands.executeCommand('workbench.action.openSettings')
         } else if (message.command == 'OPEN_IGNORE_PATTERNS_SETTINGS') {
@@ -308,7 +302,6 @@ export class SettingsViewProvider {
           void handle_get_gemini_user_id(this)
           void handle_get_ai_studio_user_id(this)
           void handle_get_send_with_shift_enter(this)
-          void handle_get_reuse_last_tab(this)
           void handle_get_auto_run_patch_repair(this)
           void handle_get_templates(this)
           this._send_web_configurations()

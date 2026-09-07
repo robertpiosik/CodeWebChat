@@ -3,7 +3,6 @@ import { Section as UiSection } from '@ui/components/editor/settings/Section'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
-import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
 import { Button } from '@ui/components/editor/common/Button'
 import { SortableList } from '@ui/components/editor/settings/SortableList'
@@ -26,8 +25,6 @@ type Props = {
   on_delete_web_configuration: (name: string) => void
   on_toggle_pinned_web_configuration: (config: WebConfiguration) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
-  reuse_last_tab: boolean
-  on_reuse_last_tab_change: (enabled: boolean) => void
   gemini_user_id: number | null
   ai_studio_user_id: number | null
   on_gemini_user_id_change: (id: number | null) => void
@@ -308,26 +305,6 @@ export const WebSection = forwardRef<HTMLDivElement, Props>(
             )}
           </UiGroup>
         </div>
-        {props.web_configurations.length > 0 && (
-          <div
-            ref={(el) =>
-              props.set_section_ref('section:web:group:chatbots-other', el)
-            }
-          >
-            <UiGroup title={t('chatbots.behavior.title')}>
-              <UiItem
-                title={t('chatbots.behavior.reuse-last-tab.title')}
-                description={t('chatbots.behavior.reuse-last-tab.description')}
-                slot_right={
-                  <UiToggler
-                    is_on={props.reuse_last_tab}
-                    on_toggle={props.on_reuse_last_tab_change}
-                  />
-                }
-              />
-            </UiGroup>
-          </div>
-        )}
       </UiSection>
     )
   }

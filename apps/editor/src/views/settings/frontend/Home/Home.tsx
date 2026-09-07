@@ -28,7 +28,6 @@ export type NavItem =
   | 'section:general:group:commit-messages'
   | 'section:web'
   | 'section:web:group:web-configurations'
-  | 'section:web:group:chatbots-other'
   | 'section:api'
   | 'section:api:group:model-providers'
   | 'section:api:group:api-configurations'
@@ -66,10 +65,6 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     id: 'section:web:group:web-configurations',
     label: 'chatbots.configurations.title'
-  },
-  {
-    id: 'section:web:group:chatbots-other',
-    label: 'chatbots.behavior.title'
   },
   {
     id: 'section:api',
@@ -112,7 +107,6 @@ type Props = {
   gemini_user_id: number | null
   ai_studio_user_id: number | null
   send_with_shift_enter: boolean
-  reuse_last_tab: boolean
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
   auto_run_patch_repair: boolean
   templates: Record<string, Template[]>
@@ -142,7 +136,6 @@ type Props = {
   on_gemini_user_id_change: (id: number | null) => void
   on_ai_studio_user_id_change: (id: number | null) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
-  on_reuse_last_tab_change: (enabled: boolean) => void
   on_clear_checks_in_workspace_behavior_change: (
     value: 'ignore-open-editors' | 'uncheck-all'
   ) => void
@@ -195,7 +188,6 @@ export const Home: React.FC<Props> = (props) => {
     'section:general:group:commit-messages': null,
     'section:web': null,
     'section:web:group:web-configurations': null,
-    'section:web:group:chatbots-other': null,
     'section:api': null,
     'section:api:group:model-providers': null,
     'section:api:group:api-configurations': null,
@@ -242,12 +234,6 @@ export const Home: React.FC<Props> = (props) => {
         continue
       }
       if (
-        item.id === 'section:web:group:chatbots-other' &&
-        props.web_configurations.length === 0
-      ) {
-        continue
-      }
-      if (
         [
           'section:api:group:api-defaults',
           'section:api:group:api-behavior',
@@ -262,7 +248,6 @@ export const Home: React.FC<Props> = (props) => {
     return last_id
   }, [
     props.providers.length,
-    props.web_configurations.length,
     props.api_configurations.length
   ])
 
@@ -339,13 +324,7 @@ export const Home: React.FC<Props> = (props) => {
         ) {
           continue
         }
-        if (
-          item.id === 'section:web:group:chatbots-other' &&
-          props.web_configurations.length === 0
-        ) {
-          continue
-        }
-        if (
+      if (
           [
             'section:api:group:api-defaults',
             'section:api:group:api-behavior',
@@ -379,7 +358,6 @@ export const Home: React.FC<Props> = (props) => {
     }
   }, [
     props.providers.length,
-    props.web_configurations.length,
     props.api_configurations.length
   ])
 
@@ -458,12 +436,6 @@ export const Home: React.FC<Props> = (props) => {
             if (
               item.id === 'section:api:group:model-providers' &&
               props.providers.length === 0
-            ) {
-              continue
-            }
-            if (
-              item.id === 'section:web:group:chatbots-other' &&
-              props.web_configurations.length === 0
             ) {
               continue
             }
@@ -647,8 +619,6 @@ export const Home: React.FC<Props> = (props) => {
           on_toggle_pinned_web_configuration={
             props.on_toggle_pinned_web_configuration
           }
-          reuse_last_tab={props.reuse_last_tab}
-          on_reuse_last_tab_change={props.on_reuse_last_tab_change}
           gemini_user_id={props.gemini_user_id}
           ai_studio_user_id={props.ai_studio_user_id}
           on_gemini_user_id_change={props.on_gemini_user_id_change}
