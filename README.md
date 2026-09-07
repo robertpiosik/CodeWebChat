@@ -415,9 +415,4 @@ Install the browser extension and never copy and paste again ([source code](http
 <hr />
 
 Copyright © 2026 [Robert Piosik](https://x.com/robertpiosik) \
-E-mail: robertpiosik@gmail.com \
-Telegram: robertpiosik
-
-```
-
-```
+E-mail: robertpiosik@gmail.com
