@@ -80,7 +80,7 @@ export namespace CommitMessageDetails {
 
     const simplified_prompt = simplify_prompt_symbols({
       prompt: params.prompt || ''
-    })
+    }).replace(/\r?\n|\r/g, ' ')
 
     const normalize = (f: string) =>
       path.isAbsolute(f)
@@ -123,7 +123,9 @@ export namespace CommitMessageDetails {
   }) => {
     const all_prompts = load_all(params.extension_context)
     let changed = false
-    const simplified_prompt = simplify_prompt_symbols({ prompt: params.prompt })
+    const simplified_prompt = simplify_prompt_symbols({
+      prompt: params.prompt
+    }).replace(/\r?\n|\r/g, ' ')
 
     for (const root in all_prompts) {
       const initial_count = all_prompts[root].length
