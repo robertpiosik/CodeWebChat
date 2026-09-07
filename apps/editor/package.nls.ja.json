@@ -54,7 +54,7 @@
   "codeWebChat.openInIntegratedTerminal.title": "統合ターミナルで開く",
   "codeWebChat.removeFolderFromWorkspace.title": "ワークスペースからフォルダーを削除",
   "codeWebChat.openWebsitePreviewUrl.title": "ブラウザーでURLを開く",
-  "codeWebChat.selectUnstagedFiles.title": "変更されたファイルを選択...",
+  "codeWebChat.selectModifiedFiles.title": "変更されたファイルを選択...",
   "codeWebChat.selectFilesOfCommit.title": "コミットからのファイルを選択...",
   "codeWebChat.selectClipboardPaths.title": "クリップボードのパスを選択...",
   "codeWebChat.selectParentFolder.title": "親フォルダーを選択...",

@@ -54,7 +54,7 @@
   "codeWebChat.openInIntegratedTerminal.title": "Apri nel terminale integrato",
   "codeWebChat.removeFolderFromWorkspace.title": "Rimuovi cartella dall'area di lavoro",
   "codeWebChat.openWebsitePreviewUrl.title": "Apri URL nel browser",
-  "codeWebChat.selectUnstagedFiles.title": "Seleziona file modificati...",
+  "codeWebChat.selectModifiedFiles.title": "Seleziona file modificati...",
   "codeWebChat.selectFilesOfCommit.title": "Seleziona i file da un commit...",
   "codeWebChat.selectClipboardPaths.title": "Seleziona percorsi dagli appunti...",
   "codeWebChat.selectParentFolder.title": "Seleziona cartella superiore...",

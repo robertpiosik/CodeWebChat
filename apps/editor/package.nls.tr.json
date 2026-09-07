@@ -54,7 +54,7 @@
   "codeWebChat.openInIntegratedTerminal.title": "Entegre Terminalde Aç",
   "codeWebChat.removeFolderFromWorkspace.title": "Klasörü Çalışma Alanından Kaldır",
   "codeWebChat.openWebsitePreviewUrl.title": "URL'yi Tarayıcıda Aç",
-  "codeWebChat.selectUnstagedFiles.title": "Değiştirilen Dosyaları Seç...",
+  "codeWebChat.selectModifiedFiles.title": "Değiştirilen Dosyaları Seç...",
   "codeWebChat.selectFilesOfCommit.title": "Bir İşlemeden (Commit) Dosyaları Seç...",
   "codeWebChat.selectClipboardPaths.title": "Panodaki Yolları Seç...",
   "codeWebChat.selectParentFolder.title": "Üst Klasörü Seç...",

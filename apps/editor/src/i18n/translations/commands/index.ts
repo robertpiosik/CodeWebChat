@@ -13,7 +13,7 @@ import { translations as new_folder } from './new-folder'
 import { translations as rename } from './rename'
 import { translations as rate_extension } from './rate-extension'
 import { translations as install_browser_extension } from './install-browser-extension'
-import { translations as select_unstaged_files } from './select-unstaged-files'
+import { translations as select_modified_files } from './select-modified-files'
 import { translations as select_files_of_commit } from './select-files-of-commit'
 import { translations as history } from './history'
 import { translations as select_clipboard_paths } from './select-clipboard-paths'
@@ -38,7 +38,7 @@ export const translations = {
   ...rename,
   ...rate_extension,
   ...install_browser_extension,
-  ...select_unstaged_files,
+  ...select_modified_files,
   ...select_files_of_commit,
   ...history,
   ...select_clipboard_paths,

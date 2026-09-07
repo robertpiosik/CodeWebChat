@@ -35,7 +35,7 @@ import {
   set_ranges_command,
   search_files_commands,
   select_definition_file_command,
-  select_unstaged_files_command,
+  select_modified_files_command,
   select_files_of_commit_command,
   select_clipboard_paths_command,
   select_parent_folder_command,
@@ -168,7 +168,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       extension_context,
       on_context_selected: () => {}
     }),
-    select_unstaged_files_command(
+    select_modified_files_command(
       workspace_provider,
       extension_context,
       websocket_server_instance

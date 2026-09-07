@@ -54,7 +54,7 @@
   "codeWebChat.openInIntegratedTerminal.title": "Otevřít v integrovaném terminálu",
   "codeWebChat.removeFolderFromWorkspace.title": "Odebrat složku z pracovního prostoru",
   "codeWebChat.openWebsitePreviewUrl.title": "Otevřít URL v prohlížeči",
-  "codeWebChat.selectUnstagedFiles.title": "Vybrat upravené soubory...",
+  "codeWebChat.selectModifiedFiles.title": "Vybrat upravené soubory...",
   "codeWebChat.selectFilesOfCommit.title": "Vybrat soubory z commitu...",
   "codeWebChat.selectClipboardPaths.title": "Vybrat cesty ze schránky...",
   "codeWebChat.selectParentFolder.title": "Vybrat nadřazenou složku...",

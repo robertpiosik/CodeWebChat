@@ -54,7 +54,7 @@
   "codeWebChat.openInIntegratedTerminal.title": "Abrir no Terminal Integrado",
   "codeWebChat.removeFolderFromWorkspace.title": "Remover Pasta do Espaço de Trabalho",
   "codeWebChat.openWebsitePreviewUrl.title": "Abrir URL no Navegador",
-  "codeWebChat.selectUnstagedFiles.title": "Marcar Arquivos Modificados...",
+  "codeWebChat.selectModifiedFiles.title": "Marcar Arquivos Modificados...",
   "codeWebChat.selectFilesOfCommit.title": "Marcar Arquivos de um Commit...",
   "codeWebChat.selectClipboardPaths.title": "Selecionar caminhos da área de transferência...",
   "codeWebChat.selectParentFolder.title": "Selecionar Pasta Pai...",

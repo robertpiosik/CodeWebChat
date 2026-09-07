@@ -413,8 +413,8 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.selectUnstagedFiles",
-        "title": "%codeWebChat.selectUnstagedFiles.title%",
+        "command": "codeWebChat.selectModifiedFiles",
+        "title": "%codeWebChat.selectModifiedFiles.title%",
         "category": "Code Web Chat"
       },
       {
@@ -599,6 +599,10 @@
           "when": "false"
         },
         {
+          "command": "codeWebChat.selectModifiedFiles",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.selectReferencingFilesForSelected",
           "when": "false"
         },
@@ -716,7 +720,7 @@
           "group": "3_more@2"
         },
         {
-          "command": "codeWebChat.selectUnstagedFiles",
+          "command": "codeWebChat.selectModifiedFiles",
           "when": "view == codeWebChatViewWorkspace",
           "group": "3_more@3"
         },

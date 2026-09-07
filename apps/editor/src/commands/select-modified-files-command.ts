@@ -9,13 +9,13 @@ import { search_files } from '@/features/search-files'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { display_token_count } from '@shared/utils/display-token-count'
 
-export const select_unstaged_files_command = (
+export const select_modified_files_command = (
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext,
   websocket_manager: WebSocketManager
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
-    'codeWebChat.selectUnstagedFiles',
+    'codeWebChat.selectModifiedFiles',
     async () => {
       try {
         const git_extension =
@@ -41,21 +41,21 @@ export const select_unstaged_files_command = (
           return
         }
 
-        const unstaged_file_paths: string[] = []
+        const modified_file_paths: string[] = []
         for (const repo of git_api.repositories) {
           repo.state.workingTreeChanges.forEach((change: any) => {
-            unstaged_file_paths.push(change.uri.fsPath)
+            modified_file_paths.push(change.uri.fsPath)
           })
         }
 
-        if (unstaged_file_paths.length == 0) {
+        if (modified_file_paths.length == 0) {
           vscode.window.showInformationMessage(
-            dictionary.information_message.NO_UNSTAGED_FILES_FOUND
+            t('command.select-modified-files.no-modified-files') || dictionary.information_message.NO_UNSTAGED_FILES_FOUND
           )
           return
         }
 
-        const existing_unstaged_files = unstaged_file_paths.filter((p) => {
+        const existing_modified_files = modified_file_paths.filter((p) => {
           try {
             return fs.existsSync(p) && fs.statSync(p).isFile()
           } catch {
@@ -63,9 +63,9 @@ export const select_unstaged_files_command = (
           }
         })
 
-        if (existing_unstaged_files.length == 0) {
+        if (existing_modified_files.length == 0) {
           vscode.window.showInformationMessage(
-            dictionary.information_message.NO_ACTIONABLE_UNSTAGED_FILES_FOUND
+            t('command.select-modified-files.no-actionable-modified-files') || dictionary.information_message.NO_ACTIONABLE_UNSTAGED_FILES_FOUND
           )
           return
         }
@@ -76,8 +76,19 @@ export const select_unstaged_files_command = (
           const currently_checked = workspace_provider.get_checked_files()
           const currently_checked_set = new Set(currently_checked)
 
+          if (
+            existing_modified_files.every((file) =>
+              currently_checked_set.has(file)
+            )
+          ) {
+            vscode.window.showInformationMessage(
+              t('command.select-modified-files.all-selected')
+            )
+            return
+          }
+
           const quick_pick_items = await Promise.all(
-            existing_unstaged_files.map(async (file_path) => {
+            existing_modified_files.map(async (file_path) => {
               const token_count =
                 await workspace_provider.calculate_file_tokens(file_path)
 
@@ -104,7 +115,7 @@ export const select_unstaged_files_command = (
                     iconPath: new vscode.ThemeIcon(
                       'git-pull-request-go-to-changes'
                     ),
-                    tooltip: t('command.select-unstaged-files.show-diff')
+                    tooltip: t('command.select-modified-files.show-diff')
                   },
                   {
                     iconPath: new vscode.ThemeIcon('go-to-file'),
@@ -119,9 +130,9 @@ export const select_unstaged_files_command = (
             vscode.QuickPickItem & { file_path: string }
           >()
 
-          quick_pick.title = t('command.select-unstaged-files.title')
+          quick_pick.title = t('command.select-modified-files.title')
 
-          const base_placeholder = t('command.select-unstaged-files.include')
+          const base_placeholder = t('command.select-modified-files.include')
 
           const update_title = () => {
             const total = quick_pick.selectedItems.reduce(
@@ -185,7 +196,7 @@ export const select_unstaged_files_command = (
                 const uri = vscode.Uri.file(e.item.file_path)
                 vscode.window.showTextDocument(uri, { preview: true })
               } else if (
-                e.button.tooltip == t('command.select-unstaged-files.show-diff')
+                e.button.tooltip == t('command.select-modified-files.show-diff')
               ) {
                 const uri = vscode.Uri.file(e.item.file_path)
                 await vscode.commands.executeCommand('git.openChange', uri)
@@ -263,7 +274,7 @@ export const select_unstaged_files_command = (
           ]
 
           Logger.info({
-            message: `Selected ${selected_paths.length} unstaged file${
+            message: `Selected ${selected_paths.length} modified file${
               selected_paths.length == 1 ? '' : 's'
             }.`,
             data: { paths: selected_paths }
@@ -278,13 +289,13 @@ export const select_unstaged_files_command = (
         }
       } catch (error) {
         vscode.window.showErrorMessage(
-          dictionary.error_message.FAILED_TO_SELECT_UNSTAGED_FILES(
+          dictionary.error_message.FAILED_TO_SELECT_UNSTAGED_FILES?.(
             error instanceof Error ? error.message : String(error)
-          )
+          ) || `Failed to select modified files: ${error instanceof Error ? error.message : String(error)}`
         )
         Logger.error({
-          function_name: 'select_unstaged_files_command',
-          message: 'Failed to select unstaged files',
+          function_name: 'select_modified_files_command',
+          message: 'Failed to select modified files',
           data: error
         })
       }
