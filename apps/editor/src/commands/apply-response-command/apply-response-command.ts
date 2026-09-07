@@ -31,6 +31,7 @@ import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-fil
 import { parse_response } from './utils/response-parser'
 import { Checkpoint } from '@/features/checkpoints/types'
 import { WebSocketManager } from '@/services/websocket-manager'
+import { set_file_applied_with_patch_repair } from './utils/preview/workspace-listener'
 
 let in_progress = false
 let initialization_mutex = Promise.resolve()
@@ -136,6 +137,54 @@ export const apply_response_command = (params: {
         is_intelligent_file_search_results = response_items.some(
           (i) => i.type == 'intelligent-file-search-results'
         )
+
+        const is_patch_repair = response_items.some(
+          (item) => item.type == 'patch-repair'
+        )
+
+        if (is_patch_repair) {
+          const workspace_map = new Map<string, string>()
+          vscode.workspace.workspaceFolders!.forEach((folder) => {
+            workspace_map.set(folder.name, folder.uri.fsPath)
+          })
+          const default_workspace =
+            vscode.workspace.workspaceFolders![0].uri.fsPath
+
+          params.workspace_provider.pause_file_watcher()
+          try {
+            for (const item of response_items) {
+              if (item.type == 'patch-repair') {
+                const patch_item = item as any
+                let workspace_root = default_workspace
+                if (
+                  patch_item.workspace_name &&
+                  workspace_map.has(patch_item.workspace_name)
+                ) {
+                  workspace_root = workspace_map.get(patch_item.workspace_name)!
+                }
+                const safe_path = create_safe_path(
+                  workspace_root,
+                  patch_item.file_path
+                )
+                if (safe_path) {
+                  await vscode.workspace.fs.writeFile(
+                    vscode.Uri.file(safe_path),
+                    Buffer.from(patch_item.content, 'utf8')
+                  )
+                  if (set_file_applied_with_patch_repair) {
+                    set_file_applied_with_patch_repair({
+                      file_path: patch_item.file_path,
+                      workspace_name: patch_item.workspace_name
+                    })
+                  }
+                }
+              }
+            }
+          } finally {
+            params.workspace_provider.resume_file_watcher()
+          }
+          return
+        }
 
         is_code_at_cursor = response_items.some(
           (item) => item.type == 'code-at-cursor'

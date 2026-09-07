@@ -338,6 +338,7 @@ export interface CancelPatchRepairFileInPreviewMessage extends BaseMessage {
 export interface FixAllFailedFilesMessage extends BaseMessage {
   command: 'FIX_ALL_FAILED_FILES'
   files: { file_path: string; workspace_name?: string }[]
+  is_auto_run?: boolean
 }
 
 export interface ManageApiConfigurationsMessage extends BaseMessage {

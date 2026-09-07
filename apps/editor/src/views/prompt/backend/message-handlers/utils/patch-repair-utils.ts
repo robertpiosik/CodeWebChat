@@ -58,7 +58,7 @@ export const get_patch_repair_config = async (params: {
       items: patch_repair_api_configurations,
       map_item: map_api_configuration_to_item,
       last_selected_id,
-      placeholder: 'Select the Intelligent Update API tool configuration'
+      placeholder: t('common.config.placeholder')
     })
 
     if (!result || result === 'back') {
@@ -84,7 +84,7 @@ export const get_patch_repair_config = async (params: {
     vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))
     Logger.warn({
       function_name: 'get_patch_repair_config',
-      message: 'API provider not found for Intelligent Update API tool.'
+      message: 'API provider not found for Prompt Repair API tool.'
     })
     return
   }
@@ -116,7 +116,7 @@ export const process_file = async (params: {
     }
   })
 
-  const content = `# File\n\n${params.file_content}\n\n# Task\n\n${patch_repair_task_instructions}\n\n# Changes\n\n${params.instruction}`
+  const content = `# File\n\n${params.file_content}\n\n# Task\n\n${patch_repair_task_instructions}\n\n${params.instruction}`
 
   const messages = [
     {

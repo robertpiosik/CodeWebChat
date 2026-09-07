@@ -650,10 +650,11 @@ export const Prompt = () => {
                     content: file.content
                   })
                 }}
-                on_fix_all_failed={(files) => {
+                on_fix_all_failed={(files, is_auto_run) => {
                   post_message(vscode, {
                     command: 'FIX_ALL_FAILED_FILES',
-                    files
+                    files,
+                    is_auto_run
                   })
                 }}
               />

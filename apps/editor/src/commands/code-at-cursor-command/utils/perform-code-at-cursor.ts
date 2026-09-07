@@ -128,30 +128,26 @@ export const perform_code_at_cursor = async (params: {
           vscode.QuickPickItem & { id: string }
         >()
         quick_pick.items = [
-          ...(has_api_configurations
-            ? [
-                {
-                  label: t(
-                    'command.generate-commit-message.action.make-api-call'
-                  ),
-                  id: 'make-api'
-                }
-              ]
-            : []),
-          ...(params.websocket_manager.is_connected_with_browser()
-            ? [
-                {
-                  label: t(
-                    'command.generate-commit-message.action.autofill-in-chatbot'
-                  ),
-                  id: 'autofill'
-                }
-              ]
-            : []),
-          {
-            label: t('command.generate-commit-message.action.copy-prompt'),
-            id: 'copy'
-          }
+              ...(has_api_configurations
+                ? [
+                    {
+                      label: t('common.action.make-api-call'),
+                      id: 'make-api'
+                    }
+                  ]
+                : []),
+              ...(params.websocket_manager.is_connected_with_browser()
+                ? [
+                    {
+                      label: t('common.action.autofill-chatbot'),
+                      id: 'autofill'
+                    }
+                  ]
+                : []),
+              {
+                label: t('common.action.copy-prompt'),
+                id: 'copy'
+              }
         ]
 
         const last_action_id =
@@ -170,9 +166,7 @@ export const perform_code_at_cursor = async (params: {
         }
 
         quick_pick.title = t('command.code-at-cursor.progress.title')
-        quick_pick.placeholder = t(
-          'command.generate-commit-message.action-quick-pick.placeholder'
-        )
+        quick_pick.placeholder = t('common.action-quick-pick.placeholder.no-tokens')
 
         const close_button = {
           iconPath: new vscode.ThemeIcon('close'),

@@ -54,7 +54,7 @@ import {
   handle_show_diff,
   handle_toggle_file_in_preview,
   handle_discard_user_changes_in_preview,
-  handle_patch_repair_file_in_preview as handle_patch_repair_file_in_preview,
+  handle_patch_repair,
   handle_response_preview,
   handle_manage_api_configurations,
   handle_undo,
@@ -63,7 +63,6 @@ import {
   handle_get_tasks,
   handle_save_tasks,
   handle_delete_task,
-  handle_fix_all_failed_files,
   handle_cancel_patch_repair_file_in_preview as handle_cancel_patch_repair_file_in_preview,
   handle_open_file_and_select,
   handle_open_external_url,
@@ -734,7 +733,16 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'DISCARD_USER_CHANGES_IN_PREVIEW') {
             await handle_discard_user_changes_in_preview(message)
           } else if (message.command == 'PATCH_REPAIR_FILE_IN_PREVIEW') {
-            await handle_patch_repair_file_in_preview(this, message)
+            await handle_patch_repair({
+              prompt_view_provider: this,
+              files_to_fix: [
+                {
+                  file_path: message.file_path,
+                  workspace_name: message.workspace_name
+                }
+              ],
+              show_quick_pick: message.force_model_selection
+            })
           } else if (message.command == 'CANCEL_PATCH_REPAIR_FILE_IN_PREVIEW') {
             handle_cancel_patch_repair_file_in_preview(this, message)
           } else if (message.command == 'RESPONSE_PREVIEW') {
@@ -789,9 +797,10 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'REQUEST_CAN_UNDO') {
             handle_request_can_undo(this)
           } else if (message.command == 'FIX_ALL_FAILED_FILES') {
-            await handle_fix_all_failed_files({
+            await handle_patch_repair({
               prompt_view_provider: this,
-              files_to_fix: message.files
+              files_to_fix: message.files,
+              is_auto_run: message.is_auto_run
             })
           } else if (message.command == 'SAVE_PROMPT_IMAGE') {
             await handle_save_prompt_image(this, message)

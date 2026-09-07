@@ -135,9 +135,7 @@ export const perform_intelligent_search_mode = async (params: {
               ...(has_api_configurations
                 ? [
                     {
-                      label: t(
-                        'command.generate-commit-message.action.make-api-call'
-                      ),
+                      label: t('common.action.make-api-call'),
                       id: 'make-api'
                     }
                   ]
@@ -145,15 +143,13 @@ export const perform_intelligent_search_mode = async (params: {
               ...(params.websocket_manager.is_connected_with_browser()
                 ? [
                     {
-                      label: t(
-                        'command.generate-commit-message.action.autofill-in-chatbot'
-                      ),
+                      label: t('common.action.autofill-chatbot'),
                       id: 'autofill'
                     }
                   ]
                 : []),
               {
-                label: t('command.generate-commit-message.action.copy-prompt'),
+                label: t('common.action.copy-prompt'),
                 id: 'copy'
               }
             ]
@@ -174,9 +170,7 @@ export const perform_intelligent_search_mode = async (params: {
             }
 
             quick_pick.title = t('feature.search-files.title.intelligent')
-            quick_pick.placeholder = t(
-              'command.generate-commit-message.action-quick-pick.placeholder'
-            )
+            quick_pick.placeholder = t('common.action-quick-pick.placeholder.no-tokens')
 
             const close_button = {
               iconPath: new vscode.ThemeIcon('close'),
@@ -287,7 +281,7 @@ export const perform_intelligent_search_mode = async (params: {
               ? analysis.shrink_tokens
               : analysis.full_tokens
             vscode.window.showInformationMessage(
-              t('command.generate-commit-message.copied', {
+              t('common.info.prompt-copied-with-tokens', {
                 tokens: display_token_count(token_count)
               })
             )

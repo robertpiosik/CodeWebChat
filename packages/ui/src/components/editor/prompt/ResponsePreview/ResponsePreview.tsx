@@ -36,7 +36,8 @@ type Props = {
     content: string
   }) => void
   on_fix_all_failed: (
-    files: { file_path: string; workspace_name?: string }[]
+    files: { file_path: string; workspace_name?: string }[],
+    is_auto_run?: boolean
   ) => void
   raw_instructions?: string
   auto_run_patch_repair?: boolean
@@ -156,7 +157,7 @@ export const ResponsePreview: FC<Props> = (props) => {
           file_path: f.file_path,
           workspace_name: f.workspace_name
         }))
-      props.on_fix_all_failed(files_to_fix)
+      props.on_fix_all_failed(files_to_fix, true)
     }
   }, [
     props.auto_run_patch_repair,
@@ -307,7 +308,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                     file_path: f.file_path,
                     workspace_name: f.workspace_name
                   }))
-                props.on_fix_all_failed(files_to_fix)
+                props.on_fix_all_failed(files_to_fix, false)
               }}
             >
               <span className="codicon codicon-sparkle" />

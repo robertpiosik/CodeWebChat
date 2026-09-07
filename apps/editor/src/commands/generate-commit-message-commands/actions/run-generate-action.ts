@@ -104,18 +104,10 @@ export const run_generate_action = async (params: {
       const show_back_button =
         was_empty_stage && !is_single_change_flow && !params.source_control
 
-      const action_make_api = t(
-        'command.generate-commit-message.action.make-api-call'
-      )
-      const action_autofill_in_chatbot = t(
-        'command.generate-commit-message.action.autofill-in-chatbot'
-      )
-      const action_enter_manually = t(
-        'command.generate-commit-message.action.enter-manually'
-      )
-      const action_copy_prompt = t(
-        'command.generate-commit-message.action.copy-prompt'
-      )
+      const action_make_api = t('common.action.make-api-call')
+      const action_autofill_chatbot = t('common.action.autofill-chatbot')
+      const action_enter_manually = t('common.action.enter-manually')
+      const action_copy_prompt = t('common.action.copy-prompt')
 
       const model_providers_manager = new ModelProvidersManager(
         params.extension_context
@@ -145,7 +137,7 @@ export const run_generate_action = async (params: {
                   ? [{ label: action_make_api, id: 'make-api' }]
                   : []),
                 ...(params.websocket_manager.is_connected_with_browser()
-                  ? [{ label: action_autofill_in_chatbot, id: 'autofill' }]
+                  ? [{ label: action_autofill_chatbot, id: 'autofill' }]
                   : []),
                 { label: action_enter_manually, id: 'manual' },
                 { label: action_copy_prompt, id: 'copy' }
@@ -170,7 +162,7 @@ export const run_generate_action = async (params: {
                 'command.generate-commit-message.action-quick-pick.title'
               )
               quick_pick.placeholder = t(
-                'command.generate-commit-message.action-quick-pick.placeholder',
+                'common.action-quick-pick.placeholder',
                 { tokens: display_token_count(base_token_count) }
               )
 
@@ -376,7 +368,7 @@ export const run_generate_action = async (params: {
         if (action == 'copy') {
           await vscode.env.clipboard.writeText(final_chatbot_prompt!)
           vscode.window.showInformationMessage(
-            t('command.generate-commit-message.copied', {
+            t('common.info.prompt-copied-with-tokens', {
               tokens: display_token_count(
                 Math.ceil(final_api_prompt!.length / 4)
               )

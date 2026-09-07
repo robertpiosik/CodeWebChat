@@ -51,6 +51,8 @@ export const LAST_USED_INTELLIGENT_SEARCH_ACTION_STATE_KEY =
   'last-used-intelligent-search-action'
 export const LAST_USED_PATCH_REPAIR_CONFIG_ID_STATE_KEY =
   'last-used-patch-repair-config-id'
+export const LAST_USED_PATCH_REPAIR_ACTION_STATE_KEY =
+  'last-used-patch-repair-action'
 export const LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY =
   'last-used-voice-input-config-id'
 

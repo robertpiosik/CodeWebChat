@@ -1,6 +1,7 @@
 import {
   extract_diffs,
   parse_code_at_cursor,
+  parse_patch_repair,
   file_blocks_parser,
   parse_intelligent_file_search_results,
   parse_commit_message
@@ -35,6 +36,13 @@ export type CodeAtCursorItem = {
   workspace_name?: string
 }
 
+export type PatchRepairItem = {
+  type: 'patch-repair'
+  file_path: string
+  content: string
+  workspace_name?: string
+}
+
 export type IntelligentFileSearchResultsItem = {
   type: 'intelligent-file-search-results'
   file_paths: string[]
@@ -62,6 +70,7 @@ export type ResponseItem =
   | FileItem
   | DiffItem
   | CodeAtCursorItem
+  | PatchRepairItem
   | TextItem
   | InlineFileItem
   | IntelligentFileSearchResultsItem
@@ -118,6 +127,15 @@ export const parse_response = (params: {
 
   if (code_at_cursor_items && code_at_cursor_items.length > 0) {
     return code_at_cursor_items
+  }
+
+  const patch_repair_items = parse_patch_repair({
+    response: params.response,
+    is_single_root_folder_workspace
+  })
+
+  if (patch_repair_items && patch_repair_items.length > 0) {
+    return patch_repair_items
   }
 
   const processed_response = params.response.replace(/``````/g, '```\n```')

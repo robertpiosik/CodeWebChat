@@ -26,21 +26,16 @@ Find correct replacement text for the <missing_text> symbol.`
 export const patch_repair_task_instructions =
   'Apply the attached changes to the file without explanations or any other text.'
 
-export const patch_repair_edit_format_instructions = `Respond strictly with a single markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
+export const patch_repair_format_instructions = `Your response must begin with a markdown heading identifying the file, followed by a markdown code block containing the updated file. The heading must be: "### Patch repair: \`path/to/file.ext\`". Example:
+
+### Patched file: \`path/to/file.ext\`
 
 \`\`\`python
-<<<<<<< SEARCH
-GREETING = "Welcome everyone!"
-=======
-WISHES = "Have a nice day!"
->>>>>>> REPLACE
-<<<<<<< SEARCH
-def show_greeting():
-   print(GREETING)
-=======
-def show_wishes():
-   print(WISHES)
->>>>>>> REPLACE
+def add(a, b):
+  return a + b
+
+def subtract(a, b):
+  return a - b
 \`\`\``
 
 export const commit_message_instructions =
