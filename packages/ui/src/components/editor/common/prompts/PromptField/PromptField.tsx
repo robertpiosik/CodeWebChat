@@ -671,19 +671,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     <span
                       className={styles['footer__right__target-switch__label']}
                     >
-                      {(props.target == TARGET.WEB ? 'WEB' : 'API')
-                        .split('')
-                        .map((char, index) => (
-                          <span
-                            key={index}
-                            className={
-                              styles['footer__right__target-switch__label-char']
-                            }
-                            style={{ animationDelay: `${index * 0.05}s` }}
-                          >
-                            {char}
-                          </span>
-                        ))}
+                      {props.target == TARGET.WEB ? 'WEB' : 'API'}
                     </span>
                   </button>
                 </KeycapWrapper>

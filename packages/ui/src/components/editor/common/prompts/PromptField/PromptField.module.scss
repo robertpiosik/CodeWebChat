@@ -216,23 +216,12 @@
         @include accent-font;
         font-size: 16px;
         padding: 0 4px;
-
-        &:hover {
-          .footer__right__target-switch__label-char {
-            animation: target-switch-wave 0.5s ease-in-out;
-          }
-        }
       }
 
       &__label {
         padding-top: 1px;
         display: flex;
         align-items: center;
-      }
-
-      &__label-char {
-        display: inline-block;
-        position: relative;
       }
     }
 
@@ -361,18 +350,5 @@
         font-size: 11px;
       }
     }
-  }
-}
-
-@keyframes target-switch-wave {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  25% {
-    transform: translateY(-1.5px);
-  }
-  75% {
-    transform: translateY(0);
   }
 }
