@@ -7,7 +7,7 @@ export const show_no_configurations_warning = async (
 ): Promise<void> => {
   const open_settings_label = t('common.open-settings')
   const result = await vscode.window.showWarningMessage(
-    t('common.missing-configuration'),
+    t('utils.show-no-configurations-warning.no-configurations-created-yet'),
     { modal: true },
     open_settings_label
   )

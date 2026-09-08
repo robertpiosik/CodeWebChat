@@ -29,6 +29,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
 
   &--warning {
     > span:first-child {
@@ -46,5 +47,8 @@
 
   .content {
     flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }

@@ -21,6 +21,7 @@ import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
+import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { ApiPromptType } from '@shared/types/prompt-types'
 import {
@@ -50,6 +51,7 @@ const get_api_configuration = async (params: {
     await params.model_providers_manager.get_api_configurations()
 
   if (api_configurations.length == 0) {
+    show_no_configurations_warning('api')
     return
   }
 
