@@ -5,7 +5,7 @@ import {
 } from '../../constants/state-keys'
 import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
 import dayjs from 'dayjs'
-import localizedFormat from 'dayjs/plugin/localizedFormat'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import { t } from '@/i18n'
 import type { Checkpoint } from '@/features/checkpoints/types'
 import {
@@ -24,7 +24,7 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 
-dayjs.extend(localizedFormat)
+dayjs.extend(relativeTime)
 
 export type { Checkpoint } from '@/features/checkpoints/types'
 
@@ -141,7 +141,7 @@ export const history_command = (params: {
             return {
               id: c.timestamp.toString(),
               label: label_text,
-              description: dayjs(c.timestamp).format('LT'),
+              description: `${dayjs(c.timestamp).fromNow()}`,
               detail: c.description,
               checkpoint: c,
               buttons: [
