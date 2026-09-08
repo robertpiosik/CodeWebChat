@@ -22,6 +22,7 @@ export namespace Tasks {
     on_add: () => void
     on_add_subtask?: (parent_task: Task) => void
     on_delete: (created_at: number) => void
+    on_forward: (text: string) => void
     translations: {
       placeholder: string
       add_new: string
@@ -63,8 +64,8 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
     null
   )
   const [editing_initial_text, set_editing_initial_text] = useState<string>('')
-  const [copied_timestamp, set_copied_timestamp] = useState<number | null>(null)
   const prevent_edit_ref = useRef(false)
+  const is_canceling_ref = useRef(false)
 
   const handle_set_editing = (timestamp: number | null, text?: string) => {
     set_editing_timestamp(timestamp)
@@ -75,7 +76,25 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
 
   use_auto_focus_new_task(props.tasks, handle_set_editing)
 
+  const handle_cancel_edit = (task: Task) => {
+    is_canceling_ref.current = true
+    set_editing_timestamp(null)
+
+    const has_children = task.children && task.children.length > 0
+    if (!editing_initial_text.trim() && !has_children) {
+      props.on_delete(task.created_at)
+    } else {
+      const { id, ...rest } = task as any
+      props.on_change({ ...rest, text: editing_initial_text })
+    }
+
+    setTimeout(() => {
+      is_canceling_ref.current = false
+    }, 100)
+  }
+
   const handle_stop_editing = (task: Task) => {
+    if (is_canceling_ref.current) return
     if (editing_timestamp !== task.created_at) return
     set_editing_timestamp(null)
     if (!task.text.trim()) {
@@ -189,46 +208,17 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
             >
               {params.task.text && (
                 <IconButton
-                  codicon_icon={
-                    copied_timestamp == params.task.created_at
-                      ? 'check'
-                      : 'copy'
-                  }
-                  style={
-                    copied_timestamp == params.task.created_at
-                      ? { cursor: 'default' }
-                      : undefined
-                  }
+                  codicon_icon="forward"
                   on_mouse_down={
                     is_editing ? (e) => e.preventDefault() : undefined
                   }
                   on_click={(e) => {
                     e.stopPropagation()
-                    navigator.clipboard.writeText(params.task.text)
-                    set_copied_timestamp(params.task.created_at)
-                    setTimeout(() => {
-                      set_copied_timestamp((prev) =>
-                        prev === params.task.created_at ? null : prev
-                      )
-                    }, 2000)
+                    props.on_forward(params.task.text)
                   }}
-                  title="Copy"
+                  title="Forward to edit instructions"
                 />
               )}
-              <IconButton
-                codicon_icon={is_editing ? 'check' : 'edit'}
-                on_mouse_down={
-                  is_editing ? (e) => e.preventDefault() : undefined
-                }
-                on_click={() => {
-                  if (is_editing) {
-                    handle_stop_editing(params.task)
-                  } else {
-                    handle_set_editing(params.task.created_at, params.task.text)
-                  }
-                }}
-                title={is_editing ? 'Done' : 'Edit'}
-              />
               <IconButton
                 codicon_icon="trash"
                 on_mouse_down={
@@ -255,7 +245,10 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
                 handle_stop_editing(params.task)
               }}
               on_key_down={(e) => {
-                if (e.key == 'Enter' && !e.shiftKey) {
+                if (e.key == 'Escape') {
+                  e.preventDefault()
+                  handle_cancel_edit(params.task)
+                } else if (e.key == 'Enter' && !e.shiftKey) {
                   e.preventDefault()
                 }
               }}

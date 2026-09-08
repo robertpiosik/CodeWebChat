@@ -388,6 +388,19 @@ export const Prompt = () => {
                 version={version}
                 is_setup_complete={is_setup_complete}
                 on_donate_click={() => set_viewing_donations(true)}
+                on_forward_task={(text) => {
+                  set_active_view('main')
+                  set_main_view_scroll_reset_key((k) => k + 1)
+
+                  if (target == TARGET.WEB) {
+                    handle_web_prompt_type_change('edit-files')
+                  } else if (target == TARGET.API) {
+                    handle_api_prompt_type_change('edit-files')
+                  }
+
+                  handle_instructions_change(text, 'edit-files')
+                  set_chat_input_focus_key((k) => k + 1)
+                }}
               />
             </div>
           </Layout>

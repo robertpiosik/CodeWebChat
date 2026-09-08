@@ -28,6 +28,7 @@ type Props = {
   is_setup_complete: boolean
   is_connected: boolean
   on_donate_click: () => void
+  on_forward_task: (text: string) => void
   bottom_spacer_height?: number
 }
 
@@ -282,6 +283,7 @@ export const Home: React.FC<Props> = (props) => {
                 on_delete={(timestamp) => {
                   handle_delete(active_root, timestamp)
                 }}
+                on_forward={props.on_forward_task}
                 translations={{
                   placeholder: t('home.tasks.placeholder'),
                   add_new: t('home.tasks.add-new')
