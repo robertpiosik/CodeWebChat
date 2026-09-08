@@ -285,7 +285,7 @@ export class TokenCalculator implements vscode.Disposable {
 
     let timeout_handle: NodeJS.Timeout
     const timeout_promise = new Promise<void>((resolve) => {
-      timeout_handle = setTimeout(() => resolve(), 3000)
+      timeout_handle = setTimeout(() => resolve(), 1000)
     })
 
     let is_completed = false
