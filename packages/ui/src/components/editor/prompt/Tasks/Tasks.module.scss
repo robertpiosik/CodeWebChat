@@ -26,10 +26,6 @@
     border-radius: var(--border-radius-small);
   }
 
-  &:hover {
-    background-color: var(--vscode-list-hoverBackground);
-  }
-
   &__left {
     display: flex;
     flex-direction: column;
@@ -176,7 +172,16 @@
   }
 
   &:hover {
-    background-color: var(--vscode-list-hoverBackground);
+    background-color: var(--vscode-toolbar-hoverBackground);
+
+    .add-button::before {
+      opacity: 1;
+    }
+
+    .add-text {
+      opacity: 1;
+      color: inherit;
+    }
   }
 }
 
@@ -201,6 +206,7 @@
 
 .add-text {
   color: var(--cwc-text-color-dimmed);
+  opacity: 0.8;
   margin-left: 6px;
   user-select: none;
 }
