@@ -12,6 +12,7 @@ export const prompt_for_intelligent_search_results = async (params: {
   restored_selected_paths?: string[]
   restored_unmatched_paths?: string[]
   is_search_in_selected?: boolean
+  is_sub_search?: boolean
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | {
@@ -51,9 +52,11 @@ export const prompt_for_intelligent_search_results = async (params: {
 
   const unmatched_checked_files =
     params.restored_unmatched_paths ??
-    (params.is_search_in_selected
+    (params.is_search_in_selected || params.is_sub_search
       ? params.files.filter(
-          (f) => currently_checked.includes(f) && !unique_paths.includes(f)
+          (f) =>
+            (params.is_sub_search || currently_checked.includes(f)) &&
+            !unique_paths.includes(f)
         )
       : [])
 

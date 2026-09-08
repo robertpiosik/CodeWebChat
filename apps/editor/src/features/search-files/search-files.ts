@@ -81,7 +81,8 @@ export const search_files = async (params: {
         extension_context: params.extension_context,
         show_back_button: params.show_back_button,
         search_in_results,
-        is_search_in_selected: params.is_search_in_selected
+        is_search_in_selected: params.is_search_in_selected,
+        is_sub_search: params.is_sub_search
       }
 
       if (search_mode == 'phrase') {
@@ -98,15 +99,18 @@ export const search_files = async (params: {
           show_back_button: params.show_back_button,
           search_in_results,
           is_search_in_selected: params.is_search_in_selected,
+          is_sub_search: params.is_sub_search,
           folder_path: params.folder_path
         })
       } else if (search_mode == 'agent') {
         flow_result = await perform_agent_search_mode({
+          resolve_files,
           workspace_provider: params.workspace_provider,
           extension_context: params.extension_context,
           show_back_button: params.show_back_button,
           search_in_results,
-          is_search_in_selected: params.is_search_in_selected
+          is_search_in_selected: params.is_search_in_selected,
+          is_sub_search: params.is_sub_search
         })
       }
 

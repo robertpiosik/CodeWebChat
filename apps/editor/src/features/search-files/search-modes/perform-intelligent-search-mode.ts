@@ -39,6 +39,7 @@ export const perform_intelligent_search_mode = async (params: {
   >
   show_back_button?: boolean
   is_search_in_selected?: boolean
+  is_sub_search?: boolean
   folder_path?: string
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
@@ -457,7 +458,8 @@ export const perform_intelligent_search_mode = async (params: {
                 workspace_provider: params.workspace_provider,
                 restored_selected_paths,
                 restored_unmatched_paths,
-                is_search_in_selected: params.is_search_in_selected
+                is_search_in_selected: params.is_search_in_selected,
+                is_sub_search: params.is_sub_search
               })
 
               if (apply_result == 'back') {

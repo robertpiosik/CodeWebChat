@@ -34,6 +34,7 @@ const AGENTS: CodingAgent[] = [
 ]
 
 export const perform_agent_search_mode = async (params: {
+  resolve_files: () => Promise<string[]>
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
   show_back_button?: boolean
@@ -45,6 +46,7 @@ export const perform_agent_search_mode = async (params: {
     | 'back'
   >
   is_search_in_selected?: boolean
+  is_sub_search?: boolean
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | undefined
@@ -638,6 +640,8 @@ export const perform_agent_search_mode = async (params: {
           break
         }
 
+        const input_files = await params.resolve_files()
+
         let should_go_back_to_workspace = false
         let restored_selected_paths: string[] | undefined = undefined
         let restored_unmatched_paths: string[] | undefined = undefined
@@ -650,8 +654,12 @@ export const perform_agent_search_mode = async (params: {
             params.workspace_provider.get_checked_files()
           const unmatched_checked_files =
             restored_unmatched_paths ??
-            (params.is_search_in_selected
-              ? currently_checked.filter((f) => !absolute_paths.includes(f))
+            (params.is_search_in_selected || params.is_sub_search
+              ? input_files.filter(
+                  (f) =>
+                    (params.is_sub_search || currently_checked.includes(f)) &&
+                    !absolute_paths.includes(f)
+                )
               : [])
 
           const selected_items = (await show_search_results_quick_pick({
