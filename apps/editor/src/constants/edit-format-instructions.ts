@@ -28,6 +28,75 @@ def subtract(a, b):
 
 ### Renamed file: \`src/examples/math_utils.py\` (old) \`src/examples/calculator.py\` (new)`
 
+export const EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE = `${intro}, followed by a markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
+Changed greeting to wishes.
+
+### Updated file: \`src/examples/hello.py\`
+
+\`\`\`python
+<<<<<<< SEARCH
+GREETING = "Welcome everyone!"
+=======
+WISHES = "Have a nice day!"
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+ def show_greeting():
+   print(GREETING)
+=======
+ def show_wishes():
+   print(WISHES)
+>>>>>>> REPLACE
+\`\`\`
+
+Created a simple calculator with addition and subtraction.
+
+### Created file: \`src/examples/calculator.py\`
+
+\`\`\`python
+def add(a, b):
+  return a + b
+
+def subtract(a, b):
+  return a - b
+\`\`\`
+
+### Deleted file: \`src/examples/weekdays.py\`
+
+### Renamed file: \`src/examples/math_utils.py\` (old) \`src/examples/calculator.py\` (new)`
+
+export const EDIT_FORMAT_INSTRUCTIONS_DIFF = `${intro}, followed by a unified diff within a markdown code block. Example:
+Updated the greeting text.
+
+### Updated file: \`src/examples/hello.py\`
+
+\`\`\`diff
+--- a/src/examples/hello.py
++++ b/src/examples/hello.py
+@@ -1,5 +1,5 @@
+ # A simple greeting script
+-GREETING = "Welcome everyone!"
++GREETING = "Hello, World!"
+
+ def show_greeting():
+   print(GREETING)
+\`\`\`
+
+Created a simple calculator with addition and subtraction.
+
+### Created file: \`src/examples/calculator.py\`
+
+\`\`\`python
+def add(a, b):
+  return a + b
+
+def subtract(a, b):
+  return a - b
+\`\`\`
+
+### Deleted file: \`src/examples/weekdays.py\`
+
+### Renamed file: \`src/examples/math_utils.py\` (old) \`src/examples/calculator.py\` (new)`
+
 export const EDIT_FORMAT_INSTRUCTIONS_TRUNCATED = `${intro}, followed by a markdown code block with file's contents. As a space saving measure, truncate blocks like unchanged function bodies (code inside {}) by replacing with ellipsis comments. Example:
 Updated the greeting text.
 
@@ -81,72 +150,3 @@ function subtract(a, b) {
 ### Deleted file: \`src/examples/weekdays.js\`
 
 ### Renamed file: \`src/examples/math-tools.js\` (old) \`src/examples/calculator.js\` (new)`
-
-export const EDIT_FORMAT_INSTRUCTIONS_DIFF = `${intro}, followed by a unified diff within a markdown code block. Example:
-Updated the greeting text.
-
-### Updated file: \`src/examples/hello.py\`
-
-\`\`\`diff
---- a/src/examples/hello.py
-+++ b/src/examples/hello.py
-@@ -1,5 +1,5 @@
- # A simple greeting script
--GREETING = "Welcome everyone!"
-+GREETING = "Hello, World!"
-
- def show_greeting():
-   print(GREETING)
-\`\`\`
-
-Created a simple calculator with addition and subtraction.
-
-### Created file: \`src/examples/calculator.py\`
-
-\`\`\`python
-def add(a, b):
-  return a + b
-
-def subtract(a, b):
-  return a - b
-\`\`\`
-
-### Deleted file: \`src/examples/weekdays.py\`
-
-### Renamed file: \`src/examples/math_utils.py\` (old) \`src/examples/calculator.py\` (new)`
-
-export const EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE = `${intro}, followed by a markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
-Changed greeting to wishes.
-
-### Updated file: \`src/examples/hello.py\`
-
-\`\`\`python
-<<<<<<< SEARCH
-GREETING = "Welcome everyone!"
-=======
-WISHES = "Have a nice day!"
->>>>>>> REPLACE
-<<<<<<< SEARCH
- def show_greeting():
-   print(GREETING)
-=======
- def show_wishes():
-   print(WISHES)
->>>>>>> REPLACE
-\`\`\`
-
-Created a simple calculator with addition and subtraction.
-
-### Created file: \`src/examples/calculator.py\`
-
-\`\`\`python
-def add(a, b):
-  return a + b
-
-def subtract(a, b):
-  return a - b
-\`\`\`
-
-### Deleted file: \`src/examples/weekdays.py\`
-
-### Renamed file: \`src/examples/math_utils.py\` (old) \`src/examples/calculator.py\` (new)`

@@ -191,11 +191,7 @@ _TAB completions from SOTA reasoning models._
 
 ### File `[ACTIVE FILE PATH]`
 
-```
-
 [PREFIX]<missing_text>[PROMPT]</missing_text>[SUFFIX]
-
-```
 
 # Output formatting
 
@@ -222,11 +218,7 @@ Find correct replacement text for the <missing_text> symbol.
 
 ### File `[ACTIVE FILE PATH]`
 
-```
-
 [PREFIX]<missing_text>[PROMPT]</missing_text>[SUFFIX]
-
-```
 
 # Output formatting
 
@@ -276,7 +268,7 @@ _Applying malformed edits._
 <details>
 <summary>WEB/API</summary>
 
-````
+```
 [ORIGINAL FILE]
 
 [MALFORMED EDITS]
@@ -285,22 +277,13 @@ _Applying malformed edits._
 
 Your response must begin with a markdown heading identifying the file, followed by a markdown code block containing the updated file. The heading must be: "### Patch repair: `path/to/file.ext`". Example:
 
-### Patched file: `path/to/file.ext`
-
-```python
-def add(a, b):
-  return a + b
-
-def subtract(a, b):
-  return a - b
-
-```
+[EXAMPLE]
 
 # Task
 
 Apply the attached changes to the file without explanations or any other text.
 
-````
+```
 
 </details>
 
