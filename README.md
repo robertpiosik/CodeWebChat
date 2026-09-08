@@ -45,7 +45,6 @@ _Task-relevant files from your favorite coding agent, utilizing its one-off prom
 <summary>AGENT</summary>
 
 ```
-
 # Task
 
 In the project, find the complete set of primary and structural files relevant to the query.
@@ -57,7 +56,6 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 # Query
 
 [PROMPT]
-
 ```
 
 </details>
@@ -70,7 +68,6 @@ _A quick way for task-relevant files from a single llm message._
 <summary>WEB</summary>
 
 ```
-
 # Files
 
 [WORKSPACE FILES/SPECIFIC FOLDER/SELECTED FILES]
@@ -94,7 +91,6 @@ These files contain the core greeting logic and module exports.
 # Query
 
 [PROMPT]
-
 ```
 
 </details>
@@ -103,7 +99,6 @@ These files contain the core greeting logic and module exports.
 <summary>API</summary>
 
 ```
-
 # Files
 
 [WORKSPACE FILES/SPECIFIC FOLDER/SELECTED FILES]
@@ -123,7 +118,6 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 # Query
 
 [PROMPT]
-
 ```
 
 </details>
@@ -136,7 +130,6 @@ _Implementing new features, fixing bugs or doing refactors._
 <summary>WEB/API</summary>
 
 ```
-
 # Files
 
 [SELECTED FILES]
@@ -150,7 +143,6 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 ---
 
 [PROMPT]
-
 ```
 
 </details>
@@ -171,7 +163,6 @@ _Explanations, planning, code reviews, you name it._
 ---
 
 [PROMPT]
-
 ```
 
 </details>
@@ -184,7 +175,6 @@ _TAB completions from SOTA reasoning models._
 <summary>WEB</summary>
 
 ```
-
 # Files
 
 [SELECTED FILES]
@@ -202,7 +192,6 @@ Your response must begin with a markdown heading identifying the file and the cu
 ---
 
 Find correct replacement text for the <missing_text> symbol.
-
 ```
 
 </details>
@@ -211,7 +200,6 @@ Find correct replacement text for the <missing_text> symbol.
 <summary>API</summary>
 
 ```
-
 # Files
 
 [SELECTED FILES]
@@ -224,8 +212,7 @@ Find correct replacement text for the <missing_text> symbol.
 
 Find correct replacement for the <missing_text> symbol. Respond with replacement text within "replacement" XML tags, without explanations or any other text.
 Example:
-!== undefined
-
+<replacement>!== undefined</replacement>'
 ```
 
 </details>
@@ -256,7 +243,6 @@ Your response must begin with "**Commit message:**", then proceed with the messa
 # Task
 
 Write a brief and precise summary for the changes, limited to a single sentence. Because the summary will be used for a commit message, don't use any markdown formatting and don't include a trailing dot. Use an imperative tone to ensure clarity and focus on the primary change or purpose.
-
 ```
 
 </details>
@@ -282,7 +268,6 @@ Your response must begin with a markdown heading identifying the file, followed 
 # Task
 
 Apply the attached changes to the file without explanations or any other text.
-
 ```
 
 </details>
