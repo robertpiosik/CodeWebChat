@@ -13,8 +13,7 @@ let search_in_progress = false
 export const search_files_commands = (
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext,
-  websocket_manager: WebSocketManager,
-  output_channel: vscode.OutputChannel
+  websocket_manager: WebSocketManager
 ) => {
   const process_search_result = async (params: {
     result: {
@@ -124,6 +123,8 @@ export const search_files_commands = (
       return
     }
     search_in_progress = true
+    const output_channel =
+      vscode.window.createOutputChannel('CWC Agentic Search')
     try {
       if (options?.provided_files) {
         let resolved_all_files: string[] = []
@@ -258,6 +259,7 @@ export const search_files_commands = (
       }
     } finally {
       search_in_progress = false
+      output_channel.dispose()
     }
   }
 
@@ -269,6 +271,7 @@ export const search_files_commands = (
       return
     }
     search_in_progress = true
+    const output_channel = vscode.window.createOutputChannel('Code Web Chat')
     try {
       const currently_checked = workspace_provider.get_checked_files()
       if (currently_checked.length === 0) {
@@ -323,6 +326,7 @@ export const search_files_commands = (
       }
     } finally {
       search_in_progress = false
+      output_channel.dispose()
     }
   }
 
