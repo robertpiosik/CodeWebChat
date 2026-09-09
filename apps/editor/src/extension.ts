@@ -88,6 +88,9 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     extension_context
   )
 
+  const output_channel = vscode.window.createOutputChannel('Code Web Chat')
+  extension_context.subscriptions.push(output_channel)
+
   const prompt_view_api_calls_manager = new PromptViewApiCallsManager(
     prompt_view_provider,
     chats_view_provider
@@ -203,7 +206,8 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     ...search_files_commands(
       workspace_provider,
       extension_context,
-      websocket_server_instance
+      websocket_server_instance,
+      output_channel
     ),
     select_definition_file_command(workspace_provider),
     open_url_command({

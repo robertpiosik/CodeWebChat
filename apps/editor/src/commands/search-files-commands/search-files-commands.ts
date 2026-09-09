@@ -13,7 +13,8 @@ let search_in_progress = false
 export const search_files_commands = (
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext,
-  websocket_manager: WebSocketManager
+  websocket_manager: WebSocketManager,
+  output_channel: vscode.OutputChannel
 ) => {
   const process_search_result = async (params: {
     result: {
@@ -180,6 +181,7 @@ export const search_files_commands = (
               workspace_provider,
               extension_context,
               websocket_manager,
+              output_channel,
               show_back_button: true,
               is_sub_search: true
             })
@@ -237,6 +239,7 @@ export const search_files_commands = (
           workspace_provider,
           extension_context,
           websocket_manager,
+          output_channel,
           folder_path,
           is_workspace_action: options?.is_workspace_action
         })
@@ -300,6 +303,7 @@ export const search_files_commands = (
           workspace_provider,
           extension_context,
           websocket_manager,
+          output_channel,
           is_search_in_selected: true,
           folder_path
         })

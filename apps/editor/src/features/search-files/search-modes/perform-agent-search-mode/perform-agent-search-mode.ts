@@ -37,6 +37,7 @@ export const perform_agent_search_mode = async (params: {
   resolve_files: () => Promise<string[]>
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
+  output_channel: vscode.OutputChannel
   show_back_button?: boolean
   search_in_results: (
     matched_paths: string[]
@@ -510,8 +511,13 @@ export const perform_agent_search_mode = async (params: {
                   stdio: ['ignore', 'pipe', 'pipe']
                 })
 
+                const out_channel = params.output_channel
+                out_channel.show(true)
+                out_channel.appendLine(`\n${executable} ${args.join(' ')}\n`)
+
                 child.stdout.on('data', (data) => {
                   const chunk = data.toString()
+                  out_channel.append(chunk)
                   if (agent_info.parse_stream_line) {
                     raw_stream_output += chunk
                     const lines = raw_stream_output.split('\n')
@@ -540,8 +546,9 @@ export const perform_agent_search_mode = async (params: {
                   }
                 })
 
-                child.stderr.on('data', () => {
-                  // Ignore stderr
+                child.stderr.on('data', (data) => {
+                  const chunk = data.toString()
+                  out_channel.append(chunk)
                 })
 
                 token.onCancellationRequested(() => {
@@ -550,7 +557,8 @@ export const perform_agent_search_mode = async (params: {
                   resolve()
                 })
 
-                child.on('close', () => {
+                child.on('close', (code) => {
+                  out_channel.appendLine(`\nProcess exited with code ${code}\n`)
                   if (
                     agent_info.parse_final_output &&
                     raw_stream_output.trim()
@@ -573,6 +581,7 @@ export const perform_agent_search_mode = async (params: {
                 })
 
                 child.on('error', (err) => {
+                  out_channel.appendLine(`\nProcess error: ${err.message}\n`)
                   Logger.error({
                     function_name: 'perform_agent_search_mode',
                     message: 'Agent execution failed',

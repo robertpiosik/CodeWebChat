@@ -1,6 +1,9 @@
 import { CodingAgent } from '../types'
 import { build_agent_prompt, check_command_exists } from '../utils'
 
+let last_action_name = ''
+let action_count = 0
+
 export const antigravity_agent: CodingAgent = {
   id: 'antigravity',
   label: 'Antigravity',
@@ -17,64 +20,38 @@ export const antigravity_agent: CodingAgent = {
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.event == 'step_update' && parsed.step_update) {
       const step = parsed.step_update
+      let action_name = ''
+      let has_dots = false
+
       if (step.step_type == 'tool') {
-        const tool_name = step.tool_name || step.tool_info?.name
-        if (tool_name) {
-          let msg = tool_name
-          const params = step.tool_info?.parameters
-
-          if (params) {
-            const formatted_name = tool_name.toLowerCase()
-
-            if (
-              (formatted_name.includes('run') ||
-                formatted_name.includes('command') ||
-                formatted_name.includes('bash')) &&
-              (params.CommandLine || params.command || params.cmd)
-            ) {
-              msg = params.CommandLine || params.command || params.cmd
-            } else if (formatted_name.includes('read') && params.path) {
-              msg = params.path
-            } else if (
-              (formatted_name.includes('write') ||
-                formatted_name.includes('edit')) &&
-              params.path
-            ) {
-              msg = params.path
-            } else if (formatted_name.includes('list') && params.path) {
-              msg = params.path
-            } else if (
-              (formatted_name.includes('search') ||
-                formatted_name.includes('find') ||
-                formatted_name.includes('grep')) &&
-              (params.query ||
-                params.pattern ||
-                params.description ||
-                params.keyword)
-            ) {
-              msg =
-                params.query ||
-                params.pattern ||
-                params.description ||
-                params.keyword
-            } else if (params.path) {
-              msg = params.path
-            } else if (params.command || params.cmd || params.CommandLine) {
-              msg = params.command || params.cmd || params.CommandLine
-            }
-          }
-
-          report_progress(msg)
+        if (step.tool_name) {
+          action_name = step.tool_name.replace(/_/g, ' ')
+          has_dots = true
         }
       } else if (step.subagent_info?.subagents?.length > 0) {
         const subagent = step.subagent_info.subagents[0]
-        report_progress(subagent.role || subagent.type_name)
+        action_name = subagent.role || subagent.type_name
+      }
+
+      if (action_name) {
+        if (action_name === last_action_name) {
+          action_count++
+        } else {
+          last_action_name = action_name
+          action_count = 1
+        }
+        const counter = action_count > 1 ? ` (${action_count})` : ''
+        report_progress(`${action_name}${has_dots ? '...' : ''}${counter}`)
       }
     } else if (parsed.event == 'result' && parsed.result) {
+      last_action_name = ''
+      action_count = 0
       return { output: parsed.result.response || '' }
     }
   },
   parse_final_output: (parsed, current_output) => {
+    last_action_name = ''
+    action_count = 0
     if (parsed.event == 'result' && parsed.result) {
       return parsed.result.response || ''
     } else if (parsed.response) {
