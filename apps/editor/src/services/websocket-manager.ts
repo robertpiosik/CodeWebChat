@@ -294,11 +294,25 @@ export class WebSocketManager {
         LAST_SELECTED_BROWSER_ID_STATE_KEY
       )
 
-    const items = this.connected_browsers.map((b) => ({
-      label: this._get_browser_name(b.user_agent),
-      detail: b.user_agent,
-      id: b.id
-    }))
+    const items = this.connected_browsers
+      .map((b) => ({
+        label: b.profile_name || this._get_browser_name(b.user_agent),
+        description: b.profile_name
+          ? this._get_browser_name(b.user_agent)
+          : undefined,
+        id: b.id,
+        _has_profile: !!b.profile_name
+      }))
+      .sort((a, b) => {
+        if (a._has_profile && !b._has_profile) return -1
+        if (!a._has_profile && b._has_profile) return 1
+        return a.label.localeCompare(b.label)
+      })
+      .map((item) => ({
+        label: item.label,
+        description: item.description,
+        id: item.id
+      }))
 
     return new Promise<number | undefined>((resolve) => {
       const quick_pick = vscode.window.createQuickPick<

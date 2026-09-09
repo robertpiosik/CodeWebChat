@@ -1,5 +1,3 @@
-import { WebPromptType } from './prompt-types'
-
 export type Chat = {
   url: string
   model?: string
@@ -12,6 +10,7 @@ export type ConnectedBrowser = {
   id: number
   version: string
   user_agent: string
+  profile_name?: string
 }
 
 export type InitializeChatMessage = {

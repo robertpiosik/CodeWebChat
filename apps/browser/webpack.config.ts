@@ -17,6 +17,7 @@ const config = (_: any, argv: Record<string, any>): webpack.Configuration => {
       patterns: [
         { from: 'src/manifest.json', to: 'manifest.json' },
         { from: 'src/icons', to: 'icons' },
+        { from: 'src/fonts', to: 'fonts' },
         { from: 'src/views/popup/index.html', to: 'popup.html' },
         { from: 'src/views/popup/index.css', to: 'index.css' }
       ]
