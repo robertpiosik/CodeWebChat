@@ -117,8 +117,8 @@ export const search_files_commands = (
     }
   ) => {
     if (search_in_progress) {
-      vscode.window.showWarningMessage(
-        t('feature.search-files.warning.search-in-progress' as any)
+      vscode.window.showInformationMessage(
+        t('feature.search-files.info.search-in-progress')
       )
       return
     }
@@ -265,8 +265,8 @@ export const search_files_commands = (
 
   const search_selected_files_handler = async (item?: any) => {
     if (search_in_progress) {
-      vscode.window.showWarningMessage(
-        t('feature.search-files.warning.search-in-progress' as any)
+      vscode.window.showInformationMessage(
+        t('feature.search-files.info.search-in-progress')
       )
       return
     }
@@ -276,7 +276,7 @@ export const search_files_commands = (
       const currently_checked = workspace_provider.get_checked_files()
       if (currently_checked.length === 0) {
         vscode.window.showInformationMessage(
-          t('feature.search-files.info.no-files-selected' as any)
+          t('feature.search-files.info.no-files-selected')
         )
         return
       }
@@ -293,7 +293,7 @@ export const search_files_commands = (
 
       if (files_to_search.length == 0) {
         vscode.window.showInformationMessage(
-          t('feature.search-files.info.no-files-selected-in-folder' as any)
+          t('feature.search-files.info.no-files-selected-in-folder')
         )
         return
       }

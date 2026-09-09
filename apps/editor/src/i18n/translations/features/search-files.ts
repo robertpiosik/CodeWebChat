@@ -1277,7 +1277,7 @@ export const translations = {
     hu: 'várakozás az ügynökre...',
     bg: 'изчакване на агент...'
   },
-  'feature.search-files.warning.search-in-progress': {
+  'feature.search-files.info.search-in-progress': {
     en: 'Search is already in progress.',
     pl: 'Wyszukiwanie jest już w toku.',
     'zh-cn': '搜索已在进行中。',
@@ -1313,7 +1313,7 @@ export const translations = {
     hu: 'Nincsenek keresendő fájlok kiválasztva.',
     bg: 'Няма избрани файлове за търсене.'
   },
-  'feature.search-files.warning.no-files-selected-in-folder': {
+  'feature.search-files.info.no-files-selected-in-folder': {
     en: 'No selected files found in this folder.',
     pl: 'Nie znaleziono wybranych plików w tym folderze.',
     'zh-cn': '在此文件夹中未找到选定的文件。',
