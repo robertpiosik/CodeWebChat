@@ -333,9 +333,6 @@ Install the browser extension and never copy and paste again ([source code](http
 - `Select Clipboard Paths...` - Select files based on paths in your clipboard.
 - `Select Unstaged Files...` - Select files with unstaged changes.
 - `Select Files of Commit...` - Select files modified in a specific commit.
-- `Select Referencing Files...` - Select files referencing the active or selected items.
-- `Select Imported Files...` - Select files imported by the active or selected items.
-- `Select Parent Folder...` - Select the parent directory of a file.
 
 ### Copy
 
