@@ -20,13 +20,16 @@ export const prompt_for_search_mode = async (
       label: t('feature.search-files.mode.keywords'),
       description: t('feature.search-files.mode.keywords-description'),
       mode: 'keywords'
-    },
-    {
+    }
+  ]
+
+  if (!is_workspace_action) {
+    items.push({
       label: t('feature.search-files.mode.intelligent'),
       description: t('feature.search-files.mode.intelligent-description'),
       mode: 'intelligent'
-    }
-  ]
+    })
+  }
 
   if (is_workspace_action) {
     items.push({
