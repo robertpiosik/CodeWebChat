@@ -29,7 +29,6 @@ export type NavItem =
   | 'section:api:group:model-providers'
   | 'section:api:group:api-configurations'
   | 'section:api:group:api-defaults'
-  | 'section:api:group:api-behavior'
   | 'section:api:group:system-instructions'
 
 type NavConfigItem = { id: NavItem; label: TranslationKey }
@@ -76,10 +75,6 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'api-calls.default-configurations.title'
   },
   {
-    id: 'section:api:group:api-behavior',
-    label: 'api-calls.behavior.title'
-  },
-  {
     id: 'section:api:group:system-instructions',
     label: 'api-calls.system-instructions.title'
   }
@@ -98,7 +93,6 @@ type Props = {
   gemini_user_id: number | null
   ai_studio_user_id: number | null
   send_with_shift_enter: boolean
-  auto_run_patch_repair: boolean
   templates: Record<string, Template[]>
   on_update_templates: (key: string, templates: Template[]) => void
   on_edit_template: (key: string, index: number) => void
@@ -124,7 +118,6 @@ type Props = {
   on_gemini_user_id_change: (id: number | null) => void
   on_ai_studio_user_id_change: (id: number | null) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
-  on_auto_run_patch_repair_change: (enabled: boolean) => void
   on_open_keybindings: (search?: string) => void
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
@@ -176,7 +169,6 @@ export const Home: React.FC<Props> = (props) => {
     'section:api:group:model-providers': null,
     'section:api:group:api-configurations': null,
     'section:api:group:api-defaults': null,
-    'section:api:group:api-behavior': null,
     'section:api:group:system-instructions': null
   })
 
@@ -216,7 +208,6 @@ export const Home: React.FC<Props> = (props) => {
       if (
         [
           'section:api:group:api-defaults',
-          'section:api:group:api-behavior',
           'section:api:group:system-instructions'
         ].includes(item.id) &&
         props.api_configurations.length === 0
@@ -304,7 +295,6 @@ export const Home: React.FC<Props> = (props) => {
         if (
           [
             'section:api:group:api-defaults',
-            'section:api:group:api-behavior',
             'section:api:group:system-instructions'
           ].includes(item.id) &&
           props.api_configurations.length === 0
@@ -406,7 +396,6 @@ export const Home: React.FC<Props> = (props) => {
             if (
               [
                 'section:api:group:api-defaults',
-                'section:api:group:api-behavior',
                 'section:api:group:system-instructions'
               ].includes(item.id) &&
               props.api_configurations.length === 0
@@ -536,10 +525,6 @@ export const Home: React.FC<Props> = (props) => {
           on_delete_provider={props.on_delete_provider}
           on_edit_provider={props.on_edit_provider}
           on_reorder_providers={props.on_reorder_providers}
-          auto_run_patch_repair={props.auto_run_patch_repair}
-          on_auto_run_patch_repair_change={
-            props.on_auto_run_patch_repair_change
-          }
           on_open_external_url={props.on_open_external_url}
           api_configurations={props.api_configurations}
           defaults={props.defaults}

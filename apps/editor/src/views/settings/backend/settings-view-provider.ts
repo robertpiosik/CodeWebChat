@@ -30,8 +30,6 @@ import {
   handle_update_send_with_shift_enter,
   handle_open_ignore_patterns_settings,
   handle_open_allow_patterns_settings,
-  handle_get_auto_run_patch_repair as handle_get_auto_run_patch_repair,
-  handle_update_auto_run_patch_repair as handle_update_auto_run_patch_repair,
   handle_open_keybindings,
   handle_open_external_url,
   handle_delete_web_configuration,
@@ -216,10 +214,6 @@ export class SettingsViewProvider {
           await handle_open_ignore_patterns_settings()
         } else if (message.command == 'OPEN_ALLOW_PATTERNS_SETTINGS') {
           await handle_open_allow_patterns_settings()
-        } else if (message.command == 'GET_AUTO_RUN_PATCH_REPAIR') {
-          await handle_get_auto_run_patch_repair(this)
-        } else if (message.command == 'UPDATE_AUTO_RUN_PATCH_REPAIR') {
-          await handle_update_auto_run_patch_repair(message)
         } else if (message.command == 'OPEN_KEYBINDINGS') {
           await handle_open_keybindings(message)
         } else if (message.command == 'OPEN_EXTERNAL_URL') {
@@ -275,7 +269,6 @@ export class SettingsViewProvider {
           void handle_get_gemini_user_id(this)
           void handle_get_ai_studio_user_id(this)
           void handle_get_send_with_shift_enter(this)
-          void handle_get_auto_run_patch_repair(this)
           void handle_get_templates(this)
           this._send_web_configurations()
         }

@@ -140,15 +140,6 @@ export interface UpdateSendWithShiftEnterMessage {
   enabled: boolean
 }
 
-export interface GetAutoRunPatchRepairMessage {
-  command: 'GET_AUTO_RUN_PATCH_REPAIR'
-}
-
-export interface UpdateAutoRunPatchRepairMessage {
-  command: 'UPDATE_AUTO_RUN_PATCH_REPAIR'
-  enabled: boolean
-}
-
 export interface OpenKeybindingsMessage {
   command: 'OPEN_KEYBINDINGS'
   search?: string
@@ -325,8 +316,6 @@ export type FrontendMessage =
   | OpenEditorSettingsMessage
   | OpenIgnorePatternsSettingsMessage
   | OpenAllowPatternsSettingsMessage
-  | GetAutoRunPatchRepairMessage
-  | UpdateAutoRunPatchRepairMessage
   | OpenKeybindingsMessage
   | OpenExternalUrlMessage
   | GetWebConfigurationsMessage
@@ -406,11 +395,6 @@ export interface SendWithShiftEnterMessage {
 export interface ShowSectionMessage {
   command: 'SHOW_SECTION'
   section: string
-}
-
-export interface AutoRunPatchRepairMessage {
-  command: 'AUTO_RUN_PATCH_REPAIR'
-  enabled: boolean
 }
 
 export interface WebConfigurationsMessage {
@@ -508,7 +492,6 @@ export type BackendMessage =
   | AiStudioUserIdMessage
   | SendWithShiftEnterMessage
   | ShowSectionMessage
-  | AutoRunPatchRepairMessage
   | WebConfigurationsMessage
   | NewlyPickedModelMessage
   | NewlyPickedChatbotMessage

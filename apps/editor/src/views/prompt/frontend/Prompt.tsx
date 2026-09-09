@@ -94,7 +94,6 @@ export const Prompt = () => {
     set_items_in_preview,
     raw_instructions,
     preview_item_created_at,
-    auto_run_patch_repair,
     handle_discard_user_changes_in_preview,
     url,
     recent_api_configuration
@@ -605,7 +604,6 @@ export const Prompt = () => {
             >
               <UiResponsePreview
                 items={items_in_preview}
-                auto_run_patch_repair={auto_run_patch_repair}
                 raw_instructions={raw_instructions}
                 recent_api_configuration={recent_api_configuration}
                 has_multiple_workspaces={workspace_folder_count > 1}

@@ -984,11 +984,6 @@
           "type": "string",
           "scope": "resource"
         },
-        "codeWebChat.autoRunPatchRepair": {
-          "type": "boolean",
-          "scope": "resource",
-          "default": false
-        },
         "codeWebChat.agenticSearchAntigravityFlags": {
           "type": "array",
           "scope": "resource",

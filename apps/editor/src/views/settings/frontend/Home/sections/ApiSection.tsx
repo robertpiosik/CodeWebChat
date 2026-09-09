@@ -3,7 +3,6 @@ import { Section as UiSection } from '@ui/components/editor/settings/Section'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
-import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { Button } from '@ui/components/editor/common/Button'
 import { DefaultConfigurationSelector } from '@ui/components/editor/settings/DefaultConfigurationSelector'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
@@ -41,8 +40,6 @@ type Props = {
   ) => void
   on_select_default_api_configuration: (api_feature: ApiFeature) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
-  auto_run_patch_repair: boolean
-  on_auto_run_patch_repair_change: (enabled: boolean) => void
   on_open_external_url: (url: string) => void
   edit_files_instructions: string
   set_edit_files_instructions: (instructions: string) => void
@@ -389,27 +386,6 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                   select: t('api-calls.configurations.action.select-default'),
                   unset: t('api-calls.configurations.action.unset-default')
                 }}
-              />
-            </UiGroup>
-          </div>
-
-          <div
-            ref={(el) =>
-              props.set_section_ref('section:api:group:api-behavior', el)
-            }
-          >
-            <UiGroup title={t('api-calls.behavior.title')}>
-              <UiItem
-                title={t('api-calls.behavior.patch-repair.auto-run.title')}
-                description={t(
-                  'api-calls.behavior.patch-repair.auto-run.description'
-                )}
-                slot_right={
-                  <UiToggler
-                    is_on={props.auto_run_patch_repair}
-                    on_toggle={props.on_auto_run_patch_repair_change}
-                  />
-                }
               />
             </UiGroup>
           </div>

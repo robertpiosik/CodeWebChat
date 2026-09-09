@@ -741,7 +741,6 @@ export interface ResponsePreviewStartedMessage extends BaseMessage {
   items: ItemInPreview[]
   raw_instructions?: string
   created_at?: number
-  auto_run_patch_repair?: boolean
   url?: string
   recent_api_configuration?: RecentApiConfiguration
 }
