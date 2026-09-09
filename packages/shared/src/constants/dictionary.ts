@@ -28,7 +28,7 @@ export const dictionary = {
     DELETED_CONTEXT_FROM_WORKSPACE_STATE: 'Deleted context.',
     CONTEXT_SAVED_SUCCESSFULLY: 'Saved successfully.',
     FILES_REMAIN_CHECKED: (count: number) =>
-      `${count} file${count == 1 ? '' : 's'} remain${
+      `${count} open editor${count == 1 ? '' : 's'} remain${
         count == 1 ? 's' : ''
       } checked.`,
     TEMPLATE_RESTORED: 'Template has been restored.',
