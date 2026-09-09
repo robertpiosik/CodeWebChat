@@ -203,8 +203,8 @@ export const FileItem: FC<Props> = (props) => {
                 {props.file.file_state != 'new' &&
                   props.file.file_state != 'deleted' && (
                     <IconButton
-                      codicon_icon="edit-sparkle"
-                      title="Edit with Patch Repair"
+                      codicon_icon="sparkle"
+                      title="Apply with Patch Repair"
                       on_click={(e) => {
                         e.stopPropagation()
                         props.on_patch_repair(
