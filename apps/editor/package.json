@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "AI coding with static context (CWC)",
-  "version": "2026.9.105",
+  "version": "2026.9.106",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -605,12 +605,12 @@
       ],
       "view/title": [
         {
-          "command": "codeWebChat.undoSelection",
+          "command": "codeWebChat.searchSelectedFiles",
           "when": "view == codeWebChatViewSelectedFiles",
-          "group": "navigation@1"
+          "group": "navigation@2"
         },
         {
-          "command": "codeWebChat.searchSelectedFiles",
+          "command": "codeWebChat.undoSelection",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@3"
         },
@@ -660,14 +660,14 @@
           "group": "3_more@1"
         },
         {
-          "command": "codeWebChat.clearChecks",
-          "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@2"
-        },
-        {
           "command": "codeWebChat.searchFilesWorkspaceAction",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@5"
+        },
+        {
+          "command": "codeWebChat.clearChecks",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "navigation@6"
         },
         {
           "command": "codeWebChat.newFile",
