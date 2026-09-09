@@ -269,8 +269,8 @@ export const search_files_commands = (
     try {
       const currently_checked = workspace_provider.get_checked_files()
       if (currently_checked.length === 0) {
-        vscode.window.showWarningMessage(
-          t('feature.search-files.warning.no-files-selected' as any)
+        vscode.window.showInformationMessage(
+          t('feature.search-files.info.no-files-selected' as any)
         )
         return
       }
@@ -285,9 +285,9 @@ export const search_files_commands = (
         })
       }
 
-      if (files_to_search.length === 0) {
-        vscode.window.showWarningMessage(
-          t('feature.search-files.warning.no-files-selected-in-folder' as any)
+      if (files_to_search.length == 0) {
+        vscode.window.showInformationMessage(
+          t('feature.search-files.info.no-files-selected-in-folder' as any)
         )
         return
       }

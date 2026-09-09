@@ -1295,7 +1295,7 @@ export const translations = {
     hu: 'A keresés már folyamatban van.',
     bg: 'Търсенето вече е в ход.'
   },
-  'feature.search-files.warning.no-files-selected': {
+  'feature.search-files.info.no-files-selected': {
     en: 'No files selected to search in.',
     pl: 'Nie wybrano plików do wyszukiwania.',
     'zh-cn': '未选择要搜索的文件。',
