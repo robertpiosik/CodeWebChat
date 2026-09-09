@@ -140,7 +140,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 [EXAMPLE]
 
----
+# Task
 
 [PROMPT]
 ```
@@ -159,7 +159,7 @@ _Explanations, planning, code reviews, you name it._
 
 [SELECTED FILES]
 
----
+# Task
 
 [PROMPT]
 ```
