@@ -30,11 +30,13 @@ export const use_dropdown = (props: PromptFieldProps) => {
   }, [])
 
   const handle_copy_click = () => {
+    if (props.is_action_disabled) return
     props.on_copy()
     close_dropdown()
   }
 
   const handle_select_click = () => {
+    if (props.is_action_disabled) return
     props.on_submit_with_control()
     close_dropdown()
   }
