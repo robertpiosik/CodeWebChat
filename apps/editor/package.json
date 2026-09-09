@@ -607,32 +607,37 @@
         {
           "command": "codeWebChat.searchSelectedFiles",
           "when": "view == codeWebChatViewSelectedFiles",
-          "group": "navigation@2"
+          "group": "navigation@1"
         },
         {
           "command": "codeWebChat.undoSelection",
-          "when": "view == codeWebChatViewSelectedFiles",
-          "group": "navigation@3"
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "1_more@1"
+        },
+        {
+          "command": "codeWebChat.redoSelection",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "1_more@2"
         },
         {
           "command": "codeWebChat.restoreFileSelection",
           "when": "view == codeWebChatViewSelectedFiles",
-          "group": "navigation@4"
+          "group": "navigation@2"
         },
         {
           "command": "codeWebChat.saveFileSelection",
           "when": "view == codeWebChatViewSelectedFiles",
-          "group": "navigation@5"
+          "group": "navigation@3"
         },
         {
           "command": "codeWebChat.expandContextFolders",
           "when": "view == codeWebChatViewSelectedFiles",
-          "group": "navigation@6"
+          "group": "navigation@4"
         },
         {
           "command": "codeWebChat.collapseContextFolders",
           "when": "view == codeWebChatViewSelectedFiles",
-          "group": "navigation@7"
+          "group": "navigation@5"
         },
         {
           "command": "codeWebChat.copyMarkdown",
@@ -655,59 +660,54 @@
           "group": "2_more@2"
         },
         {
-          "command": "codeWebChat.redoSelection",
-          "when": "view == codeWebChatViewSelectedFiles",
-          "group": "3_more@1"
-        },
-        {
           "command": "codeWebChat.searchFilesWorkspaceAction",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@5"
+          "group": "navigation@1"
         },
         {
           "command": "codeWebChat.clearChecks",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@6"
+          "group": "navigation@2"
         },
         {
           "command": "codeWebChat.newFile",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@7"
+          "group": "navigation@3"
         },
         {
           "command": "codeWebChat.newFolder",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@8"
+          "group": "navigation@4"
         },
         {
           "command": "codeWebChat.collapseWorkspaceFolders",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@9"
+          "group": "navigation@5"
         },
         {
           "command": "codeWebChat.selectWorkspaceFile",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "3_more@1"
+          "group": "2_more@1"
         },
         {
           "command": "codeWebChat.selectClipboardPaths",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "3_more@2"
+          "group": "2_more@2"
         },
         {
           "command": "codeWebChat.selectModifiedFiles",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "3_more@3"
+          "group": "2_more@3"
         },
         {
           "command": "codeWebChat.selectFilesOfCommit",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "3_more@4"
+          "group": "2_more@4"
         },
         {
           "command": "codeWebChat.duplicateWorkspace",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "4_more@1"
+          "group": "3_more@1"
         },
         {
           "command": "codeWebChat.checkAllOpenEditors",
@@ -717,27 +717,27 @@
         {
           "command": "codeWebChat.copyMarkdownOpenEditors",
           "when": "view == codeWebChatViewOpenEditors",
-          "group": "2_more@1"
+          "group": "1_more@1"
         },
         {
           "command": "codeWebChat.saveAll",
           "when": "view == codeWebChatViewOpenEditors",
-          "group": "navigation@5"
+          "group": "navigation@2"
         },
         {
           "command": "codeWebChat.copyPathsOpenEditors",
           "when": "view == codeWebChatViewOpenEditors",
-          "group": "2_more@2"
+          "group": "1_more@2"
         },
         {
           "command": "codeWebChat.closeAllEditors",
           "when": "view == codeWebChatViewOpenEditors",
-          "group": "navigation@6"
+          "group": "navigation@3"
         },
         {
           "command": "codeWebChat.settings",
           "when": "view == promptView",
-          "group": "navigation@2"
+          "group": "navigation@1"
         },
         {
           "command": "codeWebChat.visitWebsite",
@@ -803,17 +803,17 @@
         {
           "command": "codeWebChat.selectParentFolder",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
-          "group": "2_modification@2"
+          "group": "2_modification@1"
         },
         {
           "command": "codeWebChat.selectReferencingFiles",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
-          "group": "2_modification@3"
+          "group": "2_modification@2"
         },
         {
           "command": "codeWebChat.selectImportedFiles",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
-          "group": "2_modification@4"
+          "group": "2_modification@3"
         },
         {
           "command": "codeWebChat.setRanges",
@@ -853,27 +853,27 @@
         {
           "command": "codeWebChat.searchFilesFromDirectory",
           "when": "view == codeWebChatViewWorkspace && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
-          "group": "1_modification@4"
+          "group": "1_modification@1"
         },
         {
           "command": "codeWebChat.searchSelectedFilesFromDirectory",
           "when": "view == codeWebChatViewSelectedFiles && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
-          "group": "1_modification@4"
+          "group": "1_modification@1"
         },
         {
           "command": "codeWebChat.selectParentFolder",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewSelectedFiles) && (viewItem == file || viewItem == contextFile)",
-          "group": "1_modification@5"
+          "group": "1_modification@2"
         },
         {
           "command": "codeWebChat.selectReferencingFiles",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewSelectedFiles) && (viewItem == file || viewItem == contextFile || viewItem == directory || viewItem == contextDirectory || viewItem == workspaceRoot || viewItem == contextWorkspaceRoot)",
-          "group": "1_modification@6"
+          "group": "1_modification@3"
         },
         {
           "command": "codeWebChat.selectImportedFiles",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewSelectedFiles) && (viewItem == file || viewItem == contextFile || viewItem == directory || viewItem == contextDirectory || viewItem == workspaceRoot || viewItem == contextWorkspaceRoot)",
-          "group": "1_modification@7"
+          "group": "1_modification@4"
         },
         {
           "command": "codeWebChat.setRanges",

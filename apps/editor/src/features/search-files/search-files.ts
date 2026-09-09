@@ -1,7 +1,10 @@
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { t } from '@/i18n'
-import { LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY } from '@/constants/state-keys'
+import {
+  LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY,
+  LAST_SEARCH_SELECTED_FILES_FOR_CONTEXT_MODE_STATE_KEY
+} from '@/constants/state-keys'
 import { prompt_for_search_mode } from './utils/prompt-for-search-mode'
 import { perform_phrase_search_mode } from './search-modes/perform-phrase-search-mode'
 import { perform_keywords_search_mode } from './search-modes/perform-keywords-search-mode'
@@ -25,10 +28,14 @@ export const search_files = async (params: {
   | undefined
   | 'back'
 > => {
+  const mode_state_key = params.is_search_in_selected
+    ? LAST_SEARCH_SELECTED_FILES_FOR_CONTEXT_MODE_STATE_KEY
+    : LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY
+
   let initial_search_mode =
     params.extension_context.workspaceState.get<
       'phrase' | 'keywords' | 'intelligent' | 'agent'
-    >(LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY) || 'phrase'
+    >(mode_state_key) || 'phrase'
 
   let _resolved_files: string[] | undefined
   const resolve_files = async () => {
@@ -66,7 +73,7 @@ export const search_files = async (params: {
       const search_mode = mode_result
 
       await params.extension_context.workspaceState.update(
-        LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY,
+        mode_state_key,
         search_mode
       )
 
