@@ -97,7 +97,6 @@ export const Settings = () => {
       settings_hook.gemini_user_id !== undefined &&
       settings_hook.ai_studio_user_id !== undefined &&
       settings_hook.send_with_shift_enter !== undefined &&
-      settings_hook.clear_checks_in_workspace_behavior !== undefined &&
       settings_hook.auto_run_patch_repair !== undefined &&
       settings_hook.is_modern_ui !== undefined &&
       settings_hook.templates !== undefined
@@ -151,9 +150,6 @@ export const Settings = () => {
         gemini_user_id={settings_hook.gemini_user_id!}
         ai_studio_user_id={settings_hook.ai_studio_user_id!}
         send_with_shift_enter={settings_hook.send_with_shift_enter!}
-        clear_checks_in_workspace_behavior={
-          settings_hook.clear_checks_in_workspace_behavior!
-        }
         auto_run_patch_repair={settings_hook.auto_run_patch_repair!}
         templates={settings_hook.templates!}
         on_update_templates={settings_hook.handle_update_templates}
@@ -188,9 +184,6 @@ export const Settings = () => {
         }
         on_agentic_search_instructions_change={
           settings_hook.handle_agentic_search_instructions_change
-        }
-        on_clear_checks_in_workspace_behavior_change={
-          settings_hook.handle_clear_checks_in_workspace_behavior_change
         }
         on_gemini_user_id_change={settings_hook.handle_gemini_user_id_change}
         on_ai_studio_user_id_change={

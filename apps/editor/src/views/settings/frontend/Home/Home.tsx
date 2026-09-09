@@ -107,7 +107,6 @@ type Props = {
   gemini_user_id: number | null
   ai_studio_user_id: number | null
   send_with_shift_enter: boolean
-  clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
   auto_run_patch_repair: boolean
   templates: Record<string, Template[]>
   on_update_templates: (key: string, templates: Template[]) => void
@@ -136,9 +135,6 @@ type Props = {
   on_gemini_user_id_change: (id: number | null) => void
   on_ai_studio_user_id_change: (id: number | null) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
-  on_clear_checks_in_workspace_behavior_change: (
-    value: 'ignore-open-editors' | 'uncheck-all'
-  ) => void
   on_auto_run_patch_repair_change: (enabled: boolean) => void
   on_open_keybindings: (search?: string) => void
   on_open_editor_settings: () => void
@@ -487,12 +483,6 @@ export const Home: React.FC<Props> = (props) => {
           send_with_shift_enter={props.send_with_shift_enter}
           on_send_with_shift_enter_change={
             props.on_send_with_shift_enter_change
-          }
-          clear_checks_in_workspace_behavior={
-            props.clear_checks_in_workspace_behavior
-          }
-          on_clear_checks_in_workspace_behavior_change={
-            props.on_clear_checks_in_workspace_behavior_change
           }
           on_open_editor_settings={props.on_open_editor_settings}
           on_open_ignore_patterns_settings={

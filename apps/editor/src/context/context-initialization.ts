@@ -260,16 +260,8 @@ export const context_initialization = async (
     ),
     vscode.commands.registerCommand('codeWebChat.clearChecks', async () => {
       await workspace_provider!.clear_checks()
+      open_editors_provider!.clear_checks()
     }),
-    vscode.commands.registerCommand('codeWebChat.checkAll', async () => {
-      await workspace_provider!.check_all()
-    }),
-    vscode.commands.registerCommand(
-      'codeWebChat.clearChecksOpenEditors',
-      () => {
-        open_editors_provider!.clear_checks()
-      }
-    ),
     vscode.commands.registerCommand(
       'codeWebChat.checkAllOpenEditors',
       async () => {

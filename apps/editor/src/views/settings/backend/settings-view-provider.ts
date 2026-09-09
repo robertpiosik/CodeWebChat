@@ -7,7 +7,6 @@ import {
   handle_add_model_provider,
   handle_update_model_provider,
   handle_delete_model_provider,
-  handle_get_clear_checks_in_workspace_behavior,
   handle_get_api_configurations,
   handle_get_commit_message_instructions,
   handle_get_attach_ascii_tree_of_context,
@@ -21,7 +20,6 @@ import {
   handle_reorder_model_providers,
   handle_set_default_api_configuration,
   handle_select_default_api_configuration,
-  handle_update_clear_checks_in_workspace_behavior,
   handle_update_commit_message_instructions,
   handle_update_attach_ascii_tree_of_context,
   handle_update_use_context_files_in_commit_message_prompt,
@@ -214,14 +212,6 @@ export class SettingsViewProvider {
           'UPDATE_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
         ) {
           await handle_update_include_prompts_in_commit_messages(message)
-        } else if (
-          message.command == 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
-        ) {
-          await handle_get_clear_checks_in_workspace_behavior(this)
-        } else if (
-          message.command == 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
-        ) {
-          await handle_update_clear_checks_in_workspace_behavior(message)
         } else if (message.command == 'GET_GEMINI_USER_ID') {
           await handle_get_gemini_user_id(this)
         } else if (message.command == 'UPDATE_GEMINI_USER_ID') {
@@ -298,7 +288,6 @@ export class SettingsViewProvider {
           void handle_get_attach_ascii_tree_of_context(this)
           void handle_get_use_context_files_in_commit_message_prompt(this)
           void handle_get_include_prompts_in_commit_messages(this)
-          void handle_get_clear_checks_in_workspace_behavior(this)
           void handle_get_gemini_user_id(this)
           void handle_get_ai_studio_user_id(this)
           void handle_get_send_with_shift_enter(this)

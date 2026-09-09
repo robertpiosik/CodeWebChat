@@ -179,12 +179,6 @@
         "icon": "$(archive)"
       },
       {
-        "command": "codeWebChat.checkAll",
-        "title": "%codeWebChat.checkAll.title%",
-        "category": "Code Web Chat",
-        "icon": "$(check-all)"
-      },
-      {
         "command": "codeWebChat.clearChecks",
         "title": "%codeWebChat.clearChecks.title%",
         "category": "Code Web Chat",
@@ -213,12 +207,6 @@
         "title": "%codeWebChat.checkAllOpenEditors.title%",
         "category": "Code Web Chat",
         "icon": "$(check-all)"
-      },
-      {
-        "command": "codeWebChat.clearChecksOpenEditors",
-        "title": "%codeWebChat.clearChecksOpenEditors.title%",
-        "category": "Code Web Chat",
-        "icon": "$(clear-all)"
       },
       {
         "command": "codeWebChat.closeEditor",
@@ -487,14 +475,6 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.clearChecksOpenEditors",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.checkAll",
-          "when": "false"
-        },
-        {
           "command": "codeWebChat.checkAllOpenEditors",
           "when": "false"
         },
@@ -680,11 +660,6 @@
           "group": "3_more@1"
         },
         {
-          "command": "codeWebChat.checkAll",
-          "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@1"
-        },
-        {
           "command": "codeWebChat.clearChecks",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@2"
@@ -738,11 +713,6 @@
           "command": "codeWebChat.checkAllOpenEditors",
           "when": "view == codeWebChatViewOpenEditors",
           "group": "navigation@1"
-        },
-        {
-          "command": "codeWebChat.clearChecksOpenEditors",
-          "when": "view == codeWebChatViewOpenEditors",
-          "group": "navigation@2"
         },
         {
           "command": "codeWebChat.copyMarkdownOpenEditors",
@@ -987,15 +957,6 @@
           "type": "boolean",
           "scope": "resource",
           "default": false
-        },
-        "codeWebChat.clearChecksInWorkspaceBehavior": {
-          "type": "string",
-          "scope": "resource",
-          "enum": [
-            "ignore-open-editors",
-            "uncheck-all"
-          ],
-          "default": "ignore-open-editors"
         },
         "codeWebChat.ignorePatterns": {
           "type": "array",

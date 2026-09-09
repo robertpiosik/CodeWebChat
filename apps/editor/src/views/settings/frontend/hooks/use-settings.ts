@@ -47,10 +47,6 @@ export const use_settings = (vscode: any) => {
   const [send_with_shift_enter, set_send_with_shift_enter] = useState<
     boolean | undefined
   >(undefined)
-  const [
-    clear_checks_in_workspace_behavior,
-    set_clear_checks_in_workspace_behavior
-  ] = useState<'ignore-open-editors' | 'uncheck-all' | undefined>(undefined)
   const [auto_run_patch_repair, set_auto_run_patch_repair] = useState<
     boolean | undefined
   >(undefined)
@@ -85,7 +81,6 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_GEMINI_USER_ID' })
     post_message(vscode, { command: 'GET_AI_STUDIO_USER_ID' })
     post_message(vscode, { command: 'GET_SEND_WITH_SHIFT_ENTER' })
-    post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
     post_message(vscode, { command: 'GET_AUTO_RUN_PATCH_REPAIR' })
     post_message(vscode, { command: 'GET_IS_MODERN_UI' })
     post_message(vscode, { command: 'GET_TEMPLATES' })
@@ -125,8 +120,6 @@ export const use_settings = (vscode: any) => {
         set_ai_studio_user_id(message.aiStudioUserId)
       } else if (message.command == 'SEND_WITH_SHIFT_ENTER') {
         set_send_with_shift_enter(message.enabled)
-      } else if (message.command == 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR') {
-        set_clear_checks_in_workspace_behavior(message.value)
       } else if (message.command == 'AUTO_RUN_PATCH_REPAIR') {
         set_auto_run_patch_repair(message.enabled)
       } else if (message.command == 'IS_MODERN_UI') {
@@ -326,16 +319,6 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_clear_checks_in_workspace_behavior_change = (
-    value: 'ignore-open-editors' | 'uncheck-all'
-  ) => {
-    set_clear_checks_in_workspace_behavior(value)
-    post_message(vscode, {
-      command: 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR',
-      value
-    })
-  }
-
   const handle_auto_run_patch_repair_change = (enabled: boolean) => {
     set_auto_run_patch_repair(enabled)
     post_message(vscode, {
@@ -435,7 +418,6 @@ export const use_settings = (vscode: any) => {
     gemini_user_id,
     ai_studio_user_id,
     send_with_shift_enter,
-    clear_checks_in_workspace_behavior,
     auto_run_patch_repair,
     is_modern_ui,
     handle_reorder_providers,
@@ -464,7 +446,6 @@ export const use_settings = (vscode: any) => {
     handle_gemini_user_id_change,
     handle_ai_studio_user_id_change,
     handle_send_with_shift_enter_change,
-    handle_clear_checks_in_workspace_behavior_change,
     handle_auto_run_patch_repair_change,
     handle_open_keybindings,
     handle_open_external_url,

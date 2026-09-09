@@ -158,15 +158,6 @@ export interface UpdateSendWithShiftEnterMessage {
   enabled: boolean
 }
 
-export interface GetClearChecksInWorkspaceBehaviorMessage {
-  command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
-}
-
-export interface UpdateClearChecksInWorkspaceBehaviorMessage {
-  command: 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
-  value: 'ignore-open-editors' | 'uncheck-all'
-}
-
 export interface GetAutoRunPatchRepairMessage {
   command: 'GET_AUTO_RUN_PATCH_REPAIR'
 }
@@ -353,8 +344,6 @@ export type FrontendMessage =
   | UpdateAiStudioUserIdMessage
   | GetSendWithShiftEnterMessage
   | UpdateSendWithShiftEnterMessage
-  | GetClearChecksInWorkspaceBehaviorMessage
-  | UpdateClearChecksInWorkspaceBehaviorMessage
   | OpenEditorSettingsMessage
   | OpenIgnorePatternsSettingsMessage
   | OpenAllowPatternsSettingsMessage
@@ -444,11 +433,6 @@ export interface AiStudioUserIdMessage {
 export interface SendWithShiftEnterMessage {
   command: 'SEND_WITH_SHIFT_ENTER'
   enabled: boolean
-}
-
-export interface ClearChecksInWorkspaceBehaviorMessage {
-  command: 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
-  value: 'ignore-open-editors' | 'uncheck-all'
 }
 
 export interface ShowSectionMessage {
@@ -557,7 +541,6 @@ export type BackendMessage =
   | GeminiUserIdMessage
   | AiStudioUserIdMessage
   | SendWithShiftEnterMessage
-  | ClearChecksInWorkspaceBehaviorMessage
   | ShowSectionMessage
   | AutoRunPatchRepairMessage
   | WebConfigurationsMessage

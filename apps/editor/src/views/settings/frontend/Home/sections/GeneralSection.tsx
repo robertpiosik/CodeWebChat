@@ -11,15 +11,9 @@ import { NavItem } from '../Home'
 import { Templates } from '@ui/components/editor/settings/Templates'
 import { Template } from '@/views/settings/types/messages'
 
-type ClearChecksBehavior = 'ignore-open-editors' | 'uncheck-all'
-
 type Props = {
   send_with_shift_enter: boolean
   on_send_with_shift_enter_change: (enabled: boolean) => void
-  clear_checks_in_workspace_behavior: ClearChecksBehavior
-  on_clear_checks_in_workspace_behavior_change: (
-    value: ClearChecksBehavior
-  ) => void
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
   on_open_allow_patterns_settings: () => void
@@ -194,32 +188,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           }
         >
           <UiGroup title={t('general.context.title')}>
-            <UiItem
-              title={t(
-                'general.context.clear-checks-in-workspace-behavior.title'
-              )}
-              description={t(
-                'general.context.clear-checks-in-workspace-behavior.description'
-              )}
-              slot_right={
-                <UiDropdown
-                  options={[
-                    {
-                      value: 'ignore-open-editors',
-                      label: t(
-                        'general.context.clear-checks.ignore-open-editors'
-                      )
-                    },
-                    {
-                      value: 'uncheck-all',
-                      label: t('general.context.clear-checks.uncheck-all')
-                    }
-                  ]}
-                  value={props.clear_checks_in_workspace_behavior}
-                  onChange={props.on_clear_checks_in_workspace_behavior_change}
-                />
-              }
-            />
             <UiItem
               title={t('general.context.intelligent-search-instructions.title')}
               description={t(
