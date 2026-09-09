@@ -67,8 +67,10 @@ export const FileItem: FC<Props> = (props) => {
       return
     }
 
+    const start_time = Date.now()
+
     const interval = setInterval(() => {
-      set_elapsed_seconds((prev) => prev + 0.1)
+      set_elapsed_seconds((Date.now() - start_time) / 1000)
     }, 100)
     return () => clearInterval(interval)
   }, [props.file.is_applying])
