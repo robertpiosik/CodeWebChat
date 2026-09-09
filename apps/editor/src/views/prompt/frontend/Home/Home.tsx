@@ -141,10 +141,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={container_ref}
         >
           <div className={styles['header__left']}>
-            <div className={styles['header__home']}>
-              <span className="codicon codicon-home" />
-            </div>
-            <span className={styles['header__text']}>HOME</span>
+            <span className="codicon codicon-home" />
           </div>
           <div className={styles['header__right']}>
             <CompactableActionButton

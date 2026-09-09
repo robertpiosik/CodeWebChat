@@ -32,18 +32,6 @@
   &__left {
     display: flex;
     align-items: center;
-    gap: 7px;
-  }
-
-  &__right {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  &__home {
-    display: flex;
-    align-items: center;
     justify-content: center;
     border-radius: 5px;
     --size: 20px;
@@ -52,15 +40,10 @@
     color: var(--vscode-icon-foreground);
   }
 
-  &__text {
+  &__right {
     display: flex;
     align-items: center;
-    height: 24px;
-    @include accent-font;
-    font-size: 18px;
-    line-height: 1;
-    padding-top: 1px;
-    white-space: nowrap;
+    gap: 4px;
   }
 
   &__targets {
