@@ -192,10 +192,6 @@ const main = async () => {
     }
 
     if (!stored_data) {
-      console.error(
-        'Chat initialization data not found for batch ID:',
-        batch_id
-      )
       return
     }
 
