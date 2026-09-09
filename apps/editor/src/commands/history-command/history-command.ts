@@ -23,6 +23,7 @@ import {
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
+import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 
 dayjs.extend(relativeTime)
 
@@ -142,7 +143,9 @@ export const history_command = (params: {
               id: c.timestamp.toString(),
               label: label_text,
               description: `${dayjs(c.timestamp).fromNow()}`,
-              detail: c.description,
+              detail: c.description
+                ? simplify_prompt_symbols({ prompt: c.description })
+                : undefined,
               checkpoint: c,
               buttons: [
                 {
