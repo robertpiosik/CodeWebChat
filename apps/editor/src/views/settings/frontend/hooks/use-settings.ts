@@ -34,10 +34,6 @@ export const use_settings = (vscode: any) => {
   ] = useState<boolean | undefined>(undefined)
   const [edit_files_system_instructions, set_edit_files_system_instructions] =
     useState<string | undefined>(undefined)
-  const [intelligent_search_instructions, set_intelligent_search_instructions] =
-    useState<string | undefined>(undefined)
-  const [agentic_search_instructions, set_agentic_search_instructions] =
-    useState<string | undefined>(undefined)
   const [gemini_user_id, set_gemini_user_id] = useState<
     number | null | undefined
   >(undefined)
@@ -62,12 +58,6 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_API_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_WEB_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS' })
-    post_message(vscode, {
-      command: 'GET_INTELLIGENT_SEARCH_INSTRUCTIONS'
-    })
-    post_message(vscode, {
-      command: 'GET_AGENTIC_SEARCH_INSTRUCTIONS'
-    })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, {
       command: 'GET_ATTACH_ASCII_TREE_OF_CONTEXT'
@@ -98,10 +88,6 @@ export const use_settings = (vscode: any) => {
         set_web_configurations(message.web_configurations)
       } else if (message.command == 'EDIT_FILES_SYSTEM_INSTRUCTIONS') {
         set_edit_files_system_instructions(message.instructions)
-      } else if (message.command == 'INTELLIGENT_SEARCH_INSTRUCTIONS') {
-        set_intelligent_search_instructions(message.instructions)
-      } else if (message.command == 'AGENTIC_SEARCH_INSTRUCTIONS') {
-        set_agentic_search_instructions(message.instructions)
       } else if (message.command == 'COMMIT_MESSAGE_INSTRUCTIONS') {
         set_commit_message_instructions(message.instructions)
       } else if (message.command == 'ATTACH_ASCII_TREE_OF_CONTEXT') {
@@ -276,20 +262,6 @@ export const use_settings = (vscode: any) => {
       instructions
     })
 
-  const handle_intelligent_search_instructions_change = (
-    instructions: string
-  ) =>
-    post_message(vscode, {
-      command: 'UPDATE_INTELLIGENT_SEARCH_INSTRUCTIONS',
-      instructions
-    })
-
-  const handle_agentic_search_instructions_change = (instructions: string) =>
-    post_message(vscode, {
-      command: 'UPDATE_AGENTIC_SEARCH_INSTRUCTIONS',
-      instructions
-    })
-
   const handle_open_editor_settings = () =>
     post_message(vscode, { command: 'OPEN_EDITOR_SETTINGS' })
 
@@ -413,8 +385,6 @@ export const use_settings = (vscode: any) => {
     use_context_files_in_commit_message_prompt,
     select_all_prompts_in_commit_messages_by_default,
     edit_files_system_instructions,
-    intelligent_search_instructions,
-    agentic_search_instructions,
     gemini_user_id,
     ai_studio_user_id,
     send_with_shift_enter,
@@ -438,8 +408,6 @@ export const use_settings = (vscode: any) => {
     handle_use_context_files_in_commit_message_prompt_change,
     handle_select_all_prompts_in_commit_messages_by_default_change,
     handle_edit_files_system_instructions_change,
-    handle_intelligent_search_instructions_change,
-    handle_agentic_search_instructions_change,
     handle_open_editor_settings,
     handle_open_ignore_patterns_settings,
     handle_open_allow_patterns_settings,

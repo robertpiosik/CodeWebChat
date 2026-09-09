@@ -87,8 +87,6 @@ export const Settings = () => {
       settings_hook.web_configurations !== undefined &&
       settings_hook.defaults !== undefined &&
       settings_hook.edit_files_system_instructions !== undefined &&
-      settings_hook.intelligent_search_instructions !== undefined &&
-      settings_hook.agentic_search_instructions !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
       settings_hook.attach_ascii_tree_of_context !== undefined &&
       settings_hook.use_context_files_in_commit_message_prompt !== undefined &&
@@ -133,10 +131,6 @@ export const Settings = () => {
         edit_files_system_instructions={
           settings_hook.edit_files_system_instructions!
         }
-        intelligent_search_instructions={
-          settings_hook.intelligent_search_instructions!
-        }
-        agentic_search_instructions={settings_hook.agentic_search_instructions!}
         attach_ascii_tree_of_context={
           settings_hook.attach_ascii_tree_of_context!
         }
@@ -178,12 +172,6 @@ export const Settings = () => {
         }
         on_edit_files_system_instructions_change={
           settings_hook.handle_edit_files_system_instructions_change
-        }
-        on_intelligent_search_instructions_change={
-          settings_hook.handle_intelligent_search_instructions_change
-        }
-        on_agentic_search_instructions_change={
-          settings_hook.handle_agentic_search_instructions_change
         }
         on_gemini_user_id_change={settings_hook.handle_gemini_user_id_change}
         on_ai_studio_user_id_change={

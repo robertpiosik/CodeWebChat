@@ -1,7 +1,3 @@
-export * from './handle-get-intelligent-search-instructions'
-export * from './handle-update-intelligent-search-instructions'
-export * from './handle-get-agentic-search-instructions'
-export * from './handle-update-agentic-search-instructions'
 export * from './handle-get-templates'
 export * from './handle-update-templates'
 export * from './handle-create-template'

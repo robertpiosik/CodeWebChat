@@ -48,10 +48,6 @@ import {
   handle_pick_model_provider,
   handle_pick_api_model,
   handle_pick_api_reasoning_effort,
-  handle_get_intelligent_search_instructions,
-  handle_update_intelligent_search_instructions,
-  handle_get_agentic_search_instructions,
-  handle_update_agentic_search_instructions,
   handle_get_templates,
   handle_update_templates,
   handle_create_template,
@@ -162,16 +158,6 @@ export class SettingsViewProvider {
           await handle_delete_template(this, message)
         } else if (message.command == 'GET_API_CONFIGURATIONS') {
           await handle_get_api_configurations(this)
-        } else if (message.command == 'GET_INTELLIGENT_SEARCH_INSTRUCTIONS') {
-          await handle_get_intelligent_search_instructions(this)
-        } else if (
-          message.command == 'UPDATE_INTELLIGENT_SEARCH_INSTRUCTIONS'
-        ) {
-          await handle_update_intelligent_search_instructions(message)
-        } else if (message.command == 'GET_AGENTIC_SEARCH_INSTRUCTIONS') {
-          await handle_get_agentic_search_instructions(this)
-        } else if (message.command == 'UPDATE_AGENTIC_SEARCH_INSTRUCTIONS') {
-          await handle_update_agentic_search_instructions(message)
         } else if (message.command == 'SET_DEFAULT_API_CONFIGURATION') {
           await handle_set_default_api_configuration(
             this,
@@ -282,8 +268,6 @@ export class SettingsViewProvider {
           void handle_get_model_providers(this)
           void handle_get_api_configurations(this)
           void handle_get_edit_files_system_instructions(this)
-          void handle_get_intelligent_search_instructions(this)
-          void handle_get_agentic_search_instructions(this)
           void handle_get_commit_message_instructions(this)
           void handle_get_attach_ascii_tree_of_context(this)
           void handle_get_use_context_files_in_commit_message_prompt(this)

@@ -15,17 +15,14 @@ import { ApiFeature } from '@/views/shared/types/api-features'
 import { use_translation, TranslationKey } from '../i18n/use-translation'
 import { WebSection } from './sections/WebSection'
 import { commit_message_instructions as default_commit_message_instructions } from '@/constants/instructions'
-import { intelligent_search_task_instructions as default_intelligent_file_search_instructions } from '@/constants/instructions'
-import { agentic_search_task_instructions as default_agentic_file_search_instructions } from '@/constants/instructions'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { GROUP_TITLE_HEIGHT, SECTION_HEADER_HEIGHT } from '@ui/constants/sizes'
 
 export type NavItem =
   | 'section:general'
   | 'section:general:group:open-links'
-  | 'section:general:group:context'
   | 'section:general:group:prompt'
-  | 'section:general:group:commit-messages'
+  | 'section:general:group:commits'
   | 'section:web'
   | 'section:web:group:web-configurations'
   | 'section:api'
@@ -51,12 +48,8 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'general.prompt.title'
   },
   {
-    id: 'section:general:group:context',
-    label: 'general.context.title'
-  },
-  {
-    id: 'section:general:group:commit-messages',
-    label: 'general.commit-messages.title'
+    id: 'section:general:group:commits',
+    label: 'general.commits.title'
   },
   {
     id: 'section:web',
@@ -98,8 +91,6 @@ type Props = {
   web_configurations: WebConfiguration[]
   defaults: Record<ApiFeature, string | null>
   edit_files_system_instructions: string
-  intelligent_search_instructions: string
-  agentic_search_instructions: string
   commit_message_instructions: string
   attach_ascii_tree_of_context: 'ask' | 'always' | 'never'
   use_context_files_in_commit_message_prompt: 'ask' | 'always' | 'never'
@@ -130,8 +121,6 @@ type Props = {
     enabled: boolean
   ) => void
   on_edit_files_system_instructions_change: (instructions: string) => void
-  on_intelligent_search_instructions_change: (instructions: string) => void
-  on_agentic_search_instructions_change: (instructions: string) => void
   on_gemini_user_id_change: (id: number | null) => void
   on_ai_studio_user_id_change: (id: number | null) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
@@ -180,8 +169,7 @@ export const Home: React.FC<Props> = (props) => {
     'section:general': null,
     'section:general:group:open-links': null,
     'section:general:group:prompt': null,
-    'section:general:group:context': null,
-    'section:general:group:commit-messages': null,
+    'section:general:group:commits': null,
     'section:web': null,
     'section:web:group:web-configurations': null,
     'section:api': null,
@@ -200,10 +188,6 @@ export const Home: React.FC<Props> = (props) => {
   )
 
   const [commit_instructions, set_commit_instructions] = useState('')
-  const [intelligent_search_instructions, set_intelligent_search_instructions] =
-    useState('')
-  const [agentic_search_instructions, set_agentic_search_instructions] =
-    useState('')
   const [edit_files_instructions, set_edit_files_instructions] = useState('')
 
   const get_has_warning = (id: NavItem): boolean => {
@@ -354,16 +338,6 @@ export const Home: React.FC<Props> = (props) => {
   useEffect(() => {
     set_commit_instructions(props.commit_message_instructions || '')
   }, [props.commit_message_instructions])
-
-  useEffect(() => {
-    set_intelligent_search_instructions(
-      props.intelligent_search_instructions || ''
-    )
-  }, [props.intelligent_search_instructions])
-
-  useEffect(() => {
-    set_agentic_search_instructions(props.agentic_search_instructions || '')
-  }, [props.agentic_search_instructions])
 
   useEffect(() => {
     set_edit_files_instructions(props.edit_files_system_instructions || '')
@@ -525,62 +499,6 @@ export const Home: React.FC<Props> = (props) => {
             set_commit_instructions(default_commit_message_instructions)
             props.on_commit_instructions_change(
               default_commit_message_instructions
-            )
-          }}
-          intelligent_search_instructions={intelligent_search_instructions}
-          set_intelligent_search_instructions={
-            set_intelligent_search_instructions
-          }
-          on_intelligent_search_instructions_blur={() => {
-            props.on_intelligent_search_instructions_change(
-              intelligent_search_instructions
-            )
-            if (
-              intelligent_search_instructions == '' &&
-              props.intelligent_search_instructions ==
-                default_intelligent_file_search_instructions
-            ) {
-              set_intelligent_search_instructions(
-                default_intelligent_file_search_instructions
-              )
-            }
-          }}
-          default_intelligent_search_instructions={
-            default_intelligent_file_search_instructions
-          }
-          on_restore_intelligent_search_instructions={() => {
-            set_intelligent_search_instructions(
-              default_intelligent_file_search_instructions
-            )
-            props.on_intelligent_search_instructions_change(
-              default_intelligent_file_search_instructions
-            )
-          }}
-          agentic_search_instructions={agentic_search_instructions}
-          set_agentic_search_instructions={set_agentic_search_instructions}
-          on_agentic_search_instructions_blur={() => {
-            props.on_agentic_search_instructions_change(
-              agentic_search_instructions
-            )
-            if (
-              agentic_search_instructions == '' &&
-              props.agentic_search_instructions ==
-                default_agentic_file_search_instructions
-            ) {
-              set_agentic_search_instructions(
-                default_agentic_file_search_instructions
-              )
-            }
-          }}
-          default_agentic_search_instructions={
-            default_agentic_file_search_instructions
-          }
-          on_restore_agentic_search_instructions={() => {
-            set_agentic_search_instructions(
-              default_agentic_file_search_instructions
-            )
-            props.on_agentic_search_instructions_change(
-              default_agentic_file_search_instructions
             )
           }}
           on_open_external_url={props.on_open_external_url}

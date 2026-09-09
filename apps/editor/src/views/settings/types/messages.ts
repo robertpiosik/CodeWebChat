@@ -88,24 +88,6 @@ export interface UpdateSelectAllPromptsInCommitMessagesByDefaultMessage {
   enabled: boolean
 }
 
-export interface GetIntelligentSearchInstructionsMessage {
-  command: 'GET_INTELLIGENT_SEARCH_INSTRUCTIONS'
-}
-
-export interface UpdateIntelligentSearchInstructionsMessage {
-  command: 'UPDATE_INTELLIGENT_SEARCH_INSTRUCTIONS'
-  instructions: string
-}
-
-export interface GetAgenticSearchInstructionsMessage {
-  command: 'GET_AGENTIC_SEARCH_INSTRUCTIONS'
-}
-
-export interface UpdateAgenticSearchInstructionsMessage {
-  command: 'UPDATE_AGENTIC_SEARCH_INSTRUCTIONS'
-  instructions: string
-}
-
 export interface GetEditFilesSystemInstructionsMessage {
   command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS'
 }
@@ -332,10 +314,6 @@ export type FrontendMessage =
   | GetSelectAllPromptsInCommitMessagesByDefaultMessage
   | UpdateSelectAllPromptsInCommitMessagesByDefaultMessage
   | GetEditFilesSystemInstructionsMessage
-  | GetIntelligentSearchInstructionsMessage
-  | UpdateIntelligentSearchInstructionsMessage
-  | GetAgenticSearchInstructionsMessage
-  | UpdateAgenticSearchInstructionsMessage
   | UpdateEditFilesSystemInstructionsMessage
   | SettingsUiReadyMessage
   | GetGeminiUserIdMessage
@@ -407,16 +385,6 @@ export interface SelectAllPromptsInCommitMessagesByDefaultMessage {
 
 export interface EditFilesSystemInstructionsMessage {
   command: 'EDIT_FILES_SYSTEM_INSTRUCTIONS'
-  instructions: string
-}
-
-export interface IntelligentSearchInstructionsMessage {
-  command: 'INTELLIGENT_SEARCH_INSTRUCTIONS'
-  instructions: string
-}
-
-export interface AgenticSearchInstructionsMessage {
-  command: 'AGENTIC_SEARCH_INSTRUCTIONS'
   instructions: string
 }
 
@@ -536,8 +504,6 @@ export type BackendMessage =
   | UseContextFilesInCommitMessagePromptMessage
   | SelectAllPromptsInCommitMessagesByDefaultMessage
   | EditFilesSystemInstructionsMessage
-  | IntelligentSearchInstructionsMessage
-  | AgenticSearchInstructionsMessage
   | GeminiUserIdMessage
   | AiStudioUserIdMessage
   | SendWithShiftEnterMessage
