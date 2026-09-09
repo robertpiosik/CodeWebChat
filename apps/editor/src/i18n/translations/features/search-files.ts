@@ -1294,5 +1294,41 @@ export const translations = {
     cs: 'Hledání již probíhá.',
     hu: 'A keresés már folyamatban van.',
     bg: 'Търсенето вече е в ход.'
+  },
+  'feature.search-files.warning.no-files-selected': {
+    en: 'No files selected to search in.',
+    pl: 'Nie wybrano plików do wyszukiwania.',
+    'zh-cn': '未选择要搜索的文件。',
+    ja: '検索するファイルが選択されていません。',
+    'zh-tw': '未選擇要搜尋的檔案。',
+    de: 'Keine Dateien für die Suche ausgewählt.',
+    es: 'No se han seleccionado archivos para buscar.',
+    fr: 'Aucun fichier sélectionné pour la recherche.',
+    'pt-br': 'Nenhum arquivo selecionado para pesquisa.',
+    ru: 'Не выбраны файлы для поиска.',
+    ko: '검색할 파일이 선택되지 않았습니다.',
+    it: 'Nessun file selezionato per la ricerca.',
+    tr: 'Aramak için dosya seçilmedi.',
+    cs: 'Nebyly vybrány žádné soubory k prohledání.',
+    hu: 'Nincsenek keresendő fájlok kiválasztva.',
+    bg: 'Няма избрани файлове за търсене.'
+  },
+  'feature.search-files.warning.no-files-selected-in-folder': {
+    en: 'No selected files found in this folder.',
+    pl: 'Nie znaleziono wybranych plików w tym folderze.',
+    'zh-cn': '在此文件夹中未找到选定的文件。',
+    ja: 'このフォルダに選択されたファイルは見つかりませんでした。',
+    'zh-tw': '在此資料夾中未找到選定的檔案。',
+    de: 'Keine ausgewählten Dateien in diesem Ordner gefunden.',
+    es: 'No se encontraron archivos seleccionados en esta carpeta.',
+    fr: 'Aucun fichier sélectionné trouvé dans ce dossier.',
+    'pt-br': 'Nenhum arquivo selecionado encontrado nesta pasta.',
+    ru: 'В этой папке не найдено выбранных файлов.',
+    ko: '이 폴더에서 선택된 파일을 찾을 수 없습니다.',
+    it: 'Nessun file selezionato trovato in questa cartella.',
+    tr: 'Bu klasörde seçili dosya bulunamadı.',
+    cs: 'V této složce nebyly nalezeny žádné vybrané soubory.',
+    hu: 'Ebben a mappában nem találhatók kiválasztott fájlok.',
+    bg: 'В тази папка не са намерени избрани файлове.'
   }
 } as const
