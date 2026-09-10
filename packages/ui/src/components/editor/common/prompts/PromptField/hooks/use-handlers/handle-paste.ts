@@ -111,7 +111,8 @@ export const create_handle_paste =
     const has_symbols =
       get_symbol_ranges({
         text,
-        selected_files: props.selected_files ?? []
+        selected_files: props.selected_files ?? [],
+        ignore_file_paths: true
       }).length > 0
 
     if (

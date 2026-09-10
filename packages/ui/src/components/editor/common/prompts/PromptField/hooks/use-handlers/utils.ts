@@ -7,6 +7,7 @@ import {
 export const get_symbol_ranges = (params: {
   text: string
   selected_files: string[]
+  ignore_file_paths?: boolean
 }): { start: number; end: number }[] => {
   const ranges: { start: number; end: number }[] = []
   const regex =
@@ -17,7 +18,7 @@ export const get_symbol_ranges = (params: {
     const file_path = match[1]
 
     if (file_path) {
-      if (params.selected_files.includes(file_path)) {
+      if (!params.ignore_file_paths && params.selected_files.includes(file_path)) {
         ranges.push({ start: match.index, end: match.index + match[0].length })
       }
     } else {
