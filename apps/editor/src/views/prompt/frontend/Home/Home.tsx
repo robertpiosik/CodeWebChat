@@ -167,7 +167,7 @@ export const Home: React.FC<Props> = (props) => {
           })}
         >
           <AsciiArtEffect density={2.3} />
-          <UiKeycapWrapper char={is_alt_pressed ? '1' : undefined} full_width>
+          <UiKeycapWrapper char={is_alt_pressed ? 'W' : undefined} full_width>
             <UiTargetButton
               label={TARGET.WEB}
               on_click={props.on_chatbots_click}
@@ -175,7 +175,7 @@ export const Home: React.FC<Props> = (props) => {
             />
           </UiKeycapWrapper>
           <div className={styles['header__targets-divider']} />
-          <UiKeycapWrapper char={is_alt_pressed ? '2' : undefined} full_width>
+          <UiKeycapWrapper char={is_alt_pressed ? 'A' : undefined} full_width>
             <UiTargetButton
               label={TARGET.API}
               on_click={props.on_api_calls_click}
@@ -191,7 +191,7 @@ export const Home: React.FC<Props> = (props) => {
             <div className={styles.inner__target} ref={target_ref}>
               <AsciiArtEffect />
               <UiKeycapWrapper
-                char={is_alt_pressed ? '1' : undefined}
+                char={is_alt_pressed ? 'W' : undefined}
                 full_width
               >
                 <UiTargetButton
@@ -200,7 +200,7 @@ export const Home: React.FC<Props> = (props) => {
                 />
               </UiKeycapWrapper>
               <UiKeycapWrapper
-                char={is_alt_pressed ? '2' : undefined}
+                char={is_alt_pressed ? 'A' : undefined}
                 full_width
               >
                 <UiTargetButton

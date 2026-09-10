@@ -31,10 +31,10 @@ export const use_keyboard_shortcuts = (params: Params) => {
         !event.metaKey &&
         !event.ctrlKey
       ) {
-        if (event.code == 'Digit1') {
+        if (event.code == 'KeyW') {
           event.preventDefault()
           params.on_chatbots_click()
-        } else if (event.code == 'Digit2') {
+        } else if (event.code == 'KeyA') {
           event.preventDefault()
           params.on_api_calls_click()
         }
