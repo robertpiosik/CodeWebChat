@@ -263,6 +263,17 @@ export const context_initialization = async (
       open_editors_provider!.clear_checks()
     }),
     vscode.commands.registerCommand(
+      'codeWebChat.selectAllWorkspaceFiles',
+      async () => {
+        const all_files: string[] = []
+        for (const root of workspace_provider.get_workspace_roots()) {
+          const files = await workspace_provider.find_all_files(root)
+          all_files.push(...files)
+        }
+        await workspace_provider.set_checked_files(all_files)
+      }
+    ),
+    vscode.commands.registerCommand(
       'codeWebChat.checkAllOpenEditors',
       async () => {
         await open_editors_provider!.check_all()

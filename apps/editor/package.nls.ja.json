@@ -26,6 +26,7 @@
   "codeWebChat.codeAtCursorUsing.title": "カーソル位置のコード...",
   "codeWebChat.codeAtCursorWithInstructions.title": "指示付きでカーソル位置のコードを生成",
   "codeWebChat.codeAtCursorWithInstructionsUsing.title": "指示付きでカーソル位置のコードを生成...",
+  "codeWebChat.selectAllWorkspaceFiles.title": "すべてのワークスペースファイルを選択",
   "codeWebChat.selectWorkspaceFile.title": "ワークスペースファイルを選択...",
   "codeWebChat.newFolder.title": "新しいフォルダー...",
   "codeWebChat.newFile.title": "新しいファイル...",

@@ -26,6 +26,7 @@
   "codeWebChat.codeAtCursorUsing.title": "在游標處產生程式碼...",
   "codeWebChat.codeAtCursorWithInstructions.title": "包含指示在游標處產生程式碼",
   "codeWebChat.codeAtCursorWithInstructionsUsing.title": "包含指示在游標處產生程式碼...",
+  "codeWebChat.selectAllWorkspaceFiles.title": "選擇所有工作區檔案",
   "codeWebChat.selectWorkspaceFile.title": "選擇工作區檔案...",
   "codeWebChat.newFolder.title": "新增資料夾...",
   "codeWebChat.newFile.title": "新增檔案...",

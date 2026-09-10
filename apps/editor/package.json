@@ -247,6 +247,11 @@
         "category": "Code Web Chat"
       },
       {
+        "command": "codeWebChat.selectAllWorkspaceFiles",
+        "title": "%codeWebChat.selectAllWorkspaceFiles.title%",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.selectWorkspaceFile",
         "title": "%codeWebChat.selectWorkspaceFile.title%",
         "category": "Code Web Chat",
@@ -575,6 +580,10 @@
           "when": "false"
         },
         {
+          "command": "codeWebChat.selectAllWorkspaceFiles",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.selectDefinitionFile",
           "when": "false"
         },
@@ -683,6 +692,11 @@
           "command": "codeWebChat.collapseWorkspaceFolders",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@5"
+        },
+        {
+          "command": "codeWebChat.selectAllWorkspaceFiles",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "2_more@0"
         },
         {
           "command": "codeWebChat.selectWorkspaceFile",

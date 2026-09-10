@@ -26,6 +26,7 @@
   "codeWebChat.codeAtCursorUsing.title": "在光标处生成代码...",
   "codeWebChat.codeAtCursorWithInstructions.title": "带指令在光标处生成代码",
   "codeWebChat.codeAtCursorWithInstructionsUsing.title": "带指令在光标处生成代码...",
+  "codeWebChat.selectAllWorkspaceFiles.title": "选择所有工作区文件",
   "codeWebChat.selectWorkspaceFile.title": "选择工作区文件...",
   "codeWebChat.newFolder.title": "新建文件夹...",
   "codeWebChat.newFile.title": "新建文件...",

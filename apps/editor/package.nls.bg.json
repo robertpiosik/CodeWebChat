@@ -26,6 +26,7 @@
   "codeWebChat.codeAtCursorUsing.title": "Генерирай код при курсора...",
   "codeWebChat.codeAtCursorWithInstructions.title": "Генерирай код при курсора с инструкции",
   "codeWebChat.codeAtCursorWithInstructionsUsing.title": "Генерирай код при курсора с инструкции...",
+  "codeWebChat.selectAllWorkspaceFiles.title": "Избери всички файлове от работното пространство",
   "codeWebChat.selectWorkspaceFile.title": "Избери файл от работното пространство...",
   "codeWebChat.newFolder.title": "Нова папка...",
   "codeWebChat.newFile.title": "Нов файл...",

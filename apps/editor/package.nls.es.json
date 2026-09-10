@@ -26,6 +26,7 @@
   "codeWebChat.codeAtCursorUsing.title": "Código en el cursor...",
   "codeWebChat.codeAtCursorWithInstructions.title": "Código en el cursor con instrucciones",
   "codeWebChat.codeAtCursorWithInstructionsUsing.title": "Código en el cursor con instrucciones...",
+  "codeWebChat.selectAllWorkspaceFiles.title": "Seleccionar todos los archivos del espacio de trabajo",
   "codeWebChat.selectWorkspaceFile.title": "Seleccionar archivo del espacio de trabajo...",
   "codeWebChat.newFolder.title": "Nueva carpeta...",
   "codeWebChat.newFile.title": "Nuevo archivo...",
