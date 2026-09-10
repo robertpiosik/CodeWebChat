@@ -84,14 +84,13 @@
   flex-direction: column;
   width: 100%;
 
-  &__responses {
-    margin: 0;
-  }
-
   &__target {
     display: flex;
     flex-direction: column;
     margin: 0 12px;
+    overflow: hidden;
+    border-radius: 10px;
+    position: relative;
 
     :global([data-modern-ui='true']) & {
       margin: 0 10px;
@@ -100,22 +99,6 @@
     > button {
       flex: 1;
     }
-  }
-
-  &__empty {
-    padding: 0 16px;
-    color: var(--cwc-text-color-dimmed);
-
-    :global([data-modern-ui='true']) & {
-      padding: 0 12px;
-    }
-  }
-
-  &__buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
   }
 
   &__workspace-dropdown {

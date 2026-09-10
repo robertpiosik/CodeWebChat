@@ -1,6 +1,5 @@
 import styles from './TargetButton.module.scss'
 import cn from 'classnames'
-import { AsciiArtEffect } from '../AsciiArtEffect'
 
 type Props = {
   label: string
@@ -24,7 +23,6 @@ export const TargetButton: React.FC<Props> = (props) => {
         onClick={props.disabled ? undefined : props.on_click}
         disabled={!!props.disabled}
       >
-        <AsciiArtEffect density={props.is_compact ? 2.3 : undefined} />
         <div className={styles['button__label']}>
           {props.label.split('').map((char, index) => (
             <span

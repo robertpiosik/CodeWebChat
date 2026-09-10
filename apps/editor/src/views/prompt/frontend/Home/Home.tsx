@@ -4,6 +4,7 @@ import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrolla
 import { Tabs as UiTabs } from '@ui/components/editor/prompt/Tabs'
 import { TargetButton as UiTargetButton } from '@ui/components/editor/prompt/TargetButton'
 import { KeycapWrapper as UiKeycapWrapper } from '@ui/components/editor/prompt/KeycapWrapper'
+import { AsciiArtEffect as UiAsciiArtEffect } from '@ui/components/editor/prompt/AsciiArtEffect'
 import cn from 'classnames'
 import { post_message } from '../utils/post-message'
 import { BackendMessage } from '@/views/prompt/types/messages'
@@ -165,6 +166,7 @@ export const Home: React.FC<Props> = (props) => {
               has_scrolled_past_target_button
           })}
         >
+          <UiAsciiArtEffect density={2.3} />
           <UiKeycapWrapper char={is_alt_pressed ? 'W' : undefined} full_width>
             <UiTargetButton
               label={TARGET.WEB}
@@ -186,6 +188,7 @@ export const Home: React.FC<Props> = (props) => {
         <div className={styles.content}>
           <div className={styles.inner}>
             <div className={styles.inner__target} ref={target_ref}>
+              <UiAsciiArtEffect />
               <UiKeycapWrapper
                 char={is_alt_pressed ? 'W' : undefined}
                 full_width
