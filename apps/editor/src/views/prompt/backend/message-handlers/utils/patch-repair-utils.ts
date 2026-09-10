@@ -84,7 +84,7 @@ export const get_patch_repair_config = async (params: {
     vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))
     Logger.warn({
       function_name: 'get_patch_repair_config',
-      message: 'API provider not found for Prompt Repair API tool.'
+      message: 'API provider not found for the Patch Repair tool.'
     })
     return
   }

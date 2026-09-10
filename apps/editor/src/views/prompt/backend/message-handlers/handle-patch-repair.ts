@@ -137,6 +137,10 @@ export const handle_patch_repair = async (params: {
       await model_providers_manager.get_default_patch_repair_api_configuration()
     if (default_config || api_configurations.length === 1) {
       skip_action_quick_pick = true
+    } else {
+      vscode.window.showInformationMessage(
+        t('views.prompt.handlers.handle-patch-repair.some-changes-unable-to-apply')
+      )
     }
   }
 
@@ -194,7 +198,7 @@ export const handle_patch_repair = async (params: {
         quick_pick.activeItems = [quick_pick.items[0]]
       }
 
-      quick_pick.title = 'Prompt Repair'
+      quick_pick.title = 'Patch Repair'
       quick_pick.placeholder = t(
         'common.action-quick-pick.placeholder.no-tokens'
       )
