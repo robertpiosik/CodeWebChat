@@ -14,12 +14,17 @@ export const sync_workspace_from_dir = async (params: {
       params.source_dir_uri
     )
     const source_folders = new Map(source_entries)
-    for (const folder of workspace_folders) {
-      const source_folder_type = source_folders.get(folder.name)
-      if (source_folder_type == vscode.FileType.Directory) {
+    for (let index = 0; index < workspace_folders.length; index++) {
+      const folder = workspace_folders[index]
+      const folder_key = `${index}-${folder.name}`
+
+      if (
+        source_folders.has(folder_key) &&
+        source_folders.get(folder_key) == vscode.FileType.Directory
+      ) {
         const source_folder_uri = vscode.Uri.joinPath(
           params.source_dir_uri,
-          folder.name
+          folder_key
         )
         await sync_directory({
           source_dir: source_folder_uri,

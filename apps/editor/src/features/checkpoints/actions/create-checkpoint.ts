@@ -101,38 +101,61 @@ export const create_checkpoint = async (params: {
       const git_data: Record<string, any> = {}
       let uses_git = false
 
-      for (const [index, folder] of workspace_folders.entries()) {
-        const has_git = folder_git_statuses[index]
+      await Promise.all(
+        workspace_folders.map(async (folder, index) => {
+          const has_git = folder_git_statuses[index]
+          const folder_key = `${index}-${folder.name}`
 
-        if (has_git) {
-          uses_git = true
-          const git_info = await get_git_info(folder)
-          const diff = await get_git_diff(folder)
+          if (has_git) {
+            uses_git = true
+            const git_info = await get_git_info(folder)
+            const diff = await get_git_diff(folder)
 
-          if (git_info && diff !== null) {
-            const folder_name = folder.name
-            git_data[folder_name] = {
-              branch: git_info.branch,
-              commit_hash: git_info.commit_hash,
-              folder_name
+            if (git_info && diff !== null) {
+              git_data[folder_key] = {
+                branch: git_info.branch,
+                commit_hash: git_info.commit_hash,
+                folder_name: folder_key
+              }
+
+              const diff_file_path = path.join(
+                checkpoint_dir_path,
+                `${folder_key}.diff`
+              )
+              await vscode.workspace.fs.writeFile(
+                vscode.Uri.file(diff_file_path),
+                Buffer.from(diff, 'utf8')
+              )
+            } else {
+              Logger.warn({
+                function_name: 'create_checkpoint',
+                message: `Failed to get git information for repository in ${folder.name}. Falling back to file copy.`
+              })
+              const dest_folder_path =
+                workspace_folders.length > 1
+                  ? path.join(checkpoint_dir_path, folder_key)
+                  : checkpoint_dir_path
+              const dest_folder_uri = vscode.Uri.file(dest_folder_path)
+              if (workspace_folders.length > 1) {
+                await vscode.workspace.fs.createDirectory(dest_folder_uri)
+              }
+
+              const entries = await vscode.workspace.fs.readDirectory(
+                folder.uri
+              )
+              for (const [name] of entries) {
+                await copy_optimised_recursively(
+                  vscode.Uri.joinPath(folder.uri, name),
+                  vscode.Uri.joinPath(dest_folder_uri, name),
+                  folder.uri.fsPath,
+                  params.workspace_provider
+                )
+              }
             }
-
-            const diff_file_path = path.join(
-              checkpoint_dir_path,
-              `${folder_name}.diff`
-            )
-            await vscode.workspace.fs.writeFile(
-              vscode.Uri.file(diff_file_path),
-              Buffer.from(diff, 'utf8')
-            )
           } else {
-            Logger.warn({
-              function_name: 'create_checkpoint',
-              message: `Failed to get git information for repository in ${folder.name}. Falling back to file copy.`
-            })
             const dest_folder_path =
               workspace_folders.length > 1
-                ? path.join(checkpoint_dir_path, folder.name)
+                ? path.join(checkpoint_dir_path, folder_key)
                 : checkpoint_dir_path
             const dest_folder_uri = vscode.Uri.file(dest_folder_path)
             if (workspace_folders.length > 1) {
@@ -149,27 +172,8 @@ export const create_checkpoint = async (params: {
               )
             }
           }
-        } else {
-          const dest_folder_path =
-            workspace_folders.length > 1
-              ? path.join(checkpoint_dir_path, folder.name)
-              : checkpoint_dir_path
-          const dest_folder_uri = vscode.Uri.file(dest_folder_path)
-          if (workspace_folders.length > 1) {
-            await vscode.workspace.fs.createDirectory(dest_folder_uri)
-          }
-
-          const entries = await vscode.workspace.fs.readDirectory(folder.uri)
-          for (const [name] of entries) {
-            await copy_optimised_recursively(
-              vscode.Uri.joinPath(folder.uri, name),
-              vscode.Uri.joinPath(dest_folder_uri, name),
-              folder.uri.fsPath,
-              params.workspace_provider
-            )
-          }
-        }
-      }
+        })
+      )
 
       let checkpoints = await get_checkpoints(params.extension_context)
 

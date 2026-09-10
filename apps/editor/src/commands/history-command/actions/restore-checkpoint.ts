@@ -168,9 +168,10 @@ export const restore_checkpoint = async (params: {
         if (params.checkpoint.uses_git && params.checkpoint.git_data) {
           const workspace_folders = vscode.workspace.workspaceFolders!
 
-          for (const folder of workspace_folders) {
-            const folder_name = folder.name
-            const git_info = params.checkpoint.git_data[folder_name]
+          for (let index = 0; index < workspace_folders.length; index++) {
+            const folder = workspace_folders[index]
+            const folder_key = `${index}-${folder.name}`
+            const git_info = params.checkpoint.git_data[folder_key]
 
             if (git_info) {
               const current_git_info = await get_git_info(folder)
@@ -218,7 +219,7 @@ export const restore_checkpoint = async (params: {
 
                 const diff_file_path = path.join(
                   checkpoint_dir_path,
-                  `${folder_name}.diff`
+                  `${git_info.folder_name}.diff`
                 )
 
                 let diff = ''
@@ -319,7 +320,7 @@ export const restore_checkpoint = async (params: {
 
                 const diff_file_path = path.join(
                   checkpoint_dir_path,
-                  `${folder_name}.diff`
+                  `${git_info.folder_name}.diff`
                 )
 
                 let diff = ''
@@ -413,10 +414,13 @@ export const restore_checkpoint = async (params: {
                 }
               }
             } else {
-              const source_folder_uri =
-                workspace_folders.length > 1
-                  ? vscode.Uri.joinPath(checkpoint_dir_uri, folder.name)
-                  : checkpoint_dir_uri
+              let source_folder_uri = checkpoint_dir_uri
+              if (workspace_folders.length > 1) {
+                source_folder_uri = vscode.Uri.joinPath(
+                  checkpoint_dir_uri,
+                  folder_key
+                )
+              }
               try {
                 await vscode.workspace.fs.stat(source_folder_uri)
                 await sync_directory({

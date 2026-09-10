@@ -1,10 +1,6 @@
 import * as vscode from 'vscode'
 import { exec } from 'child_process'
 import { Logger } from '@shared/utils/logger'
-import * as crypto from 'crypto'
-import * as fs from 'fs/promises'
-import * as os from 'os'
-import * as path from 'path'
 
 const exec_async = (command: string, options: any): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -60,96 +56,71 @@ export const get_git_diff = async (
 ): Promise<string | null> => {
   try {
     const cwd = workspace_folder.uri.fsPath
-    const tmp_dir = os.tmpdir()
 
-    const tracked_files_output = await exec_async(
-      'git diff -z --name-only HEAD',
-      {
+    let total_diff = ''
+
+    try {
+      const tracked_diff = await exec_async('git diff --binary HEAD', {
         cwd,
         encoding: 'utf8',
-        maxBuffer: 50 * 1024 * 1024 // 50MB max
+        maxBuffer: 50 * 1024 * 1024
+      })
+      if (tracked_diff) {
+        total_diff += tracked_diff
       }
-    )
-    const tracked_files = tracked_files_output
-      .split('\0')
-      .filter((f) => f.length > 0)
+    } catch (err: any) {
+      if (err.status === 1 && err.stdout) {
+        total_diff += err.stdout.toString()
+      } else {
+        throw err
+      }
+    }
 
     const untracked_files_output = await exec_async(
       'git ls-files -z --others --exclude-standard',
       {
         cwd,
-        encoding: 'utf8'
+        encoding: 'utf8',
+        maxBuffer: 50 * 1024 * 1024
       }
     )
     const untracked_files = untracked_files_output
       .split('\0')
       .filter((f) => f.length > 0)
 
-    const all_files = [
-      ...tracked_files.map((f) => ({ file: f, is_untracked: false })),
-      ...untracked_files.map((f) => ({ file: f, is_untracked: true }))
-    ]
-
-    let total_diff = ''
-
-    for (const { file, is_untracked } of all_files) {
-      const absolute_path = path.join(cwd, file)
-      let mtime = 0
-
+    const process_untracked_file = async (file: string) => {
       try {
-        const stats = await fs.stat(absolute_path)
-        mtime = Math.floor(stats.mtimeMs)
-      } catch {}
-
-      let diff_chunk = ''
-      let cache_path = ''
-
-      if (mtime > 0) {
-        const path_hash = crypto
-          .createHash('md5')
-          .update(absolute_path)
-          .digest('hex')
-        const cache_filename = `cwc-checkpoint-cache-${path_hash}-${mtime}.txt`
-        cache_path = path.join(tmp_dir, cache_filename)
-
-        try {
-          const cached_diff = await fs.readFile(cache_path, 'utf8')
-          total_diff += cached_diff
-          continue
-        } catch {}
-      }
-
-      try {
-        const cmd = is_untracked
-          ? `git diff --no-index --binary /dev/null "${file}"`
-          : `git diff --binary HEAD -- "${file}"`
-
-        diff_chunk = await exec_async(cmd, {
+        const cmd = `git diff --no-index --binary /dev/null "${file}"`
+        const diff_chunk = await exec_async(cmd, {
           cwd,
           encoding: 'utf8',
           maxBuffer: 50 * 1024 * 1024
         })
+        return diff_chunk
       } catch (err: any) {
         if (err.status === 1 && err.stdout) {
-          diff_chunk = err.stdout.toString()
+          return err.stdout.toString()
         } else {
           Logger.warn({
             function_name: 'get_git_diff',
             message: `Could not create diff for file: ${file}`,
             data: err
           })
-        }
-      }
-
-      if (diff_chunk) {
-        total_diff += diff_chunk
-        if (mtime > 0 && cache_path) {
-          try {
-            await fs.writeFile(cache_path, diff_chunk, 'utf8')
-          } catch (e) {}
+          return ''
         }
       }
     }
+
+    const concurrency_limit = 20
+    const untracked_diffs: string[] = []
+
+    for (let i = 0; i < untracked_files.length; i += concurrency_limit) {
+      const chunk = untracked_files.slice(i, i + concurrency_limit)
+      const results = await Promise.all(chunk.map(process_untracked_file))
+      untracked_diffs.push(...results)
+    }
+
+    total_diff += untracked_diffs.join('')
 
     return total_diff
   } catch (error) {
