@@ -50,8 +50,8 @@ export const codex_agent: CodingAgent = {
           last_action_name = action_name
           action_count = 1
         }
-        const counter = action_count > 1 ? ` (${action_count})` : ''
-        report_progress(`${action_name}...${counter}`)
+        const extra_dots = action_count > 1 ? '.'.repeat(action_count - 1) : ''
+        report_progress(`${action_name}...${extra_dots}`)
       }
     } else if (parsed.type == 'item.completed' && parsed.item) {
       if (parsed.item.type == 'agent_message' && parsed.item.text) {

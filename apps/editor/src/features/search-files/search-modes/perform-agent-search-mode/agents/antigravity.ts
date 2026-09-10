@@ -40,8 +40,8 @@ export const antigravity_agent: CodingAgent = {
           last_action_name = action_name
           action_count = 1
         }
-        const counter = action_count > 1 ? ` (${action_count})` : ''
-        report_progress(`${action_name}${has_dots ? '...' : ''}${counter}`)
+        const extra_dots = action_count > 1 ? '.'.repeat(action_count - 1) : ''
+        report_progress(`${action_name}${has_dots ? '...' : ''}${extra_dots}`)
       }
     } else if (parsed.event == 'result' && parsed.result) {
       last_action_name = ''

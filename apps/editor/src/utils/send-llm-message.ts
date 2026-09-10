@@ -6,6 +6,8 @@ import { Logger } from '@shared/utils/logger'
 type StreamCallback = (tokens_per_second: number, total_tokens: number) => void
 type ThinkingStreamCallback = (text: string) => void
 
+let reasoning_output_channel: vscode.OutputChannel | undefined
+
 const DATA_PREFIX = 'data: '
 const DONE_TOKEN = '[DONE]'
 
@@ -88,6 +90,7 @@ export const send_llm_message = async (params: {
   let stream_start_time = 0
   let last_on_chunk_time = 0
   let total_tokens = 0
+  let is_first_thinking_chunk = true
 
   const handle_chunk_metrics = (chunk: string) => {
     if (!params.on_chunk || !chunk) return
@@ -118,8 +121,23 @@ export const send_llm_message = async (params: {
   }
 
   const handle_thinking_chunk = (chunk: string) => {
-    if (!params.on_thinking_chunk || !chunk) return
-    params.on_thinking_chunk(chunk)
+    if (!chunk) return
+
+    if (!reasoning_output_channel) {
+      reasoning_output_channel =
+        vscode.window.createOutputChannel('CWC Reasoning')
+    }
+
+    if (is_first_thinking_chunk) {
+      reasoning_output_channel.show(true)
+      is_first_thinking_chunk = false
+    }
+
+    reasoning_output_channel.append(chunk)
+
+    if (params.on_thinking_chunk) {
+      params.on_thinking_chunk(chunk)
+    }
   }
 
   try {
