@@ -136,7 +136,7 @@ export const perform_intelligent_search_mode = async (params: {
               ...(has_api_configurations
                 ? [
                     {
-                      label: t('common.action.make-api-call'),
+                      label: t('common.action.send-request'),
                       id: 'make-api'
                     }
                   ]

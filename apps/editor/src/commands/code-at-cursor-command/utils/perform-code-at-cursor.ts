@@ -131,7 +131,7 @@ export const perform_code_at_cursor = async (params: {
           ...(has_api_configurations
             ? [
                 {
-                  label: t('common.action.make-api-call'),
+                  label: t('common.action.send-request'),
                   id: 'make-api'
                 }
               ]

@@ -105,7 +105,7 @@ export const run_generate_action = async (params: {
       const show_back_button =
         was_empty_stage && !is_single_change_flow && !params.source_control
 
-      const action_make_api = t('common.action.make-api-call')
+      const action_make_api = t('common.action.send-request')
       const action_autofill_chatbot = t('common.action.autofill-chatbot')
       const action_enter_manually = t('common.action.enter-manually')
       const action_copy_prompt = t('common.action.copy-prompt')
