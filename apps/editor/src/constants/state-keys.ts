@@ -86,6 +86,8 @@ export const LAST_SEARCH_SELECTED_FILES_FOR_CONTEXT_MODE_STATE_KEY =
 
 export const LAST_SELECTED_WORKSPACE_IN_AGENT_SEARCH_STATE_KEY =
   'last-selected-workspace-in-agent-search'
+export const LAST_USED_SEARCH_FILES_AGENT_STATE_KEY =
+  'last-used-search-files-agent'
 
 export const LAST_INTELLIGENT_FILE_SEARCH_SHRINK_STATE_KEY =
   'last-intelligent-file-search-shrink'

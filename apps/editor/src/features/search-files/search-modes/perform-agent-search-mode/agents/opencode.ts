@@ -33,7 +33,8 @@ export const opencode_agent: CodingAgent = {
         last_action_name = action_name
         action_count = 1
       }
-      const extra_dots = action_count > 1 ? '.'.repeat(action_count - 1) : ''
+      const extra_dots =
+        action_count > 1 ? ' ' + '.'.repeat(action_count - 1) : ''
       report_progress(`${action_name}...${extra_dots}`)
     } else if (parsed.type == 'result' && parsed.result) {
       last_action_name = ''

@@ -6,7 +6,8 @@ import * as path from 'path'
 import * as fs from 'fs'
 import {
   LAST_SELECTED_WORKSPACE_IN_AGENT_SEARCH_STATE_KEY,
-  LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY
+  LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY,
+  LAST_USED_SEARCH_FILES_AGENT_STATE_KEY
 } from '@/constants/state-keys'
 import { extract_paths_from_bullet_list } from '@/utils/extract-paths-from-bullet-list'
 import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-files'
@@ -204,6 +205,20 @@ export const perform_agent_search_mode = async (params: {
 
         const agent_quick_pick = vscode.window.createQuickPick<AgentPickItem>()
         agent_quick_pick.items = build_agent_picks()
+
+        const last_used_agent =
+          params.extension_context.workspaceState.get<string>(
+            LAST_USED_SEARCH_FILES_AGENT_STATE_KEY
+          )
+        if (last_used_agent) {
+          const active_item = agent_quick_pick.items.find(
+            (i) => i.cmd == last_used_agent
+          )
+          if (active_item) {
+            agent_quick_pick.activeItems = [active_item]
+          }
+        }
+
         agent_quick_pick.title = t('feature.search-files.agent.select-agent')
         agent_quick_pick.placeholder = t(
           'feature.search-files.agent.select-agent-placeholder'
@@ -397,6 +412,11 @@ export const perform_agent_search_mode = async (params: {
 
         const selected_agent_cmd = agent_selection_result.cmd
         const flags_string = agent_selection_result.flag_value
+
+        await params.extension_context.workspaceState.update(
+          LAST_USED_SEARCH_FILES_AGENT_STATE_KEY,
+          selected_agent_cmd
+        )
 
         let go_back_to_agent = false
 
