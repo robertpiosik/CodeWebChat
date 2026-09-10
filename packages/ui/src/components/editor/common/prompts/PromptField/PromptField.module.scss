@@ -67,6 +67,7 @@
     opacity: var(--dimmed-opacity);
     pointer-events: none;
     font-variant-numeric: tabular-nums;
+    transform: translateY(0.5px);
   }
 
   &__clear-button {
