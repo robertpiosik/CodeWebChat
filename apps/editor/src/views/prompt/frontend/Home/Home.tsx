@@ -8,7 +8,6 @@ import cn from 'classnames'
 import { post_message } from '../utils/post-message'
 import { BackendMessage } from '@/views/prompt/types/messages'
 import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
-import { AsciiArtEffect } from '@ui/components/editor/prompt/AsciiArtEffect'
 import { Translation, use_translation } from '../i18n/use-translation'
 import { CompactableActionButton } from '@ui/components/editor/prompt/CompactableActionButton'
 import { Tasks as UiTasks } from '@ui/components/editor/prompt/Tasks'
@@ -166,7 +165,6 @@ export const Home: React.FC<Props> = (props) => {
               has_scrolled_past_target_button
           })}
         >
-          <AsciiArtEffect density={2.3} />
           <UiKeycapWrapper char={is_alt_pressed ? 'W' : undefined} full_width>
             <UiTargetButton
               label={TARGET.WEB}
@@ -174,7 +172,6 @@ export const Home: React.FC<Props> = (props) => {
               is_compact
             />
           </UiKeycapWrapper>
-          <div className={styles['header__targets-divider']} />
           <UiKeycapWrapper char={is_alt_pressed ? 'A' : undefined} full_width>
             <UiTargetButton
               label={TARGET.API}
@@ -189,13 +186,17 @@ export const Home: React.FC<Props> = (props) => {
         <div className={styles.content}>
           <div className={styles.inner}>
             <div className={styles.inner__target} ref={target_ref}>
-              <AsciiArtEffect />
               <UiKeycapWrapper
                 char={is_alt_pressed ? 'W' : undefined}
                 full_width
               >
                 <UiTargetButton
                   label={TARGET.WEB}
+                  description={
+                    props.is_connected
+                      ? t('home.target.web.description-connected')
+                      : t('home.target.web.description')
+                  }
                   on_click={props.on_chatbots_click}
                 />
               </UiKeycapWrapper>
@@ -205,6 +206,7 @@ export const Home: React.FC<Props> = (props) => {
               >
                 <UiTargetButton
                   label={TARGET.API}
+                  description={t('home.target.api.description')}
                   on_click={props.on_api_calls_click}
                 />
               </UiKeycapWrapper>

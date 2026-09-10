@@ -66,12 +66,6 @@
       transform: translateY(0);
       pointer-events: auto;
     }
-
-    &-divider {
-      width: 1px;
-      height: 16px;
-      background-color: var(--cwc-purple-background);
-    }
   }
 }
 
@@ -95,8 +89,8 @@
   }
 
   &__target {
-    position: relative;
     display: flex;
+    flex-direction: column;
     margin: 0 12px;
 
     :global([data-modern-ui='true']) & {
@@ -105,18 +99,6 @@
 
     > button {
       flex: 1;
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 1px;
-      height: 35px;
-      background-color: var(--cwc-purple-background);
-      pointer-events: none;
     }
   }
 
@@ -184,7 +166,7 @@
   gap: 8px;
   font-size: 12px;
   user-select: text;
-  width: 100%; // For easier text selection
+  width: 100%;
   padding: 0 12px 12px 12px;
 
   &__links {

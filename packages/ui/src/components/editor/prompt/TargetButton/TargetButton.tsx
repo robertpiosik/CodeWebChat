@@ -1,8 +1,10 @@
 import styles from './TargetButton.module.scss'
 import cn from 'classnames'
+import { AsciiArtEffect } from '../AsciiArtEffect'
 
 type Props = {
   label: string
+  description?: string
   on_click: () => void
   is_compact?: boolean
   disabled?: boolean
@@ -22,6 +24,7 @@ export const TargetButton: React.FC<Props> = (props) => {
         onClick={props.disabled ? undefined : props.on_click}
         disabled={!!props.disabled}
       >
+        <AsciiArtEffect density={props.is_compact ? 2.3 : undefined} />
         <div className={styles['button__label']}>
           {props.label.split('').map((char, index) => (
             <span
@@ -33,6 +36,12 @@ export const TargetButton: React.FC<Props> = (props) => {
             </span>
           ))}
         </div>
+        {props.description && !props.is_compact && (
+          <div className={styles['button__description']}>
+            <span>{props.description}</span>
+            <span className="codicon codicon-chevron-right" />
+          </div>
+        )}
       </button>
     </div>
   )
