@@ -17,10 +17,7 @@ import { MakeApiCallMessage } from '@/views/prompt/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { build_user_content } from '@/utils/build-user-content'
-import {
-  show_configuration_quick_pick,
-  map_api_configuration_to_item
-} from '@/utils/show-configuration-quick-pick'
+import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { ApiPromptType } from '@shared/types/prompt-types'
@@ -99,7 +96,7 @@ const get_api_configuration = async (params: {
 
     const result = await show_configuration_quick_pick({
       items: api_configurations,
-      map_item: map_api_configuration_to_item,
+      type: 'api',
       last_selected_id
     })
 

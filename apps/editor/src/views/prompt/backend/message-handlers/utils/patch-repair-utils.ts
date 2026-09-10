@@ -12,10 +12,7 @@ import { cleanup_api_response } from '@/utils/cleanup-api-response'
 import { patch_repair_task_instructions } from '@/constants/instructions'
 import { t } from '@/i18n'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
-import {
-  show_configuration_quick_pick,
-  map_api_configuration_to_item
-} from '@/utils/show-configuration-quick-pick'
+import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 
 export const get_patch_repair_config = async (params: {
@@ -56,7 +53,7 @@ export const get_patch_repair_config = async (params: {
 
     const result = await show_configuration_quick_pick({
       items: patch_repair_api_configurations,
-      map_item: map_api_configuration_to_item,
+      type: 'api',
       last_selected_id,
       placeholder: t('common.config.placeholder')
     })

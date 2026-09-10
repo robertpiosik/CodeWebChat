@@ -5,7 +5,6 @@ import { get_last_used_web_configuration_key } from '@/constants/state-keys'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { TARGET } from '@shared/types/mode'
 import { WebPromptType } from '@shared/types/prompt-types'
-import { CHATBOTS } from '@shared/constants/chatbots'
 import { dictionary } from '@shared/constants/dictionary'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
@@ -147,39 +146,7 @@ const show_web_configuration_quick_pick = async (params: {
 
   const result = await show_configuration_quick_pick({
     items: valid_web_configurations,
-    map_item: (web_configuration) => {
-      const is_unnamed =
-        !web_configuration.name ||
-        /^\(\d+\)$/.test(web_configuration.name.trim())
-      const chatbot_models =
-        CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]?.models
-      const model = web_configuration.model
-        ? chatbot_models?.[web_configuration.model]?.label ||
-          web_configuration.model
-        : ''
-
-      const details: string[] = []
-      if (!is_unnamed && web_configuration.chatbot) {
-        details.push(web_configuration.chatbot)
-      }
-      if (model) {
-        details.push(model)
-      }
-      if (web_configuration.reasoningEffort) {
-        details.push(web_configuration.reasoningEffort)
-      }
-
-      return {
-        label: `${
-          is_unnamed
-            ? web_configuration.chatbot!
-            : web_configuration.name!.replace(/\s*\(\d+\)$/, '')
-        }`,
-        description: details.join(' · '),
-        id: web_configuration.name || '',
-        is_pinned: web_configuration.isPinned
-      }
-    },
+    type: 'web',
     last_selected_id: last_selected_name
   })
 

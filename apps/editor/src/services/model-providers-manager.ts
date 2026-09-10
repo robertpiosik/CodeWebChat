@@ -15,6 +15,18 @@ export type ApiConfiguration = {
   is_pinned?: boolean
 }
 
+export type ConfigApiConfigurationFormat = {
+  providerName: string
+  model: string
+  reasoningEffort?: string
+  isPinned?: boolean
+  isDefaultForCodeAtCursor?: boolean
+  isDefaultForIntelligentFileSearch?: boolean
+  isDefaultForPatchRepair?: boolean
+  isDefaultForCommitMessages?: boolean
+  isDefaultForVoiceInput?: boolean
+}
+
 export const get_api_configuration_id = (
   api_configuration: ApiConfiguration
 ): string => {
@@ -139,7 +151,7 @@ export class ModelProvidersManager {
   public async get_api_configurations(): Promise<ApiConfiguration[]> {
     await this._load_promise
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const settings_configs = config.get<any[]>('apiConfigurations', [])
+    const settings_configs = config.get<ConfigApiConfigurationFormat[]>('apiConfigurations', [])
 
     const api_configurations: ApiConfiguration[] = settings_configs.map(
       (sc) => {
@@ -159,13 +171,13 @@ export class ModelProvidersManager {
 
   public async save_api_configurations(api_configurations: ApiConfiguration[]) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const old_settings_configs = config.get<any[]>('apiConfigurations', [])
+    const old_settings_configs = config.get<ConfigApiConfigurationFormat[]>('apiConfigurations', [])
 
     const new_settings_configs = api_configurations.map((c) => {
       const old_config = old_settings_configs.find((oldC) =>
         this._are_api_configurations_effectively_equal(oldC, c)
       )
-      const new_config: any = {
+      const new_config: ConfigApiConfigurationFormat = {
         providerName: c.model_provider_name,
         model: c.model
       }
@@ -194,7 +206,7 @@ export class ModelProvidersManager {
   }
 
   private _are_api_configurations_effectively_equal(
-    settings_config: any,
+    settings_config: ConfigApiConfigurationFormat,
     api_configuration: ApiConfiguration
   ): boolean {
     return (
@@ -206,10 +218,10 @@ export class ModelProvidersManager {
   }
 
   private _get_default_api_configuration_from_settings(
-    default_key: string
+    default_key: keyof ConfigApiConfigurationFormat
   ): ApiConfiguration | undefined {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const settings_configs = config.get<any[]>('apiConfigurations', [])
+    const settings_configs = config.get<ConfigApiConfigurationFormat[]>('apiConfigurations', [])
     const default_config_from_settings = settings_configs.find(
       (c) => c[default_key]
     )
@@ -229,11 +241,11 @@ export class ModelProvidersManager {
   }
 
   private async _set_default_api_configuration_in_settings(
-    default_key: string,
+    default_key: keyof ConfigApiConfigurationFormat,
     config_to_set: ApiConfiguration | null
   ) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const settings_configs = config.get<any[]>('apiConfigurations', [])
+    const settings_configs = config.get<ConfigApiConfigurationFormat[]>('apiConfigurations', [])
 
     const new_settings_configs = settings_configs.map((c) => {
       const is_default =
@@ -242,7 +254,7 @@ export class ModelProvidersManager {
 
       const new_c = { ...c }
       if (is_default) {
-        new_c[default_key] = true
+        (new_c as any)[default_key] = true
       } else {
         delete new_c[default_key]
       }

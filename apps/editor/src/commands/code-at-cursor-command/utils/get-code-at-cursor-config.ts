@@ -7,10 +7,7 @@ import {
 import { Logger } from '@shared/utils/logger'
 import { LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { t } from '@/i18n'
-import {
-  show_configuration_quick_pick,
-  map_api_configuration_to_item
-} from '@/utils/show-configuration-quick-pick'
+import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 
 export const get_code_at_cursor_api_configuration = async (params: {
@@ -52,7 +49,7 @@ export const get_code_at_cursor_api_configuration = async (params: {
 
     const result = await show_configuration_quick_pick({
       items: code_at_cursor_api_configurations,
-      map_item: map_api_configuration_to_item,
+      type: 'api',
       last_selected_id,
       placeholder: t('command.code-at-cursor.config.placeholder')
     })

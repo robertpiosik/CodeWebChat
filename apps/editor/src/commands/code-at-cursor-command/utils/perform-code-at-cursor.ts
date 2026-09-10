@@ -22,9 +22,9 @@ import { OpenEditorsProvider } from '@/context/providers/open-editors/open-edito
 import { normalize_path } from '@/utils/normalize-path'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
-import { CHATBOTS } from '@shared/constants/chatbots'
 import { get_last_used_web_configuration_key } from '@/constants/state-keys'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
+import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 
 export const perform_code_at_cursor = async (params: {
   workspace_provider: WorkspaceProvider
@@ -275,7 +275,10 @@ export const perform_code_at_cursor = async (params: {
 
     if (action === 'autofill') {
       const config = vscode.workspace.getConfiguration('codeWebChat')
-      const all_web_configurations = config.get<any[]>('webConfigurations', [])
+      const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>(
+        'webConfigurations',
+        []
+      )
       const valid_web_configurations = all_web_configurations.filter(
         (c) => c.chatbot
       )
@@ -298,30 +301,7 @@ export const perform_code_at_cursor = async (params: {
 
         const result = await show_configuration_quick_pick({
           items: valid_web_configurations,
-          map_item: (web_configuration) => {
-            const is_unnamed =
-              !web_configuration.name ||
-              /^\(\d+\)$/.test(web_configuration.name.trim())
-            const chatbot_models =
-              CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]
-                ?.models
-            const model = web_configuration.model
-              ? chatbot_models?.[web_configuration.model]?.label ||
-                web_configuration.model
-              : ''
-            const details: string[] = []
-            if (!is_unnamed && web_configuration.chatbot)
-              details.push(web_configuration.chatbot)
-            if (model) details.push(model)
-            if (web_configuration.reasoningEffort)
-              details.push(web_configuration.reasoningEffort)
-            return {
-              label: `${is_unnamed ? web_configuration.chatbot! : web_configuration.name!.replace(/\s*\(\d+\)$/, '')}`,
-              description: details.join(' · '),
-              id: web_configuration.name || '',
-              is_pinned: web_configuration.isPinned
-            }
-          },
+          type: 'web',
           last_selected_id: last_selected_name,
           show_back_button: false
         })

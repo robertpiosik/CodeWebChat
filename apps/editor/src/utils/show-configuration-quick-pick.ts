@@ -4,22 +4,19 @@ import {
   get_api_configuration_id
 } from '@/services/model-providers-manager'
 import { t } from '@/i18n'
+import { CHATBOTS } from '@shared/constants/chatbots'
+import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 
 export type ShowConfigurationQuickPickOptions<T> = {
   items: T[]
-  map_item: (item: T) => {
-    label: string
-    description?: string
-    id: string
-    is_pinned?: boolean
-  }
+  type: 'api' | 'web'
   last_selected_id?: string
   title?: string
   placeholder?: string
   show_back_button?: boolean
 }
 
-export const map_api_configuration_to_item = (
+const map_api_configuration_to_item = (
   api_configuration: ApiConfiguration
 ) => {
   const description_parts = [api_configuration.model_provider_name]
@@ -35,17 +32,56 @@ export const map_api_configuration_to_item = (
   }
 }
 
+const map_web_configuration_to_item = (
+  web_configuration: ConfigWebConfigurationFormat
+) => {
+  const is_unnamed =
+    !web_configuration.name ||
+    /^\(\d+\)$/.test(web_configuration.name.trim())
+  const chatbot =
+    CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]
+  const chatbot_models = chatbot?.models
+  const model = web_configuration.model
+    ? chatbot_models?.[web_configuration.model]?.label
+    : undefined
+  const details: string[] = []
+  if (!is_unnamed && web_configuration.chatbot)
+    details.push(web_configuration.chatbot)
+  if (model) details.push(model)
+  if (
+    web_configuration.reasoningEffort &&
+    (chatbot?.supports_reasoning_effort ||
+      !!(
+        web_configuration.model &&
+        chatbot_models?.[web_configuration.model]
+          ?.supported_reasoning_efforts
+      ))
+  ) {
+    details.push(web_configuration.reasoningEffort)
+  }
+  return {
+    label: `${is_unnamed ? web_configuration.chatbot! : web_configuration.name!.replace(/\s*\(\d+\)$/, '')}`,
+    description: details.join(' · '),
+    id: web_configuration.name || '',
+    is_pinned: web_configuration.isPinned
+  }
+}
+
 export const show_configuration_quick_pick = async <T>(
   options: ShowConfigurationQuickPickOptions<T>
 ): Promise<{ item: T; id: string } | 'back' | undefined> => {
   const {
     items: configurations,
-    map_item,
+    type,
     last_selected_id,
     title = t('common.config.title'),
     placeholder = 'Select a configuration',
     show_back_button = false
   } = options
+
+  const map_item = type === 'api'
+    ? (map_api_configuration_to_item as unknown as (item: T) => any)
+    : (map_web_configuration_to_item as unknown as (item: T) => any)
 
   type PickItem = vscode.QuickPickItem & {
     original_item?: T
