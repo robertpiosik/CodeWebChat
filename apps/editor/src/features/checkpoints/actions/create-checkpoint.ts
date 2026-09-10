@@ -78,6 +78,14 @@ export const create_checkpoint = async (params: {
     const folder_git_statuses = await Promise.all(
       workspace_folders.map((folder) => is_git_repository(folder))
     )
+
+    if (
+      trigger != 'manual' &&
+      folder_git_statuses.some((has_git) => !has_git)
+    ) {
+      return undefined
+    }
+
     let new_checkpoint: Checkpoint | undefined
 
     const create_checkpoint_task = async () => {

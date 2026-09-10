@@ -15,19 +15,28 @@ import { Logger } from '@shared/utils/logger'
 
 export const create_temporary_checkpoint = async (
   workspace_provider: WorkspaceProvider
-): Promise<Checkpoint> => {
+): Promise<Checkpoint | undefined> => {
+  const workspace_folders = vscode.workspace.workspaceFolders
+
+  const folder_git_statuses = await Promise.all(
+    workspace_folders.map((folder) => is_git_repository(folder))
+  )
+
+  if (folder_git_statuses.some((has_git) => !has_git)) {
+    return undefined
+  }
+
   await vscode.workspace.saveAll()
   const timestamp = Date.now()
   const checkpoint_dir_path = get_checkpoint_path(timestamp)
   const checkpoint_dir_uri = vscode.Uri.file(checkpoint_dir_path)
   await vscode.workspace.fs.createDirectory(checkpoint_dir_uri)
 
-  const workspace_folders = vscode.workspace.workspaceFolders!
   const git_data: Record<string, any> = {}
   let uses_git = false
 
-  for (const folder of workspace_folders) {
-    const has_git = await is_git_repository(folder)
+  for (const [index, folder] of workspace_folders.entries()) {
+    const has_git = folder_git_statuses[index]
 
     if (has_git) {
       uses_git = true
