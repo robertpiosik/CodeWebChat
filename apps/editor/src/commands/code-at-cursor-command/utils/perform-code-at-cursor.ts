@@ -21,7 +21,7 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import { normalize_path } from '@/utils/normalize-path'
 import { WebSocketManager } from '@/services/websocket-manager'
-import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
+import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { get_last_used_web_configuration_key } from '@/constants/state-keys'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
@@ -299,7 +299,7 @@ export const perform_code_at_cursor = async (params: {
           params.extension_context.workspaceState.get<string>(recents_key) ??
           params.extension_context.globalState.get<string>(recents_key)
 
-        const result = await show_configuration_quick_pick({
+        const result = await show_configurations_quick_pick({
           items: valid_web_configurations,
           type: 'web',
           last_selected_id: last_selected_name,
@@ -331,7 +331,7 @@ export const perform_code_at_cursor = async (params: {
         })
         if (sent) {
           vscode.window.showInformationMessage(
-            'Continue in the connected browser'
+            t('common.info.continue-in-browser')
           )
         }
       }

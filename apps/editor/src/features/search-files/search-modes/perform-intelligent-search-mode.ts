@@ -17,7 +17,7 @@ import { prompt_for_intelligent_search_results } from '../utils/prompt-for-intel
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { display_token_count } from '@shared/utils/display-token-count'
-import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
+import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import {
   intelligent_search_task_instructions,
   intelligent_file_search_format_for_prompt_view
@@ -320,7 +320,7 @@ export const perform_intelligent_search_mode = async (params: {
                 ) ??
                 params.extension_context.globalState.get<string>(recents_key)
 
-              const result = await show_configuration_quick_pick({
+              const result = await show_configurations_quick_pick({
                 items: valid_web_configurations,
                 type: 'web',
                 last_selected_id: last_selected_name,
@@ -355,7 +355,7 @@ export const perform_intelligent_search_mode = async (params: {
               })
               if (sent) {
                 vscode.window.showInformationMessage(
-                  'Continue in the connected browser'
+                  t('common.info.continue-in-browser')
                 )
               }
             }

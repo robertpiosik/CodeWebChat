@@ -7,7 +7,7 @@ import {
 } from '@/services/model-providers-manager'
 import { LAST_USED_INTELLIGENT_FILE_SEARCH_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { t } from '@/i18n'
-import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
+import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { display_token_count } from '@shared/utils/display-token-count'
 
 export const prompt_for_api_configuration = async (params: {
@@ -54,7 +54,7 @@ export const prompt_for_api_configuration = async (params: {
       }
     )
 
-    const result = await show_configuration_quick_pick({
+    const result = await show_configurations_quick_pick({
       items: params.api_configurations,
       type: 'api',
       last_selected_id,

@@ -17,7 +17,7 @@ import { MakeApiCallMessage } from '@/views/prompt/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { build_user_content } from '@/utils/build-user-content'
-import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
+import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { ApiPromptType } from '@shared/types/prompt-types'
@@ -94,7 +94,7 @@ const get_api_configuration = async (params: {
     const last_selected_id =
       params.extension_context.workspaceState.get<string>(last_used_key)
 
-    const result = await show_configuration_quick_pick({
+    const result = await show_configurations_quick_pick({
       items: api_configurations,
       type: 'api',
       last_selected_id

@@ -13,7 +13,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
 import { handle_update_last_used_web_configuration } from './handle-update-last-used-web-configuration'
-import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
+import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 
@@ -144,7 +144,7 @@ const show_web_configuration_quick_pick = async (params: {
     extension_context.workspaceState.get<string>(recents_key) ??
     extension_context.globalState.get<string>(recents_key)
 
-  const result = await show_configuration_quick_pick({
+  const result = await show_configurations_quick_pick({
     items: valid_web_configurations,
     type: 'web',
     last_selected_id: last_selected_name

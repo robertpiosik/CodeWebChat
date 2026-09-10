@@ -19,7 +19,7 @@ import { Logger } from '@shared/utils/logger'
 import { set_file_applied_with_patch_repair } from '@/commands/apply-response-command/utils/preview'
 import { t } from '@/i18n'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
-import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
+import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { get_last_used_web_configuration_key } from '@/constants/state-keys'
 import {
   patch_repair_format_instructions,
@@ -283,7 +283,7 @@ export const handle_patch_repair = async (params: {
           recents_key
         )
 
-      const result = await show_configuration_quick_pick({
+      const result = await show_configurations_quick_pick({
         items: valid_web_configurations,
         type: 'web',
         last_selected_id: last_selected_name,
@@ -334,7 +334,7 @@ export const handle_patch_repair = async (params: {
 
       if (sent) {
         vscode.window.showInformationMessage(
-          'Continue in the connected browser'
+          t('common.info.continue-in-browser')
         )
       }
     }

@@ -12,7 +12,7 @@ import { cleanup_api_response } from '@/utils/cleanup-api-response'
 import { patch_repair_task_instructions } from '@/constants/instructions'
 import { t } from '@/i18n'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
-import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
+import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 
 export const get_patch_repair_config = async (params: {
@@ -51,7 +51,7 @@ export const get_patch_repair_config = async (params: {
         LAST_USED_PATCH_REPAIR_CONFIG_ID_STATE_KEY
       )
 
-    const result = await show_configuration_quick_pick({
+    const result = await show_configurations_quick_pick({
       items: patch_repair_api_configurations,
       type: 'api',
       last_selected_id,

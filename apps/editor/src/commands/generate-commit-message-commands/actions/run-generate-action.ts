@@ -19,7 +19,7 @@ import {
 } from '@/constants/state-keys'
 import { get_prompt_data } from './get-prompt-data'
 import { display_token_count } from '@shared/utils/display-token-count'
-import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
+import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { dictionary } from '@shared/constants/dictionary'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
@@ -417,7 +417,7 @@ export const run_generate_action = async (params: {
                 recents_key
               ) ?? params.extension_context.globalState.get<string>(recents_key)
 
-            const result = await show_configuration_quick_pick({
+            const result = await show_configurations_quick_pick({
               items: valid_web_configurations,
               type: 'web',
               last_selected_id: last_selected_name,
@@ -458,7 +458,7 @@ export const run_generate_action = async (params: {
             })
             if (sent) {
               vscode.window.showInformationMessage(
-                'Continue in the connected browser'
+                t('common.info.continue-in-browser')
               )
             }
           }

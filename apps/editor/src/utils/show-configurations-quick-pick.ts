@@ -7,7 +7,7 @@ import { t } from '@/i18n'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 
-export type ShowConfigurationQuickPickOptions<T> = {
+export type ShowConfigurationsQuickPickOptions<T> = {
   items: T[]
   type: 'api' | 'web'
   last_selected_id?: string
@@ -67,8 +67,8 @@ const map_web_configuration_to_item = (
   }
 }
 
-export const show_configuration_quick_pick = async <T>(
-  options: ShowConfigurationQuickPickOptions<T>
+export const show_configurations_quick_pick = async <T>(
+  options: ShowConfigurationsQuickPickOptions<T>
 ): Promise<{ item: T; id: string } | 'back' | undefined> => {
   const {
     items: configurations,
