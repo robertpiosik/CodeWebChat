@@ -1,5 +1,5 @@
 import { CodingAgent } from '../types'
-import { build_agent_prompt, check_command_exists } from '../utils'
+import { build_agent_prompt, check_command_exists, get_progress_dots } from '../utils'
 
 let last_action_name = ''
 let action_count = 0
@@ -21,12 +21,10 @@ export const antigravity_agent: CodingAgent = {
     if (parsed.event == 'step_update' && parsed.step_update) {
       const step = parsed.step_update
       let action_name = ''
-      let has_dots = false
 
       if (step.step_type == 'tool') {
         if (step.tool_name) {
           action_name = step.tool_name.replace(/_/g, ' ')
-          has_dots = true
         }
       } else if (step.subagent_info?.subagents?.length > 0) {
         const subagent = step.subagent_info.subagents[0]
@@ -40,11 +38,7 @@ export const antigravity_agent: CodingAgent = {
           last_action_name = action_name
           action_count = 1
         }
-        const extra_dots =
-          action_count > 1
-            ? (has_dots ? ' ' : '') + '.'.repeat(action_count - 1)
-            : ''
-        report_progress(`${action_name}${has_dots ? '...' : ''}${extra_dots}`)
+        report_progress(`${action_name}${get_progress_dots(action_count)}`)
       }
     } else if (parsed.event == 'result' && parsed.result) {
       last_action_name = ''

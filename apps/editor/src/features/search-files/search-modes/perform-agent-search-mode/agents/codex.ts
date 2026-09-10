@@ -1,5 +1,5 @@
 import { CodingAgent } from '../types'
-import { build_agent_prompt, check_command_exists } from '../utils'
+import { build_agent_prompt, check_command_exists, get_progress_dots } from '../utils'
 
 let last_action_name = ''
 let action_count = 0
@@ -50,9 +50,7 @@ export const codex_agent: CodingAgent = {
           last_action_name = action_name
           action_count = 1
         }
-        const extra_dots =
-          action_count > 1 ? ' ' + '.'.repeat(action_count - 1) : ''
-        report_progress(`${action_name}...${extra_dots}`)
+        report_progress(`${action_name}${get_progress_dots(action_count)}`)
       }
     } else if (parsed.type == 'item.completed' && parsed.item) {
       if (parsed.item.type == 'agent_message' && parsed.item.text) {
