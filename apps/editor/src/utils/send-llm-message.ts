@@ -129,7 +129,6 @@ export const send_llm_message = async (params: {
     }
 
     if (is_first_thinking_chunk) {
-      reasoning_output_channel.show(true)
       is_first_thinking_chunk = false
     }
 

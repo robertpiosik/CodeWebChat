@@ -518,7 +518,6 @@ export const perform_agent_search_mode = async (params: {
                     stdio: ['ignore', 'pipe', 'pipe']
                   })
 
-                  output_channel.show(true)
                   output_channel.appendLine(
                     `\n${executable} ${args.join(' ')}\n`
                   )
