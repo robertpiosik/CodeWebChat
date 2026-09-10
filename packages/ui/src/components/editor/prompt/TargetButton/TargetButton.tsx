@@ -1,5 +1,6 @@
 import styles from './TargetButton.module.scss'
 import cn from 'classnames'
+import { AsciiArtEffect } from '../AsciiArtEffect'
 
 type Props = {
   label: string
@@ -7,6 +8,7 @@ type Props = {
   on_click: () => void
   is_compact?: boolean
   disabled?: boolean
+  hover_color?: 'blue' | 'purple'
 }
 
 export const TargetButton: React.FC<Props> = (props) => {
@@ -18,11 +20,13 @@ export const TargetButton: React.FC<Props> = (props) => {
     >
       <button
         className={cn(styles.button, {
-          [styles['button--compact']]: props.is_compact
+          [styles['button--compact']]: props.is_compact,
+          [styles[`button--hover-${props.hover_color}`]]: props.hover_color
         })}
         onClick={props.disabled ? undefined : props.on_click}
         disabled={!!props.disabled}
       >
+        <AsciiArtEffect />
         <div className={styles['button__label']}>
           {props.label.split('').map((char, index) => (
             <span

@@ -34,6 +34,14 @@
     }
   }
 
+  &.button--hover-blue {
+    --ascii-color: var(--cwc-blue-foreground);
+  }
+
+  &.button--hover-purple {
+    --ascii-color: var(--cwc-purple-foreground);
+  }
+
   &:not(:disabled):hover {
     background-color: var(--vscode-toolbar-hoverBackground);
 
@@ -44,6 +52,24 @@
     .button__description {
       color: var(--vscode-foreground);
       opacity: 1;
+    }
+
+    &.button--hover-blue {
+      background-color: var(--cwc-blue-background);
+      color: var(--cwc-blue-foreground);
+
+      .button__description {
+        color: var(--cwc-blue-foreground);
+      }
+    }
+
+    &.button--hover-purple {
+      background-color: var(--cwc-purple-background);
+      color: var(--cwc-purple-foreground);
+
+      .button__description {
+        color: var(--cwc-purple-foreground);
+      }
     }
   }
 

@@ -4,7 +4,6 @@ import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrolla
 import { Tabs as UiTabs } from '@ui/components/editor/prompt/Tabs'
 import { TargetButton as UiTargetButton } from '@ui/components/editor/prompt/TargetButton'
 import { KeycapWrapper as UiKeycapWrapper } from '@ui/components/editor/prompt/KeycapWrapper'
-import { AsciiArtEffect as UiAsciiArtEffect } from '@ui/components/editor/prompt/AsciiArtEffect'
 import cn from 'classnames'
 import { post_message } from '../utils/post-message'
 import { BackendMessage } from '@/views/prompt/types/messages'
@@ -16,6 +15,7 @@ import { use_tasks } from './hooks/use-tasks'
 import { use_has_scrolled_past_target_button } from './hooks/use-has-scrolled-past-mode-button'
 import { use_compacting } from '@shared/hooks'
 import { TARGET } from '@shared/types/mode'
+import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 
 type Props = {
@@ -30,6 +30,8 @@ type Props = {
   on_donate_click: () => void
   on_forward_task: (text: string) => void
   bottom_spacer_height?: number
+  web_prompt_type: WebPromptType
+  api_prompt_type: ApiPromptType
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -166,12 +168,14 @@ export const Home: React.FC<Props> = (props) => {
               has_scrolled_past_target_button
           })}
         >
-          <UiAsciiArtEffect density={2.3} />
           <UiKeycapWrapper char={is_alt_pressed ? 'W' : undefined} full_width>
             <UiTargetButton
               label={TARGET.WEB}
               on_click={props.on_chatbots_click}
               is_compact
+              hover_color={
+                props.web_prompt_type == 'edit-files' ? 'blue' : 'purple'
+              }
             />
           </UiKeycapWrapper>
           <UiKeycapWrapper char={is_alt_pressed ? 'A' : undefined} full_width>
@@ -179,6 +183,9 @@ export const Home: React.FC<Props> = (props) => {
               label={TARGET.API}
               on_click={props.on_api_calls_click}
               is_compact
+              hover_color={
+                props.api_prompt_type == 'edit-files' ? 'blue' : 'purple'
+              }
             />
           </UiKeycapWrapper>
         </div>
@@ -188,7 +195,6 @@ export const Home: React.FC<Props> = (props) => {
         <div className={styles.content}>
           <div className={styles.inner}>
             <div className={styles.inner__target} ref={target_ref}>
-              <UiAsciiArtEffect />
               <UiKeycapWrapper
                 char={is_alt_pressed ? 'W' : undefined}
                 full_width
@@ -201,6 +207,9 @@ export const Home: React.FC<Props> = (props) => {
                       : t('home.target.web.description')
                   }
                   on_click={props.on_chatbots_click}
+                  hover_color={
+                    props.web_prompt_type == 'edit-files' ? 'blue' : 'purple'
+                  }
                 />
               </UiKeycapWrapper>
               <UiKeycapWrapper
@@ -211,6 +220,9 @@ export const Home: React.FC<Props> = (props) => {
                   label={TARGET.API}
                   description={t('home.target.api.description')}
                   on_click={props.on_api_calls_click}
+                  hover_color={
+                    props.api_prompt_type == 'edit-files' ? 'blue' : 'purple'
+                  }
                 />
               </UiKeycapWrapper>
             </div>

@@ -371,6 +371,8 @@ export const Prompt = () => {
                 vscode={vscode}
                 is_active={active_view == 'home'}
                 is_connected={is_connected}
+                web_prompt_type={web_prompt_type}
+                api_prompt_type={api_prompt_type}
                 on_go_forward={() => set_active_view('main')}
                 on_chatbots_click={() => {
                   set_active_view('main')
