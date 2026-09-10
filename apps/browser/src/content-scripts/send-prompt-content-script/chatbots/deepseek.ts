@@ -7,37 +7,6 @@ import {
 import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const deepseek: Chatbot = {
-  set_model: async (chat) => {
-    const model = chat.model
-    if (!model) return
-
-    let target_type = ''
-    if (model == 'expert') {
-      target_type = 'expert'
-    } else if (model == 'instant') {
-      target_type = 'default'
-    } else if (model == 'vision') {
-      target_type = 'vision'
-    }
-
-    if (target_type) {
-      const model_radio = document.querySelector(
-        `div[data-model-type="${target_type}"]`
-      ) as HTMLElement
-      if (model_radio) {
-        const is_checked = model_radio.getAttribute('aria-checked') == 'true'
-        if (!is_checked) {
-          model_radio.click()
-          await new Promise((r) => requestAnimationFrame(r))
-        }
-      } else {
-        report_initialization_error({
-          function_name: 'set_model',
-          log_message: `Model radio button for "${model}" not found`
-        })
-      }
-    }
-  },
   set_options: async (chat) => {
     const deep_think_button = Array.from(
       document.querySelectorAll('div.ds-toggle-button')

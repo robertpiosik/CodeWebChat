@@ -76,12 +76,7 @@ export const CHATBOTS = {
   } as Chatbot,
   DeepSeek: {
     url: 'https://chat.deepseek.com/',
-    supported_options: { 'deep-think': 'DeepThink', search: 'Search' },
-    models: {
-      instant: { label: 'Instant' },
-      expert: { label: 'Expert', disabled_options: ['search'] },
-      vision: { label: 'Vision', disabled_options: ['search'] }
-    }
+    supported_options: { 'deep-think': 'DeepThink', search: 'Search' }
   } as Chatbot,
   Doubao: {
     url: 'https://www.doubao.com/chat/',
