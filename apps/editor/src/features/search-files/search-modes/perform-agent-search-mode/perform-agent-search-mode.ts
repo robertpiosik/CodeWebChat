@@ -23,6 +23,15 @@ import { muse_agent } from './agents/muse'
 import { CodingAgent } from './types'
 import { format_duration } from './utils'
 
+let _output_channel: vscode.OutputChannel | undefined
+
+const get_output_channel = () => {
+  if (!_output_channel) {
+    _output_channel = vscode.window.createOutputChannel('CWC Agentic Search')
+  }
+  return _output_channel
+}
+
 const AGENTS: CodingAgent[] = [
   antigravity_agent,
   codex_agent,
@@ -60,8 +69,9 @@ export const perform_agent_search_mode = async (params: {
     return undefined
   }
 
-  const output_channel = vscode.window.createOutputChannel('CWC Agentic Search')
-  try {
+  const output_channel = get_output_channel()
+
+  {
     while (true) {
       const initial_query =
         local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY] !== undefined
@@ -499,6 +509,8 @@ export const perform_agent_search_mode = async (params: {
           let is_cancelled = false
           const start_time = Date.now()
 
+          output_channel.clear()
+
           try {
             await vscode.window.withProgress(
               {
@@ -517,10 +529,6 @@ export const perform_agent_search_mode = async (params: {
                     shell: false, // Prevents syntax breakage and command injection from newlines/quotes
                     stdio: ['ignore', 'pipe', 'pipe']
                   })
-
-                  output_channel.appendLine(
-                    `\n${executable} ${args.join(' ')}\n`
-                  )
 
                   child.stdout.on('data', (data) => {
                     const chunk = data.toString()
@@ -564,10 +572,7 @@ export const perform_agent_search_mode = async (params: {
                     resolve()
                   })
 
-                  child.on('close', (code) => {
-                    output_channel.appendLine(
-                      `\nProcess exited with code ${code}\n`
-                    )
+                  child.on('close', () => {
                     if (
                       agent_info.parse_final_output &&
                       raw_stream_output.trim()
@@ -590,9 +595,6 @@ export const perform_agent_search_mode = async (params: {
                   })
 
                   child.on('error', (err) => {
-                    output_channel.appendLine(
-                      `\nProcess error: ${err.message}\n`
-                    )
                     Logger.error({
                       function_name: 'perform_agent_search_mode',
                       message: 'Agent execution failed',
@@ -755,7 +757,5 @@ export const perform_agent_search_mode = async (params: {
     }
 
     return undefined
-  } finally {
-    output_channel.dispose()
   }
 }
