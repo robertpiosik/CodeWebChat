@@ -204,10 +204,7 @@ export class WebSocketManager {
           this.connected_browsers = message.connected_browsers
           this.has_connected_browsers = this.connected_browsers.length > 0
           this._on_connection_status_change.fire(this.has_connected_browsers)
-        } else if (
-          message.action == 'apply-response' ||
-          (message.action as any) == 'apply-chat-response' // Backward compatibility 20.07.26
-        ) {
+        } else if (message.action == 'apply-response') {
           const apply_msg = message as ApplyResponseMessage
           vscode.commands.executeCommand('codeWebChat.applyResponse', {
             raw_instructions: apply_msg.raw_instructions,
@@ -462,7 +459,7 @@ export class WebSocketManager {
       reasoning_effort: web_configuration.reasoningEffort,
       system_instructions: web_configuration.systemInstructions,
       options: web_configuration.options,
-      client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
+      client_id: this.client_id!,
       raw_instructions: params.raw_instructions,
       inject_apply_response_button: params.inject_apply_response_button
     }
@@ -564,7 +561,7 @@ export class WebSocketManager {
       reasoning_effort: params.web_configuration.reasoning_effort,
       system_instructions: params.web_configuration.system_instructions,
       options: params.web_configuration.options,
-      client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
+      client_id: this.client_id!,
       raw_instructions: params.raw_instructions,
       inject_apply_response_button: params.inject_apply_response_button
     }
