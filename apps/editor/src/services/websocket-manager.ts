@@ -303,7 +303,10 @@ export class WebSocketManager {
       .sort((a, b) => {
         if (a._has_profile && !b._has_profile) return -1
         if (!a._has_profile && b._has_profile) return 1
-        return a.label.localeCompare(b.label)
+        if (a._has_profile && b._has_profile) {
+          return a.label.localeCompare(b.label)
+        }
+        return a.id - b.id
       })
       .map((item) => ({
         label: item.label,
