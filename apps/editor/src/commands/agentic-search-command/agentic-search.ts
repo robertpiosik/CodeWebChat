@@ -110,26 +110,26 @@ export const agentic_search = async (params: {
 
         if (available_agents.length == 0) {
           vscode.window.showInformationMessage(
-            t('feature.search-files.agent.no-agents')
+            t('command.agentic-search.info.no-agents')
           )
           return undefined
         }
 
         const add_button = {
           iconPath: new vscode.ThemeIcon('flag'),
-          tooltip: t('feature.search-files.agent.add-flags')
+          tooltip: t('command.agentic-search.agent.add-flags')
         }
         const edit_button = {
           iconPath: new vscode.ThemeIcon('edit'),
-          tooltip: t('feature.search-files.agent.edit-flags')
+          tooltip: t('command.agentic-search.agent.edit-flags')
         }
         const delete_button = {
           iconPath: new vscode.ThemeIcon('trash'),
-          tooltip: t('feature.search-files.agent.delete-flags')
+          tooltip: t('command.agentic-search.agent.delete-flags')
         }
         const doc_button = {
           iconPath: new vscode.ThemeIcon('question'),
-          tooltip: t('feature.search-files.agent.learn-more')
+          tooltip: t('command.agentic-search.agent.learn-more')
         }
 
         type AgentPickItem = vscode.QuickPickItem & {
@@ -202,9 +202,9 @@ export const agentic_search = async (params: {
           }
         }
 
-        agent_quick_pick.title = t('feature.search-files.agent.select-agent')
+        agent_quick_pick.title = t('command.agentic-search.agent.select-agent')
         agent_quick_pick.placeholder = t(
-          'feature.search-files.agent.select-agent-placeholder'
+          'command.agentic-search.agent.select-agent-placeholder'
         )
         agent_quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
         agent_quick_pick.ignoreFocusOut = true
@@ -281,7 +281,7 @@ export const agentic_search = async (params: {
                     const undo_action = t('common.undo')
                     vscode.window
                       .showInformationMessage(
-                        t('feature.search-files.agent.deleted'),
+                        t('command.agentic-search.agent.deleted'),
                         undo_action
                       )
                       .then((choice) => {
@@ -344,9 +344,9 @@ export const agentic_search = async (params: {
         if (agent_selection_result.action === 'add') {
           const { configKey } = agent_selection_result
           const new_flags = await vscode.window.showInputBox({
-            title: t('feature.search-files.agent.add-flags'),
-            prompt: t('feature.search-files.agent.edit-flags-prompt'),
-            placeHolder: t('feature.search-files.agent.edit-flags-placeholder'),
+            title: t('command.agentic-search.agent.add-flags'),
+            prompt: t('command.agentic-search.agent.edit-flags-prompt'),
+            placeHolder: t('command.agentic-search.agent.edit-flags-placeholder'),
             value: '',
             ignoreFocusOut: true
           })
@@ -367,9 +367,9 @@ export const agentic_search = async (params: {
         if (agent_selection_result.action === 'edit') {
           const { configKey, index, value } = agent_selection_result
           const new_flags = await vscode.window.showInputBox({
-            title: t('feature.search-files.agent.edit-flags'),
-            prompt: t('feature.search-files.agent.edit-flags-prompt'),
-            placeHolder: t('feature.search-files.agent.edit-flags-placeholder'),
+            title: t('command.agentic-search.agent.edit-flags'),
+            prompt: t('command.agentic-search.agent.edit-flags-prompt'),
+            placeHolder: t('command.agentic-search.agent.edit-flags-placeholder'),
             value: value,
             ignoreFocusOut: true
           })
@@ -429,9 +429,9 @@ export const agentic_search = async (params: {
             if (active_item) {
               quick_pick.activeItems = [active_item]
             }
-            quick_pick.title = t('feature.search-files.agent.select-workspace')
+            quick_pick.title = t('command.agentic-search.agent.select-workspace')
             quick_pick.placeholder = t(
-              'feature.search-files.agent.select-workspace-placeholder'
+              'command.agentic-search.agent.select-workspace-placeholder'
             )
             quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
             quick_pick.ignoreFocusOut = true
@@ -518,12 +518,12 @@ export const agentic_search = async (params: {
             await vscode.window.withProgress(
               {
                 location: vscode.ProgressLocation.Notification,
-                title: t('feature.search-files.title.agent'),
+                title: t('command.agentic-search.title'),
                 cancellable: true
               },
               async (progress, token) => {
                 progress.report({
-                  message: t('feature.search-files.agent.waiting-for-agent')
+                  message: t('command.agentic-search.agent.waiting-for-agent')
                 })
 
                 return new Promise<void>((resolve, reject) => {
@@ -610,7 +610,7 @@ export const agentic_search = async (params: {
             )
           } catch (err) {
             vscode.window.showErrorMessage(
-              t('feature.search-files.failed', { error: String(err) })
+              t('command.agentic-search.error.failed', { error: String(err) })
             )
             go_back_to_query = true
             break
@@ -623,12 +623,12 @@ export const agentic_search = async (params: {
 
           const duration = format_duration(Date.now() - start_time)
           vscode.window.showInformationMessage(
-            t('feature.search-files.agent.finished', { duration })
+            t('command.agentic-search.agent.finished', { duration })
           )
 
           if (agent_output.trim() == '') {
             vscode.window.showInformationMessage(
-              t('feature.search-files.no-files')
+              t('command.agentic-search.info.no-files')
             )
             go_back_to_query = true
             break
@@ -661,7 +661,7 @@ export const agentic_search = async (params: {
 
           if (absolute_paths.length === 0) {
             vscode.window.showInformationMessage(
-              t('feature.search-files.no-files')
+              t('command.agentic-search.info.no-files')
             )
             go_back_to_query = true
             break
@@ -681,7 +681,7 @@ export const agentic_search = async (params: {
               matched_items: absolute_paths.map((path) => ({ path })),
               unmatched_checked_paths: [],
               workspace_provider: params.workspace_provider,
-              title: t('feature.search-files.results'),
+              title: t('command.agentic-search.results'),
               show_back_button: true,
               hide_search_in_results_button: true
             })) as any

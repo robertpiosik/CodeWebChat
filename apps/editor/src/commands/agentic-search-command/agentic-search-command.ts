@@ -15,7 +15,7 @@ export const agentic_search_command = (
     async () => {
       if (agentic_search_in_progress) {
         vscode.window.showInformationMessage(
-          t('feature.search-files.info.search-in-progress')
+          t('command.agentic-search.info.search-in-progress')
         )
         return
       }
