@@ -2,6 +2,7 @@ import browser from 'webextension-polyfill'
 import { Chat } from '@shared/types/websocket-message'
 import { Chatbot } from './types/chatbot'
 import { Message } from '@/types/messages'
+import { click_site_apply_response } from './utils/click-site-apply-response'
 import {
   ai_studio,
   gemini,
@@ -251,6 +252,8 @@ const main = async () => {
     }
   }
 }
+
+click_site_apply_response()
 
 // Hash changes when reusing a tab
 window.addEventListener('hashchange', () => {
