@@ -247,13 +247,13 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.selectAllWorkspaceFiles",
-        "title": "%codeWebChat.selectAllWorkspaceFiles.title%",
+        "command": "codeWebChat.selectAllFiles",
+        "title": "%codeWebChat.selectAllFiles.title%",
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.selectWorkspaceFile",
-        "title": "%codeWebChat.selectWorkspaceFile.title%",
+        "command": "codeWebChat.selectFile",
+        "title": "%codeWebChat.selectFile.title%",
         "category": "Code Web Chat",
         "icon": "$(files)"
       },
@@ -583,7 +583,7 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.selectAllWorkspaceFiles",
+          "command": "codeWebChat.selectAllFiles",
           "when": "false"
         },
         {
@@ -702,12 +702,12 @@
           "group": "2_more@0"
         },
         {
-          "command": "codeWebChat.selectAllWorkspaceFiles",
+          "command": "codeWebChat.selectAllFiles",
           "when": "view == codeWebChatViewWorkspace",
           "group": "2_more@1"
         },
         {
-          "command": "codeWebChat.selectWorkspaceFile",
+          "command": "codeWebChat.selectFile",
           "when": "view == codeWebChatViewWorkspace",
           "group": "2_more@2"
         },

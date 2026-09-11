@@ -263,7 +263,7 @@ export const context_initialization = async (
       open_editors_provider!.clear_checks()
     }),
     vscode.commands.registerCommand(
-      'codeWebChat.selectAllWorkspaceFiles',
+      'codeWebChat.selectAllFiles',
       async () => {
         const all_files: string[] = []
         for (const root of workspace_provider.get_workspace_roots()) {
