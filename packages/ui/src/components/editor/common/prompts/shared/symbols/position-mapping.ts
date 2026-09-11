@@ -10,7 +10,7 @@ export const map_display_pos_to_raw_pos = (params: {
   let last_raw_index = 0
 
   const regex =
-    /`([^`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))|(#ClipboardPaths)/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
   let match
 
   while ((match = regex.exec(params.raw_text)) !== null) {
@@ -28,7 +28,6 @@ export const map_display_pos_to_raw_pos = (params: {
     const image_symbol = match[15]
     const pasted_text_symbol = match[16]
     const website_symbol = match[17]
-    const clipboard_paths_symbol = match[18]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -90,9 +89,6 @@ export const map_display_pos_to_raw_pos = (params: {
         }
       } catch {}
       display_match_length = label.length
-      is_replacement_match = true
-    } else if (clipboard_paths_symbol) {
-      display_match_length = 'Clipboard paths'.length
       is_replacement_match = true
     }
 
@@ -137,7 +133,7 @@ export const map_raw_pos_to_display_pos = (params: {
   let last_raw_index = 0
 
   const regex =
-    /`([^`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))|(#ClipboardPaths)/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
   let match
 
   while ((match = regex.exec(params.raw_text)) !== null) {
@@ -155,7 +151,6 @@ export const map_raw_pos_to_display_pos = (params: {
     const image_symbol = match[15]
     const pasted_text_symbol = match[16]
     const website_symbol = match[17]
-    const clipboard_paths_symbol = match[18]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -217,9 +212,6 @@ export const map_raw_pos_to_display_pos = (params: {
         }
       } catch {}
       display_match_length = label.length
-      is_replacement_match = true
-    } else if (clipboard_paths_symbol) {
-      display_match_length = 'Clipboard paths'.length
       is_replacement_match = true
     }
 

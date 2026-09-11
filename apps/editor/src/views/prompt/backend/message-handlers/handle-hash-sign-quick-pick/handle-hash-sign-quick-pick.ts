@@ -7,8 +7,7 @@ import {
   handle_changes_item,
   handle_commit_item,
   handle_saved_context_item,
-  handle_skill_item,
-  handle_clipboard_paths_item
+  handle_skill_item
 } from './symbols'
 
 const selection_label = `$(list-flat) ${t('views.prompt.handlers.hash-sign.quick-pick.selection.label')}`
@@ -16,7 +15,6 @@ const changes_label = `$(git-pull-request-draft) ${t('views.prompt.handlers.hash
 const commit_label = `$(git-commit) ${t('views.prompt.handlers.hash-sign.quick-pick.commit.label')}`
 const saved_context_label = `$(checklist) ${t('views.prompt.handlers.hash-sign.quick-pick.saved-context.label')}`
 const skill_label = `$(thinking) ${t('views.prompt.handlers.hash-sign.quick-pick.skill.label')}`
-const clipboard_paths_label = `$(clippy) ${t('views.prompt.handlers.hash-sign.quick-pick.clipboard-paths.label')}`
 
 const hash_sign_quick_pick = async (params: {
   extension_context: vscode.ExtensionContext
@@ -58,12 +56,6 @@ const hash_sign_quick_pick = async (params: {
           tooltip: t('views.prompt.handlers.hash-sign.quick-pick.skill.tooltip')
         }
       ]
-    },
-    {
-      label: clipboard_paths_label,
-      description: t(
-        'views.prompt.handlers.hash-sign.quick-pick.clipboard-paths.description'
-      )
     }
   ]
 
@@ -152,9 +144,6 @@ const hash_sign_quick_pick = async (params: {
         break
       case skill_label:
         result = await handle_skill_item()
-        break
-      case clipboard_paths_label:
-        result = await handle_clipboard_paths_item()
         break
       default:
         continue

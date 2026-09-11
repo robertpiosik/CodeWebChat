@@ -361,43 +361,6 @@ export const translations = {
     hu: 'Fedezz fel képességeket a skills.sh oldalon',
     bg: 'Открийте умения на skills.sh'
   },
-  'views.prompt.handlers.hash-sign.quick-pick.clipboard-paths.label': {
-    en: 'Clipboard paths',
-    pl: 'Ścieżki ze schowka',
-    'zh-cn': '剪贴板路径',
-    ja: 'クリップボードのパス',
-    'zh-tw': '剪貼板路徑',
-    de: 'Zwischenablage-Pfade',
-    es: 'Rutas del portapapeles',
-    fr: 'Chemins du presse-papiers',
-    'pt-br': 'Caminhos da área de transferência',
-    ru: 'Пути из буфера обмена',
-    ko: '클립보드 경로',
-    it: 'Percorsi negli appunti',
-    tr: 'Pano yolları',
-    cs: 'Cesty ze schránky',
-    hu: 'Vágólap útvonalak',
-    bg: 'Пътища от клипборда'
-  },
-  'views.prompt.handlers.hash-sign.quick-pick.clipboard-paths.description': {
-    en: 'Files matching paths found in the clipboard',
-    pl: 'Pliki pasujące do ścieżek znalezionych w schowku',
-    'zh-cn': '与在剪贴板中找到的路径匹配的文件',
-    ja: 'クリップボードに見つかったパスに一致するファイル',
-    'zh-tw': '與在剪貼板中找到的路徑匹配的文件',
-    de: 'Dateien, die mit den in der Zwischenablage gefundenen Pfaden übereinstimmen',
-    es: 'Archivos que coinciden con las rutas encontradas en el portapapeles',
-    fr: 'Fichiers correspondant aux chemins trouvés dans le presse-papiers',
-    'pt-br':
-      'Arquivos que correspondem aos caminhos encontrados na área de transferência',
-    ru: 'Файлы, соответствующие путям, найденным в буфере обмена',
-    ko: '클립보드에서 찾은 경로와 일치하는 파일',
-    it: 'File corrispondenti ai percorsi trovati negli appunti',
-    tr: 'Panoda bulunan yollarla eşleşen dosyalar',
-    cs: 'Soubory odpovídající cestám nalezeným ve schránce',
-    hu: 'A vágólapon található útvonalaknak megfelelő fájlok',
-    bg: 'Файлове, съвпадащи с пътищата, намерени в клипборда'
-  },
   'views.prompt.handlers.hash-sign.quick-pick.placeholder': {
     en: 'Select symbol to insert',
     pl: 'Wybierz symbol do wstawienia',

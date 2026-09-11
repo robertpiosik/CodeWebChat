@@ -188,10 +188,6 @@
     pointer-events: none;
   }
 
-  &--clipboard-paths &__icon::before {
-    content: '\eac0';
-  }
-
   &--pasted-lines &__icon::before {
     content: '\eac0';
   }
