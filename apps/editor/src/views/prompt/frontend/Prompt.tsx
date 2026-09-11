@@ -78,7 +78,10 @@ export const Prompt = () => {
     ask_instructions_token_count,
     handle_preview_prompt,
     api_configurations,
-    set_api_configurations
+    set_api_configurations,
+    handle_changes_click,
+    handle_commit_click,
+    handle_skill_click
   } = use_panel(vscode)
 
   const {
@@ -359,6 +362,9 @@ export const Prompt = () => {
                 edit_instructions_token_count={edit_instructions_token_count}
                 ask_instructions_token_count={ask_instructions_token_count}
                 on_preview_prompt={handle_preview_prompt}
+                on_changes_click={handle_changes_click}
+                on_commit_click={handle_commit_click}
+                on_skill_click={handle_skill_click}
               />
             </div>
             <div

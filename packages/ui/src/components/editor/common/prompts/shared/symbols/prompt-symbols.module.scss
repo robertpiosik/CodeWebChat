@@ -146,9 +146,34 @@
     content: '\ebdb';
   }
 
+  &--changes &__text {
+    cursor: pointer;
+
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-charts-blue) 30%,
+        transparent
+      );
+    }
+  }
+
   &--commit &__icon::before,
   &--commitmessage &__icon::before {
     content: '\eafc';
+  }
+
+  &--commit &__text,
+  &--commitmessage &__text {
+    cursor: pointer;
+
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-charts-blue) 30%,
+        transparent
+      );
+    }
   }
 
   &--saved-context &__icon::before {

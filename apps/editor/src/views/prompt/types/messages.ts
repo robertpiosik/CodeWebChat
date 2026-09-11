@@ -517,6 +517,26 @@ export interface PreviewPromptMessage extends BaseMessage {
   command: 'PREVIEW_PROMPT'
 }
 
+export interface PreviewChangesSymbolMessage extends BaseMessage {
+  command: 'PREVIEW_CHANGES_SYMBOL'
+  branch_name: string
+}
+
+export interface PreviewCommitSymbolMessage extends BaseMessage {
+  command: 'PREVIEW_COMMIT_SYMBOL'
+  repo_name: string
+  commit_hash: string
+  commit_message?: string
+  type: 'Commit' | 'CommitMessage'
+}
+
+export interface PreviewSkillSymbolMessage extends BaseMessage {
+  command: 'PREVIEW_SKILL_SYMBOL'
+  agent: string
+  repo: string
+  skill_name: string
+}
+
 export interface InstallBrowserExtensionMessage extends BaseMessage {
   command: 'INSTALL_BROWSER_EXTENSION'
 }
@@ -612,6 +632,9 @@ export type FrontendMessage =
   | GetSelectedFilesMessage
   | PreviewPromptMessage
   | InstallBrowserExtensionMessage
+  | PreviewChangesSymbolMessage
+  | PreviewCommitSymbolMessage
+  | PreviewSkillSymbolMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {

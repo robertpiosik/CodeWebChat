@@ -66,16 +66,12 @@ export const create_handle_input_click = ({
         '[data-type="skill-symbol"]'
       )
       if (skill_symbol_element) {
+        const agent = skill_symbol_element.dataset.agent
         const repo = skill_symbol_element.dataset.repo
         const skill_name = skill_symbol_element.dataset.skillName
 
-        if (repo && repo != 'local' && skill_name) {
-          const parts = repo.split(':')
-          if (parts.length == 2) {
-            const [user, repo_name] = parts
-            const url = `https://skills.sh/${user}/${repo_name}/${skill_name}`
-            props.on_open_url(url)
-          }
+        if (agent && repo && skill_name) {
+          props.on_skill_click?.(agent, repo, skill_name)
         }
       }
 
@@ -106,6 +102,37 @@ export const create_handle_input_click = ({
         const url = website_symbol_element.dataset.url
         if (url) {
           props.on_open_website(url)
+        }
+      }
+
+      const changes_symbol_element = text_element.closest<HTMLElement>(
+        '[data-type="changes-symbol"]'
+      )
+      if (changes_symbol_element) {
+        const branch_name = changes_symbol_element.dataset.branchName
+        if (branch_name) {
+          props.on_changes_click?.(branch_name)
+        }
+      }
+
+      const commit_symbol_element =
+        text_element.closest<HTMLElement>('[data-type="commit-symbol"]') ||
+        text_element.closest<HTMLElement>('[data-type="commitmessage-symbol"]')
+      if (commit_symbol_element) {
+        const repo_name = commit_symbol_element.dataset.repoName
+        const commit_hash = commit_symbol_element.dataset.commitHash
+        const commit_message = commit_symbol_element.dataset.commitMessage
+        const type =
+          commit_symbol_element.dataset.type === 'commitmessage-symbol'
+            ? 'CommitMessage'
+            : 'Commit'
+        if (repo_name && commit_hash) {
+          props.on_commit_click?.(
+            repo_name,
+            commit_hash,
+            type,
+            commit_message,
+          )
         }
       }
 

@@ -80,7 +80,10 @@ import {
   handle_request_return_home,
   handle_pick_tasks_workspace,
   handle_preview_prompt,
-  handle_install_browser_extension
+  handle_install_browser_extension,
+  handle_preview_changes_symbol,
+  handle_preview_commit_symbol,
+  handle_preview_skill_symbol
 } from './message-handlers'
 import { handle_update_api_configuration } from './message-handlers/handle-update-api-configuration'
 import { handle_pick_model_provider } from './message-handlers/handle-pick-model-provider'
@@ -836,6 +839,12 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             })
           } else if (message.command == 'INSTALL_BROWSER_EXTENSION') {
             await handle_install_browser_extension()
+          } else if (message.command == 'PREVIEW_CHANGES_SYMBOL') {
+            await handle_preview_changes_symbol(message)
+          } else if (message.command == 'PREVIEW_COMMIT_SYMBOL') {
+            await handle_preview_commit_symbol(message)
+          } else if (message.command == 'PREVIEW_SKILL_SYMBOL') {
+            await handle_preview_skill_symbol(message)
           }
         } catch (error: any) {
           Logger.error({
