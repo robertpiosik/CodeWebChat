@@ -7,31 +7,27 @@ import {
 import { report_initialization_error } from '../utils/report-initialization-error'
 
 const show_options_modal = async (function_name: string) => {
-  const options_button = Array.from(
-    document.querySelectorAll('main > div > div > div.flex-col button')
+  const model_button = document.querySelector(
+    'div[role="button"][aria-haspopup="dialog"]'
+  ) as HTMLDivElement
+  if (!model_button) {
+    report_initialization_error({
+      function_name,
+      log_message: 'Model button not found'
+    })
+    return false
+  }
+  model_button.click()
+  await new Promise((r) => requestAnimationFrame(r))
+  const advanced_settings_button = Array.from(
+    document.querySelectorAll('[data-side="bottom"] button')
   ).find((button) => {
     const path = button.querySelector('path')
     return (
       path?.getAttribute('d') ==
-      'M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z'
+      'M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75'
     )
   }) as HTMLButtonElement
-  if (!options_button) {
-    report_initialization_error({
-      function_name,
-      log_message: 'Options button not found'
-    })
-    return false
-  }
-  options_button.click()
-  await new Promise((r) => requestAnimationFrame(r))
-
-  const advanced_settings_button = Array.from(
-    document.querySelectorAll('div[role="dialog"] button')
-  ).find(
-    (button) => button.textContent?.trim() == 'Advanced Settings'
-  ) as HTMLButtonElement
-
   if (!advanced_settings_button) {
     report_initialization_error({
       function_name,
@@ -39,15 +35,15 @@ const show_options_modal = async (function_name: string) => {
     })
     return false
   }
-
   advanced_settings_button.click()
+
   await new Promise((r) => requestAnimationFrame(r))
   return true
 }
 
 const close_options_modal = async (function_name: string) => {
   const close_button = document.querySelector(
-    'div[role="dialog"] button[data-slot="dialog-close"]'
+    '[data-slot="dialog-viewport"] [data-base-ui-focusable][data-open] > button'
   ) as HTMLButtonElement
   if (!close_button) {
     report_initialization_error({
@@ -129,30 +125,12 @@ export const openrouter: Chatbot = {
     active_textarea.blur()
     await close_options_modal('enter_system_instructions')
   },
-  set_options: async (chat) => {
-    const options = chat.options
-    if (!options) return
-    if (!(await show_options_modal('set_options'))) return
-    const reasoning_toggle = document.querySelector(
-      'button[id^="toggle-reasoning-char-"]'
-    ) as HTMLButtonElement
-
-    // Only some models support this option
-    if (reasoning_toggle) {
-      if (options.includes('disable-reasoning')) {
-        if (reasoning_toggle.hasAttribute('data-checked')) {
-          reasoning_toggle.click()
-        }
-      }
-    }
-
-    await close_options_modal('set_options')
-  },
   set_reasoning_effort: async (chat) => {
-    const reasoning_effort = chat.reasoning_effort
-    if (!reasoning_effort) return
+    if (!chat.reasoning_effort) return
     if (!(await show_options_modal('set_reasoning_effort'))) return
-    const dialog = document.querySelector('div[role="dialog"]')
+    const dialog = document.querySelector(
+      '[data-slot="dialog-viewport"] [data-base-ui-focusable][data-open]'
+    )
     if (!dialog) {
       report_initialization_error({
         function_name: 'set_reasoning_effort',
@@ -175,10 +153,10 @@ export const openrouter: Chatbot = {
 
     if (
       reasoning_button.textContent?.trim().toLowerCase() !==
-      reasoning_effort.toLowerCase()
+      chat.reasoning_effort.toLowerCase()
     ) {
       reasoning_button.click()
-      await new Promise((resolve) => setTimeout(resolve, 500)) // Opening animation must finish
+      await new Promise((r) => requestAnimationFrame(r))
 
       const options = document.querySelectorAll('div[role="option"]')
       if (options.length === 0) {
@@ -194,7 +172,7 @@ export const openrouter: Chatbot = {
       for (const option of Array.from(options)) {
         if (
           option.textContent?.trim().toLowerCase() ===
-          reasoning_effort.toLowerCase()
+          chat.reasoning_effort.toLowerCase()
         ) {
           ;(option as HTMLElement).click()
           found = true
@@ -205,7 +183,7 @@ export const openrouter: Chatbot = {
       if (!found) {
         report_initialization_error({
           function_name: 'set_reasoning_effort',
-          log_message: `Reasoning effort option "${reasoning_effort}" not found`
+          log_message: `Reasoning effort option "${chat.reasoning_effort}" not found`
         })
       }
     }

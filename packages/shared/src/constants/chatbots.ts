@@ -150,10 +150,7 @@ export const CHATBOTS = {
       'XHigh',
       'Max'
     ],
-    default_system_instructions: "You're a helpful coding assistant.",
-    supported_options: {
-      'disable-reasoning': 'Disable reasoning (for hybrid models)'
-    }
+    default_system_instructions: "You're a helpful coding assistant."
   } as Chatbot,
   Qwen: {
     url: 'https://chat.qwen.ai/',
