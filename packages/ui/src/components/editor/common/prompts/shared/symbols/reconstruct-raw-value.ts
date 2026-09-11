@@ -47,14 +47,6 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
           .replace(/\\/g, '\\\\')
           .replace(/"/g, '\\"')}")${suffix}`
       }
-    } else if (el.dataset.type == 'selection-symbol') {
-      const expected_text = 'Selection'
-      const index = inner_content.indexOf(expected_text)
-      if (index != -1) {
-        const prefix = inner_content.substring(0, index)
-        const suffix = inner_content.substring(index + expected_text.length)
-        return `${prefix}#Selection${suffix}`
-      }
     } else if (
       el.dataset.type == 'commit-symbol' ||
       el.dataset.type == 'commitmessage-symbol'

@@ -5,7 +5,6 @@ import {
   replace_commit_symbol
 } from './git/replace-git-symbols'
 import { replace_saved_context_symbol } from './saved-context/replace-saved-context-symbol'
-import { replace_selection_symbol } from './selection/replace-selection-symbol'
 import { replace_skill_symbol } from './skill/replace-skill-symbol'
 import { replace_image_symbol } from './image/replace-image-symbol'
 import { replace_pasted_text_symbol } from './pasted-text/replace-pasted-text-symbol'
@@ -22,10 +21,6 @@ export const replace_symbols = async (params: {
 }): Promise<{ instructions: string; skill_definitions: string }> => {
   let processed_instructions = params.instructions
   let skill_definitions = ''
-
-  if (processed_instructions.includes('#Selection')) {
-    processed_instructions = replace_selection_symbol(processed_instructions)
-  }
 
   if (processed_instructions.includes('#Changes(')) {
     const result = await replace_changes_symbol({

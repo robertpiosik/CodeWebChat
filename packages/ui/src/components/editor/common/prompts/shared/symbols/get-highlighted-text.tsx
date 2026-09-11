@@ -72,7 +72,7 @@ export const get_highlighted_text = (params: {
   const pasted_text_regex_part = '#PastedText\\([a-fA-F0-9]+:\\d+\\)'
 
   const regex = new RegExp(
-    `(${fragment_regex_part}|#Selection|#Changes\\([^)]+\\)|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part}|${image_regex_part}|${pasted_text_regex_part}|${website_regex_part})`,
+    `(${fragment_regex_part}|#Changes\\([^)]+\\)|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part}|${image_regex_part}|${pasted_text_regex_part}|${website_regex_part})`,
     'g'
   )
   const parts = params.text.split(regex)
@@ -107,21 +107,6 @@ export const get_highlighted_text = (params: {
         }" data-role="symbol-text">Pasted ${line_count} ${lines_text}</span></span>`
       }
 
-      if (part == '#Selection') {
-        const className = cn(styles['symbol'], styles['symbol--selection'], {
-          [styles['symbol--error']]: !params.current_selection
-        })
-        const title = !params.current_selection
-          ? 'Missing text selection'
-          : params.current_selection.text
-        return `<span class="${className}" data-type="selection-symbol" title="${escape_html(
-          title
-        )}"><span class="${
-          styles['symbol__icon']
-        }" data-role="symbol-icon"></span><span class="${
-          styles['symbol__text']
-        }" data-role="symbol-text">Selection</span></span>`
-      }
       if (part && /^#Changes\([^)]+\)$/.test(part)) {
         const branch_name = part.slice(9, -1)
         return `<span class="${cn(

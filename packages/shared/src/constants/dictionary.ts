@@ -16,8 +16,6 @@ export const dictionary = {
       commit_hash: string
     ) =>
       `No checked files in the "${folder_name}" repository for commit ${commit_hash}.`,
-    NO_TEXT_SELECTED_FOR_SELECTION_PLACEHOLDER:
-      'No text selected for #Selection placeholder.',
     RESTORED_CONTEXT: (context_name: string) =>
       `Restored context "${context_name}".`,
     NO_GIT_REPOSITORY_FOUND_IN_WORKSPACE:

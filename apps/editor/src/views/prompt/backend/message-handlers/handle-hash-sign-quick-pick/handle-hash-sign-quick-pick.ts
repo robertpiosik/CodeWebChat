@@ -3,14 +3,12 @@ import { t } from '@/i18n'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { LAST_SELECTED_SYMBOL_STATE_KEY } from '@/constants/state-keys'
 import {
-  handle_selection_item,
   handle_changes_item,
   handle_commit_item,
   handle_saved_context_item,
   handle_skill_item
 } from './symbols'
 
-const selection_label = `$(list-flat) ${t('views.prompt.handlers.hash-sign.quick-pick.selection.label')}`
 const changes_label = `$(git-pull-request-draft) ${t('views.prompt.handlers.hash-sign.quick-pick.changes.label')}`
 const commit_label = `$(git-commit) ${t('views.prompt.handlers.hash-sign.quick-pick.commit.label')}`
 const saved_context_label = `$(checklist) ${t('views.prompt.handlers.hash-sign.quick-pick.saved-context.label')}`
@@ -21,12 +19,6 @@ const hash_sign_quick_pick = async (params: {
   on_insert: (text: string) => void
 }): Promise<string | undefined> => {
   const items: vscode.QuickPickItem[] = [
-    {
-      label: selection_label,
-      description: t(
-        'views.prompt.handlers.hash-sign.quick-pick.selection.description'
-      )
-    },
     {
       label: changes_label,
       description: t(
@@ -127,9 +119,6 @@ const hash_sign_quick_pick = async (params: {
     let result: string | 'continue' | undefined
 
     switch (selected.label) {
-      case selection_label:
-        result = await handle_selection_item()
-        break
       case changes_label:
         result = await handle_changes_item(params.extension_context)
         break

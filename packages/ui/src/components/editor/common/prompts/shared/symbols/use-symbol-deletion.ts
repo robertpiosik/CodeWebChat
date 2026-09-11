@@ -87,13 +87,6 @@ export const use_symbol_deletion = (params: {
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (symbol_type == 'selection-symbol') {
-      const search_pattern = '#Selection'
-      const start_index = get_start_index(symbol_element, search_pattern)
-
-      if (start_index != -1) {
-        apply_symbol_deletion(start_index, start_index + search_pattern.length)
-      }
     } else if (
       symbol_type == 'commit-symbol' ||
       symbol_type == 'commitmessage-symbol'
@@ -258,25 +251,6 @@ export const use_symbol_deletion = (params: {
     return false
   }
 
-  const handle_selection_symbol_deletion = (
-    raw_pos: number,
-    context_file_paths: string[]
-  ): boolean => {
-    const text_before_cursor = params.value.substring(0, raw_pos)
-    const match = text_before_cursor.match(/#Selection$/)
-
-    if (match) {
-      const start_of_match = raw_pos - match[0].length
-      const new_value =
-        params.value.substring(0, start_of_match) +
-        params.value.substring(raw_pos)
-      const new_raw_cursor_pos = start_of_match
-      params.on_delete(new_value, new_raw_cursor_pos)
-      return true
-    }
-    return false
-  }
-
   const handle_commit_symbol_deletion = (
     raw_pos: number,
     context_file_paths: string[]
@@ -414,10 +388,6 @@ export const use_symbol_deletion = (params: {
       return handle_saved_context_symbol_deletion(raw_pos, context_file_paths)
     }
 
-    if (deletion_params.el.dataset.type == 'selection-symbol') {
-      return handle_selection_symbol_deletion(raw_pos, context_file_paths)
-    }
-
     if (
       deletion_params.el.dataset.type == 'commit-symbol' ||
       deletion_params.el.dataset.type == 'commitmessage-symbol'
@@ -513,7 +483,6 @@ export const use_symbol_deletion = (params: {
         if (
           parent.dataset.type == 'file-symbol' ||
           parent.dataset.type == 'changes-symbol' ||
-          parent.dataset.type == 'selection-symbol' ||
           parent.dataset.type == 'saved-context-symbol' ||
           parent.dataset.type == 'commit-symbol' ||
           parent.dataset.type == 'commitmessage-symbol' ||
@@ -543,7 +512,6 @@ export const use_symbol_deletion = (params: {
       if (
         el.dataset.type == 'file-symbol' ||
         el.dataset.type == 'changes-symbol' ||
-        el.dataset.type == 'selection-symbol' ||
         el.dataset.type == 'saved-context-symbol' ||
         el.dataset.type == 'commit-symbol' ||
         el.dataset.type == 'commitmessage-symbol' ||

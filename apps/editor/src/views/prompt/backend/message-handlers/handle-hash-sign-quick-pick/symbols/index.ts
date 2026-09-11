@@ -1,4 +1,3 @@
-export * from './selection-symbol'
 export * from './changes-symbol'
 export * from './commit-symbol'
 export * from './saved-context-symbol'

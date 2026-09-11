@@ -1,13 +1,3 @@
-.selection-symbol {
-  background-color: var(--vscode-editor-selectionBackground);
-  border-radius: 2px;
-  padding: 0 0.6px;
-
-  &--error {
-    background-color: var(--vscode-diffEditor-removedLineBackground);
-  }
-}
-
 .symbol {
   font-size: 12px;
   background-color: color-mix(
@@ -178,14 +168,6 @@
 
   &--saved-context &__icon::before {
     content: '\eab3';
-  }
-
-  &--selection &__icon::before {
-    content: '\eb84';
-  }
-
-  &--selection &__text {
-    pointer-events: none;
   }
 
   &--pasted-lines &__icon::before {

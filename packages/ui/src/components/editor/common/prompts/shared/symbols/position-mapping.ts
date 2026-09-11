@@ -10,24 +10,23 @@ export const map_display_pos_to_raw_pos = (params: {
   let last_raw_index = 0
 
   const regex =
-    /`([^`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
   let match
 
   while ((match = regex.exec(params.raw_text)) !== null) {
     const file_path = match[1]
     const changes_symbol = match[2]
-    const selection_symbol = match[3]
-    const saved_context_symbol = match[4]
-    const context_name = match[5]
-    const commit_symbol = match[6]
-    const commit_hash = match[7]
-    const fragment_symbol = match[8]
-    const fragment_start_line = match[10] ? parseInt(match[10], 10) : 0
-    const fragment_end_line = match[12] ? parseInt(match[12], 10) : 0
-    const skill_symbol = match[14]
-    const image_symbol = match[15]
-    const pasted_text_symbol = match[16]
-    const website_symbol = match[17]
+    const saved_context_symbol = match[3]
+    const context_name = match[4]
+    const commit_symbol = match[5]
+    const commit_hash = match[6]
+    const fragment_symbol = match[7]
+    const fragment_start_line = match[9] ? parseInt(match[9], 10) : 0
+    const fragment_end_line = match[11] ? parseInt(match[11], 10) : 0
+    const skill_symbol = match[13]
+    const image_symbol = match[14]
+    const pasted_text_symbol = match[15]
+    const website_symbol = match[16]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -39,9 +38,6 @@ export const map_display_pos_to_raw_pos = (params: {
     } else if (changes_symbol) {
       const branch_name = changes_symbol.slice(9, -1)
       display_match_length = `Diff with ${branch_name}`.length
-      is_replacement_match = true
-    } else if (selection_symbol) {
-      display_match_length = 'Selection'.length
       is_replacement_match = true
     } else if (saved_context_symbol) {
       const display_name = context_name
@@ -133,24 +129,23 @@ export const map_raw_pos_to_display_pos = (params: {
   let last_raw_index = 0
 
   const regex =
-    /`([^`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
   let match
 
   while ((match = regex.exec(params.raw_text)) !== null) {
     const file_path = match[1]
     const changes_symbol = match[2]
-    const selection_symbol = match[3]
-    const saved_context_symbol = match[4]
-    const context_name = match[5]
-    const commit_symbol = match[6]
-    const commit_hash = match[7]
-    const fragment_symbol = match[8]
-    const fragment_start_line = match[10] ? parseInt(match[10], 10) : 0
-    const fragment_end_line = match[12] ? parseInt(match[12], 10) : 0
-    const skill_symbol = match[14]
-    const image_symbol = match[15]
-    const pasted_text_symbol = match[16]
-    const website_symbol = match[17]
+    const saved_context_symbol = match[3]
+    const context_name = match[4]
+    const commit_symbol = match[5]
+    const commit_hash = match[6]
+    const fragment_symbol = match[7]
+    const fragment_start_line = match[9] ? parseInt(match[9], 10) : 0
+    const fragment_end_line = match[11] ? parseInt(match[11], 10) : 0
+    const skill_symbol = match[13]
+    const image_symbol = match[14]
+    const pasted_text_symbol = match[15]
+    const website_symbol = match[16]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -162,9 +157,6 @@ export const map_raw_pos_to_display_pos = (params: {
     } else if (changes_symbol) {
       const branch_name = changes_symbol.slice(9, -1)
       display_match_length = `Diff with ${branch_name}`.length
-      is_replacement_match = true
-    } else if (selection_symbol) {
-      display_match_length = 'Selection'.length
       is_replacement_match = true
     } else if (saved_context_symbol) {
       const display_name = context_name
