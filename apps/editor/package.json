@@ -702,12 +702,12 @@
           "group": "2_more@0"
         },
         {
-          "command": "codeWebChat.selectAllFiles",
+          "command": "codeWebChat.selectFile",
           "when": "view == codeWebChatViewWorkspace",
           "group": "2_more@1"
         },
         {
-          "command": "codeWebChat.selectFile",
+          "command": "codeWebChat.selectAllFiles",
           "when": "view == codeWebChatViewWorkspace",
           "group": "2_more@2"
         },
