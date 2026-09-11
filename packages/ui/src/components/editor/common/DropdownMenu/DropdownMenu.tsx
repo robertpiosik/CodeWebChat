@@ -56,8 +56,18 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
       }
 
       const viewport_height = window.innerHeight
-      if (top + dropdown_rect.height > viewport_height) {
-        top = viewport_height - dropdown_rect.height
+      const is_modern_ui =
+        document.documentElement.getAttribute('data-modern-ui') == 'true'
+
+      if (is_modern_ui) {
+        if (top + dropdown_rect.height > viewport_height) {
+          top = viewport_height - dropdown_rect.height
+        }
+      } else {
+        if (top + dropdown_rect.height > viewport_height - 6) {
+          const overflow = top + dropdown_rect.height - (viewport_height - 6)
+          top -= overflow
+        }
       }
 
       set_anchor_style({
