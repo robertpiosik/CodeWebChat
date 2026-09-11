@@ -5,15 +5,15 @@ import { spawn } from 'child_process'
 import * as path from 'path'
 import * as fs from 'fs'
 import {
-  LAST_SELECTED_WORKSPACE_IN_AGENT_SEARCH_STATE_KEY,
-  LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY,
-  LAST_USED_SEARCH_FILES_AGENT_STATE_KEY
+  LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY,
+  LAST_AGENTIC_SEARCH_QUERY_STATE_KEY,
+  LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY
 } from '@/constants/state-keys'
 import { extract_paths_from_bullet_list } from '@/utils/extract-paths-from-bullet-list'
 import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-files'
 import { Logger } from '@shared/utils/logger'
-import { show_search_results_quick_pick } from '@/features/search-files/utils/show-search-results-quick-pick'
-import { prompt_for_search_term } from '@/features/search-files/utils/prompt-for-search-term'
+import { show_search_results_quick_pick } from './utils/show-search-results-quick-pick'
+import { prompt_for_search_term } from './utils/prompt-for-search-term'
 import { antigravity_agent } from './agents/antigravity'
 import { claude_agent } from './agents/claude'
 import { codex_agent } from './agents/codex'
@@ -64,20 +64,18 @@ export const agentic_search = async (params: {
   {
     while (true) {
       const initial_query =
-        local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY] !== undefined
-          ? local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY]
+        local_queries[LAST_AGENTIC_SEARCH_QUERY_STATE_KEY] !== undefined
+          ? local_queries[LAST_AGENTIC_SEARCH_QUERY_STATE_KEY]
           : params.extension_context.workspaceState.get<string>(
-              LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY
+              LAST_AGENTIC_SEARCH_QUERY_STATE_KEY
             ) || ''
 
       const query_result = await prompt_for_search_term(
         initial_query,
-        'agent',
-        undefined,
         (value) => {
-          local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY] = value
+          local_queries[LAST_AGENTIC_SEARCH_QUERY_STATE_KEY] = value
           params.extension_context.workspaceState.update(
-            LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY,
+            LAST_AGENTIC_SEARCH_QUERY_STATE_KEY,
             value
           )
         }
@@ -97,9 +95,9 @@ export const agentic_search = async (params: {
         continue
       }
 
-      local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY] = query
+      local_queries[LAST_AGENTIC_SEARCH_QUERY_STATE_KEY] = query
       await params.extension_context.workspaceState.update(
-        LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY,
+        LAST_AGENTIC_SEARCH_QUERY_STATE_KEY,
         query
       )
 
@@ -191,7 +189,7 @@ export const agentic_search = async (params: {
 
         const last_used_agent =
           params.extension_context.workspaceState.get<string>(
-            LAST_USED_SEARCH_FILES_AGENT_STATE_KEY
+            LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY
           )
         if (last_used_agent) {
           const active_item = agent_quick_pick.items.find(
@@ -397,7 +395,7 @@ export const agentic_search = async (params: {
         const flags_string = agent_selection_result.flag_value
 
         await params.extension_context.workspaceState.update(
-          LAST_USED_SEARCH_FILES_AGENT_STATE_KEY,
+          LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY,
           selected_agent_cmd
         )
 
@@ -417,7 +415,7 @@ export const agentic_search = async (params: {
 
             const last_selected_root =
               params.extension_context.workspaceState.get<string>(
-                LAST_SELECTED_WORKSPACE_IN_AGENT_SEARCH_STATE_KEY
+                LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY
               )
             const active_item =
               picks.find((p) => p.root == last_selected_root) || picks[0]
@@ -483,7 +481,7 @@ export const agentic_search = async (params: {
 
             selected_root = res
             await params.extension_context.workspaceState.update(
-              LAST_SELECTED_WORKSPACE_IN_AGENT_SEARCH_STATE_KEY,
+              LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY,
               selected_root
             )
           }
@@ -677,14 +675,12 @@ export const agentic_search = async (params: {
             | undefined
 
           while (true) {
-            const selected_items = (await show_search_results_quick_pick({
+            const selected_items = await show_search_results_quick_pick({
               matched_items: absolute_paths.map((path) => ({ path })),
-              unmatched_checked_paths: [],
               workspace_provider: params.workspace_provider,
               title: t('command.agentic-search.results'),
-              show_back_button: true,
-              hide_search_in_results_button: true
-            })) as any
+              show_back_button: true
+            })
 
             if (selected_items == 'back') {
               should_go_back_to_workspace = true

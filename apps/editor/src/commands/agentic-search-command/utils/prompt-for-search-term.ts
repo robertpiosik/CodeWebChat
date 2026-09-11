@@ -3,8 +3,6 @@ import { t } from '@/i18n'
 
 export const prompt_for_search_term = async (
   initial_search_term: string,
-  mode: 'phrase' | 'keywords' | 'intelligent',
-  keywords_target: 'contents' | 'filenames' | 'both' | undefined,
   on_change?: (value: string) => void
 ): Promise<{ value: string | undefined; back?: boolean }> => {
   const close_button = {
@@ -13,29 +11,12 @@ export const prompt_for_search_term = async (
   }
 
   const input_box = vscode.window.createInputBox()
-  input_box.title =
-    mode == 'keywords'
-      ? keywords_target == 'filenames'
-        ? t('feature.search-files.title.filename')
-        : t('feature.search-files.title.keywords')
-      : mode == 'intelligent'
-        ? t('feature.search-files.title.intelligent')
-        : t('feature.search-files.title.phrase')
-  input_box.prompt =
-    mode == 'keywords'
-      ? keywords_target == 'filenames'
-        ? t('feature.search-files.prompt.filename')
-        : t('feature.search-files.prompt.keywords')
-      : mode == 'intelligent'
-        ? t('feature.search-files.prompt.intelligent')
-        : t('feature.search-files.prompt')
-  input_box.placeholder =
-    mode == 'keywords'
-      ? t('feature.search-files.placeholder.keywords')
-      : t('feature.search-files.placeholder')
+  input_box.title = t('feature.search-files.title.agent')
+  input_box.prompt = t('feature.search-files.prompt.intelligent')
+  input_box.placeholder = t('feature.search-files.placeholder')
   input_box.value = initial_search_term
   input_box.ignoreFocusOut = true
-  input_box.buttons = [vscode.QuickInputButtons.Back, close_button]
+  input_box.buttons = [close_button]
 
   return new Promise<{ value: string | undefined; back?: boolean }>(
     (resolve) => {
@@ -44,10 +25,7 @@ export const prompt_for_search_term = async (
 
       disposables.push(
         input_box.onDidTriggerButton((button) => {
-          if (button === vscode.QuickInputButtons.Back) {
-            resolve({ value: undefined, back: true })
-            input_box.hide()
-          } else if (button === close_button) {
+          if (button === close_button) {
             resolve({ value: undefined })
             input_box.hide()
           }
@@ -74,7 +52,7 @@ export const prompt_for_search_term = async (
         }),
         input_box.onDidHide(() => {
           if (!is_resolved) {
-            resolve({ value: undefined, back: true })
+            resolve({ value: undefined })
           }
           disposables.forEach((d) => d.dispose())
           input_box.dispose()
