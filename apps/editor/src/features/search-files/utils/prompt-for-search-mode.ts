@@ -2,14 +2,13 @@ import * as vscode from 'vscode'
 import { t } from '@/i18n'
 
 export const prompt_for_search_mode = async (
-  last_mode: 'phrase' | 'keywords' | 'intelligent' | 'agent',
+  last_mode: 'phrase' | 'keywords' | 'intelligent',
   show_back_button?: boolean,
-  is_workspace_action?: boolean
 ): Promise<
-  'phrase' | 'keywords' | 'intelligent' | 'agent' | undefined | 'back'
+  'phrase' | 'keywords' | 'intelligent' | undefined | 'back'
 > => {
   const items: (vscode.QuickPickItem & {
-    mode: 'phrase' | 'keywords' | 'intelligent' | 'agent'
+    mode: 'phrase' | 'keywords' | 'intelligent'
   })[] = [
     {
       label: t('feature.search-files.mode.phrase'),
@@ -20,24 +19,13 @@ export const prompt_for_search_mode = async (
       label: t('feature.search-files.mode.keywords'),
       description: t('feature.search-files.mode.keywords-description'),
       mode: 'keywords'
-    }
-  ]
-
-  if (!is_workspace_action) {
-    items.push({
+    },
+    {
       label: t('feature.search-files.mode.intelligent'),
       description: t('feature.search-files.mode.intelligent-description'),
       mode: 'intelligent'
-    })
-  }
-
-  if (is_workspace_action) {
-    items.push({
-      label: t('feature.search-files.mode.agent'),
-      description: t('feature.search-files.mode.agent-description'),
-      mode: 'agent'
-    })
-  }
+    }
+  ]
 
   const active_item = items.find((i) => i.mode == last_mode) || items[0]
 
@@ -48,7 +36,7 @@ export const prompt_for_search_mode = async (
 
   const quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & {
-      mode: 'phrase' | 'keywords' | 'intelligent' | 'agent'
+      mode: 'phrase' | 'keywords' | 'intelligent'
     }
   >()
   quick_pick.items = items

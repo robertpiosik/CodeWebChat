@@ -12,8 +12,8 @@ import {
 import { extract_paths_from_bullet_list } from '@/utils/extract-paths-from-bullet-list'
 import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-files'
 import { Logger } from '@shared/utils/logger'
-import { show_search_results_quick_pick } from '../../utils/show-search-results-quick-pick'
-import { prompt_for_search_term } from '../../utils/prompt-for-search-term'
+import { show_search_results_quick_pick } from '@/features/search-files/utils/show-search-results-quick-pick'
+import { prompt_for_search_term } from '@/features/search-files/utils/prompt-for-search-term'
 import { antigravity_agent } from './agents/antigravity'
 import { claude_agent } from './agents/claude'
 import { codex_agent } from './agents/codex'
@@ -43,20 +43,9 @@ const AGENTS: CodingAgent[] = [
   opencode_agent
 ]
 
-export const perform_agent_search_mode = async (params: {
-  resolve_files: () => Promise<string[]>
+export const agentic_search = async (params: {
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
-  show_back_button?: boolean
-  search_in_results: (
-    matched_paths: string[]
-  ) => Promise<
-    | { selected_paths: string[]; matched_paths: string[]; title: string }
-    | undefined
-    | 'back'
-  >
-  is_search_in_selected?: boolean
-  is_sub_search?: boolean
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | undefined
@@ -77,11 +66,9 @@ export const perform_agent_search_mode = async (params: {
       const initial_query =
         local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY] !== undefined
           ? local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY]
-          : params.show_back_button
-            ? ''
-            : params.extension_context.workspaceState.get<string>(
-                LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY
-              ) || ''
+          : params.extension_context.workspaceState.get<string>(
+              LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY
+            ) || ''
 
       const query_result = await prompt_for_search_term(
         initial_query,
@@ -89,12 +76,10 @@ export const perform_agent_search_mode = async (params: {
         undefined,
         (value) => {
           local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY] = value
-          if (!params.show_back_button) {
-            params.extension_context.workspaceState.update(
-              LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY,
-              value
-            )
-          }
+          params.extension_context.workspaceState.update(
+            LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY,
+            value
+          )
         }
       )
 
@@ -113,12 +98,10 @@ export const perform_agent_search_mode = async (params: {
       }
 
       local_queries[LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY] = query
-      if (!params.show_back_button) {
-        await params.extension_context.workspaceState.update(
-          LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY,
-          query
-        )
-      }
+      await params.extension_context.workspaceState.update(
+        LAST_SEARCH_FILES_AGENT_QUERY_STATE_KEY,
+        query
+      )
 
       let go_back_to_query = false
 
@@ -684,11 +667,7 @@ export const perform_agent_search_mode = async (params: {
             break
           }
 
-          const input_files = await params.resolve_files()
-
           let should_go_back_to_workspace = false
-          let restored_selected_paths: string[] | undefined = undefined
-          let restored_unmatched_paths: string[] | undefined = undefined
           let final_decision:
             | {
                 selected_paths: string[]
@@ -698,25 +677,13 @@ export const perform_agent_search_mode = async (params: {
             | undefined
 
           while (true) {
-            const currently_checked =
-              params.workspace_provider.get_checked_files()
-            const unmatched_checked_files =
-              restored_unmatched_paths ??
-              (params.is_search_in_selected || params.is_sub_search
-                ? input_files.filter(
-                    (f) =>
-                      (params.is_sub_search || currently_checked.includes(f)) &&
-                      !absolute_paths.includes(f)
-                  )
-                : [])
-
             const selected_items = (await show_search_results_quick_pick({
               matched_items: absolute_paths.map((path) => ({ path })),
-              unmatched_checked_paths: unmatched_checked_files,
+              unmatched_checked_paths: [],
               workspace_provider: params.workspace_provider,
               title: t('feature.search-files.results'),
               show_back_button: true,
-              restored_selected_paths
+              hide_search_in_results_button: true
             })) as any
 
             if (selected_items == 'back') {
@@ -726,19 +693,6 @@ export const perform_agent_search_mode = async (params: {
 
             if (!selected_items) {
               return undefined
-            }
-
-            if ('action' in selected_items) {
-              const sub_search_result = await params.search_in_results(
-                selected_items.matched_paths
-              )
-
-              if (sub_search_result == 'back') {
-                restored_selected_paths = selected_items.selected_paths
-                restored_unmatched_paths = selected_items.unmatched_paths
-                continue
-              }
-              return sub_search_result
             }
 
             final_decision = selected_items

@@ -9,7 +9,6 @@ import { prompt_for_search_mode } from './utils/prompt-for-search-mode'
 import { perform_phrase_search_mode } from './search-modes/perform-phrase-search-mode'
 import { perform_keywords_search_mode } from './search-modes/perform-keywords-search-mode'
 import { perform_intelligent_search_mode } from './search-modes/perform-intelligent-search-mode'
-import { perform_agent_search_mode } from './search-modes/perform-agent-search-mode'
 import { Logger } from '@shared/utils/logger'
 import { WebSocketManager } from '@/services/websocket-manager'
 
@@ -34,7 +33,7 @@ export const search_files = async (params: {
 
   let initial_search_mode =
     params.extension_context.workspaceState.get<
-      'phrase' | 'keywords' | 'intelligent' | 'agent'
+      'phrase' | 'keywords' | 'intelligent'
     >(mode_state_key) || 'phrase'
 
   let _resolved_files: string[] | undefined
@@ -63,7 +62,6 @@ export const search_files = async (params: {
       const mode_result = await prompt_for_search_mode(
         initial_search_mode,
         params.show_back_button,
-        params.is_workspace_action
       )
 
       if (mode_result == 'back') return 'back'
@@ -108,16 +106,6 @@ export const search_files = async (params: {
           is_search_in_selected: params.is_search_in_selected,
           is_sub_search: params.is_sub_search,
           folder_path: params.folder_path
-        })
-      } else if (search_mode == 'agent') {
-        flow_result = await perform_agent_search_mode({
-          resolve_files,
-          workspace_provider: params.workspace_provider,
-          extension_context: params.extension_context,
-          show_back_button: params.show_back_button,
-          search_in_results,
-          is_search_in_selected: params.is_search_in_selected,
-          is_sub_search: params.is_sub_search
         })
       }
 

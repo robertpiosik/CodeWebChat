@@ -43,7 +43,8 @@ import {
   select_referencing_files_commands,
   select_imported_files_commands,
   copy_merge_commit_details_command,
-  rate_extension_command
+  rate_extension_command,
+  agentic_search_command
 } from './commands'
 import { setup_git_discard_file_watcher } from './services/git-discard-file-watcher'
 import { SettingsViewProvider } from './views/settings/backend/settings-view-provider'
@@ -222,6 +223,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       command: 'codeWebChat.followOnX',
       url: 'https://x.com/CodeWebChat'
     }),
+    agentic_search_command(workspace_provider, extension_context),
     vscode.commands.registerCommand(
       'codeWebChat.settings',
       (section?: string) => {

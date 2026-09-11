@@ -14,6 +14,7 @@ export const show_search_results_quick_pick = async (params: {
   workspace_provider: WorkspaceProvider
   title: string
   show_back_button: boolean
+  hide_search_in_results_button?: boolean
   resolve_cancel_as?: 'cancel'
   resolve_hide_as?: 'back'
   restored_selected_paths?: string[]
@@ -129,7 +130,10 @@ export const show_search_results_quick_pick = async (params: {
 
   const buttons: vscode.QuickInputButton[] = []
   if (params.show_back_button) buttons.push(vscode.QuickInputButtons.Back)
-  buttons.push(search_in_results_button, close_button)
+  if (!params.hide_search_in_results_button) {
+    buttons.push(search_in_results_button)
+  }
+  buttons.push(close_button)
   quick_pick.buttons = buttons
 
   let is_showing_folder_quick_pick = false

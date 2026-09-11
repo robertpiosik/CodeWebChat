@@ -331,22 +331,25 @@
         "category": "Code Web Chat"
       },
       {
+        "command": "codeWebChat.agenticSearch",
+        "title": "%codeWebChat.agenticSearch.title%",
+        "category": "Code Web Chat",
+        "icon": "$(search-sparkle)"
+      },
+      {
         "command": "codeWebChat.searchFiles",
         "title": "%codeWebChat.searchFiles.title%",
-        "category": "Code Web Chat",
-        "icon": "$(search)"
+        "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.searchFilesWorkspaceAction",
         "title": "%codeWebChat.searchFilesWorkspaceAction.title%",
-        "category": "Code Web Chat",
-        "icon": "$(search)"
+        "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.searchSelectedFiles",
         "title": "%codeWebChat.searchSelectedFiles.title%",
-        "category": "Code Web Chat",
-        "icon": "$(search)"
+        "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.searchFilesFromDirectory",
@@ -646,7 +649,7 @@
         {
           "command": "codeWebChat.searchSelectedFiles",
           "when": "view == codeWebChatViewSelectedFiles",
-          "group": "1_more@1"
+          "group": "2_more@0"
         },
         {
           "command": "codeWebChat.selectReferencingFilesForSelected",
@@ -669,54 +672,59 @@
           "group": "3_more@2"
         },
         {
-          "command": "codeWebChat.searchFilesWorkspaceAction",
+          "command": "codeWebChat.agenticSearch",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@1"
         },
         {
           "command": "codeWebChat.clearChecks",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@2"
+          "group": "navigation@3"
         },
         {
           "command": "codeWebChat.newFile",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@3"
+          "group": "navigation@4"
         },
         {
           "command": "codeWebChat.newFolder",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@4"
+          "group": "navigation@5"
         },
         {
           "command": "codeWebChat.collapseWorkspaceFolders",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@5"
+          "group": "navigation@6"
         },
         {
-          "command": "codeWebChat.selectAllWorkspaceFiles",
+          "command": "codeWebChat.searchFilesWorkspaceAction",
           "when": "view == codeWebChatViewWorkspace",
           "group": "2_more@0"
         },
         {
-          "command": "codeWebChat.selectWorkspaceFile",
+          "command": "codeWebChat.selectAllWorkspaceFiles",
           "when": "view == codeWebChatViewWorkspace",
           "group": "2_more@1"
         },
         {
-          "command": "codeWebChat.selectClipboardPaths",
+          "command": "codeWebChat.selectWorkspaceFile",
           "when": "view == codeWebChatViewWorkspace",
           "group": "2_more@2"
         },
         {
-          "command": "codeWebChat.selectModifiedFiles",
+          "command": "codeWebChat.selectClipboardPaths",
           "when": "view == codeWebChatViewWorkspace",
           "group": "2_more@3"
         },
         {
-          "command": "codeWebChat.selectFilesOfCommit",
+          "command": "codeWebChat.selectModifiedFiles",
           "when": "view == codeWebChatViewWorkspace",
           "group": "2_more@4"
+        },
+        {
+          "command": "codeWebChat.selectFilesOfCommit",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "2_more@5"
         },
         {
           "command": "codeWebChat.duplicateWorkspace",
