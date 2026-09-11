@@ -16,6 +16,7 @@ import { handle_update_last_used_web_configuration } from './handle-update-last-
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
+import { t } from '@/i18n'
 
 export const handle_autofill = async (params: {
   prompt_view_provider: PromptViewProvider
@@ -106,7 +107,7 @@ export const handle_autofill = async (params: {
   if (sent) {
     params.prompt_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
-      title: 'Continue in the connected browser',
+      title: t('views.prompt.handlers.common.continue-in-browser'),
       type: 'success'
     })
   }
