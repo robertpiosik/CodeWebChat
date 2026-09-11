@@ -512,8 +512,15 @@ export class WorkspaceProvider
 
   async getTreeItem(element: FileItem): Promise<vscode.TreeItem> {
     const key = element.resourceUri.fsPath
-    const checkbox_state =
+    let checkbox_state: vscode.TreeItemCheckboxState | undefined =
       this._checked_items.get(key) ?? vscode.TreeItemCheckboxState.Unchecked
+
+    if (element.isDirectory) {
+      const tokens = await this._token_calculator.calculate_directory_tokens(key)
+      if (tokens.file_count === 0) {
+        checkbox_state = undefined
+      }
+    }
 
     element.checkboxState = checkbox_state
 
@@ -705,6 +712,13 @@ export class WorkspaceProvider
       const selected_tokens =
         await this._token_calculator.calculate_directory_selected_tokens(root)
 
+      let checkbox_state: vscode.TreeItemCheckboxState | undefined =
+        this._checked_items.get(root) ?? vscode.TreeItemCheckboxState.Unchecked
+        
+      if (total_tokens.file_count === 0) {
+        checkbox_state = undefined
+      }
+
       items.push(
         new FileItem(
           name,
@@ -713,8 +727,7 @@ export class WorkspaceProvider
             ? this._selected_files_view_collapsible_state
             : this._workspace_view_collapsible_state,
           true,
-          this._checked_items.get(root) ??
-            vscode.TreeItemCheckboxState.Unchecked,
+          checkbox_state,
           false,
           false,
           total_tokens.total,
@@ -944,6 +957,13 @@ export class WorkspaceProvider
 
         const range = this._file_ranges.get(full_path)
 
+        let final_checkbox_state: vscode.TreeItemCheckboxState | undefined =
+          checkbox_state
+
+        if (is_directory && (tokens as any).file_count === 0) {
+          final_checkbox_state = undefined
+        }
+
         const item = new FileItem(
           entry.name,
           uri,
@@ -953,7 +973,7 @@ export class WorkspaceProvider
               : this._workspace_view_collapsible_state
             : vscode.TreeItemCollapsibleState.None,
           is_directory,
-          checkbox_state,
+          final_checkbox_state,
           false,
           false,
           tokens.total,
@@ -1068,6 +1088,16 @@ export class WorkspaceProvider
           this.is_ignored_by_patterns(sibling_path)
         ) {
           continue
+        }
+
+        if (entry.isDirectory()) {
+          const tokens =
+            await this._token_calculator.calculate_directory_tokens(
+              sibling_path
+            )
+          if (tokens.file_count === 0) {
+            continue
+          }
         }
 
         has_non_ignored_child = true
