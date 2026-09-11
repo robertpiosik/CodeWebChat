@@ -875,7 +875,11 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             chatbot_info.supports_user_provided_model
           const is_model_predefined = chatbot_info.models?.[model]
 
-          if (!is_user_provided_supported && !is_model_predefined) {
+          if (
+            !is_user_provided_supported &&
+            !is_model_predefined &&
+            config.chatbot != 'OpenRouter'
+          ) {
             model = undefined
           }
         }

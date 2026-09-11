@@ -53,6 +53,7 @@ import {
 } from './message-handlers'
 import { config_web_configuration_to_ui_format } from '@/utils/web-configuration-format-converters'
 import { webview_html } from '@/views/shared/utils/webview-html'
+import { CHATBOTS } from '@shared/constants/chatbots'
 
 export class SettingsViewProvider {
   private _webview_panel: vscode.WebviewPanel | undefined
@@ -72,8 +73,25 @@ export class SettingsViewProvider {
     this.postMessage({
       command: 'WEB_CONFIGURATIONS',
       web_configurations: web_configurations_config
-        .filter((c: any) => c.chatbot)
-        .map((c: any) => config_web_configuration_to_ui_format(c))
+        .filter((c: any) => c.chatbot && CHATBOTS[c.chatbot as keyof typeof CHATBOTS])
+        .map((config: any) => {
+          let model = config.model
+          if (config.chatbot && model) {
+            const chatbot_info = CHATBOTS[config.chatbot as keyof typeof CHATBOTS]
+            const is_user_provided_supported =
+              chatbot_info.supports_user_provided_model
+            const is_model_predefined = chatbot_info.models?.[model]
+
+            if (
+              !is_user_provided_supported &&
+              !is_model_predefined &&
+              config.chatbot != 'OpenRouter'
+            ) {
+              model = undefined
+            }
+          }
+          return config_web_configuration_to_ui_format({ ...config, model })
+        })
     })
   }
 
