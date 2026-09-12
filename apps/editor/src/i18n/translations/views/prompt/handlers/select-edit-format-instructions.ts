@@ -187,7 +187,7 @@ export const translations = {
   },
   'views.prompt.handlers.select-edit-format-instructions.items.truncated.description':
     {
-      en: 'File contents with unchanged parts commented-out',
+      en: 'File contents with commented-out unchanged parts',
       pl: 'Zawartość pliku z zakomentowanymi niezmienionymi fragmentami',
       'zh-cn': '文件内容，未更改的部分被注释掉',
       ja: '変更されていない部分がコメントアウトされたファイルの内容',

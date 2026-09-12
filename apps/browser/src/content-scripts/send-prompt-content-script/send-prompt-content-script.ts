@@ -192,10 +192,6 @@ const main = async () => {
     }
 
     if (!stored_data) {
-      console.error(
-        'Chat initialization data not found for batch ID:',
-        batch_id
-      )
       return
     }
 
@@ -203,7 +199,7 @@ const main = async () => {
     const current_chat = stored_data.current_chat
 
     if (!current_chat) {
-      console.error('Chat configuration not found')
+      console.debug('Chat configuration not found')
       return
     }
 
@@ -250,7 +246,7 @@ const main = async () => {
           })
         }
       } catch (e) {
-        console.error('Failed to parse CWC session data', e)
+        console.debug('Failed to parse CWC session data', e)
       }
     }
   }

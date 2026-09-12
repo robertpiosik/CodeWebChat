@@ -8,7 +8,7 @@ export namespace IconAccentButton {
     icon: string
     is_compact?: boolean
     is_active?: boolean
-    active_color?: 'blue' | 'green' | 'red' | 'yellow' | 'purple'
+    active_color?: 'blue' | 'purple'
     on_click?: () => void
   }
 }
@@ -21,13 +21,8 @@ export const IconAccentButton: FC<IconAccentButton.Props> = (props) => {
         [styles['button--compact']]: props.is_compact,
         [styles['button--blue']]:
           props.is_active && props.active_color == 'blue',
-        [styles['button--green']]:
-          props.is_active && props.active_color == 'green',
-        [styles['button--red']]: props.is_active && props.active_color == 'red',
         [styles['button--purple']]:
-          props.is_active && props.active_color == 'purple',
-        [styles['button--yellow']]:
-          props.is_active && props.active_color == 'yellow'
+          props.is_active && props.active_color == 'purple'
       })}
       onClick={props.on_click}
       type="button"

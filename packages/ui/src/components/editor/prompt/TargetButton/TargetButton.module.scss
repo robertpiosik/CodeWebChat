@@ -12,18 +12,19 @@
 .button {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  justify-content: space-between;
   padding: 0 12px;
-  height: 81px;
+  height: 40px;
   width: 100%;
   border-radius: 10px;
   overflow: hidden;
   flex: 1;
   position: relative;
   cursor: pointer;
+  gap: 12px;
 
   &--compact {
+    justify-content: center;
     height: 100%;
     gap: 8px;
     border-radius: 0;
@@ -33,11 +34,42 @@
     }
   }
 
+  &.button--hover-blue {
+    --ascii-color: var(--cwc-blue-foreground);
+  }
+
+  &.button--hover-purple {
+    --ascii-color: var(--cwc-purple-foreground);
+  }
+
   &:not(:disabled):hover {
     background-color: var(--vscode-toolbar-hoverBackground);
 
     .button__label-char {
       animation: wave 0.5s ease-in-out;
+    }
+
+    .button__description {
+      color: var(--vscode-foreground);
+      opacity: 1;
+    }
+
+    &.button--hover-blue {
+      background-color: var(--cwc-blue-background);
+      color: var(--cwc-blue-foreground);
+
+      .button__description {
+        color: var(--cwc-blue-foreground);
+      }
+    }
+
+    &.button--hover-purple {
+      background-color: var(--cwc-purple-background);
+      color: var(--cwc-purple-foreground);
+
+      .button__description {
+        color: var(--cwc-purple-foreground);
+      }
     }
   }
 
@@ -52,12 +84,36 @@
 
   &__label {
     @include accent-font;
-    font-size: 32px;
+    font-size: 24px;
+    position: relative;
+    z-index: 1;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   &__label-char {
     display: inline-block;
     position: relative;
+  }
+
+  &__description {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--vscode-descriptionForeground);
+    z-index: 1;
+    opacity: 0.8;
+    min-width: 0;
+
+    > span:first-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    > span:last-child {
+      flex-shrink: 0;
+    }
   }
 }
 

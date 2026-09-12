@@ -7,7 +7,6 @@ export const simplify_prompt_symbols = (params: { prompt: string }): string => {
     /#Fragment\(.+?:\d+:\d+-\d+:\d+\)/g,
     '[Fragment]'
   )
-  simplified = simplified.replace(/#Selection/g, '[Selection]')
   simplified = simplified.replace(/#Changes\([^)]+\)/g, '[Changes]')
   simplified = simplified.replace(
     /#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\)/g,

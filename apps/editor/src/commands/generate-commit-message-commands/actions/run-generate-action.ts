@@ -19,14 +19,14 @@ import {
 } from '@/constants/state-keys'
 import { get_prompt_data } from './get-prompt-data'
 import { display_token_count } from '@shared/utils/display-token-count'
-import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
-import { CHATBOTS } from '@shared/constants/chatbots'
+import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { dictionary } from '@shared/constants/dictionary'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 import { normalize_path } from '@/utils/normalize-path'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
+import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
@@ -105,7 +105,7 @@ export const run_generate_action = async (params: {
       const show_back_button =
         was_empty_stage && !is_single_change_flow && !params.source_control
 
-      const action_make_api = t('common.action.make-api-call')
+      const action_make_api = t('common.action.send-request')
       const action_autofill_chatbot = t('common.action.autofill-chatbot')
       const action_enter_manually = t('common.action.enter-manually')
       const action_copy_prompt = t('common.action.copy-prompt')
@@ -391,7 +391,7 @@ export const run_generate_action = async (params: {
           }
 
           const config = vscode.workspace.getConfiguration('codeWebChat')
-          const all_web_configurations = config.get<any[]>(
+          const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>(
             'webConfigurations',
             []
           )
@@ -417,32 +417,9 @@ export const run_generate_action = async (params: {
                 recents_key
               ) ?? params.extension_context.globalState.get<string>(recents_key)
 
-            const result = await show_configuration_quick_pick({
+            const result = await show_configurations_quick_pick({
               items: valid_web_configurations,
-              map_item: (web_configuration) => {
-                const is_unnamed =
-                  !web_configuration.name ||
-                  /^\(\d+\)$/.test(web_configuration.name.trim())
-                const chatbot_models =
-                  CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]
-                    ?.models
-                const model = web_configuration.model
-                  ? chatbot_models?.[web_configuration.model]?.label ||
-                    web_configuration.model
-                  : ''
-                const details: string[] = []
-                if (!is_unnamed && web_configuration.chatbot)
-                  details.push(web_configuration.chatbot)
-                if (model) details.push(model)
-                if (web_configuration.reasoningEffort)
-                  details.push(web_configuration.reasoningEffort)
-                return {
-                  label: `${is_unnamed ? web_configuration.chatbot! : web_configuration.name!.replace(/\s*\(\d+\)$/, '')}`,
-                  description: details.join(' · '),
-                  id: web_configuration.name || '',
-                  is_pinned: web_configuration.isPinned
-                }
-              },
+              type: 'web',
               last_selected_id: last_selected_name,
               show_back_button: true
             })
@@ -481,7 +458,7 @@ export const run_generate_action = async (params: {
             })
             if (sent) {
               vscode.window.showInformationMessage(
-                'Continue in the connected browser'
+                t('common.info.continue-in-browser')
               )
             }
           }

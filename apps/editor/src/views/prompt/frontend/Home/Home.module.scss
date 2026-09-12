@@ -32,18 +32,6 @@
   &__left {
     display: flex;
     align-items: center;
-    gap: 7px;
-  }
-
-  &__right {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  &__home {
-    display: flex;
-    align-items: center;
     justify-content: center;
     border-radius: 5px;
     --size: 20px;
@@ -52,15 +40,10 @@
     color: var(--vscode-icon-foreground);
   }
 
-  &__text {
+  &__right {
     display: flex;
     align-items: center;
-    height: 24px;
-    @include accent-font;
-    font-size: 18px;
-    line-height: 1;
-    padding-top: 1px;
-    white-space: nowrap;
+    gap: 4px;
   }
 
   &__targets {
@@ -83,12 +66,6 @@
       transform: translateY(0);
       pointer-events: auto;
     }
-
-    &-divider {
-      width: 1px;
-      height: 16px;
-      background-color: var(--cwc-purple-background);
-    }
   }
 }
 
@@ -107,14 +84,13 @@
   flex-direction: column;
   width: 100%;
 
-  &__responses {
-    margin: 0;
-  }
-
   &__target {
-    position: relative;
     display: flex;
+    flex-direction: column;
     margin: 0 12px;
+    overflow: hidden;
+    border-radius: 10px;
+    position: relative;
 
     :global([data-modern-ui='true']) & {
       margin: 0 10px;
@@ -123,34 +99,6 @@
     > button {
       flex: 1;
     }
-
-    &::after {
-      content: '';
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 1px;
-      height: 35px;
-      background-color: var(--cwc-purple-background);
-      pointer-events: none;
-    }
-  }
-
-  &__empty {
-    padding: 0 16px;
-    color: var(--cwc-text-color-dimmed);
-
-    :global([data-modern-ui='true']) & {
-      padding: 0 12px;
-    }
-  }
-
-  &__buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
   }
 
   &__workspace-dropdown {
@@ -201,7 +149,7 @@
   gap: 8px;
   font-size: 12px;
   user-select: text;
-  width: 100%; // For easier text selection
+  width: 100%;
   padding: 0 12px 12px 12px;
 
   &__links {

@@ -1,5 +1,8 @@
 import { CodingAgent } from '../types'
-import { build_agent_prompt, check_command_exists } from '../utils'
+import { build_agent_prompt, check_command_exists, get_progress_dots } from '../utils'
+
+let last_action_name = ''
+let action_count = 0
 
 export const opencode_agent: CodingAgent = {
   id: 'opencode',
@@ -15,18 +18,42 @@ export const opencode_agent: CodingAgent = {
     '--auto'
   ],
   parse_stream_line: (parsed, report_progress) => {
-    if (parsed.type == 'tool_call' && parsed.tool) {
-      report_progress(parsed.tool)
+    let action_name = ''
+    if (parsed.type == 'tool_use' && parsed.part?.tool) {
+      action_name = parsed.part.tool
+    } else if (parsed.type == 'tool_call' && parsed.tool) {
+      action_name = parsed.tool
+    }
+
+    if (action_name) {
+      action_name = action_name.replace(/_/g, ' ')
+      if (action_name === last_action_name) {
+        action_count++
+      } else {
+        last_action_name = action_name
+        action_count = 1
+      }
+      report_progress(`${action_name}${get_progress_dots(action_count)}`)
     } else if (parsed.type == 'result' && parsed.result) {
+      last_action_name = ''
+      action_count = 0
       return {
         output:
           typeof parsed.result == 'string'
             ? parsed.result
             : parsed.result.text || ''
       }
+    } else if (parsed.type == 'text' && parsed.part?.text) {
+      last_action_name = ''
+      action_count = 0
+      return { output: parsed.part.text }
     } else if (parsed.text) {
+      last_action_name = ''
+      action_count = 0
       return { output: parsed.text }
     } else if (parsed.output) {
+      last_action_name = ''
+      action_count = 0
       return {
         output:
           typeof parsed.output == 'string'
@@ -36,10 +63,14 @@ export const opencode_agent: CodingAgent = {
     }
   },
   parse_final_output: (parsed, current_output) => {
+    last_action_name = ''
+    action_count = 0
     if (parsed.type == 'result' && parsed.result) {
       return typeof parsed.result == 'string'
         ? parsed.result
         : parsed.result.text || ''
+    } else if (parsed.type == 'text' && parsed.part?.text) {
+      return parsed.part.text
     } else if (parsed.text) {
       return parsed.text
     } else if (parsed.output) {

@@ -15,11 +15,6 @@ describe('simplify_prompt_symbols', () => {
     )
   })
 
-  it('should replace #Selection', () => {
-    const prompt = 'What about #Selection?'
-    expect(simplify_prompt_symbols({ prompt })).toBe('What about [Selection]?')
-  })
-
   it('should replace #Changes', () => {
     const prompt = 'Review #Changes(main)'
     expect(simplify_prompt_symbols({ prompt })).toBe('Review [Changes]')
@@ -56,9 +51,9 @@ describe('simplify_prompt_symbols', () => {
   })
 
   it('should handle multiple replacements', () => {
-    const prompt = '#Selection and #Fragment(a.ts:1:1-2:2) with #Changes(dev)'
+    const prompt = '#Fragment(a.ts:1:1-2:2) with #Changes(dev)'
     expect(simplify_prompt_symbols({ prompt })).toBe(
-      '[Selection] and [Fragment] with [Changes]'
+      '[Fragment] with [Changes]'
     )
   })
 })

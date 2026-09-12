@@ -10,6 +10,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
 import { PromptBuilder } from '@/utils/prompt-builder'
+import { t } from '@/i18n'
 
 export const handle_preview_web_configuration = async (
   prompt_view_provider: PromptViewProvider,
@@ -78,7 +79,7 @@ export const handle_preview_web_configuration = async (
   if (sent) {
     prompt_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
-      title: 'Continue in the connected browser',
+      title: t('views.prompt.handlers.common.continue-in-browser'),
       type: 'success'
     })
   }

@@ -11,15 +11,9 @@ import { NavItem } from '../Home'
 import { Templates } from '@ui/components/editor/settings/Templates'
 import { Template } from '@/views/settings/types/messages'
 
-type ClearChecksBehavior = 'ignore-open-editors' | 'uncheck-all'
-
 type Props = {
   send_with_shift_enter: boolean
   on_send_with_shift_enter_change: (enabled: boolean) => void
-  clear_checks_in_workspace_behavior: ClearChecksBehavior
-  on_clear_checks_in_workspace_behavior_change: (
-    value: ClearChecksBehavior
-  ) => void
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
   on_open_allow_patterns_settings: () => void
@@ -42,16 +36,6 @@ type Props = {
   on_commit_instructions_blur: () => void
   default_commit_instructions: string
   on_restore_commit_instructions: () => void
-  intelligent_search_instructions: string
-  set_intelligent_search_instructions: (instructions: string) => void
-  on_intelligent_search_instructions_blur: () => void
-  default_intelligent_search_instructions: string
-  on_restore_intelligent_search_instructions: () => void
-  agentic_search_instructions: string
-  set_agentic_search_instructions: (instructions: string) => void
-  on_agentic_search_instructions_blur: () => void
-  default_agentic_search_instructions: string
-  on_restore_agentic_search_instructions: () => void
   on_open_external_url: (url: string) => void
   templates: Record<string, Template[]>
   on_update_templates: (key: string, templates: Template[]) => void
@@ -190,105 +174,14 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
 
         <div
           ref={(el) =>
-            props.set_section_ref('section:general:group:context', el)
+            props.set_section_ref('section:general:group:commits', el)
           }
         >
-          <UiGroup title={t('general.context.title')}>
+          <UiGroup title={t('general.commits.title')}>
             <UiItem
-              title={t(
-                'general.context.clear-checks-in-workspace-behavior.title'
-              )}
+              title={t('general.commits.commit-message-instructions.title')}
               description={t(
-                'general.context.clear-checks-in-workspace-behavior.description'
-              )}
-              slot_right={
-                <UiDropdown
-                  options={[
-                    {
-                      value: 'ignore-open-editors',
-                      label: t(
-                        'general.context.clear-checks.ignore-open-editors'
-                      )
-                    },
-                    {
-                      value: 'uncheck-all',
-                      label: t('general.context.clear-checks.uncheck-all')
-                    }
-                  ]}
-                  value={props.clear_checks_in_workspace_behavior}
-                  onChange={props.on_clear_checks_in_workspace_behavior_change}
-                />
-              }
-            />
-            <UiItem
-              title={t('general.context.intelligent-search-instructions.title')}
-              description={t(
-                'general.context.intelligent-search-instructions.description'
-              )}
-              is_toggleable
-              translations={{
-                expand: t('common.expand'),
-                collapse: t('common.collapse')
-              }}
-            >
-              <UiTextarea
-                value={props.intelligent_search_instructions}
-                min_rows={3}
-                on_change={props.set_intelligent_search_instructions}
-                on_blur={props.on_intelligent_search_instructions_blur}
-                action_icon={
-                  props.intelligent_search_instructions !=
-                  props.default_intelligent_search_instructions
-                    ? 'discard'
-                    : undefined
-                }
-                action_title={t('general.action.restore-default')}
-                on_action_click={
-                  props.on_restore_intelligent_search_instructions
-                }
-              />
-            </UiItem>
-            <UiItem
-              title={t('general.context.agentic-search-instructions.title')}
-              description={t(
-                'general.context.agentic-search-instructions.description'
-              )}
-              is_toggleable
-              translations={{
-                expand: t('common.expand'),
-                collapse: t('common.collapse')
-              }}
-            >
-              <UiTextarea
-                value={props.agentic_search_instructions}
-                min_rows={3}
-                on_change={props.set_agentic_search_instructions}
-                on_blur={props.on_agentic_search_instructions_blur}
-                action_icon={
-                  props.agentic_search_instructions !=
-                  props.default_agentic_search_instructions
-                    ? 'discard'
-                    : undefined
-                }
-                action_title={t('general.action.restore-default')}
-                on_action_click={props.on_restore_agentic_search_instructions}
-              />
-            </UiItem>
-          </UiGroup>
-        </div>
-
-        <div
-          ref={(el) =>
-            props.set_section_ref('section:general:group:commit-messages', el)
-          }
-        >
-          <UiGroup title={t('general.commit-messages.title')}>
-            <UiItem
-              title={t(
-                'general.commit-messages.commit-message-instructions.title'
-              )}
-              description={t(
-                'general.commit-messages.commit-message-instructions.description'
+                'general.commits.commit-message-instructions.description'
               )}
               is_toggleable
               translations={{
@@ -313,10 +206,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             </UiItem>
             <UiItem
               title={t(
-                'general.commit-messages.use-context-files-in-commit-message-prompt.title'
+                'general.commits.use-context-files-in-commit-message-prompt.title'
               )}
               description={t(
-                'general.commit-messages.use-context-files-in-commit-message-prompt.description'
+                'general.commits.use-context-files-in-commit-message-prompt.description'
               )}
               slot_right={
                 <UiDropdown
@@ -324,19 +217,19 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                     {
                       value: 'ask',
                       label: t(
-                        'general.commit-messages.use-context-files-in-commit-message-prompt.ask'
+                        'general.commits.use-context-files-in-commit-message-prompt.ask'
                       )
                     },
                     {
                       value: 'always',
                       label: t(
-                        'general.commit-messages.use-context-files-in-commit-message-prompt.always'
+                        'general.commits.use-context-files-in-commit-message-prompt.always'
                       )
                     },
                     {
                       value: 'never',
                       label: t(
-                        'general.commit-messages.use-context-files-in-commit-message-prompt.never'
+                        'general.commits.use-context-files-in-commit-message-prompt.never'
                       )
                     }
                   ]}
@@ -348,11 +241,9 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               }
             />
             <UiItem
-              title={t(
-                'general.commit-messages.attach-ascii-tree-of-context.title'
-              )}
+              title={t('general.commits.attach-ascii-tree-of-context.title')}
               description={t(
-                'general.commit-messages.attach-ascii-tree-of-context.description'
+                'general.commits.attach-ascii-tree-of-context.description'
               )}
               slot_right={
                 <UiDropdown
@@ -360,19 +251,19 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                     {
                       value: 'ask',
                       label: t(
-                        'general.commit-messages.attach-ascii-tree-of-context.ask'
+                        'general.commits.attach-ascii-tree-of-context.ask'
                       )
                     },
                     {
                       value: 'always',
                       label: t(
-                        'general.commit-messages.attach-ascii-tree-of-context.always'
+                        'general.commits.attach-ascii-tree-of-context.always'
                       )
                     },
                     {
                       value: 'never',
                       label: t(
-                        'general.commit-messages.attach-ascii-tree-of-context.never'
+                        'general.commits.attach-ascii-tree-of-context.never'
                       )
                     }
                   ]}
@@ -383,10 +274,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             />
             <UiItem
               title={t(
-                'general.commit-messages.select-all-prompts-in-commit-messages-by-default.title'
+                'general.commits.select-all-prompts-in-commit-messages-by-default.title'
               )}
               description={t(
-                'general.commit-messages.select-all-prompts-in-commit-messages-by-default.description'
+                'general.commits.select-all-prompts-in-commit-messages-by-default.description'
               )}
               slot_right={
                 <UiToggler

@@ -40,7 +40,6 @@ type Props = {
     is_auto_run?: boolean
   ) => void
   raw_instructions?: string
-  auto_run_patch_repair?: boolean
   recent_api_configuration?: RecentApiConfiguration
 }
 
@@ -138,18 +137,13 @@ export const ResponsePreview: FC<Props> = (props) => {
   )
 
   useEffect(() => {
-    if (
-      props.auto_run_patch_repair &&
-      error_count > 0 &&
-      !is_fixing_all &&
-      !has_attempted_auto_fix
-    ) {
+    if (error_count > 0 && !is_fixing_all && !has_attempted_auto_fix) {
       set_is_fixing_all(true)
       set_has_attempted_auto_fix(true)
       const files_to_fix = files_in_preview
         .filter(
           (f) =>
-            f.type === 'file' && f.apply_failed && !f.applied_with_patch_repair
+            f.type == 'file' && f.apply_failed && !f.applied_with_patch_repair
         )
         .map((f) => ({
           file_path: f.file_path,
@@ -157,13 +151,7 @@ export const ResponsePreview: FC<Props> = (props) => {
         }))
       props.on_fix_all_failed(files_to_fix, true)
     }
-  }, [
-    props.auto_run_patch_repair,
-    error_count,
-    is_fixing_all,
-    has_attempted_auto_fix,
-    files_in_preview
-  ])
+  }, [error_count, is_fixing_all, has_attempted_auto_fix, files_in_preview])
 
   const get_status_text = (file: FileInPreview) => {
     if (file.apply_status == 'waiting') return 'Waiting for server...'

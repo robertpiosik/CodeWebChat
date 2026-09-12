@@ -19,13 +19,13 @@ import { Logger } from '@shared/utils/logger'
 import { set_file_applied_with_patch_repair } from '@/commands/apply-response-command/utils/preview'
 import { t } from '@/i18n'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
-import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
+import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { get_last_used_web_configuration_key } from '@/constants/state-keys'
-import { CHATBOTS } from '@shared/constants/chatbots'
 import {
   patch_repair_format_instructions,
   patch_repair_task_instructions
 } from '@/constants/instructions'
+import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 
 export const handle_patch_repair = async (params: {
   prompt_view_provider: PromptViewProvider
@@ -137,6 +137,10 @@ export const handle_patch_repair = async (params: {
       await model_providers_manager.get_default_patch_repair_api_configuration()
     if (default_config || api_configurations.length === 1) {
       skip_action_quick_pick = true
+    } else {
+      vscode.window.showInformationMessage(
+        t('views.prompt.handlers.handle-patch-repair.some-changes-unable-to-apply')
+      )
     }
   }
 
@@ -153,7 +157,7 @@ export const handle_patch_repair = async (params: {
         ...(has_api_configurations
           ? [
               {
-                label: t('common.action.make-api-call'),
+                label: t('common.action.send-request'),
                 id: 'make-api'
               }
             ]
@@ -194,7 +198,7 @@ export const handle_patch_repair = async (params: {
         quick_pick.activeItems = [quick_pick.items[0]]
       }
 
-      quick_pick.title = 'Prompt Repair'
+      quick_pick.title = 'Patch Repair'
       quick_pick.placeholder = t(
         'common.action-quick-pick.placeholder.no-tokens'
       )
@@ -255,7 +259,7 @@ export const handle_patch_repair = async (params: {
 
   if (action === 'autofill') {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const all_web_configurations = config.get<any[]>('webConfigurations', [])
+    const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>('webConfigurations', [])
     const valid_web_configurations = all_web_configurations.filter(
       (c) => c.chatbot
     )
@@ -279,31 +283,9 @@ export const handle_patch_repair = async (params: {
           recents_key
         )
 
-      const result = await show_configuration_quick_pick({
+      const result = await show_configurations_quick_pick({
         items: valid_web_configurations,
-        map_item: (web_configuration) => {
-          const is_unnamed =
-            !web_configuration.name ||
-            /^\(\d+\)$/.test(web_configuration.name.trim())
-          const chatbot_models =
-            CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]?.models
-          const model = web_configuration.model
-            ? chatbot_models?.[web_configuration.model]?.label ||
-              web_configuration.model
-            : ''
-          const details: string[] = []
-          if (!is_unnamed && web_configuration.chatbot)
-            details.push(web_configuration.chatbot)
-          if (model) details.push(model)
-          if (web_configuration.reasoningEffort)
-            details.push(web_configuration.reasoningEffort)
-          return {
-            label: `${is_unnamed ? web_configuration.chatbot! : web_configuration.name!.replace(/\s*\(\d+\)$/, '')}`,
-            description: details.join(' · '),
-            id: web_configuration.name || '',
-            is_pinned: web_configuration.isPinned
-          }
-        },
+        type: 'web',
         last_selected_id: last_selected_name,
         show_back_button: false
       })
@@ -352,7 +334,7 @@ export const handle_patch_repair = async (params: {
 
       if (sent) {
         vscode.window.showInformationMessage(
-          'Continue in the connected browser'
+          t('common.info.continue-in-browser')
         )
       }
     }

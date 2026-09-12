@@ -7,7 +7,8 @@
   gap: 12px;
 
   &__title {
-    font-size: 16px;
+    font-family: 'Bangers';
+    font-size: 24px;
     margin: 0;
   }
 
@@ -19,6 +20,27 @@
     flex-direction: column;
     align-items: center;
     gap: 8px;
+  }
+
+  &__profile-name {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__input-label {
+    font-size: 14px;
+    align-self: flex-start;
+  }
+
+  &__profile-name-input {
+    width: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
   }
 
   &__enable-button {
@@ -36,6 +58,9 @@
 
   &__container-select {
     width: 100%;
-    padding: 4px;
+    padding: 6px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
   }
 }

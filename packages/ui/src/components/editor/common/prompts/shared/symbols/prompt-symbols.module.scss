@@ -1,13 +1,3 @@
-.selection-symbol {
-  background-color: var(--vscode-editor-selectionBackground);
-  border-radius: 2px;
-  padding: 0 0.6px;
-
-  &--error {
-    background-color: var(--vscode-diffEditor-removedLineBackground);
-  }
-}
-
 .symbol {
   font-size: 12px;
   background-color: color-mix(
@@ -146,25 +136,38 @@
     content: '\ebdb';
   }
 
+  &--changes &__text {
+    cursor: pointer;
+
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-charts-blue) 30%,
+        transparent
+      );
+    }
+  }
+
   &--commit &__icon::before,
   &--commitmessage &__icon::before {
     content: '\eafc';
   }
 
+  &--commit &__text,
+  &--commitmessage &__text {
+    cursor: pointer;
+
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-charts-blue) 30%,
+        transparent
+      );
+    }
+  }
+
   &--saved-context &__icon::before {
     content: '\eab3';
-  }
-
-  &--selection &__icon::before {
-    content: '\eb84';
-  }
-
-  &--selection &__text {
-    pointer-events: none;
-  }
-
-  &--clipboard-paths &__icon::before {
-    content: '\eac0';
   }
 
   &--pasted-lines &__icon::before {

@@ -68,6 +68,14 @@ export type PromptFieldProps = {
   on_paste_long_text: (text: string) => void
   on_open_pasted_text: (hash: string) => void
   on_paste_url: (url: string) => void
+  on_changes_click?: (branch_name: string) => void
+  on_commit_click?: (
+    repo_name: string,
+    commit_hash: string,
+    type: 'Commit' | 'CommitMessage',
+    commit_message?: string,
+  ) => void
+  on_skill_click?: (agent: string, repo: string, skill_name: string) => void
   on_preview_prompt?: () => void
   is_recording: boolean
   on_recording_started: () => void

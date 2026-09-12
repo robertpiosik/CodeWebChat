@@ -8,7 +8,6 @@ import cn from 'classnames'
 import { post_message } from '../utils/post-message'
 import { BackendMessage } from '@/views/prompt/types/messages'
 import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
-import { AsciiArtEffect } from '@ui/components/editor/prompt/AsciiArtEffect'
 import { Translation, use_translation } from '../i18n/use-translation'
 import { CompactableActionButton } from '@ui/components/editor/prompt/CompactableActionButton'
 import { Tasks as UiTasks } from '@ui/components/editor/prompt/Tasks'
@@ -16,6 +15,7 @@ import { use_tasks } from './hooks/use-tasks'
 import { use_has_scrolled_past_target_button } from './hooks/use-has-scrolled-past-mode-button'
 import { use_compacting } from '@shared/hooks'
 import { TARGET } from '@shared/types/mode'
+import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 
 type Props = {
@@ -30,6 +30,8 @@ type Props = {
   on_donate_click: () => void
   on_forward_task: (text: string) => void
   bottom_spacer_height?: number
+  web_prompt_type: WebPromptType
+  api_prompt_type: ApiPromptType
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -141,10 +143,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={container_ref}
         >
           <div className={styles['header__left']}>
-            <div className={styles['header__home']}>
-              <span className="codicon codicon-home" />
-            </div>
-            <span className={styles['header__text']}>HOME</span>
+            <span className="codicon codicon-home" />
           </div>
           <div className={styles['header__right']}>
             <CompactableActionButton
@@ -169,20 +168,24 @@ export const Home: React.FC<Props> = (props) => {
               has_scrolled_past_target_button
           })}
         >
-          <AsciiArtEffect density={2.3} />
-          <UiKeycapWrapper char={is_alt_pressed ? '1' : undefined} full_width>
+          <UiKeycapWrapper char={is_alt_pressed ? 'W' : undefined} full_width>
             <UiTargetButton
               label={TARGET.WEB}
               on_click={props.on_chatbots_click}
               is_compact
+              hover_color={
+                props.web_prompt_type == 'edit-files' ? 'blue' : 'purple'
+              }
             />
           </UiKeycapWrapper>
-          <div className={styles['header__targets-divider']} />
-          <UiKeycapWrapper char={is_alt_pressed ? '2' : undefined} full_width>
+          <UiKeycapWrapper char={is_alt_pressed ? 'A' : undefined} full_width>
             <UiTargetButton
               label={TARGET.API}
               on_click={props.on_api_calls_click}
               is_compact
+              hover_color={
+                props.api_prompt_type == 'edit-files' ? 'blue' : 'purple'
+              }
             />
           </UiKeycapWrapper>
         </div>
@@ -192,23 +195,34 @@ export const Home: React.FC<Props> = (props) => {
         <div className={styles.content}>
           <div className={styles.inner}>
             <div className={styles.inner__target} ref={target_ref}>
-              <AsciiArtEffect />
               <UiKeycapWrapper
-                char={is_alt_pressed ? '1' : undefined}
+                char={is_alt_pressed ? 'W' : undefined}
                 full_width
               >
                 <UiTargetButton
                   label={TARGET.WEB}
+                  description={
+                    props.is_connected
+                      ? t('home.target.web.description-connected')
+                      : t('home.target.web.description')
+                  }
                   on_click={props.on_chatbots_click}
+                  hover_color={
+                    props.web_prompt_type == 'edit-files' ? 'blue' : 'purple'
+                  }
                 />
               </UiKeycapWrapper>
               <UiKeycapWrapper
-                char={is_alt_pressed ? '2' : undefined}
+                char={is_alt_pressed ? 'A' : undefined}
                 full_width
               >
                 <UiTargetButton
                   label={TARGET.API}
+                  description={t('home.target.api.description')}
                   on_click={props.on_api_calls_click}
+                  hover_color={
+                    props.api_prompt_type == 'edit-files' ? 'blue' : 'purple'
+                  }
                 />
               </UiKeycapWrapper>
             </div>

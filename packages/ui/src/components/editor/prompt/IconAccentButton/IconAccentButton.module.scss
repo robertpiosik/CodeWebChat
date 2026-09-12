@@ -43,32 +43,6 @@
       }
     }
 
-    &.button--green {
-      background-color: var(--cwc-green-background);
-
-      .button__icon,
-      .button__label {
-        color: var(--cwc-green-foreground);
-      }
-
-      &:hover {
-        background-color: var(--cwc-green-background);
-      }
-    }
-
-    &.button--red {
-      background-color: var(--cwc-red-background);
-
-      .button__icon,
-      .button__label {
-        color: var(--cwc-red-foreground);
-      }
-
-      &:hover {
-        background-color: var(--cwc-red-background);
-      }
-    }
-
     &.button--purple {
       background-color: var(--cwc-purple-background);
 
@@ -79,19 +53,6 @@
 
       &:hover {
         background-color: var(--cwc-purple-background);
-      }
-    }
-
-    &.button--yellow {
-      background-color: var(--cwc-yellow-background);
-
-      .button__icon,
-      .button__label {
-        color: var(--cwc-yellow-foreground);
-      }
-
-      &:hover {
-        background-color: var(--cwc-yellow-background);
       }
     }
   }

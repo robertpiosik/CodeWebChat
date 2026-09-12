@@ -3,9 +3,9 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { t } from '@/i18n'
 import { create_search_regex } from './create-search-regex'
 import { show_parent_folder_quick_pick } from '@/utils/show-parent-folder-quick-pick'
-import { group_quick_pick_items } from './group-quick-pick-items'
-import { map_files_to_quick_pick_items } from './map-files-to-quick-pick-items'
-import { handle_parent_folder_result } from './handle-parent-folder-result'
+import { group_quick_pick_items } from '@/utils/group-quick-pick-items'
+import { map_files_to_quick_pick_items } from '@/utils/map-files-to-quick-pick-items'
+import { handle_parent_folder_result } from '@/utils/handle-parent-folder-result'
 import { display_token_count } from '@shared/utils/display-token-count'
 
 export const show_search_results_quick_pick = async (params: {
@@ -14,6 +14,7 @@ export const show_search_results_quick_pick = async (params: {
   workspace_provider: WorkspaceProvider
   title: string
   show_back_button: boolean
+  hide_search_in_results_button?: boolean
   resolve_cancel_as?: 'cancel'
   resolve_hide_as?: 'back'
   restored_selected_paths?: string[]
@@ -129,7 +130,10 @@ export const show_search_results_quick_pick = async (params: {
 
   const buttons: vscode.QuickInputButton[] = []
   if (params.show_back_button) buttons.push(vscode.QuickInputButtons.Back)
-  buttons.push(search_in_results_button, close_button)
+  if (!params.hide_search_in_results_button) {
+    buttons.push(search_in_results_button)
+  }
+  buttons.push(close_button)
   quick_pick.buttons = buttons
 
   let is_showing_folder_quick_pick = false

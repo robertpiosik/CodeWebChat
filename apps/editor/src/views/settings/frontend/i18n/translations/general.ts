@@ -235,25 +235,25 @@ export const translations = {
     hu: 'Üzenetküldés Shift+Enterrel, új sor Enterrel.',
     bg: 'Използвайте Shift+Enter за изпращане, Enter за нов ред.'
   },
-  'general.commit-messages.title': {
-    en: 'Commit Messages',
-    pl: 'Wiadomości commitów',
-    'zh-cn': '提交信息',
-    ja: 'コミットメッセージ',
-    'zh-tw': '提交訊息',
-    de: 'Commit-Nachrichten',
-    es: 'Mensajes de commit',
-    fr: 'Messages de commit',
-    'pt-br': 'Mensagens de Commit',
-    ru: 'Сообщения коммитов',
-    ko: '커밋 메시지',
-    it: 'Messaggi di commit',
-    tr: 'Commit Mesajları',
-    cs: 'Zprávy commitů',
-    hu: 'Commit Üzenetek',
-    bg: 'Съобщения за commit'
+  'general.commits.title': {
+    en: 'Commits',
+    pl: 'Commity',
+    'zh-cn': '提交',
+    ja: 'コミット',
+    'zh-tw': '提交',
+    de: 'Commits',
+    es: 'Commits',
+    fr: 'Commits',
+    'pt-br': 'Commits',
+    ru: 'Коммиты',
+    ko: '커밋',
+    it: 'Commit',
+    tr: "Commit'ler",
+    cs: 'Commity',
+    hu: 'Commitok',
+    bg: 'Комити'
   },
-  'general.commit-messages.attach-ascii-tree-of-context.title': {
+  'general.commits.attach-ascii-tree-of-context.title': {
     en: 'Attach ASCII Tree of Context',
     pl: 'Dołącz drzewo ASCII kontekstu',
     'zh-cn': '附加上下文的 ASCII 树',
@@ -271,7 +271,7 @@ export const translations = {
     hu: 'Kontextus ASCII fájlfájának csatolása',
     bg: 'Прикачете ASCII дърво на контекста'
   },
-  'general.commit-messages.attach-ascii-tree-of-context.description': {
+  'general.commits.attach-ascii-tree-of-context.description': {
     en: 'Behavior in the commit generation flow.',
     pl: 'Zachowanie w procesie generowania commitów.',
     'zh-cn': '提交生成流程中的行为。',
@@ -289,7 +289,7 @@ export const translations = {
     hu: 'Viselkedés a commit generálási folyamatban.',
     bg: 'Поведение в процеса на генериране на commit.'
   },
-  'general.commit-messages.attach-ascii-tree-of-context.ask': {
+  'general.commits.attach-ascii-tree-of-context.ask': {
     en: 'Ask',
     pl: 'Pytaj',
     'zh-cn': '询问',
@@ -307,7 +307,7 @@ export const translations = {
     hu: 'Kérdezés',
     bg: 'Попитай'
   },
-  'general.commit-messages.attach-ascii-tree-of-context.always': {
+  'general.commits.attach-ascii-tree-of-context.always': {
     en: 'Always',
     pl: 'Zawsze',
     'zh-cn': '总是',
@@ -325,7 +325,7 @@ export const translations = {
     hu: 'Mindig',
     bg: 'Винаги'
   },
-  'general.commit-messages.attach-ascii-tree-of-context.never': {
+  'general.commits.attach-ascii-tree-of-context.never': {
     en: 'Never',
     pl: 'Nigdy',
     'zh-cn': '从不',
@@ -343,7 +343,7 @@ export const translations = {
     hu: 'Soha',
     bg: 'Никога'
   },
-  'general.commit-messages.use-context-files-in-commit-message-prompt.title': {
+  'general.commits.use-context-files-in-commit-message-prompt.title': {
     en: 'Use context files',
     pl: 'Używaj plików kontekstu',
     'zh-cn': '使用上下文文件',
@@ -361,26 +361,25 @@ export const translations = {
     hu: 'Kontextus fájlok használata',
     bg: 'Използване на контекстни файлове'
   },
-  'general.commit-messages.use-context-files-in-commit-message-prompt.description':
-    {
-      en: 'Improved accuracy at higher token usage.',
-      pl: 'Większa dokładność przy wyższym zużyciu tokenów.',
-      'zh-cn': '在更高的令牌使用率下提高准确性。',
-      ja: 'トークン使用量が増加しますが、精度が向上します。',
-      'zh-tw': '在更高的令牌使用率下提高準確性。',
-      de: 'Verbesserte Genauigkeit bei höherer Token-Nutzung.',
-      es: 'Precisión mejorada con un mayor uso de tokens.',
-      fr: 'Précision améliorée avec une utilisation plus élevée de jetons.',
-      'pt-br': 'Precisão melhorada com maior uso de tokens.',
-      ru: 'Улучшенная точность при более высоком расходе токенов.',
-      ko: '더 높은 토큰 사용량에서 정확도가 향상되었습니다.',
-      it: 'Precisione migliorata con un maggiore utilizzo di token.',
-      tr: 'Daha yüksek jeton kullanımında artan doğruluk.',
-      cs: 'Vylepšená přesnost při vyšším využití tokenů.',
-      hu: 'Javított pontosság magasabb tokenhasználat mellett.',
-      bg: 'Подобрена точност при по-голямо използване на токени.'
-    },
-  'general.commit-messages.use-context-files-in-commit-message-prompt.ask': {
+  'general.commits.use-context-files-in-commit-message-prompt.description': {
+    en: 'Improved accuracy at higher token usage.',
+    pl: 'Większa dokładność przy wyższym zużyciu tokenów.',
+    'zh-cn': '在更高的令牌使用率下提高准确性。',
+    ja: 'トークン使用量が増加しますが、精度が向上します。',
+    'zh-tw': '在更高的令牌使用率下提高準確性。',
+    de: 'Verbesserte Genauigkeit bei höherer Token-Nutzung.',
+    es: 'Precisión mejorada con un mayor uso de tokens.',
+    fr: 'Précision améliorée avec une utilisation plus élevée de jetons.',
+    'pt-br': 'Precisão melhorada com maior uso de tokens.',
+    ru: 'Улучшенная точность при более высоком расходе токенов.',
+    ko: '더 높은 토큰 사용량에서 정확도가 향상되었습니다.',
+    it: 'Precisione migliorata con un maggiore utilizzo di token.',
+    tr: 'Daha yüksek jeton kullanımında artan doğruluk.',
+    cs: 'Vylepšená přesnost při vyšším využití tokenů.',
+    hu: 'Javított pontosság magasabb tokenhasználat mellett.',
+    bg: 'Подобрена точност при по-голямо използване на токени.'
+  },
+  'general.commits.use-context-files-in-commit-message-prompt.ask': {
     en: 'Ask',
     pl: 'Pytaj',
     'zh-cn': '询问',
@@ -398,7 +397,7 @@ export const translations = {
     hu: 'Kérdezés',
     bg: 'Попитай'
   },
-  'general.commit-messages.use-context-files-in-commit-message-prompt.always': {
+  'general.commits.use-context-files-in-commit-message-prompt.always': {
     en: 'Always',
     pl: 'Zawsze',
     'zh-cn': '总是',
@@ -416,7 +415,7 @@ export const translations = {
     hu: 'Mindig',
     bg: 'Винаги'
   },
-  'general.commit-messages.use-context-files-in-commit-message-prompt.never': {
+  'general.commits.use-context-files-in-commit-message-prompt.never': {
     en: 'Never',
     pl: 'Nigdy',
     'zh-cn': '从不',
@@ -434,26 +433,25 @@ export const translations = {
     hu: 'Soha',
     bg: 'Никога'
   },
-  'general.commit-messages.select-all-prompts-in-commit-messages-by-default.title':
-    {
-      en: 'Select All Prompts by Default',
-      pl: 'Domyślnie wybieraj wszystkie prompty',
-      'zh-cn': '默认选择所有提示',
-      ja: 'デフォルトですべてのプロンプトを選択',
-      'zh-tw': '預設選擇所有提示',
-      de: 'Standardmäßig alle Prompts auswählen',
-      es: 'Seleccionar todos los prompts por defecto',
-      fr: 'Sélectionner tous les prompts par défaut',
-      'pt-br': 'Selecionar todos os prompts por padrão',
-      ru: 'Выбирать все промпты по умолчанию',
-      ko: '기본적으로 모든 프롬프트 선택',
-      it: 'Seleziona tutti i prompt per impostazione predefinita',
-      tr: 'Varsayılan olarak tüm istemleri seç',
-      cs: 'Ve výchozím nastavení vybrat všechny prompty',
-      hu: 'Minden prompt kiválasztása alapértelmezés szerint',
-      bg: 'Избор на всички промптове по подразбиране'
-    },
-  'general.commit-messages.select-all-prompts-in-commit-messages-by-default.description':
+  'general.commits.select-all-prompts-in-commit-messages-by-default.title': {
+    en: 'Select All Prompts by Default',
+    pl: 'Domyślnie wybieraj wszystkie prompty',
+    'zh-cn': '默认选择所有提示',
+    ja: 'デフォルトですべてのプロンプトを選択',
+    'zh-tw': '預設選擇所有提示',
+    de: 'Standardmäßig alle Prompts auswählen',
+    es: 'Seleccionar todos los prompts por defecto',
+    fr: 'Sélectionner tous les prompts par défaut',
+    'pt-br': 'Selecionar todos os prompts por padrão',
+    ru: 'Выбирать все промпты по умолчанию',
+    ko: '기본적으로 모든 프롬프트 선택',
+    it: 'Seleziona tutti i prompt per impostazione predefinita',
+    tr: 'Varsayılan olarak tüm istemleri seç',
+    cs: 'Ve výchozím nastavení vybrat všechny prompty',
+    hu: 'Minden prompt kiválasztása alapértelmezés szerint',
+    bg: 'Избор на всички промптове по подразбиране'
+  },
+  'general.commits.select-all-prompts-in-commit-messages-by-default.description':
     {
       en: 'Determines whether accepted prompts are pre-selected.',
       pl: 'Określa, czy zaakceptowane prompty są wstępnie zaznaczone.',
@@ -472,7 +470,7 @@ export const translations = {
       hu: 'Meghatározza, hogy az elfogadott promptok előre ki vannak-e választva.',
       bg: 'Определя дали приетите промптове са предварително избрани.'
     },
-  'general.commit-messages.commit-message-instructions.title': {
+  'general.commits.commit-message-instructions.title': {
     en: 'Commit Message Instructions',
     pl: 'Instrukcje wiadomości commitu',
     'zh-cn': '提交信息说明',
@@ -490,7 +488,7 @@ export const translations = {
     hu: 'Commit Üzenet Utasítások',
     bg: 'Инструкции за съобщения за commit'
   },
-  'general.commit-messages.commit-message-instructions.description': {
+  'general.commits.commit-message-instructions.description': {
     en: 'Describe style and conventions (e.g. Conventional Commits, gitmoji).',
     pl: 'Opisz styl i konwencje (np. Conventional Commits, gitmoji).',
     'zh-cn': '描述样式和规范（例如 Conventional Commits、gitmoji）。',
@@ -508,79 +506,6 @@ export const translations = {
     cs: 'Popište styl a konvence (např. Conventional Commits, gitmoji).',
     hu: 'Írja le a stílust és a konvenciókat (pl. Conventional Commits, gitmoji).',
     bg: 'Опишете стила и конвенциите (напр. Conventional Commits, gitmoji).'
-  },
-  'general.context.clear-checks-in-workspace-behavior.title': {
-    en: 'Clear Checks in Workspace Behavior',
-    pl: 'Zachowanie czyszczenia zaznaczeń w obszarze roboczym',
-    'zh-cn': '工作区中“清除检查”的行为',
-    ja: 'ワークスペースでのチェッククリアの動作',
-    'zh-tw': '工作區中「清除檢查」的行為',
-    de: 'Verhalten bei "Prüfungen löschen" im Arbeitsbereich',
-    es: 'Comportamiento de borrar selecciones en el espacio de trabajo',
-    fr: "Comportement d'effacement des coches",
-    'pt-br': 'Comportamento de Limpar Seleções',
-    ru: 'Поведение очистки выбора в рабочей области',
-    ko: '작업 공간에서 체크 지우기 동작',
-    it: "Comportamento pulizia spunte nell'area di lavoro",
-    tr: 'Çalışma Alanında Seçimleri Temizleme Davranışı',
-    cs: 'Chování vyčištění výběru v pracovním prostoru',
-    hu: 'Kijelölés Törlése a Munkaterületen',
-    bg: 'Поведение при изчистване на избора'
-  },
-  'general.context.clear-checks-in-workspace-behavior.description': {
-    en: "Behavior of the 'Clear Checks' button in the Workspace view.",
-    pl: "Zachowanie przycisku 'Wyczyść zaznaczenia' w widoku obszaru roboczego.",
-    'zh-cn': '工作区视图中“清除检查”按钮的行为。',
-    ja: 'ワークスペースビューの「チェックをクリア」ボタンの動作。',
-    'zh-tw': '工作區視圖中「清除檢查」按鈕的行為。',
-    de: 'Verhalten der Schaltfläche "Prüfungen löschen" in der Arbeitsbereich-Ansicht.',
-    es: "Comportamiento del botón 'Borrar selecciones' en la vista del espacio de trabajo.",
-    fr: 'Comportement du bouton "Effacer les coches" dans l\'espace de travail.',
-    'pt-br':
-      "Comportamento do botão 'Limpar Seleções' na visualização do Workspace.",
-    ru: "Поведение кнопки 'Очистить выбор'.",
-    ko: "작업 공간 보기에서 '체크 지우기' 버튼의 동작입니다.",
-    it: "Comportamento del pulsante 'Pulisci spunte' nell'area di lavoro.",
-    tr: "Çalışma Alanı görünümündeki 'Seçimleri Temizle' düğmesinin davranışı.",
-    cs: "Chování tlačítka 'Vyčistit výběr' v zobrazení Pracovní prostor.",
-    hu: "A 'Kijelölés Törlése' gomb viselkedése.",
-    bg: "Поведение на бутона 'Изчистване' в работното пространство."
-  },
-  'general.context.clear-checks.ignore-open-editors': {
-    en: 'Ignore Open Editors',
-    pl: 'Ignoruj otwarte edytory',
-    'zh-cn': '忽略打开的编辑器',
-    ja: '開いているエディターを無視',
-    'zh-tw': '忽略開啟的編輯器',
-    de: 'Geöffnete Editoren ignorieren',
-    es: 'Ignorar editores abiertos',
-    fr: 'Ignorer les éditeurs ouverts',
-    'pt-br': 'Ignorar Editores Abertos',
-    ru: 'Игнорировать открытые редакторы',
-    ko: '열린 에디터 무시',
-    it: 'Ignora editor aperti',
-    tr: 'Açık Editörleri Yok Say',
-    cs: 'Ignorovat otevřené editory',
-    hu: 'Nyitott Szerkesztők Figyelmen Kívül Hagyása',
-    bg: 'Игнориране на отворени редактори'
-  },
-  'general.context.clear-checks.uncheck-all': {
-    en: 'Uncheck All',
-    pl: 'Odznacz wszystko',
-    'zh-cn': '取消全选',
-    ja: 'すべて選択解除',
-    'zh-tw': '取消全選',
-    de: 'Alle abwählen',
-    es: 'Desmarcar todo',
-    fr: 'Tout décocher',
-    'pt-br': 'Desmarcar Tudo',
-    ru: 'Снять все отметки',
-    ko: '모두 선택 해제',
-    it: 'Deseleziona tutto',
-    tr: 'Tümünün Seçimini Kaldır',
-    cs: 'Zrušit vše',
-    hu: 'Minden Kijelölés Törlése',
-    bg: 'Размаркиране на всички'
   },
   'general.prompt.title': {
     en: 'Prompt',
@@ -761,98 +686,6 @@ export const translations = {
     cs: "Instrukce pro generování kódu ve formátu 'diff'.",
     hu: "Utasítások kód generálásához 'diff' formátumban.",
     bg: "Инструкции за генериране на код във формат 'diff'."
-  },
-  'general.context.title': {
-    en: 'Context',
-    pl: 'Kontekst',
-    'zh-cn': '上下文',
-    ja: 'コンテキスト',
-    'zh-tw': '上下文',
-    de: 'Kontext',
-    es: 'Contexto',
-    fr: 'Contexte',
-    'pt-br': 'Contexto',
-    ru: 'Контекст',
-    ko: '컨텍스트',
-    it: 'Contesto',
-    tr: 'Bağlam',
-    cs: 'Kontext',
-    hu: 'Kontextus',
-    bg: 'Контекст'
-  },
-  'general.context.intelligent-search-instructions.title': {
-    en: 'Intelligent File Search Instructions',
-    pl: 'Instrukcje inteligentnego wyszukiwania plików',
-    'zh-cn': '智能文件搜索说明',
-    ja: 'インテリジェントファイル検索の指示',
-    'zh-tw': '智慧檔案搜尋說明',
-    de: 'Anweisungen zur intelligenten Dateisuche',
-    es: 'Instrucciones de búsqueda inteligente de archivos',
-    fr: 'Instructions de recherche intelligente de fichiers',
-    'pt-br': 'Instruções de pesquisa inteligente de arquivos',
-    ru: 'Инструкции для умного поиска файлов',
-    ko: '지능형 파일 검색 지침',
-    it: 'Istruzioni per la ricerca intelligente dei file',
-    tr: 'Akıllı Dosya Arama Talimatları',
-    cs: 'Pokyny pro inteligentní vyhledávání souborů',
-    hu: 'Intelligens fájlkeresési utasítások',
-    bg: 'Инструкции за интелигентно търсене на файлове'
-  },
-  'general.context.intelligent-search-instructions.description': {
-    en: 'Specify a prefix instruction for the intelligent file search.',
-    pl: 'Określ instrukcję początkową dla inteligentnego wyszukiwania plików.',
-    'zh-cn': '为智能文件搜索指定前缀指令。',
-    ja: 'インテリジェントファイル検索のプレフィックス指示を指定します。',
-    'zh-tw': '為智慧檔案搜尋指定前綴指令。',
-    de: 'Geben Sie eine Präfix-Anweisung für die intelligente Dateisuche an.',
-    es: 'Especifica una instrucción de prefijo para la búsqueda inteligente de archivos.',
-    fr: 'Spécifiez une instruction de préfixe pour la recherche intelligente de fichiers.',
-    'pt-br':
-      'Especifique uma instrução de prefixo para a pesquisa inteligente de arquivos.',
-    ru: 'Укажите начальную инструкцию (префикс) для интеллектуального поиска файлов.',
-    ko: '지능형 파일 검색을 위한 접두사 지침을 지정하세요.',
-    it: "Specifica un'istruzione di prefisso per la ricerca intelligente dei file.",
-    tr: 'Akıllı dosya araması için bir önek talimatı belirtin.',
-    cs: 'Zadejte prefixovou instrukci pro inteligentní vyhledávání souborů.',
-    hu: 'Adjon meg egy előtag-utasítást az intelligens fájlkereséshez.',
-    bg: 'Посочете префиксна инструкция за интелигентното търсене на файлове.'
-  },
-  'general.context.agentic-search-instructions.title': {
-    en: 'Agentic File Search Instructions',
-    pl: 'Instrukcje agentowego wyszukiwania plików',
-    'zh-cn': '代理文件搜索说明',
-    ja: 'エージェントファイル検索の指示',
-    'zh-tw': '代理檔案搜尋說明',
-    de: 'Anweisungen zur agentenbasierten Dateisuche',
-    es: 'Instrucciones de búsqueda de archivos basada en agentes',
-    fr: 'Instructions de recherche de fichiers basée sur un agent',
-    'pt-br': 'Instruções de pesquisa de arquivos baseada em agente',
-    ru: 'Инструкции для агентного поиска файлов',
-    ko: '에이전트 파일 검색 지침',
-    it: 'Istruzioni per la ricerca dei file basata su agenti',
-    tr: 'Aracı Dosya Arama Talimatları',
-    cs: 'Pokyny pro vyhledávání souborů pomocí agentů',
-    hu: 'Ügynökalapú fájlkeresési utasítások',
-    bg: 'Инструкции за търсене на файлове от агенти'
-  },
-  'general.context.agentic-search-instructions.description': {
-    en: 'Specify a prefix instruction for the agentic file search.',
-    pl: 'Określ instrukcję początkową dla agentowego wyszukiwania plików.',
-    'zh-cn': '为代理文件搜索指定前缀指令。',
-    ja: 'エージェントファイル検索のプレフィックス指示を指定します。',
-    'zh-tw': '為代理檔案搜尋指定前綴指令。',
-    de: 'Geben Sie eine Präfix-Anweisung für die agentenbasierte Dateisuche an.',
-    es: 'Especifica una instrucción de prefijo para la búsqueda de archivos basada en agentes.',
-    fr: 'Spécifiez une instruction de préfixe pour la recherche de fichiers basée sur un agent.',
-    'pt-br':
-      'Especifique uma instrução de prefixo para a pesquisa de arquivos baseada em agente.',
-    ru: 'Укажите начальную инструкцию (префикс) для агентного поиска файлов.',
-    ko: '에이전트 파일 검색을 위한 접두사 지침을 지정하세요.',
-    it: "Specifica un'istruzione di prefisso per la ricerca dei file basata su agenti.",
-    tr: 'Aracı dosya araması için bir önek talimatı belirtin.',
-    cs: 'Zadejte prefixovou instrukci pro vyhledávání souborů pomocí agentů.',
-    hu: 'Adjon meg egy előtag-utasítást az ügynökalapú fájlkereséshez.',
-    bg: 'Посочете префиксна инструкция за търсене на файлове от агенти.'
   },
   'general.action.restore-default': {
     en: 'Restore default',

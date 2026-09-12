@@ -87,8 +87,6 @@ export const Settings = () => {
       settings_hook.web_configurations !== undefined &&
       settings_hook.defaults !== undefined &&
       settings_hook.edit_files_system_instructions !== undefined &&
-      settings_hook.intelligent_search_instructions !== undefined &&
-      settings_hook.agentic_search_instructions !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
       settings_hook.attach_ascii_tree_of_context !== undefined &&
       settings_hook.use_context_files_in_commit_message_prompt !== undefined &&
@@ -97,8 +95,6 @@ export const Settings = () => {
       settings_hook.gemini_user_id !== undefined &&
       settings_hook.ai_studio_user_id !== undefined &&
       settings_hook.send_with_shift_enter !== undefined &&
-      settings_hook.clear_checks_in_workspace_behavior !== undefined &&
-      settings_hook.auto_run_patch_repair !== undefined &&
       settings_hook.is_modern_ui !== undefined &&
       settings_hook.templates !== undefined
     )
@@ -134,10 +130,6 @@ export const Settings = () => {
         edit_files_system_instructions={
           settings_hook.edit_files_system_instructions!
         }
-        intelligent_search_instructions={
-          settings_hook.intelligent_search_instructions!
-        }
-        agentic_search_instructions={settings_hook.agentic_search_instructions!}
         attach_ascii_tree_of_context={
           settings_hook.attach_ascii_tree_of_context!
         }
@@ -151,10 +143,6 @@ export const Settings = () => {
         gemini_user_id={settings_hook.gemini_user_id!}
         ai_studio_user_id={settings_hook.ai_studio_user_id!}
         send_with_shift_enter={settings_hook.send_with_shift_enter!}
-        clear_checks_in_workspace_behavior={
-          settings_hook.clear_checks_in_workspace_behavior!
-        }
-        auto_run_patch_repair={settings_hook.auto_run_patch_repair!}
         templates={settings_hook.templates!}
         on_update_templates={settings_hook.handle_update_templates}
         on_edit_template={(key, index) => {
@@ -183,24 +171,12 @@ export const Settings = () => {
         on_edit_files_system_instructions_change={
           settings_hook.handle_edit_files_system_instructions_change
         }
-        on_intelligent_search_instructions_change={
-          settings_hook.handle_intelligent_search_instructions_change
-        }
-        on_agentic_search_instructions_change={
-          settings_hook.handle_agentic_search_instructions_change
-        }
-        on_clear_checks_in_workspace_behavior_change={
-          settings_hook.handle_clear_checks_in_workspace_behavior_change
-        }
         on_gemini_user_id_change={settings_hook.handle_gemini_user_id_change}
         on_ai_studio_user_id_change={
           settings_hook.handle_ai_studio_user_id_change
         }
         on_send_with_shift_enter_change={
           settings_hook.handle_send_with_shift_enter_change
-        }
-        on_auto_run_patch_repair_change={
-          settings_hook.handle_auto_run_patch_repair_change
         }
         on_open_keybindings={settings_hook.handle_open_keybindings}
         on_open_editor_settings={settings_hook.handle_open_editor_settings}

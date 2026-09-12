@@ -6,6 +6,22 @@ import {
 import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const meta: Chatbot = {
+  wait_until_ready: async () => {
+    await new Promise((resolve) => {
+      const check_for_element = () => {
+        if (
+          document.querySelector(
+            'button[data-testid="composer-mode-dropdown-button"]'
+          )
+        ) {
+          resolve(null)
+        } else {
+          setTimeout(check_for_element, 100)
+        }
+      }
+      check_for_element()
+    })
+  },
   enter_message: async (params) => {
     const input_element = document.querySelector(
       'div[contenteditable="true"][data-testid="composer-input"]'

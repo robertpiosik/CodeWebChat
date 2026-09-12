@@ -7,7 +7,6 @@ import {
   handle_add_model_provider,
   handle_update_model_provider,
   handle_delete_model_provider,
-  handle_get_clear_checks_in_workspace_behavior,
   handle_get_api_configurations,
   handle_get_commit_message_instructions,
   handle_get_attach_ascii_tree_of_context,
@@ -21,7 +20,6 @@ import {
   handle_reorder_model_providers,
   handle_set_default_api_configuration,
   handle_select_default_api_configuration,
-  handle_update_clear_checks_in_workspace_behavior,
   handle_update_commit_message_instructions,
   handle_update_attach_ascii_tree_of_context,
   handle_update_use_context_files_in_commit_message_prompt,
@@ -32,8 +30,6 @@ import {
   handle_update_send_with_shift_enter,
   handle_open_ignore_patterns_settings,
   handle_open_allow_patterns_settings,
-  handle_get_auto_run_patch_repair as handle_get_auto_run_patch_repair,
-  handle_update_auto_run_patch_repair as handle_update_auto_run_patch_repair,
   handle_open_keybindings,
   handle_open_external_url,
   handle_delete_web_configuration,
@@ -50,10 +46,6 @@ import {
   handle_pick_model_provider,
   handle_pick_api_model,
   handle_pick_api_reasoning_effort,
-  handle_get_intelligent_search_instructions,
-  handle_update_intelligent_search_instructions,
-  handle_get_agentic_search_instructions,
-  handle_update_agentic_search_instructions,
   handle_get_templates,
   handle_update_templates,
   handle_create_template,
@@ -61,6 +53,7 @@ import {
 } from './message-handlers'
 import { config_web_configuration_to_ui_format } from '@/utils/web-configuration-format-converters'
 import { webview_html } from '@/views/shared/utils/webview-html'
+import { CHATBOTS } from '@shared/constants/chatbots'
 
 export class SettingsViewProvider {
   private _webview_panel: vscode.WebviewPanel | undefined
@@ -80,8 +73,25 @@ export class SettingsViewProvider {
     this.postMessage({
       command: 'WEB_CONFIGURATIONS',
       web_configurations: web_configurations_config
-        .filter((c: any) => c.chatbot)
-        .map((c: any) => config_web_configuration_to_ui_format(c))
+        .filter((c: any) => c.chatbot && CHATBOTS[c.chatbot as keyof typeof CHATBOTS])
+        .map((config: any) => {
+          let model = config.model
+          if (config.chatbot && model) {
+            const chatbot_info = CHATBOTS[config.chatbot as keyof typeof CHATBOTS]
+            const is_user_provided_supported =
+              chatbot_info.supports_user_provided_model
+            const is_model_predefined = chatbot_info.models?.[model]
+
+            if (
+              !is_user_provided_supported &&
+              !is_model_predefined &&
+              config.chatbot != 'OpenRouter'
+            ) {
+              model = undefined
+            }
+          }
+          return config_web_configuration_to_ui_format({ ...config, model })
+        })
     })
   }
 
@@ -164,16 +174,6 @@ export class SettingsViewProvider {
           await handle_delete_template(this, message)
         } else if (message.command == 'GET_API_CONFIGURATIONS') {
           await handle_get_api_configurations(this)
-        } else if (message.command == 'GET_INTELLIGENT_SEARCH_INSTRUCTIONS') {
-          await handle_get_intelligent_search_instructions(this)
-        } else if (
-          message.command == 'UPDATE_INTELLIGENT_SEARCH_INSTRUCTIONS'
-        ) {
-          await handle_update_intelligent_search_instructions(message)
-        } else if (message.command == 'GET_AGENTIC_SEARCH_INSTRUCTIONS') {
-          await handle_get_agentic_search_instructions(this)
-        } else if (message.command == 'UPDATE_AGENTIC_SEARCH_INSTRUCTIONS') {
-          await handle_update_agentic_search_instructions(message)
         } else if (message.command == 'SET_DEFAULT_API_CONFIGURATION') {
           await handle_set_default_api_configuration(
             this,
@@ -214,14 +214,6 @@ export class SettingsViewProvider {
           'UPDATE_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
         ) {
           await handle_update_include_prompts_in_commit_messages(message)
-        } else if (
-          message.command == 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
-        ) {
-          await handle_get_clear_checks_in_workspace_behavior(this)
-        } else if (
-          message.command == 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
-        ) {
-          await handle_update_clear_checks_in_workspace_behavior(message)
         } else if (message.command == 'GET_GEMINI_USER_ID') {
           await handle_get_gemini_user_id(this)
         } else if (message.command == 'UPDATE_GEMINI_USER_ID') {
@@ -240,10 +232,6 @@ export class SettingsViewProvider {
           await handle_open_ignore_patterns_settings()
         } else if (message.command == 'OPEN_ALLOW_PATTERNS_SETTINGS') {
           await handle_open_allow_patterns_settings()
-        } else if (message.command == 'GET_AUTO_RUN_PATCH_REPAIR') {
-          await handle_get_auto_run_patch_repair(this)
-        } else if (message.command == 'UPDATE_AUTO_RUN_PATCH_REPAIR') {
-          await handle_update_auto_run_patch_repair(message)
         } else if (message.command == 'OPEN_KEYBINDINGS') {
           await handle_open_keybindings(message)
         } else if (message.command == 'OPEN_EXTERNAL_URL') {
@@ -292,17 +280,13 @@ export class SettingsViewProvider {
           void handle_get_model_providers(this)
           void handle_get_api_configurations(this)
           void handle_get_edit_files_system_instructions(this)
-          void handle_get_intelligent_search_instructions(this)
-          void handle_get_agentic_search_instructions(this)
           void handle_get_commit_message_instructions(this)
           void handle_get_attach_ascii_tree_of_context(this)
           void handle_get_use_context_files_in_commit_message_prompt(this)
           void handle_get_include_prompts_in_commit_messages(this)
-          void handle_get_clear_checks_in_workspace_behavior(this)
           void handle_get_gemini_user_id(this)
           void handle_get_ai_studio_user_id(this)
           void handle_get_send_with_shift_enter(this)
-          void handle_get_auto_run_patch_repair(this)
           void handle_get_templates(this)
           this._send_web_configurations()
         }

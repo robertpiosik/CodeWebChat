@@ -67,8 +67,10 @@ export const FileItem: FC<Props> = (props) => {
       return
     }
 
+    const start_time = Date.now()
+
     const interval = setInterval(() => {
-      set_elapsed_seconds((prev) => prev + 0.1)
+      set_elapsed_seconds((Date.now() - start_time) / 1000)
     }, 100)
     return () => clearInterval(interval)
   }, [props.file.is_applying])
@@ -203,8 +205,8 @@ export const FileItem: FC<Props> = (props) => {
                 {props.file.file_state != 'new' &&
                   props.file.file_state != 'deleted' && (
                     <IconButton
-                      codicon_icon="edit-sparkle"
-                      title="Edit with Patch Repair"
+                      codicon_icon="sparkle"
+                      title="Apply with Patch Repair"
                       on_click={(e) => {
                         e.stopPropagation()
                         props.on_patch_repair(

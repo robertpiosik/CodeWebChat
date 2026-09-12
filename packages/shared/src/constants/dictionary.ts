@@ -16,8 +16,6 @@ export const dictionary = {
       commit_hash: string
     ) =>
       `No checked files in the "${folder_name}" repository for commit ${commit_hash}.`,
-    NO_TEXT_SELECTED_FOR_SELECTION_PLACEHOLDER:
-      'No text selected for #Selection placeholder.',
     RESTORED_CONTEXT: (context_name: string) =>
       `Restored context "${context_name}".`,
     NO_GIT_REPOSITORY_FOUND_IN_WORKSPACE:
@@ -27,10 +25,6 @@ export const dictionary = {
       `Selected ${count} file${count == 1 ? '' : 's'}.`,
     DELETED_CONTEXT_FROM_WORKSPACE_STATE: 'Deleted context.',
     CONTEXT_SAVED_SUCCESSFULLY: 'Saved successfully.',
-    FILES_REMAIN_CHECKED: (count: number) =>
-      `${count} file${count == 1 ? '' : 's'} remain${
-        count == 1 ? 's' : ''
-      } checked.`,
     TEMPLATE_RESTORED: 'Template has been restored.',
     UNNAMED_TEMPLATE_DELETED: 'Unnamed template has been deleted.'
   },

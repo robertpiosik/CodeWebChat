@@ -6,6 +6,18 @@ let websocket: WebSocket | null = null
 let is_reconnecting = false
 let last_ping_timestamp = Date.now()
 
+browser.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName == 'local' && changes['browser-profile-name']) {
+    if (websocket) {
+      is_reconnecting = false
+      const old_ws = websocket
+      websocket = null
+      old_ws.close()
+    }
+    connect_websocket()
+  }
+})
+
 export const check_server_health = async (): Promise<boolean> => {
   try {
     const response = await fetch(`http://localhost:${DEFAULT_PORT}/health`)
@@ -16,7 +28,7 @@ export const check_server_health = async (): Promise<boolean> => {
 }
 
 export const check_and_recover_connection = () => {
-  if (websocket?.readyState === WebSocket.OPEN) {
+  if (websocket?.readyState == WebSocket.OPEN) {
     if (Date.now() - last_ping_timestamp > 20000) {
       console.warn(
         'WebSocket connection is stale (no recent pings). Force reconnecting...'
@@ -28,8 +40,8 @@ export const check_and_recover_connection = () => {
 
   if (
     !is_reconnecting &&
-    websocket?.readyState !== WebSocket.OPEN &&
-    websocket?.readyState !== WebSocket.CONNECTING
+    websocket?.readyState != WebSocket.OPEN &&
+    websocket?.readyState != WebSocket.CONNECTING
   ) {
     connect_websocket()
   }
@@ -38,8 +50,8 @@ export const check_and_recover_connection = () => {
 export const connect_websocket = async (): Promise<void> => {
   if (
     is_reconnecting ||
-    websocket?.readyState === WebSocket.OPEN ||
-    websocket?.readyState === WebSocket.CONNECTING
+    websocket?.readyState == WebSocket.OPEN ||
+    websocket?.readyState == WebSocket.CONNECTING
   ) {
     return
   }
@@ -59,9 +71,17 @@ export const connect_websocket = async (): Promise<void> => {
     const version = manifest.version
     const user_agent = navigator.userAgent
 
-    const ws = new WebSocket(
-      `ws://localhost:${DEFAULT_PORT}?token=${SECURITY_TOKENS.BROWSERS}&version=${version}&user_agent=${encodeURIComponent(user_agent)}`
-    )
+    const storage = await browser.storage.local.get('browser-profile-name')
+    const profile_name = (
+      storage['browser-profile-name'] as string | undefined
+    )?.trim()
+
+    let ws_url = `ws://localhost:${DEFAULT_PORT}?token=${SECURITY_TOKENS.BROWSERS}&version=${version}&user_agent=${encodeURIComponent(user_agent)}`
+    if (profile_name) {
+      ws_url += `&profile_name=${encodeURIComponent(profile_name)}`
+    }
+
+    const ws = new WebSocket(ws_url)
     websocket = ws
 
     ws.onopen = () => {

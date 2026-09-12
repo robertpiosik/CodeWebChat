@@ -48,7 +48,7 @@ export const handle_template_quick_pick = async (
       selection ==
       t('views.prompt.handlers.handle-template-quick-pick.open-settings')
     ) {
-      open_settings.general.prompt_field()
+      open_settings.general.prompt()
     }
     return
   }

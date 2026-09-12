@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 
 export const open_settings = {
   general: {
-    prompt_field: () =>
+    prompt: () =>
       vscode.commands.executeCommand(
         'codeWebChat.settings',
         'section:general:group:prompt'

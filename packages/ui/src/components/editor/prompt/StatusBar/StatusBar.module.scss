@@ -33,6 +33,10 @@
   background-color: var(--cwc-bg-tertiary);
   --theme-description-color: var(--cwc-text-color-dimmed);
 
+  .action {
+    color: var(--vscode-textLink-foreground);
+  }
+
   .action:hover {
     background-color: var(--cwc-bg-tertiary);
   }
@@ -137,8 +141,7 @@
   gap: 4px;
   cursor: pointer;
   white-space: nowrap;
-  color: var(--vscode-textLink-foreground);
-  padding: 0 6px 0 4px;
+  padding: 0 7px 0 4px;
 
   &:hover {
     background-color: var(--vscode-list-hoverBackground);

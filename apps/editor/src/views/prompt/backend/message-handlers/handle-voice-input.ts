@@ -12,10 +12,7 @@ import axios from 'axios'
 import { send_llm_message } from '@/utils/send-llm-message'
 import { voice_input_instructions } from '@/constants/instructions'
 import { LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
-import {
-  show_configuration_quick_pick,
-  map_api_configuration_to_item
-} from '@/utils/show-configuration-quick-pick'
+import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { t } from '@/i18n'
 import { open_settings } from '@/views/settings/helpers/open-settings'
 
@@ -142,9 +139,9 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
               LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY
             )
 
-          const result = await show_configuration_quick_pick({
+          const result = await show_configurations_quick_pick({
             items: api_configurations,
-            map_item: map_api_configuration_to_item,
+            type: 'api',
             last_selected_id: recent_id
           })
 

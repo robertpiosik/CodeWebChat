@@ -95,6 +95,43 @@ export const use_prompt = (vscode: any) => {
     })
   }
 
+  const handle_changes_click = (branch_name: string) => {
+    post_message(vscode, {
+      command: 'PREVIEW_CHANGES_SYMBOL',
+      branch_name
+    })
+  }
+
+  const handle_commit_click = (
+    repo_name: string,
+    commit_hash: string,
+    type: 'Commit' | 'CommitMessage',
+    commit_message?: string,
+  ) => {
+    post_message(vscode, {
+      command: 'PREVIEW_COMMIT_SYMBOL',
+      repo_name,
+      commit_hash,
+      commit_message,
+      type
+    })
+  }
+
+  const handle_skill_click = (agent: string, repo: string, skill_name: string) => {
+    post_message(vscode, {
+      command: 'PREVIEW_SKILL_SYMBOL',
+      agent,
+      repo,
+      skill_name
+    })
+  }
+
+  const handle_agentic_search = () => {
+    post_message(vscode, {
+      command: 'AGENTIC_SEARCH'
+    })
+  }
+
   const handle_preview_prompt = () => {
     post_message(vscode, {
       command: 'PREVIEW_PROMPT'
@@ -264,6 +301,10 @@ export const use_prompt = (vscode: any) => {
     ask_instructions_token_count,
     handle_preview_prompt,
     api_configurations,
-    set_api_configurations
+    set_api_configurations,
+    handle_changes_click,
+    handle_commit_click,
+    handle_skill_click,
+    handle_agentic_search
   }
 }

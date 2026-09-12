@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { display_token_count } from '@shared/utils/display-token-count'
+import { natural_sort } from '@/utils/natural-sort'
 
 export const map_files_to_quick_pick_items = async <
   T extends { path: string }
@@ -12,8 +13,28 @@ export const map_files_to_quick_pick_items = async <
   open_file_button: vscode.QuickInputButton
   add_parent_folder_button: vscode.QuickInputButton
 }) => {
+  const get_sort_path = (file_path: string) => {
+    const workspace_root =
+      params.workspace_provider.get_workspace_root_for_file(file_path)
+    const relative_path = workspace_root
+      ? path.relative(workspace_root, file_path)
+      : file_path
+
+    if (workspace_root && params.is_multi_root) {
+      const workspace_name =
+        params.workspace_provider.get_workspace_name(workspace_root)
+      return `${workspace_name}/${relative_path}`
+    }
+
+    return relative_path
+  }
+
+  const sorted_files = [...params.files].sort((a, b) =>
+    natural_sort(get_sort_path(a.path), get_sort_path(b.path))
+  )
+
   return await Promise.all(
-    params.files.map(async (file_obj) => {
+    sorted_files.map(async (file_obj) => {
       const file_path = file_obj.path
       const workspace_root =
         params.workspace_provider.get_workspace_root_for_file(file_path)

@@ -18,7 +18,7 @@ export const replace_skill_symbol = async (params: {
 
   const instruction = params.instruction.replace(
     regex,
-    (full_match, agent_name, _repo_id, skill_name) => {
+    (full_match, agent_name, repo_id, skill_name) => {
       const key = `${agent_name}:${skill_name}`
 
       const formatted_skill_name = skill_name

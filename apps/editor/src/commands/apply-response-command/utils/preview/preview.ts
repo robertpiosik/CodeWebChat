@@ -123,12 +123,6 @@ export const preview = async (params: {
       items_for_preview.push(...prepared_files.map((p) => p.previewable_file))
     }
 
-    const config = vscode.workspace.getConfiguration('codeWebChat')
-    const auto_run_patch_repair = config.get<boolean>(
-      'autoRunPatchRepair',
-      false
-    )
-
     if (params.prompt_view_provider) {
       params.prompt_view_provider.send_message({
         command: 'HIDE_PROGRESS'
@@ -138,7 +132,6 @@ export const preview = async (params: {
         items: items_for_preview,
         raw_instructions: params.raw_instructions,
         created_at: params.created_at,
-        auto_run_patch_repair,
         url: params.url,
         recent_api_configuration: params.recent_api_configuration
       })

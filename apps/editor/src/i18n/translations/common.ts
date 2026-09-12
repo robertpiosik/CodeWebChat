@@ -612,23 +612,23 @@ export const translations = {
     hu: 'Chatbot automatikus kitöltése',
     bg: 'Автоматично попълване на чатбот'
   },
-  'common.action.make-api-call': {
-    en: 'Make API call',
-    pl: 'Wywołaj API',
-    'zh-cn': '调用 API',
-    ja: 'API を呼び出す',
-    'zh-tw': '呼叫 API',
-    de: 'API-Aufruf durchführen',
-    es: 'Hacer llamada API',
-    fr: 'Faire un appel API',
-    'pt-br': 'Fazer chamada de API',
-    ru: 'Выполнить API-запрос',
-    ko: 'API 호출',
-    it: 'Effettua chiamata API',
-    tr: 'API çağrısı yap',
-    cs: 'Provést API volání',
-    hu: 'API hívás',
-    bg: 'Извикване на API'
+  'common.action.send-request': {
+    en: 'Send request',
+    pl: 'Wyślij zapytanie',
+    'zh-cn': '发送请求',
+    ja: 'リクエストを送信',
+    'zh-tw': '發送請求',
+    de: 'Anfrage senden',
+    es: 'Enviar solicitud',
+    fr: 'Envoyer la demande',
+    'pt-br': 'Enviar solicitação',
+    ru: 'Отправить запрос',
+    ko: '요청 보내기',
+    it: 'Invia richiesta',
+    tr: 'İstek gönder',
+    cs: 'Odeslat požadavek',
+    hu: 'Kérés küldése',
+    bg: 'Изпращане на заявка'
   },
   'common.action.enter-manually': {
     en: 'Enter manually',
@@ -665,5 +665,23 @@ export const translations = {
     cs: 'Kopírovat prompt',
     hu: 'Prompt másolása',
     bg: 'Копиране на промпт'
+  },
+  'common.info.continue-in-browser': {
+    en: 'Continue in the browser.',
+    pl: 'Kontynuuj w przeglądarce.',
+    'zh-cn': '在浏览器中继续。',
+    ja: 'ブラウザで続行。',
+    'zh-tw': '在瀏覽器中繼續。',
+    de: 'Im Browser fortfahren.',
+    es: 'Continuar en el navegador.',
+    fr: 'Continuer dans le navigateur.',
+    'pt-br': 'Continuar no navegador.',
+    ru: 'Продолжить в браузере.',
+    ko: '브라우저에서 계속.',
+    it: 'Continua nel browser.',
+    tr: 'Tarayıcıda devam et.',
+    cs: 'Pokračovat v prohlížeči.',
+    hu: 'Folytatás a böngészőben.',
+    bg: 'Продължете в браузъра.'
   }
 } as const

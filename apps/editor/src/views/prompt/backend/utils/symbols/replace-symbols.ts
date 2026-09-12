@@ -5,13 +5,11 @@ import {
   replace_commit_symbol
 } from './git/replace-git-symbols'
 import { replace_saved_context_symbol } from './saved-context/replace-saved-context-symbol'
-import { replace_selection_symbol } from './selection/replace-selection-symbol'
 import { replace_skill_symbol } from './skill/replace-skill-symbol'
 import { replace_image_symbol } from './image/replace-image-symbol'
 import { replace_pasted_text_symbol } from './pasted-text/replace-pasted-text-symbol'
 import { replace_website_symbol } from './website/replace-website-symbol'
 import { replace_fragment_symbol } from './fragment/replace-fragment-symbol'
-import { replace_clipboard_paths_symbol } from './clipboard-paths/replace-clipboard-paths-symbol'
 import { SymbolCacheManager } from './symbol-cache'
 
 export const replace_symbols = async (params: {
@@ -23,10 +21,6 @@ export const replace_symbols = async (params: {
 }): Promise<{ instructions: string; skill_definitions: string }> => {
   let processed_instructions = params.instructions
   let skill_definitions = ''
-
-  if (processed_instructions.includes('#Selection')) {
-    processed_instructions = replace_selection_symbol(processed_instructions)
-  }
 
   if (processed_instructions.includes('#Changes(')) {
     const result = await replace_changes_symbol({
@@ -58,16 +52,6 @@ export const replace_symbols = async (params: {
     })
     processed_instructions = result.instruction
     skill_definitions += result.context_definitions
-  }
-
-  if (processed_instructions.includes('#ClipboardPaths')) {
-    const result = await replace_clipboard_paths_symbol({
-      instruction: processed_instructions,
-      workspace_provider: params.workspace_provider,
-      symbols_cache: params.symbols_cache
-    })
-    processed_instructions = result.instruction
-    skill_definitions += result.additional_files_definitions
   }
 
   if (processed_instructions.includes('#Skill(')) {

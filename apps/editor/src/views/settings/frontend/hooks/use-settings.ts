@@ -34,10 +34,6 @@ export const use_settings = (vscode: any) => {
   ] = useState<boolean | undefined>(undefined)
   const [edit_files_system_instructions, set_edit_files_system_instructions] =
     useState<string | undefined>(undefined)
-  const [intelligent_search_instructions, set_intelligent_search_instructions] =
-    useState<string | undefined>(undefined)
-  const [agentic_search_instructions, set_agentic_search_instructions] =
-    useState<string | undefined>(undefined)
   const [gemini_user_id, set_gemini_user_id] = useState<
     number | null | undefined
   >(undefined)
@@ -45,13 +41,6 @@ export const use_settings = (vscode: any) => {
     number | null | undefined
   >(undefined)
   const [send_with_shift_enter, set_send_with_shift_enter] = useState<
-    boolean | undefined
-  >(undefined)
-  const [
-    clear_checks_in_workspace_behavior,
-    set_clear_checks_in_workspace_behavior
-  ] = useState<'ignore-open-editors' | 'uncheck-all' | undefined>(undefined)
-  const [auto_run_patch_repair, set_auto_run_patch_repair] = useState<
     boolean | undefined
   >(undefined)
   const [is_modern_ui, set_is_modern_ui] = useState<boolean | undefined>(
@@ -66,12 +55,6 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_API_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_WEB_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS' })
-    post_message(vscode, {
-      command: 'GET_INTELLIGENT_SEARCH_INSTRUCTIONS'
-    })
-    post_message(vscode, {
-      command: 'GET_AGENTIC_SEARCH_INSTRUCTIONS'
-    })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, {
       command: 'GET_ATTACH_ASCII_TREE_OF_CONTEXT'
@@ -85,8 +68,6 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_GEMINI_USER_ID' })
     post_message(vscode, { command: 'GET_AI_STUDIO_USER_ID' })
     post_message(vscode, { command: 'GET_SEND_WITH_SHIFT_ENTER' })
-    post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
-    post_message(vscode, { command: 'GET_AUTO_RUN_PATCH_REPAIR' })
     post_message(vscode, { command: 'GET_IS_MODERN_UI' })
     post_message(vscode, { command: 'GET_TEMPLATES' })
   }, [vscode])
@@ -103,10 +84,6 @@ export const use_settings = (vscode: any) => {
         set_web_configurations(message.web_configurations)
       } else if (message.command == 'EDIT_FILES_SYSTEM_INSTRUCTIONS') {
         set_edit_files_system_instructions(message.instructions)
-      } else if (message.command == 'INTELLIGENT_SEARCH_INSTRUCTIONS') {
-        set_intelligent_search_instructions(message.instructions)
-      } else if (message.command == 'AGENTIC_SEARCH_INSTRUCTIONS') {
-        set_agentic_search_instructions(message.instructions)
       } else if (message.command == 'COMMIT_MESSAGE_INSTRUCTIONS') {
         set_commit_message_instructions(message.instructions)
       } else if (message.command == 'ATTACH_ASCII_TREE_OF_CONTEXT') {
@@ -125,10 +102,6 @@ export const use_settings = (vscode: any) => {
         set_ai_studio_user_id(message.aiStudioUserId)
       } else if (message.command == 'SEND_WITH_SHIFT_ENTER') {
         set_send_with_shift_enter(message.enabled)
-      } else if (message.command == 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR') {
-        set_clear_checks_in_workspace_behavior(message.value)
-      } else if (message.command == 'AUTO_RUN_PATCH_REPAIR') {
-        set_auto_run_patch_repair(message.enabled)
       } else if (message.command == 'IS_MODERN_UI') {
         set_is_modern_ui(message.is_modern_ui)
       } else if (message.command == 'TEMPLATES') {
@@ -283,20 +256,6 @@ export const use_settings = (vscode: any) => {
       instructions
     })
 
-  const handle_intelligent_search_instructions_change = (
-    instructions: string
-  ) =>
-    post_message(vscode, {
-      command: 'UPDATE_INTELLIGENT_SEARCH_INSTRUCTIONS',
-      instructions
-    })
-
-  const handle_agentic_search_instructions_change = (instructions: string) =>
-    post_message(vscode, {
-      command: 'UPDATE_AGENTIC_SEARCH_INSTRUCTIONS',
-      instructions
-    })
-
   const handle_open_editor_settings = () =>
     post_message(vscode, { command: 'OPEN_EDITOR_SETTINGS' })
 
@@ -322,24 +281,6 @@ export const use_settings = (vscode: any) => {
     set_send_with_shift_enter(enabled)
     post_message(vscode, {
       command: 'UPDATE_SEND_WITH_SHIFT_ENTER',
-      enabled
-    })
-  }
-
-  const handle_clear_checks_in_workspace_behavior_change = (
-    value: 'ignore-open-editors' | 'uncheck-all'
-  ) => {
-    set_clear_checks_in_workspace_behavior(value)
-    post_message(vscode, {
-      command: 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR',
-      value
-    })
-  }
-
-  const handle_auto_run_patch_repair_change = (enabled: boolean) => {
-    set_auto_run_patch_repair(enabled)
-    post_message(vscode, {
-      command: 'UPDATE_AUTO_RUN_PATCH_REPAIR',
       enabled
     })
   }
@@ -430,13 +371,9 @@ export const use_settings = (vscode: any) => {
     use_context_files_in_commit_message_prompt,
     select_all_prompts_in_commit_messages_by_default,
     edit_files_system_instructions,
-    intelligent_search_instructions,
-    agentic_search_instructions,
     gemini_user_id,
     ai_studio_user_id,
     send_with_shift_enter,
-    clear_checks_in_workspace_behavior,
-    auto_run_patch_repair,
     is_modern_ui,
     handle_reorder_providers,
     handle_add_provider,
@@ -456,16 +393,12 @@ export const use_settings = (vscode: any) => {
     handle_use_context_files_in_commit_message_prompt_change,
     handle_select_all_prompts_in_commit_messages_by_default_change,
     handle_edit_files_system_instructions_change,
-    handle_intelligent_search_instructions_change,
-    handle_agentic_search_instructions_change,
     handle_open_editor_settings,
     handle_open_ignore_patterns_settings,
     handle_open_allow_patterns_settings,
     handle_gemini_user_id_change,
     handle_ai_studio_user_id_change,
     handle_send_with_shift_enter_change,
-    handle_clear_checks_in_workspace_behavior_change,
-    handle_auto_run_patch_repair_change,
     handle_open_keybindings,
     handle_open_external_url,
     templates,

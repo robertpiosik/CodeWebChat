@@ -16,7 +16,7 @@ export const select_workspace_file_command = (
   workspace_provider: WorkspaceProvider
 ) => {
   return vscode.commands.registerCommand(
-    'codeWebChat.selectWorkspaceFile',
+    'codeWebChat.selectFile',
     async () => {
       const workspace_roots = workspace_provider.get_workspace_roots()
       if (workspace_roots.length == 0) {

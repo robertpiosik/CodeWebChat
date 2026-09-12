@@ -111,7 +111,16 @@ type Props = {
   voice_input_push_to_talk: boolean
   bottom_spacer_height?: number
   on_preview_prompt: () => void
+  on_changes_click?: (branch_name: string) => void
+  on_commit_click?: (
+    repo_name: string,
+    commit_hash: string,
+    type: 'Commit' | 'CommitMessage',
+    commit_message?: string,
+  ) => void
+  on_skill_click?: (agent: string, repo: string, skill_name: string) => void
   on_install_browser_extension: () => void
+  on_agentic_search: () => void
 }
 
 const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
@@ -365,6 +374,9 @@ export const MainView: React.FC<Props> = (props) => {
             on_paste_long_text={props.on_paste_long_text}
             on_open_pasted_text={props.on_open_pasted_text}
             on_paste_url={props.on_paste_url}
+            on_changes_click={props.on_changes_click}
+            on_commit_click={props.on_commit_click}
+            on_skill_click={props.on_skill_click}
             on_preview_prompt={props.on_preview_prompt}
             is_recording={props.is_recording}
             on_recording_started={props.on_recording_started}
@@ -421,9 +433,11 @@ export const MainView: React.FC<Props> = (props) => {
                 ? 'blue'
                 : 'purple'
           }
+          on_agentic_search={props.on_agentic_search}
           translations={{
             attaching_file: t('selected-files.attaching-file'),
-            attaching_files: t('selected-files.attaching-files')
+            attaching_files: t('selected-files.attaching-files'),
+            agentic_search: t('selected-files.agentic-search')
           }}
         />
 

@@ -26,6 +26,7 @@ export const perform_keywords_search_mode = async (params: {
     | 'back'
   >
   is_search_in_selected?: boolean
+  is_sub_search?: boolean
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | undefined
@@ -203,7 +204,8 @@ export const perform_keywords_search_mode = async (params: {
             workspace_provider: params.workspace_provider,
             restored_selected_paths,
             restored_unmatched_paths,
-            is_search_in_selected: params.is_search_in_selected
+            is_search_in_selected: params.is_search_in_selected,
+            is_sub_search: params.is_sub_search
           })
 
           if (selected_items == 'back') {

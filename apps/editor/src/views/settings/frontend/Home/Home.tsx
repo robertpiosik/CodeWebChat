@@ -15,24 +15,20 @@ import { ApiFeature } from '@/views/shared/types/api-features'
 import { use_translation, TranslationKey } from '../i18n/use-translation'
 import { WebSection } from './sections/WebSection'
 import { commit_message_instructions as default_commit_message_instructions } from '@/constants/instructions'
-import { intelligent_search_task_instructions as default_intelligent_file_search_instructions } from '@/constants/instructions'
-import { agentic_search_task_instructions as default_agentic_file_search_instructions } from '@/constants/instructions'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { GROUP_TITLE_HEIGHT, SECTION_HEADER_HEIGHT } from '@ui/constants/sizes'
 
 export type NavItem =
   | 'section:general'
   | 'section:general:group:open-links'
-  | 'section:general:group:context'
   | 'section:general:group:prompt'
-  | 'section:general:group:commit-messages'
+  | 'section:general:group:commits'
   | 'section:web'
   | 'section:web:group:web-configurations'
   | 'section:api'
   | 'section:api:group:model-providers'
   | 'section:api:group:api-configurations'
   | 'section:api:group:api-defaults'
-  | 'section:api:group:api-behavior'
   | 'section:api:group:system-instructions'
 
 type NavConfigItem = { id: NavItem; label: TranslationKey }
@@ -51,12 +47,8 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'general.prompt.title'
   },
   {
-    id: 'section:general:group:context',
-    label: 'general.context.title'
-  },
-  {
-    id: 'section:general:group:commit-messages',
-    label: 'general.commit-messages.title'
+    id: 'section:general:group:commits',
+    label: 'general.commits.title'
   },
   {
     id: 'section:web',
@@ -83,10 +75,6 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'api-calls.default-configurations.title'
   },
   {
-    id: 'section:api:group:api-behavior',
-    label: 'api-calls.behavior.title'
-  },
-  {
     id: 'section:api:group:system-instructions',
     label: 'api-calls.system-instructions.title'
   }
@@ -98,8 +86,6 @@ type Props = {
   web_configurations: WebConfiguration[]
   defaults: Record<ApiFeature, string | null>
   edit_files_system_instructions: string
-  intelligent_search_instructions: string
-  agentic_search_instructions: string
   commit_message_instructions: string
   attach_ascii_tree_of_context: 'ask' | 'always' | 'never'
   use_context_files_in_commit_message_prompt: 'ask' | 'always' | 'never'
@@ -107,8 +93,6 @@ type Props = {
   gemini_user_id: number | null
   ai_studio_user_id: number | null
   send_with_shift_enter: boolean
-  clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
-  auto_run_patch_repair: boolean
   templates: Record<string, Template[]>
   on_update_templates: (key: string, templates: Template[]) => void
   on_edit_template: (key: string, index: number) => void
@@ -131,15 +115,9 @@ type Props = {
     enabled: boolean
   ) => void
   on_edit_files_system_instructions_change: (instructions: string) => void
-  on_intelligent_search_instructions_change: (instructions: string) => void
-  on_agentic_search_instructions_change: (instructions: string) => void
   on_gemini_user_id_change: (id: number | null) => void
   on_ai_studio_user_id_change: (id: number | null) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
-  on_clear_checks_in_workspace_behavior_change: (
-    value: 'ignore-open-editors' | 'uncheck-all'
-  ) => void
-  on_auto_run_patch_repair_change: (enabled: boolean) => void
   on_open_keybindings: (search?: string) => void
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
@@ -184,15 +162,13 @@ export const Home: React.FC<Props> = (props) => {
     'section:general': null,
     'section:general:group:open-links': null,
     'section:general:group:prompt': null,
-    'section:general:group:context': null,
-    'section:general:group:commit-messages': null,
+    'section:general:group:commits': null,
     'section:web': null,
     'section:web:group:web-configurations': null,
     'section:api': null,
     'section:api:group:model-providers': null,
     'section:api:group:api-configurations': null,
     'section:api:group:api-defaults': null,
-    'section:api:group:api-behavior': null,
     'section:api:group:system-instructions': null
   })
 
@@ -204,10 +180,6 @@ export const Home: React.FC<Props> = (props) => {
   )
 
   const [commit_instructions, set_commit_instructions] = useState('')
-  const [intelligent_search_instructions, set_intelligent_search_instructions] =
-    useState('')
-  const [agentic_search_instructions, set_agentic_search_instructions] =
-    useState('')
   const [edit_files_instructions, set_edit_files_instructions] = useState('')
 
   const get_has_warning = (id: NavItem): boolean => {
@@ -236,7 +208,6 @@ export const Home: React.FC<Props> = (props) => {
       if (
         [
           'section:api:group:api-defaults',
-          'section:api:group:api-behavior',
           'section:api:group:system-instructions'
         ].includes(item.id) &&
         props.api_configurations.length === 0
@@ -324,7 +295,6 @@ export const Home: React.FC<Props> = (props) => {
         if (
           [
             'section:api:group:api-defaults',
-            'section:api:group:api-behavior',
             'section:api:group:system-instructions'
           ].includes(item.id) &&
           props.api_configurations.length === 0
@@ -358,16 +328,6 @@ export const Home: React.FC<Props> = (props) => {
   useEffect(() => {
     set_commit_instructions(props.commit_message_instructions || '')
   }, [props.commit_message_instructions])
-
-  useEffect(() => {
-    set_intelligent_search_instructions(
-      props.intelligent_search_instructions || ''
-    )
-  }, [props.intelligent_search_instructions])
-
-  useEffect(() => {
-    set_agentic_search_instructions(props.agentic_search_instructions || '')
-  }, [props.agentic_search_instructions])
 
   useEffect(() => {
     set_edit_files_instructions(props.edit_files_system_instructions || '')
@@ -436,7 +396,6 @@ export const Home: React.FC<Props> = (props) => {
             if (
               [
                 'section:api:group:api-defaults',
-                'section:api:group:api-behavior',
                 'section:api:group:system-instructions'
               ].includes(item.id) &&
               props.api_configurations.length === 0
@@ -488,12 +447,6 @@ export const Home: React.FC<Props> = (props) => {
           on_send_with_shift_enter_change={
             props.on_send_with_shift_enter_change
           }
-          clear_checks_in_workspace_behavior={
-            props.clear_checks_in_workspace_behavior
-          }
-          on_clear_checks_in_workspace_behavior_change={
-            props.on_clear_checks_in_workspace_behavior_change
-          }
           on_open_editor_settings={props.on_open_editor_settings}
           on_open_ignore_patterns_settings={
             props.on_open_ignore_patterns_settings
@@ -537,62 +490,6 @@ export const Home: React.FC<Props> = (props) => {
               default_commit_message_instructions
             )
           }}
-          intelligent_search_instructions={intelligent_search_instructions}
-          set_intelligent_search_instructions={
-            set_intelligent_search_instructions
-          }
-          on_intelligent_search_instructions_blur={() => {
-            props.on_intelligent_search_instructions_change(
-              intelligent_search_instructions
-            )
-            if (
-              intelligent_search_instructions == '' &&
-              props.intelligent_search_instructions ==
-                default_intelligent_file_search_instructions
-            ) {
-              set_intelligent_search_instructions(
-                default_intelligent_file_search_instructions
-              )
-            }
-          }}
-          default_intelligent_search_instructions={
-            default_intelligent_file_search_instructions
-          }
-          on_restore_intelligent_search_instructions={() => {
-            set_intelligent_search_instructions(
-              default_intelligent_file_search_instructions
-            )
-            props.on_intelligent_search_instructions_change(
-              default_intelligent_file_search_instructions
-            )
-          }}
-          agentic_search_instructions={agentic_search_instructions}
-          set_agentic_search_instructions={set_agentic_search_instructions}
-          on_agentic_search_instructions_blur={() => {
-            props.on_agentic_search_instructions_change(
-              agentic_search_instructions
-            )
-            if (
-              agentic_search_instructions == '' &&
-              props.agentic_search_instructions ==
-                default_agentic_file_search_instructions
-            ) {
-              set_agentic_search_instructions(
-                default_agentic_file_search_instructions
-              )
-            }
-          }}
-          default_agentic_search_instructions={
-            default_agentic_file_search_instructions
-          }
-          on_restore_agentic_search_instructions={() => {
-            set_agentic_search_instructions(
-              default_agentic_file_search_instructions
-            )
-            props.on_agentic_search_instructions_change(
-              default_agentic_file_search_instructions
-            )
-          }}
           on_open_external_url={props.on_open_external_url}
           templates={props.templates}
           on_update_templates={props.on_update_templates}
@@ -628,10 +525,6 @@ export const Home: React.FC<Props> = (props) => {
           on_delete_provider={props.on_delete_provider}
           on_edit_provider={props.on_edit_provider}
           on_reorder_providers={props.on_reorder_providers}
-          auto_run_patch_repair={props.auto_run_patch_repair}
-          on_auto_run_patch_repair_change={
-            props.on_auto_run_patch_repair_change
-          }
           on_open_external_url={props.on_open_external_url}
           api_configurations={props.api_configurations}
           defaults={props.defaults}

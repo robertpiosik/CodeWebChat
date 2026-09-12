@@ -8,6 +8,7 @@ export const apply_response_button_style = (button: HTMLButtonElement) => {
   button.style.display = 'flex'
   button.style.alignItems = 'center'
   button.style.outline = 'none'
+  button.style.width = 'auto'
 
   button.addEventListener('focus', () => {
     button.style.outline = '2px solid rgba(251, 177, 0, 0.5)'

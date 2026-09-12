@@ -88,24 +88,6 @@ export interface UpdateSelectAllPromptsInCommitMessagesByDefaultMessage {
   enabled: boolean
 }
 
-export interface GetIntelligentSearchInstructionsMessage {
-  command: 'GET_INTELLIGENT_SEARCH_INSTRUCTIONS'
-}
-
-export interface UpdateIntelligentSearchInstructionsMessage {
-  command: 'UPDATE_INTELLIGENT_SEARCH_INSTRUCTIONS'
-  instructions: string
-}
-
-export interface GetAgenticSearchInstructionsMessage {
-  command: 'GET_AGENTIC_SEARCH_INSTRUCTIONS'
-}
-
-export interface UpdateAgenticSearchInstructionsMessage {
-  command: 'UPDATE_AGENTIC_SEARCH_INSTRUCTIONS'
-  instructions: string
-}
-
 export interface GetEditFilesSystemInstructionsMessage {
   command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS'
 }
@@ -155,24 +137,6 @@ export interface GetSendWithShiftEnterMessage {
 
 export interface UpdateSendWithShiftEnterMessage {
   command: 'UPDATE_SEND_WITH_SHIFT_ENTER'
-  enabled: boolean
-}
-
-export interface GetClearChecksInWorkspaceBehaviorMessage {
-  command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
-}
-
-export interface UpdateClearChecksInWorkspaceBehaviorMessage {
-  command: 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
-  value: 'ignore-open-editors' | 'uncheck-all'
-}
-
-export interface GetAutoRunPatchRepairMessage {
-  command: 'GET_AUTO_RUN_PATCH_REPAIR'
-}
-
-export interface UpdateAutoRunPatchRepairMessage {
-  command: 'UPDATE_AUTO_RUN_PATCH_REPAIR'
   enabled: boolean
 }
 
@@ -341,10 +305,6 @@ export type FrontendMessage =
   | GetSelectAllPromptsInCommitMessagesByDefaultMessage
   | UpdateSelectAllPromptsInCommitMessagesByDefaultMessage
   | GetEditFilesSystemInstructionsMessage
-  | GetIntelligentSearchInstructionsMessage
-  | UpdateIntelligentSearchInstructionsMessage
-  | GetAgenticSearchInstructionsMessage
-  | UpdateAgenticSearchInstructionsMessage
   | UpdateEditFilesSystemInstructionsMessage
   | SettingsUiReadyMessage
   | GetGeminiUserIdMessage
@@ -353,13 +313,9 @@ export type FrontendMessage =
   | UpdateAiStudioUserIdMessage
   | GetSendWithShiftEnterMessage
   | UpdateSendWithShiftEnterMessage
-  | GetClearChecksInWorkspaceBehaviorMessage
-  | UpdateClearChecksInWorkspaceBehaviorMessage
   | OpenEditorSettingsMessage
   | OpenIgnorePatternsSettingsMessage
   | OpenAllowPatternsSettingsMessage
-  | GetAutoRunPatchRepairMessage
-  | UpdateAutoRunPatchRepairMessage
   | OpenKeybindingsMessage
   | OpenExternalUrlMessage
   | GetWebConfigurationsMessage
@@ -421,16 +377,6 @@ export interface EditFilesSystemInstructionsMessage {
   instructions: string
 }
 
-export interface IntelligentSearchInstructionsMessage {
-  command: 'INTELLIGENT_SEARCH_INSTRUCTIONS'
-  instructions: string
-}
-
-export interface AgenticSearchInstructionsMessage {
-  command: 'AGENTIC_SEARCH_INSTRUCTIONS'
-  instructions: string
-}
-
 export interface GeminiUserIdMessage {
   command: 'GEMINI_USER_ID'
   geminiUserId: number | null
@@ -446,19 +392,9 @@ export interface SendWithShiftEnterMessage {
   enabled: boolean
 }
 
-export interface ClearChecksInWorkspaceBehaviorMessage {
-  command: 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
-  value: 'ignore-open-editors' | 'uncheck-all'
-}
-
 export interface ShowSectionMessage {
   command: 'SHOW_SECTION'
   section: string
-}
-
-export interface AutoRunPatchRepairMessage {
-  command: 'AUTO_RUN_PATCH_REPAIR'
-  enabled: boolean
 }
 
 export interface WebConfigurationsMessage {
@@ -552,14 +488,10 @@ export type BackendMessage =
   | UseContextFilesInCommitMessagePromptMessage
   | SelectAllPromptsInCommitMessagesByDefaultMessage
   | EditFilesSystemInstructionsMessage
-  | IntelligentSearchInstructionsMessage
-  | AgenticSearchInstructionsMessage
   | GeminiUserIdMessage
   | AiStudioUserIdMessage
   | SendWithShiftEnterMessage
-  | ClearChecksInWorkspaceBehaviorMessage
   | ShowSectionMessage
-  | AutoRunPatchRepairMessage
   | WebConfigurationsMessage
   | NewlyPickedModelMessage
   | NewlyPickedChatbotMessage

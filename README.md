@@ -11,7 +11,7 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> 
 </p>
 
-<p align="center"><strong>CWC</strong> is a free and privacy-fist toolkit for AI coding with static context.</p>
+<p align="center"><strong>CWC</strong> is a free and privacy-first toolkit for AI coding with static context.</p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
@@ -140,7 +140,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 [EXAMPLE]
 
----
+# Task
 
 [PROMPT]
 ```
@@ -159,7 +159,7 @@ _Explanations, planning, code reviews, you name it._
 
 [SELECTED FILES]
 
----
+# Task
 
 [PROMPT]
 ```
@@ -333,9 +333,6 @@ Install the browser extension and never copy and paste again ([source code](http
 - `Select Clipboard Paths...` - Select files based on paths in your clipboard.
 - `Select Unstaged Files...` - Select files with unstaged changes.
 - `Select Files of Commit...` - Select files modified in a specific commit.
-- `Select Referencing Files...` - Select files referencing the active or selected items.
-- `Select Imported Files...` - Select files imported by the active or selected items.
-- `Select Parent Folder...` - Select the parent directory of a file.
 
 ### Copy
 

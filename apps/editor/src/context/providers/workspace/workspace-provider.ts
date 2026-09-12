@@ -9,7 +9,6 @@ import {
 } from '@/constants/state-keys'
 import { IGNORED_LOCK_FILES } from '@/constants/ignored-lock-files'
 import { natural_sort } from '@/utils/natural-sort'
-import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '@shared/utils/display-token-count'
 import { TokenCalculator } from './modules/token-calculator'
@@ -503,91 +502,25 @@ export class WorkspaceProvider
   }
 
   public async clear_checks(): Promise<void> {
-    const config = vscode.workspace.getConfiguration('codeWebChat')
-    const clear_checks_in_workspace_behavior = config.get<string>(
-      'clearChecksInWorkspaceBehavior'
-    )
+    this._checked_items.clear()
+    this._checked_timestamps.clear()
+    this._partially_checked_dirs.clear()
+    this._token_calculator.clear_selected_counts()
 
-    if (clear_checks_in_workspace_behavior == 'uncheck-all') {
-      this._checked_items.clear()
-      this._checked_timestamps.clear()
-      this._partially_checked_dirs.clear()
-      this._token_calculator.clear_selected_counts()
-    } else {
-      const open_files = new Set(
-        this._get_open_editors().map((uri) => uri.fsPath)
-      )
-
-      const checked_open_files = Array.from(this._checked_items.entries())
-        .filter(
-          ([path, state]) =>
-            open_files.has(path) &&
-            state == vscode.TreeItemCheckboxState.Checked
-        )
-        .map(([path]) => path)
-
-      const new_checked_items = new Map<string, vscode.TreeItemCheckboxState>()
-      const new_checked_timestamps = new Map<string, number>()
-
-      for (const [path, state] of this._checked_items.entries()) {
-        if (open_files.has(path)) {
-          new_checked_items.set(path, state)
-          const ts = this._checked_timestamps.get(path)
-          if (ts) new_checked_timestamps.set(path, ts)
-        }
-      }
-
-      this._checked_items = new_checked_items
-      this._checked_timestamps = new_checked_timestamps
-
-      this._partially_checked_dirs.clear()
-      this._token_calculator.clear_selected_counts()
-
-      const dirs_to_update = new Set<string>()
-
-      for (const file_path of open_files) {
-        if (this._checked_items.has(file_path)) {
-          let dir_path = path.dirname(file_path)
-          const workspace_root = this.get_workspace_root_for_file(file_path)
-          while (workspace_root && dir_path.startsWith(workspace_root)) {
-            dirs_to_update.add(dir_path)
-            dir_path = path.dirname(dir_path)
-          }
-        }
-      }
-
-      const sorted_dirs = Array.from(dirs_to_update).sort(
-        (a, b) => b.length - a.length
-      )
-
-      for (const dir_path of sorted_dirs) {
-        await this._update_parent_state(dir_path)
-      }
-
-      if (checked_open_files.length > 0) {
-        vscode.window
-          .showInformationMessage(
-            dictionary.information_message.FILES_REMAIN_CHECKED(
-              checked_open_files.length
-            ),
-            'Clear open editors'
-          )
-          .then((selection) => {
-            if (selection == 'Clear open editors') {
-              vscode.commands.executeCommand(
-                'codeWebChat.clearChecksOpenEditors'
-              )
-            }
-          })
-      }
-    }
     this._dispatch_change_events()
   }
 
   async getTreeItem(element: FileItem): Promise<vscode.TreeItem> {
     const key = element.resourceUri.fsPath
-    const checkbox_state =
+    let checkbox_state: vscode.TreeItemCheckboxState | undefined =
       this._checked_items.get(key) ?? vscode.TreeItemCheckboxState.Unchecked
+
+    if (element.isDirectory) {
+      const tokens = await this._token_calculator.calculate_directory_tokens(key)
+      if (tokens.file_count === 0) {
+        checkbox_state = undefined
+      }
+    }
 
     element.checkboxState = checkbox_state
 
@@ -779,6 +712,13 @@ export class WorkspaceProvider
       const selected_tokens =
         await this._token_calculator.calculate_directory_selected_tokens(root)
 
+      let checkbox_state: vscode.TreeItemCheckboxState | undefined =
+        this._checked_items.get(root) ?? vscode.TreeItemCheckboxState.Unchecked
+        
+      if (total_tokens.file_count === 0) {
+        checkbox_state = undefined
+      }
+
       items.push(
         new FileItem(
           name,
@@ -787,8 +727,7 @@ export class WorkspaceProvider
             ? this._selected_files_view_collapsible_state
             : this._workspace_view_collapsible_state,
           true,
-          this._checked_items.get(root) ??
-            vscode.TreeItemCheckboxState.Unchecked,
+          checkbox_state,
           false,
           false,
           total_tokens.total,
@@ -1018,6 +957,13 @@ export class WorkspaceProvider
 
         const range = this._file_ranges.get(full_path)
 
+        let final_checkbox_state: vscode.TreeItemCheckboxState | undefined =
+          checkbox_state
+
+        if (is_directory && (tokens as any).file_count === 0) {
+          final_checkbox_state = undefined
+        }
+
         const item = new FileItem(
           entry.name,
           uri,
@@ -1027,7 +973,7 @@ export class WorkspaceProvider
               : this._workspace_view_collapsible_state
             : vscode.TreeItemCollapsibleState.None,
           is_directory,
-          checkbox_state,
+          final_checkbox_state,
           false,
           false,
           tokens.total,
@@ -1142,6 +1088,16 @@ export class WorkspaceProvider
           this.is_ignored_by_patterns(sibling_path)
         ) {
           continue
+        }
+
+        if (entry.isDirectory()) {
+          const tokens =
+            await this._token_calculator.calculate_directory_tokens(
+              sibling_path
+            )
+          if (tokens.file_count === 0) {
+            continue
+          }
         }
 
         has_non_ignored_child = true
@@ -1515,48 +1471,6 @@ export class WorkspaceProvider
 
   public is_partially_checked(path: string): boolean {
     return this._partially_checked_dirs.has(path)
-  }
-
-  public async check_all(): Promise<void> {
-    await this._token_calculator.with_token_counting_notification({
-      roots: this._workspace_roots,
-      task: async () => {
-        for (const workspace_root of this._workspace_roots) {
-          this._checked_items.set(
-            workspace_root,
-            vscode.TreeItemCheckboxState.Checked
-          )
-          this._partially_checked_dirs.delete(workspace_root)
-          this._token_calculator.invalidate_directory_selected_count(
-            workspace_root
-          )
-
-          const items = await this._get_files_and_directories(workspace_root)
-
-          for (const item of items) {
-            const key = item.resourceUri.fsPath
-            this._checked_items.set(key, vscode.TreeItemCheckboxState.Checked)
-
-            if (!this._checked_timestamps.has(key)) {
-              this._checked_timestamps.set(key, Math.floor(Date.now() / 1000))
-            }
-
-            this._partially_checked_dirs.delete(key)
-            this._token_calculator.invalidate_directory_selected_count(key)
-
-            if (item.isDirectory) {
-              await this._update_directory_check_state(
-                key,
-                vscode.TreeItemCheckboxState.Checked,
-                false
-              )
-            }
-          }
-        }
-      }
-    })
-
-    this._dispatch_change_events()
   }
 
   public async get_checked_files_token_count(options?: {

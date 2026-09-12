@@ -26,7 +26,6 @@ type Props = {
 
 export const EditWebConfigurationForm: React.FC<Props> = (props) => {
   const { t } = use_translation()
-
   const [chatbot, set_chatbot] = useState(props.web_configuration.chatbot)
   const [name, set_name] = useState(props.web_configuration.name)
   const [reasoning_effort, set_reasoning_effort] = useState(

@@ -5,7 +5,6 @@ import { get_last_used_web_configuration_key } from '@/constants/state-keys'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { TARGET } from '@shared/types/mode'
 import { WebPromptType } from '@shared/types/prompt-types'
-import { CHATBOTS } from '@shared/constants/chatbots'
 import { dictionary } from '@shared/constants/dictionary'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
@@ -14,9 +13,10 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
 import { handle_update_last_used_web_configuration } from './handle-update-last-used-web-configuration'
-import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
+import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
+import { t } from '@/i18n'
 
 export const handle_autofill = async (params: {
   prompt_view_provider: PromptViewProvider
@@ -107,7 +107,7 @@ export const handle_autofill = async (params: {
   if (sent) {
     params.prompt_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
-      title: 'Continue in the connected browser',
+      title: t('views.prompt.handlers.common.continue-in-browser'),
       type: 'success'
     })
   }
@@ -145,41 +145,9 @@ const show_web_configuration_quick_pick = async (params: {
     extension_context.workspaceState.get<string>(recents_key) ??
     extension_context.globalState.get<string>(recents_key)
 
-  const result = await show_configuration_quick_pick({
+  const result = await show_configurations_quick_pick({
     items: valid_web_configurations,
-    map_item: (web_configuration) => {
-      const is_unnamed =
-        !web_configuration.name ||
-        /^\(\d+\)$/.test(web_configuration.name.trim())
-      const chatbot_models =
-        CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]?.models
-      const model = web_configuration.model
-        ? chatbot_models?.[web_configuration.model]?.label ||
-          web_configuration.model
-        : ''
-
-      const details: string[] = []
-      if (!is_unnamed && web_configuration.chatbot) {
-        details.push(web_configuration.chatbot)
-      }
-      if (model) {
-        details.push(model)
-      }
-      if (web_configuration.reasoningEffort) {
-        details.push(web_configuration.reasoningEffort)
-      }
-
-      return {
-        label: `${
-          is_unnamed
-            ? web_configuration.chatbot!
-            : web_configuration.name!.replace(/\s*\(\d+\)$/, '')
-        }`,
-        description: details.join(' · '),
-        id: web_configuration.name || '',
-        is_pinned: web_configuration.isPinned
-      }
-    },
+    type: 'web',
     last_selected_id: last_selected_name
   })
 

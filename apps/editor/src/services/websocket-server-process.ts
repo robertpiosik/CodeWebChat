@@ -5,24 +5,12 @@ const WebSocket = require('ws')
 
 import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
 
-const is_version_gte = (v: string, target: string) => {
-  if (v === 'unknown') return false
-  const vParts = v.split('.').map(Number)
-  const tParts = target.split('.').map(Number)
-  for (let i = 0; i < Math.max(vParts.length, tParts.length); i++) {
-    const p1 = vParts[i] || 0
-    const p2 = tParts[i] || 0
-    if (p1 > p2) return true
-    if (p1 < p2) return false
-  }
-  return true
-}
-
 interface BrowserClient {
   ws: WebSocket
   version: string
   id: number
   user_agent: string
+  profile_name?: string
   is_alive: boolean
 }
 
@@ -110,6 +98,7 @@ class WebSocketServer {
   private _handle_browser_connection(ws: WebSocket, url: URL) {
     const version = url.searchParams.get('version') || 'unknown'
     const user_agent = url.searchParams.get('user_agent') || 'unknown'
+    const profile_name = url.searchParams.get('profile_name') || undefined
 
     this.browser_client_counter++
     const id = this.browser_client_counter
@@ -119,6 +108,7 @@ class WebSocketServer {
       version,
       id,
       user_agent,
+      profile_name,
       is_alive: true
     }
     this.browser_clients.set(id, client)
@@ -197,10 +187,7 @@ class WebSocketServer {
           }
         }
       }
-    } else if (
-      msg_data.action == 'apply-response' ||
-      msg_data.action == 'apply-chat-response' // Backward compatibility 20.07.26
-    ) {
+    } else if (msg_data.action == 'apply-response') {
       const target_client_id = msg_data.client_id
       const target_client = this.vscode_clients.get(target_client_id)
       if (target_client && target_client.ws.readyState == WebSocket.OPEN) {
@@ -252,7 +239,8 @@ class WebSocketServer {
     return Array.from(this.browser_clients.values()).map((c) => ({
       id: c.id,
       version: c.version,
-      user_agent: c.user_agent
+      user_agent: c.user_agent,
+      profile_name: c.profile_name
     }))
   }
 
@@ -273,15 +261,11 @@ class WebSocketServer {
     const ping_message = JSON.stringify({ action: 'ping' })
 
     for (const client of this.browser_clients.values()) {
-      const expects_pong = is_version_gte(client.version, '2026.7.2')
-
-      if (expects_pong) {
-        if (!client.is_alive) {
-          ;(client.ws as any).terminate()
-          continue
-        }
-        client.is_alive = false
+      if (!client.is_alive) {
+        ;(client.ws as any).terminate()
+        continue
       }
+      client.is_alive = false
       if (client.ws.readyState === WebSocket.OPEN) {
         client.ws.send(ping_message)
       }

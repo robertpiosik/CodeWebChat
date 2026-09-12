@@ -109,8 +109,8 @@ export namespace PromptBuilder {
       params.separator &&
       (part1.length > 0 || part2.length > 0 || full_prompt.length > 0)
     ) {
-      part2 = part2.trimEnd() + '\n\n---\n\n'
-      full_prompt = full_prompt.trimEnd() + '\n\n---\n\n'
+      part2 = part2.trimEnd() + '\n\n# Task\n\n'
+      full_prompt = full_prompt.trimEnd() + '\n\n# Task\n\n'
     }
 
     if (params.user_instructions) {

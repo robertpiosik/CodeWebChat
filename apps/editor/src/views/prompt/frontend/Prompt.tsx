@@ -78,7 +78,11 @@ export const Prompt = () => {
     ask_instructions_token_count,
     handle_preview_prompt,
     api_configurations,
-    set_api_configurations
+    set_api_configurations,
+    handle_changes_click,
+    handle_commit_click,
+    handle_skill_click,
+    handle_agentic_search
   } = use_panel(vscode)
 
   const {
@@ -94,7 +98,6 @@ export const Prompt = () => {
     set_items_in_preview,
     raw_instructions,
     preview_item_created_at,
-    auto_run_patch_repair,
     handle_discard_user_changes_in_preview,
     url,
     recent_api_configuration
@@ -360,6 +363,10 @@ export const Prompt = () => {
                 edit_instructions_token_count={edit_instructions_token_count}
                 ask_instructions_token_count={ask_instructions_token_count}
                 on_preview_prompt={handle_preview_prompt}
+                on_changes_click={handle_changes_click}
+                on_commit_click={handle_commit_click}
+                on_skill_click={handle_skill_click}
+                on_agentic_search={handle_agentic_search}
               />
             </div>
             <div
@@ -372,6 +379,8 @@ export const Prompt = () => {
                 vscode={vscode}
                 is_active={active_view == 'home'}
                 is_connected={is_connected}
+                web_prompt_type={web_prompt_type}
+                api_prompt_type={api_prompt_type}
                 on_go_forward={() => set_active_view('main')}
                 on_chatbots_click={() => {
                   set_active_view('main')
@@ -605,7 +614,6 @@ export const Prompt = () => {
             >
               <UiResponsePreview
                 items={items_in_preview}
-                auto_run_patch_repair={auto_run_patch_repair}
                 raw_instructions={raw_instructions}
                 recent_api_configuration={recent_api_configuration}
                 has_multiple_workspaces={workspace_folder_count > 1}
