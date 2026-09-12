@@ -1,20 +1,20 @@
 export const translations = {
   'views.prompt.handlers.handle-patch-repair.some-changes-unable-to-apply': {
-    en: 'Some changes were unable to apply. Fix with the Patch Repair prompt.',
-    pl: 'Nie udało się zastosować niektórych zmian. Napraw za pomocą promptu Patch Repair.',
-    'zh-cn': '部分更改无法应用。请使用 Patch Repair 提示进行修复。',
-    ja: '一部の変更を適用できませんでした。パッチ修復プロンプトで修正してください。',
-    'zh-tw': '部分變更無法套用。請使用 Patch Repair 提示進行修復。',
-    de: 'Einige Änderungen konnten nicht angewendet werden. Mit dem Patch Repair-Prompt beheben.',
-    es: 'No se pudieron aplicar algunos cambios. Arréglalo con el prompt de Patch Repair.',
-    fr: "Certaines modifications n'ont pas pu être appliquées. Corrigez avec le prompt Patch Repair.",
-    'pt-br': 'Algumas alterações não puderam ser aplicadas. Corrija com o prompt Patch Repair.',
-    ru: 'Некоторые изменения не удалось применить. Исправьте с помощью промпта Patch Repair.',
-    ko: '일부 변경 사항을 적용할 수 없습니다. 패치 복구 프롬프트로 수정하세요.',
-    it: 'Impossibile applicare alcune modifiche. Correggi con il prompt di Patch Repair.',
-    tr: 'Bazı değişiklikler uygulanamadı. Patch Repair istemi ile düzeltin.',
-    cs: 'Některé změny se nepodařilo aplikovat. Opravte pomocí promptu Patch Repair.',
-    hu: 'Néhány módosítást nem sikerült alkalmazni. Javítsa a Patch Repair prompttal.',
-    bg: 'Някои промени не можаха да бъдат приложени. Поправете с промпта Patch Repair.'
+    en: 'There were issues when applying some patches. You can fix automatically with the Patch Repair prompt.',
+    pl: 'Wystąpiły problemy podczas wprowadzania niektórych zmian. Możesz je naprawić automatycznie za pomocą promptu Naprawa Patchy.',
+    'zh-cn': '应用某些补丁时遇到问题。您可以使用补丁修复提示词自动修复。',
+    ja: '一部のパッチを適用する際に問題が発生しました。パッチ修復プロンプトで自動的に修正できます。',
+    'zh-tw': '套用某些修補程式時遇到問題。您可以使用修補程式修復提示詞自動修復。',
+    de: 'Beim Anwenden einiger Patches sind Probleme aufgetreten. Sie können diese automatisch mit dem Patch Repair Prompt beheben.',
+    es: 'Hubo problemas al aplicar algunos parches. Puede solucionarlos automáticamente con el prompt de Reparación de Parches.',
+    fr: 'Des problèmes sont survenus lors de l\'application de certains correctifs. Vous pouvez les corriger automatiquement avec le prompt de Réparation de correctifs.',
+    'pt-br': 'Houve problemas ao aplicar alguns patches. Você pode corrigir automaticamente com o prompt de Reparo de Patch.',
+    ru: 'При применении некоторых патчей возникли проблемы. Вы можете исправить их автоматически с помощью промпта Исправление патчей.',
+    ko: '일부 패치를 적용하는 동안 문제가 발생했습니다. 패치 복구 프롬프트를 사용하여 자동으로 수정할 수 있습니다.',
+    it: 'Si sono verificati problemi durante l\'applicazione di alcune patch. Puoi risolverli automaticamente con il prompt di Riparazione Patch.',
+    tr: 'Bazı yamalar uygulanırken sorunlar oluştu. Yama Onarımı istemi ile otomatik olarak düzeltebilirsiniz.',
+    cs: 'Při aplikaci některých záplat se vyskytly problémy. Můžete je automaticky opravit pomocí promptu Oprava záplat.',
+    hu: 'Problémák adódtak néhány javítás alkalmazásakor. A Javítás helyreállítása prompttal automatikusan kijavíthatja őket.',
+    bg: 'Възникнаха проблеми при прилагането на някои пачове. Можете да ги поправите автоматично с промпта за поправка на пачове.'
   }
 } as const
