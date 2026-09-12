@@ -1,7 +1,7 @@
 export const translations = {
   'views.prompt.handlers.handle-patch-repair.some-changes-unable-to-apply': {
     en: 'There were issues when applying some patches. You can fix automatically with the Patch Repair prompt.',
-    pl: 'Wystąpiły problemy podczas wprowadzania niektórych zmian. Możesz je naprawić automatycznie za pomocą promptu Naprawa Patchy.',
+    pl: 'Wystąpiły problemy podczas wprowadzania niektórych zmian. Możesz je naprawić automatycznie za pomocą promptu Naprawa patchy.',
     'zh-cn': '应用某些补丁时遇到问题。您可以使用补丁修复提示词自动修复。',
     ja: '一部のパッチを適用する際に問題が発生しました。パッチ修復プロンプトで自動的に修正できます。',
     'zh-tw': '套用某些修補程式時遇到問題。您可以使用修補程式修復提示詞自動修復。',

@@ -381,7 +381,7 @@ export const translations = {
   },
   'api-calls.default-configurations.tool.patch-repair': {
     en: 'Patch Repair',
-    pl: 'Inteligentna integracja',
+    pl: 'Naprawa patchy',
     'zh-cn': '智能更新',
     ja: 'インテリジェントアップデート',
     'zh-tw': '智慧更新',
