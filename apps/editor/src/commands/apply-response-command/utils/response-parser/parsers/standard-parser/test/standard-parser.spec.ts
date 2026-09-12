@@ -70,6 +70,22 @@ describe('standard-parser', () => {
       })
     })
 
+   it('merges content when merge conflicts have file path as bold text', () => {
+      const test_case = 'merge-conflicts-file-path-as-bold-text'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'file',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+    })
+
     it('merges content when merge conflicts use three dots notation', () => {
       const test_case = 'merge-conflicts-three-dots'
       const text = load_test_case_file(test_case, `${test_case}.txt`)

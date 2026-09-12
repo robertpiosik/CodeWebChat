@@ -21,7 +21,6 @@ export const file_blocks_parser = (params: {
   let backtick_nesting_level = 0
   let last_seen_file_path_comment: string | null = null
   let last_seen_file_path_was_header = false
-  let last_seen_header_was_persistent = false
   let header_path_already_used = false
   let current_block_mode: 'overwrite' | 'append' = 'overwrite'
   let is_markdown_container_block = false
@@ -66,47 +65,30 @@ export const file_blocks_parser = (params: {
             current_workspace_name = workspace_name
           }
 
-          if (last_seen_file_path_was_header) {
-            if (header_path_already_used && !last_seen_header_was_persistent) {
+          const file_key = `${current_workspace_name || ''}:${current_file_name}`
+          const existing_file = file_ref_map.get(file_key)
+          const has_conflict_markers =
+            existing_file &&
+            existing_file.content.includes('<<<<<<<') &&
+            existing_file.content.includes('>>>>>>>') &&
+            existing_file.content.includes('=======')
+
+          if (header_path_already_used) {
+            if (has_conflict_markers) {
+              current_block_mode = 'append'
+            } else {
               current_file_name = ''
               current_workspace_name = undefined
               last_seen_file_path_comment = null
-            } else if (header_path_already_used) {
-              const file_key = `${current_workspace_name || ''}:${current_file_name}`
-              const existing_file = file_ref_map.get(file_key)
-              const has_conflict_markers =
-                existing_file &&
-                existing_file.content.includes('<<<<<<<') &&
-                existing_file.content.includes('>>>>>>>') &&
-                existing_file.content.includes('=======')
-
-              if (has_conflict_markers) {
-                current_block_mode = 'append'
-              } else {
-                current_file_name = ''
-                current_workspace_name = undefined
-                last_seen_file_path_comment = null
-                current_block_mode = 'overwrite'
-              }
-            } else {
-              const file_key = `${current_workspace_name || ''}:${current_file_name}`
-              const existing_file = file_ref_map.get(file_key)
-              const has_conflict_markers =
-                existing_file &&
-                existing_file.content.includes('<<<<<<<') &&
-                existing_file.content.includes('>>>>>>>') &&
-                existing_file.content.includes('=======')
-
-              if (has_conflict_markers) {
-                current_block_mode = 'append'
-              } else {
-                current_block_mode = 'overwrite'
-              }
-              header_path_already_used = true
+              current_block_mode = 'overwrite'
             }
           } else {
-            current_block_mode = 'overwrite'
-            last_seen_file_path_comment = null
+            if (has_conflict_markers) {
+              current_block_mode = 'append'
+            } else {
+              current_block_mode = 'overwrite'
+            }
+            header_path_already_used = true
           }
         }
         current_content = ''
@@ -158,7 +140,6 @@ export const file_blocks_parser = (params: {
 
         last_seen_file_path_comment = renamed_file_match[2]
         last_seen_file_path_was_header = true
-        last_seen_header_was_persistent = true
         header_path_already_used = false
 
         continue
@@ -283,15 +264,6 @@ export const file_blocks_parser = (params: {
           }
 
           last_seen_file_path_was_header = is_header_line
-          if (is_header_line) {
-            const stripped = line
-              .replace(/^###\s+/, '')
-              .replace(/[`*]/g, '')
-              .trim()
-            last_seen_header_was_persistent =
-              /updated|new|renamed|file/i.test(line) ||
-              stripped == extracted_filename
-          }
           header_path_already_used = false
         }
       } else {
@@ -479,7 +451,6 @@ export const file_blocks_parser = (params: {
         if (current_file_name && !current_content.trim()) {
           last_seen_file_path_comment = current_file_name
           last_seen_file_path_was_header = false
-          last_seen_header_was_persistent = false
           header_path_already_used = false
         }
 
