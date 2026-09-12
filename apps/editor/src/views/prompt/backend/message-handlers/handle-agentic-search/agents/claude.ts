@@ -1,40 +1,27 @@
 import { CodingAgent } from '../types'
-import { build_agent_prompt, check_command_exists } from '../utils'
+import {
+  build_agent_prompt,
+  check_command_exists,
+  get_progress_dots
+} from '../utils'
+
+let last_action_name = ''
+let action_count = 0
 
 const report_tool_progress = (
   tool_name: string,
-  input: any,
   report_progress: (msg: string) => void
 ) => {
-  const formatted_name = tool_name.toLowerCase()
-  let msg: string | undefined
+  const action_name = tool_name.replace(/_/g, ' ').toLowerCase()
 
-  if (
-    formatted_name.includes('bash') ||
-    formatted_name.includes('command') ||
-    formatted_name.includes('run')
-  ) {
-    msg = input?.command || input?.cmd || input?.CommandLine
-  } else if (
-    formatted_name.includes('read') ||
-    formatted_name.includes('write') ||
-    formatted_name.includes('edit') ||
-    formatted_name.includes('list')
-  ) {
-    msg = input?.file_path || input?.path
-  } else if (
-    formatted_name.includes('grep') ||
-    formatted_name.includes('search') ||
-    formatted_name.includes('find')
-  ) {
-    msg = input?.pattern || input?.query
+  if (action_name === last_action_name) {
+    action_count++
   } else {
-    msg = input?.file_path || input?.path || tool_name
+    last_action_name = action_name
+    action_count = 1
   }
 
-  if (msg) {
-    report_progress(msg)
-  }
+  report_progress(`${action_name}${get_progress_dots(action_count)}`)
 }
 
 export const claude_agent: CodingAgent = {
@@ -61,7 +48,7 @@ export const claude_agent: CodingAgent = {
       ) {
         const tool = parsed.event.content_block
         if (tool.name) {
-          report_tool_progress(tool.name, tool.input, report_progress)
+          report_tool_progress(tool.name, report_progress)
         }
       }
     } else if (parsed.type == 'assistant' && parsed.message?.content) {
@@ -71,10 +58,12 @@ export const claude_agent: CodingAgent = {
 
       for (const block of content) {
         if (block?.type == 'tool_use' && block.name) {
-          report_tool_progress(block.name, block.input, report_progress)
+          report_tool_progress(block.name, report_progress)
         }
       }
     } else if (parsed.type == 'result' && parsed.result) {
+      last_action_name = ''
+      action_count = 0
       return {
         output:
           typeof parsed.result == 'string'
@@ -82,6 +71,8 @@ export const claude_agent: CodingAgent = {
             : parsed.result.text || ''
       }
     } else if (parsed.result) {
+      last_action_name = ''
+      action_count = 0
       return {
         output:
           typeof parsed.result == 'string'
@@ -91,6 +82,9 @@ export const claude_agent: CodingAgent = {
     }
   },
   parse_final_output: (parsed, current_output) => {
+    last_action_name = ''
+    action_count = 0
+
     if (parsed.type == 'result' && parsed.result) {
       return typeof parsed.result == 'string'
         ? parsed.result
