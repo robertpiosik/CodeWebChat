@@ -17,10 +17,6 @@ export const handle_agentic_search = async (
   }
 
   const query = prompt_view_provider.current_instructions
-  if (query.trim() === '') {
-    vscode.window.showErrorMessage(t('feature.search-files.validation-empty'))
-    return
-  }
 
   agentic_search_in_progress = true
   try {

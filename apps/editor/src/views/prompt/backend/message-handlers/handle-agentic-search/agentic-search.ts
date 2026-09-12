@@ -12,6 +12,7 @@ import { extract_paths_from_bullet_list } from '@/utils/extract-paths-from-bulle
 import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-files'
 import { Logger } from '@shared/utils/logger'
 import { show_search_results_quick_pick } from './utils/show-search-results-quick-pick'
+import { prompt_for_search_term } from './utils/prompt-for-search-term'
 import { antigravity_agent } from './agents/antigravity'
 import { claude_agent } from './agents/claude'
 import { codex_agent } from './agents/codex'
@@ -57,10 +58,29 @@ export const agentic_search = async (params: {
   }
 
   const output_channel = get_output_channel()
-  const query = params.query
+  let query = params.query
 
   while (true) {
-    const available_agents = AGENTS.filter((a) => a.is_installed())
+    const query_result = await prompt_for_search_term(query)
+
+    if (query_result.back) {
+      return 'back'
+    }
+
+    if (query_result.value === undefined) {
+      return undefined
+    }
+
+    query = query_result.value
+
+    if (query.trim() == '') {
+      continue
+    }
+
+    let go_back_to_query = false
+
+    while (true) {
+      const available_agents = AGENTS.filter((a) => a.is_installed())
 
         if (available_agents.length == 0) {
           vscode.window.showInformationMessage(
@@ -160,7 +180,7 @@ export const agentic_search = async (params: {
         agent_quick_pick.placeholder = t(
           'views.prompt.handlers.handle-agentic-search.agent.select-agent-placeholder'
         )
-        agent_quick_pick.buttons = [close_button]
+        agent_quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
         agent_quick_pick.ignoreFocusOut = true
 
         const config_listener = vscode.workspace.onDidChangeConfiguration(
@@ -183,7 +203,11 @@ export const agentic_search = async (params: {
             let is_resolved = false
 
             agent_quick_pick.onDidTriggerButton((button) => {
-              if (button === close_button) {
+              if (button === vscode.QuickInputButtons.Back) {
+                is_resolved = true
+                resolve('back')
+                agent_quick_pick.hide()
+              } else if (button === close_button) {
                 is_resolved = true
                 resolve(undefined)
                 agent_quick_pick.hide()
@@ -272,7 +296,7 @@ export const agentic_search = async (params: {
 
             agent_quick_pick.onDidHide(() => {
               if (!is_resolved) {
-                resolve(undefined)
+                resolve('back')
               }
               config_listener.dispose()
               agent_quick_pick.dispose()
@@ -282,7 +306,12 @@ export const agentic_search = async (params: {
           }
         )
 
-        if (!agent_selection_result || agent_selection_result === 'back') {
+        if (agent_selection_result === 'back') {
+          go_back_to_query = true
+          break
+        }
+
+        if (!agent_selection_result) {
           return undefined
         }
 
@@ -557,11 +586,13 @@ export const agentic_search = async (params: {
             vscode.window.showErrorMessage(
               t('views.prompt.handlers.handle-agentic-search.error.failed', { error: String(err) })
             )
-            return undefined
+            go_back_to_query = true
+            break
           }
 
           if (is_cancelled) {
-            return undefined
+            go_back_to_query = true
+            break
           }
 
           const duration = format_duration(Date.now() - start_time)
@@ -573,7 +604,8 @@ export const agentic_search = async (params: {
             vscode.window.showInformationMessage(
               t('views.prompt.handlers.handle-agentic-search.info.no-files')
             )
-            return undefined
+            go_back_to_query = true
+            break
           }
 
           const all_workspace_files = await get_all_workspace_files({
@@ -605,7 +637,8 @@ export const agentic_search = async (params: {
             vscode.window.showInformationMessage(
               t('views.prompt.handlers.handle-agentic-search.info.no-files')
             )
-            return undefined
+            go_back_to_query = true
+            break
           }
 
           let should_go_back_to_workspace = false
@@ -657,6 +690,13 @@ export const agentic_search = async (params: {
         }
         break
       }
+
+      if (go_back_to_query) {
+        continue
+      }
+
+      break
+    }
 
     return undefined
 }
