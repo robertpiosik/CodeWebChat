@@ -1,5 +1,5 @@
 export const translations = {
-  'command.agentic-search.info.search-in-progress': {
+  'views.prompt.handlers.handle-agentic-search.info.search-in-progress': {
     en: 'Agentic search is already in progress.',
     pl: 'Wyszukiwanie agentowe jest już w toku.',
     'zh-cn': '智能体搜索已经在进行中。',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Az ügynökkeresés már folyamatban van.',
     bg: 'Агентното търсене вече се изпълнява.'
   },
-  'command.agentic-search.info.no-agents': {
+  'views.prompt.handlers.handle-agentic-search.info.no-agents': {
     en: 'No agents available.',
     pl: 'Brak dostępnych agentów.',
     'zh-cn': '没有可用的智能体。',
@@ -35,7 +35,7 @@ export const translations = {
     hu: 'Nincsenek elérhető ügynökök.',
     bg: 'Няма налични агенти.'
   },
-  'command.agentic-search.agent.add-flags': {
+  'views.prompt.handlers.handle-agentic-search.agent.add-flags': {
     en: 'Add flags',
     pl: 'Dodaj flagi',
     'zh-cn': '添加标志',
@@ -53,7 +53,7 @@ export const translations = {
     hu: 'Jelzők hozzáadása',
     bg: 'Добавяне на флагове'
   },
-  'command.agentic-search.agent.edit-flags': {
+  'views.prompt.handlers.handle-agentic-search.agent.edit-flags': {
     en: 'Edit flags',
     pl: 'Edytuj flagi',
     'zh-cn': '编辑标志',
@@ -71,7 +71,7 @@ export const translations = {
     hu: 'Jelzők szerkesztése',
     bg: 'Редактиране на флагове'
   },
-  'command.agentic-search.agent.delete-flags': {
+  'views.prompt.handlers.handle-agentic-search.agent.delete-flags': {
     en: 'Delete flags',
     pl: 'Usuń flagi',
     'zh-cn': '删除标志',
@@ -89,7 +89,7 @@ export const translations = {
     hu: 'Jelzők törlése',
     bg: 'Изтриване на флагове'
   },
-  'command.agentic-search.agent.learn-more': {
+  'views.prompt.handlers.handle-agentic-search.agent.learn-more': {
     en: 'Learn more',
     pl: 'Dowiedz się więcej',
     'zh-cn': '了解更多',
@@ -107,7 +107,7 @@ export const translations = {
     hu: 'Tudjon meg többet',
     bg: 'Научете повече'
   },
-  'command.agentic-search.agent.select-agent': {
+  'views.prompt.handlers.handle-agentic-search.agent.select-agent': {
     en: 'Select Agent',
     pl: 'Wybierz agenta',
     'zh-cn': '选择智能体',
@@ -125,7 +125,7 @@ export const translations = {
     hu: 'Ügynök kiválasztása',
     bg: 'Изберете агент'
   },
-  'command.agentic-search.agent.select-agent-placeholder': {
+  'views.prompt.handlers.handle-agentic-search.agent.select-agent-placeholder': {
     en: 'Select an agent to perform the search',
     pl: 'Wybierz agenta, aby wykonać wyszukiwanie',
     'zh-cn': '选择一个智能体来执行搜索',
@@ -143,7 +143,7 @@ export const translations = {
     hu: 'Válasszon ügynököt a keresés végrehajtásához',
     bg: 'Изберете агент, който да извърши търсенето'
   },
-  'command.agentic-search.agent.deleted': {
+  'views.prompt.handlers.handle-agentic-search.agent.deleted': {
     en: 'Flags deleted.',
     pl: 'Flagi usunięte.',
     'zh-cn': '标志已删除。',
@@ -161,7 +161,7 @@ export const translations = {
     hu: 'Jelzők törölve.',
     bg: 'Флаговете са изтрити.'
   },
-  'command.agentic-search.agent.edit-flags-prompt': {
+  'views.prompt.handlers.handle-agentic-search.agent.edit-flags-prompt': {
     en: 'Enter custom CLI flags for the agent',
     pl: 'Wprowadź niestandardowe flagi CLI dla agenta',
     'zh-cn': '输入智能体的自定义 CLI 标志',
@@ -179,7 +179,7 @@ export const translations = {
     hu: 'Adjon meg egyéni CLI jelzőket az ügynökhöz',
     bg: 'Въведете персонализирани CLI флагове за агента'
   },
-  'command.agentic-search.agent.edit-flags-placeholder': {
+  'views.prompt.handlers.handle-agentic-search.agent.edit-flags-placeholder': {
     en: 'e.g. --verbose --max-steps 10',
     pl: 'np. --verbose --max-steps 10',
     'zh-cn': '例如 --verbose --max-steps 10',
@@ -197,7 +197,7 @@ export const translations = {
     hu: 'pl. --verbose --max-steps 10',
     bg: 'напр. --verbose --max-steps 10'
   },
-  'command.agentic-search.agent.select-workspace': {
+  'views.prompt.handlers.handle-agentic-search.agent.select-workspace': {
     en: 'Select Workspace',
     pl: 'Wybierz obszar roboczy',
     'zh-cn': '选择工作区',
@@ -215,7 +215,7 @@ export const translations = {
     hu: 'Munkaterület kiválasztása',
     bg: 'Изберете работно пространство'
   },
-  'command.agentic-search.agent.select-workspace-placeholder': {
+  'views.prompt.handlers.handle-agentic-search.agent.select-workspace-placeholder': {
     en: 'Select the workspace for the agent to run in',
     pl: 'Wybierz obszar roboczy, w którym agent zostanie uruchomiony',
     'zh-cn': '选择智能体运行的工作区',
@@ -233,7 +233,7 @@ export const translations = {
     hu: 'Válassza ki a munkaterületet, amelyben az ügynök futni fog',
     bg: 'Изберете работното пространство, в което да работи агентът'
   },
-  'command.agentic-search.title': {
+  'views.prompt.handlers.handle-agentic-search.title': {
     en: 'Agentic Search',
     pl: 'Wyszukiwanie agentowe',
     'zh-cn': '智能体搜索',
@@ -251,7 +251,7 @@ export const translations = {
     hu: 'Ügynökkeresés',
     bg: 'Агентно търсене'
   },
-  'command.agentic-search.agent.waiting-for-agent': {
+  'views.prompt.handlers.handle-agentic-search.agent.waiting-for-agent': {
     en: 'waiting for agent...',
     pl: 'oczekiwanie na agenta...',
     'zh-cn': '等待代理...',
@@ -269,7 +269,7 @@ export const translations = {
     hu: 'várakozás az ügynökre...',
     bg: 'изчакване на агент...'
   },
-  'command.agentic-search.error.failed': {
+  'views.prompt.handlers.handle-agentic-search.error.failed': {
     en: 'Agentic search failed: {error}',
     pl: 'Wyszukiwanie agentowe nie powiodło się: {error}',
     'zh-cn': '智能体搜索失败: {error}',
@@ -287,7 +287,7 @@ export const translations = {
     hu: 'Az ügynökkeresés sikertelen: {error}',
     bg: 'Агентното търсене се провали: {error}'
   },
-  'command.agentic-search.agent.finished': {
+  'views.prompt.handlers.handle-agentic-search.agent.finished': {
     en: 'Agent finished in {duration}',
     pl: 'Agent zakończył działanie w {duration}',
     'zh-cn': '智能体完成于 {duration}',
@@ -305,7 +305,7 @@ export const translations = {
     hu: 'Az ügynök befejezte {duration} alatt',
     bg: 'Агентът завърши за {duration}'
   },
-  'command.agentic-search.info.no-files': {
+  'views.prompt.handlers.handle-agentic-search.info.no-files': {
     en: 'No files found by the agent.',
     pl: 'Agent nie znalazł żadnych plików.',
     'zh-cn': '智能体未找到任何文件。',
@@ -323,7 +323,7 @@ export const translations = {
     hu: 'Az ügynök nem talált fájlokat.',
     bg: 'Не са намерени файлове от агента.'
   },
-  'command.agentic-search.results': {
+  'views.prompt.handlers.handle-agentic-search.results': {
     en: 'Agentic Search Results',
     pl: 'Wyniki wyszukiwania agentowego',
     'zh-cn': '智能体搜索结果',

@@ -40,7 +40,6 @@
   "codeWebChat.settings.title": "Beállítások",
   "codeWebChat.generateCommitMessage.title": "CWC: Commit üzenet generálása",
   "codeWebChat.generateCommitMessageAndCommit.title": "Változások commitálása",
-  "codeWebChat.agenticSearch.title": "Keresés ügynökkel...",
   "codeWebChat.setRanges.title": "Tartományok beállítása...",
   "codeWebChat.searchFiles.title": "Fájlok keresése...",
   "codeWebChat.searchFilesWorkspaceAction.title": "Fájlok keresése...",

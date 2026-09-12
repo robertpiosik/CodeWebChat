@@ -537,6 +537,10 @@ export interface PreviewSkillSymbolMessage extends BaseMessage {
   skill_name: string
 }
 
+export interface AgenticSearchMessage extends BaseMessage {
+  command: 'AGENTIC_SEARCH'
+}
+
 export interface InstallBrowserExtensionMessage extends BaseMessage {
   command: 'INSTALL_BROWSER_EXTENSION'
 }
@@ -635,6 +639,7 @@ export type FrontendMessage =
   | PreviewChangesSymbolMessage
   | PreviewCommitSymbolMessage
   | PreviewSkillSymbolMessage
+  | AgenticSearchMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {

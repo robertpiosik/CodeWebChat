@@ -85,6 +85,7 @@ import {
   handle_preview_commit_symbol,
   handle_preview_skill_symbol
 } from './message-handlers'
+import { handle_agentic_search } from './message-handlers/handle-agentic-search/handle-agentic-search'
 import { handle_update_api_configuration } from './message-handlers/handle-update-api-configuration'
 import { handle_pick_model_provider } from './message-handlers/handle-pick-model-provider'
 import { handle_pick_api_model } from './message-handlers/handle-pick-api-model'
@@ -845,6 +846,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_preview_commit_symbol(message)
           } else if (message.command == 'PREVIEW_SKILL_SYMBOL') {
             await handle_preview_skill_symbol(message)
+          } else if (message.command == 'AGENTIC_SEARCH') {
+            await handle_agentic_search(this)
           }
         } catch (error: any) {
           Logger.error({

@@ -126,6 +126,12 @@ export const use_prompt = (vscode: any) => {
     })
   }
 
+  const handle_agentic_search = () => {
+    post_message(vscode, {
+      command: 'AGENTIC_SEARCH'
+    })
+  }
+
   const handle_preview_prompt = () => {
     post_message(vscode, {
       command: 'PREVIEW_PROMPT'
@@ -298,6 +304,7 @@ export const use_prompt = (vscode: any) => {
     set_api_configurations,
     handle_changes_click,
     handle_commit_click,
-    handle_skill_click
+    handle_skill_click,
+    handle_agentic_search
   }
 }

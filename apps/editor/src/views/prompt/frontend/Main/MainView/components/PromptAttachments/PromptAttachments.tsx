@@ -9,7 +9,9 @@ type Props = {
   translations: {
     attaching_file: string
     attaching_files: string
+    agentic_search: string
   }
+  on_agentic_search: () => void
 }
 
 export const PromptAttachments: React.FC<Props> = (props) => {
@@ -30,6 +32,14 @@ export const PromptAttachments: React.FC<Props> = (props) => {
           ? display_token_count(props.token_count ?? 0)
           : undefined
       }
+      actions={[
+        {
+          id: 'agentic-search',
+          icon: 'codicon-search-sparkle',
+          label: props.translations.agentic_search,
+          on_click: props.on_agentic_search
+        }
+      ]}
     />
   )
 }

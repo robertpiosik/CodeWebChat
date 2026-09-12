@@ -6,14 +6,12 @@ import * as path from 'path'
 import * as fs from 'fs'
 import {
   LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY,
-  LAST_AGENTIC_SEARCH_QUERY_STATE_KEY,
   LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY
 } from '@/constants/state-keys'
 import { extract_paths_from_bullet_list } from '@/utils/extract-paths-from-bullet-list'
 import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-files'
 import { Logger } from '@shared/utils/logger'
 import { show_search_results_quick_pick } from './utils/show-search-results-quick-pick'
-import { prompt_for_search_term } from './utils/prompt-for-search-term'
 import { antigravity_agent } from './agents/antigravity'
 import { claude_agent } from './agents/claude'
 import { codex_agent } from './agents/codex'
@@ -46,13 +44,12 @@ const AGENTS: CodingAgent[] = [
 export const agentic_search = async (params: {
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
+  query: string
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | undefined
   | 'back'
 > => {
-  const local_queries: Record<string, string> = {}
-
   const roots = params.workspace_provider.get_workspace_roots()
 
   if (roots.length == 0) {
@@ -60,74 +57,33 @@ export const agentic_search = async (params: {
   }
 
   const output_channel = get_output_channel()
+  const query = params.query
 
-  {
-    while (true) {
-      const initial_query =
-        local_queries[LAST_AGENTIC_SEARCH_QUERY_STATE_KEY] !== undefined
-          ? local_queries[LAST_AGENTIC_SEARCH_QUERY_STATE_KEY]
-          : params.extension_context.workspaceState.get<string>(
-              LAST_AGENTIC_SEARCH_QUERY_STATE_KEY
-            ) || ''
-
-      const query_result = await prompt_for_search_term(
-        initial_query,
-        (value) => {
-          local_queries[LAST_AGENTIC_SEARCH_QUERY_STATE_KEY] = value
-          params.extension_context.workspaceState.update(
-            LAST_AGENTIC_SEARCH_QUERY_STATE_KEY,
-            value
-          )
-        }
-      )
-
-      if (query_result.back) {
-        return 'back'
-      }
-
-      if (query_result.value === undefined) {
-        return undefined
-      }
-
-      const query = query_result.value
-
-      if (query.trim() == '') {
-        continue
-      }
-
-      local_queries[LAST_AGENTIC_SEARCH_QUERY_STATE_KEY] = query
-      await params.extension_context.workspaceState.update(
-        LAST_AGENTIC_SEARCH_QUERY_STATE_KEY,
-        query
-      )
-
-      let go_back_to_query = false
-
-      while (true) {
-        const available_agents = AGENTS.filter((a) => a.is_installed())
+  while (true) {
+    const available_agents = AGENTS.filter((a) => a.is_installed())
 
         if (available_agents.length == 0) {
           vscode.window.showInformationMessage(
-            t('command.agentic-search.info.no-agents')
+            t('views.prompt.handlers.handle-agentic-search.info.no-agents')
           )
           return undefined
         }
 
         const add_button = {
           iconPath: new vscode.ThemeIcon('flag'),
-          tooltip: t('command.agentic-search.agent.add-flags')
+          tooltip: t('views.prompt.handlers.handle-agentic-search.agent.add-flags')
         }
         const edit_button = {
           iconPath: new vscode.ThemeIcon('edit'),
-          tooltip: t('command.agentic-search.agent.edit-flags')
+          tooltip: t('views.prompt.handlers.handle-agentic-search.agent.edit-flags')
         }
         const delete_button = {
           iconPath: new vscode.ThemeIcon('trash'),
-          tooltip: t('command.agentic-search.agent.delete-flags')
+          tooltip: t('views.prompt.handlers.handle-agentic-search.agent.delete-flags')
         }
         const doc_button = {
           iconPath: new vscode.ThemeIcon('question'),
-          tooltip: t('command.agentic-search.agent.learn-more')
+          tooltip: t('views.prompt.handlers.handle-agentic-search.agent.learn-more')
         }
 
         type AgentPickItem = vscode.QuickPickItem & {
@@ -200,11 +156,11 @@ export const agentic_search = async (params: {
           }
         }
 
-        agent_quick_pick.title = t('command.agentic-search.agent.select-agent')
+        agent_quick_pick.title = t('views.prompt.handlers.handle-agentic-search.agent.select-agent')
         agent_quick_pick.placeholder = t(
-          'command.agentic-search.agent.select-agent-placeholder'
+          'views.prompt.handlers.handle-agentic-search.agent.select-agent-placeholder'
         )
-        agent_quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
+        agent_quick_pick.buttons = [close_button]
         agent_quick_pick.ignoreFocusOut = true
 
         const config_listener = vscode.workspace.onDidChangeConfiguration(
@@ -227,11 +183,7 @@ export const agentic_search = async (params: {
             let is_resolved = false
 
             agent_quick_pick.onDidTriggerButton((button) => {
-              if (button === vscode.QuickInputButtons.Back) {
-                is_resolved = true
-                resolve('back')
-                agent_quick_pick.hide()
-              } else if (button === close_button) {
+              if (button === close_button) {
                 is_resolved = true
                 resolve(undefined)
                 agent_quick_pick.hide()
@@ -279,7 +231,7 @@ export const agentic_search = async (params: {
                     const undo_action = t('common.undo')
                     vscode.window
                       .showInformationMessage(
-                        t('command.agentic-search.agent.deleted'),
+                        t('views.prompt.handlers.handle-agentic-search.agent.deleted'),
                         undo_action
                       )
                       .then((choice) => {
@@ -320,7 +272,7 @@ export const agentic_search = async (params: {
 
             agent_quick_pick.onDidHide(() => {
               if (!is_resolved) {
-                resolve('back')
+                resolve(undefined)
               }
               config_listener.dispose()
               agent_quick_pick.dispose()
@@ -330,21 +282,16 @@ export const agentic_search = async (params: {
           }
         )
 
-        if (agent_selection_result == 'back') {
-          go_back_to_query = true
-          break
-        }
-
-        if (!agent_selection_result) {
+        if (!agent_selection_result || agent_selection_result === 'back') {
           return undefined
         }
 
         if (agent_selection_result.action === 'add') {
           const { configKey } = agent_selection_result
           const new_flags = await vscode.window.showInputBox({
-            title: t('command.agentic-search.agent.add-flags'),
-            prompt: t('command.agentic-search.agent.edit-flags-prompt'),
-            placeHolder: t('command.agentic-search.agent.edit-flags-placeholder'),
+            title: t('views.prompt.handlers.handle-agentic-search.agent.add-flags'),
+            prompt: t('views.prompt.handlers.handle-agentic-search.agent.edit-flags-prompt'),
+            placeHolder: t('views.prompt.handlers.handle-agentic-search.agent.edit-flags-placeholder'),
             value: '',
             ignoreFocusOut: true
           })
@@ -365,9 +312,9 @@ export const agentic_search = async (params: {
         if (agent_selection_result.action === 'edit') {
           const { configKey, index, value } = agent_selection_result
           const new_flags = await vscode.window.showInputBox({
-            title: t('command.agentic-search.agent.edit-flags'),
-            prompt: t('command.agentic-search.agent.edit-flags-prompt'),
-            placeHolder: t('command.agentic-search.agent.edit-flags-placeholder'),
+            title: t('views.prompt.handlers.handle-agentic-search.agent.edit-flags'),
+            prompt: t('views.prompt.handlers.handle-agentic-search.agent.edit-flags-prompt'),
+            placeHolder: t('views.prompt.handlers.handle-agentic-search.agent.edit-flags-placeholder'),
             value: value,
             ignoreFocusOut: true
           })
@@ -427,9 +374,9 @@ export const agentic_search = async (params: {
             if (active_item) {
               quick_pick.activeItems = [active_item]
             }
-            quick_pick.title = t('command.agentic-search.agent.select-workspace')
+            quick_pick.title = t('views.prompt.handlers.handle-agentic-search.agent.select-workspace')
             quick_pick.placeholder = t(
-              'command.agentic-search.agent.select-workspace-placeholder'
+              'views.prompt.handlers.handle-agentic-search.agent.select-workspace-placeholder'
             )
             quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
             quick_pick.ignoreFocusOut = true
@@ -516,12 +463,12 @@ export const agentic_search = async (params: {
             await vscode.window.withProgress(
               {
                 location: vscode.ProgressLocation.Notification,
-                title: t('command.agentic-search.title'),
+                title: t('views.prompt.handlers.handle-agentic-search.title'),
                 cancellable: true
               },
               async (progress, token) => {
                 progress.report({
-                  message: t('command.agentic-search.agent.waiting-for-agent')
+                  message: t('views.prompt.handlers.handle-agentic-search.agent.waiting-for-agent')
                 })
 
                 return new Promise<void>((resolve, reject) => {
@@ -608,28 +555,25 @@ export const agentic_search = async (params: {
             )
           } catch (err) {
             vscode.window.showErrorMessage(
-              t('command.agentic-search.error.failed', { error: String(err) })
+              t('views.prompt.handlers.handle-agentic-search.error.failed', { error: String(err) })
             )
-            go_back_to_query = true
-            break
+            return undefined
           }
 
           if (is_cancelled) {
-            go_back_to_query = true
-            break
+            return undefined
           }
 
           const duration = format_duration(Date.now() - start_time)
           vscode.window.showInformationMessage(
-            t('command.agentic-search.agent.finished', { duration })
+            t('views.prompt.handlers.handle-agentic-search.agent.finished', { duration })
           )
 
           if (agent_output.trim() == '') {
             vscode.window.showInformationMessage(
-              t('command.agentic-search.info.no-files')
+              t('views.prompt.handlers.handle-agentic-search.info.no-files')
             )
-            go_back_to_query = true
-            break
+            return undefined
           }
 
           const all_workspace_files = await get_all_workspace_files({
@@ -659,10 +603,9 @@ export const agentic_search = async (params: {
 
           if (absolute_paths.length === 0) {
             vscode.window.showInformationMessage(
-              t('command.agentic-search.info.no-files')
+              t('views.prompt.handlers.handle-agentic-search.info.no-files')
             )
-            go_back_to_query = true
-            break
+            return undefined
           }
 
           let should_go_back_to_workspace = false
@@ -678,7 +621,7 @@ export const agentic_search = async (params: {
             const selected_items = await show_search_results_quick_pick({
               matched_items: absolute_paths.map((path) => ({ path })),
               workspace_provider: params.workspace_provider,
-              title: t('command.agentic-search.results'),
+              title: t('views.prompt.handlers.handle-agentic-search.results'),
               show_back_button: true
             })
 
@@ -709,23 +652,11 @@ export const agentic_search = async (params: {
           }
         }
 
-        if (go_back_to_query) {
-          break
-        }
-
         if (go_back_to_agent) {
           continue
         }
         break
       }
 
-      if (go_back_to_query) {
-        continue
-      }
-
-      break
-    }
-
     return undefined
-  }
 }

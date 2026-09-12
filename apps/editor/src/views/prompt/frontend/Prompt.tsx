@@ -81,7 +81,8 @@ export const Prompt = () => {
     set_api_configurations,
     handle_changes_click,
     handle_commit_click,
-    handle_skill_click
+    handle_skill_click,
+    handle_agentic_search
   } = use_panel(vscode)
 
   const {
@@ -365,6 +366,7 @@ export const Prompt = () => {
                 on_changes_click={handle_changes_click}
                 on_commit_click={handle_commit_click}
                 on_skill_click={handle_skill_click}
+                on_agentic_search={handle_agentic_search}
               />
             </div>
             <div

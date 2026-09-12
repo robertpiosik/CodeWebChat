@@ -40,7 +40,6 @@
   "codeWebChat.settings.title": "設定",
   "codeWebChat.generateCommitMessage.title": "CWC: コミットメッセージを生成",
   "codeWebChat.generateCommitMessageAndCommit.title": "変更をコミット",
-  "codeWebChat.agenticSearch.title": "エージェント検索...",
   "codeWebChat.setRanges.title": "範囲を設定...",
   "codeWebChat.searchFiles.title": "ファイルを検索...",
   "codeWebChat.searchFilesWorkspaceAction.title": "ファイルを検索...",

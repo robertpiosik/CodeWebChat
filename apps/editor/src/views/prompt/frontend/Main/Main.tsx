@@ -82,6 +82,7 @@ type Props = {
     commit_message?: string,
   ) => void
   on_skill_click?: (agent: string, repo: string, skill_name: string) => void
+  on_agentic_search: () => void
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -555,8 +556,9 @@ export const Main: React.FC<Props> = (props) => {
       on_preview_prompt={props.on_preview_prompt}
       on_changes_click={props.on_changes_click}
       on_commit_click={props.on_commit_click}
-              on_skill_click={props.on_skill_click}
+      on_skill_click={props.on_skill_click}
       on_install_browser_extension={handle_install_browser_extension}
+      on_agentic_search={props.on_agentic_search}
     />
   )
 }

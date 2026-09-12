@@ -21,7 +21,6 @@ import { translations as select_imported_files } from './select-imported-files'
 import { translations as copy_paths } from './copy-paths'
 import { translations as copy_markdown } from './copy-markdown'
 import { translations as copy_merge_commit_details } from './copy-merge-commit-details'
-import { translations as agentic_search } from './agentic-search'
 
 export const translations = {
   ...generate_commit_message,
@@ -46,6 +45,5 @@ export const translations = {
   ...select_imported_files,
   ...copy_paths,
   ...copy_markdown,
-  ...copy_merge_commit_details,
-  ...agentic_search
+  ...copy_merge_commit_details
 }

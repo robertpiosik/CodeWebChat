@@ -52,5 +52,23 @@ export const selected_files = {
     cs: 'Připojování vybraných souborů zakázáno!',
     hu: 'Kiválasztott fájlok csatolása letiltva!',
     bg: 'Прикачването на избраните файлове е деактивирано!'
+  },
+  'selected-files.agentic-search': {
+    en: 'Agentic Search',
+    pl: 'Wyszukiwanie agentowe',
+    'zh-cn': '代理搜索',
+    ja: 'エージェンティック検索',
+    'zh-tw': '代理搜尋',
+    de: 'Agentische Suche',
+    es: 'Búsqueda agéntica',
+    fr: 'Recherche agentique',
+    'pt-br': 'Busca agêntica',
+    ru: 'Агентный поиск',
+    ko: '에이전트 검색',
+    it: 'Ricerca agentica',
+    tr: 'Ajanlı arama',
+    cs: 'Agentní vyhledávání',
+    hu: 'Ágens alapú keresés',
+    bg: 'Агентно търсене'
   }
 } as const

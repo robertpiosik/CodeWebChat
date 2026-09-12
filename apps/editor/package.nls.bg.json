@@ -40,7 +40,6 @@
   "codeWebChat.settings.title": "Настройки",
   "codeWebChat.generateCommitMessage.title": "CWC: Генерирай commit съобщение",
   "codeWebChat.generateCommitMessageAndCommit.title": "Потвърди промените",
-  "codeWebChat.agenticSearch.title": "Търсене с агент...",
   "codeWebChat.setRanges.title": "Задай диапазони...",
   "codeWebChat.searchFiles.title": "Търсене на файлове...",
   "codeWebChat.searchFilesWorkspaceAction.title": "Търсене на файлове...",

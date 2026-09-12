@@ -120,6 +120,7 @@ type Props = {
   ) => void
   on_skill_click?: (agent: string, repo: string, skill_name: string) => void
   on_install_browser_extension: () => void
+  on_agentic_search: () => void
 }
 
 const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
@@ -432,9 +433,11 @@ export const MainView: React.FC<Props> = (props) => {
                 ? 'blue'
                 : 'purple'
           }
+          on_agentic_search={props.on_agentic_search}
           translations={{
             attaching_file: t('selected-files.attaching-file'),
-            attaching_files: t('selected-files.attaching-files')
+            attaching_files: t('selected-files.attaching-files'),
+            agentic_search: t('selected-files.agentic-search')
           }}
         />
 

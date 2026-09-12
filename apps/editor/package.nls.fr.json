@@ -40,7 +40,6 @@
   "codeWebChat.settings.title": "Paramètres",
   "codeWebChat.generateCommitMessage.title": "CWC: Générer un message de commit",
   "codeWebChat.generateCommitMessageAndCommit.title": "Valider les modifications",
-  "codeWebChat.agenticSearch.title": "Recherche par agent...",
   "codeWebChat.setRanges.title": "Définir les plages...",
   "codeWebChat.searchFiles.title": "Rechercher des fichiers...",
   "codeWebChat.searchFilesWorkspaceAction.title": "Rechercher des fichiers...",
