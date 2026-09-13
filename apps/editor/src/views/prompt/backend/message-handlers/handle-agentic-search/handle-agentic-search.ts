@@ -23,12 +23,14 @@ export const handle_agentic_search = async (
     const result = await agentic_search({
       workspace_provider: prompt_view_provider.workspace_provider,
       extension_context: prompt_view_provider.extension_context,
+      websocket_manager: prompt_view_provider.websocket_server_instance,
       query
     })
 
     if (!result || result === 'back') return
 
-    const currently_checked = prompt_view_provider.workspace_provider.get_checked_files()
+    const currently_checked =
+      prompt_view_provider.workspace_provider.get_checked_files()
 
     const unchecked_paths = result.matched_paths.filter(
       (file_path) => !result.selected_paths.includes(file_path)
@@ -41,7 +43,9 @@ export const handle_agentic_search = async (
       ])
     ]
 
-    await prompt_view_provider.workspace_provider.set_checked_files(paths_to_apply)
+    await prompt_view_provider.workspace_provider.set_checked_files(
+      paths_to_apply
+    )
 
     Logger.info({
       message: `Selected ${result.selected_paths.length} files from agentic search.`,
