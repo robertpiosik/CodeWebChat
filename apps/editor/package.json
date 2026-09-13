@@ -613,16 +613,6 @@
       ],
       "view/title": [
         {
-          "command": "codeWebChat.undoSelection",
-          "when": "view == codeWebChatViewSelectedFiles",
-          "group": "1_more@1"
-        },
-        {
-          "command": "codeWebChat.redoSelection",
-          "when": "view == codeWebChatViewSelectedFiles",
-          "group": "1_more@2"
-        },
-        {
           "command": "codeWebChat.restoreFileSelection",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@1"
@@ -650,12 +640,12 @@
         {
           "command": "codeWebChat.selectReferencingFilesForSelected",
           "when": "view == codeWebChatViewSelectedFiles",
-          "group": "2_more@1"
+          "group": "1_more@1"
         },
         {
           "command": "codeWebChat.selectImportedFilesForSelected",
           "when": "view == codeWebChatViewSelectedFiles",
-          "group": "2_more@2"
+          "group": "1_more@2"
         },
         {
           "command": "codeWebChat.copyMarkdown",
@@ -718,9 +708,19 @@
           "group": "2_more@5"
         },
         {
-          "command": "codeWebChat.duplicateWorkspace",
+          "command": "codeWebChat.undoSelection",
           "when": "view == codeWebChatViewWorkspace",
           "group": "3_more@1"
+        },
+        {
+          "command": "codeWebChat.redoSelection",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "3_more@2"
+        },
+        {
+          "command": "codeWebChat.duplicateWorkspace",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "4_more@1"
         },
         {
           "command": "codeWebChat.checkAllOpenEditors",
