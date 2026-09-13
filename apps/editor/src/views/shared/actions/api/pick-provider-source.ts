@@ -45,6 +45,7 @@ export const pick_provider_source = async (params?: {
   ]
 
   const quick_pick = vscode.window.createQuickPick()
+  quick_pick.ignoreFocusOut = true
   quick_pick.items = items
   quick_pick.title = t(
     'views.shared.actions.api.upsert-provider.options.title'

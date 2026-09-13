@@ -40,6 +40,7 @@ export const initial_select_provider = async (
         label: string
         provider?: Provider
       }>()
+      quick_pick.ignoreFocusOut = true
       quick_pick.items = [
         add_new_item,
         {
