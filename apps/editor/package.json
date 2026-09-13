@@ -989,6 +989,59 @@
           "type": "string",
           "scope": "resource"
         },
+        "codeWebChat.agenticSearchInstructions": {
+          "type": "string",
+          "scope": "resource"
+        },
+        "codeWebChat.agenticSearchAntigravityFlags": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          }
+        },
+        "codeWebChat.agenticSearchClaudeFlags": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          }
+        },
+        "codeWebChat.agenticSearchCodexFlags": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          }
+        },
+        "codeWebChat.agenticSearchCursorFlags": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          }
+        },
+        "codeWebChat.agenticSearchGrokFlags": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          }
+        },
+        "codeWebChat.agenticSearchMuseFlags": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          }
+        },
+        "codeWebChat.agenticSearchOpencodeFlags": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          }
+        },
         "codeWebChat.editFilesSystemInstructions": {
           "type": "string",
           "scope": "resource"

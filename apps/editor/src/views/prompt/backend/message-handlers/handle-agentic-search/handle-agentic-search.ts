@@ -3,6 +3,7 @@ import { PromptViewProvider } from '../../prompt-view-provider'
 import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
 import { agentic_search } from './agentic-search'
+import { LAST_AGENTIC_SEARCH_QUERY_STATE_KEY } from '@/constants/state-keys'
 
 let agentic_search_in_progress = false
 
@@ -16,7 +17,22 @@ export const handle_agentic_search = async (
     return
   }
 
-  const query = prompt_view_provider.current_instructions
+  const current_instructions = prompt_view_provider.current_instructions
+
+  const last_query_state =
+    prompt_view_provider.extension_context.workspaceState.get<{
+      instructions: string
+      query: string
+    }>(LAST_AGENTIC_SEARCH_QUERY_STATE_KEY)
+
+  let initial_query = current_instructions
+  if (
+    last_query_state &&
+    typeof last_query_state === 'object' &&
+    last_query_state.instructions === current_instructions
+  ) {
+    initial_query = last_query_state.query
+  }
 
   agentic_search_in_progress = true
   try {
@@ -24,7 +40,8 @@ export const handle_agentic_search = async (
       workspace_provider: prompt_view_provider.workspace_provider,
       extension_context: prompt_view_provider.extension_context,
       websocket_manager: prompt_view_provider.websocket_server_instance,
-      query
+      query: initial_query,
+      current_instructions
     })
 
     if (!result || result === 'back') return

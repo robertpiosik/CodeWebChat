@@ -6,7 +6,8 @@ import * as path from 'path'
 import * as fs from 'fs'
 import {
   LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY,
-  LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY
+  LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY,
+  LAST_AGENTIC_SEARCH_QUERY_STATE_KEY
 } from '@/constants/state-keys'
 import { extract_paths_from_bullet_list } from '@/utils/extract-paths-from-bullet-list'
 import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-files'
@@ -50,6 +51,7 @@ export const agentic_search = async (params: {
   extension_context: vscode.ExtensionContext
   websocket_manager: WebSocketManager
   query: string
+  current_instructions: string
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | undefined
@@ -81,7 +83,18 @@ export const agentic_search = async (params: {
       continue
     }
 
+    await params.extension_context.workspaceState.update(
+      LAST_AGENTIC_SEARCH_QUERY_STATE_KEY,
+      {
+        instructions: params.current_instructions,
+        query
+      }
+    )
+
     let go_back_to_query = false
+
+    let active_config_key: string | undefined
+    let active_flag_index: number | undefined
 
     while (true) {
       const available_agents = AGENTS.filter((a) => a.is_installed())
@@ -175,16 +188,27 @@ export const agentic_search = async (params: {
       const agent_quick_pick = vscode.window.createQuickPick<AgentPickItem>()
       agent_quick_pick.items = build_agent_picks()
 
-      const last_used_agent =
-        params.extension_context.workspaceState.get<string>(
-          LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY
-        )
-      if (last_used_agent) {
+      if (active_config_key !== undefined && active_flag_index !== undefined) {
         const active_item = agent_quick_pick.items.find(
-          (i) => i.cmd == last_used_agent
+          (i) =>
+            i.configKey === active_config_key &&
+            i.flag_index === active_flag_index
         )
         if (active_item) {
           agent_quick_pick.activeItems = [active_item]
+        }
+      } else {
+        const last_used_agent =
+          params.extension_context.workspaceState.get<string>(
+            LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY
+          )
+        if (last_used_agent) {
+          const active_item = agent_quick_pick.items.find(
+            (i) => i.cmd == last_used_agent
+          )
+          if (active_item) {
+            agent_quick_pick.activeItems = [active_item]
+          }
         }
       }
 
@@ -199,7 +223,31 @@ export const agentic_search = async (params: {
 
       const config_listener = vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration('codeWebChat')) {
+          const prev_active = agent_quick_pick.activeItems[0]
           agent_quick_pick.items = build_agent_picks()
+
+          if (
+            active_config_key !== undefined &&
+            active_flag_index !== undefined
+          ) {
+            const item = agent_quick_pick.items.find(
+              (i) =>
+                i.configKey === active_config_key &&
+                i.flag_index === active_flag_index
+            )
+            if (item) {
+              agent_quick_pick.activeItems = [item]
+            }
+          } else if (prev_active) {
+            const item = agent_quick_pick.items.find(
+              (i) =>
+                i.configKey === prev_active.configKey &&
+                i.flag_index === prev_active.flag_index
+            )
+            if (item) {
+              agent_quick_pick.activeItems = [item]
+            }
+          }
         }
       })
 
@@ -248,6 +296,9 @@ export const agentic_search = async (params: {
               resolve({ action: 'add', configKey: e.item.configKey })
               agent_quick_pick.hide()
             } else if (e.button === delete_button) {
+              active_config_key = e.item.configKey
+              active_flag_index = -1
+
               const config = vscode.workspace.getConfiguration('codeWebChat')
               const flags = config
                 .get<string[]>(e.item.configKey, [])
@@ -274,6 +325,9 @@ export const agentic_search = async (params: {
                     )
                     .then((choice) => {
                       if (choice === undo_action) {
+                        active_config_key = e.item.configKey
+                        active_flag_index = e.item.flag_index
+
                         const current_config =
                           vscode.workspace.getConfiguration('codeWebChat')
                         const current_flags = current_config
@@ -327,6 +381,9 @@ export const agentic_search = async (params: {
 
       if (agent_selection_result.action === 'add') {
         const { configKey } = agent_selection_result
+        active_config_key = configKey
+        active_flag_index = -1
+
         const new_flags = await vscode.window.showInputBox({
           title: t(
             'views.prompt.handlers.handle-agentic-search.agent.add-flags'
@@ -345,6 +402,9 @@ export const agentic_search = async (params: {
           const flags = config
             .get<string[]>(configKey, [])
             .filter((f) => f.trim() !== '')
+          
+          active_flag_index = flags.length
+
           await config.update(
             configKey,
             [...flags, new_flags],
@@ -356,6 +416,9 @@ export const agentic_search = async (params: {
 
       if (agent_selection_result.action === 'edit') {
         const { configKey, index, value } = agent_selection_result
+        active_config_key = configKey
+        active_flag_index = index
+
         const new_flags = await vscode.window.showInputBox({
           title: t(
             'views.prompt.handlers.handle-agentic-search.agent.edit-flags'
@@ -379,6 +442,7 @@ export const agentic_search = async (params: {
             new_flags_array[index] = new_flags
           } else {
             new_flags_array.splice(index, 1)
+            active_flag_index = -1
           }
           await config.update(
             configKey,
@@ -495,10 +559,27 @@ export const agentic_search = async (params: {
 
         const custom_args: string[] = []
         if (flags_string.trim()) {
-          const regex = /([^\s'"]+)|"([^"]*)"|'([^']*)'/g
-          let match
-          while ((match = regex.exec(flags_string)) !== null) {
-            custom_args.push(match[1] || match[2] || match[3])
+          let current_arg = ''
+          let in_single_quote = false
+          let in_double_quote = false
+
+          for (let i = 0; i < flags_string.length; i++) {
+            const char = flags_string[i]
+            if (char === "'" && !in_double_quote) {
+              in_single_quote = !in_single_quote
+            } else if (char === '"' && !in_single_quote) {
+              in_double_quote = !in_double_quote
+            } else if (char === ' ' && !in_single_quote && !in_double_quote) {
+              if (current_arg.length > 0) {
+                custom_args.push(current_arg)
+                current_arg = ''
+              }
+            } else {
+              current_arg += char
+            }
+          }
+          if (current_arg.length > 0) {
+            custom_args.push(current_arg)
           }
         }
 
