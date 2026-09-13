@@ -8,6 +8,8 @@ import { dictionary } from '@shared/constants/dictionary'
 import { PROVIDERS } from '@/constants/providers'
 import { generate_unique_name } from '@/views/shared/utils/generate-unique-name'
 import { t } from '@/i18n'
+import { pick_extended_provider } from './pick-extended-provider'
+import { pick_provider_source } from './pick-provider-source'
 
 const normalize_base_url = (url: string): string => {
   return url.trim().replace(/\/+$/, '')
@@ -416,90 +418,32 @@ export const upsert_provider = async (params: {
     working_provider = { ...existing }
     original_name = existing.name
   } else {
-    const show_add_options = async (): Promise<{
-      id?: string
-    } | null> => {
-      const custom_label = t(
-        'views.shared.actions.api.upsert-provider.options.custom-label'
-      )
-      const available_built_in = Object.entries(PROVIDERS)
-
-      const items: vscode.QuickPickItem[] = [
-        {
-          label: custom_label,
-          description: t(
-            'views.shared.actions.api.upsert-provider.options.custom-desc'
-          )
-        },
-        {
-          label: t(
-            'views.shared.actions.api.upsert-provider.options.predefined'
-          ),
-          kind: vscode.QuickPickItemKind.Separator
-        },
-        ...available_built_in.map(([id, info]) => ({
-          label: id,
-          detail: info.base_url
-        }))
-      ]
-
-      const quick_pick = vscode.window.createQuickPick()
-      quick_pick.items = items
-      quick_pick.title = t(
-        'views.shared.actions.api.upsert-provider.options.title'
-      )
-      quick_pick.placeholder = t(
-        'views.shared.actions.api.upsert-provider.options.placeholder'
-      )
-
-      const close_button: vscode.QuickInputButton = {
-        iconPath: new vscode.ThemeIcon('close'),
-        tooltip: t('common.close')
-      }
-
-      if (params.show_back_button) {
-        quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
-      } else {
-        quick_pick.buttons = [close_button]
-      }
-
-      return new Promise((resolve) => {
-        quick_pick.onDidTriggerButton((button) => {
-          if (
-            button === vscode.QuickInputButtons.Back ||
-            button === close_button
-          ) {
-            quick_pick.hide()
-          }
-        })
-        quick_pick.onDidAccept(() => {
-          const selected = quick_pick.selectedItems[0]
-          quick_pick.hide()
-          if (!selected) return resolve(null)
-
-          if (selected.label === custom_label) {
-            resolve({})
-          } else {
-            resolve({ id: selected.label })
-          }
-        })
-        quick_pick.onDidHide(() => {
-          quick_pick.dispose()
-          resolve(null)
-        })
-        quick_pick.show()
-      })
-    }
-
     while (true) {
-      const choice = await show_add_options()
-      if (!choice) return
+      const choice = await pick_provider_source({
+        show_back_button: params.show_back_button
+      })
+      if (choice === 'BACK' || !choice) return
 
-      if (choice.id) {
+      let provider_info: { name: string; base_url: string } | null = null
+
+      if (choice.is_extended) {
+        const ext_choice = await pick_extended_provider()
+
+        if (ext_choice === 'BACK') {
+          continue
+        }
+
+        if (!ext_choice) return
+
+        provider_info = { name: ext_choice.name, base_url: ext_choice.url }
+      } else if (choice.id) {
         const name = choice.id as keyof typeof PROVIDERS
         const info = PROVIDERS[name]
+        provider_info = { name: name as string, base_url: info.base_url }
+      }
 
-        let current_name_value = name as string
+      if (provider_info) {
+        let current_name_value = provider_info.name
         let back_to_options = false
 
         while (true) {
@@ -517,7 +461,7 @@ export const upsert_provider = async (params: {
           current_name_value = new_name
 
           let api_key = ''
-          if (!info.base_url.includes('localhost')) {
+          if (!provider_info.base_url.includes('localhost')) {
             const { value, accepted, back } = await prompt_for_key('', true)
             if (back) continue
             if (!accepted) return
@@ -533,7 +477,7 @@ export const upsert_provider = async (params: {
 
           const new_provider: Provider = {
             name: final_name,
-            base_url: info.base_url,
+            base_url: provider_info.base_url,
             api_key
           }
           await providers_manager.save_providers([

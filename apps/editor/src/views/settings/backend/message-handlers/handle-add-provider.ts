@@ -3,6 +3,8 @@ import { SettingsViewProvider } from '../settings-view-provider'
 import { PROVIDERS } from '@/constants/providers'
 import { AddProviderMessage } from '@/views/settings/types/messages'
 import { t } from '@/i18n'
+import { pick_extended_provider } from '@/views/shared/actions/api/pick-extended-provider'
+import { pick_provider_source } from '@/views/shared/actions/api/pick-provider-source'
 
 export const handle_add_provider = async (
   provider: SettingsViewProvider,
@@ -66,80 +68,42 @@ export const handle_add_provider = async (
         : message.insertion_index + 1
   }
 
-  const custom_label = '$(edit) Custom endpoint...'
-  const available_built_in = Object.entries(PROVIDERS)
+  while (true) {
+    const choice = await pick_provider_source()
 
-  const items: vscode.QuickPickItem[] = [
-    {
-      label: custom_label,
-      description: 'You can use any OpenAI-API compatible provider'
-    },
-    {
-      label: 'predefined endpoints',
-      kind: vscode.QuickPickItemKind.Separator
-    },
-    ...available_built_in.map(([id, info]) => ({
-      label: id,
-      detail: info.base_url
-    }))
-  ]
+    if (choice === 'BACK' || !choice) return
 
-  const quick_pick = vscode.window.createQuickPick()
-  quick_pick.items = items
-  quick_pick.title = 'Providers'
-  quick_pick.placeholder =
-    'Choose a predefined provider or add a custom endpoint'
+    let new_name = ''
+    let new_base_url = ''
 
-  const close_button: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('close'),
-    tooltip: 'Close'
-  }
-  quick_pick.buttons = [close_button]
+    if (choice.is_extended) {
+      const ext_choice = await pick_extended_provider()
 
-  const choice = await new Promise<{ id?: string } | null>((resolve) => {
-    quick_pick.onDidTriggerButton((button) => {
-      if (button === close_button) {
-        quick_pick.hide()
+      if (ext_choice === 'BACK') {
+        continue
       }
+
+      if (!ext_choice) return
+
+      new_name = ext_choice.name
+      new_base_url = ext_choice.url
+    } else if (choice.id) {
+      const name = choice.id as keyof typeof PROVIDERS
+      const info = PROVIDERS[name]
+      new_name = name
+      new_base_url = info.base_url
+    }
+
+    provider.postMessage({
+      command: 'START_PROVIDER_CREATION',
+      provider: {
+        name: new_name,
+        base_url: new_base_url,
+        api_key_mask: '',
+        extended_cache: undefined
+      },
+      insertion_index
     })
-    quick_pick.onDidAccept(() => {
-      const selected = quick_pick.selectedItems[0]
-      quick_pick.hide()
-      if (!selected) return resolve(null)
-
-      if (selected.label === custom_label) {
-        resolve({})
-      } else {
-        resolve({ id: selected.label })
-      }
-    })
-    quick_pick.onDidHide(() => {
-      quick_pick.dispose()
-      resolve(null)
-    })
-    quick_pick.show()
-  })
-
-  if (!choice) return
-
-  let new_name = ''
-  let new_base_url = ''
-
-  if (choice.id) {
-    const name = choice.id as keyof typeof PROVIDERS
-    const info = PROVIDERS[name]
-    new_name = name
-    new_base_url = info.base_url
+    break
   }
-
-  provider.postMessage({
-    command: 'START_PROVIDER_CREATION',
-    provider: {
-      name: new_name,
-      base_url: new_base_url,
-      api_key_mask: '',
-      extended_cache: undefined
-    },
-    insertion_index
-  })
 }
