@@ -639,13 +639,22 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     </KeycapWrapper>
                   </span>
                 ) : (
-                  {
-                    whole: props.translations.edit_format_whole,
-                    'search-replace':
-                      props.translations.edit_format_search_replace,
-                    diff: props.translations.edit_format_diff,
-                    truncated: props.translations.edit_format_truncated
-                  }[props.edit_format as EditFormat]
+                  <>
+                    +{' '}
+                    <span
+                      className={styles['footer__right__edit-format__text']}
+                    >
+                      {
+                        {
+                          whole: props.translations.edit_format_whole,
+                          'search-replace':
+                            props.translations.edit_format_search_replace,
+                          diff: props.translations.edit_format_diff,
+                          truncated: props.translations.edit_format_truncated
+                        }[props.edit_format as EditFormat]
+                      }
+                    </span>
+                  </>
                 )}
               </button>
             </div>
