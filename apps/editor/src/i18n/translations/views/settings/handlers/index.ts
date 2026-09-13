@@ -4,7 +4,7 @@ import { translations as select_default_api_configuration } from './select-defau
 import { translations as handle_pick_api_reasoning_effort } from './handle-pick-api-reasoning-effort'
 import { translations as handle_create_template } from './handle-create-template'
 import { translations as handle_delete_template } from './handle-delete-template'
-import { translations as handle_delete_model_provider } from './handle-delete-model-provider'
+import { translations as handle_delete_provider } from './handle-delete-provider'
 
 export const translations = {
   ...open_allow_patterns_settings,
@@ -13,5 +13,5 @@ export const translations = {
   ...handle_pick_api_reasoning_effort,
   ...handle_create_template,
   ...handle_delete_template,
-  ...handle_delete_model_provider
+  ...handle_delete_provider
 }

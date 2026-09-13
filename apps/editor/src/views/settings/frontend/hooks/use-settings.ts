@@ -51,7 +51,7 @@ export const use_settings = (vscode: any) => {
   >(undefined)
 
   useEffect(() => {
-    post_message(vscode, { command: 'GET_MODEL_PROVIDERS' })
+    post_message(vscode, { command: 'GET_PROVIDERS' })
     post_message(vscode, { command: 'GET_API_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_WEB_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS' })
@@ -75,7 +75,7 @@ export const use_settings = (vscode: any) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
-      if (message.command == 'MODEL_PROVIDERS') {
+      if (message.command == 'PROVIDERS') {
         set_providers(message.providers)
       } else if (message.command == 'API_CONFIGURATIONS') {
         set_api_configurations(message.api_configurations)
@@ -119,7 +119,7 @@ export const use_settings = (vscode: any) => {
   const handle_reorder_providers = (reordered_providers: Provider[]) => {
     set_providers(reordered_providers)
     post_message(vscode, {
-      command: 'REORDER_MODEL_PROVIDERS',
+      command: 'REORDER_PROVIDERS',
       providers: reordered_providers
     })
   }
@@ -129,7 +129,7 @@ export const use_settings = (vscode: any) => {
     exact_insertion?: boolean
   }) => {
     post_message(vscode, {
-      command: 'ADD_MODEL_PROVIDER',
+      command: 'ADD_PROVIDER',
       insertion_index: params?.insertion_index,
       exact_insertion: params?.exact_insertion
     })
@@ -137,7 +137,7 @@ export const use_settings = (vscode: any) => {
 
   const handle_delete_provider = (provider_name: string) => {
     post_message(vscode, {
-      command: 'DELETE_MODEL_PROVIDER',
+      command: 'DELETE_PROVIDER',
       provider_name
     })
   }

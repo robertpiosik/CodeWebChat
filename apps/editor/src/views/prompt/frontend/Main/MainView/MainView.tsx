@@ -232,7 +232,7 @@ export const MainView: React.FC<Props> = (props) => {
 
   const api_configurations_ui: UiConfigurations.Configuration[] =
     props.api_configurations.map((c) => {
-      const details = [c.model_provider_name]
+      const details = [c.provider_name]
       if (c.reasoning_effort) {
         details.push(`${c.reasoning_effort}`)
       }
@@ -473,7 +473,7 @@ export const MainView: React.FC<Props> = (props) => {
             }}
             selected_configuration_id={props.selected_web_configuration_name}
             translations={{
-              empty: t('configurations.empty'),
+              empty: t('chatbots.empty'),
               add_new: t('action.add-new'),
               pin: t('action.pin'),
               unpin: t('action.unpin'),

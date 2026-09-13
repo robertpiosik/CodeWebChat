@@ -1088,7 +1088,7 @@
             ]
           }
         },
-        "codeWebChat.modelProviders": {
+        "codeWebChat.providers": {
           "type": "array",
           "scope": "resource",
           "items": {

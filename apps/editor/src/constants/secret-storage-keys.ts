@@ -1,1 +1,1 @@
-export const SECRET_STORAGE_MODEL_PROVIDERS_KEY = 'model-providers'
+export const SECRET_STORAGE_PROVIDERS_KEY = 'providers'

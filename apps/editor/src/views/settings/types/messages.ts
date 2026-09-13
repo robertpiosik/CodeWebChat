@@ -10,30 +10,30 @@ export type Provider = {
 
 export type ApiConfiguration = {
   id: string
-  model_provider_name: string
+  provider_name: string
   model: string
   reasoning_effort?: string
   is_pinned?: boolean
 }
 
 // === FROM FRONTEND TO BACKEND ===
-export interface GetModelProvidersMessage {
-  command: 'GET_MODEL_PROVIDERS'
+export interface GetProvidersMessage {
+  command: 'GET_PROVIDERS'
 }
 
-export interface ReorderModelProvidersMessage {
-  command: 'REORDER_MODEL_PROVIDERS'
+export interface ReorderProvidersMessage {
+  command: 'REORDER_PROVIDERS'
   providers: Provider[]
 }
 
-export interface AddModelProviderMessage {
-  command: 'ADD_MODEL_PROVIDER'
+export interface AddProviderMessage {
+  command: 'ADD_PROVIDER'
   insertion_index?: number
   exact_insertion?: boolean
 }
 
-export interface DeleteModelProviderMessage {
-  command: 'DELETE_MODEL_PROVIDER'
+export interface DeleteProviderMessage {
+  command: 'DELETE_PROVIDER'
   provider_name: string
 }
 
@@ -222,28 +222,28 @@ export interface ReorderApiConfigurationsMessage {
   api_configurations: ApiConfiguration[]
 }
 
-export interface PickModelProviderMessage {
-  command: 'PICK_MODEL_PROVIDER'
-  current_model_provider_name?: string
+export interface PickProviderMessage {
+  command: 'PICK_PROVIDER'
+  current_provider_name?: string
 }
 
 export interface PickApiModelMessage {
   command: 'PICK_API_MODEL'
-  model_provider_name: string
+  provider_name: string
   current_model?: string
 }
 
 export interface PickApiReasoningEffortMessage {
   command: 'PICK_API_REASONING_EFFORT'
   current_effort?: string
-  model_provider_name: string
+  provider_name: string
   model: string
 }
 
-export interface UpdateModelProviderMessage {
-  command: 'UPDATE_MODEL_PROVIDER'
+export interface UpdateProviderMessage {
+  command: 'UPDATE_PROVIDER'
   original_name?: string
-  updating_model_provider?: Provider
+  updating_provider?: Provider
   provider: {
     name: string
     base_url: string
@@ -289,10 +289,10 @@ export interface GetIsModernUiMessage {
 }
 
 export type FrontendMessage =
-  | GetModelProvidersMessage
-  | ReorderModelProvidersMessage
-  | AddModelProviderMessage
-  | DeleteModelProviderMessage
+  | GetProvidersMessage
+  | ReorderProvidersMessage
+  | AddProviderMessage
+  | DeleteProviderMessage
   | GetApiConfigurationsMessage
   | SetDefaultApiConfigurationMessage
   | SelectDefaultApiConfigurationMessage
@@ -330,10 +330,10 @@ export type FrontendMessage =
   | UpdateApiConfigurationMessage
   | DeleteApiConfigurationMessage
   | ReorderApiConfigurationsMessage
-  | PickModelProviderMessage
+  | PickProviderMessage
   | PickApiModelMessage
   | PickApiReasoningEffortMessage
-  | UpdateModelProviderMessage
+  | UpdateProviderMessage
   | GetIsModernUiMessage
   | GetTemplatesMessage
   | UpdateTemplatesMessage
@@ -341,8 +341,8 @@ export type FrontendMessage =
   | DeleteTemplateMessage
 
 // === FROM BACKEND TO FRONTEND ===
-export interface ModelProvidersMessage {
-  command: 'MODEL_PROVIDERS'
+export interface ProvidersMessage {
+  command: 'PROVIDERS'
   providers: Provider[]
 }
 
@@ -438,9 +438,9 @@ export interface ApiConfigurationUpdatedMessage {
   command: 'API_CONFIGURATION_UPDATED'
 }
 
-export interface NewlyPickedModelProviderMessage {
-  command: 'NEWLY_PICKED_MODEL_PROVIDER'
-  model_provider_name: string
+export interface NewlyPickedProviderMessage {
+  command: 'NEWLY_PICKED_PROVIDER'
+  provider_name: string
 }
 
 export interface NewlyPickedApiModelMessage {
@@ -453,14 +453,14 @@ export interface NewlyPickedApiReasoningEffortMessage {
   effort?: string
 }
 
-export interface StartModelProviderCreationMessage {
-  command: 'START_MODEL_PROVIDER_CREATION'
+export interface StartProviderCreationMessage {
+  command: 'START_PROVIDER_CREATION'
   provider: Provider
   insertion_index?: number
 }
 
-export interface ModelProviderUpdatedMessage {
-  command: 'MODEL_PROVIDER_UPDATED'
+export interface ProviderUpdatedMessage {
+  command: 'PROVIDER_UPDATED'
 }
 
 export interface IsModernUiMessage {
@@ -481,7 +481,7 @@ export interface StartTemplateCreationMessage {
 }
 
 export type BackendMessage =
-  | ModelProvidersMessage
+  | ProvidersMessage
   | ApiConfigurationsMessage
   | CommitMessageInstructionsMessage
   | AttachAsciiTreeOfContextMessage
@@ -500,11 +500,11 @@ export type BackendMessage =
   | StartWebConfigurationCreationMessage
   | StartApiConfigurationCreationMessage
   | ApiConfigurationUpdatedMessage
-  | NewlyPickedModelProviderMessage
+  | NewlyPickedProviderMessage
   | NewlyPickedApiModelMessage
   | NewlyPickedApiReasoningEffortMessage
-  | StartModelProviderCreationMessage
-  | ModelProviderUpdatedMessage
+  | StartProviderCreationMessage
+  | ProviderUpdatedMessage
   | IsModernUiMessage
   | TemplatesMessage
   | StartTemplateCreationMessage

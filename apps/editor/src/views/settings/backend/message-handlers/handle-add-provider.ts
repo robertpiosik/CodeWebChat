@@ -1,12 +1,12 @@
 import * as vscode from 'vscode'
 import { SettingsViewProvider } from '../settings-view-provider'
 import { PROVIDERS } from '@/constants/providers'
-import { AddModelProviderMessage } from '@/views/settings/types/messages'
+import { AddProviderMessage } from '@/views/settings/types/messages'
 import { t } from '@/i18n'
 
-export const handle_add_model_provider = async (
+export const handle_add_provider = async (
   provider: SettingsViewProvider,
-  message: AddModelProviderMessage
+  message: AddProviderMessage
 ): Promise<void> => {
   let insertion_index: number | undefined = message.insertion_index
 
@@ -86,7 +86,7 @@ export const handle_add_model_provider = async (
 
   const quick_pick = vscode.window.createQuickPick()
   quick_pick.items = items
-  quick_pick.title = 'Model Providers'
+  quick_pick.title = 'Providers'
   quick_pick.placeholder =
     'Choose a predefined provider or add a custom endpoint'
 
@@ -133,7 +133,7 @@ export const handle_add_model_provider = async (
   }
 
   provider.postMessage({
-    command: 'START_MODEL_PROVIDER_CREATION',
+    command: 'START_PROVIDER_CREATION',
     provider: {
       name: new_name,
       base_url: new_base_url,

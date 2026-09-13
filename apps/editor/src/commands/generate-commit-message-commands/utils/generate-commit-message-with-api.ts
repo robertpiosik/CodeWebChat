@@ -5,13 +5,13 @@ import { send_llm_message } from '@/utils/send-llm-message'
 import { display_token_count } from '@shared/utils/display-token-count'
 import { Logger } from '@shared/utils/logger'
 import { strip_wrapping_quotes } from './strip-wrapping-quotes'
-import { ModelProvider } from '@/services/model-providers-manager'
+import { Provider } from '@/services/providers-manager'
 import { t } from '@/i18n'
 import { CommitMessageApiConfiguration } from './get-commit-message-config'
 
 export const generate_commit_message_with_api = async (params: {
   base_url: string
-  model_provider: ModelProvider
+  provider: Provider
   api_configuration: CommitMessageApiConfiguration
   message: string
 }): Promise<string> => {
@@ -29,7 +29,7 @@ export const generate_commit_message_with_api = async (params: {
 
   apply_reasoning_effort({
     body,
-    model_provider: params.model_provider,
+    provider: params.provider,
     reasoning_effort: params.api_configuration.reasoning_effort
   })
 
@@ -57,7 +57,7 @@ export const generate_commit_message_with_api = async (params: {
       try {
         const response_result = await send_llm_message({
           base_url: params.base_url,
-          api_key: params.model_provider.api_key,
+          api_key: params.provider.api_key,
           body,
           abort_signal: abort_controller.signal,
           on_chunk: () => {

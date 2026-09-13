@@ -1,41 +1,26 @@
 export const translations = {
   'api.title': {
-    en: 'API',
-    pl: 'API',
-    'zh-cn': 'API',
-    ja: 'API',
-    'zh-tw': 'API',
-    de: 'API',
-    es: 'API',
-    fr: 'API',
-    'pt-br': 'API',
-    ru: 'API',
-    ko: 'API',
-    it: 'API',
-    tr: 'API',
-    cs: 'API',
-    hu: 'API',
-    bg: 'API'
+    en: 'API'
   },
-  'api-calls.model-providers.title': {
-    en: 'Model Providers',
-    pl: 'Dostawcy modeli',
-    'zh-cn': '模型提供商',
-    ja: 'モデルプロバイダー',
-    'zh-tw': '模型供應商',
-    de: 'Modellanbieter',
-    es: 'Proveedores de modelos',
-    fr: 'Fournisseurs de modèles',
-    'pt-br': 'Provedores de Modelos',
-    ru: 'Провайдеры моделей',
-    ko: '모델 제공자',
-    it: 'Fornitori di modelli',
-    tr: 'Model Sağlayıcılar',
-    cs: 'Poskytovatelé modelů',
-    hu: 'Modell Szolgáltatók',
-    bg: 'Доставчици на модели'
+  'api.providers.title': {
+    en: 'Providers',
+    pl: 'Dostawcy',
+    'zh-cn': '提供商',
+    ja: 'プロバイダー',
+    'zh-tw': '供應商',
+    de: 'Anbieter',
+    es: 'Proveedores',
+    fr: 'Fournisseurs',
+    'pt-br': 'Provedores',
+    ru: 'Провайдеры',
+    ko: '제공자',
+    it: 'Fornitori',
+    tr: 'Sağlayıcılar',
+    cs: 'Poskytovatelé',
+    hu: 'Szolgáltatók',
+    bg: 'Доставчици'
   },
-  'api-calls.model-providers.subtitle': {
+  'api.providers.subtitle': {
     en: 'Setup from predefined endpoints or add a custom one.',
     pl: 'Skonfiguruj z predefiniowanych endpointów lub dodaj własny.',
     'zh-cn': '从预定义端点进行设置或添加自定义端点。',
@@ -54,7 +39,7 @@ export const translations = {
     hu: 'Beállítás előre definiált végpontokból vagy egyedi hozzáadása.',
     bg: 'Настройка от предефинирани крайни точки или добавяне на персонализирана.'
   },
-  'api-calls.notice.credentials': {
+  'api.notice.credentials': {
     en: 'Credentials are stored securely in the {link} on your machine.',
     pl: 'Dane uwierzytelniające są bezpiecznie przechowywane w {link} na twoim komputerze.',
     'zh-cn': '凭据安全地存储在您机器上的 {link} 中。',
@@ -73,7 +58,7 @@ export const translations = {
     hu: 'A hitelesítő adatok biztonságosan vannak tárolva a {link} a gépén.',
     bg: 'Идентификационните данни се съхраняват сигурно в {link} на вашата машина.'
   },
-  'api-calls.model-providers.action.edit': {
+  'api.providers.action.edit': {
     en: 'Edit provider',
     pl: 'Edytuj dostawcę',
     'zh-cn': '编辑提供商',
@@ -91,7 +76,7 @@ export const translations = {
     hu: 'Szolgáltató szerkesztése',
     bg: 'Редактиране на доставчик'
   },
-  'api-calls.model-providers.action.delete': {
+  'api.providers.action.delete': {
     en: 'Delete provider',
     pl: 'Usuń dostawcę',
     'zh-cn': '删除提供商',
@@ -109,43 +94,43 @@ export const translations = {
     hu: 'Szolgáltató törlése',
     bg: 'Изтриване на доставчик'
   },
-  'api-calls.model-providers.item': {
-    en: 'model provider',
-    pl: 'dostawca modelu',
-    'zh-cn': '模型提供商',
-    ja: 'モデルプロバイダー',
-    'zh-tw': '模型供應商',
-    de: 'Modellanbieter',
-    es: 'proveedor de modelos',
-    fr: 'fournisseur de modèles',
-    'pt-br': 'provedor de modelos',
-    ru: 'провайдер модели',
-    ko: '모델 제공자',
-    it: 'fornitore di modelli',
-    tr: 'model sağlayıcı',
-    cs: 'poskytovatel modelu',
-    hu: 'modell szolgáltató',
-    bg: 'доставчик на модели'
+  'api.providers.item': {
+    en: 'provider',
+    pl: 'dostawca',
+    'zh-cn': '提供商',
+    ja: 'プロバイダー',
+    'zh-tw': '供應商',
+    de: 'Anbieter',
+    es: 'proveedor',
+    fr: 'fournisseur',
+    'pt-br': 'provedor',
+    ru: 'провайдер',
+    ko: '제공자',
+    it: 'fornitore',
+    tr: 'sağlayıcı',
+    cs: 'poskytovatel',
+    hu: 'szolgáltató',
+    bg: 'доставчик'
   },
-  'api-calls.model-providers.items': {
-    en: 'model providers',
-    pl: 'dostawcy modelu',
-    'zh-cn': '模型提供商',
-    ja: 'モデルプロバイダー',
-    'zh-tw': '模型供應商',
-    de: 'Modellanbieter',
-    es: 'proveedores de modelos',
-    fr: 'fournisseurs de modèles',
-    'pt-br': 'provedores de modelos',
-    ru: 'провайдеры модели',
-    ko: '모델 제공자',
-    it: 'fornitori di modelli',
-    tr: 'model sağlayıcılar',
-    cs: 'poskytovatelé modelu',
-    hu: 'modell szolgáltatók',
-    bg: 'доставчици на модели'
+  'api.providers.items': {
+    en: 'providers',
+    pl: 'dostawcy',
+    'zh-cn': '提供商',
+    ja: 'プロバイダー',
+    'zh-tw': '供應商',
+    de: 'Anbieter',
+    es: 'proveedores',
+    fr: 'fournisseurs',
+    'pt-br': 'provedores',
+    ru: 'провайдеры',
+    ko: '제공자',
+    it: 'fornitori',
+    tr: 'sağlayıcılar',
+    cs: 'poskytovatelé',
+    hu: 'szolgáltatók',
+    bg: 'доставчици'
   },
-  'api-calls.configurations.title': {
+  'api.configurations.title': {
     en: 'Configurations',
     pl: 'Konfiguracje',
     'zh-cn': '配置',
@@ -163,7 +148,7 @@ export const translations = {
     hu: 'Konfigurációk',
     bg: 'Конфигурации'
   },
-  'api-calls.subtitle': {
+  'api.subtitle': {
     en: 'Send prompts from within the editor.',
     pl: 'Wysyłaj prompty z poziomu edytora.',
     'zh-cn': '在编辑器内发送提示。',
@@ -181,7 +166,7 @@ export const translations = {
     hu: 'Küldjön promptokat a szerkesztőből.',
     bg: 'Изпращайте промптове от самия редактор.'
   },
-  'api-calls.configurations.action.edit': {
+  'api.configurations.action.edit': {
     en: 'Edit configuration',
     pl: 'Edytuj konfigurację',
     'zh-cn': '编辑配置',
@@ -199,7 +184,7 @@ export const translations = {
     hu: 'Konfiguráció szerkesztése',
     bg: 'Редактиране на конфигурация'
   },
-  'api-calls.configurations.action.duplicate': {
+  'api.configurations.action.duplicate': {
     en: 'Duplicate configuration',
     pl: 'Duplikuj konfigurację',
     'zh-cn': '复制配置',
@@ -217,7 +202,7 @@ export const translations = {
     hu: 'Konfiguráció duplikálása',
     bg: 'Дублиране на конфигурация'
   },
-  'api-calls.configurations.action.delete': {
+  'api.configurations.action.delete': {
     en: 'Delete configuration',
     pl: 'Usuń konfigurację',
     'zh-cn': '删除配置',
@@ -235,7 +220,7 @@ export const translations = {
     hu: 'Konfiguráció törlése',
     bg: 'Изтриване на конфигурация'
   },
-  'api-calls.configurations.action.select-default': {
+  'api.configurations.action.select-default': {
     en: 'Select default configuration',
     pl: 'Wybierz domyślną konfigurację',
     'zh-cn': '选择默认配置',
@@ -253,7 +238,7 @@ export const translations = {
     hu: 'Alapértelmezett konfiguráció kiválasztása',
     bg: 'Избор на конфигурация по подразбиране'
   },
-  'api-calls.configurations.action.unset-default': {
+  'api.configurations.action.unset-default': {
     en: 'Unset default',
     pl: 'Usuń domyślne',
     'zh-cn': '取消默认',
@@ -271,7 +256,7 @@ export const translations = {
     hu: 'Alapértelmezett törlése',
     bg: 'Премахни подразбиране'
   },
-  'api-calls.configurations.action.restore-default': {
+  'api.configurations.action.restore-default': {
     en: 'Restore to default',
     pl: 'Przywróć domyślne',
     'zh-cn': '恢复默认',
@@ -289,7 +274,7 @@ export const translations = {
     hu: 'Alapértelmezett visszaállítása',
     bg: 'Възстанови по подразбиране'
   },
-  'api-calls.configurations.item': {
+  'api.configurations.item': {
     en: 'configuration',
     pl: 'konfiguracja',
     'zh-cn': '配置',
@@ -307,7 +292,7 @@ export const translations = {
     hu: 'konfiguráció',
     bg: 'конфигурация'
   },
-  'api-calls.configurations.items': {
+  'api.configurations.items': {
     en: 'configurations',
     pl: 'konfiguracje',
     'zh-cn': '配置',
@@ -325,7 +310,7 @@ export const translations = {
     hu: 'konfigurációk',
     bg: 'конфигурации'
   },
-  'api-calls.configurations.items-many': {
+  'api.configurations.items-many': {
     en: 'configurations',
     pl: 'konfiguracji',
     'zh-cn': '配置',
@@ -343,7 +328,7 @@ export const translations = {
     hu: 'konfigurációk',
     bg: 'конфигурации'
   },
-  'api-calls.default-configurations.title': {
+  'api.default-configurations.title': {
     en: 'Defaults',
     pl: 'Domyślne',
     'zh-cn': '默认',
@@ -361,7 +346,7 @@ export const translations = {
     hu: 'Alapértelmezettek',
     bg: 'По подразбиране'
   },
-  'api-calls.default-configurations.tool.code-at-cursor': {
+  'api.default-configurations.tool.code-at-cursor': {
     en: 'Code at Cursor',
     pl: 'Autouzupełnianie',
     'zh-cn': '自动补全',
@@ -379,7 +364,7 @@ export const translations = {
     hu: 'Automatikus kiegészítés',
     bg: 'Автодопълване'
   },
-  'api-calls.default-configurations.tool.patch-repair': {
+  'api.default-configurations.tool.patch-repair': {
     en: 'Patch Repair',
     pl: 'Naprawa patchy',
     'zh-cn': '智能更新',
@@ -397,7 +382,7 @@ export const translations = {
     hu: 'Intelligens Frissítés',
     bg: 'Интелигентно актуализиране'
   },
-  'api-calls.default-configurations.tool.commit-messages': {
+  'api.default-configurations.tool.commit-messages': {
     en: 'Commit Messages',
     pl: 'Wiadomości commitów',
     'zh-cn': '提交信息',
@@ -415,7 +400,7 @@ export const translations = {
     hu: 'Commit Üzenetek',
     bg: 'Съобщения за commit'
   },
-  'api-calls.default-configurations.tool.intelligent-file-search': {
+  'api.default-configurations.tool.intelligent-file-search': {
     en: 'Intelligent File Search',
     pl: 'Inteligentne wyszukiwanie plików',
     'zh-cn': '智能文件搜索',
@@ -433,7 +418,7 @@ export const translations = {
     hu: 'Intelligens fájlkeresés',
     bg: 'Интелигентно търсене на файлове'
   },
-  'api-calls.default-configurations.tool.voice-input': {
+  'api.default-configurations.tool.voice-input': {
     en: 'Voice Input',
     pl: 'Wprowadzanie głosowe',
     'zh-cn': '语音输入',
@@ -451,7 +436,7 @@ export const translations = {
     hu: 'Hangbemenet',
     bg: 'Гласово въвеждане'
   },
-  'api-calls.system-instructions.title': {
+  'api.system-instructions.title': {
     en: 'System Instructions',
     pl: 'Instrukcje systemowe',
     'zh-cn': '系统指令',
@@ -469,7 +454,7 @@ export const translations = {
     hu: 'Rendszer Utasítások',
     bg: 'Системни инструкции'
   },
-  'api-calls.system-instructions.edit-files.title': {
+  'api.system-instructions.edit-files.title': {
     en: 'Edit Files',
     pl: 'Edytuj pliki',
     'zh-cn': '编辑文件',
@@ -487,7 +472,7 @@ export const translations = {
     hu: 'Fájlok szerkesztése',
     bg: 'Редактиране на файлове'
   },
-  'api-calls.system-instructions.edit-files.description': {
+  'api.system-instructions.edit-files.description': {
     en: "Tone and style instructions for the model when using the 'Edit Files' prompt type with API calls.",
     pl: 'Instrukcje dotyczące tonu i stylu dla modelu przy użyciu typu promptu Edycji Plików z zapytaniami API.',
     'zh-cn': '使用编辑上下文提示类型进行 API 调用时，模型的语气和样式说明。',

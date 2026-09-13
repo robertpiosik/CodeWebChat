@@ -1,8 +1,8 @@
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import {
-  ModelProvidersManager,
+  ProvidersManager,
   get_api_configuration_id
-} from '@/services/model-providers-manager'
+} from '@/services/providers-manager'
 import { TogglePinnedApiConfigurationMessage } from '@/views/prompt/types/messages'
 import { handle_get_api_configurations } from './handle-get-api-configurations'
 
@@ -11,7 +11,7 @@ export const handle_toggle_pinned_api_configuration = async (
   message: TogglePinnedApiConfigurationMessage
 ): Promise<void> => {
   const { api_configuration_id } = message
-  const providers_manager = new ModelProvidersManager(
+  const providers_manager = new ProvidersManager(
     prompt_view_provider.extension_context
   )
   const api_configurations = await providers_manager.get_api_configurations()

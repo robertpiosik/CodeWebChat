@@ -3,9 +3,9 @@ import { SetRecordingStateMessage } from '../../types/messages'
 import { spawn } from 'child_process'
 import { Logger } from '@shared/utils/logger'
 import {
-  ModelProvidersManager,
+  ProvidersManager,
   ApiConfiguration
-} from '@/services/model-providers-manager'
+} from '@/services/providers-manager'
 import * as vscode from 'vscode'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import axios from 'axios'
@@ -119,16 +119,16 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
     prompt_view_provider.audio_chunks = []
 
     try {
-      const model_providers_manager = new ModelProvidersManager(
+      const providers_manager = new ProvidersManager(
         prompt_view_provider.extension_context
       )
       const api_configurations =
-        await model_providers_manager.get_api_configurations()
+        await providers_manager.get_api_configurations()
 
       if (api_configurations.length == 0) return
 
       let api_configuration: ApiConfiguration | undefined =
-        await model_providers_manager.get_default_voice_input_api_configuration()
+        await providers_manager.get_default_voice_input_api_configuration()
 
       if (!api_configuration) {
         if (api_configurations.length == 1) {
@@ -164,14 +164,14 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
         cancellable: true
       })
 
-      const model_provider = await model_providers_manager.get_model_provider(
-        api_configuration!.model_provider_name
+      const provider = await providers_manager.get_provider(
+        api_configuration!.provider_name
       )
 
-      if (!model_provider) {
+      if (!provider) {
         vscode.window.showErrorMessage(
           t('views.prompt.handlers.voice-input.error.provider-not-found', {
-            name: api_configuration!.model_provider_name
+            name: api_configuration!.provider_name
           })
         )
         return
@@ -201,15 +201,15 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
 
       apply_reasoning_effort({
         body,
-        model_provider,
+        provider,
         reasoning_effort: api_configuration.reasoning_effort
       })
 
       prompt_view_provider.api_call_abort_controller = new AbortController()
 
       const result = await send_llm_message({
-        base_url: model_provider.base_url,
-        api_key: model_provider.api_key,
+        base_url: provider.base_url,
+        api_key: provider.api_key,
         body,
         abort_signal: prompt_view_provider.api_call_abort_controller.signal
       })
@@ -258,11 +258,11 @@ export const handle_voice_input = async (
   }
 
   if (message.is_recording) {
-    const model_providers_manager = new ModelProvidersManager(
+    const providers_manager = new ProvidersManager(
       prompt_view_provider.extension_context
     )
     const api_configurations =
-      await model_providers_manager.get_api_configurations()
+      await providers_manager.get_api_configurations()
 
     if (api_configurations.length == 0) {
       open_settings.api.api_configurations()

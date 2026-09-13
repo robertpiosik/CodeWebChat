@@ -1,9 +1,9 @@
 import * as vscode from 'vscode'
 import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
 import {
-  ModelProvidersManager,
+  ProvidersManager,
   get_api_configuration_id
-} from '@/services/model-providers-manager'
+} from '@/services/providers-manager'
 import { SelectDefaultApiConfigurationMessage } from '@/views/settings/types/messages'
 import { handle_set_default_api_configuration } from './handle-set-default-api-configuration'
 import { t } from '@/i18n'
@@ -13,7 +13,7 @@ export const handle_select_default_api_configuration = async (
   provider: SettingsViewProvider,
   message: SelectDefaultApiConfigurationMessage
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(
+  const providers_manager = new ProvidersManager(
     provider.extension_context
   )
   const api_configurations = await providers_manager.get_api_configurations()
@@ -26,7 +26,7 @@ export const handle_select_default_api_configuration = async (
   }
 
   const items = api_configurations.map((c) => {
-    const description_parts = [c.model_provider_name]
+    const description_parts = [c.provider_name]
     if (c.reasoning_effort) {
       description_parts.push(`${c.reasoning_effort}`)
     }
@@ -71,14 +71,14 @@ export const handle_select_default_api_configuration = async (
           (c) => get_api_configuration_id(c) == selected.api_configuration_id
         )
         if (api_configuration) {
-          const model_provider = await providers_manager.get_model_provider(
-            api_configuration.model_provider_name
+          const provider_inst = await providers_manager.get_provider(
+            api_configuration.provider_name
           )
-          if (model_provider) {
+          if (provider_inst) {
             const is_valid = await verify_model({
               model: api_configuration.model,
-              base_url: model_provider.base_url,
-              api_key: model_provider.api_key,
+              base_url: provider_inst.base_url,
+              api_key: provider_inst.api_key,
               is_voice_input: true
             })
             if (!is_valid) {

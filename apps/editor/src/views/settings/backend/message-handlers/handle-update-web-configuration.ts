@@ -12,12 +12,12 @@ export const handle_update_web_configuration = async (
     const discard_button = 'Discard'
     const result = await vscode.window.showWarningMessage(
       t('views.common.handlers.common.confirm-discard-unsaved-changes', {
-        item_type: 'web configuration'
+        item_type: 'chatbot'
       }),
       {
         modal: true,
         detail: t('views.common.handlers.common.unsaved-changes-will-be-lost', {
-          item_type: 'web configuration'
+          item_type: 'chatbot'
         })
       },
       discard_button

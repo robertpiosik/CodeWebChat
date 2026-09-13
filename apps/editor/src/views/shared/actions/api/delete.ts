@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
 import {
-  ModelProvidersManager,
+  ProvidersManager,
   get_api_configuration_id
-} from '@/services/model-providers-manager'
+} from '@/services/providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 
@@ -10,7 +10,7 @@ export const remove = async (params: {
   extension_context: vscode.ExtensionContext
   api_configuration_id: string
 }): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(params.extension_context)
+  const providers_manager = new ProvidersManager(params.extension_context)
 
   const original_api_configurations =
     await providers_manager.get_api_configurations()
@@ -29,7 +29,7 @@ export const remove = async (params: {
       modal: true,
       detail: dictionary.warning_message.CONFIRM_DELETE_CONFIGURATION(
         api_config_to_delete.model,
-        api_config_to_delete.model_provider_name
+        api_config_to_delete.provider_name
       )
     },
     delete_button

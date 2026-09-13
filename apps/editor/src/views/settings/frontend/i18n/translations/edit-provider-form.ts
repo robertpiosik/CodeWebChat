@@ -1,5 +1,5 @@
 export const translations = {
-  'edit-model-provider-form.name.label': {
+  'edit-provider-form.name.label': {
     en: 'Name',
     pl: 'Nazwa',
     'zh-cn': '名称',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Név',
     bg: 'Име'
   },
-  'edit-model-provider-form.name.placeholder': {
+  'edit-provider-form.name.placeholder': {
     en: 'e.g. OpenAI',
     pl: 'np. OpenAI',
     'zh-cn': '例如 OpenAI',
@@ -35,7 +35,7 @@ export const translations = {
     hu: 'pl. OpenAI',
     bg: 'напр. OpenAI'
   },
-  'edit-model-provider-form.base-url.label': {
+  'edit-provider-form.base-url.label': {
     en: 'Base URL',
     pl: 'Bazowy adres URL',
     'zh-cn': '基础 URL',
@@ -53,7 +53,7 @@ export const translations = {
     hu: 'Alap URL',
     bg: 'Базов URL'
   },
-  'edit-model-provider-form.base-url.placeholder': {
+  'edit-provider-form.base-url.placeholder': {
     en: 'e.g. https://api.openai.com/v1',
     pl: 'np. https://api.openai.com/v1',
     'zh-cn': '例如 https://api.openai.com/v1',
@@ -71,7 +71,7 @@ export const translations = {
     hu: 'pl. https://api.openai.com/v1',
     bg: 'напр. https://api.openai.com/v1'
   },
-  'edit-model-provider-form.api-key.label': {
+  'edit-provider-form.api-key.label': {
     en: 'API Key',
     pl: 'Klucz API',
     'zh-cn': 'API 密钥',
@@ -89,7 +89,7 @@ export const translations = {
     hu: 'API Kulcs',
     bg: 'API Ключ'
   },
-  'edit-model-provider-form.api-key.action.clear': {
+  'edit-provider-form.api-key.action.clear': {
     en: 'Clear',
     pl: 'Wyczyść',
     'zh-cn': '清除',
@@ -107,7 +107,7 @@ export const translations = {
     hu: 'Törlés',
     bg: 'Изчистване'
   },
-  'edit-model-provider-form.api-key.placeholder.cleared': {
+  'edit-provider-form.api-key.placeholder.cleared': {
     en: 'API Key cleared',
     pl: 'Klucz API wyczyszczony',
     'zh-cn': 'API 密钥已清除',
@@ -125,7 +125,7 @@ export const translations = {
     hu: 'API Kulcs törölve',
     bg: 'API ключът е изчистен'
   },
-  'edit-model-provider-form.api-key.placeholder.default': {
+  'edit-provider-form.api-key.placeholder.default': {
     en: 'Enter API Key',
     pl: 'Wprowadź klucz API',
     'zh-cn': '输入 API 密钥',
@@ -143,7 +143,7 @@ export const translations = {
     hu: 'Adja meg az API Kulcsot',
     bg: 'Въведете API ключ'
   },
-  'edit-model-provider-form.extended-cache.anthropic.title': {
+  'edit-provider-form.extended-cache.anthropic.title': {
     en: 'Extended Cache for Anthropic',
     pl: 'Rozszerzona pamięć podręczna dla Anthropic',
     'zh-cn': 'Anthropic 的扩展缓存',
@@ -161,7 +161,7 @@ export const translations = {
     hu: 'Bővített gyorsítótár Anthropic-hoz',
     bg: 'Разширен кеш за Anthropic'
   },
-  'edit-model-provider-form.extended-cache.anthropic.description': {
+  'edit-provider-form.extended-cache.anthropic.description': {
     en: 'Enable 1-hour prompt caching for requests including the selected files.',
     pl: 'Włącz 1-godzinne buforowanie promptów dla zapytań zawierających wybrane pliki.',
     'zh-cn': '为包含所选文件的请求启用 1 小时提示词缓存。',
@@ -180,7 +180,7 @@ export const translations = {
     hu: 'Engedélyezze az 1 órás prompt gyorsítótárazást a kiválasztott fájlokat tartalmazó kérésekhez.',
     bg: 'Включете 1-часово кеширане на промптове за заявки, включващи избраните файлове.'
   },
-  'edit-model-provider-form.extended-cache.anthropic.learn-more': {
+  'edit-provider-form.extended-cache.anthropic.learn-more': {
     en: 'Learn more',
     pl: 'Dowiedz się więcej',
     'zh-cn': '了解更多',

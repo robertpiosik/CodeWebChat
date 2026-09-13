@@ -1,8 +1,8 @@
 import { PROVIDERS } from '@/constants/providers'
-import { ModelProvider } from '@/services/model-providers-manager'
+import { Provider } from '@/services/providers-manager'
 
 export const build_user_content = (params: {
-  model_provider: ModelProvider
+  provider: Provider
   part1: string
   part2: string
 }): any => {
@@ -31,15 +31,15 @@ export const build_user_content = (params: {
   }
 
   const is_anthropic =
-    params.model_provider.base_url == PROVIDERS.Anthropic.base_url
-  const is_openai = params.model_provider.base_url == PROVIDERS.OpenAI.base_url
+    params.provider.base_url == PROVIDERS.Anthropic.base_url
+  const is_openai = params.provider.base_url == PROVIDERS.OpenAI.base_url
 
   if (is_anthropic || is_openai) {
     const cache_config: any = {}
 
     if (is_anthropic) {
       cache_config.cache_control = { type: 'ephemeral' }
-      if (params.model_provider.extended_cache) {
+      if (params.provider.extended_cache) {
         cache_config.cache_control.ttl = '1h'
       }
     } else if (is_openai) {

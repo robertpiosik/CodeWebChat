@@ -10,14 +10,14 @@ import { build_user_content } from '@/utils/build-user-content'
 import { extract_paths_from_bullet_list } from '@/utils/extract-paths-from-bullet-list'
 import { Logger } from '@shared/utils/logger'
 import { FileData } from './analyze-files'
-import { ModelProvider } from '@/services/model-providers-manager'
+import { Provider } from '@/services/providers-manager'
 import { t } from '@/i18n'
 
 export const search_files_by_intelligent = async (
   files_data: FileData[],
   shrink_result: boolean,
   instructions: string,
-  model_provider: ModelProvider,
+  provider: Provider,
   selected_config: any
 ): Promise<string[] | 'cancel' | 'error_no_files' | 'error'> => {
   let md_files = ''
@@ -35,7 +35,7 @@ export const search_files_by_intelligent = async (
   const part1 = `# Files\n\n${md_files}`
   const part2 = `# Task\n\n${base_instructions}\n\n# Output formatting\n\n${ai_file_search_format_instructions}\n\n# Query\n\n${instructions}`
   const user_content = build_user_content({
-    model_provider,
+    provider,
     part1,
     part2
   })
@@ -48,7 +48,7 @@ export const search_files_by_intelligent = async (
 
   apply_reasoning_effort({
     body,
-    model_provider,
+    provider,
     reasoning_effort: selected_config.reasoning_effort
   })
 
@@ -67,8 +67,8 @@ export const search_files_by_intelligent = async (
         })
         progress.report({ message: t('common.progress.waiting-for-server') })
         return await send_llm_message({
-          base_url: model_provider.base_url,
-          api_key: model_provider.api_key,
+          base_url: provider.base_url,
+          api_key: provider.api_key,
           body,
           abort_signal: abort_controller.signal,
           on_chunk: () =>

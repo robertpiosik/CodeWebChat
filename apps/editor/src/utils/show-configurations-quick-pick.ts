@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import {
   ApiConfiguration,
   get_api_configuration_id
-} from '@/services/model-providers-manager'
+} from '@/services/providers-manager'
 import { t } from '@/i18n'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
@@ -19,7 +19,7 @@ export type ShowConfigurationsQuickPickOptions<T> = {
 const map_api_configuration_to_item = (
   api_configuration: ApiConfiguration
 ) => {
-  const description_parts = [api_configuration.model_provider_name]
+  const description_parts = [api_configuration.provider_name]
   if (api_configuration.reasoning_effort) {
     description_parts.push(`${api_configuration.reasoning_effort}`)
   }

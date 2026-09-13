@@ -1,16 +1,16 @@
 import { SettingsViewProvider } from '../settings-view-provider'
-import { ModelProvidersManager } from '@/services/model-providers-manager'
+import { ProvidersManager } from '@/services/providers-manager'
 
 export const handle_reorder_api_configurations = async (
   provider: SettingsViewProvider,
   message: any
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(
+  const providers_manager = new ProvidersManager(
     provider.extension_context
   )
   const current_configs = await providers_manager.get_api_configurations()
   const { get_api_configuration_id } =
-    await import('@/services/model-providers-manager')
+    await import('@/services/providers-manager')
 
   const sorted_configs = message.api_configurations
     .map((ordered_config: any) =>

@@ -31,11 +31,11 @@ export const update = async (params: {
 
     if (web_configuration_index == -1 && params.origin != 'cancel') {
       console.error(
-        `web configuration with original name "${params.updating_web_configuration.name}" not found.`
+        `chatbot with original name "${params.updating_web_configuration.name}" not found.`
       )
       vscode.window.showErrorMessage(
         dictionary.error_message.COULD_NOT_UPDATE_ITEM_NOT_FOUND(
-          'web configuration',
+          'chatbot',
           params.updating_web_configuration.name!
         )
       )
@@ -69,12 +69,12 @@ export const update = async (params: {
     const discard_button = t('views.shared.actions.web.update.discard')
     const result = await vscode.window.showWarningMessage(
       t('views.common.handlers.common.confirm-discard-unsaved-changes', {
-        item_type: 'web configuration'
+        item_type: 'chatbot'
       }),
       {
         modal: true,
         detail: t('views.common.handlers.common.unsaved-changes-will-be-lost', {
-          item_type: 'web configuration'
+          item_type: 'chatbot'
         })
       },
       discard_button

@@ -87,7 +87,7 @@ import {
 } from './message-handlers'
 import { handle_agentic_search } from './message-handlers/handle-agentic-search/handle-agentic-search'
 import { handle_update_api_configuration } from './message-handlers/handle-update-api-configuration'
-import { handle_pick_model_provider } from './message-handlers/handle-pick-model-provider'
+import { handle_pick_provider } from './message-handlers/handle-pick-provider'
 import { handle_pick_api_model } from './message-handlers/handle-pick-api-model'
 import { handle_pick_api_reasoning_effort } from './message-handlers/handle-pick-api-reasoning-effort'
 import { handle_select_edit_format_instructions } from './message-handlers/handle-select-edit-format-instructions'
@@ -112,7 +112,7 @@ import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Logger } from '@shared/utils/logger'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { dictionary } from '@shared/constants/dictionary'
-import { ModelProvidersManager } from '@/services/model-providers-manager'
+import { ProvidersManager } from '@/services/providers-manager'
 import { SharedContextState } from '@/context/shared-context-state'
 import { webview_html } from '@/views/shared/utils/webview-html'
 import { get_selected_files } from '@/context/helpers/get-selected-files'
@@ -236,16 +236,16 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
   }
 
   public async send_setup_progress() {
-    const providers_manager = new ModelProvidersManager(this.extension_context)
-    const [model_providers, configs] = await Promise.all([
-      providers_manager.get_model_providers(),
+    const providers_manager = new ProvidersManager(this.extension_context)
+    const [providers, configs] = await Promise.all([
+      providers_manager.get_providers(),
       providers_manager.get_api_configurations()
     ])
 
     this.send_message({
       command: 'SETUP_PROGRESS',
       setup_progress: {
-        has_model_provider: model_providers.length > 0,
+        has_provider: providers.length > 0,
         has_api_configuration: configs.length > 0
       }
     })
@@ -346,14 +346,14 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
         }
 
         if (
-          event.affectsConfiguration('codeWebChat.modelProviders') ||
+          event.affectsConfiguration('codeWebChat.providers') ||
           event.affectsConfiguration('codeWebChat.apiConfigurations')
         ) {
           handle_get_api_configurations(this)
         }
 
         const setup_progress_keys = [
-          'codeWebChat.modelProviders',
+          'codeWebChat.providers',
           'codeWebChat.apiConfigurations'
         ]
 
@@ -790,8 +790,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_create_api_configuration(this, message)
           } else if (message.command == 'UPDATE_API_CONFIGURATION') {
             await handle_update_api_configuration(this, message)
-          } else if (message.command == 'PICK_MODEL_PROVIDER') {
-            await handle_pick_model_provider(this, message)
+          } else if (message.command == 'PICK_PROVIDER') {
+            await handle_pick_provider(this, message)
           } else if (message.command == 'PICK_API_MODEL') {
             await handle_pick_api_model(this, message)
           } else if (message.command == 'PICK_API_REASONING_EFFORT') {

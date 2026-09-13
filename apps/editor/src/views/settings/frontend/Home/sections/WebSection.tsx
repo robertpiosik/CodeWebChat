@@ -103,10 +103,10 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
     <UiSection
       ref={ref}
       title={t('web.title')}
-      subtitle={t('chatbots.subtitle')}
+      subtitle={t('web.subtitle')}
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <UiNotice type="info">{t('chatbots.notice')}</UiNotice>
+        <UiNotice type="info">{t('web.notice')}</UiNotice>
       </div>
       <div
         ref={(el) =>

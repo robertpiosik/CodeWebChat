@@ -26,7 +26,7 @@ export type NavItem =
   | 'section:web'
   | 'section:web:group:web-configurations'
   | 'section:api'
-  | 'section:api:group:model-providers'
+  | 'section:api:group:providers'
   | 'section:api:group:api-configurations'
   | 'section:api:group:api-defaults'
   | 'section:api:group:system-instructions'
@@ -63,20 +63,20 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'api.title'
   },
   {
-    id: 'section:api:group:model-providers',
-    label: 'api-calls.model-providers.title'
+    id: 'section:api:group:providers',
+    label: 'api.providers.title'
   },
   {
     id: 'section:api:group:api-configurations',
-    label: 'api-calls.configurations.title'
+    label: 'api.configurations.title'
   },
   {
     id: 'section:api:group:api-defaults',
-    label: 'api-calls.default-configurations.title'
+    label: 'api.default-configurations.title'
   },
   {
     id: 'section:api:group:system-instructions',
-    label: 'api-calls.system-instructions.title'
+    label: 'api.system-instructions.title'
   }
 ]
 
@@ -166,7 +166,7 @@ export const Home: React.FC<Props> = (props) => {
     'section:web': null,
     'section:web:group:web-configurations': null,
     'section:api': null,
-    'section:api:group:model-providers': null,
+    'section:api:group:providers': null,
     'section:api:group:api-configurations': null,
     'section:api:group:api-defaults': null,
     'section:api:group:system-instructions': null
@@ -200,7 +200,7 @@ export const Home: React.FC<Props> = (props) => {
     let last_id = NAV_ITEMS_CONFIG[0].id
     for (const item of NAV_ITEMS_CONFIG) {
       if (
-        item.id === 'section:api:group:model-providers' &&
+        item.id === 'section:api:group:providers' &&
         props.providers.length === 0
       ) {
         continue
@@ -287,7 +287,7 @@ export const Home: React.FC<Props> = (props) => {
 
       for (const item of NAV_ITEMS_CONFIG) {
         if (
-          item.id === 'section:api:group:model-providers' &&
+          item.id === 'section:api:group:providers' &&
           props.providers.length === 0
         ) {
           continue
@@ -388,7 +388,7 @@ export const Home: React.FC<Props> = (props) => {
 
           for (const item of NAV_ITEMS_CONFIG) {
             if (
-              item.id === 'section:api:group:model-providers' &&
+              item.id === 'section:api:group:providers' &&
               props.providers.length === 0
             ) {
               continue

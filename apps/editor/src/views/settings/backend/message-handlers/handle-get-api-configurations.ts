@@ -1,14 +1,14 @@
 import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
 import {
-  ModelProvidersManager,
+  ProvidersManager,
   get_api_configuration_id
-} from '@/services/model-providers-manager'
+} from '@/services/providers-manager'
 import { ApiConfiguration } from '@/views/settings/types/messages'
 
 export const handle_get_api_configurations = async (
   provider: SettingsViewProvider
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(
+  const providers_manager = new ProvidersManager(
     provider.extension_context
   )
 

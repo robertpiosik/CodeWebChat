@@ -1,9 +1,9 @@
 import * as vscode from 'vscode'
 import { dictionary } from '@shared/constants/dictionary'
 import {
-  ModelProvidersManager,
+  ProvidersManager,
   get_api_configuration_id
-} from '@/services/model-providers-manager'
+} from '@/services/providers-manager'
 import { ApiConfiguration } from '@/views/prompt/types/messages'
 import { ApiFeature } from '@/views/shared/types/api-features'
 import { t } from '@/i18n'
@@ -17,7 +17,7 @@ export const update = async (params: {
   insertion_index?: number
   api_feature?: ApiFeature
 }): Promise<{ success: boolean; has_changes: boolean; new_id?: string }> => {
-  const providers_manager = new ModelProvidersManager(params.extension_context)
+  const providers_manager = new ProvidersManager(params.extension_context)
 
   const api_configurations = await providers_manager.get_api_configurations()
 
@@ -74,7 +74,7 @@ export const update = async (params: {
     ...(!params.is_new && api_configuration_index !== -1
       ? api_configurations[api_configuration_index]
       : {}),
-    model_provider_name: params.updated_api_configuration.model_provider_name,
+    provider_name: params.updated_api_configuration.provider_name,
     model: params.updated_api_configuration.model,
     reasoning_effort: params.updated_api_configuration.reasoning_effort,
     is_pinned: params.updated_api_configuration.is_pinned

@@ -4,9 +4,9 @@ import {
   FrontendMessage
 } from '@/views/settings/types/messages'
 import {
-  handle_add_model_provider,
-  handle_update_model_provider,
-  handle_delete_model_provider,
+  handle_add_provider,
+  handle_update_provider,
+  handle_delete_provider,
   handle_get_api_configurations,
   handle_get_commit_message_instructions,
   handle_get_attach_ascii_tree_of_context,
@@ -15,9 +15,9 @@ import {
   handle_get_edit_files_system_instructions,
   handle_get_gemini_user_id,
   handle_get_ai_studio_user_id,
-  handle_get_model_providers,
+  handle_get_providers,
   handle_get_send_with_shift_enter,
-  handle_reorder_model_providers,
+  handle_reorder_providers,
   handle_set_default_api_configuration,
   handle_select_default_api_configuration,
   handle_update_commit_message_instructions,
@@ -43,7 +43,7 @@ import {
   handle_update_api_configuration,
   handle_delete_api_configuration,
   handle_reorder_api_configurations,
-  handle_pick_model_provider,
+  handle_pick_provider,
   handle_pick_api_model,
   handle_pick_api_reasoning_effort,
   handle_get_templates,
@@ -154,16 +154,16 @@ export class SettingsViewProvider {
             })
             this._pending_section_to_show = undefined
           }
-        } else if (message.command == 'GET_MODEL_PROVIDERS') {
-          await handle_get_model_providers(this)
-        } else if (message.command == 'REORDER_MODEL_PROVIDERS') {
-          await handle_reorder_model_providers(this, message)
-        } else if (message.command == 'ADD_MODEL_PROVIDER') {
-          await handle_add_model_provider(this, message)
-        } else if (message.command == 'DELETE_MODEL_PROVIDER') {
-          await handle_delete_model_provider(this, message)
-        } else if (message.command == 'UPDATE_MODEL_PROVIDER') {
-          await handle_update_model_provider(this, message)
+        } else if (message.command == 'GET_PROVIDERS') {
+          await handle_get_providers(this)
+        } else if (message.command == 'REORDER_PROVIDERS') {
+          await handle_reorder_providers(this, message)
+        } else if (message.command == 'ADD_PROVIDER') {
+          await handle_add_provider(this, message)
+        } else if (message.command == 'DELETE_PROVIDER') {
+          await handle_delete_provider(this, message)
+        } else if (message.command == 'UPDATE_PROVIDER') {
+          await handle_update_provider(this, message)
         } else if (message.command == 'GET_TEMPLATES') {
           await handle_get_templates(this)
         } else if (message.command == 'UPDATE_TEMPLATES') {
@@ -260,8 +260,8 @@ export class SettingsViewProvider {
           await handle_delete_api_configuration(this, message)
         } else if (message.command == 'REORDER_API_CONFIGURATIONS') {
           await handle_reorder_api_configurations(this, message)
-        } else if (message.command == 'PICK_MODEL_PROVIDER') {
-          await handle_pick_model_provider(this, message)
+        } else if (message.command == 'PICK_PROVIDER') {
+          await handle_pick_provider(this, message)
         } else if (message.command == 'PICK_API_MODEL') {
           await handle_pick_api_model(this, message)
         } else if (message.command == 'PICK_API_REASONING_EFFORT') {
@@ -277,7 +277,7 @@ export class SettingsViewProvider {
     this._disposables.push(
       vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration('codeWebChat')) {
-          void handle_get_model_providers(this)
+          void handle_get_providers(this)
           void handle_get_api_configurations(this)
           void handle_get_edit_files_system_instructions(this)
           void handle_get_commit_message_instructions(this)

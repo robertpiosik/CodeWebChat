@@ -1,13 +1,13 @@
 import * as vscode from 'vscode'
 import {
-  ModelProvidersManager,
+  ProvidersManager,
   ApiConfiguration,
-  ModelProvider
-} from '@/services/model-providers-manager'
+  Provider
+} from '@/services/providers-manager'
 import { ModelFetcher } from '@/services/model-fetcher'
 import {
   initial_select_model,
-  initial_select_model_provider
+  initial_select_provider
 } from './interactions'
 import { t } from '@/i18n'
 
@@ -18,7 +18,7 @@ export const create = async (params: {
 }): Promise<
   { config: ApiConfiguration; insertion_index?: number } | undefined
 > => {
-  const providers_manager = new ModelProvidersManager(params.extension_context)
+  const providers_manager = new ProvidersManager(params.extension_context)
   const model_fetcher = new ModelFetcher()
 
   let actual_insertion_index: number | undefined = params.insertion_index
@@ -74,26 +74,26 @@ export const create = async (params: {
         : params.insertion_index + 1
   }
 
-  let selected_model_provider: ModelProvider | undefined
+  let selected_provider: Provider | undefined
   let selected_model: string | undefined
 
   while (true) {
-    selected_model_provider = await initial_select_model_provider(
+    selected_provider = await initial_select_provider(
       params.extension_context,
       providers_manager,
-      selected_model_provider?.name
+      selected_provider?.name
     )
-    if (!selected_model_provider) return undefined
+    if (!selected_provider) return undefined
 
     selected_model = await initial_select_model(
       model_fetcher,
-      selected_model_provider
+      selected_provider
     )
     if (selected_model) break
   }
 
   const api_configuration_to_add: ApiConfiguration = {
-    model_provider_name: selected_model_provider.name,
+    provider_name: selected_provider.name,
     model: selected_model
   }
 

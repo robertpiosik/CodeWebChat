@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { ModelProvider } from '@/services/model-providers-manager'
+import { Provider } from '@/services/providers-manager'
 import {
   ModelFetcher,
   MODELS_ROUTE_NOT_FOUND_ERROR
@@ -11,16 +11,16 @@ import { t } from '@/i18n'
 
 export const initial_select_model = async (
   model_fetcher: ModelFetcher,
-  model_provider: ModelProvider
+  provider: Provider
 ): Promise<string | undefined> => {
   let base_url: string | undefined
 
   try {
-    base_url = model_provider.base_url
+    base_url = provider.base_url
 
     if (!base_url)
       throw new Error(
-        `Base URL not found for model provider ${model_provider.name}`
+        `Base URL not found for provider ${provider.name}`
       )
 
     const models = await vscode.window.withProgress(
@@ -34,7 +34,7 @@ export const initial_select_model = async (
       async () => {
         return await model_fetcher.get_models({
           base_url: base_url as string,
-          api_key: model_provider.api_key
+          api_key: provider.api_key
         })
       }
     )
@@ -128,7 +128,7 @@ export const initial_select_model = async (
           await verify_model({
             model: selected_model,
             base_url,
-            api_key: model_provider.api_key
+            api_key: provider.api_key
           })
         ) {
           return selected_model
@@ -147,7 +147,7 @@ export const initial_select_model = async (
     ) {
       vscode.window.showInformationMessage(
         dictionary.information_message.MODELS_ROUTE_NOT_FOUND(
-          model_provider.name
+          provider.name
         ),
         { modal: true }
       )
@@ -178,7 +178,7 @@ export const initial_select_model = async (
       (await verify_model({
         model,
         base_url,
-        api_key: model_provider.api_key
+        api_key: provider.api_key
       }))
     ) {
       return model

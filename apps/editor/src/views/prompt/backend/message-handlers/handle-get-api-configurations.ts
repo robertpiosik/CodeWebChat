@@ -1,14 +1,14 @@
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import {
-  ModelProvidersManager,
+  ProvidersManager,
   get_api_configuration_id
-} from '@/services/model-providers-manager'
+} from '@/services/providers-manager'
 import { ApiConfiguration } from '@/views/prompt/types/messages'
 
 export const handle_get_api_configurations = async (
   prompt_view_provider: PromptViewProvider
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(
+  const providers_manager = new ProvidersManager(
     prompt_view_provider.extension_context
   )
 

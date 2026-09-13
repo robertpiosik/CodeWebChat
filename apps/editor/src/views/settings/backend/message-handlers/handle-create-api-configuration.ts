@@ -1,6 +1,6 @@
 import { SettingsViewProvider } from '../settings-view-provider'
 import { create } from '@/views/shared/actions/api/create/create'
-import { get_api_configuration_id } from '@/services/model-providers-manager'
+import { get_api_configuration_id } from '@/services/providers-manager'
 import { CreateApiConfigurationMessage } from '../../types/messages'
 
 export const handle_create_api_configuration = async (

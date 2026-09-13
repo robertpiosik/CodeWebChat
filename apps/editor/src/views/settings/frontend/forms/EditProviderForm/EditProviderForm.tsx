@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import styles from './EditModelProviderForm.module.scss'
+import styles from './EditProviderForm.module.scss'
 import { Provider } from '@/views/settings/types/messages'
 import { Field as UiField } from '@ui/components/editor/common/Field'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
@@ -8,7 +8,7 @@ import { Fieldset as UiFieldset } from '@ui/components/editor/prompt/Fieldset'
 import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { use_translation } from '../../i18n/use-translation'
 
-export type ModelProviderDraft = {
+export type ProviderDraft = {
   name: string
   base_url: string
   api_key?: string
@@ -18,11 +18,11 @@ export type ModelProviderDraft = {
 
 type Props = {
   provider: Provider
-  on_update: (draft: ModelProviderDraft) => void
+  on_update: (draft: ProviderDraft) => void
   on_open_external_url: (url: string) => void
 }
 
-export const EditModelProviderForm: React.FC<Props> = (props) => {
+export const EditProviderForm: React.FC<Props> = (props) => {
   const { t } = use_translation()
   const [name, set_name] = useState(props.provider.name)
   const [base_url, set_base_url] = useState(props.provider.base_url)
@@ -47,7 +47,7 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
       <div className={styles.form}>
         <UiFieldset>
           <UiField
-            label={t('edit-model-provider-form.name.label')}
+            label={t('edit-provider-form.name.label')}
             html_for="name"
           >
             <UiInput
@@ -55,12 +55,12 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
               type="text"
               value={name}
               on_change={set_name}
-              placeholder={t('edit-model-provider-form.name.placeholder')}
+              placeholder={t('edit-provider-form.name.placeholder')}
             />
           </UiField>
 
           <UiField
-            label={t('edit-model-provider-form.base-url.label')}
+            label={t('edit-provider-form.base-url.label')}
             html_for="base_url"
           >
             <UiInput
@@ -68,12 +68,12 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
               type="text"
               value={base_url}
               on_change={set_base_url}
-              placeholder={t('edit-model-provider-form.base-url.placeholder')}
+              placeholder={t('edit-provider-form.base-url.placeholder')}
             />
           </UiField>
 
           <UiField
-            label={t('edit-model-provider-form.api-key.label')}
+            label={t('edit-provider-form.api-key.label')}
             html_for="api_key"
             action={
               (props.provider.api_key_mask || api_key) &&
@@ -85,7 +85,7 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
                     set_is_api_key_cleared(true)
                   }}
                 >
-                  {t('edit-model-provider-form.api-key.action.clear')}
+                  {t('edit-provider-form.api-key.action.clear')}
                 </button>
               ) : undefined
             }
@@ -100,10 +100,10 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
               }}
               placeholder={
                 is_api_key_cleared
-                  ? t('edit-model-provider-form.api-key.placeholder.cleared')
+                  ? t('edit-provider-form.api-key.placeholder.cleared')
                   : props.provider.api_key_mask
                     ? `...${props.provider.api_key_mask.slice(-4)}`
-                    : t('edit-model-provider-form.api-key.placeholder.default')
+                    : t('edit-provider-form.api-key.placeholder.default')
               }
             />
           </UiField>
@@ -111,12 +111,12 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
           {base_url.includes('api.anthropic.com') && (
             <UiField
               label={t(
-                'edit-model-provider-form.extended-cache.anthropic.title'
+                'edit-provider-form.extended-cache.anthropic.title'
               )}
               info={
                 <>
                   {t(
-                    'edit-model-provider-form.extended-cache.anthropic.description'
+                    'edit-provider-form.extended-cache.anthropic.description'
                   )}{' '}
                   <a
                     href="#"
@@ -128,7 +128,7 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
                     }}
                   >
                     {t(
-                      'edit-model-provider-form.extended-cache.anthropic.learn-more'
+                      'edit-provider-form.extended-cache.anthropic.learn-more'
                     )}
                   </a>
                 </>

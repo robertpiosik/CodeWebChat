@@ -22,7 +22,7 @@ import { display_token_count } from '@shared/utils/display-token-count'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { dictionary } from '@shared/constants/dictionary'
 import { WebSocketManager } from '@/services/websocket-manager'
-import { ModelProvidersManager } from '@/services/model-providers-manager'
+import { ProvidersManager } from '@/services/providers-manager'
 import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 import { normalize_path } from '@/utils/normalize-path'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
@@ -110,11 +110,11 @@ export const run_generate_action = async (params: {
       const action_enter_manually = t('common.action.enter-manually')
       const action_copy_prompt = t('common.action.copy-prompt')
 
-      const model_providers_manager = new ModelProvidersManager(
+      const providers_manager = new ProvidersManager(
         params.extension_context
       )
       const api_configurations =
-        await model_providers_manager.get_api_configurations()
+        await providers_manager.get_api_configurations()
       const has_api_configurations = api_configurations.length > 0
 
       let go_back_to_prompt_data = false
@@ -497,7 +497,7 @@ export const run_generate_action = async (params: {
           try {
             commit_message = await generate_commit_message_with_api({
               base_url: api_configuration_data.base_url,
-              model_provider: api_configuration_data.model_provider,
+              provider: api_configuration_data.provider,
               api_configuration: api_configuration_data.api_configuration,
               message: final_api_prompt!
             })

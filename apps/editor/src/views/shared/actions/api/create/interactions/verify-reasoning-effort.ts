@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { ModelProvider } from '@/services/model-providers-manager'
+import { Provider } from '@/services/providers-manager'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import axios from 'axios'
 
@@ -8,7 +8,7 @@ export const verify_reasoning_effort = async (params: {
   api_key?: string
   model: string
   reasoning_effort: string
-  model_provider: ModelProvider
+  provider: Provider
   cancellation_token: vscode.CancellationToken
 }): Promise<void> => {
   const abort_controller = new AbortController()
@@ -30,7 +30,7 @@ export const verify_reasoning_effort = async (params: {
 
   apply_reasoning_effort({
     body,
-    model_provider: params.model_provider,
+    provider: params.provider,
     reasoning_effort: params.reasoning_effort as any
   })
 

@@ -52,7 +52,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const { t } = use_translation()
 
   const selector_configurations = props.api_configurations.map((config) => {
-    const details: string[] = [config.model_provider_name]
+    const details: string[] = [config.provider_name]
     if (config.reasoning_effort) {
       details.push(config.reasoning_effort)
     }
@@ -68,11 +68,11 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
     <UiSection
       ref={ref}
       title={t('api.title')}
-      subtitle={t('api-calls.subtitle')}
+      subtitle={t('api.subtitle')}
     >
       <UiNotice type="info">
         <Translation
-          id="api-calls.notice.credentials"
+          id="api.notice.credentials"
           components={{
             link: (
               <a
@@ -93,10 +93,10 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
       {props.providers.length > 0 && (
         <div
           ref={(el) =>
-            props.set_section_ref('section:api:group:model-providers', el)
+            props.set_section_ref('section:api:group:providers', el)
           }
         >
-          <UiGroup title={t('api-calls.model-providers.title')}>
+          <UiGroup title={t('api.providers.title')}>
             <SortableList
               items={props.providers.map((p) => ({ ...p, id: p.name }))}
               on_reorder={(reordered) => {
@@ -109,8 +109,8 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               on_add={props.on_add_provider}
               translations={{
                 add_title: t('action.add-new'),
-                item_text: t('api-calls.model-providers.item'),
-                items_text: t('api-calls.model-providers.items')
+                item_text: t('api.providers.item'),
+                items_text: t('api.providers.items')
               }}
               render_content={(provider) => {
                 const is_localhost =
@@ -166,12 +166,12 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                     />
                     <IconButton
                       codicon_icon="edit"
-                      title={t('api-calls.model-providers.action.edit')}
+                      title={t('api.providers.action.edit')}
                       on_click={() => props.on_edit_provider(provider.name)}
                     />
                     <IconButton
                       codicon_icon="trash"
-                      title={t('api-calls.model-providers.action.delete')}
+                      title={t('api.providers.action.delete')}
                       on_click={() => props.on_delete_provider(provider.name)}
                     />
                   </>
@@ -188,7 +188,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
         }
       >
         <UiGroup
-          title={t('api-calls.configurations.title')}
+          title={t('api.configurations.title')}
           notice_slot={
             !props.api_configurations.length ? (
               <UiNotice
@@ -214,12 +214,12 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               on_add={props.on_add_api_configuration}
               translations={{
                 add_title: t('action.add-new'),
-                item_text: t('api-calls.configurations.item'),
-                items_text: t('api-calls.configurations.items'),
-                items_text_many: t('api-calls.configurations.items-many')
+                item_text: t('api.configurations.item'),
+                items_text: t('api.configurations.items'),
+                items_text_many: t('api.configurations.items-many')
               }}
               render_content={(config) => {
-                const details: string[] = [config.model_provider_name]
+                const details: string[] = [config.provider_name]
                 if (config.reasoning_effort) {
                   details.push(config.reasoning_effort)
                 }
@@ -271,12 +271,12 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                   />
                   <IconButton
                     codicon_icon="edit"
-                    title={t('api-calls.configurations.action.edit')}
+                    title={t('api.configurations.action.edit')}
                     on_click={() => props.on_edit_api_configuration(config.id)}
                   />
                   <IconButton
                     codicon_icon="trash"
-                    title={t('api-calls.configurations.action.delete')}
+                    title={t('api.configurations.action.delete')}
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_delete_api_configuration(config.id)
@@ -296,9 +296,9 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               props.set_section_ref('section:api:group:api-defaults', el)
             }
           >
-            <UiGroup title={t('api-calls.default-configurations.title')}>
+            <UiGroup title={t('api.default-configurations.title')}>
               <DefaultConfigurationSelector
-                title={t('api-calls.default-configurations.tool.patch-repair')}
+                title={t('api.default-configurations.tool.patch-repair')}
                 value={props.defaults['patch-repair'] || null}
                 configurations={selector_configurations}
                 on_unset={() =>
@@ -308,13 +308,13 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                   props.on_select_default_api_configuration('patch-repair')
                 }
                 translations={{
-                  select: t('api-calls.configurations.action.select-default'),
-                  unset: t('api-calls.configurations.action.unset-default')
+                  select: t('api.configurations.action.select-default'),
+                  unset: t('api.configurations.action.unset-default')
                 }}
               />
               <DefaultConfigurationSelector
                 title={t(
-                  'api-calls.default-configurations.tool.code-at-cursor'
+                  'api.default-configurations.tool.code-at-cursor'
                 )}
                 value={props.defaults['code-at-cursor'] || null}
                 configurations={selector_configurations}
@@ -325,13 +325,13 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                   props.on_select_default_api_configuration('code-at-cursor')
                 }
                 translations={{
-                  select: t('api-calls.configurations.action.select-default'),
-                  unset: t('api-calls.configurations.action.unset-default')
+                  select: t('api.configurations.action.select-default'),
+                  unset: t('api.configurations.action.unset-default')
                 }}
               />
               <DefaultConfigurationSelector
                 title={t(
-                  'api-calls.default-configurations.tool.commit-messages'
+                  'api.default-configurations.tool.commit-messages'
                 )}
                 value={props.defaults['commit-messages'] || null}
                 configurations={selector_configurations}
@@ -345,13 +345,13 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                   props.on_select_default_api_configuration('commit-messages')
                 }
                 translations={{
-                  select: t('api-calls.configurations.action.select-default'),
-                  unset: t('api-calls.configurations.action.unset-default')
+                  select: t('api.configurations.action.select-default'),
+                  unset: t('api.configurations.action.unset-default')
                 }}
               />
               <DefaultConfigurationSelector
                 title={t(
-                  'api-calls.default-configurations.tool.intelligent-file-search'
+                  'api.default-configurations.tool.intelligent-file-search'
                 )}
                 value={props.defaults['intelligent-file-search'] || null}
                 configurations={selector_configurations}
@@ -367,13 +367,13 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                   )
                 }
                 translations={{
-                  select: t('api-calls.configurations.action.select-default'),
-                  unset: t('api-calls.configurations.action.unset-default')
+                  select: t('api.configurations.action.select-default'),
+                  unset: t('api.configurations.action.unset-default')
                 }}
               />
 
               <DefaultConfigurationSelector
-                title={t('api-calls.default-configurations.tool.voice-input')}
+                title={t('api.default-configurations.tool.voice-input')}
                 value={props.defaults['voice-input'] || null}
                 configurations={selector_configurations}
                 on_unset={() =>
@@ -383,8 +383,8 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                   props.on_select_default_api_configuration('voice-input')
                 }
                 translations={{
-                  select: t('api-calls.configurations.action.select-default'),
-                  unset: t('api-calls.configurations.action.unset-default')
+                  select: t('api.configurations.action.select-default'),
+                  unset: t('api.configurations.action.unset-default')
                 }}
               />
             </UiGroup>
@@ -395,11 +395,11 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               props.set_section_ref('section:api:group:system-instructions', el)
             }
           >
-            <UiGroup title={t('api-calls.system-instructions.title')}>
+            <UiGroup title={t('api.system-instructions.title')}>
               <UiItem
-                title={t('api-calls.system-instructions.edit-files.title')}
+                title={t('api.system-instructions.edit-files.title')}
                 description={t(
-                  'api-calls.system-instructions.edit-files.description'
+                  'api.system-instructions.edit-files.description'
                 )}
                 is_toggleable
                 translations={{

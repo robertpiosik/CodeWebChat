@@ -426,7 +426,7 @@ export const Prompt = () => {
                   </UiButton>
                 </div>
               }
-              title="Edit Configuration"
+              title="Edit Chatbot"
               header_slot={
                 <UiTextButton
                   on_click={handle_preview_web_configuration}
@@ -481,23 +481,23 @@ export const Prompt = () => {
               <EditApiConfigurationForm
                 api_configuration={updating_api_configuration}
                 on_update={set_updated_api_configuration}
-                pick_model_provider={(current) => {
+                pick_provider={(current) => {
                   post_message(vscode, {
-                    command: 'PICK_MODEL_PROVIDER',
-                    current_model_provider_name: current
+                    command: 'PICK_PROVIDER',
+                    current_provider_name: current
                   })
                 }}
                 pick_model={(provider, current) => {
                   post_message(vscode, {
                     command: 'PICK_API_MODEL',
-                    model_provider_name: provider,
+                    provider_name: provider,
                     current_model: current
                   })
                 }}
                 pick_reasoning_effort={(provider, model, current) => {
                   post_message(vscode, {
                     command: 'PICK_API_REASONING_EFFORT',
-                    model_provider_name: provider,
+                    provider_name: provider,
                     model,
                     current_effort: current
                   })

@@ -24,8 +24,8 @@ type Story = StoryObj<typeof Item>
 
 export const Default: Story = {
   args: {
-    title: 'Model Provider',
-    description: 'Select the model provider to use for this configuration.'
+    title: 'Provider',
+    description: 'Select the provider to use for this configuration.'
   }
 }
 
@@ -33,7 +33,7 @@ export const WithChildren: Story = {
   args: {
     title: 'API Key',
     description:
-      'Enter your API key for the selected model provider. It will be stored securely.',
+      'Enter your API key for the selected provider. It will be stored securely.',
     children: <div>Input goes here</div>
   }
 }

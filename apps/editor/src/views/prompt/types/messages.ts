@@ -37,7 +37,7 @@ export type InstructionsState = {
 }
 
 export type SetupProgress = {
-  has_model_provider: boolean
+  has_provider: boolean
   has_api_configuration: boolean
 }
 
@@ -58,7 +58,7 @@ export type SelectionState = {
 
 export type ApiConfiguration = {
   id: string
-  model_provider_name: string
+  provider_name: string
   model: string
   reasoning_effort?: string
   is_pinned?: boolean
@@ -477,21 +477,21 @@ export interface UpdateApiConfigurationMessage extends BaseMessage {
   api_feature?: ApiFeature
 }
 
-export interface PickModelProviderMessage extends BaseMessage {
-  command: 'PICK_MODEL_PROVIDER'
-  current_model_provider_name?: string
+export interface PickProviderMessage extends BaseMessage {
+  command: 'PICK_PROVIDER'
+  current_provider_name?: string
 }
 
 export interface PickApiModelMessage extends BaseMessage {
   command: 'PICK_API_MODEL'
-  model_provider_name: string
+  provider_name: string
   current_model?: string
 }
 
 export interface PickApiReasoningEffortMessage extends BaseMessage {
   command: 'PICK_API_REASONING_EFFORT'
   current_effort?: string
-  model_provider_name: string
+  provider_name: string
   model: string
 }
 
@@ -627,7 +627,7 @@ export type FrontendMessage =
   | RequestReturnHomeMessage
   | GetVoiceInputPushToTalkMessage
   | UpdateApiConfigurationMessage
-  | PickModelProviderMessage
+  | PickProviderMessage
   | PickApiModelMessage
   | PickApiReasoningEffortMessage
   | PickTasksWorkspaceMessage
@@ -856,9 +856,9 @@ export interface VoiceInputPushToTalkMessage extends BaseMessage {
   enabled: boolean
 }
 
-export interface NewlyPickedModelProviderMessage extends BaseMessage {
-  command: 'NEWLY_PICKED_MODEL_PROVIDER'
-  model_provider_name: string
+export interface NewlyPickedProviderMessage extends BaseMessage {
+  command: 'NEWLY_PICKED_PROVIDER'
+  provider_name: string
 }
 
 export interface NewlyPickedApiModelMessage extends BaseMessage {
@@ -930,7 +930,7 @@ export type BackendMessage =
   | SetupProgressMessage
   | ReturnHomeMessage
   | VoiceInputPushToTalkMessage
-  | NewlyPickedModelProviderMessage
+  | NewlyPickedProviderMessage
   | NewlyPickedApiModelMessage
   | NewlyPickedApiReasoningEffortMessage
   | ApiConfigurationUpdatedMessage

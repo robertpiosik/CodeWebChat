@@ -14,7 +14,7 @@ import { prompt_for_shrink_mode } from '../utils/prompt-for-shrink-mode'
 import { prompt_for_api_configuration } from '../utils/prompt-for-config'
 import { search_files_by_intelligent } from '../utils/search-files-by-intelligent'
 import { prompt_for_intelligent_search_results } from '../utils/prompt-for-intelligent-search-results'
-import { ModelProvidersManager } from '@/services/model-providers-manager'
+import { ProvidersManager } from '@/services/providers-manager'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { display_token_count } from '@shared/utils/display-token-count'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
@@ -119,11 +119,11 @@ export const perform_intelligent_search_mode = async (params: {
       let go_back_to_shrink = false
 
       while (true) {
-        const model_providers_manager = new ModelProvidersManager(
+        const providers_manager = new ProvidersManager(
           params.extension_context
         )
         const api_configurations =
-          await model_providers_manager.get_api_configurations()
+          await providers_manager.get_api_configurations()
 
         const has_api_configurations = api_configurations.length > 0
 
@@ -381,7 +381,7 @@ export const perform_intelligent_search_mode = async (params: {
               : analysis.full_tokens
             const api_configuration_result = await prompt_for_api_configuration(
               {
-                model_providers_manager,
+                providers_manager,
                 extension_context: params.extension_context,
                 api_configurations,
                 tokens_to_process,
@@ -399,14 +399,14 @@ export const perform_intelligent_search_mode = async (params: {
 
             const {
               api_configuration: selected_api_configuration,
-              model_provider
+              provider
             } = api_configuration_result
 
             const api_result = await search_files_by_intelligent(
               analysis.files_data,
               shrink_result as boolean,
               search_term,
-              model_provider,
+              provider,
               selected_api_configuration
             )
 

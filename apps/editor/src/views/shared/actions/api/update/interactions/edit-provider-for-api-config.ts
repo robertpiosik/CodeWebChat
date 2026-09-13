@@ -1,22 +1,22 @@
 import * as vscode from 'vscode'
-import { ModelProvidersManager } from '@/services/model-providers-manager'
+import { ProvidersManager } from '@/services/providers-manager'
 import { t } from '@/i18n'
 
-export const edit_model_provider_for_api_configuration = async (
-  providers_manager: ModelProvidersManager,
-  current_model_provider_name?: string
+export const edit_provider_for_api_configuration = async (
+  providers_manager: ProvidersManager,
+  current_provider_name?: string
 ) => {
-  const model_providers = await providers_manager.get_model_providers()
-  const model_provider_items = model_providers.map((p) => ({
+  const providers = await providers_manager.get_providers()
+  const provider_items = providers.map((p) => ({
     label: p.name,
-    model_provider: p
+    provider: p
   }))
-  const selected_model_provider_item = await new Promise<
-    (typeof model_provider_items)[0] | undefined
+  const selected_provider_item = await new Promise<
+    (typeof provider_items)[0] | undefined
   >((resolve) => {
     const quick_pick =
-      vscode.window.createQuickPick<(typeof model_provider_items)[0]>()
-    quick_pick.items = model_provider_items
+      vscode.window.createQuickPick<(typeof provider_items)[0]>()
+    quick_pick.items = provider_items
     quick_pick.title = t(
       'views.shared.actions.api.upsert-provider.options.title'
     )
@@ -28,9 +28,9 @@ export const edit_model_provider_for_api_configuration = async (
       tooltip: t('common.close')
     }
     quick_pick.buttons = [close_button]
-    if (current_model_provider_name) {
-      const active = model_provider_items.find(
-        (p) => p.label === current_model_provider_name
+    if (current_provider_name) {
+      const active = provider_items.find(
+        (p) => p.label === current_provider_name
       )
       if (active) quick_pick.activeItems = [active]
     }
@@ -57,9 +57,9 @@ export const edit_model_provider_for_api_configuration = async (
     quick_pick.show()
   })
 
-  if (selected_model_provider_item) {
+  if (selected_provider_item) {
     return {
-      model_provider_name: selected_model_provider_item.model_provider.name
+      provider_name: selected_provider_item.provider.name
     }
   }
   return undefined

@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { PickApiReasoningEffortMessage } from '@/views/prompt/types/messages'
 import { edit_reasoning_effort_for_api_config } from '@/views/shared/actions/api/update/interactions'
-import { ModelProvidersManager } from '@/services/model-providers-manager'
+import { ProvidersManager } from '@/services/providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { verify_reasoning_effort } from '@/views/shared/actions/api/create/interactions'
 import { t } from '@/i18n'
@@ -11,7 +11,7 @@ export const handle_pick_api_reasoning_effort = async (
   prompt_view_provider: PromptViewProvider,
   message: PickApiReasoningEffortMessage
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(
+  const providers_manager = new ProvidersManager(
     prompt_view_provider.extension_context
   )
 
@@ -23,11 +23,11 @@ export const handle_pick_api_reasoning_effort = async (
 
   if (new_effort !== null) {
     let is_valid = true
-    const model_provider = await providers_manager.get_model_provider(
-      message.model_provider_name
+    const provider = await providers_manager.get_provider(
+      message.provider_name
     )
 
-    if (model_provider && model_provider.base_url) {
+    if (provider && provider.base_url) {
       try {
         await vscode.window.withProgress(
           {
@@ -39,11 +39,11 @@ export const handle_pick_api_reasoning_effort = async (
           },
           async (_progress, token) => {
             await verify_reasoning_effort({
-              base_url: model_provider.base_url!,
-              api_key: model_provider.api_key,
+              base_url: provider.base_url!,
+              api_key: provider.api_key,
               model: message.model,
               reasoning_effort: new_effort as string,
-              model_provider,
+              provider,
               cancellation_token: token
             })
           }

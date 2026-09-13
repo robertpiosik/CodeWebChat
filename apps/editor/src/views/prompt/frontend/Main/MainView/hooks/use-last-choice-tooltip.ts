@@ -74,7 +74,7 @@ export const use_last_choice_tooltip = (params: {
           (c) => c.id === params.selected_api_configuration_id
         )
         if (configuration) {
-          const description_parts = [configuration.model_provider_name]
+          const description_parts = [configuration.provider_name]
           if (configuration.reasoning_effort) {
             description_parts.push(`${configuration.reasoning_effort}`)
           }

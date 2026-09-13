@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
 import {
-  ModelProvidersManager,
+  ProvidersManager,
   ApiConfiguration
-} from '@/services/model-providers-manager'
+} from '@/services/providers-manager'
 import {
   ModelFetcher,
   MODELS_ROUTE_NOT_FOUND_ERROR
@@ -14,28 +14,28 @@ import { t } from '@/i18n'
 
 export const edit_model_for_api_configuration = async (params: {
   api_configuration: ApiConfiguration
-  providers_manager: ModelProvidersManager
+  providers_manager: ProvidersManager
   model_fetcher: ModelFetcher
 }) => {
-  const model_provider_from_manager =
-    await params.providers_manager.get_model_provider(
-      params.api_configuration.model_provider_name
+  const provider_from_manager =
+    await params.providers_manager.get_provider(
+      params.api_configuration.provider_name
     )
-  if (!model_provider_from_manager) {
+  if (!provider_from_manager) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.MODEL_PROVIDER_NOT_FOUND_BY_NAME(
-        params.api_configuration.model_provider_name
+      dictionary.error_message.PROVIDER_NOT_FOUND_BY_NAME(
+        params.api_configuration.provider_name
       )
     )
     return undefined
   }
 
-  const base_url = model_provider_from_manager.base_url
+  const base_url = provider_from_manager.base_url
 
   if (!base_url) {
     vscode.window.showErrorMessage(
       dictionary.error_message.BASE_URL_NOT_FOUND_FOR_PROVIDER(
-        params.api_configuration.model_provider_name
+        params.api_configuration.provider_name
       )
     )
     return undefined
@@ -53,7 +53,7 @@ export const edit_model_for_api_configuration = async (params: {
       async () => {
         return await params.model_fetcher.get_models({
           base_url,
-          api_key: model_provider_from_manager.api_key
+          api_key: provider_from_manager.api_key
         })
       }
     )
@@ -149,7 +149,7 @@ export const edit_model_for_api_configuration = async (params: {
           await verify_model({
             model,
             base_url,
-            api_key: model_provider_from_manager.api_key
+            api_key: provider_from_manager.api_key
           })
         ) {
           return model
@@ -158,7 +158,7 @@ export const edit_model_for_api_configuration = async (params: {
     } else {
       vscode.window.showWarningMessage(
         dictionary.warning_message.NO_MODELS_FOUND_MANUAL_ENTRY(
-          params.api_configuration.model_provider_name
+          params.api_configuration.provider_name
         )
       )
     }
@@ -175,7 +175,7 @@ export const edit_model_for_api_configuration = async (params: {
       vscode.window.showInformationMessage(
         t(
           'views.shared.actions.api.update.interactions.edit-model-for-api-config.info.models-route-not-found-manual-entry',
-          { provider_name: params.api_configuration.model_provider_name }
+          { provider_name: params.api_configuration.provider_name }
         ),
         { modal: true }
       )
@@ -206,7 +206,7 @@ export const edit_model_for_api_configuration = async (params: {
       await verify_model({
         model,
         base_url,
-        api_key: model_provider_from_manager.api_key
+        api_key: provider_from_manager.api_key
       })
     ) {
       return model

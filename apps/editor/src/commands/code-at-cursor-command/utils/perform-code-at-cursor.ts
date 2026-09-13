@@ -8,7 +8,7 @@ import {
   code_at_cursor_instructions_for_chatbots
 } from '../../../constants/instructions'
 import { FilesCollector } from '../../../utils/files-collector'
-import { ModelProvidersManager } from '../../../services/model-providers-manager'
+import { ProvidersManager } from '../../../services/providers-manager'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from '../../../utils/apply-reasoning-effort'
@@ -36,7 +36,7 @@ export const perform_code_at_cursor = async (params: {
   completion_instructions?: string
   api_configuration_id?: string
 }) => {
-  const model_providers_manager = new ModelProvidersManager(
+  const providers_manager = new ProvidersManager(
     params.extension_context
   )
 
@@ -120,7 +120,7 @@ export const perform_code_at_cursor = async (params: {
 
     if (params.show_quick_pick) {
       const api_configurations =
-        await model_providers_manager.get_api_configurations()
+        await providers_manager.get_api_configurations()
       const has_api_configurations = api_configurations.length > 0
 
       action = await new Promise<string | undefined | 'back'>((resolve) => {
@@ -346,7 +346,7 @@ export const perform_code_at_cursor = async (params: {
   while (true) {
     const api_configuration_result = await get_code_at_cursor_api_configuration(
       {
-        model_providers_manager,
+        providers_manager,
         show_quick_pick,
         extension_context: params.extension_context,
         api_configuration_id: current_api_configuration_id
@@ -361,11 +361,11 @@ export const perform_code_at_cursor = async (params: {
     current_api_configuration_id = undefined
 
     const {
-      model_provider,
+      provider,
       api_configuration: code_at_cursor_api_configuration
     } = api_configuration_result
 
-    if (!code_at_cursor_api_configuration.model_provider_name) {
+    if (!code_at_cursor_api_configuration.provider_name) {
       vscode.window.showErrorMessage(
         dictionary.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
       )
@@ -404,7 +404,7 @@ export const perform_code_at_cursor = async (params: {
     })
 
     const user_content = build_user_content({
-      model_provider,
+      provider,
       part1,
       part2
     })
@@ -423,7 +423,7 @@ export const perform_code_at_cursor = async (params: {
 
     apply_reasoning_effort({
       body,
-      model_provider,
+      provider,
       reasoning_effort: code_at_cursor_api_configuration.reasoning_effort
     })
 
@@ -448,8 +448,8 @@ export const perform_code_at_cursor = async (params: {
           })
 
           return await send_llm_message({
-            base_url: model_provider.base_url,
-            api_key: model_provider.api_key,
+            base_url: provider.base_url,
+            api_key: provider.api_key,
             body,
             abort_signal: abort_controller.signal,
             on_chunk: () => {

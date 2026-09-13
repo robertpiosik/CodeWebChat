@@ -9,7 +9,7 @@ import {
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import { dictionary } from '@shared/constants/dictionary'
 import { parse_response } from '@/commands/apply-response-command/utils/response-parser'
-import { ModelProvidersManager } from '@/services/model-providers-manager'
+import { ProvidersManager } from '@/services/providers-manager'
 import {
   get_patch_repair_config,
   process_file
@@ -123,18 +123,18 @@ export const handle_patch_repair = async (params: {
 
   if (files_to_process.length === 0) return
 
-  const model_providers_manager = new ModelProvidersManager(
+  const providers_manager = new ProvidersManager(
     params.prompt_view_provider.extension_context
   )
 
   const api_configurations =
-    await model_providers_manager.get_api_configurations()
+    await providers_manager.get_api_configurations()
   const has_api_configurations = api_configurations.length > 0
 
   let skip_action_quick_pick = false
   if (params.is_auto_run) {
     const default_config =
-      await model_providers_manager.get_default_patch_repair_api_configuration()
+      await providers_manager.get_default_patch_repair_api_configuration()
     if (default_config || api_configurations.length === 1) {
       skip_action_quick_pick = true
     } else {
@@ -343,14 +343,14 @@ export const handle_patch_repair = async (params: {
   }
 
   const api_configuration_result = await get_patch_repair_config({
-    model_providers_manager,
+    providers_manager,
     show_quick_pick: params.show_quick_pick ?? false,
     extension_context: params.prompt_view_provider.extension_context
   })
   if (!api_configuration_result) return
 
   const {
-    model_provider: api_model_provider,
+    provider: api_provider,
     api_configuration: patch_repair_api_configuration
   } = api_configuration_result
 
@@ -416,9 +416,9 @@ export const handle_patch_repair = async (params: {
 
         try {
           const updated_content = await process_file({
-            base_url: api_model_provider.base_url,
-            api_key: api_model_provider.api_key,
-            model_provider: api_model_provider,
+            base_url: api_provider.base_url,
+            api_key: api_provider.api_key,
+            provider: api_provider,
             model: patch_repair_api_configuration.model,
             reasoning_effort: patch_repair_api_configuration.reasoning_effort,
             file_path: file_path,

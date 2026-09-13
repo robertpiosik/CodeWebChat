@@ -28,12 +28,12 @@ export const remove = async (params: { name: string }): Promise<void> => {
     dictionary.warning_message.PLEASE_CONFIRM,
     {
       modal: true,
-      detail: is_unnamed
-        ? dictionary.warning_message.CONFIRM_DELETE_ITEM('configuration')
-        : dictionary.warning_message.CONFIRM_DELETE_NAMED_ITEM(
-            'web configuration',
-            display_item_name
-          )
+          detail: is_unnamed
+            ? dictionary.warning_message.CONFIRM_DELETE_ITEM('chatbot')
+            : dictionary.warning_message.CONFIRM_DELETE_NAMED_ITEM(
+                'chatbot',
+                display_item_name
+              )
     },
     delete_button
   )
@@ -74,7 +74,7 @@ export const remove = async (params: { name: string }): Promise<void> => {
     }
   } catch (error) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.FAILED_TO_DELETE_ITEM('web configuration', error)
+      dictionary.error_message.FAILED_TO_DELETE_ITEM('chatbot', error)
     )
   }
 }

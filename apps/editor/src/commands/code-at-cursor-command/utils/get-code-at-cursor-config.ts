@@ -1,9 +1,9 @@
 import * as vscode from 'vscode'
 import {
-  ModelProvidersManager,
+  ProvidersManager,
   get_api_configuration_id,
   ApiConfiguration
-} from '../../../services/model-providers-manager'
+} from '../../../services/providers-manager'
 import { Logger } from '@shared/utils/logger'
 import { LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { t } from '@/i18n'
@@ -11,13 +11,13 @@ import { show_configurations_quick_pick } from '@/utils/show-configurations-quic
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 
 export const get_code_at_cursor_api_configuration = async (params: {
-  model_providers_manager: ModelProvidersManager
+  providers_manager: ProvidersManager
   show_quick_pick?: boolean
   extension_context: vscode.ExtensionContext
   api_configuration_id?: string
-}): Promise<{ model_provider: any; api_configuration: any } | undefined> => {
+}): Promise<{ provider: any; api_configuration: any } | undefined> => {
   const code_at_cursor_api_configurations =
-    await params.model_providers_manager.get_api_configurations()
+    await params.providers_manager.get_api_configurations()
 
   if (code_at_cursor_api_configurations.length == 0) {
     show_no_configurations_warning('api')
@@ -33,7 +33,7 @@ export const get_code_at_cursor_api_configuration = async (params: {
       ) || null
   } else if (!params.show_quick_pick) {
     const default_api_configuration =
-      await params.model_providers_manager.get_default_code_at_cursor_api_configuration()
+      await params.providers_manager.get_default_code_at_cursor_api_configuration()
     if (default_api_configuration) {
       selected_api_configuration = default_api_configuration
     } else if (code_at_cursor_api_configurations.length == 1) {
@@ -68,12 +68,12 @@ export const get_code_at_cursor_api_configuration = async (params: {
     selected_api_configuration = api_configuration
   }
 
-  const model_provider =
-    await params.model_providers_manager.get_model_provider(
-      selected_api_configuration.model_provider_name
+  const provider =
+    await params.providers_manager.get_provider(
+      selected_api_configuration.provider_name
     )
 
-  if (!model_provider) {
+  if (!provider) {
     vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))
     Logger.warn({
       function_name: 'get_code_at_cursor_api_configuration',
@@ -83,7 +83,7 @@ export const get_code_at_cursor_api_configuration = async (params: {
   }
 
   return {
-    model_provider,
+    provider,
     api_configuration: selected_api_configuration
   }
 }

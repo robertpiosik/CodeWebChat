@@ -1,21 +1,21 @@
 export const translations = {
-  'edit-api-configuration-form.model-provider': {
-    en: 'Model Provider',
-    pl: 'Dostawca modelu',
-    'zh-cn': '模型提供商',
-    ja: 'モデルプロバイダー',
-    'zh-tw': '模型供應商',
-    de: 'Modellanbieter',
-    es: 'Proveedor de modelos',
-    fr: 'Fournisseur de modèles',
-    'pt-br': 'Provedor de Modelos',
-    ru: 'Провайдер модели',
-    ko: '모델 제공자',
-    it: 'Fornitore di modelli',
-    tr: 'Model Sağlayıcı',
-    cs: 'Poskytovatel modelu',
-    hu: 'Modell Szolgáltató',
-    bg: 'Доставчик на модел'
+  'edit-api-configuration-form.provider': {
+    en: 'Provider',
+    pl: 'Dostawca',
+    'zh-cn': '提供商',
+    ja: 'プロバイダー',
+    'zh-tw': '供應商',
+    de: 'Anbieter',
+    es: 'Proveedor',
+    fr: 'Fournisseur',
+    'pt-br': 'Provedor',
+    ru: 'Провайдер',
+    ko: '제공자',
+    it: 'Fornitore',
+    tr: 'Sağlayıcı',
+    cs: 'Poskytovatel',
+    hu: 'Szolgáltató',
+    bg: 'Доставчик'
   },
   'edit-api-configuration-form.model': {
     en: 'Model',

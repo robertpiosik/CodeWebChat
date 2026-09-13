@@ -3,11 +3,11 @@ import { t } from '@/i18n'
 import { build_prompt_payload } from './utils/build-prompt-payload'
 import { Logger } from '@shared/utils/logger'
 import {
-  ModelProvidersManager,
+  ProvidersManager,
   get_api_configuration_id,
-  ModelProvider,
+  Provider,
   ApiConfiguration
-} from '@/services/model-providers-manager'
+} from '@/services/providers-manager'
 import axios from 'axios'
 import { LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
@@ -34,18 +34,18 @@ const get_last_used_config_id_key = () => {
 }
 
 const get_api_configuration = async (params: {
-  model_providers_manager: ModelProvidersManager
+  providers_manager: ProvidersManager
   show_quick_pick?: boolean
   extension_context: vscode.ExtensionContext
   prompt_view_provider: PromptViewProvider
   api_configuration_id?: string
   prompt_type: ApiPromptType
 }): Promise<
-  | { model_provider: ModelProvider; api_configuration: ApiConfiguration }
+  | { provider: Provider; api_configuration: ApiConfiguration }
   | undefined
 > => {
   const api_configurations =
-    await params.model_providers_manager.get_api_configurations()
+    await params.providers_manager.get_api_configurations()
 
   if (api_configurations.length == 0) {
     show_no_configurations_warning('api')
@@ -123,12 +123,12 @@ const get_api_configuration = async (params: {
     selected_api_configuration = api_configuration
   }
 
-  const model_provider =
-    await params.model_providers_manager.get_model_provider(
-      selected_api_configuration.model_provider_name
+  const provider =
+    await params.providers_manager.get_provider(
+      selected_api_configuration.provider_name
     )
 
-  if (!model_provider) {
+  if (!provider) {
     vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))
     Logger.warn({
       function_name: 'get_api_configuration',
@@ -138,7 +138,7 @@ const get_api_configuration = async (params: {
   }
 
   return {
-    model_provider,
+    provider,
     api_configuration: selected_api_configuration
   }
 }
@@ -150,7 +150,7 @@ export const handle_make_api_call = async (
   await vscode.workspace.saveAll()
 
   const prompt_type = prompt_view_provider.prompt_type as ApiPromptType
-  const model_providers_manager = new ModelProvidersManager(
+  const providers_manager = new ProvidersManager(
     prompt_view_provider.extension_context
   )
 
@@ -191,7 +191,7 @@ export const handle_make_api_call = async (
 
   while (true) {
     const api_configuration_result = await get_api_configuration({
-      model_providers_manager,
+      providers_manager,
       show_quick_pick,
       extension_context: prompt_view_provider.extension_context,
       prompt_view_provider,
@@ -205,7 +205,7 @@ export const handle_make_api_call = async (
 
     prompt_view_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
 
-    const { model_provider, api_configuration } = api_configuration_result
+    const { provider, api_configuration } = api_configuration_result
 
     let edit_format: EditFormat = 'whole'
     let system_instructions = ''
@@ -240,7 +240,7 @@ export const handle_make_api_call = async (
         separator: true
       })
       user_content = build_user_content({
-        model_provider,
+        provider,
         part1,
         part2
       })
@@ -260,14 +260,14 @@ export const handle_make_api_call = async (
       model: api_configuration.model
     }
 
-    const is_openai = model_provider.base_url == PROVIDERS.OpenAI.base_url
+    const is_openai = provider.base_url == PROVIDERS.OpenAI.base_url
     if (is_openai) {
       body.prompt_cache_options = { mode: 'explicit' }
     }
 
     apply_reasoning_effort({
       body,
-      model_provider,
+      provider,
       reasoning_effort: api_configuration.reasoning_effort
     })
 
@@ -277,10 +277,10 @@ export const handle_make_api_call = async (
       result =
         await prompt_view_provider.prompt_view_api_calls_manager.send_llm_message(
           {
-            base_url: model_provider.base_url,
-            api_key: model_provider.api_key,
+            base_url: provider.base_url,
+            api_key: provider.api_key,
             body,
-            provider_name: api_configuration.model_provider_name,
+            provider_name: api_configuration.provider_name,
             model: api_configuration.model,
             reasoning_effort: api_configuration.reasoning_effort,
             raw_instructions: current_instructions
@@ -289,7 +289,7 @@ export const handle_make_api_call = async (
 
       if (result) {
         const recent_api_configuration = {
-          model_provider: api_configuration.model_provider_name,
+          provider: api_configuration.provider_name,
           model: api_configuration.model,
           reasoning_effort: api_configuration.reasoning_effort
         }

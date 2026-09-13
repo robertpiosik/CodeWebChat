@@ -56,14 +56,14 @@ export const dictionary = {
     CONFIRM_CLEAR_API_KEY: (provider_name: string) =>
       `Are you sure you want to clear the API key for ${provider_name}? This action cannot be undone.`,
     CONFIRM_DELETE_ITEM: (
-      item_type: 'file' | 'folder' | 'group' | 'configuration'
+      item_type: 'file' | 'folder' | 'group' | 'configuration' | 'chatbot'
     ) => `Are you sure you want to delete this ${item_type}?`,
     CONFIRM_DELETE_NAMED_ITEM: (item_type: string, name: string) =>
       `Are you sure you want to delete ${item_type} "${name}"?`,
     CONFIRM_DELETE_CONFIGURATION: (model: string, provider: string) =>
       `Are you sure you want to delete the configuration for model "${model}" provided by ${provider}?`,
-    CONFIRM_DELETE_MODEL_PROVIDER: (provider_name: string) =>
-      `Are you sure you want to delete the model provider "${provider_name}"?`,
+    CONFIRM_DELETE_PROVIDER: (provider_name: string) =>
+      `Are you sure you want to delete the provider "${provider_name}"?`,
     NO_MODELS_FOUND_MANUAL_ENTRY: (provider_name: string) =>
       `No models found for ${provider_name}. You can enter model name manually.`,
     REASONING_EFFORT_NOT_SUPPORTED:
@@ -160,8 +160,8 @@ export const dictionary = {
       `Error handling message: ${message}.`,
     BASE_URL_NOT_FOUND_FOR_PROVIDER: (name: string) =>
       `Base URL not found for provider ${name}.`,
-    MODEL_PROVIDER_NOT_FOUND_BY_NAME: (name: string) =>
-      `Model provider "${name}" not found.`,
+    PROVIDER_NOT_FOUND_BY_NAME: (name: string) =>
+      `Provider "${name}" not found.`,
     NO_WORKSPACE_FOLDER_OPEN: 'No workspace folder open.',
     CANNOT_PROCESS_MULTIPLE_FILES_WITHOUT_WORKSPACE:
       'Cannot process multiple files without an open workspace folder.',

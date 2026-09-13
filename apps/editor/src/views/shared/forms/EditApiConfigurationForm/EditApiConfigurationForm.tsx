@@ -12,10 +12,10 @@ import { use_translation } from '../../i18n/use-translation'
 type Props = {
   api_configuration: ApiConfiguration
   on_update: (updated_api_configuration: ApiConfiguration) => void
-  pick_model_provider: (current_model_provider_name?: string) => void
-  pick_model: (model_provider_name: string, current_model?: string) => void
+  pick_provider: (current_provider_name?: string) => void
+  pick_model: (provider_name: string, current_model?: string) => void
   pick_reasoning_effort: (
-    model_provider_name: string,
+    provider_name: string,
     model: string,
     current_effort?: string
   ) => void
@@ -24,8 +24,8 @@ type Props = {
 export const EditApiConfigurationForm: React.FC<Props> = (props) => {
   const { t } = use_translation()
 
-  const [model_provider_name, set_model_provider_name] = useState(
-    props.api_configuration.model_provider_name
+  const [provider_name, set_provider_name] = useState(
+    props.api_configuration.provider_name
   )
   const [model, set_model] = useState(props.api_configuration.model)
   const [reasoning_effort, set_reasoning_effort] = useState(
@@ -35,19 +35,19 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
   useEffect(() => {
     props.on_update({
       ...props.api_configuration,
-      model_provider_name,
+      provider_name,
       model,
       reasoning_effort
     })
-  }, [model_provider_name, model, reasoning_effort])
+  }, [provider_name, model, reasoning_effort])
 
   useEffect(() => {
     const handle_message = (event: MessageEvent) => {
       const message = event.data as BackendMessage
       if (message.command == 'NEWLY_PICKED_API_MODEL') {
         set_model(message.model_id)
-      } else if (message.command == 'NEWLY_PICKED_MODEL_PROVIDER') {
-        set_model_provider_name(message.model_provider_name)
+      } else if (message.command == 'NEWLY_PICKED_PROVIDER') {
+        set_provider_name(message.provider_name)
       } else if (message.command == 'NEWLY_PICKED_API_REASONING_EFFORT') {
         set_reasoning_effort(message.effort)
       }
@@ -61,14 +61,14 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
       <div className={styles.form}>
         <UiFieldset>
           <UiField
-            label={t('edit-api-configuration-form.model-provider')}
-            html_for="model-provider"
+            label={t('edit-api-configuration-form.provider')}
+            html_for="provider"
           >
             <UiQuickPickButton
-              label={model_provider_name || '—'}
+              label={provider_name || '—'}
               onClick={(e) => {
                 e.stopPropagation()
-                props.pick_model_provider(model_provider_name)
+                props.pick_provider(provider_name)
               }}
             />
           </UiField>
@@ -81,8 +81,8 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
               label={model || '—'}
               onClick={(e) => {
                 e.stopPropagation()
-                if (model_provider_name) {
-                  props.pick_model(model_provider_name, model)
+                if (provider_name) {
+                  props.pick_model(provider_name, model)
                 }
               }}
             />
@@ -109,9 +109,9 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
               }
               onClick={(e) => {
                 e.stopPropagation()
-                if (model_provider_name && model) {
+                if (provider_name && model) {
                   props.pick_reasoning_effort(
-                    model_provider_name,
+                    provider_name,
                     model,
                     reasoning_effort
                   )

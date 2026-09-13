@@ -1,17 +1,17 @@
 import * as vscode from 'vscode'
 import {
-  ModelProvidersManager,
+  ProvidersManager,
   get_api_configuration_id,
   ApiConfiguration,
-  ModelProvider
-} from '@/services/model-providers-manager'
+  Provider
+} from '@/services/providers-manager'
 import { LAST_USED_INTELLIGENT_FILE_SEARCH_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { t } from '@/i18n'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { display_token_count } from '@shared/utils/display-token-count'
 
 export const prompt_for_api_configuration = async (params: {
-  model_providers_manager: ModelProvidersManager
+  providers_manager: ProvidersManager
   extension_context: vscode.ExtensionContext
   api_configurations: ApiConfiguration[]
   tokens_to_process: number
@@ -19,7 +19,7 @@ export const prompt_for_api_configuration = async (params: {
 }): Promise<
   | {
       api_configuration: ApiConfiguration
-      model_provider: ModelProvider
+      provider: Provider
       skipped: boolean
     }
   | 'back'
@@ -30,7 +30,7 @@ export const prompt_for_api_configuration = async (params: {
 
   if (!params.show_quick_pick) {
     const default_api_configuration =
-      await params.model_providers_manager.get_default_intelligent_file_search_api_configuration()
+      await params.providers_manager.get_default_intelligent_file_search_api_configuration()
 
     if (default_api_configuration) {
       selected_api_configuration = default_api_configuration
@@ -75,11 +75,11 @@ export const prompt_for_api_configuration = async (params: {
     )
   }
 
-  const model_provider =
-    await params.model_providers_manager.get_model_provider(
-      selected_api_configuration.model_provider_name
+  const provider =
+    await params.providers_manager.get_provider(
+      selected_api_configuration.provider_name
     )
-  if (!model_provider) {
+  if (!provider) {
     vscode.window.showErrorMessage(
       t('feature.search-files.error.provider-not-found')
     )
@@ -88,7 +88,7 @@ export const prompt_for_api_configuration = async (params: {
 
   return {
     api_configuration: selected_api_configuration,
-    model_provider,
+    provider,
     skipped
   }
 }

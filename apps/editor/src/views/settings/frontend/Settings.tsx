@@ -5,11 +5,11 @@ import { BackendMessage, Template } from '../types/messages'
 import { Home, NavItem } from './Home/Home'
 import { use_web_configuration_editing } from './hooks/use-web-configuration-editing'
 import { use_api_configuration_editing } from './hooks/use-api-configuration-editing'
-import { use_model_provider_editing } from './hooks/use-model-provider-editing'
+import { use_provider_editing } from './hooks/use-provider-editing'
 import { Modal as UiModal } from '@ui/components/editor/settings/Modal'
 import { EditWebConfigurationForm } from '@/views/shared/forms/EditWebConfigurationForm'
 import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurationForm'
-import { EditModelProviderForm } from './forms/EditModelProviderForm'
+import { EditProviderForm } from './forms/EditProviderForm'
 import { EditTemplateForm } from './forms/EditTemplateForm'
 
 const vscode = acquireVsCodeApi()
@@ -35,13 +35,13 @@ export const Settings = () => {
   } = use_api_configuration_editing(vscode)
 
   const {
-    updating_model_provider,
-    set_updating_model_provider,
-    set_updated_model_provider,
-    edit_model_provider_cancel_handler,
-    edit_model_provider_save_handler,
-    set_is_new_model_provider
-  } = use_model_provider_editing(vscode)
+    updating_provider,
+    set_updating_provider,
+    set_updated_provider,
+    edit_provider_cancel_handler,
+    edit_provider_save_handler,
+    set_is_new_provider
+  } = use_provider_editing(vscode)
 
   const [scroll_to_section_on_load, set_scroll_to_section_on_load] =
     useState<NavItem>()
@@ -194,11 +194,11 @@ export const Settings = () => {
             (p) => p.name == provider_name
           )
           if (provider) {
-            set_updating_model_provider({
+            set_updating_provider({
               original_name: provider.name,
               provider
             })
-            set_is_new_model_provider(false)
+            set_is_new_provider(false)
           }
         }}
         on_set_default_api_configuration={
@@ -251,7 +251,7 @@ export const Settings = () => {
       {updating_web_configuration && (
         <UiModal on_close={edit_web_configuration_cancel_handler}>
           <UiModal.Form
-            title="Edit Configuration"
+            title="Edit Chatbot"
             on_save={edit_web_configuration_save_handler}
             on_cancel={edit_web_configuration_cancel_handler}
           >
@@ -289,23 +289,23 @@ export const Settings = () => {
             <EditApiConfigurationForm
               api_configuration={updating_api_configuration}
               on_update={set_updated_api_configuration}
-              pick_model_provider={(current) => {
+              pick_provider={(current) => {
                 post_message(vscode, {
-                  command: 'PICK_MODEL_PROVIDER',
-                  current_model_provider_name: current
+                  command: 'PICK_PROVIDER',
+                  current_provider_name: current
                 })
               }}
               pick_model={(provider, current) => {
                 post_message(vscode, {
                   command: 'PICK_API_MODEL',
-                  model_provider_name: provider,
+                  provider_name: provider,
                   current_model: current
                 })
               }}
               pick_reasoning_effort={(provider, model, current) => {
                 post_message(vscode, {
                   command: 'PICK_API_REASONING_EFFORT',
-                  model_provider_name: provider,
+                  provider_name: provider,
                   model,
                   current_effort: current
                 })
@@ -314,16 +314,16 @@ export const Settings = () => {
           </UiModal.Form>
         </UiModal>
       )}
-      {updating_model_provider && (
-        <UiModal on_close={edit_model_provider_cancel_handler}>
+      {updating_provider && (
+        <UiModal on_close={edit_provider_cancel_handler}>
           <UiModal.Form
-            title="Edit Model Provider"
-            on_save={edit_model_provider_save_handler}
-            on_cancel={edit_model_provider_cancel_handler}
+            title="Edit Provider"
+            on_save={edit_provider_save_handler}
+            on_cancel={edit_provider_cancel_handler}
           >
-            <EditModelProviderForm
-              provider={updating_model_provider.provider}
-              on_update={set_updated_model_provider}
+            <EditProviderForm
+              provider={updating_provider.provider}
+              on_update={set_updated_provider}
               on_open_external_url={settings_hook.handle_open_external_url}
             />
           </UiModal.Form>

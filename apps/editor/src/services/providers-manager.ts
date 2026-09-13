@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
-import { SECRET_STORAGE_MODEL_PROVIDERS_KEY } from '@/constants/secret-storage-keys'
+import { SECRET_STORAGE_PROVIDERS_KEY } from '@/constants/secret-storage-keys'
 
-export type ModelProvider = {
+export type Provider = {
   name: string
   base_url: string
   api_key: string
@@ -9,7 +9,7 @@ export type ModelProvider = {
 }
 
 export type ApiConfiguration = {
-  model_provider_name: string
+  provider_name: string
   model: string
   reasoning_effort?: string
   is_pinned?: boolean
@@ -31,7 +31,7 @@ export const get_api_configuration_id = (
   api_configuration: ApiConfiguration
 ): string => {
   return [
-    api_configuration.model_provider_name,
+    api_configuration.provider_name,
     api_configuration.model,
     api_configuration.reasoning_effort ?? ''
   ]
@@ -39,8 +39,8 @@ export const get_api_configuration_id = (
     .join(':')
 }
 
-export class ModelProvidersManager {
-  private _model_providers: ModelProvider[] = []
+export class ProvidersManager {
+  private _providers: Provider[] = []
   private _load_promise: Promise<void>
 
   constructor(private readonly _extension_context: vscode.ExtensionContext) {
@@ -50,47 +50,47 @@ export class ModelProvidersManager {
   private async _load_providers() {
     try {
       const config = vscode.workspace.getConfiguration('codeWebChat')
-      const model_provider_configs = config.get<
+      const provider_configs = config.get<
         {
           name: string
           baseUrl: string
           extendedCache?: boolean
         }[]
-      >('modelProviders', [])
+      >('providers', [])
 
       const providers_json = await this._extension_context.secrets.get(
-        SECRET_STORAGE_MODEL_PROVIDERS_KEY
+        SECRET_STORAGE_PROVIDERS_KEY
       )
       const saved_providers_with_keys = providers_json
-        ? (JSON.parse(providers_json) as ModelProvider[])
+        ? (JSON.parse(providers_json) as Provider[])
         : []
 
-      this._model_providers = model_provider_configs.map((provider_config) => {
-        const model_provider_with_key = saved_providers_with_keys.find(
+      this._providers = provider_configs.map((provider_config) => {
+        const provider_with_key = saved_providers_with_keys.find(
           (p) => p.name == provider_config.name
         )
-        const model_provider: ModelProvider = {
+        const provider: Provider = {
           name: provider_config.name,
-          api_key: model_provider_with_key?.api_key || '',
+          api_key: provider_with_key?.api_key || '',
           base_url: provider_config.baseUrl || '',
           extended_cache: provider_config.extendedCache
         }
-        return model_provider
+        return provider
       })
     } catch (error) {
       console.error('Error loading providers:', error)
-      this._model_providers = []
+      this._providers = []
     }
   }
 
-  public async save_model_providers(model_providers: ModelProvider[]) {
+  public async save_providers(providers: Provider[]) {
     try {
       await this._extension_context.secrets.store(
-        SECRET_STORAGE_MODEL_PROVIDERS_KEY,
-        JSON.stringify(model_providers)
+        SECRET_STORAGE_PROVIDERS_KEY,
+        JSON.stringify(providers)
       )
 
-      const model_provider_configs = model_providers.map((p) => {
+      const provider_configs = providers.map((p) => {
         const config: {
           name: string
           baseUrl: string
@@ -106,29 +106,29 @@ export class ModelProvidersManager {
       })
       const config = vscode.workspace.getConfiguration('codeWebChat')
       await config.update(
-        'modelProviders',
-        model_provider_configs,
+        'providers',
+        provider_configs,
         vscode.ConfigurationTarget.Global
       )
 
-      this._model_providers = model_providers
+      this._providers = providers
     } catch (error) {
       console.error('Error saving providers:', error)
       throw error
     }
   }
 
-  public async get_model_providers(): Promise<ModelProvider[]> {
+  public async get_providers(): Promise<Provider[]> {
     await this._load_promise
-    return this._model_providers
+    return this._providers
   }
 
-  public async get_model_provider(
+  public async get_provider(
     name: string
-  ): Promise<ModelProvider | undefined> {
+  ): Promise<Provider | undefined> {
     await this._load_promise
-    return this._model_providers.find(
-      (model_provider) => model_provider.name == name
+    return this._providers.find(
+      (provider) => provider.name == name
     )
   }
 
@@ -137,11 +137,11 @@ export class ModelProvidersManager {
   ): ApiConfiguration | undefined {
     if (!api_configuration) return undefined
 
-    const model_provider = this._model_providers.find(
-      (p) => p.name == api_configuration.model_provider_name
+    const provider = this._providers.find(
+      (p) => p.name == api_configuration.provider_name
     )
 
-    if (!model_provider) {
+    if (!provider) {
       return undefined
     }
 
@@ -156,7 +156,7 @@ export class ModelProvidersManager {
     const api_configurations: ApiConfiguration[] = settings_configs.map(
       (sc) => {
         return {
-          model_provider_name: sc.providerName,
+          provider_name: sc.providerName,
           model: sc.model,
           reasoning_effort: sc.reasoningEffort,
           is_pinned: sc.isPinned
@@ -178,7 +178,7 @@ export class ModelProvidersManager {
         this._are_api_configurations_effectively_equal(oldC, c)
       )
       const new_config: ConfigApiConfigurationFormat = {
-        providerName: c.model_provider_name,
+        providerName: c.provider_name,
         model: c.model
       }
 
@@ -210,7 +210,7 @@ export class ModelProvidersManager {
     api_configuration: ApiConfiguration
   ): boolean {
     return (
-      settings_config.providerName === api_configuration.model_provider_name &&
+      settings_config.providerName === api_configuration.provider_name &&
       settings_config.model === api_configuration.model &&
       (settings_config.reasoningEffort ?? undefined) ===
         (api_configuration.reasoning_effort ?? undefined)
@@ -228,7 +228,7 @@ export class ModelProvidersManager {
 
     if (default_config_from_settings) {
       const api_configuration: ApiConfiguration = {
-        model_provider_name: default_config_from_settings.providerName,
+        provider_name: default_config_from_settings.providerName,
         model: default_config_from_settings.model,
         reasoning_effort: default_config_from_settings.reasoningEffort,
         is_pinned: default_config_from_settings.isPinned
@@ -358,7 +358,7 @@ export class ModelProvidersManager {
     )
   }
 
-  public async update_model_provider_name_in_api_configurations(params: {
+  public async update_provider_name_in_api_configurations(params: {
     old_name: string
     new_name: string
   }): Promise<void> {

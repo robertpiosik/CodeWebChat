@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { ModelProvidersManager } from '@/services/model-providers-manager'
+import { ProvidersManager } from '@/services/providers-manager'
 import { Logger } from '@shared/utils/logger'
 import { LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { t } from '@/i18n'
@@ -7,7 +7,7 @@ import { show_configurations_quick_pick } from '@/utils/show-configurations-quic
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 
 export interface CommitMessageApiConfiguration {
-  model_provider_name: string
+  provider_name: string
   model: string
   reasoning_effort?: string
 }
@@ -19,13 +19,13 @@ export const get_commit_message_api_configuration = async (params: {
 }): Promise<
   | {
       api_configuration: CommitMessageApiConfiguration
-      model_provider: any
+      provider: any
       base_url: string
     }
   | 'back'
   | null
 > => {
-  const model_providers_manager = new ModelProvidersManager(
+  const providers_manager = new ProvidersManager(
     params.extension_context
   )
   const show_quick_pick = params.show_quick_pick ?? false
@@ -37,11 +37,11 @@ export const get_commit_message_api_configuration = async (params: {
     | undefined
     | 'back' = show_quick_pick
     ? undefined
-    : await model_providers_manager.get_default_commit_messages_api_configuration()
+    : await providers_manager.get_default_commit_messages_api_configuration()
 
   if (!commit_message_api_configuration) {
     const api_configurations =
-      await model_providers_manager.get_api_configurations()
+      await providers_manager.get_api_configurations()
 
     if (api_configurations.length == 0) {
       show_no_configurations_warning('api')
@@ -86,11 +86,11 @@ export const get_commit_message_api_configuration = async (params: {
     return null
   }
 
-  const model_provider = await model_providers_manager.get_model_provider(
-    commit_message_api_configuration.model_provider_name
+  const provider = await providers_manager.get_provider(
+    commit_message_api_configuration.provider_name
   )
 
-  if (!model_provider) {
+  if (!provider) {
     vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))
     Logger.warn({
       function_name: 'get_commit_message_api_configuration',
@@ -101,7 +101,7 @@ export const get_commit_message_api_configuration = async (params: {
 
   return {
     api_configuration: commit_message_api_configuration,
-    model_provider,
-    base_url: model_provider.base_url
+    provider,
+    base_url: provider.base_url
   }
 }

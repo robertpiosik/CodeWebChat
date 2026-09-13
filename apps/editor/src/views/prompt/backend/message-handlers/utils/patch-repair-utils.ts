@@ -1,10 +1,10 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
 import {
-  ModelProvidersManager,
+  ProvidersManager,
   ApiConfiguration,
-  ModelProvider
-} from '@/services/model-providers-manager'
+  Provider
+} from '@/services/providers-manager'
 import { LAST_USED_PATCH_REPAIR_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { Logger } from '@shared/utils/logger'
 import { send_llm_message } from '@/utils/send-llm-message'
@@ -16,15 +16,15 @@ import { show_configurations_quick_pick } from '@/utils/show-configurations-quic
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 
 export const get_patch_repair_config = async (params: {
-  model_providers_manager: ModelProvidersManager
+  providers_manager: ProvidersManager
   show_quick_pick?: boolean
   extension_context: vscode.ExtensionContext
 }): Promise<
-  | { model_provider: ModelProvider; api_configuration: ApiConfiguration }
+  | { provider: Provider; api_configuration: ApiConfiguration }
   | undefined
 > => {
   const patch_repair_api_configurations =
-    await params.model_providers_manager.get_api_configurations()
+    await params.providers_manager.get_api_configurations()
 
   if (patch_repair_api_configurations.length == 0) {
     show_no_configurations_warning('api')
@@ -35,7 +35,7 @@ export const get_patch_repair_config = async (params: {
 
   if (!params.show_quick_pick) {
     selected_api_configuration =
-      await params.model_providers_manager.get_default_patch_repair_api_configuration()
+      await params.providers_manager.get_default_patch_repair_api_configuration()
 
     if (
       !selected_api_configuration &&
@@ -72,12 +72,12 @@ export const get_patch_repair_config = async (params: {
     selected_api_configuration = api_configuration
   }
 
-  const model_provider =
-    await params.model_providers_manager.get_model_provider(
-      selected_api_configuration.model_provider_name
+  const provider =
+    await params.providers_manager.get_provider(
+      selected_api_configuration.provider_name
     )
 
-  if (!model_provider) {
+  if (!provider) {
     vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))
     Logger.warn({
       function_name: 'get_patch_repair_config',
@@ -87,7 +87,7 @@ export const get_patch_repair_config = async (params: {
   }
 
   return {
-    model_provider,
+    provider,
     api_configuration: selected_api_configuration
   }
 }
@@ -95,7 +95,7 @@ export const get_patch_repair_config = async (params: {
 export const process_file = async (params: {
   base_url: string
   api_key: string
-  model_provider: ModelProvider
+  provider: Provider
   model: string
   reasoning_effort?: string
   file_path: string
@@ -129,7 +129,7 @@ export const process_file = async (params: {
 
   apply_reasoning_effort({
     body,
-    model_provider: params.model_provider,
+    provider: params.provider,
     reasoning_effort: params.reasoning_effort
   })
 

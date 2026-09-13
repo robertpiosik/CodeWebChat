@@ -1,19 +1,19 @@
 import * as vscode from 'vscode'
 import { SettingsViewProvider } from '../settings-view-provider'
 import {
-  ModelProvidersManager,
-  ModelProvider
-} from '@/services/model-providers-manager'
+  ProvidersManager,
+  Provider
+} from '@/services/providers-manager'
 import { generate_unique_name } from '@/views/shared/utils/generate-unique-name'
-import { UpdateModelProviderMessage } from '@/views/settings/types/messages'
+import { UpdateProviderMessage } from '@/views/settings/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 
-export const handle_update_model_provider = async (
+export const handle_update_provider = async (
   provider: SettingsViewProvider,
-  message: UpdateModelProviderMessage
+  message: UpdateProviderMessage
 ): Promise<void> => {
-  const a = message.updating_model_provider
+  const a = message.updating_provider
   const b = message.provider
   let has_changes = false
 
@@ -31,13 +31,13 @@ export const handle_update_model_provider = async (
 
   if (!has_changes && !message.is_new) {
     if (message.origin === 'cancel') {
-      provider.postMessage({ command: 'MODEL_PROVIDER_UPDATED' })
+      provider.postMessage({ command: 'PROVIDER_UPDATED' })
       return
     }
   }
 
   if (message.is_new && message.origin === 'cancel' && !has_changes) {
-    provider.postMessage({ command: 'MODEL_PROVIDER_UPDATED' })
+    provider.postMessage({ command: 'PROVIDER_UPDATED' })
     return
   }
 
@@ -45,12 +45,12 @@ export const handle_update_model_provider = async (
     const discard_button = 'Discard'
     const result = await vscode.window.showWarningMessage(
       t('views.common.handlers.common.confirm-discard-unsaved-changes', {
-        item_type: 'model provider'
+        item_type: 'provider'
       }),
       {
         modal: true,
         detail: t('views.common.handlers.common.unsaved-changes-will-be-lost', {
-          item_type: 'model provider'
+          item_type: 'provider'
         })
       },
       discard_button
@@ -60,28 +60,28 @@ export const handle_update_model_provider = async (
       return
     }
 
-    provider.postMessage({ command: 'MODEL_PROVIDER_UPDATED' })
+    provider.postMessage({ command: 'PROVIDER_UPDATED' })
     return
   }
 
   if (!message.provider.base_url.trim()) {
     vscode.window.showErrorMessage(
-      'A Base URL is required for model providers.'
+      'A Base URL is required for providers.'
     )
     return
   }
   if (!message.provider.name.trim()) {
-    vscode.window.showErrorMessage('A Name is required for model providers.')
+    vscode.window.showErrorMessage('A Name is required for providers.')
     return
   }
 
-  const providers_manager = new ModelProvidersManager(
+  const providers_manager = new ProvidersManager(
     provider.extension_context
   )
-  const model_providers = await providers_manager.get_model_providers()
+  const providers = await providers_manager.get_providers()
 
-  const updated_providers = [...model_providers]
-  let working_provider: ModelProvider
+  const updated_providers = [...providers]
+  let working_provider: Provider
 
   const normalize_base_url = (url: string): string => {
     return url.trim().replace(/\/+$/, '')
@@ -94,7 +94,7 @@ export const handle_update_model_provider = async (
     if (existing_index == -1) {
       vscode.window.showErrorMessage(
         dictionary.error_message.COULD_NOT_UPDATE_ITEM_NOT_FOUND(
-          'model provider',
+          'provider',
           message.original_name!
         )
       )
@@ -122,7 +122,7 @@ export const handle_update_model_provider = async (
     updated_providers[existing_index] = working_provider
 
     if (message.original_name != working_provider.name) {
-      await providers_manager.update_model_provider_name_in_api_configurations({
+      await providers_manager.update_provider_name_in_api_configurations({
         old_name: message.original_name!,
         new_name: working_provider.name
       })
@@ -147,11 +147,11 @@ export const handle_update_model_provider = async (
     }
   }
 
-  await providers_manager.save_model_providers(updated_providers)
+  await providers_manager.save_providers(updated_providers)
 
-  provider.postMessage({ command: 'MODEL_PROVIDER_UPDATED' })
+  provider.postMessage({ command: 'PROVIDER_UPDATED' })
 
-  const { handle_get_model_providers } =
-    await import('./handle-get-model-providers')
-  await handle_get_model_providers(provider)
+  const { handle_get_providers } =
+    await import('./handle-get-providers')
+  await handle_get_providers(provider)
 }
