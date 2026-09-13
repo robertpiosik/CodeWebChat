@@ -614,12 +614,12 @@
       "view/title": [
         {
           "command": "codeWebChat.undoSelection",
-          "when": "view == codeWebChatViewWorkspace",
+          "when": "view == codeWebChatViewSelectedFiles",
           "group": "1_more@1"
         },
         {
           "command": "codeWebChat.redoSelection",
-          "when": "view == codeWebChatViewWorkspace",
+          "when": "view == codeWebChatViewSelectedFiles",
           "group": "1_more@2"
         },
         {
