@@ -7,6 +7,7 @@ export const use_keyboard_shortcuts = (params: {
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
   on_show_home: () => void
+  on_agentic_search?: () => void
   is_disabled: boolean
 }) => {
   const [is_alt_pressed, set_is_alt_pressed] = useState(false)
@@ -132,6 +133,12 @@ export const use_keyboard_shortcuts = (params: {
         params.on_web_prompt_type_change('ask-about-files')
         return
       }
+
+      if (event.code == 'Slash' || event.key == '/') {
+        event.preventDefault()
+        params.on_agentic_search?.()
+        return
+      }
     }
 
     window.addEventListener('keydown', handle_key_down)
@@ -143,6 +150,7 @@ export const use_keyboard_shortcuts = (params: {
     params.target,
     params.on_web_prompt_type_change,
     params.on_api_prompt_type_change,
+    params.on_agentic_search,
     params.is_disabled
   ])
 

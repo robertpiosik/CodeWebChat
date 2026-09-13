@@ -14,6 +14,7 @@ import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrolla
 import { BrowserConnectionStatus } from './components/BrowserConnectionStatus'
 import { ApiConfiguration } from '@/views/prompt/types/messages'
 import { use_last_choice_tooltip } from './hooks/use-last-choice-tooltip'
+import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { Header } from './components/Header'
 import { SelectionState } from '@/views/prompt/types/messages'
 import { use_translation } from '../../i18n/use-translation'
@@ -187,6 +188,15 @@ export const MainView: React.FC<Props> = (props) => {
     api_configurations: props.api_configurations
   })
 
+  const { is_alt_pressed } = use_keyboard_shortcuts({
+    target: props.target,
+    on_web_prompt_type_change: props.on_web_prompt_type_change,
+    on_api_prompt_type_change: props.on_api_prompt_type_change,
+    on_show_home: props.on_show_home,
+    on_agentic_search: props.on_agentic_search,
+    is_disabled: props.are_keyboard_shortcuts_disabled
+  })
+
   const web_configurations: UiConfigurations.Configuration[] =
     props.web_configurations.map((web_configuration, index) => {
       const is_unnamed =
@@ -253,7 +263,7 @@ export const MainView: React.FC<Props> = (props) => {
         on_web_prompt_type_change={props.on_web_prompt_type_change}
         api_prompt_type={props.api_prompt_type}
         on_api_prompt_type_change={props.on_api_prompt_type_change}
-        are_keyboard_shortcuts_disabled={props.are_keyboard_shortcuts_disabled}
+        is_alt_pressed={is_alt_pressed}
       />
       <UiScrollable scroll_to_top_key={props.scroll_reset_key} top_shadow>
         <UiSeparator height={2} />
@@ -433,6 +443,7 @@ export const MainView: React.FC<Props> = (props) => {
                 ? 'blue'
                 : 'purple'
           }
+          is_alt_pressed={is_alt_pressed}
           on_agentic_search={props.on_agentic_search}
           translations={{
             attaching_file: t('selected-files.attaching-file'),

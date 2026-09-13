@@ -11,6 +11,7 @@ type Props = {
     attaching_files: string
     agentic_search: string
   }
+  is_alt_pressed?: boolean
   on_agentic_search: () => void
 }
 
@@ -37,6 +38,7 @@ export const PromptAttachments: React.FC<Props> = (props) => {
           id: 'agentic-search',
           icon: 'codicon-search-sparkle',
           label: props.translations.agentic_search,
+          keycap: props.is_alt_pressed ? '/' : undefined,
           on_click: props.on_agentic_search
         }
       ]}

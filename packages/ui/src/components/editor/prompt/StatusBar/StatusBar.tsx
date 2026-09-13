@@ -1,12 +1,14 @@
 import React from 'react'
 import cn from 'classnames'
 import styles from './StatusBar.module.scss'
+import { KeycapWrapper } from '../KeycapWrapper'
 
 export type StatusBarAction = {
   id: string
   icon: string
   label?: string
   title?: string
+  keycap?: string
   on_click: (e: React.MouseEvent) => void
 }
 
@@ -57,17 +59,29 @@ export const StatusBar: React.FC<Props> = ({
       </div>
       {actions && actions.length > 0 && (
         <div className={styles.actions}>
-          {actions.map((action) => (
-            <div
-              key={action.id}
-              className={styles.action}
-              onClick={action.on_click}
-              title={action.title}
-            >
-              <span className={cn('codicon', action.icon)} />
-              {action.label && <span>{action.label}</span>}
-            </div>
-          ))}
+          {actions.map((action) => {
+            const content = (
+              <div
+                key={action.id}
+                className={styles.action}
+                onClick={action.on_click}
+                title={action.title}
+              >
+                <span className={cn('codicon', action.icon)} />
+                {action.label && <span>{action.label}</span>}
+              </div>
+            )
+
+            if (action.keycap) {
+              return (
+                <KeycapWrapper key={action.id} char={action.keycap}>
+                  {content}
+                </KeycapWrapper>
+              )
+            }
+
+            return content
+          })}
         </div>
       )}
     </div>

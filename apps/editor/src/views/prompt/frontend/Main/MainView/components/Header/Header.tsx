@@ -9,7 +9,6 @@ import {
   api_prompt_type_labels,
   web_prompt_type_labels
 } from '../../prompt-type-labels'
-import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { use_translation } from '@/views/prompt/frontend/i18n/use-translation'
 
 type Props = {
@@ -19,20 +18,12 @@ type Props = {
   api_prompt_type: ApiPromptType
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
-  are_keyboard_shortcuts_disabled: boolean
+  is_alt_pressed: boolean
 }
 
 export const Header: React.FC<Props> = (props) => {
   const { t } = use_translation()
   const { container_ref, compact_step } = use_compacting()
-
-  const { is_alt_pressed } = use_keyboard_shortcuts({
-    target: props.target,
-    on_web_prompt_type_change: props.on_web_prompt_type_change,
-    on_api_prompt_type_change: props.on_api_prompt_type_change,
-    on_show_home: props.on_show_home,
-    is_disabled: props.are_keyboard_shortcuts_disabled
-  })
 
   return (
     <div className={styles.header} ref={container_ref}>
@@ -44,7 +35,7 @@ export const Header: React.FC<Props> = (props) => {
         />
         {props.target == TARGET.WEB && (
           <>
-            <UiKeycapWrapper char={is_alt_pressed ? 'E' : undefined}>
+            <UiKeycapWrapper char={props.is_alt_pressed ? 'E' : undefined}>
               <UiIconAccentButton
                 label={web_prompt_type_labels['edit-files']}
                 icon="edit-sparkle"
@@ -58,7 +49,7 @@ export const Header: React.FC<Props> = (props) => {
                 on_click={() => props.on_web_prompt_type_change('edit-files')}
               />
             </UiKeycapWrapper>
-            <UiKeycapWrapper char={is_alt_pressed ? 'A' : undefined}>
+            <UiKeycapWrapper char={props.is_alt_pressed ? 'A' : undefined}>
               <UiIconAccentButton
                 label={web_prompt_type_labels['ask-about-files']}
                 icon="chat-sparkle"
