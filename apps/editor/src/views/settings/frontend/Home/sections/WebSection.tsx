@@ -125,7 +125,7 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                   </Button>
                 }
               >
-                {t('common.missing-configuration')}
+                {t('common.missing-chatbot')}
               </UiNotice>
             ) : null
           }

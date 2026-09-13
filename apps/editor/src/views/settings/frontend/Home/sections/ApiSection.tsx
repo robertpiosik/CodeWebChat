@@ -199,7 +199,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                   </Button>
                 }
               >
-                {t('common.missing-configuration')}
+                {t('common.missing-model')}
               </UiNotice>
             ) : null
           }

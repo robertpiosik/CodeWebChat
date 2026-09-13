@@ -468,24 +468,6 @@ export const translations = {
     hu: 'Beállítások megnyitása',
     bg: 'Отвори настройките'
   },
-  'common.missing-configuration': {
-    en: 'Missing configuration.',
-    pl: 'Brakująca konfiguracja.',
-    'zh-cn': '缺少配置。',
-    ja: '設定が不足しています。',
-    'zh-tw': '缺少設定。',
-    de: 'Fehlende Konfiguration.',
-    es: 'Falta configuración.',
-    fr: 'Configuration manquante.',
-    'pt-br': 'Configuração ausente.',
-    ru: 'Отсутствует конфигурация.',
-    ko: '구성이 누락되었습니다.',
-    it: 'Configurazione mancante.',
-    tr: 'Yapılandırma eksik.',
-    cs: 'Chybí konfigurace.',
-    hu: 'Hiányzó konfiguráció.',
-    bg: 'Липсваща конфигурация.'
-  },
   'common.info.select-files-to-search': {
     en: 'Please select files to search.',
     pl: 'Proszę wybrać pliki do przeszukania.',
