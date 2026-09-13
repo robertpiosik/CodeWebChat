@@ -198,7 +198,7 @@ export const run_generate_action = async (params: {
 
               quick_pick.onDidHide(() => {
                 if (!is_resolved) {
-                  resolve(undefined)
+                  resolve(show_back_button ? 'back' : undefined)
                 }
                 quick_pick.dispose()
               })
@@ -329,7 +329,7 @@ export const run_generate_action = async (params: {
 
                   quick_pick.onDidHide(() => {
                     if (!is_resolved) {
-                      resolve(undefined)
+                      resolve('back')
                     }
                     quick_pick.dispose()
                   })
@@ -655,7 +655,7 @@ export const run_generate_action = async (params: {
 
             quick_pick.onDidHide(() => {
               if (!is_resolved) {
-                resolve(undefined)
+                resolve(show_back_button ? 'back' : undefined)
               }
               quick_pick.dispose()
             })
@@ -757,7 +757,7 @@ export const run_generate_action = async (params: {
 
             input_box.onDidHide(() => {
               if (!is_resolved) {
-                resolve(undefined)
+                resolve(params.provided_text !== undefined ? undefined : 'back')
               }
               input_box.dispose()
             })
@@ -828,7 +828,11 @@ export const run_generate_action = async (params: {
 
           quick_pick.onDidHide(() => {
             if (!is_resolved) {
-              resolve(undefined)
+              resolve(
+                params.provided_text !== undefined && !params.should_commit
+                  ? undefined
+                  : 'back'
+              )
             }
             quick_pick.dispose()
           })

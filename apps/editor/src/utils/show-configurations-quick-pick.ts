@@ -209,7 +209,7 @@ export const show_configurations_quick_pick = async <T>(
       quick_pick.onDidHide(() => {
         quick_pick.dispose()
         if (!resolved) {
-          resolve(undefined)
+          resolve(show_back_button ? 'back' : undefined)
         }
       })
 
