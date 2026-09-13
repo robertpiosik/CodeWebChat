@@ -50,8 +50,7 @@ export const get_code_at_cursor_api_configuration = async (params: {
     const result = await show_configurations_quick_pick({
       items: code_at_cursor_api_configurations,
       type: 'api',
-      last_selected_id,
-      placeholder: t('command.code-at-cursor.config.placeholder')
+      last_selected_id
     })
 
     if (!result || result === 'back') {

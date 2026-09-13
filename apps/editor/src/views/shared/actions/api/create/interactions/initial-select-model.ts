@@ -71,12 +71,8 @@ export const initial_select_model = async (
           const quick_pick =
             vscode.window.createQuickPick<vscode.QuickPickItem>()
           quick_pick.items = model_items
-          quick_pick.title = t(
-            'views.shared.actions.api.create.interactions.initial-select-model.title'
-          )
-          quick_pick.placeholder = t(
-            'views.shared.actions.api.create.interactions.initial-select-model.placeholder'
-          )
+          quick_pick.title = t('common.select-model.title')
+          quick_pick.placeholder = t('common.select-model.placeholder')
           quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
           if (last_selected_model_id) {
@@ -162,9 +158,7 @@ export const initial_select_model = async (
 
   while (true) {
     const input = await vscode.window.showInputBox({
-      title: t(
-        'views.shared.actions.api.create.interactions.initial-select-model.title'
-      ),
+      title: t('common.select-model.title'),
       prompt: t(
         'views.shared.actions.api.create.interactions.initial-select-model.prompt'
       )

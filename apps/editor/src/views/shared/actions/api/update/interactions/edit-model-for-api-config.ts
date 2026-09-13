@@ -90,12 +90,8 @@ export const edit_model_for_api_configuration = async (params: {
           const quick_pick =
             vscode.window.createQuickPick<vscode.QuickPickItem>()
           quick_pick.items = model_items
-          quick_pick.title = t(
-            'views.shared.actions.api.create.interactions.initial-select-model.title'
-          )
-          quick_pick.placeholder = t(
-            'views.shared.actions.api.create.interactions.initial-select-model.placeholder'
-          )
+          quick_pick.title = t('common.select-model.title')
+          quick_pick.placeholder = t('common.select-model.placeholder')
           const close_button: vscode.QuickInputButton = {
             iconPath: new vscode.ThemeIcon('close'),
             tooltip: t('common.close')
@@ -190,9 +186,7 @@ export const edit_model_for_api_configuration = async (params: {
 
   while (true) {
     const new_model_input = await vscode.window.showInputBox({
-      title: t(
-        'views.shared.actions.api.create.interactions.initial-select-model.title'
-      ),
+      title: t('common.select-model.title'),
       value: params.api_configuration.model,
       prompt: t(
         'views.shared.actions.api.update.interactions.edit-model-for-api-config.prompt'

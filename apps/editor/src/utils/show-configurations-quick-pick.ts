@@ -74,8 +74,12 @@ export const show_configurations_quick_pick = async <T>(
     items: configurations,
     type,
     last_selected_id,
-    title = t('common.config.title'),
-    placeholder = 'Select a configuration',
+    title = type === 'api'
+      ? t('common.select-model.title')
+      : t('views.shared.actions.web.pick-chatbot.title'),
+    placeholder = type === 'api'
+      ? t('common.select-model.placeholder')
+      : t('views.shared.actions.web.pick-chatbot.placeholder'),
     show_back_button = false
   } = options
 

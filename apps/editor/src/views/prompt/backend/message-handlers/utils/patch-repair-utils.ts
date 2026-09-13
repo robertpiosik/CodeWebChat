@@ -54,8 +54,7 @@ export const get_patch_repair_config = async (params: {
     const result = await show_configurations_quick_pick({
       items: patch_repair_api_configurations,
       type: 'api',
-      last_selected_id,
-      placeholder: t('common.config.placeholder')
+      last_selected_id
     })
 
     if (!result || result === 'back') {

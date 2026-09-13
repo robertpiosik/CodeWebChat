@@ -56,13 +56,10 @@ export const get_commit_message_api_configuration = async (params: {
           LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY
         )
 
-      const placeholder = t('common.config.placeholder')
-
       const result = await show_configurations_quick_pick({
         items: api_configurations,
         type: 'api',
         last_selected_id,
-        placeholder,
         show_back_button
       })
 

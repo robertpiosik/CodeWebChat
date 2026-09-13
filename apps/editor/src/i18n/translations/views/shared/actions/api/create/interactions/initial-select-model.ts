@@ -1,41 +1,4 @@
 export const translations = {
-  'views.shared.actions.api.create.interactions.initial-select-model.title': {
-    en: 'Models',
-    pl: 'Modele',
-    'zh-cn': '模型',
-    ja: 'モデル',
-    'zh-tw': '模型',
-    de: 'Modelle',
-    es: 'Modelos',
-    fr: 'Modèles',
-    'pt-br': 'Modelos',
-    ru: 'Модели',
-    ko: '모델',
-    it: 'Modelli',
-    tr: 'Modeller',
-    cs: 'Modely',
-    hu: 'Modellek',
-    bg: 'Модели'
-  },
-  'views.shared.actions.api.create.interactions.initial-select-model.placeholder':
-    {
-      en: 'Choose a model',
-      pl: 'Wybierz model',
-      'zh-cn': '选择一个模型',
-      ja: 'モデルを選択',
-      'zh-tw': '選擇一個模型',
-      de: 'Wähle ein Modell',
-      es: 'Elige un modelo',
-      fr: 'Choisissez un modèle',
-      'pt-br': 'Escolha um modelo',
-      ru: 'Выберите модель',
-      ko: '모델 선택',
-      it: 'Scegli un modello',
-      tr: 'Bir model seçin',
-      cs: 'Vyberte model',
-      hu: 'Válasszon egy modellt',
-      bg: 'Изберете модел'
-    },
   'views.shared.actions.api.create.interactions.initial-select-model.prompt': {
     en: 'Enter a model name (ID)',
     pl: 'Wprowadź nazwę modelu (ID)',

@@ -43,10 +43,8 @@ export const handle_select_default_api_configuration = async (
   >()
 
   quick_pick.items = items
-  quick_pick.title = t('common.config.title')
-  quick_pick.placeholder = t(
-    'views.settings.handlers.select-default-api-configuration.placeholder'
-  )
+  quick_pick.title = t('common.select-model.title')
+  quick_pick.placeholder = t('common.select-model.placeholder')
   quick_pick.matchOnDescription = true
 
   const close_button: vscode.QuickInputButton = {
