@@ -21,7 +21,7 @@ export const update = async (params: {
 
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const current_web_configurations =
-    config.get<ConfigWebConfigurationFormat[]>('webConfigurations', []) || []
+    config.get<ConfigWebConfigurationFormat[]>('chatbots', []) || []
 
   let web_configuration_index = -1
   if (!params.is_new) {
@@ -120,7 +120,7 @@ export const update = async (params: {
   }
 
   await config.update(
-    'webConfigurations',
+    'chatbots',
     updated_web_configurations,
     vscode.ConfigurationTarget.Global
   )

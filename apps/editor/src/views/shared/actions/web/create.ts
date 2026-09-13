@@ -12,7 +12,7 @@ export const create = async (params: {
 > => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const current_web_configurations =
-    config.get<ConfigWebConfigurationFormat[]>('webConfigurations', []) || []
+    config.get<ConfigWebConfigurationFormat[]>('chatbots', []) || []
 
   let insertion_index: number | undefined = params.reference_index
 

@@ -476,7 +476,7 @@ export const Prompt = () => {
                   </UiButton>
                 </div>
               }
-              title="Edit Configuration"
+              title="Edit Model"
             >
               <EditApiConfigurationForm
                 api_configuration={updating_api_configuration}

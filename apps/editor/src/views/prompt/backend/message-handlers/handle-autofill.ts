@@ -183,7 +183,7 @@ const resolve_web_configuration = async (params: {
   )
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>(
-    'webConfigurations',
+    'chatbots',
     []
   )
   const get_is_web_configuration_disabled = (

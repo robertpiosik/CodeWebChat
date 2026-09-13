@@ -387,7 +387,7 @@ export class WebSocketManager {
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const web_configurations =
-      config.get<ConfigWebConfigurationFormat[]>('webConfigurations') ?? []
+      config.get<ConfigWebConfigurationFormat[]>('chatbots') ?? []
     const gemini_user_id = config.get<number | null>('geminiUserId')
     const ai_studio_user_id = config.get<number | null>('aiStudioUserId')
 

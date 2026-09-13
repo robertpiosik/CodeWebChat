@@ -282,7 +282,7 @@ export const Settings = () => {
       {updating_api_configuration && (
         <UiModal on_close={edit_api_configuration_cancel_handler}>
           <UiModal.Form
-            title="Edit Configuration"
+            title="Edit Model"
             on_save={edit_api_configuration_save_handler}
             on_cancel={edit_api_configuration_cancel_handler}
           >

@@ -341,20 +341,20 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     this._config_listener = vscode.workspace.onDidChangeConfiguration(
       (event) => {
         if (!this.webview_view) return
-        if (event.affectsConfiguration('codeWebChat.webConfigurations')) {
+        if (event.affectsConfiguration('codeWebChat.chatbots')) {
           this.send_web_configurations_to_webview(this.webview_view.webview)
         }
 
         if (
           event.affectsConfiguration('codeWebChat.providers') ||
-          event.affectsConfiguration('codeWebChat.apiConfigurations')
+          event.affectsConfiguration('codeWebChat.models')
         ) {
           handle_get_api_configurations(this)
         }
 
         const setup_progress_keys = [
           'codeWebChat.providers',
-          'codeWebChat.apiConfigurations'
+          'codeWebChat.models'
         ]
 
         if (
@@ -867,7 +867,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     const config = vscode.workspace.getConfiguration('codeWebChat')
 
     const web_configurations_config =
-      config.get<ConfigWebConfigurationFormat[]>('webConfigurations', []) || []
+      config.get<ConfigWebConfigurationFormat[]>('chatbots', []) || []
     const web_configurations_ui = web_configurations_config
       .filter((config) => config.chatbot && CHATBOTS[config.chatbot])
       .map((config) => {

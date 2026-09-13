@@ -276,7 +276,7 @@ export const perform_code_at_cursor = async (params: {
     if (action === 'autofill') {
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>(
-        'webConfigurations',
+        'chatbots',
         []
       )
       const valid_web_configurations = all_web_configurations.filter(

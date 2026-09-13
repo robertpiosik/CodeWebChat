@@ -993,7 +993,7 @@
           "type": "string",
           "scope": "resource"
         },
-        "codeWebChat.webConfigurations": {
+        "codeWebChat.chatbots": {
           "type": "array",
           "scope": "resource",
           "default": [
@@ -1110,7 +1110,7 @@
             ]
           }
         },
-        "codeWebChat.apiConfigurations": {
+        "codeWebChat.models": {
           "type": "array",
           "scope": "resource",
           "items": {

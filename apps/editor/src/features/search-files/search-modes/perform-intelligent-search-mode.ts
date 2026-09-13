@@ -293,7 +293,7 @@ export const perform_intelligent_search_mode = async (params: {
 
           if (action == 'autofill') {
             const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>(
-              'webConfigurations',
+              'chatbots',
               []
             )
             const valid_web_configurations = all_web_configurations.filter(

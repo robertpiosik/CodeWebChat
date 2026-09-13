@@ -6,7 +6,7 @@ import { t } from '@/i18n'
 export const remove = async (params: { name: string }): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const current_web_configurations =
-    config.get<ConfigWebConfigurationFormat[]>('webConfigurations', []) || []
+    config.get<ConfigWebConfigurationFormat[]>('chatbots', []) || []
 
   const index = current_web_configurations.findIndex(
     (c, i) => (c.name ?? `unnamed-${i}`) == params.name
@@ -47,7 +47,7 @@ export const remove = async (params: { name: string }): Promise<void> => {
 
   try {
     await config.update(
-      'webConfigurations',
+      'chatbots',
       updated_web_configurations,
       vscode.ConfigurationTarget.Global
     )
@@ -62,12 +62,12 @@ export const remove = async (params: { name: string }): Promise<void> => {
       const current_config = vscode.workspace.getConfiguration('codeWebChat')
       const current_web_configs =
         current_config.get<ConfigWebConfigurationFormat[]>(
-          'webConfigurations',
+          'chatbots',
           []
         ) || []
       current_web_configs.splice(index, 0, item_to_delete)
       await current_config.update(
-        'webConfigurations',
+        'chatbots',
         current_web_configs,
         vscode.ConfigurationTarget.Global
       )

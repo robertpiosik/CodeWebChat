@@ -538,6 +538,11 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   align="center"
                 />
               )}
+              {!is_alt_pressed && (
+                <span className={styles['footer__right__edit-format__plus']}>
+                  +{' '}
+                </span>
+              )}
               <button
                 className={cn(styles['footer__right__edit-format__button'], {
                   [styles['footer__right__edit-format__button--alt-pressed']]:
@@ -639,22 +644,17 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     </KeycapWrapper>
                   </span>
                 ) : (
-                  <>
-                    +{' '}
-                    <span
-                      className={styles['footer__right__edit-format__text']}
-                    >
+                  <span className={styles['footer__right__edit-format__text']}>
+                    {
                       {
-                        {
-                          whole: props.translations.edit_format_whole,
-                          'search-replace':
-                            props.translations.edit_format_search_replace,
-                          diff: props.translations.edit_format_diff,
-                          truncated: props.translations.edit_format_truncated
-                        }[props.edit_format as EditFormat]
-                      }
-                    </span>
-                  </>
+                        whole: props.translations.edit_format_whole,
+                        'search-replace':
+                          props.translations.edit_format_search_replace,
+                        diff: props.translations.edit_format_diff,
+                        truncated: props.translations.edit_format_truncated
+                      }[props.edit_format as EditFormat]
+                    }
+                  </span>
                 )}
               </button>
             </div>

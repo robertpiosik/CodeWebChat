@@ -11,7 +11,8 @@ import {
   migrate_commit_message_details_filename,
   migrate_prompt_templates_to_templates,
   migrate_clear_all_checkpoints,
-  migrate_model_providers_to_providers
+  migrate_model_providers_to_providers,
+  migrate_settings_keys_to_chatbots_and_models
 } from './migrations'
 import {
   apply_response_command,
@@ -76,6 +77,8 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     await migrate_clear_all_checkpoints(extension_context)
     // 20 September 2026
     await migrate_model_providers_to_providers(extension_context)
+    // 26 October 2026
+    await migrate_settings_keys_to_chatbots_and_models(extension_context)
   }
 
   await migrations()

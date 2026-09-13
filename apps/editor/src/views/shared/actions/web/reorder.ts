@@ -11,7 +11,7 @@ export const reorder = async (params: {
       ui_web_configuration_to_config_format(web_configuration)
     )
   await config.update(
-    'webConfigurations',
+    'chatbots',
     config_formatted_web_configurations,
     vscode.ConfigurationTarget.Global
   )

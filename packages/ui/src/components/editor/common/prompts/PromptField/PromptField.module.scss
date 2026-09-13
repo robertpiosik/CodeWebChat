@@ -164,21 +164,27 @@
     &__edit-format {
       position: relative;
       display: flex;
+      align-items: center;
       min-width: 0;
       font-size: 11px;
+
+      &__plus {
+        color: var(--cwc-text-color-dimmed);
+        padding-right: 1px;
+      }
 
       &__button {
         pointer-events: all;
         color: var(--vscode-foreground);
         padding: 5px 2px;
         margin: -5px 0;
-        opacity: var(--dimmed-opacity);
+        color: var(--cwc-text-color-dimmed);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
 
         &:hover {
-          opacity: 1;
+          color: var(--cwc-text-color);
         }
 
         &--alt-pressed {

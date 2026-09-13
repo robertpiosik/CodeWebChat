@@ -392,7 +392,7 @@ export const run_generate_action = async (params: {
 
           const config = vscode.workspace.getConfiguration('codeWebChat')
           const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>(
-            'webConfigurations',
+            'chatbots',
             []
           )
           const valid_web_configurations = all_web_configurations.filter(

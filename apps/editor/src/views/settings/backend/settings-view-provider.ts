@@ -68,7 +68,7 @@ export class SettingsViewProvider {
   private _send_web_configurations() {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const web_configurations_config =
-      config.get<any[]>('webConfigurations', []) || []
+      config.get<any[]>('chatbots', []) || []
 
     this.postMessage({
       command: 'WEB_CONFIGURATIONS',

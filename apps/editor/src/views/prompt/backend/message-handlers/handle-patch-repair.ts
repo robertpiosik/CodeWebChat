@@ -259,7 +259,7 @@ export const handle_patch_repair = async (params: {
 
   if (action === 'autofill') {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>('webConfigurations', [])
+    const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>('chatbots', [])
     const valid_web_configurations = all_web_configurations.filter(
       (c) => c.chatbot
     )
