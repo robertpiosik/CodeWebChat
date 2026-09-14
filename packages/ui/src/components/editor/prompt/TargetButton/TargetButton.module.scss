@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 12px;
+  padding: 0 3px 0 12px;
   height: 40px;
   width: 100%;
   border-radius: 10px;
@@ -38,7 +38,11 @@
     --ascii-color: var(--cwc-blue-foreground);
 
     &:not(.button--compact) {
-      background: linear-gradient(90deg, var(--cwc-bg-secondary) 0%, transparent 100%);
+      background: linear-gradient(
+        90deg,
+        var(--cwc-bg-tertiary) 0%,
+        transparent 100%
+      );
 
       .button__label {
         color: var(--cwc-text-color);
@@ -50,7 +54,11 @@
     --ascii-color: var(--cwc-purple-foreground);
 
     &:not(.button--compact) {
-      background: linear-gradient(90deg, var(--cwc-bg-secondary) 0%, transparent 100%);
+      background: linear-gradient(
+        90deg,
+        var(--cwc-bg-tertiary) 0%,
+        transparent 100%
+      );
 
       .button__label {
         color: var(--cwc-text-color);
@@ -66,8 +74,7 @@
     }
 
     .button__description {
-      color: var(--vscode-foreground);
-      opacity: 1;
+      color: var(--cwc-text-color);
     }
 
     &.button--hover-blue {
@@ -117,10 +124,9 @@
   &__description {
     display: flex;
     align-items: center;
-    gap: 2px;
-    color: var(--vscode-descriptionForeground);
+    gap: 1px;
+    color: var(--cwc-text-color-dimmed);
     z-index: 1;
-    opacity: 0.8;
     min-width: 0;
 
     > span:first-child {
