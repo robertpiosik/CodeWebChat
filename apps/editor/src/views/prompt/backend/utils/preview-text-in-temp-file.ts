@@ -14,7 +14,10 @@ export const preview_text_in_temp_file = async (params: {
     .update(`${Date.now()}-${Math.random()}`)
     .digest('hex')
   const ext = params.extension || '.txt'
-  const temp_file_path = path.join(os.tmpdir(), `${params.prefix}-${hash}${ext}`)
+  const temp_file_path = path.join(
+    os.tmpdir(),
+    `${params.prefix}-${hash}${ext}`
+  )
 
   try {
     await fs.promises.writeFile(temp_file_path, params.content, 'utf8')

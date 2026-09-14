@@ -1,9 +1,6 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
-import {
-  ProvidersManager,
-  Provider
-} from '@/services/providers-manager'
+import { ProvidersManager, Provider } from '@/services/providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { PROVIDERS } from '@/constants/providers'
 import { generate_unique_name } from '@/views/shared/utils/generate-unique-name'
@@ -205,9 +202,7 @@ export const upsert_provider = async (params: {
     })
   }
 
-  const run_edit_loop = async (
-    provider_to_edit: Provider
-  ): Promise<void> => {
+  const run_edit_loop = async (provider_to_edit: Provider): Promise<void> => {
     while (true) {
       const items: (vscode.QuickPickItem & { id: string })[] = [
         {
@@ -404,9 +399,7 @@ export const upsert_provider = async (params: {
   let original_name: string | undefined
 
   if (params.provider_name) {
-    const existing = await providers_manager.get_provider(
-      params.provider_name
-    )
+    const existing = await providers_manager.get_provider(params.provider_name)
     if (!existing) {
       vscode.window.showErrorMessage(
         dictionary.error_message.PROVIDER_NOT_FOUND_BY_NAME(
@@ -480,10 +473,7 @@ export const upsert_provider = async (params: {
             base_url: provider_info.base_url,
             api_key
           }
-          await providers_manager.save_providers([
-            ...providers,
-            new_provider
-          ])
+          await providers_manager.save_providers([...providers, new_provider])
           return new_provider
         }
         if (back_to_options) continue
@@ -560,10 +550,7 @@ export const upsert_provider = async (params: {
     }
   }
 
-  if (
-    working_provider.base_url &&
-    !working_provider.base_url.endsWith('/v1')
-  ) {
+  if (working_provider.base_url && !working_provider.base_url.endsWith('/v1')) {
     try {
       const headers: { [key: string]: string } = {}
       if (working_provider.api_key) {
@@ -582,9 +569,7 @@ export const upsert_provider = async (params: {
 
   working_provider.name = generate_unique_name(
     working_provider.name,
-    updated_providers
-      .filter((p) => p.name !== original_name)
-      .map((p) => p.name)
+    updated_providers.filter((p) => p.name !== original_name).map((p) => p.name)
   )
 
   if (original_name) {
@@ -599,11 +584,7 @@ export const upsert_provider = async (params: {
     }
   } else {
     if (actual_insertion_index !== undefined) {
-      updated_providers.splice(
-        actual_insertion_index,
-        0,
-        working_provider
-      )
+      updated_providers.splice(actual_insertion_index, 0, working_provider)
     } else {
       updated_providers.push(working_provider)
     }

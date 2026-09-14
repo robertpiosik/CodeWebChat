@@ -117,7 +117,7 @@ type Props = {
     repo_name: string,
     commit_hash: string,
     type: 'Commit' | 'CommitMessage',
-    commit_message?: string,
+    commit_message?: string
   ) => void
   on_skill_click?: (agent: string, repo: string, skill_name: string) => void
   on_install_browser_extension: () => void

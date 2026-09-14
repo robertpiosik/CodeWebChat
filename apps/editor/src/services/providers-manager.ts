@@ -123,13 +123,9 @@ export class ProvidersManager {
     return this._providers
   }
 
-  public async get_provider(
-    name: string
-  ): Promise<Provider | undefined> {
+  public async get_provider(name: string): Promise<Provider | undefined> {
     await this._load_promise
-    return this._providers.find(
-      (provider) => provider.name == name
-    )
+    return this._providers.find((provider) => provider.name == name)
   }
 
   private _validate_api_configuration(
@@ -151,7 +147,10 @@ export class ProvidersManager {
   public async get_api_configurations(): Promise<ApiConfiguration[]> {
     await this._load_promise
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const settings_configs = config.get<ConfigApiConfigurationFormat[]>('models', [])
+    const settings_configs = config.get<ConfigApiConfigurationFormat[]>(
+      'models',
+      []
+    )
 
     const api_configurations: ApiConfiguration[] = settings_configs.map(
       (sc) => {
@@ -171,7 +170,10 @@ export class ProvidersManager {
 
   public async save_api_configurations(api_configurations: ApiConfiguration[]) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const old_settings_configs = config.get<ConfigApiConfigurationFormat[]>('models', [])
+    const old_settings_configs = config.get<ConfigApiConfigurationFormat[]>(
+      'models',
+      []
+    )
 
     const new_settings_configs = api_configurations.map((c) => {
       const old_config = old_settings_configs.find((oldC) =>
@@ -221,7 +223,10 @@ export class ProvidersManager {
     default_key: keyof ConfigApiConfigurationFormat
   ): ApiConfiguration | undefined {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const settings_configs = config.get<ConfigApiConfigurationFormat[]>('models', [])
+    const settings_configs = config.get<ConfigApiConfigurationFormat[]>(
+      'models',
+      []
+    )
     const default_config_from_settings = settings_configs.find(
       (c) => c[default_key]
     )
@@ -245,7 +250,10 @@ export class ProvidersManager {
     config_to_set: ApiConfiguration | null
   ) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const settings_configs = config.get<ConfigApiConfigurationFormat[]>('models', [])
+    const settings_configs = config.get<ConfigApiConfigurationFormat[]>(
+      'models',
+      []
+    )
 
     const new_settings_configs = settings_configs.map((c) => {
       const is_default =
@@ -254,7 +262,7 @@ export class ProvidersManager {
 
       const new_c = { ...c }
       if (is_default) {
-        (new_c as any)[default_key] = true
+        ;(new_c as any)[default_key] = true
       } else {
         delete new_c[default_key]
       }
@@ -365,10 +373,7 @@ export class ProvidersManager {
     const { old_name, new_name } = params
     const config = vscode.workspace.getConfiguration('codeWebChat')
 
-    const configs = config.get<{ providerName: string }[]>(
-      'models',
-      []
-    )
+    const configs = config.get<{ providerName: string }[]>('models', [])
     const updated_configs = configs.map((c) => {
       if (c.providerName == old_name) {
         return { ...c, providerName: new_name }

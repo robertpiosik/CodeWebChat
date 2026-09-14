@@ -46,10 +46,7 @@ export const EditProviderForm: React.FC<Props> = (props) => {
     <UiScrollable top_shadow>
       <div className={styles.form}>
         <UiFieldset>
-          <UiField
-            label={t('edit-provider-form.name.label')}
-            html_for="name"
-          >
+          <UiField label={t('edit-provider-form.name.label')} html_for="name">
             <UiInput
               id="name"
               type="text"
@@ -110,14 +107,10 @@ export const EditProviderForm: React.FC<Props> = (props) => {
 
           {base_url.includes('api.anthropic.com') && (
             <UiField
-              label={t(
-                'edit-provider-form.extended-cache.anthropic.title'
-              )}
+              label={t('edit-provider-form.extended-cache.anthropic.title')}
               info={
                 <>
-                  {t(
-                    'edit-provider-form.extended-cache.anthropic.description'
-                  )}{' '}
+                  {t('edit-provider-form.extended-cache.anthropic.description')}{' '}
                   <a
                     href="#"
                     onClick={(e) => {

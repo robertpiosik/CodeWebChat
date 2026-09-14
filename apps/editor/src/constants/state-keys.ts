@@ -82,8 +82,7 @@ export const LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY =
 export const LAST_SEARCH_SELECTED_FILES_FOR_CONTEXT_MODE_STATE_KEY =
   'last-search-selected-files-for-context-mode'
 
-export const LAST_AGENTIC_SEARCH_QUERY_STATE_KEY =
-  'last-agentic-search-query'
+export const LAST_AGENTIC_SEARCH_QUERY_STATE_KEY = 'last-agentic-search-query'
 export const LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY =
   'last-selected-workspace-in-agentic-search'
 export const LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY =

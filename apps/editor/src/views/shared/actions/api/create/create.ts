@@ -5,10 +5,7 @@ import {
   Provider
 } from '@/services/providers-manager'
 import { ModelFetcher } from '@/services/model-fetcher'
-import {
-  initial_select_model,
-  initial_select_provider
-} from './interactions'
+import { initial_select_model, initial_select_provider } from './interactions'
 import { t } from '@/i18n'
 
 export const create = async (params: {

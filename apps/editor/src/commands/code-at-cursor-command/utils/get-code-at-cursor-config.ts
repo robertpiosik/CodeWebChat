@@ -67,10 +67,9 @@ export const get_code_at_cursor_api_configuration = async (params: {
     selected_api_configuration = api_configuration
   }
 
-  const provider =
-    await params.providers_manager.get_provider(
-      selected_api_configuration.provider_name
-    )
+  const provider = await params.providers_manager.get_provider(
+    selected_api_configuration.provider_name
+  )
 
   if (!provider) {
     vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))

@@ -516,13 +516,19 @@ export class WorkspaceProvider
     let checkbox_state: vscode.TreeItemCheckboxState | undefined =
       this._checked_items.get(key) ?? vscode.TreeItemCheckboxState.Unchecked
 
-    const is_selected_files_view = element.contextValue?.startsWith('context') ?? false
-    if (!is_selected_files_view && element.isDirectory && this._partially_checked_dirs.has(key)) {
+    const is_selected_files_view =
+      element.contextValue?.startsWith('context') ?? false
+    if (
+      !is_selected_files_view &&
+      element.isDirectory &&
+      this._partially_checked_dirs.has(key)
+    ) {
       checkbox_state = vscode.TreeItemCheckboxState.Checked
     }
 
     if (element.isDirectory) {
-      const tokens = await this._token_calculator.calculate_directory_tokens(key)
+      const tokens =
+        await this._token_calculator.calculate_directory_tokens(key)
       if (tokens.file_count === 0) {
         checkbox_state = undefined
       }
@@ -725,7 +731,7 @@ export class WorkspaceProvider
 
       let checkbox_state: vscode.TreeItemCheckboxState | undefined =
         this._checked_items.get(root) ?? vscode.TreeItemCheckboxState.Unchecked
-        
+
       if (!is_selected_files_view && this._partially_checked_dirs.has(root)) {
         checkbox_state = vscode.TreeItemCheckboxState.Checked
       }
@@ -975,7 +981,11 @@ export class WorkspaceProvider
         let final_checkbox_state: vscode.TreeItemCheckboxState | undefined =
           checkbox_state
 
-        if (is_directory && !is_selected_files_view && this._partially_checked_dirs.has(full_path)) {
+        if (
+          is_directory &&
+          !is_selected_files_view &&
+          this._partially_checked_dirs.has(full_path)
+        ) {
           final_checkbox_state = vscode.TreeItemCheckboxState.Checked
         }
 

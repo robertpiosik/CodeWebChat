@@ -1,8 +1,5 @@
 import * as vscode from 'vscode'
-import {
-  ProvidersManager,
-  Provider
-} from '@/services/providers-manager'
+import { ProvidersManager, Provider } from '@/services/providers-manager'
 import { upsert_provider } from '../../upsert-provider'
 import { t } from '@/i18n'
 

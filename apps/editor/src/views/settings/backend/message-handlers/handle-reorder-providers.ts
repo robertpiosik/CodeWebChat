@@ -1,17 +1,12 @@
 import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
-import {
-  ProvidersManager,
-  Provider
-} from '@/services/providers-manager'
+import { ProvidersManager, Provider } from '@/services/providers-manager'
 import { ReorderProvidersMessage } from '@/views/settings/types/messages'
 
 export const handle_reorder_providers = async (
   provider: SettingsViewProvider,
   message: ReorderProvidersMessage
 ): Promise<void> => {
-  const providers_manager = new ProvidersManager(
-    provider.extension_context
-  )
+  const providers_manager = new ProvidersManager(provider.extension_context)
   const current_providers = await providers_manager.get_providers()
 
   const reordered_names = message.providers.map((p) => p.name)

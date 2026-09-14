@@ -10,9 +10,7 @@ export const handle_pick_provider = async (
   provider: SettingsViewProvider,
   message: any
 ): Promise<void> => {
-  const providers_manager = new ProvidersManager(
-    provider.extension_context
-  )
+  const providers_manager = new ProvidersManager(provider.extension_context)
   const result = await edit_provider_for_api_configuration(
     providers_manager,
     message.current_provider_name

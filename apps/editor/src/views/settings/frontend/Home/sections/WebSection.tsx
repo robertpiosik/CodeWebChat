@@ -100,11 +100,7 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
   }
 
   return (
-    <UiSection
-      ref={ref}
-      title={t('web.title')}
-      subtitle={t('web.subtitle')}
-    >
+    <UiSection ref={ref} title={t('web.title')} subtitle={t('web.subtitle')}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <UiNotice type="info">{t('web.notice')}</UiNotice>
       </div>

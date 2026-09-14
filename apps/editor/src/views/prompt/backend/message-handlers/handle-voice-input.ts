@@ -261,8 +261,7 @@ export const handle_voice_input = async (
     const providers_manager = new ProvidersManager(
       prompt_view_provider.extension_context
     )
-    const api_configurations =
-      await providers_manager.get_api_configurations()
+    const api_configurations = await providers_manager.get_api_configurations()
 
     if (api_configurations.length == 0) {
       open_settings.api.api_configurations()

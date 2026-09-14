@@ -4,9 +4,7 @@ import { ProvidersManager } from '@/services/providers-manager'
 export const handle_get_providers = async (
   provider: SettingsViewProvider
 ): Promise<void> => {
-  const providers_manager = new ProvidersManager(
-    provider.extension_context
-  )
+  const providers_manager = new ProvidersManager(provider.extension_context)
   const saved_providers = await providers_manager.get_providers()
 
   const providers_for_client = saved_providers.map((p) => {

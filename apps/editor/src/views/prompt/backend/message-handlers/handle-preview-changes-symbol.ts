@@ -18,7 +18,9 @@ export const handle_preview_changes_symbol = async (message: {
         extension: '.md'
       })
     } else {
-      vscode.window.showInformationMessage('No changes found or failed to generate diff.')
+      vscode.window.showInformationMessage(
+        'No changes found or failed to generate diff.'
+      )
     }
   } catch (error) {
     vscode.window.showErrorMessage(`Failed to preview changes: ${error}`)

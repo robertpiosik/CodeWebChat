@@ -3,10 +3,8 @@ import { t } from '@/i18n'
 
 export const prompt_for_search_mode = async (
   last_mode: 'phrase' | 'keywords' | 'intelligent',
-  show_back_button?: boolean,
-): Promise<
-  'phrase' | 'keywords' | 'intelligent' | undefined | 'back'
-> => {
+  show_back_button?: boolean
+): Promise<'phrase' | 'keywords' | 'intelligent' | undefined | 'back'> => {
   const items: (vscode.QuickPickItem & {
     mode: 'phrase' | 'keywords' | 'intelligent'
   })[] = [

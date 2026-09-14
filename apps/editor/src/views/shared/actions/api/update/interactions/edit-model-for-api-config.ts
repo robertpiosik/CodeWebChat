@@ -17,10 +17,9 @@ export const edit_model_for_api_configuration = async (params: {
   providers_manager: ProvidersManager
   model_fetcher: ModelFetcher
 }) => {
-  const provider_from_manager =
-    await params.providers_manager.get_provider(
-      params.api_configuration.provider_name
-    )
+  const provider_from_manager = await params.providers_manager.get_provider(
+    params.api_configuration.provider_name
+  )
   if (!provider_from_manager) {
     vscode.window.showErrorMessage(
       dictionary.error_message.PROVIDER_NOT_FOUND_BY_NAME(

@@ -65,11 +65,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
   })
 
   return (
-    <UiSection
-      ref={ref}
-      title={t('api.title')}
-      subtitle={t('api.subtitle')}
-    >
+    <UiSection ref={ref} title={t('api.title')} subtitle={t('api.subtitle')}>
       <UiNotice type="info">
         <Translation
           id="api.notice.credentials"
@@ -92,9 +88,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
       </UiNotice>
       {props.providers.length > 0 && (
         <div
-          ref={(el) =>
-            props.set_section_ref('section:api:group:providers', el)
-          }
+          ref={(el) => props.set_section_ref('section:api:group:providers', el)}
         >
           <UiGroup title={t('api.providers.title')}>
             <SortableList
@@ -313,9 +307,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                 }}
               />
               <DefaultConfigurationSelector
-                title={t(
-                  'api.default-configurations.tool.code-at-cursor'
-                )}
+                title={t('api.default-configurations.tool.code-at-cursor')}
                 value={props.defaults['code-at-cursor'] || null}
                 configurations={selector_configurations}
                 on_unset={() =>
@@ -330,9 +322,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                 }}
               />
               <DefaultConfigurationSelector
-                title={t(
-                  'api.default-configurations.tool.commit-messages'
-                )}
+                title={t('api.default-configurations.tool.commit-messages')}
                 value={props.defaults['commit-messages'] || null}
                 configurations={selector_configurations}
                 on_unset={() =>

@@ -36,9 +36,7 @@ export const perform_code_at_cursor = async (params: {
   completion_instructions?: string
   api_configuration_id?: string
 }) => {
-  const providers_manager = new ProvidersManager(
-    params.extension_context
-  )
+  const providers_manager = new ProvidersManager(params.extension_context)
 
   const editor = vscode.window.activeTextEditor
   if (!editor) return
@@ -360,10 +358,8 @@ export const perform_code_at_cursor = async (params: {
     show_quick_pick = false
     current_api_configuration_id = undefined
 
-    const {
-      provider,
-      api_configuration: code_at_cursor_api_configuration
-    } = api_configuration_result
+    const { provider, api_configuration: code_at_cursor_api_configuration } =
+      api_configuration_result
 
     if (!code_at_cursor_api_configuration.provider_name) {
       vscode.window.showErrorMessage(

@@ -110,9 +110,7 @@ export const run_generate_action = async (params: {
       const action_enter_manually = t('common.action.enter-manually')
       const action_copy_prompt = t('common.action.copy-prompt')
 
-      const providers_manager = new ProvidersManager(
-        params.extension_context
-      )
+      const providers_manager = new ProvidersManager(params.extension_context)
       const api_configurations =
         await providers_manager.get_api_configurations()
       const has_api_configurations = api_configurations.length > 0
@@ -391,10 +389,9 @@ export const run_generate_action = async (params: {
           }
 
           const config = vscode.workspace.getConfiguration('codeWebChat')
-          const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>(
-            'chatbots',
-            []
-          )
+          const all_web_configurations = config.get<
+            ConfigWebConfigurationFormat[]
+          >('chatbots', [])
           const valid_web_configurations = all_web_configurations.filter(
             (c) => c.chatbot
           )

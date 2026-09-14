@@ -402,7 +402,7 @@ export const agentic_search = async (params: {
           const flags = config
             .get<string[]>(configKey, [])
             .filter((f) => f.trim() !== '')
-          
+
           active_flag_index = flags.length
 
           await config.update(
@@ -746,9 +746,7 @@ export const agentic_search = async (params: {
           const workspace_name =
             params.workspace_provider.get_workspace_name(selected_root)
           const prefix = `${workspace_name}/`
-          const root_files = workspace_files.filter((f) =>
-            f.startsWith(prefix)
-          )
+          const root_files = workspace_files.filter((f) => f.startsWith(prefix))
           workspace_files = root_files.map((f) => f.substring(prefix.length))
         }
 

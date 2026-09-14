@@ -18,4 +18,3 @@ export const translations = {
     bg: 'Неуспешно зареждане на доставчици от Models.dev'
   }
 } as const
-

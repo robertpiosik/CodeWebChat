@@ -9,9 +9,7 @@ export const handle_delete_provider = async (
   provider: SettingsViewProvider,
   message: DeleteProviderMessage
 ): Promise<void> => {
-  const providers_manager = new ProvidersManager(
-    provider.extension_context
-  )
+  const providers_manager = new ProvidersManager(provider.extension_context)
   const provider_name_to_delete = message.provider_name
 
   const confirmation = await vscode.window.showWarningMessage(
@@ -52,8 +50,7 @@ export const handle_delete_provider = async (
   )
 
   if (choice === undo_action) {
-    const current_providers =
-      await providers_manager.get_providers()
+    const current_providers = await providers_manager.get_providers()
     current_providers.splice(deleted_provider_index, 0, deleted_provider)
     await providers_manager.save_providers(current_providers)
   }

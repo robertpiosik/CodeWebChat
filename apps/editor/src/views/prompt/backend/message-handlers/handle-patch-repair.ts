@@ -126,8 +126,7 @@ export const handle_patch_repair = async (params: {
     params.prompt_view_provider.extension_context
   )
 
-  const api_configurations =
-    await providers_manager.get_api_configurations()
+  const api_configurations = await providers_manager.get_api_configurations()
   const has_api_configurations = api_configurations.length > 0
 
   let skip_action_quick_pick = false
@@ -138,7 +137,9 @@ export const handle_patch_repair = async (params: {
       skip_action_quick_pick = true
     } else {
       vscode.window.showInformationMessage(
-        t('views.prompt.handlers.handle-patch-repair.some-changes-unable-to-apply')
+        t(
+          'views.prompt.handlers.handle-patch-repair.some-changes-unable-to-apply'
+        )
       )
     }
   }
@@ -260,7 +261,10 @@ export const handle_patch_repair = async (params: {
 
   if (action == 'autofill') {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>('chatbots', [])
+    const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>(
+      'chatbots',
+      []
+    )
     const valid_web_configurations = all_web_configurations.filter(
       (c) => c.chatbot
     )

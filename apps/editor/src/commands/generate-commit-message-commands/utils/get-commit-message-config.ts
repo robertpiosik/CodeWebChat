@@ -25,9 +25,7 @@ export const get_commit_message_api_configuration = async (params: {
   | 'back'
   | null
 > => {
-  const providers_manager = new ProvidersManager(
-    params.extension_context
-  )
+  const providers_manager = new ProvidersManager(params.extension_context)
   const show_quick_pick = params.show_quick_pick ?? false
   const show_back_button = params.show_back_button ?? true
 
@@ -40,8 +38,7 @@ export const get_commit_message_api_configuration = async (params: {
     : await providers_manager.get_default_commit_messages_api_configuration()
 
   if (!commit_message_api_configuration) {
-    const api_configurations =
-      await providers_manager.get_api_configurations()
+    const api_configurations = await providers_manager.get_api_configurations()
 
     if (api_configurations.length == 0) {
       show_no_configurations_warning('api')

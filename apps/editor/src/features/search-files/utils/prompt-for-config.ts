@@ -75,10 +75,9 @@ export const prompt_for_api_configuration = async (params: {
     )
   }
 
-  const provider =
-    await params.providers_manager.get_provider(
-      selected_api_configuration.provider_name
-    )
+  const provider = await params.providers_manager.get_provider(
+    selected_api_configuration.provider_name
+  )
   if (!provider) {
     vscode.window.showErrorMessage(
       t('feature.search-files.error.provider-not-found')

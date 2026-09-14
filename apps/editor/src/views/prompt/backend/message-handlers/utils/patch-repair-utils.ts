@@ -20,8 +20,7 @@ export const get_patch_repair_config = async (params: {
   show_quick_pick?: boolean
   extension_context: vscode.ExtensionContext
 }): Promise<
-  | { provider: Provider; api_configuration: ApiConfiguration }
-  | undefined
+  { provider: Provider; api_configuration: ApiConfiguration } | undefined
 > => {
   const patch_repair_api_configurations =
     await params.providers_manager.get_api_configurations()
@@ -71,10 +70,9 @@ export const get_patch_repair_config = async (params: {
     selected_api_configuration = api_configuration
   }
 
-  const provider =
-    await params.providers_manager.get_provider(
-      selected_api_configuration.provider_name
-    )
+  const provider = await params.providers_manager.get_provider(
+    selected_api_configuration.provider_name
+  )
 
   if (!provider) {
     vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))

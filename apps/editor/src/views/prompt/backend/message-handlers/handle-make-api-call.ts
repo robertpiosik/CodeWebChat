@@ -41,8 +41,7 @@ const get_api_configuration = async (params: {
   api_configuration_id?: string
   prompt_type: ApiPromptType
 }): Promise<
-  | { provider: Provider; api_configuration: ApiConfiguration }
-  | undefined
+  { provider: Provider; api_configuration: ApiConfiguration } | undefined
 > => {
   const api_configurations =
     await params.providers_manager.get_api_configurations()
@@ -123,10 +122,9 @@ const get_api_configuration = async (params: {
     selected_api_configuration = api_configuration
   }
 
-  const provider =
-    await params.providers_manager.get_provider(
-      selected_api_configuration.provider_name
-    )
+  const provider = await params.providers_manager.get_provider(
+    selected_api_configuration.provider_name
+  )
 
   if (!provider) {
     vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))

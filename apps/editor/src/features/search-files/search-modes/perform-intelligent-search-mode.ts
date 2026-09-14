@@ -119,9 +119,7 @@ export const perform_intelligent_search_mode = async (params: {
       let go_back_to_shrink = false
 
       while (true) {
-        const providers_manager = new ProvidersManager(
-          params.extension_context
-        )
+        const providers_manager = new ProvidersManager(params.extension_context)
         const api_configurations =
           await providers_manager.get_api_configurations()
 
@@ -292,10 +290,9 @@ export const perform_intelligent_search_mode = async (params: {
           }
 
           if (action == 'autofill') {
-            const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>(
-              'chatbots',
-              []
-            )
+            const all_web_configurations = config.get<
+              ConfigWebConfigurationFormat[]
+            >('chatbots', [])
             const valid_web_configurations = all_web_configurations.filter(
               (c) => c.chatbot
             )
@@ -397,10 +394,8 @@ export const perform_intelligent_search_mode = async (params: {
             }
             if (api_configuration_result == 'cancel') return undefined
 
-            const {
-              api_configuration: selected_api_configuration,
-              provider
-            } = api_configuration_result
+            const { api_configuration: selected_api_configuration, provider } =
+              api_configuration_result
 
             const api_result = await search_files_by_intelligent(
               analysis.files_data,

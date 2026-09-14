@@ -23,9 +23,7 @@ export const handle_pick_api_reasoning_effort = async (
 
   if (new_effort !== null) {
     let is_valid = true
-    const provider = await providers_manager.get_provider(
-      message.provider_name
-    )
+    const provider = await providers_manager.get_provider(message.provider_name)
 
     if (provider && provider.base_url) {
       try {

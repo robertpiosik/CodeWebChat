@@ -1,5 +1,9 @@
 import { CodingAgent } from '../types'
-import { build_agent_prompt, check_command_exists, get_progress_dots } from '../utils'
+import {
+  build_agent_prompt,
+  check_command_exists,
+  get_progress_dots
+} from '../utils'
 
 let accumulated_output = ''
 let last_action_name = ''

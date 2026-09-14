@@ -33,9 +33,7 @@ export const pick_provider_source = async (params?: {
       ]
     },
     {
-      label: t(
-        'views.shared.actions.api.upsert-provider.options.predefined'
-      ),
+      label: t('views.shared.actions.api.upsert-provider.options.predefined'),
       kind: vscode.QuickPickItemKind.Separator
     },
     ...available_built_in.map(([id, info]) => ({
@@ -47,9 +45,7 @@ export const pick_provider_source = async (params?: {
   const quick_pick = vscode.window.createQuickPick()
   quick_pick.ignoreFocusOut = true
   quick_pick.items = items
-  quick_pick.title = t(
-    'views.shared.actions.api.upsert-provider.options.title'
-  )
+  quick_pick.title = t('views.shared.actions.api.upsert-provider.options.title')
   quick_pick.placeholder = t(
     'views.shared.actions.api.upsert-provider.options.placeholder'
   )

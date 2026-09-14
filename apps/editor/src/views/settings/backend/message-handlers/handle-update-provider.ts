@@ -1,9 +1,6 @@
 import * as vscode from 'vscode'
 import { SettingsViewProvider } from '../settings-view-provider'
-import {
-  ProvidersManager,
-  Provider
-} from '@/services/providers-manager'
+import { ProvidersManager, Provider } from '@/services/providers-manager'
 import { generate_unique_name } from '@/views/shared/utils/generate-unique-name'
 import { UpdateProviderMessage } from '@/views/settings/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
@@ -65,9 +62,7 @@ export const handle_update_provider = async (
   }
 
   if (!message.provider.base_url.trim()) {
-    vscode.window.showErrorMessage(
-      'A Base URL is required for providers.'
-    )
+    vscode.window.showErrorMessage('A Base URL is required for providers.')
     return
   }
   if (!message.provider.name.trim()) {
@@ -75,9 +70,7 @@ export const handle_update_provider = async (
     return
   }
 
-  const providers_manager = new ProvidersManager(
-    provider.extension_context
-  )
+  const providers_manager = new ProvidersManager(provider.extension_context)
   const providers = await providers_manager.get_providers()
 
   const updated_providers = [...providers]
@@ -151,7 +144,6 @@ export const handle_update_provider = async (
 
   provider.postMessage({ command: 'PROVIDER_UPDATED' })
 
-  const { handle_get_providers } =
-    await import('./handle-get-providers')
+  const { handle_get_providers } = await import('./handle-get-providers')
   await handle_get_providers(provider)
 }

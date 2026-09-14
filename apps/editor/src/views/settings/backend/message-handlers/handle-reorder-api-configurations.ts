@@ -5,9 +5,7 @@ export const handle_reorder_api_configurations = async (
   provider: SettingsViewProvider,
   message: any
 ): Promise<void> => {
-  const providers_manager = new ProvidersManager(
-    provider.extension_context
-  )
+  const providers_manager = new ProvidersManager(provider.extension_context)
   const current_configs = await providers_manager.get_api_configurations()
   const { get_api_configuration_id } =
     await import('@/services/providers-manager')

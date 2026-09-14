@@ -61,7 +61,7 @@ export const search_files = async (params: {
     try {
       const mode_result = await prompt_for_search_mode(
         initial_search_mode,
-        params.show_back_button,
+        params.show_back_button
       )
 
       if (mode_result == 'back') return 'back'

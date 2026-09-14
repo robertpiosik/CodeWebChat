@@ -13,9 +13,7 @@ export const handle_select_default_api_configuration = async (
   provider: SettingsViewProvider,
   message: SelectDefaultApiConfigurationMessage
 ): Promise<void> => {
-  const providers_manager = new ProvidersManager(
-    provider.extension_context
-  )
+  const providers_manager = new ProvidersManager(provider.extension_context)
   const api_configurations = await providers_manager.get_api_configurations()
 
   if (api_configurations.length == 0) {

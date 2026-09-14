@@ -106,7 +106,7 @@ export const use_prompt = (vscode: any) => {
     repo_name: string,
     commit_hash: string,
     type: 'Commit' | 'CommitMessage',
-    commit_message?: string,
+    commit_message?: string
   ) => {
     post_message(vscode, {
       command: 'PREVIEW_COMMIT_SYMBOL',
@@ -117,7 +117,11 @@ export const use_prompt = (vscode: any) => {
     })
   }
 
-  const handle_skill_click = (agent: string, repo: string, skill_name: string) => {
+  const handle_skill_click = (
+    agent: string,
+    repo: string,
+    skill_name: string
+  ) => {
     post_message(vscode, {
       command: 'PREVIEW_SKILL_SYMBOL',
       agent,

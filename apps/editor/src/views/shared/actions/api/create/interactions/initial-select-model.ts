@@ -19,9 +19,7 @@ export const initial_select_model = async (
     base_url = provider.base_url
 
     if (!base_url)
-      throw new Error(
-        `Base URL not found for provider ${provider.name}`
-      )
+      throw new Error(`Base URL not found for provider ${provider.name}`)
 
     const models = await vscode.window.withProgress(
       {
@@ -142,9 +140,7 @@ export const initial_select_model = async (
       error.message == MODELS_ROUTE_NOT_FOUND_ERROR
     ) {
       vscode.window.showInformationMessage(
-        dictionary.information_message.MODELS_ROUTE_NOT_FOUND(
-          provider.name
-        ),
+        dictionary.information_message.MODELS_ROUTE_NOT_FOUND(provider.name),
         { modal: true }
       )
     } else {

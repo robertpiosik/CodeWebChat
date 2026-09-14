@@ -28,12 +28,12 @@ export const remove = async (params: { name: string }): Promise<void> => {
     dictionary.warning_message.PLEASE_CONFIRM,
     {
       modal: true,
-          detail: is_unnamed
-            ? dictionary.warning_message.CONFIRM_DELETE_ITEM('chatbot')
-            : dictionary.warning_message.CONFIRM_DELETE_NAMED_ITEM(
-                'chatbot',
-                display_item_name
-              )
+      detail: is_unnamed
+        ? dictionary.warning_message.CONFIRM_DELETE_ITEM('chatbot')
+        : dictionary.warning_message.CONFIRM_DELETE_NAMED_ITEM(
+            'chatbot',
+            display_item_name
+          )
     },
     delete_button
   )
@@ -61,10 +61,7 @@ export const remove = async (params: { name: string }): Promise<void> => {
     if (choice === undo_action) {
       const current_config = vscode.workspace.getConfiguration('codeWebChat')
       const current_web_configs =
-        current_config.get<ConfigWebConfigurationFormat[]>(
-          'chatbots',
-          []
-        ) || []
+        current_config.get<ConfigWebConfigurationFormat[]>('chatbots', []) || []
       current_web_configs.splice(index, 0, item_to_delete)
       await current_config.update(
         'chatbots',

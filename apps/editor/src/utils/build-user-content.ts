@@ -30,8 +30,7 @@ export const build_user_content = (params: {
     return parsed
   }
 
-  const is_anthropic =
-    params.provider.base_url == PROVIDERS.Anthropic.base_url
+  const is_anthropic = params.provider.base_url == PROVIDERS.Anthropic.base_url
   const is_openai = params.provider.base_url == PROVIDERS.OpenAI.base_url
 
   if (is_anthropic || is_openai) {

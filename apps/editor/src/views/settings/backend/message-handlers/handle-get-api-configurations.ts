@@ -8,9 +8,7 @@ import { ApiConfiguration } from '@/views/settings/types/messages'
 export const handle_get_api_configurations = async (
   provider: SettingsViewProvider
 ): Promise<void> => {
-  const providers_manager = new ProvidersManager(
-    provider.extension_context
-  )
+  const providers_manager = new ProvidersManager(provider.extension_context)
 
   const saved_api_configurations =
     await providers_manager.get_api_configurations()

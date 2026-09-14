@@ -70,7 +70,7 @@ describe('standard-parser', () => {
       })
     })
 
-   it('merges content when merge conflicts have file path as bold text', () => {
+    it('merges content when merge conflicts have file path as bold text', () => {
       const test_case = 'merge-conflicts-file-path-as-bold-text'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({

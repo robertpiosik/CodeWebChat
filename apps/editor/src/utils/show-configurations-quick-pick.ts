@@ -16,9 +16,7 @@ export type ShowConfigurationsQuickPickOptions<T> = {
   show_back_button?: boolean
 }
 
-const map_api_configuration_to_item = (
-  api_configuration: ApiConfiguration
-) => {
+const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => {
   const description_parts = [api_configuration.provider_name]
   if (api_configuration.reasoning_effort) {
     description_parts.push(`${api_configuration.reasoning_effort}`)
@@ -36,10 +34,8 @@ const map_web_configuration_to_item = (
   web_configuration: ConfigWebConfigurationFormat
 ) => {
   const is_unnamed =
-    !web_configuration.name ||
-    /^\(\d+\)$/.test(web_configuration.name.trim())
-  const chatbot =
-    CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]
+    !web_configuration.name || /^\(\d+\)$/.test(web_configuration.name.trim())
+  const chatbot = CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]
   const chatbot_models = chatbot?.models
   const model = web_configuration.model
     ? chatbot_models?.[web_configuration.model]?.label
@@ -53,8 +49,7 @@ const map_web_configuration_to_item = (
     (chatbot?.supports_reasoning_effort ||
       !!(
         web_configuration.model &&
-        chatbot_models?.[web_configuration.model]
-          ?.supported_reasoning_efforts
+        chatbot_models?.[web_configuration.model]?.supported_reasoning_efforts
       ))
   ) {
     details.push(web_configuration.reasoningEffort)
@@ -83,9 +78,10 @@ export const show_configurations_quick_pick = async <T>(
     show_back_button = false
   } = options
 
-  const map_item = type === 'api'
-    ? (map_api_configuration_to_item as unknown as (item: T) => any)
-    : (map_web_configuration_to_item as unknown as (item: T) => any)
+  const map_item =
+    type === 'api'
+      ? (map_api_configuration_to_item as unknown as (item: T) => any)
+      : (map_web_configuration_to_item as unknown as (item: T) => any)
 
   type PickItem = vscode.QuickPickItem & {
     original_item?: T

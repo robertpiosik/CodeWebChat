@@ -67,17 +67,19 @@ export class SettingsViewProvider {
 
   private _send_web_configurations() {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const web_configurations_config =
-      config.get<any[]>('chatbots', []) || []
+    const web_configurations_config = config.get<any[]>('chatbots', []) || []
 
     this.postMessage({
       command: 'WEB_CONFIGURATIONS',
       web_configurations: web_configurations_config
-        .filter((c: any) => c.chatbot && CHATBOTS[c.chatbot as keyof typeof CHATBOTS])
+        .filter(
+          (c: any) => c.chatbot && CHATBOTS[c.chatbot as keyof typeof CHATBOTS]
+        )
         .map((config: any) => {
           let model = config.model
           if (config.chatbot && model) {
-            const chatbot_info = CHATBOTS[config.chatbot as keyof typeof CHATBOTS]
+            const chatbot_info =
+              CHATBOTS[config.chatbot as keyof typeof CHATBOTS]
             const is_user_provided_supported =
               chatbot_info.supports_user_provided_model
             const is_model_predefined = chatbot_info.models?.[model]
