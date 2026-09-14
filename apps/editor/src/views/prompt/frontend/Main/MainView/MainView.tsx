@@ -280,17 +280,6 @@ export const MainView: React.FC<Props> = (props) => {
           }}
         />
 
-        {context_is_empty_warning && (
-          <>
-            <UiStatusBar
-              theme="warning"
-              icon="codicon-warning"
-              label={t('common.context-is-empty')}
-            />
-            <UiSeparator height={4} />
-          </>
-        )}
-
         <UiSeparator height={2} />
 
         {props.response_history.length > 0 &&
@@ -429,28 +418,44 @@ export const MainView: React.FC<Props> = (props) => {
           />
         </div>
 
-        <PromptAttachments
-          token_count={props.selected_files_token_count}
-          files_count={
-            context_is_empty_warning ? undefined : props.selected_files.length
-          }
-          theme={
-            props.target == TARGET.WEB
-              ? props.web_prompt_type == 'edit-files'
-                ? 'blue'
-                : 'purple'
-              : props.api_prompt_type == 'edit-files'
-                ? 'blue'
-                : 'purple'
-          }
-          is_alt_pressed={is_alt_pressed}
-          on_agentic_search={props.on_agentic_search}
-          translations={{
-            attaching_file: t('selected-files.attaching-file'),
-            attaching_files: t('selected-files.attaching-files'),
-            agentic_search: t('selected-files.agentic-search')
-          }}
-        />
+        {context_is_empty_warning ? (
+          <UiStatusBar
+            placement="bottom"
+            theme="warning"
+            icon="codicon-warning"
+            label={t('common.context-is-empty')}
+            actions={[
+              {
+                id: 'agentic-search',
+                icon: 'codicon-search-sparkle',
+                label: t('selected-files.agentic-search'),
+                keycap: is_alt_pressed ? '/' : undefined,
+                on_click: props.on_agentic_search
+              }
+            ]}
+          />
+        ) : (
+          <PromptAttachments
+            token_count={props.selected_files_token_count}
+            files_count={props.selected_files.length}
+            theme={
+              props.target == TARGET.WEB
+                ? props.web_prompt_type == 'edit-files'
+                  ? 'blue'
+                  : 'purple'
+                : props.api_prompt_type == 'edit-files'
+                  ? 'blue'
+                  : 'purple'
+            }
+            is_alt_pressed={is_alt_pressed}
+            on_agentic_search={props.on_agentic_search}
+            translations={{
+              attaching_file: t('selected-files.attaching-file'),
+              attaching_files: t('selected-files.attaching-files'),
+              agentic_search: t('selected-files.agentic-search')
+            }}
+          />
+        )}
 
         <UiSeparator height={6} />
 
