@@ -142,23 +142,18 @@ export const Home: React.FC<Props> = (props) => {
           })}
           ref={container_ref}
         >
-          <div className={styles['header__left']}>
-            <span className="codicon codicon-home" />
-          </div>
-          <div className={styles['header__right']}>
-            <CompactableActionButton
-              label={discord_label}
-              href="https://discord.gg/KJySXsrSX5"
-              icon="DISCORD"
-              is_compact={compact_step >= 1}
-            />
-            <CompactableActionButton
-              label={coffee_label}
-              on_click={props.on_donate_click}
-              codicon="coffee"
-              is_compact={compact_step >= 2}
-            />
-          </div>
+          <CompactableActionButton
+            label={discord_label}
+            href="https://discord.gg/KJySXsrSX5"
+            icon="DISCORD"
+            is_compact={compact_step >= 1}
+          />
+          <CompactableActionButton
+            label={coffee_label}
+            on_click={props.on_donate_click}
+            codicon="coffee"
+            is_compact={compact_step >= 2}
+          />
         </div>
 
         <div

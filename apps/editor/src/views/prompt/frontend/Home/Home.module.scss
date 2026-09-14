@@ -9,9 +9,9 @@
     inset: 0;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 0 12px;
+    justify-content: center;
+    gap: 4px;
+    padding: 0 22px;
     opacity: 1;
     transform: translateY(0);
     transition:
@@ -19,7 +19,7 @@
       opacity var(--transition-duration-250) var(--transition-timing-function);
 
     :global([data-modern-ui='true']) & {
-      padding: 0 10px;
+      padding: 0 20px;
     }
 
     &--hidden {
@@ -27,23 +27,6 @@
       transform: translateY(-15px);
       pointer-events: none;
     }
-  }
-
-  &__left {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px;
-    --size: 20px;
-    width: var(--size);
-    height: var(--size);
-    color: var(--vscode-icon-foreground);
-  }
-
-  &__right {
-    display: flex;
-    align-items: center;
-    gap: 4px;
   }
 
   &__targets {
