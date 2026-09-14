@@ -28,7 +28,7 @@
 5. Apply the response
 
 > [!NOTE]
-> With CWC, it's safe to work with agents, as they're only used for task-relevant file search.
+> With CWC, it's safe to work with agents, as they're used exclusively for task-relevant file search.
 
 ## Privacy
 
