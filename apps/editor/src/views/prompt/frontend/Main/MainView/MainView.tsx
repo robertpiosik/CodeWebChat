@@ -51,6 +51,8 @@ type Props = {
     insertion_index?: number
     exact_insertion?: boolean
   }) => void
+  on_manage_models: () => void
+  on_manage_chatbots: () => void
   currently_open_file_path?: string
   current_selection?: SelectionState | null
   chat_history: string[]
@@ -279,6 +281,48 @@ export const MainView: React.FC<Props> = (props) => {
             hide: t('main.browser-connection.hide')
           }}
         />
+
+        {props.target == TARGET.WEB &&
+          props.is_connected &&
+          props.web_configurations.length == 0 && (
+            <>
+              <UiStatusBar
+                theme="warning"
+                icon="codicon-warning"
+                label={t('chatbots.missing-chatbot')}
+                actions={[
+                  {
+                    id: 'settings',
+                    icon: 'codicon-gear',
+                    label: t('action.settings'),
+                    title: t('action.settings'),
+                    on_click: props.on_manage_chatbots
+                  }
+                ]}
+              />
+              <UiSeparator height={4} />
+            </>
+          )}
+
+        {props.target == TARGET.API && props.api_configurations.length == 0 && (
+          <>
+            <UiStatusBar
+              theme="warning"
+              icon="codicon-warning"
+              label={t('configurations.missing-model')}
+              actions={[
+                {
+                  id: 'settings',
+                  icon: 'codicon-gear',
+                  label: t('action.settings'),
+                  title: t('action.settings'),
+                  on_click: props.on_manage_models
+                }
+              ]}
+            />
+            <UiSeparator height={4} />
+          </>
+        )}
 
         <UiSeparator height={2} />
 

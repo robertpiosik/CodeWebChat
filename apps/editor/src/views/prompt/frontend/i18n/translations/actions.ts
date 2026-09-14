@@ -1,4 +1,22 @@
 export const actions = {
+  'action.settings': {
+    en: 'Settings',
+    pl: 'Ustawienia',
+    'zh-cn': '设置',
+    ja: '設定',
+    'zh-tw': '設定',
+    de: 'Einstellungen',
+    es: 'Configuración',
+    fr: 'Paramètres',
+    'pt-br': 'Configurações',
+    ru: 'Настройки',
+    ko: '설정',
+    it: 'Impostazioni',
+    tr: 'Ayarlar',
+    cs: 'Nastavení',
+    hu: 'Beállítások',
+    bg: 'Настройки'
+  },
   'action.add-new': {
     en: 'Add New',
     pl: 'Dodaj...',

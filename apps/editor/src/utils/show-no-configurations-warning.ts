@@ -14,9 +14,9 @@ export const show_no_configurations_warning = async (
 
   if (result === open_settings_label) {
     if (type == 'api') {
-      open_settings.api.api_configurations()
+      open_settings.api.models()
     } else {
-      open_settings.web.web_configurations()
+      open_settings.web.chatbots()
     }
   }
 }

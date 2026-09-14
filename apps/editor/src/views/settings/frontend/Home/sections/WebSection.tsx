@@ -105,9 +105,7 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
         <UiNotice type="info">{t('web.notice')}</UiNotice>
       </div>
       <div
-        ref={(el) =>
-          props.set_section_ref('section:web:group:web-configurations', el)
-        }
+        ref={(el) => props.set_section_ref('section:web:group:chatbots', el)}
       >
         <UiGroup
           title={t('chatbots.configurations.title')}

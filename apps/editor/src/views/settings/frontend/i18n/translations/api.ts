@@ -148,6 +148,24 @@ export const translations = {
     hu: 'Modellek',
     bg: 'Модели'
   },
+  'api.configurations.missing-model': {
+    en: 'Missing model',
+    pl: 'Brak modelu',
+    'zh-cn': '缺少模型',
+    ja: 'モデルが不足しています',
+    'zh-tw': '缺少模型',
+    de: 'Fehlendes Modell',
+    es: 'Falta modelo',
+    fr: 'Modèle manquant',
+    'pt-br': 'Modelo ausente',
+    ru: 'Отсутствует модель',
+    ko: '모델이 누락되었습니다',
+    it: 'Modello mancante',
+    tr: 'Eksik model',
+    cs: 'Chybějící model',
+    hu: 'Hiányzó modell',
+    bg: 'Липсващ модел'
+  },
   'api.subtitle': {
     en: 'Send prompts from within the editor.',
     pl: 'Wysyłaj prompty z poziomu edytora.',

@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { Layout as UiLayout } from '@ui/components/editor/settings/Layout'
+import { use_scroll_to } from './hooks/use-scroll-to'
 import { NavigationSection as UiNavigationSection } from '@ui/components/editor/settings/NavigationSection'
 import { NavigationItemSection as UiNavigationItemSection } from '@ui/components/editor/settings/NavigationItemSection'
 import { NavigationItemGroup as UiNavigationItemGroup } from '@ui/components/editor/settings/NavigationItemGroup'
@@ -16,7 +17,6 @@ import { use_translation, TranslationKey } from '../i18n/use-translation'
 import { WebSection } from './sections/WebSection'
 import { commit_message_instructions as default_commit_message_instructions } from '@/constants/instructions'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
-import { GROUP_TITLE_HEIGHT, SECTION_HEADER_HEIGHT } from '@ui/constants/sizes'
 
 export type NavItem =
   | 'section:general'
@@ -24,16 +24,16 @@ export type NavItem =
   | 'section:general:group:prompt'
   | 'section:general:group:commits'
   | 'section:web'
-  | 'section:web:group:web-configurations'
+  | 'section:web:group:chatbots'
   | 'section:api'
   | 'section:api:group:providers'
-  | 'section:api:group:api-configurations'
+  | 'section:api:group:models'
   | 'section:api:group:api-defaults'
   | 'section:api:group:system-instructions'
 
-type NavConfigItem = { id: NavItem; label: TranslationKey }
+export type NavConfigItem = { id: NavItem; label: TranslationKey }
 
-const NAV_ITEMS_CONFIG: NavConfigItem[] = [
+export const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     id: 'section:general',
     label: 'sections.general'
@@ -55,7 +55,7 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'web.title'
   },
   {
-    id: 'section:web:group:web-configurations',
+    id: 'section:web:group:chatbots',
     label: 'chatbots.configurations.title'
   },
   {
@@ -67,7 +67,7 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'api.providers.title'
   },
   {
-    id: 'section:api:group:api-configurations',
+    id: 'section:api:group:models',
     label: 'api.configurations.title'
   },
   {
@@ -157,173 +157,31 @@ type Props = {
 export const Home: React.FC<Props> = (props) => {
   const { t } = use_translation()
 
-  const scroll_container_ref = useRef<HTMLDivElement>(null)
-  const section_refs = useRef<Record<NavItem, HTMLDivElement | null>>({
-    'section:general': null,
-    'section:general:group:open-links': null,
-    'section:general:group:prompt': null,
-    'section:general:group:commits': null,
-    'section:web': null,
-    'section:web:group:web-configurations': null,
-    'section:api': null,
-    'section:api:group:providers': null,
-    'section:api:group:api-configurations': null,
-    'section:api:group:api-defaults': null,
-    'section:api:group:system-instructions': null
+  const {
+    scroll_container_ref,
+    set_section_ref,
+    active_nav_item_id,
+    active_parent_id,
+    handle_nav_click
+  } = use_scroll_to({
+    nav_items_config: NAV_ITEMS_CONFIG,
+    providers_length: props.providers.length,
+    api_configurations_length: props.api_configurations.length,
+    scroll_to_section_on_load: props.scroll_to_section_on_load
   })
-
-  const set_section_ref = useCallback(
-    (id: NavItem, el: HTMLDivElement | null) => {
-      section_refs.current[id] = el
-    },
-    []
-  )
 
   const [commit_instructions, set_commit_instructions] = useState('')
   const [edit_files_instructions, set_edit_files_instructions] = useState('')
 
   const get_has_warning = (id: NavItem): boolean => {
-    if (id == 'section:api:group:api-configurations') {
+    if (id == 'section:api:group:models') {
       return props.api_configurations.length == 0
-    } else if (id == 'section:web:group:web-configurations') {
+    } else if (id == 'section:web:group:chatbots') {
       return props.web_configurations.length == 0
     } else {
       return false
     }
   }
-
-  const [active_nav_item_id, set_active_nav_item_id] = useState<NavItem>(
-    NAV_ITEMS_CONFIG[0].id
-  )
-
-  const last_rendered_item_id = useMemo(() => {
-    let last_id = NAV_ITEMS_CONFIG[0].id
-    for (const item of NAV_ITEMS_CONFIG) {
-      if (
-        item.id === 'section:api:group:providers' &&
-        props.providers.length === 0
-      ) {
-        continue
-      }
-      if (
-        [
-          'section:api:group:api-defaults',
-          'section:api:group:system-instructions'
-        ].includes(item.id) &&
-        props.api_configurations.length === 0
-      ) {
-        continue
-      }
-      last_id = item.id
-    }
-    return last_id
-  }, [props.providers.length, props.api_configurations.length])
-
-  useEffect(() => {
-    const scroll_container = scroll_container_ref.current
-    const el = section_refs.current[last_rendered_item_id]
-    if (!scroll_container || !el) return
-
-    let last_el_content_height = 0
-    let last_container_height = 0
-
-    const update = () => {
-      if (last_el_content_height && last_container_height) {
-        const is_subsection = NAV_ITEMS_CONFIG.find(
-          (i) => i.id === last_rendered_item_id
-        )?.id.includes(':group:')
-        const target_y = is_subsection ? SECTION_HEADER_HEIGHT : 0
-        const required = Math.max(
-          0,
-          last_container_height - target_y - last_el_content_height
-        )
-        el.style.paddingBottom = `${required}px`
-      }
-    }
-
-    const observer = new ResizeObserver((entries) => {
-      let changed = false
-      for (const entry of entries) {
-        if (entry.target === el) {
-          last_el_content_height = entry.contentRect.height
-          changed = true
-        } else if (entry.target === scroll_container) {
-          last_container_height = entry.contentRect.height
-          changed = true
-        }
-      }
-      if (changed) update()
-    })
-
-    observer.observe(scroll_container)
-    observer.observe(el)
-
-    return () => {
-      observer.disconnect()
-      if (el) el.style.paddingBottom = ''
-    }
-  }, [last_rendered_item_id])
-
-  const active_parent_id = useMemo(() => {
-    let current_parent: NavItem | null = null
-    for (const item of NAV_ITEMS_CONFIG) {
-      if (item.id.startsWith('section:') && !item.id.includes(':group:')) {
-        current_parent = item.id
-      }
-      if (item.id === active_nav_item_id) {
-        return item.id.includes(':group:') ? current_parent : null
-      }
-    }
-    return null
-  }, [active_nav_item_id])
-
-  useEffect(() => {
-    const scroll_container = scroll_container_ref.current
-    if (!scroll_container) return
-
-    const handle_scroll = () => {
-      const container_rect = scroll_container.getBoundingClientRect()
-      let new_active_id = NAV_ITEMS_CONFIG[0].id
-
-      for (const item of NAV_ITEMS_CONFIG) {
-        if (
-          item.id === 'section:api:group:providers' &&
-          props.providers.length === 0
-        ) {
-          continue
-        }
-        if (
-          [
-            'section:api:group:api-defaults',
-            'section:api:group:system-instructions'
-          ].includes(item.id) &&
-          props.api_configurations.length === 0
-        ) {
-          continue
-        }
-        const el = section_refs.current[item.id]
-        if (el) {
-          const rect = el.getBoundingClientRect()
-          if (
-            rect.top <=
-            container_rect.top + SECTION_HEADER_HEIGHT + GROUP_TITLE_HEIGHT
-          ) {
-            new_active_id = item.id
-          }
-        }
-      }
-      set_active_nav_item_id(new_active_id)
-    }
-
-    scroll_container.addEventListener('scroll', handle_scroll)
-    window.addEventListener('resize', handle_scroll)
-    setTimeout(handle_scroll, 50)
-
-    return () => {
-      scroll_container.removeEventListener('scroll', handle_scroll)
-      window.removeEventListener('resize', handle_scroll)
-    }
-  }, [props.providers.length, props.api_configurations.length])
 
   useEffect(() => {
     set_commit_instructions(props.commit_message_instructions || '')
@@ -332,48 +190,6 @@ export const Home: React.FC<Props> = (props) => {
   useEffect(() => {
     set_edit_files_instructions(props.edit_files_system_instructions || '')
   }, [props.edit_files_system_instructions])
-
-  const handle_scroll_to_section = (item_id: NavItem) => {
-    const section = section_refs.current[item_id]
-    const scroll_container = scroll_container_ref.current
-
-    if (section && scroll_container) {
-      const container_rect = scroll_container.getBoundingClientRect()
-      const section_rect = section.getBoundingClientRect()
-
-      const offset = section_rect.top - container_rect.top
-
-      let extra_offset = 0
-      const is_subsection = NAV_ITEMS_CONFIG.find(
-        (i) => i.id == item_id
-      )?.id.includes(':group:')
-      if (is_subsection) {
-        extra_offset = -SECTION_HEADER_HEIGHT
-      }
-
-      const target_scroll_top =
-        scroll_container.scrollTop + offset + extra_offset
-
-      scroll_container.scrollTo({
-        top: target_scroll_top,
-        behavior: 'smooth'
-      })
-    }
-  }
-
-  useEffect(() => {
-    if (props.scroll_to_section_on_load) {
-      handle_scroll_to_section(props.scroll_to_section_on_load)
-    }
-  }, [props.scroll_to_section_on_load])
-
-  const handle_nav_click = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    item_id: NavItem
-  ) => {
-    e.preventDefault()
-    handle_scroll_to_section(item_id)
-  }
 
   return (
     <div style={{ height: '100vh' }}>

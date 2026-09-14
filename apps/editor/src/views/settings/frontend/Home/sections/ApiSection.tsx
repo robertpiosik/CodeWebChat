@@ -176,11 +176,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
         </div>
       )}
 
-      <div
-        ref={(el) =>
-          props.set_section_ref('section:api:group:api-configurations', el)
-        }
-      >
+      <div ref={(el) => props.set_section_ref('section:api:group:models', el)}>
         <UiGroup
           title={t('api.configurations.title')}
           notice_slot={
@@ -193,7 +189,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                   </Button>
                 }
               >
-                {t('common.missing-model')}
+                {t('api.configurations.missing-model')}
               </UiNotice>
             ) : null
           }

@@ -1,4 +1,22 @@
 export const configurations = {
+  'configurations.missing-model': {
+    en: 'Missing model',
+    pl: 'Brak modelu',
+    'zh-cn': '缺少模型',
+    ja: 'モデルが不足しています',
+    'zh-tw': '缺少模型',
+    de: 'Fehlendes Modell',
+    es: 'Falta modelo',
+    fr: 'Modèle manquant',
+    'pt-br': 'Modelo ausente',
+    ru: 'Отсутствует модель',
+    ko: '모델이 누락되었습니다',
+    it: 'Modello mancante',
+    tr: 'Eksik model',
+    cs: 'Chybějící model',
+    hu: 'Hiányzó modell',
+    bg: 'Липсващ модел'
+  },
   'configurations.empty': {
     en: 'No models created yet.',
     pl: 'Nie utworzono jeszcze żadnych modeli.',
@@ -16,6 +34,24 @@ export const configurations = {
     cs: 'Zatím nebyly vytvořeny žádné modely.',
     hu: 'Még nincsenek modellek létrehozva.',
     bg: 'Все още няма създадени модели.'
+  },
+  'chatbots.missing-chatbot': {
+    en: 'Missing chatbot',
+    pl: 'Brak chatbota',
+    'zh-cn': '缺少聊天机器人',
+    ja: 'チャットボットが不足しています',
+    'zh-tw': '缺少聊天機器人',
+    de: 'Fehlender Chatbot',
+    es: 'Falta chatbot',
+    fr: 'Chatbot manquant',
+    'pt-br': 'Chatbot ausente',
+    ru: 'Отсутствует чат-бот',
+    ko: '챗봇이 누락되었습니다',
+    it: 'Chatbot mancante',
+    tr: 'Eksik sohbet robotu',
+    cs: 'Chybějící chatbot',
+    hu: 'Hiányzó chatbot',
+    bg: 'Липсващ чатбот'
   },
   'chatbots.empty': {
     en: 'No chatbots configured yet.',

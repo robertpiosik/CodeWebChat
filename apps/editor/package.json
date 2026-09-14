@@ -310,7 +310,7 @@
         "command": "codeWebChat.settings",
         "title": "%codeWebChat.settings.title%",
         "category": "Code Web Chat",
-        "icon": "$(settings-gear)"
+        "icon": "$(gear)"
       },
       {
         "command": "codeWebChat.generateCommitMessage",

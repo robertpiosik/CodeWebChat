@@ -341,8 +341,12 @@ export interface FixAllFailedFilesMessage extends BaseMessage {
   is_auto_run?: boolean
 }
 
-export interface ManageApiConfigurationsMessage extends BaseMessage {
-  command: 'MANAGE_API_CONFIGURATIONS'
+export interface ManageModelsMessage extends BaseMessage {
+  command: 'MANAGE_MODELS'
+}
+
+export interface ManageChatbotsMessage extends BaseMessage {
+  command: 'MANAGE_CHATBOTS'
 }
 
 export interface UndoMessage extends BaseMessage {
@@ -602,7 +606,8 @@ export type FrontendMessage =
   | CancelPatchRepairFileInPreviewMessage
   | UpdateLastUsedWebConfigurationMessage
   | FixAllFailedFilesMessage
-  | ManageApiConfigurationsMessage
+  | ManageModelsMessage
+  | ManageChatbotsMessage
   | UndoMessage
   | ApplyResponseFromHistoryMessage
   | RemoveResponseHistoryItemMessage

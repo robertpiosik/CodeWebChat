@@ -9,18 +9,18 @@ export const open_settings = {
       )
   },
   web: {
-    web_configurations: () => {
+    chatbots: () => {
       vscode.commands.executeCommand(
         'codeWebChat.settings',
-        'section:web:group:web-configurations'
+        'section:web:group:chatbots'
       )
     }
   },
   api: {
-    api_configurations: () => {
+    models: () => {
       vscode.commands.executeCommand(
         'codeWebChat.settings',
-        'section:api:group:api-configurations'
+        'section:api:group:models'
       )
     }
   }

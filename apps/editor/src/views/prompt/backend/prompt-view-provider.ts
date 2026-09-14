@@ -56,7 +56,6 @@ import {
   handle_discard_user_changes_in_preview,
   handle_patch_repair,
   handle_response_preview,
-  handle_manage_api_configurations,
   handle_undo,
   handle_request_can_undo,
   handle_preview_generated_code,
@@ -117,6 +116,7 @@ import { SharedContextState } from '@/context/shared-context-state'
 import { webview_html } from '@/views/shared/utils/webview-html'
 import { get_selected_files } from '@/context/helpers/get-selected-files'
 import { normalize_path } from '@/utils/normalize-path'
+import { open_settings } from '@/views/settings/helpers/open-settings'
 import { replace_symbols } from './utils/symbols/replace-symbols'
 import { SymbolCacheManager } from './utils/symbols/symbol-cache'
 
@@ -768,8 +768,10 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
               prompt_view_provider: this,
               web_configuration_name: message.web_configuration_name
             })
-          } else if (message.command == 'MANAGE_API_CONFIGURATIONS') {
-            await handle_manage_api_configurations()
+          } else if (message.command == 'MANAGE_MODELS') {
+            open_settings.api.models()
+          } else if (message.command == 'MANAGE_CHATBOTS') {
+            open_settings.web.chatbots()
           } else if (message.command == 'PREVIEW_SWITCH_CHOICE') {
             if (this.preview_switch_choice_resolver) {
               this.preview_switch_choice_resolver(message.choice)
