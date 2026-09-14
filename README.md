@@ -27,9 +27,6 @@
 4. Send a [multi-file editing](#multi-file-editing) prompt with a chatbot or an API call
 5. Apply the response
 
-> [!NOTE]
-> With CWC, it's 100% safe to work with agents, as they're used exclusively for task-relevant file search.
-
 ## Privacy
 
 **CWC** operates 100% on your machine—no code, prompts or usage data are collected.
