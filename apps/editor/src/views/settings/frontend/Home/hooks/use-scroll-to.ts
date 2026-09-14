@@ -35,9 +35,6 @@ export const use_scroll_to = (params: {
   const last_rendered_item_id = useMemo(() => {
     let last_id = nav_items_config[0].id
     for (const item of nav_items_config) {
-      if (item.id === 'section:api:group:providers' && providers_length === 0) {
-        continue
-      }
       if (
         [
           'section:api:group:api-defaults',
@@ -120,12 +117,6 @@ export const use_scroll_to = (params: {
       let new_active_id = nav_items_config[0].id
 
       for (const item of nav_items_config) {
-        if (
-          item.id === 'section:api:group:providers' &&
-          providers_length === 0
-        ) {
-          continue
-        }
         if (
           [
             'section:api:group:api-defaults',

@@ -17,6 +17,12 @@ export const open_settings = {
     }
   },
   api: {
+    providers: () => {
+      vscode.commands.executeCommand(
+        'codeWebChat.settings',
+        'section:api:group:providers'
+      )
+    },
     models: () => {
       vscode.commands.executeCommand(
         'codeWebChat.settings',

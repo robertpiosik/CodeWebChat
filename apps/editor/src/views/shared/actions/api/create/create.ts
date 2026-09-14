@@ -76,7 +76,6 @@ export const create = async (params: {
 
   while (true) {
     selected_provider = await initial_select_provider(
-      params.extension_context,
       providers_manager,
       selected_provider?.name
     )

@@ -86,11 +86,27 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
           }}
         />
       </UiNotice>
-      {props.providers.length > 0 && (
-        <div
-          ref={(el) => props.set_section_ref('section:api:group:providers', el)}
+      <div
+        ref={(el) => props.set_section_ref('section:api:group:providers', el)}
+      >
+        <UiGroup
+          title={t('api.providers.title')}
+          notice_slot={
+            !props.providers.length ? (
+              <UiNotice
+                type="warning"
+                slot_right={
+                  <Button on_click={() => props.on_add_provider()}>
+                    {t('action.add-new')}
+                  </Button>
+                }
+              >
+                {t('api.providers.missing-provider')}
+              </UiNotice>
+            ) : null
+          }
         >
-          <UiGroup title={t('api.providers.title')}>
+          {props.providers.length > 0 && (
             <SortableList
               items={props.providers.map((p) => ({ ...p, id: p.name }))}
               on_reorder={(reordered) => {
@@ -172,9 +188,9 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                 )
               }}
             />
-          </UiGroup>
-        </div>
-      )}
+          )}
+        </UiGroup>
+      </div>
 
       <div ref={(el) => props.set_section_ref('section:api:group:models', el)}>
         <UiGroup

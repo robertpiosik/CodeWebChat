@@ -1,10 +1,10 @@
 import * as vscode from 'vscode'
-import { SettingsViewProvider } from '../settings-view-provider'
+import { SettingsViewProvider } from '../../settings-view-provider'
 import { PROVIDERS } from '@/constants/providers'
 import { AddProviderMessage } from '@/views/settings/types/messages'
 import { t } from '@/i18n'
-import { pick_extended_provider } from '@/views/shared/actions/api/pick-extended-provider'
-import { pick_provider_source } from '@/views/shared/actions/api/pick-provider-source'
+import { pick_extended_provider } from './pick-extended-provider'
+import { pick_provider_source } from './pick-provider-source'
 
 export const handle_add_provider = async (
   provider: SettingsViewProvider,

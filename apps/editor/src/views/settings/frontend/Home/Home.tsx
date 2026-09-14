@@ -174,7 +174,9 @@ export const Home: React.FC<Props> = (props) => {
   const [edit_files_instructions, set_edit_files_instructions] = useState('')
 
   const get_has_warning = (id: NavItem): boolean => {
-    if (id == 'section:api:group:models') {
+    if (id == 'section:api:group:providers') {
+      return props.providers.length == 0
+    } else if (id == 'section:api:group:models') {
       return props.api_configurations.length == 0
     } else if (id == 'section:web:group:chatbots') {
       return props.web_configurations.length == 0
@@ -203,12 +205,6 @@ export const Home: React.FC<Props> = (props) => {
           }[] = []
 
           for (const item of NAV_ITEMS_CONFIG) {
-            if (
-              item.id === 'section:api:group:providers' &&
-              props.providers.length === 0
-            ) {
-              continue
-            }
             if (
               [
                 'section:api:group:api-defaults',
