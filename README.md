@@ -66,7 +66,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 # Query
 
-[PROMPT]
+[INSTRUCTIONS]
 ```
 
 </details>
@@ -101,7 +101,7 @@ These files contain the core greeting logic and module exports.
 
 # Query
 
-[PROMPT]
+[INSTRUCTIONS]
 ```
 
 </details>
@@ -128,7 +128,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 # Query
 
-[PROMPT]
+[INSTRUCTIONS]
 ```
 
 </details>
@@ -153,7 +153,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 # Task
 
-[PROMPT]
+[INSTRUCTIONS]
 ```
 
 </details>
@@ -172,7 +172,7 @@ _Explanations, planning, code reviews, you name it._
 
 # Task
 
-[PROMPT]
+[INSTRUCTIONS]
 ```
 
 </details>
@@ -191,7 +191,7 @@ _TAB completions from SOTA reasoning models._
 
 ### File `[ACTIVE FILE PATH]`
 
-[PREFIX]<missing_text>[PROMPT]</missing_text>[SUFFIX]
+[PREFIX]<missing_text>[INSTRUCTIONS]</missing_text>[SUFFIX]
 
 # Output formatting
 
@@ -216,7 +216,7 @@ Find correct replacement text for the <missing_text> symbol.
 
 ### File `[ACTIVE FILE PATH]`
 
-[PREFIX]<missing_text>[PROMPT]</missing_text>[SUFFIX]
+[PREFIX]<missing_text>[INSTRUCTIONS]</missing_text>[SUFFIX]
 
 # Output formatting
 
