@@ -71,7 +71,6 @@ export const handle_patch_repair = async (params: {
   const default_workspace_path =
     vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
 
-  // Prepare files to process
   const files_to_process = failed_files
     .map((file_state) => {
       const relevant_item = parsed_response.find((item) => {
@@ -223,14 +222,16 @@ export const handle_patch_repair = async (params: {
 
     if (!action) return
 
-    params.prompt_view_provider.extension_context.workspaceState.update(
-      LAST_USED_PATCH_REPAIR_ACTION_STATE_KEY,
-      action
-    )
-    params.prompt_view_provider.extension_context.globalState.update(
-      LAST_USED_PATCH_REPAIR_ACTION_STATE_KEY,
-      action
-    )
+    if (action != 'apply-from-clipboard') {
+      params.prompt_view_provider.extension_context.workspaceState.update(
+        LAST_USED_PATCH_REPAIR_ACTION_STATE_KEY,
+        action
+      )
+      params.prompt_view_provider.extension_context.globalState.update(
+        LAST_USED_PATCH_REPAIR_ACTION_STATE_KEY,
+        action
+      )
+    }
   }
 
   if (action == 'apply-from-clipboard') {
@@ -238,7 +239,7 @@ export const handle_patch_repair = async (params: {
     return
   }
 
-  if (action === 'copy') {
+  if (action == 'copy') {
     let chatbot_prompt = ''
     for (const item of files_to_process) {
       const backticks = item.file_state.content.includes('```') ? '````' : '```'
@@ -257,7 +258,7 @@ export const handle_patch_repair = async (params: {
     return
   }
 
-  if (action === 'autofill') {
+  if (action == 'autofill') {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>('chatbots', [])
     const valid_web_configurations = all_web_configurations.filter(
@@ -290,7 +291,7 @@ export const handle_patch_repair = async (params: {
         show_back_button: false
       })
 
-      if (!result || result === 'back') {
+      if (!result || result == 'back') {
         return
       }
       selected_web_configuration_name = result.item.name
