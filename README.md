@@ -17,9 +17,9 @@
 
 ## Introduction
 
-**CWC** is 10X faster, at one-tenth the cost of coding with agents alone.
+**CWC** is 10X faster at one-tenth the cost of coding with agents alone.
 
-**The workflow:**
+**The workflow**
 
 1. Type instructions
 2. Run Agentic Search for task-relevant files
