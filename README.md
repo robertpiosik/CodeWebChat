@@ -17,15 +17,16 @@
 
 ## Introduction
 
-**CWC** enables 10X greater cost-efficiency, speed and accuracy than coding with agents alone.
+**CWC** is 10X faster, at one-tenth the cost of coding with agents alone.
 
-**The workflow**
+**The workflow:**
 
 1. Type instructions
-2. Use Agentic Search to find task-relevant files
-3. Select useful examples for model's guidance
-4. Send CWC-constructed prompt with chatbot or API call
-5. Apply response in the editor
+2. Run Agentic Search for task-relevant files
+3. Select useful examples for model guidance
+4. Send the constructed prompt with a chatbot or an API call
+5. Apply the response in the editor
+6. Start over, but re-run Agentic Search only when necessary
 
 ## Privacy
 
