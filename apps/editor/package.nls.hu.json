@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "Fájlkiválasztás mentése",
-  "codeWebChat.restoreFileSelection.title": "Fájlkiválasztás visszaállítása",
+  "codeWebChat.saveFileSelection.title": "Fájlkiválasztás mentése...",
+  "codeWebChat.restoreFileSelection.title": "Fájlkiválasztás visszaállítása...",
   "codeWebChat.applyResponse.title": "Csevegési válasz alkalmazása",
   "codeWebChat.copyMarkdown.title": "Markdown másolása",
   "codeWebChat.history.title": "Előzmények",

@@ -169,14 +169,12 @@
       {
         "command": "codeWebChat.restoreFileSelection",
         "title": "%codeWebChat.restoreFileSelection.title%",
-        "category": "Code Web Chat",
-        "icon": "$(unarchive)"
+        "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.saveFileSelection",
         "title": "%codeWebChat.saveFileSelection.title%",
-        "category": "Code Web Chat",
-        "icon": "$(archive)"
+        "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.clearChecks",
@@ -613,29 +611,39 @@
       ],
       "view/title": [
         {
-          "command": "codeWebChat.restoreFileSelection",
+          "command": "codeWebChat.searchSelectedFiles",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@1"
         },
         {
-          "command": "codeWebChat.saveFileSelection",
+          "command": "codeWebChat.undoSelection",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@2"
         },
         {
-          "command": "codeWebChat.expandContextFolders",
+          "command": "codeWebChat.redoSelection",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@3"
         },
         {
-          "command": "codeWebChat.collapseContextFolders",
+          "command": "codeWebChat.restoreFileSelection",
           "when": "view == codeWebChatViewSelectedFiles",
-          "group": "navigation@4"
+          "group": "2_more@1"
         },
         {
-          "command": "codeWebChat.searchSelectedFiles",
+          "command": "codeWebChat.saveFileSelection",
           "when": "view == codeWebChatViewSelectedFiles",
-          "group": "navigation@0"
+          "group": "2_more@2"
+        },
+        {
+          "command": "codeWebChat.expandContextFolders",
+          "when": "view == codeWebChatViewSelectedFiles",
+          "group": "navigation@6"
+        },
+        {
+          "command": "codeWebChat.collapseContextFolders",
+          "when": "view == codeWebChatViewSelectedFiles",
+          "group": "navigation@7"
         },
         {
           "command": "codeWebChat.selectReferencingFilesForSelected",
@@ -706,16 +714,6 @@
           "command": "codeWebChat.selectFilesOfCommit",
           "when": "view == codeWebChatViewWorkspace",
           "group": "2_more@5"
-        },
-        {
-          "command": "codeWebChat.undoSelection",
-          "when": "view == codeWebChatViewWorkspace",
-          "group": "3_more@1"
-        },
-        {
-          "command": "codeWebChat.redoSelection",
-          "when": "view == codeWebChatViewWorkspace",
-          "group": "3_more@2"
         },
         {
           "command": "codeWebChat.duplicateWorkspace",
