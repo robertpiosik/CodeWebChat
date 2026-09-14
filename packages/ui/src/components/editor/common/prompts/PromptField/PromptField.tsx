@@ -73,7 +73,7 @@ export type PromptFieldProps = {
     repo_name: string,
     commit_hash: string,
     type: 'Commit' | 'CommitMessage',
-    commit_message?: string,
+    commit_message?: string
   ) => void
   on_skill_click?: (agent: string, repo: string, skill_name: string) => void
   on_preview_prompt?: () => void
@@ -491,8 +491,12 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             align="right"
           />
         )}
-        {is_more_hovered && (
-          <Tooltip message={props.translations.more} align="right" offset={11} />
+        {is_more_hovered && !is_dropdown_open && (
+          <Tooltip
+            message={props.translations.more}
+            align="right"
+            offset={11}
+          />
         )}
         <div
           className={styles.footer__left}
