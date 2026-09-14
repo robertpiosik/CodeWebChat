@@ -36,14 +36,30 @@
 
   &.button--hover-blue {
     --ascii-color: var(--cwc-blue-foreground);
+
+    &:not(.button--compact) {
+      background: linear-gradient(90deg, var(--cwc-blue-background) 0%, transparent 100%);
+
+      .button__label {
+        color: var(--cwc-blue-foreground);
+      }
+    }
   }
 
   &.button--hover-purple {
     --ascii-color: var(--cwc-purple-foreground);
+
+    &:not(.button--compact) {
+      background: linear-gradient(90deg, var(--cwc-purple-background) 0%, transparent 100%);
+
+      .button__label {
+        color: var(--cwc-purple-foreground);
+      }
+    }
   }
 
   &:not(:disabled):hover {
-    background-color: var(--vscode-toolbar-hoverBackground);
+    background: var(--vscode-toolbar-hoverBackground);
 
     .button__label-char {
       animation: wave 0.5s ease-in-out;
@@ -55,7 +71,7 @@
     }
 
     &.button--hover-blue {
-      background-color: var(--cwc-blue-background);
+      background: var(--cwc-blue-background);
       color: var(--cwc-blue-foreground);
 
       .button__description {
@@ -64,7 +80,7 @@
     }
 
     &.button--hover-purple {
-      background-color: var(--cwc-purple-background);
+      background: var(--cwc-purple-background);
       color: var(--cwc-purple-foreground);
 
       .button__description {
