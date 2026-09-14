@@ -13,6 +13,7 @@ import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '@shared/utils/display-token-count'
 import { TokenCalculator } from './modules/token-calculator'
 import { normalize_path } from '@/utils/normalize-path'
+import { t } from '@/i18n'
 
 export interface IWorkspaceProvider {
   get_workspace_roots(): string[]
@@ -515,6 +516,11 @@ export class WorkspaceProvider
     let checkbox_state: vscode.TreeItemCheckboxState | undefined =
       this._checked_items.get(key) ?? vscode.TreeItemCheckboxState.Unchecked
 
+    const is_selected_files_view = element.contextValue?.startsWith('context') ?? false
+    if (!is_selected_files_view && element.isDirectory && this._partially_checked_dirs.has(key)) {
+      checkbox_state = vscode.TreeItemCheckboxState.Checked
+    }
+
     if (element.isDirectory) {
       const tokens = await this._token_calculator.calculate_directory_tokens(key)
       if (tokens.file_count === 0) {
@@ -542,7 +548,7 @@ export class WorkspaceProvider
     if (element.isDirectory) {
       if (formatted_total) {
         if (formatted_selected && selected_token_count! < total_token_count!) {
-          display_description = `${formatted_total} · ${formatted_selected} selected`
+          display_description = `${formatted_selected} ${t('context.of')} ${formatted_total}`
         } else {
           display_description = formatted_total
         }
@@ -564,14 +570,14 @@ export class WorkspaceProvider
     if (formatted_total) {
       tooltip_parts.push(`· About ${formatted_total} tokens`)
     }
-    if (element.isDirectory && formatted_selected) {
+    if (element.isDirectory) {
       if (
-        total_token_count !== undefined &&
-        selected_token_count == total_token_count
+        element.checkboxState === vscode.TreeItemCheckboxState.Checked ||
+        (formatted_selected && selected_token_count === total_token_count)
       ) {
-        tooltip_parts.push('· Fully selected')
-      } else {
-        tooltip_parts.push(`· ${formatted_selected} selected`)
+        tooltip_parts.push(`· ${t('context.Selected-fully')}`)
+      } else if (formatted_selected) {
+        tooltip_parts.push(`· ${formatted_selected} ${t('context.selected')}`)
       }
     }
 
@@ -581,8 +587,13 @@ export class WorkspaceProvider
       let root_tooltip = `${element.label} (Workspace Root)`
       if (formatted_total) {
         root_tooltip += ` • About ${formatted_total} tokens`
-        if (formatted_selected) {
-          root_tooltip += ` (${formatted_selected} selected)`
+        if (
+          element.checkboxState === vscode.TreeItemCheckboxState.Checked ||
+          (formatted_selected && selected_token_count === total_token_count)
+        ) {
+          root_tooltip += ` (${t('context.Selected-fully')})`
+        } else if (formatted_selected) {
+          root_tooltip += ` (${formatted_selected} ${t('context.selected')})`
         }
       }
       element.tooltip = root_tooltip
@@ -715,6 +726,10 @@ export class WorkspaceProvider
       let checkbox_state: vscode.TreeItemCheckboxState | undefined =
         this._checked_items.get(root) ?? vscode.TreeItemCheckboxState.Unchecked
         
+      if (!is_selected_files_view && this._partially_checked_dirs.has(root)) {
+        checkbox_state = vscode.TreeItemCheckboxState.Checked
+      }
+
       if (total_tokens.file_count === 0) {
         checkbox_state = undefined
       }
@@ -959,6 +974,10 @@ export class WorkspaceProvider
 
         let final_checkbox_state: vscode.TreeItemCheckboxState | undefined =
           checkbox_state
+
+        if (is_directory && !is_selected_files_view && this._partially_checked_dirs.has(full_path)) {
+          final_checkbox_state = vscode.TreeItemCheckboxState.Checked
+        }
 
         if (is_directory && (tokens as any).file_count === 0) {
           final_checkbox_state = undefined
