@@ -27,6 +27,9 @@
 4. Send CWC-constructed prompt with chatbot or API call
 5. Apply the response
 
+> [!NOTE]
+> With CWC, it's safe to work with agents, as they're only used for task-relevant file search.
+
 ## Privacy
 
 **CWC** operates 100% on your machine—no code, prompts or usage data are collected.
