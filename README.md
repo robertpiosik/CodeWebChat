@@ -11,13 +11,21 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> 
 </p>
 
-<p align="center"><strong>CWC</strong> is a free and privacy-first toolkit for AI coding with static context.</p>
+<p align="center"><strong>CWC</strong> is a free and privacy-first toolkit for AI coding in VS Code.</p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
 ## Introduction
 
-**CWC** is built for developers who can tell good software from bad whenever they use it. Designed to let you work on your ideas at the speed of thought without compromising on code quality, privacy, or cost-efficiency.
+**CWC** enables 10X greater cost-efficiency, speed and accuracy than coding with agents alone.
+
+**The workflow**
+
+1. Type instructions
+2. Use Agentic Search to find task-relevant files
+3. Select useful examples for model's guidance
+4. Send CWC-constructed prompt with chatbot or API call
+5. Apply response in the editor
 
 ## Privacy
 
@@ -25,7 +33,7 @@
 
 ## Prompts
 
-**CWC** helps construct prompts for all day-to-day coding tasks.
+**CWC** helps construct prompts for common day-to-day coding tasks.
 
 ### Agentic search
 
@@ -273,11 +281,11 @@ Apply the attached changes to the file without explanations or any other text.
 
 ## Prompt caching
 
-**CWC** orders context files by modification and selection recency. This, combined with instructions placement at the message's very end effecively utilizes prompt caching.
+**CWC** orders context files by modification and selection recency. This, combined with instructions placement at the message's very end effecively utilizes prompt caching, across tasks.
 
 ## Enabling autofill
 
-Install the browser extension and never copy and paste again ([source code](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser)).
+Automatically place prompts in your favorite chatbot via the official browser extension ([source code](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser)).
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/autofill-for-code-web-chat/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/autofill-for-code-web-chat/)
