@@ -413,7 +413,8 @@ export const MainView: React.FC<Props> = (props) => {
               preview_prompt: t('prompt-field.action.preview-prompt'),
               send: t('prompt-field.action.send'),
               attach_selected_files: t('prompt-field.attach-selected-files'),
-              target: t('prompt-field.target')
+              target: t('prompt-field.target'),
+              more: t('prompt-field.more')
             }}
           />
         </div>

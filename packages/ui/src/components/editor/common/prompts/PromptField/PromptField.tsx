@@ -114,6 +114,7 @@ export type PromptFieldProps = {
     send: string
     attach_selected_files: string
     target: string
+    more: string
   }
 }
 
@@ -127,6 +128,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [is_focused, set_is_focused] = useState(false)
   const [is_recording_hovered, set_is_recording_hovered] = useState(false)
   const [is_edit_format_hovered, set_is_edit_format_hovered] = useState(false)
+  const [is_more_hovered, set_is_more_hovered] = useState(false)
   const [is_target_switch_hovered, set_is_target_switch_hovered] =
     useState(false)
   const [hovered_left_action, set_hovered_left_action] = useState<
@@ -489,6 +491,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             align="right"
           />
         )}
+        {is_more_hovered && (
+          <Tooltip message={props.translations.more} align="right" offset={11} />
+        )}
         <div
           className={styles.footer__left}
           onClick={(e) => {
@@ -753,6 +758,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         onClick={() => {
                           toggle_dropdown()
                         }}
+                        onMouseEnter={() => set_is_more_hovered(true)}
+                        onMouseLeave={() => set_is_more_hovered(false)}
                       >
                         <span
                           className={cn(
@@ -835,6 +842,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                           onClick={() => {
                             toggle_dropdown()
                           }}
+                          onMouseEnter={() => set_is_more_hovered(true)}
+                          onMouseLeave={() => set_is_more_hovered(false)}
                         >
                           <span
                             className={cn(

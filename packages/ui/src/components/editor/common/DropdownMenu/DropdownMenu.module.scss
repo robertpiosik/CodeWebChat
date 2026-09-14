@@ -81,8 +81,8 @@
   }
 
   &--disabled {
-    opacity: var(--disabled-opacity);
-    cursor: not-allowed;
+     opacity: var(--disabled-opacity);
+    cursor: default;
   }
 }
 

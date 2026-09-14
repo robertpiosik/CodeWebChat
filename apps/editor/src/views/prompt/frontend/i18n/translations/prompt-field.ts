@@ -376,5 +376,23 @@ export const prompt_field = {
     cs: 'Cíl',
     hu: 'Cél',
     bg: 'Цел'
+  },
+  'prompt-field.more': {
+    en: 'More',
+    pl: 'Więcej',
+    'zh-cn': '更多',
+    ja: 'もっと見る',
+    'zh-tw': '更多',
+    de: 'Mehr',
+    es: 'Más',
+    fr: 'Plus',
+    'pt-br': 'Mais',
+    ru: 'Ещё',
+    ko: '더 보기',
+    it: 'Altro',
+    tr: 'Daha Fazla',
+    cs: 'Více',
+    hu: 'Több',
+    bg: 'Още'
   }
 } as const

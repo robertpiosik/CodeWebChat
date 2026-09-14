@@ -25,8 +25,8 @@
   }
 
   &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    opacity: var(--disabled-opacity);
+    cursor: default;
 
     &:hover {
       background-color: var(--vscode-button-background);

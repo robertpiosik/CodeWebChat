@@ -67,7 +67,8 @@ export const Empty = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      target: 'Target'
+      target: 'Target',
+      more: 'More'
     }}
   />
 )
@@ -133,7 +134,8 @@ export const WithText = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      target: 'Target'
+      target: 'Target',
+      more: 'More'
     }}
   />
 )
@@ -199,7 +201,8 @@ export const LongText = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      target: 'Target'
+      target: 'Target',
+      more: 'More'
     }}
   />
 )
@@ -265,7 +268,8 @@ export const WithPlaceholderSavedContext = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      target: 'Target'
+      target: 'Target',
+      more: 'More'
     }}
   />
 )
@@ -331,7 +335,8 @@ export const WithCommit = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      target: 'Target'
+      target: 'Target',
+      more: 'More'
     }}
   />
 )
@@ -396,7 +401,8 @@ export const WithCommitWithQuotes = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      target: 'Target'
+      target: 'Target',
+      more: 'More'
     }}
   />
 )
@@ -469,7 +475,8 @@ export const WithEditFormatSelector = () => {
         preview_prompt: 'Preview prompt',
         send: 'Send',
         attach_selected_files: 'Attach selected files',
-        target: 'Target'
+        target: 'Target',
+        more: 'More'
       }}
     />
   )
@@ -534,7 +541,8 @@ export const WithWarning = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      target: 'Target'
+      target: 'Target',
+      more: 'More'
     }}
   />
 )
@@ -600,7 +608,8 @@ export const WithFilePaths = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      target: 'Target'
+      target: 'Target',
+      more: 'More'
     }}
   />
 )
@@ -694,7 +703,8 @@ export const WithTabs = () => {
         preview_prompt: 'Preview prompt',
         send: 'Send',
         attach_selected_files: 'Attach selected files',
-        target: 'Target'
+        target: 'Target',
+        more: 'More'
       }}
     />
   )
