@@ -22,7 +22,7 @@
 #### The workflow
 
 1. Type instructions
-2. Run **Agentic Search** for task-relevant files
+2. Run [Agentic Search](#agentic-search) for task-relevant files
 3. Select useful examples for model guidance
 4. Send CWC-constructed prompt with chatbot or API call
 5. Apply the response
