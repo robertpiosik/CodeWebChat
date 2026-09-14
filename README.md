@@ -24,7 +24,7 @@
 1. Type instructions
 2. Run [Agentic Search](#agentic-search) for task-relevant files
 3. Select useful examples for model guidance
-4. Send a [CWC-constructed prompt](#multi-file-editing) with a chatbot or an API call
+4. Send a [multi-file editing](#multi-file-editing) prompt with a chatbot or an API call
 5. Apply the response
 
 > [!NOTE]
