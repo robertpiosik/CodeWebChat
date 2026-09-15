@@ -554,7 +554,7 @@ export class WorkspaceProvider
         } else if (is_fully_selected) {
           display_description = `● · ${formatted_total} ${t('context.selected')}`
         } else {
-          display_description = `○ · ${formatted_total}`
+          display_description = `${formatted_total}`
         }
       }
     } else {
