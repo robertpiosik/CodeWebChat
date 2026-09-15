@@ -34,23 +34,5 @@ export const translations = {
     cs: 'Sbalit',
     hu: 'Összecsukás',
     bg: 'Свиване'
-  },
-  'common.missing-chatbot': {
-    en: 'Missing chatbot',
-    pl: 'Brak chatbota',
-    'zh-cn': '缺少聊天机器人',
-    ja: 'チャットボットが不足しています',
-    'zh-tw': '缺少聊天機器人',
-    de: 'Fehlender Chatbot',
-    es: 'Falta chatbot',
-    fr: 'Chatbot manquant',
-    'pt-br': 'Chatbot ausente',
-    ru: 'Отсутствует чат-бот',
-    ko: '챗봇이 누락되었습니다',
-    it: 'Chatbot mancante',
-    tr: 'Eksik chatbot',
-    cs: 'Chybějící chatbot',
-    hu: 'Hiányzó chatbot',
-    bg: 'Липсващ чатбот'
   }
 } as const

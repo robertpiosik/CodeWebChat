@@ -175,8 +175,6 @@ export const Home: React.FC<Props> = (props) => {
       return props.providers.length == 0
     } else if (id == 'section:api:group:models') {
       return props.api_configurations.length == 0
-    } else if (id == 'section:web:group:chatbots') {
-      return props.web_configurations.length == 0
     } else {
       return false
     }
