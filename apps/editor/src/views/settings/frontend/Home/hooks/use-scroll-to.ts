@@ -44,6 +44,9 @@ export const use_scroll_to = (params: {
       ) {
         continue
       }
+      if (item.id === 'section:api:group:models' && providers_length === 0) {
+        continue
+      }
       last_id = item.id
     }
     return last_id
@@ -124,6 +127,9 @@ export const use_scroll_to = (params: {
           ].includes(item.id) &&
           api_configurations_length === 0
         ) {
+          continue
+        }
+        if (item.id === 'section:api:group:models' && providers_length === 0) {
           continue
         }
         const el = section_refs.current[item.id]

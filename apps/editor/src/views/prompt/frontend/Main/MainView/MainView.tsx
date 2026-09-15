@@ -12,7 +12,7 @@ import { TARGET, Target } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { BrowserConnectionStatus } from './components/BrowserConnectionStatus'
-import { ApiConfiguration } from '@/views/prompt/types/messages'
+import { ApiConfiguration, SetupProgress } from '@/views/prompt/types/messages'
 import { use_last_choice_tooltip } from './hooks/use-last-choice-tooltip'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { Header } from './components/Header'
@@ -52,6 +52,7 @@ type Props = {
     exact_insertion?: boolean
   }) => void
   on_manage_models: () => void
+  on_manage_providers: () => void
   on_manage_chatbots: () => void
   currently_open_file_path?: string
   current_selection?: SelectionState | null
@@ -105,6 +106,7 @@ type Props = {
   on_recording_started: () => void
   on_recording_finished: () => void
   is_setup_complete: boolean
+  setup_progress?: SetupProgress
   tabs_count: number
   active_tab_index: number
   on_tab_change: (index: number) => void
@@ -304,25 +306,49 @@ export const MainView: React.FC<Props> = (props) => {
             </>
           )}
 
-        {props.target == TARGET.API && props.api_configurations.length == 0 && (
-          <>
-            <UiStatusBar
-              theme="warning"
-              icon="codicon-warning"
-              label={t('configurations.missing-model')}
-              actions={[
-                {
-                  id: 'settings',
-                  icon: 'codicon-gear',
-                  label: t('action.settings'),
-                  title: t('action.settings'),
-                  on_click: props.on_manage_models
-                }
-              ]}
-            />
-            <UiSeparator height={4} />
-          </>
-        )}
+        {props.target == TARGET.API &&
+          props.setup_progress &&
+          !props.setup_progress.has_provider && (
+            <>
+              <UiStatusBar
+                theme="warning"
+                icon="codicon-warning"
+                label={t('providers.missing-provider')}
+                actions={[
+                  {
+                    id: 'settings',
+                    icon: 'codicon-gear',
+                    label: t('action.settings'),
+                    title: t('action.settings'),
+                    on_click: props.on_manage_providers
+                  }
+                ]}
+              />
+              <UiSeparator height={4} />
+            </>
+          )}
+
+        {props.target == TARGET.API &&
+          props.setup_progress?.has_provider &&
+          props.api_configurations.length == 0 && (
+            <>
+              <UiStatusBar
+                theme="warning"
+                icon="codicon-warning"
+                label={t('configurations.missing-model')}
+                actions={[
+                  {
+                    id: 'settings',
+                    icon: 'codicon-gear',
+                    label: t('action.settings'),
+                    title: t('action.settings'),
+                    on_click: props.on_manage_models
+                  }
+                ]}
+              />
+              <UiSeparator height={4} />
+            </>
+          )}
 
         <UiSeparator height={2} />
 

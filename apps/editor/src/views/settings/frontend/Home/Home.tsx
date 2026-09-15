@@ -215,6 +215,12 @@ export const Home: React.FC<Props> = (props) => {
               continue
             }
             if (
+              item.id === 'section:api:group:models' &&
+              props.providers.length === 0
+            ) {
+              continue
+            }
+            if (
               item.id.startsWith('section:') &&
               !item.id.includes(':group:')
             ) {

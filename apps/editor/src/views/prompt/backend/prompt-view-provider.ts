@@ -768,6 +768,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
               prompt_view_provider: this,
               web_configuration_name: message.web_configuration_name
             })
+          } else if (message.command == 'MANAGE_PROVIDERS') {
+            open_settings.api.providers()
           } else if (message.command == 'MANAGE_MODELS') {
             open_settings.api.models()
           } else if (message.command == 'MANAGE_CHATBOTS') {

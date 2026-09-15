@@ -8,7 +8,8 @@ import {
   BackendMessage,
   WebConfigurationsMessage,
   FrontendMessage,
-  SelectionState
+  SelectionState,
+  SetupProgress
 } from '@/views/prompt/types/messages'
 import { ApiConfiguration } from '@/views/prompt/types/messages'
 import { post_message } from '../utils/post-message'
@@ -61,6 +62,7 @@ type Props = {
   on_recording_started: () => void
   on_recording_finished: () => void
   is_setup_complete: boolean
+  setup_progress?: SetupProgress
   tabs_count: number
   active_tab_index: number
   on_tab_change: (index: number) => void
@@ -317,6 +319,12 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
+  const handle_manage_providers = () => {
+    post_message(props.vscode, {
+      command: 'MANAGE_PROVIDERS'
+    })
+  }
+
   const handle_manage_chatbots = () => {
     post_message(props.vscode, {
       command: 'MANAGE_CHATBOTS'
@@ -497,6 +505,7 @@ export const Main: React.FC<Props> = (props) => {
       on_delete_api_configuration={handle_delete_api_configuration}
       on_create_api_configuration={handle_create_api_configuration}
       on_manage_models={handle_manage_models}
+      on_manage_providers={handle_manage_providers}
       on_manage_chatbots={handle_manage_chatbots}
       on_at_sign_click={handle_at_sign_click}
       on_hash_sign_click={handle_hash_sign_click}
@@ -559,6 +568,7 @@ export const Main: React.FC<Props> = (props) => {
       on_recording_started={props.on_recording_started}
       on_recording_finished={props.on_recording_finished}
       is_setup_complete={props.is_setup_complete}
+      setup_progress={props.setup_progress}
       tabs_count={props.tabs_count}
       active_tab_index={props.active_tab_index}
       on_tab_change={props.on_tab_change}

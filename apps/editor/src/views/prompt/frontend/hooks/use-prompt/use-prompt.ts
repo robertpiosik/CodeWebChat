@@ -294,6 +294,7 @@ export const use_prompt = (vscode: any) => {
     is_recording,
     handle_set_recording_state,
     is_setup_complete,
+    setup_progress,
     handle_tab_change,
     handle_new_tab,
     handle_tab_delete,

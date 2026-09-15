@@ -1,4 +1,22 @@
 export const configurations = {
+  'providers.missing-provider': {
+    en: 'Missing provider',
+    pl: 'Brak dostawcy',
+    'zh-cn': '缺少提供商',
+    ja: 'プロバイダーが不足しています',
+    'zh-tw': '缺少供應商',
+    de: 'Fehlender Anbieter',
+    es: 'Falta proveedor',
+    fr: 'Fournisseur manquant',
+    'pt-br': 'Provedor ausente',
+    ru: 'Отсутствует провайдер',
+    ko: '제공자가 누락되었습니다',
+    it: 'Fornitore mancante',
+    tr: 'Eksik sağlayıcı',
+    cs: 'Chybějící poskytovatel',
+    hu: 'Hiányzó szolgáltató',
+    bg: 'Липсващ доставчик'
+  },
   'configurations.missing-model': {
     en: 'Missing model',
     pl: 'Brak modelu',

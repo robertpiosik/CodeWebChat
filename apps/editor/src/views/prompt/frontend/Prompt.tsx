@@ -67,6 +67,7 @@ export const Prompt = () => {
     is_recording,
     handle_set_recording_state,
     is_setup_complete,
+    setup_progress,
     handle_tab_change,
     handle_new_tab,
     handle_tab_delete,
@@ -352,6 +353,7 @@ export const Prompt = () => {
                 on_recording_started={() => handle_set_recording_state(true)}
                 on_recording_finished={() => handle_set_recording_state(false)}
                 is_setup_complete={is_setup_complete}
+                setup_progress={setup_progress}
                 tabs_count={current_state?.instructions.length ?? 0}
                 active_tab_index={current_state?.active_index ?? 0}
                 on_tab_change={handle_tab_change}

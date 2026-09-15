@@ -345,6 +345,10 @@ export interface ManageModelsMessage extends BaseMessage {
   command: 'MANAGE_MODELS'
 }
 
+export interface ManageProvidersMessage extends BaseMessage {
+  command: 'MANAGE_PROVIDERS'
+}
+
 export interface ManageChatbotsMessage extends BaseMessage {
   command: 'MANAGE_CHATBOTS'
 }
@@ -607,6 +611,7 @@ export type FrontendMessage =
   | UpdateLastUsedWebConfigurationMessage
   | FixAllFailedFilesMessage
   | ManageModelsMessage
+  | ManageProvidersMessage
   | ManageChatbotsMessage
   | UndoMessage
   | ApplyResponseFromHistoryMessage
