@@ -127,7 +127,6 @@ export const handle_patch_repair = async (params: {
   )
 
   const api_configurations = await providers_manager.get_api_configurations()
-  const has_api_configurations = api_configurations.length > 0
 
   let skip_action_quick_pick = false
   if (params.is_auto_run) {
@@ -154,14 +153,10 @@ export const handle_patch_repair = async (params: {
         vscode.QuickPickItem & { id: string }
       >()
       quick_pick.items = [
-        ...(has_api_configurations
-          ? [
-              {
-                label: t('common.action.send-request'),
-                id: 'make-api'
-              }
-            ]
-          : []),
+        {
+          label: t('common.action.send-request'),
+          id: 'make-api'
+        },
         ...(params.prompt_view_provider.websocket_server_instance.is_connected_with_browser()
           ? [
               {

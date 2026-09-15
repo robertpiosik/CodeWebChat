@@ -117,23 +117,15 @@ export const perform_code_at_cursor = async (params: {
     }
 
     if (params.show_quick_pick) {
-      const api_configurations =
-        await providers_manager.get_api_configurations()
-      const has_api_configurations = api_configurations.length > 0
-
       action = await new Promise<string | undefined | 'back'>((resolve) => {
         const quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & { id: string }
         >()
         quick_pick.items = [
-          ...(has_api_configurations
-            ? [
-                {
-                  label: t('common.action.send-request'),
-                  id: 'make-api'
-                }
-              ]
-            : []),
+          {
+            label: t('common.action.send-request'),
+            id: 'make-api'
+          },
           ...(params.websocket_manager.is_connected_with_browser()
             ? [
                 {

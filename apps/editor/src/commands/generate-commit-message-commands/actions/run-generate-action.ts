@@ -22,7 +22,6 @@ import { display_token_count } from '@shared/utils/display-token-count'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { dictionary } from '@shared/constants/dictionary'
 import { WebSocketManager } from '@/services/websocket-manager'
-import { ProvidersManager } from '@/services/providers-manager'
 import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 import { normalize_path } from '@/utils/normalize-path'
 import { show_missing_configuration_notification } from '@/utils/show-missing-configuration-notification'
@@ -110,11 +109,6 @@ export const run_generate_action = async (params: {
       const action_enter_manually = t('common.action.enter-manually')
       const action_copy_prompt = t('common.action.copy-prompt')
 
-      const providers_manager = new ProvidersManager(params.extension_context)
-      const api_configurations =
-        await providers_manager.get_api_configurations()
-      const has_api_configurations = api_configurations.length > 0
-
       let go_back_to_prompt_data = false
       let action_completed = false
       let final_api_prompt: string | undefined = undefined
@@ -131,9 +125,7 @@ export const run_generate_action = async (params: {
                 vscode.QuickPickItem & { id: string }
               >()
               quick_pick.items = [
-                ...(has_api_configurations
-                  ? [{ label: action_make_api, id: 'make-api' }]
-                  : []),
+                { label: action_make_api, id: 'make-api' },
                 ...(params.websocket_manager.is_connected_with_browser()
                   ? [{ label: action_autofill_chatbot, id: 'autofill' }]
                   : []),

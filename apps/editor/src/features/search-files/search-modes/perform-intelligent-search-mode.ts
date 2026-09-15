@@ -128,14 +128,10 @@ export const perform_intelligent_search_mode = async (params: {
               vscode.QuickPickItem & { id: string }
             >()
             quick_pick.items = [
-              ...(has_api_configurations
-                ? [
-                    {
-                      label: t('common.action.send-request'),
-                      id: 'make-api'
-                    }
-                  ]
-                : []),
+              {
+                label: t('common.action.send-request'),
+                id: 'make-api'
+              },
               ...(params.websocket_manager.is_connected_with_browser()
                 ? [
                     {
@@ -361,6 +357,12 @@ export const perform_intelligent_search_mode = async (params: {
         }
 
         if (action == 'make-api') {
+          if (!has_api_configurations) {
+            show_missing_configuration_notification('api')
+            go_back_to_action = true
+            continue
+          }
+
           let show_quick_pick = false
           let break_outer = false
           let final_result:
