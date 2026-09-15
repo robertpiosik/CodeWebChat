@@ -79,7 +79,10 @@ export const set_ranges_command = (
         validateInput: (value) => {
           if (value.trim() == '') return null
 
-          const parts = value.trim().split(/\s+/)
+          const parts = value
+            .trim()
+            .split(/[\s,]+/)
+            .filter(Boolean)
           const parsed_ranges: {
             start: number
             end: number
@@ -223,7 +226,11 @@ export const set_ranges_command = (
       }
 
       if (new_ranges) {
-        const formatted_range = new_ranges.trim().split(/\s+/).join(' ')
+        const formatted_range = new_ranges
+          .trim()
+          .split(/[\s,]+/)
+          .filter(Boolean)
+          .join(' ')
 
         if (save_location == 'file') {
           file_ranges[relative_path] = formatted_range
