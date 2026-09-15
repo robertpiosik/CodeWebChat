@@ -155,9 +155,9 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 </details>
 
-### Asking about file selection
+### Asking about files
 
-_Explanations, planning, code reviews, you name it._
+_Multi-purpose: explanations, code reviews, you name it._
 
 <details>
 <summary>WEB/API</summary>
