@@ -70,23 +70,5 @@ export const translations = {
     cs: 'vybráno',
     hu: 'kiválasztva',
     bg: 'избрано'
-  },
-  'context.of': {
-    en: 'of',
-    pl: 'z',
-    'zh-cn': '/',
-    ja: '/',
-    'zh-tw': '/',
-    de: 'von',
-    es: 'de',
-    fr: 'sur',
-    'pt-br': 'de',
-    ru: 'из',
-    ko: '/',
-    it: 'di',
-    tr: '/',
-    cs: 'z',
-    hu: '/',
-    bg: 'от'
   }
 } as const
