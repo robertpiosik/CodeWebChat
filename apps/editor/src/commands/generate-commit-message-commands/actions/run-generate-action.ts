@@ -25,7 +25,7 @@ import { WebSocketManager } from '@/services/websocket-manager'
 import { ProvidersManager } from '@/services/providers-manager'
 import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 import { normalize_path } from '@/utils/normalize-path'
-import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
+import { show_missing_configuration_notification } from '@/utils/show-missing-configuration-notification'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 
 const truncate_prompt = (text: string): string => {
@@ -397,7 +397,7 @@ export const run_generate_action = async (params: {
           )
 
           if (valid_web_configurations.length == 0) {
-            show_no_configurations_warning('web')
+            show_missing_configuration_notification('web')
             current_action = undefined
             continue
           }

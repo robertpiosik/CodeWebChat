@@ -1,9 +1,9 @@
 import { translations as show_parent_folder_quick_pick } from './show-parent-folder-quick-pick'
 import { translations as git_repository_utils } from './git-repository-utils'
-import { translations as show_no_configurations_warning } from './show-no-configurations-warning'
+import { translations as show_missing_configuration_notification } from './show-missing-configuration-notification'
 
 export const translations = {
   ...show_parent_folder_quick_pick,
   ...git_repository_utils,
-  ...show_no_configurations_warning
+  ...show_missing_configuration_notification
 }

@@ -13,7 +13,7 @@ import { patch_repair_task_instructions } from '@/constants/instructions'
 import { t } from '@/i18n'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
-import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
+import { show_missing_configuration_notification } from '@/utils/show-missing-configuration-notification'
 
 export const get_patch_repair_config = async (params: {
   providers_manager: ProvidersManager
@@ -26,7 +26,7 @@ export const get_patch_repair_config = async (params: {
     await params.providers_manager.get_api_configurations()
 
   if (patch_repair_api_configurations.length == 0) {
-    show_no_configurations_warning('api')
+    show_missing_configuration_notification('api')
     return
   }
 

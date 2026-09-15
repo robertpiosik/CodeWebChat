@@ -392,7 +392,7 @@ export const MainView: React.FC<Props> = (props) => {
                 (props.target == TARGET.API &&
                   props.api_configurations.length == 0)
               }
-              is_voice_input_disabled={props.api_configurations.length == 0}
+              // is_voice_input_disabled={props.api_configurations.length == 0}
               is_preview_disabled={
                 (props.target == TARGET.WEB
                   ? props.web_prompt_type
