@@ -103,7 +103,7 @@
   overflow-wrap: break-word;
   word-break: break-word;
   letter-spacing: normal;
-  min-height: 48px;
+  min-height: 53px;
 
   .tabs {
     display: none;
@@ -263,8 +263,8 @@
         }
 
         &:disabled {
-           opacity: var(--disabled-opacity);
-    cursor: default;
+          opacity: var(--disabled-opacity);
+          cursor: default;
 
           &:hover {
             background-color: none;
