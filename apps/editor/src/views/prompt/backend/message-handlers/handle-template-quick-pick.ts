@@ -41,7 +41,9 @@ export const handle_template_quick_pick = async (
   if (!templates.length) {
     prompt_view_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
     const selection = await vscode.window.showInformationMessage(
-      t('views.prompt.handlers.handle-template-quick-pick.no-templates-found'),
+      t(
+        'views.prompt.handlers.handle-template-quick-pick.no-templates-created-yet'
+      ),
       t('views.prompt.handlers.handle-template-quick-pick.open-settings')
     )
     if (

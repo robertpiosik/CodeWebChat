@@ -1,21 +1,21 @@
 export const translations = {
-  'views.prompt.handlers.handle-template-quick-pick.no-templates-found': {
-    en: 'No templates found.',
-    pl: 'Nie znaleziono szablonów.',
-    'zh-cn': '未找到模板。',
-    ja: 'テンプレートが見つかりません。',
-    'zh-tw': '未找到範本。',
-    de: 'Keine Vorlagen gefunden.',
-    es: 'No se encontraron plantillas.',
-    fr: 'Aucun modèle trouvé.',
-    'pt-br': 'Nenhum modelo encontrado.',
-    ru: 'Шаблоны не найдены.',
-    ko: '템플릿을 찾을 수 없습니다.',
-    it: 'Nessun modello trovato.',
-    tr: 'Şablon bulunamadı.',
-    cs: 'Nebyly nalezeny žádné šablony.',
-    hu: 'Nem találhatók sablonok.',
-    bg: 'Не са намерени шаблони.'
+  'views.prompt.handlers.handle-template-quick-pick.no-templates-created-yet': {
+    en: 'No templates created yet.',
+    pl: 'Nie utworzono jeszcze szablonów.',
+    'zh-cn': '尚未创建模板。',
+    ja: 'テンプレートはまだ作成されていません。',
+    'zh-tw': '尚未建立範本。',
+    de: 'Noch keine Vorlagen erstellt.',
+    es: 'Aún no se han creado plantillas.',
+    fr: 'Aucun modèle créé pour le moment.',
+    'pt-br': 'Nenhum modelo criado ainda.',
+    ru: 'Шаблоны еще не созданы.',
+    ko: '아직 생성된 템플릿이 없습니다.',
+    it: 'Nessun modello ancora creato.',
+    tr: 'Henüz şablon oluşturulmadı.',
+    cs: 'Zatím nebyly vytvořeny žádné šablony.',
+    hu: 'Még nincsenek sablonok létrehozva.',
+    bg: 'Все още няма създадени шаблони.'
   },
   'views.prompt.handlers.handle-template-quick-pick.open-settings': {
     en: 'Open settings',
