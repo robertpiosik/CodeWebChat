@@ -57,7 +57,7 @@ export const ProgressModal: React.FC<Props> = (props) => {
             )}
             {props.tokens_per_second !== undefined && (
               <div className={styles['tokens-per-second']}>
-                {format_tokens_per_second(props.tokens_per_second)} t/s
+                {format_tokens_per_second(props.tokens_per_second)} tok/s
               </div>
             )}
             <div className={styles.progress}>
