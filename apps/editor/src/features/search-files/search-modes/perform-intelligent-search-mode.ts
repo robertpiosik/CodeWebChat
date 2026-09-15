@@ -277,7 +277,7 @@ export const perform_intelligent_search_mode = async (params: {
               ? analysis.shrink_tokens
               : analysis.full_tokens
             vscode.window.showInformationMessage(
-              t('common.info.prompt-copied-with-tokens', {
+              t('common.info.copied-to-clipboard', {
                 tokens: display_token_count(token_count)
               })
             )

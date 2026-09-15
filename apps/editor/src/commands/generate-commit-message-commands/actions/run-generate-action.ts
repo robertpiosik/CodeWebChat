@@ -359,7 +359,7 @@ export const run_generate_action = async (params: {
         if (action == 'copy') {
           await vscode.env.clipboard.writeText(final_chatbot_prompt!)
           vscode.window.showInformationMessage(
-            t('common.info.prompt-copied-with-tokens', {
+            t('common.info.copied-to-clipboard', {
               tokens: display_token_count(
                 Math.ceil(final_api_prompt!.length / 4)
               )

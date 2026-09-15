@@ -486,24 +486,6 @@ export const translations = {
     hu: 'Kérjük, válassza ki a keresendő fájlokat.',
     bg: 'Моля, изберете файлове за търсене.'
   },
-  'common.info.prompt-copied-with-tokens': {
-    en: 'Prompt copied to clipboard ({tokens} tokens).',
-    pl: 'Skopiowano prompt do schowka ({tokens} tokenów).',
-    'zh-cn': '提示词已复制到剪贴板 ({tokens} 个 token)。',
-    ja: 'プロンプトがクリップボードにコピーされました ({tokens} トークン)。',
-    'zh-tw': '提示詞已複製到剪貼簿 ({tokens} 個 token)。',
-    de: 'Prompt in die Zwischenablage kopiert ({tokens} Tokens).',
-    es: 'Prompt copiado al portapapeles ({tokens} tokens).',
-    fr: 'Prompt copié dans le presse-papiers ({tokens} jetons).',
-    'pt-br': 'Prompt copiado para a área de transferência ({tokens} tokens).',
-    ru: 'Промпт скопирован в буфер обмена ({tokens} токенов).',
-    ko: '프롬프트가 클립보드에 복사되었습니다 ({tokens} 토큰).',
-    it: 'Prompt copiato negli appunti ({tokens} token).',
-    tr: 'İstem panoya kopyalandı ({tokens} token).',
-    cs: 'Prompt zkopírován do schránky ({tokens} tokenů).',
-    hu: 'Prompt a vágólapra másolva ({tokens} token).',
-    bg: 'Промптът е копиран в клипборда ({tokens} токена).'
-  },
   'common.action-quick-pick.placeholder': {
     en: 'Choose how to proceed with {tokens} tokens',
     pl: 'Wybierz, jak kontynuować ({tokens} tokenów)',
