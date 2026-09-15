@@ -42,7 +42,7 @@ export const run_generate_action = async (params: {
   provided_text?: string
 }) => {
   if (get_response_preview_promise_resolve()) {
-    vscode.window.showWarningMessage(
+    vscode.window.showInformationMessage(
       t('command.generate-commit-message.disabled-during-preview')
     )
     return

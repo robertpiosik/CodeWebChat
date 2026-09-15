@@ -13,7 +13,6 @@ import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '@shared/utils/display-token-count'
 import { TokenCalculator } from './modules/token-calculator'
 import { normalize_path } from '@/utils/normalize-path'
-import { t } from '@/i18n'
 
 export interface IWorkspaceProvider {
   get_workspace_roots(): string[]
@@ -550,9 +549,9 @@ export class WorkspaceProvider
     if (element.isDirectory) {
       if (formatted_total) {
         if (formatted_selected && selected_token_count! < total_token_count!) {
-          display_description = `◐ · ${formatted_total} · ${formatted_selected} ${t('context.selected')}`
+          display_description = `◐ · ${formatted_total} · ${formatted_selected}`
         } else if (is_fully_selected) {
-          display_description = formatted_total
+          display_description = `● · ${formatted_total}`
         } else {
           display_description = formatted_total
         }
