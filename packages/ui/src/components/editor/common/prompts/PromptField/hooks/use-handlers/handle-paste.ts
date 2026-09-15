@@ -42,6 +42,7 @@ export const create_perform_paste =
       !refs.is_shift_pressed_ref.current &&
       props.current_selection &&
       text == props.current_selection.text &&
+      text.length > 1 &&
       props.currently_open_file_path &&
       is_file_in_context
     ) {
@@ -105,6 +106,7 @@ export const create_handle_paste =
     const is_fragment_paste =
       props.current_selection &&
       text == props.current_selection.text &&
+      text.length > 1 &&
       props.currently_open_file_path &&
       is_file_in_context
 
