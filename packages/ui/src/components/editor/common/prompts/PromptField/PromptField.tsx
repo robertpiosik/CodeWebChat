@@ -89,6 +89,7 @@ export type PromptFieldProps = {
   voice_input_push_to_talk?: boolean
   prompt_token_count: number
   is_copy_only?: boolean
+  is_voice_input_disabled?: boolean
   target: Target
   on_target_change: (target: Target) => void
   active_border_color?: 'blue' | 'purple'
@@ -374,7 +375,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     on_click: () => {
                       props.on_recording_started()
                       close_dropdown()
-                    }
+                    },
+                    is_disabled: props.is_voice_input_disabled
                   }
                 ]
               : []),
@@ -410,7 +412,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     on_click: () => {
                       props.on_recording_started()
                       close_dropdown()
-                    }
+                    },
+                    is_disabled: props.is_voice_input_disabled
                   }
                 ]
               : []),
@@ -739,6 +742,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       }}
                       onMouseEnter={() => set_is_recording_hovered(true)}
                       onMouseLeave={() => set_is_recording_hovered(false)}
+                      disabled={props.is_voice_input_disabled}
                     />
                   ) : (
                     <button
@@ -821,6 +825,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     }}
                     onMouseEnter={() => set_is_recording_hovered(true)}
                     onMouseLeave={() => set_is_recording_hovered(false)}
+                    disabled={props.is_voice_input_disabled}
                   />
                 ) : (
                   <>

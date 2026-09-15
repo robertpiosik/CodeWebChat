@@ -49,13 +49,13 @@ export const create_handle_key_down = (
     e.preventDefault()
     if (props.is_recording) {
       props.on_recording_finished()
-    } else {
+    } else if (!props.is_voice_input_disabled) {
       props.on_recording_started()
     }
   }
 
   const handle_space_key = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!props.voice_input_push_to_talk) {
+    if (!props.voice_input_push_to_talk || props.is_voice_input_disabled) {
       return false
     }
 

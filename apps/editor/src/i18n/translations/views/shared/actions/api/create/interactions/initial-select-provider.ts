@@ -77,22 +77,21 @@ export const translations = {
     },
   'views.shared.actions.api.create.interactions.initial-select-provider.no-providers-found':
     {
-      en: 'No providers found. Please add a provider first.',
-      pl: 'Nie znaleziono dostawców. Proszę najpierw dodać dostawcę.',
-      'zh-cn': '未找到提供商。请先添加一个提供商。',
-      ja: 'プロバイダーが見つかりません。まずプロバイダーを追加してください。',
-      'zh-tw': '未找到供應商。請先新增一個供應商。',
-      de: 'Keine Anbieter gefunden. Bitte fügen Sie zuerst einen Anbieter hinzu.',
-      es: 'No se encontraron proveedores. Por favor, añada un proveedor primero.',
-      fr: "Aucun fournisseur trouvé. Veuillez d'abord ajouter un fournisseur.",
-      'pt-br':
-        'Nenhum provedor encontrado. Por favor, adicione um provedor primeiro.',
-      ru: 'Провайдеры не найдены. Пожалуйста, сначала добавьте провайдера.',
-      ko: '제공자를 찾을 수 없습니다. 먼저 제공자를 추가하세요.',
-      it: 'Nessun fornitore trovato. Si prega di aggiungere prima un fornitore.',
-      tr: 'Sağlayıcı bulunamadı. Lütfen önce bir sağlayıcı ekleyin.',
-      cs: 'Nebyli nalezeni žádní poskytovatelé. Nejprve prosím přidejte poskytovatele.',
-      hu: 'Nem találhatók szolgáltatók. Kérjük, először adjon hozzá egy szolgáltatót.',
-      bg: 'Не са намерени доставчици. Моля, първо добавете доставчик.'
+      en: 'No providers found. Please add one first.',
+      pl: 'Nie znaleziono dostawców. Najpierw dodaj jednego.',
+      'zh-cn': '未找到提供商。请先添加一个。',
+      ja: 'プロバイダーが見つかりません。まず追加してください。',
+      'zh-tw': '未找到供應商。請先新增一個。',
+      de: 'Keine Anbieter gefunden. Bitte fügen Sie zuerst einen hinzu.',
+      es: 'No se encontraron proveedores. Por favor, añade uno primero.',
+      fr: "Aucun fournisseur trouvé. Veuillez d'abord en ajouter un.",
+      'pt-br': 'Nenhum provedor encontrado. Por favor, adicione um primeiro.',
+      ru: 'Провайдеры не найдены. Пожалуйста, сначала добавьте одного.',
+      ko: '제공자를 찾을 수 없습니다. 먼저 추가해 주세요.',
+      it: 'Nessun fornitore trovato. Aggiungine prima uno.',
+      tr: 'Sağlayıcı bulunamadı. Lütfen önce bir tane ekleyin.',
+      cs: 'Nebyli nalezeni žádní poskytovatelé. Nejprve prosím nějakého přidejte.',
+      hu: 'Nem találhatók szolgáltatók. Kérjük, először adjon hozzá egyet.',
+      bg: 'Не са намерени доставчици. Моля, първо добавете един.'
     }
 } as const
