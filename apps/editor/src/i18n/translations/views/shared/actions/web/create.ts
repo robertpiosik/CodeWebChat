@@ -54,21 +54,21 @@ export const translations = {
     bg: 'Чатботове'
   },
   'views.shared.actions.web.create.chatbots.placeholder': {
-    en: 'Choose a chatbot for the new configuration',
-    pl: 'Wybierz chatbota dla nowej konfiguracji',
-    'zh-cn': '为新配置选择一个聊天机器人',
-    ja: '新しい構成用のチャットボットを選択してください',
-    'zh-tw': '為新設定選擇一個聊天機器人',
-    de: 'Wählen Sie einen Chatbot für die neue Konfiguration',
-    es: 'Elige un chatbot para la nueva configuración',
-    fr: 'Choisissez un chatbot pour la nouvelle configuration',
-    'pt-br': 'Escolha um chatbot para a nova configuração',
-    ru: 'Выберите чат-бота для новой конфигурации',
-    ko: '새 구성에 사용할 챗봇을 선택하세요',
-    it: 'Scegli un chatbot per la nuova configurazione',
-    tr: 'Yeni yapılandırma için bir sohbet robotu seçin',
-    cs: 'Vyberte chatbota pro novou konfiguraci',
-    hu: 'Válasszon egy chatbotot az új konfigurációhoz',
-    bg: 'Изберете чатбот за новата конфигурация'
+    en: 'Choose a chatbot from the supported list',
+    pl: 'Wybierz chatbota z listy obsługiwanych',
+    'zh-cn': '从支持的列表中选择一个聊天机器人',
+    ja: 'サポートされているリストからチャットボットを選択してください',
+    'zh-tw': '從支援的清單中選擇一個聊天機器人',
+    de: 'Wählen Sie einen Chatbot aus der unterstützten Liste',
+    es: 'Elige un chatbot de la lista compatible',
+    fr: 'Choisissez un chatbot dans la liste prise en charge',
+    'pt-br': 'Escolha um chatbot da lista suportada',
+    ru: 'Выберите чат-бота из списка поддерживаемых',
+    ko: '지원되는 목록에서 챗봇을 선택하세요',
+    it: 'Scegli un chatbot dalla lista supportata',
+    tr: 'Desteklenen listeden bir sohbet robotu seçin',
+    cs: 'Vyberte chatbota z podporovaného seznamu',
+    hu: 'Válasszon egy chatbotot a támogatott listáról',
+    bg: 'Изберете чатбот от поддържания списък'
   }
 } as const

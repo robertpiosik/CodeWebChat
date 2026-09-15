@@ -54,21 +54,21 @@ export const configurations = {
     bg: 'Все още няма конфигурирани модели'
   },
   'chatbots.empty': {
-    en: 'No chatbot configured yet',
-    pl: 'Nie ustawiono jeszcze żadnego chatbota',
-    'zh-cn': '尚未配置聊天机器人',
-    ja: 'チャットボットはまだ設定されていません',
-    'zh-tw': '尚未配置聊天機器人',
-    de: 'Noch kein Chatbot konfiguriert',
-    es: 'Aún no se ha configurado ningún chatbot',
-    fr: 'Aucun chatbot configuré pour le moment',
-    'pt-br': 'Nenhum chatbot configurado ainda',
-    ru: 'Чат-бот еще не настроен',
+    en: 'No chatbots configured yet',
+    pl: 'Nie skonfigurowano jeszcze żadnych chatbotów',
+    'zh-cn': '尚未配置任何聊天机器人',
+    ja: 'チャットボットがまだ設定されていません',
+    'zh-tw': '尚未設定任何聊天機器人',
+    de: 'Noch keine Chatbots konfiguriert',
+    es: 'Aún no se han configurado chatbots',
+    fr: 'Pas encore de chatbots configurés pour le moment',
+    'pt-br': 'Não há chatbots configurados ainda',
+    ru: 'Чат-боты еще не настроены',
     ko: '아직 구성된 챗봇이 없습니다',
-    it: 'Nessun chatbot ancora configurato',
-    tr: 'Henüz yapılandırılmış sohbet robotu yok',
-    cs: 'Zatím není nakonfigurován žádný chatbot',
-    hu: 'Még nincs chatbot konfigurálva',
-    bg: 'Все още няма конфигуриран чатбот'
+    it: 'Non ci sono ancora chatbot configurati',
+    tr: 'Henüz hiçbir sohbet robotu yapılandırılmadı',
+    cs: 'Zatím nebyli nakonfigurováni žádní chatboti',
+    hu: 'Még nincsenek chatbotok konfigurálva',
+    bg: 'Все още няма конфигурирани чатботове'
   }
 } as const

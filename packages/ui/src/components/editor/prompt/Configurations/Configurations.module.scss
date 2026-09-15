@@ -122,12 +122,12 @@
   text-align: center;
   font-style: italic;
   justify-content: center;
-  padding: 0 12px;
+  padding: 4px 12px 3px 12px;
   height: 100%;
   color: var(--cwc-text-color-dimmed);
 
   :global([data-modern-ui='true']) & {
-    padding: 0 10px;
+    padding: 4px 10px 3px 10px;
   }
 }
 
