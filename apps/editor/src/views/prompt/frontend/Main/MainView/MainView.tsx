@@ -378,7 +378,7 @@ export const MainView: React.FC<Props> = (props) => {
               />
             )}
 
-          <div className={styles['chat-input']}>
+          <div className={styles.prompt}>
             <UiPromptField
               is_copy_only={
                 props.target == TARGET.WEB &&

@@ -88,7 +88,7 @@ type Props = {
 }
 
 export const Main: React.FC<Props> = (props) => {
-  const [all_web_configurations, set_all_web_configurations] =
+  const [web_configurations, set_web_configurations] =
     useState<WebConfiguration[]>()
   const [
     selected_web_configuration_name_by_mode,
@@ -111,7 +111,7 @@ export const Main: React.FC<Props> = (props) => {
       const message = event.data as BackendMessage
       switch (message.command) {
         case 'WEB_CONFIGURATIONS':
-          set_all_web_configurations(
+          set_web_configurations(
             (message as WebConfigurationsMessage).web_configurations
           )
           set_selected_web_configuration_name_by_mode(
@@ -204,12 +204,12 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_toggle_web_configuration_pinned = (name: string) => {
-    if (all_web_configurations) {
-      const updated_web_configurations = all_web_configurations.map((p) =>
+    if (web_configurations) {
+      const updated_web_configurations = web_configurations.map((p) =>
         p.name == name ? { ...p, is_pinned: !p.is_pinned } : p
       )
 
-      set_all_web_configurations(updated_web_configurations)
+      set_web_configurations(updated_web_configurations)
 
       post_message(props.vscode, {
         command: 'TOGGLE_PINNED_WEB_CONFIGURATION',
@@ -244,8 +244,8 @@ export const Main: React.FC<Props> = (props) => {
   const handle_web_configurations_reorder = (
     reordered_web_configurations: WebConfiguration[]
   ) => {
-    if (all_web_configurations) {
-      set_all_web_configurations(reordered_web_configurations)
+    if (web_configurations) {
+      set_web_configurations(reordered_web_configurations)
     }
 
     post_message(props.vscode, {
@@ -350,7 +350,7 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_web_configuration_edit = (name: string) => {
-    const web_configuration = all_web_configurations?.find(
+    const web_configuration = web_configurations?.find(
       (config) => config.name == name
     )
     if (web_configuration) props.on_web_configuration_edit(web_configuration)
@@ -471,7 +471,7 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   if (
-    all_web_configurations === undefined ||
+    web_configurations === undefined ||
     props.api_configurations === undefined ||
     ask_about_files_history === undefined ||
     edit_files_history === undefined ||
@@ -484,18 +484,13 @@ export const Main: React.FC<Props> = (props) => {
   const selected_web_configuration_name =
     selected_web_configuration_name_by_mode?.[props.web_prompt_type]
 
-  const api_configurations =
-    props.target == TARGET.API && props.api_configurations
-      ? props.api_configurations
-      : []
-
   return (
     <MainView
       scroll_reset_key={props.scroll_reset_key}
       on_show_home={props.on_show_home}
       initialize_chats={handle_initialize_chats}
       on_copy={handle_copy}
-      api_configurations={api_configurations}
+      api_configurations={props.api_configurations}
       on_api_configuration_click={handle_api_configuration_click}
       on_api_configurations_reorder={handle_api_configurations_reorder}
       on_toggle_pinned_api_configuration={
@@ -511,7 +506,7 @@ export const Main: React.FC<Props> = (props) => {
       on_hash_sign_click={handle_hash_sign_click}
       on_slash_click={handle_slash_click}
       is_connected={props.is_connected}
-      web_configurations={all_web_configurations || []}
+      web_configurations={web_configurations || []}
       on_create_web_configuration={handle_create_web_configuration}
       currently_open_file_path={props.currently_open_file_path}
       on_quick_action_click={handle_quick_action_click}
