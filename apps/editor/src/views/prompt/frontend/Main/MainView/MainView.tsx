@@ -413,13 +413,15 @@ export const MainView: React.FC<Props> = (props) => {
               target={props.target}
               on_target_change={(target) => props.on_target_change(target)}
               active_border_color={
-                props.target == TARGET.WEB
-                  ? props.web_prompt_type == 'edit-files'
-                    ? 'blue'
-                    : 'purple'
-                  : props.api_prompt_type == 'edit-files'
-                    ? 'blue'
-                    : 'purple'
+                context_is_empty_warning
+                  ? 'yellow'
+                  : props.target == TARGET.WEB
+                    ? props.web_prompt_type == 'edit-files'
+                      ? 'blue'
+                      : 'purple'
+                    : props.api_prompt_type == 'edit-files'
+                      ? 'blue'
+                      : 'purple'
               }
               on_paste_image={props.on_paste_image}
               on_open_image={props.on_open_image}

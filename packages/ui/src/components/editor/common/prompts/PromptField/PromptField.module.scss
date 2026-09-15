@@ -31,6 +31,12 @@
       }
     }
 
+    &--active-border-yellow {
+      &:focus-within {
+        border-color: var(--cwc-yellow-foreground);
+      }
+    }
+
     &--selecting {
       .keyword {
         pointer-events: none;
