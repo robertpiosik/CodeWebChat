@@ -18,7 +18,6 @@ import { dictionary } from '@shared/constants/dictionary'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { build_user_content } from '@/utils/build-user-content'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
-import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { ApiPromptType } from '@shared/types/prompt-types'
 import {
@@ -47,7 +46,6 @@ const get_api_configuration = async (params: {
     await params.providers_manager.get_api_configurations()
 
   if (api_configurations.length == 0) {
-    show_no_configurations_warning('api')
     return
   }
 

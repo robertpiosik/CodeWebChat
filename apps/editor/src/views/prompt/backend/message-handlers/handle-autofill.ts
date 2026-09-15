@@ -15,7 +15,6 @@ import {
 import { handle_update_last_used_web_configuration } from './handle-update-last-used-web-configuration'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { PromptBuilder } from '@/utils/prompt-builder'
-import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 import { t } from '@/i18n'
 
 export const handle_autofill = async (params: {
@@ -125,7 +124,7 @@ const show_web_configuration_quick_pick = async (params: {
   get_is_web_configuration_disabled: (
     web_configuration: ConfigWebConfigurationFormat
   ) => boolean
-}): Promise<{ web_configuration_name: string | undefined } | null> => {
+}): Promise<{ web_configuration_name: string | undefined } | undefined> => {
   const {
     web_configurations,
     extension_context,
@@ -136,8 +135,7 @@ const show_web_configuration_quick_pick = async (params: {
   const valid_web_configurations = web_configurations.filter((c) => c.chatbot)
 
   if (valid_web_configurations.length == 0) {
-    show_no_configurations_warning('web')
-    return null
+    return
   }
 
   const recents_key = get_last_used_web_configuration_key(prompt_type)
@@ -153,13 +151,13 @@ const show_web_configuration_quick_pick = async (params: {
 
   if (!result || result === 'back') {
     prompt_view_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
-    return null
+    return
   }
 
   const web_configuration = result.item
 
   if (params.get_is_web_configuration_disabled(web_configuration)) {
-    return null
+    return
   }
 
   if (web_configuration.name) {
