@@ -194,6 +194,8 @@ export const Home: React.FC<Props> = (props) => {
       <UiScrollable on_scroll={handle_scroll} top_shadow>
         <div className={styles.content}>
           <div className={styles.inner}>
+            <UiSeparator height={4} />
+
             <div className={styles.inner__target} ref={target_ref}>
               <UiKeycapWrapper
                 char={is_alt_pressed ? 'W' : undefined}

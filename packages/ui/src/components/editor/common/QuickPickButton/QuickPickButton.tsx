@@ -11,7 +11,7 @@ export namespace QuickPickButton {
 export const QuickPickButton: React.FC<QuickPickButton.Props> = (props) => {
   return (
     <button className={styles.button} onClick={props.onClick}>
-      <span>{props.label}</span>
+      <span className={styles.label}>{props.label}</span>
       <span className={cn('codicon codicon-unfold', styles.icon)} />
     </button>
   )

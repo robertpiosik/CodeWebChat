@@ -8,3 +8,13 @@
     margin: 0 10px;
   }
 }
+
+.content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  > * {
+    flex-shrink: 0;
+  }
+}

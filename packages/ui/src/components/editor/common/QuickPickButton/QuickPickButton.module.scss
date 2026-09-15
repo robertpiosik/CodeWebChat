@@ -12,6 +12,13 @@
   width: 100%;
 }
 
+.label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .icon {
   color: var(--vscode-icon-foreground);
+  flex-shrink: 0;
 }

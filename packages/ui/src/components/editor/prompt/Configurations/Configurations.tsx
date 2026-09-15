@@ -159,10 +159,10 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           <div className={styles.separator} />
         </>
       )}
+      {props.configurations.length == 0 && (
+        <div className={styles.empty}>{props.translations.empty}</div>
+      )}
       <div className={styles.configurations}>
-        {props.configurations.length == 0 && (
-          <div className={styles.empty}>{props.translations.empty}</div>
-        )}
         <ReactSortable
           list={props.configurations}
           setList={(new_state) => {
