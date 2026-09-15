@@ -1,8 +1,5 @@
 import * as vscode from 'vscode'
-import {
-  commit_message_instructions,
-  commit_message_format
-} from '@/constants/instructions'
+import { commit_message_format } from '@/constants/instructions'
 import type { GitRepository } from '@/utils/git-repository-utils'
 import { MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE } from '@/constants/values'
 import { PromptBuilder } from '@/utils/prompt-builder'
@@ -15,8 +12,10 @@ export const build_commit_message_prompt = async (
   workspace_provider?: WorkspaceProvider
 ): Promise<{ api_prompt: string; chatbot_prompt: string }> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const instructions = config.get<string>('commitMessageInstructions')
-  const commit_message_prompt = instructions || commit_message_instructions
+  const commit_message_prompt =
+    config.get<string>('commitMessageInstructions') ||
+    config.inspect<string>('commitMessageInstructions')?.defaultValue ||
+    ''
 
   const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
 

@@ -355,6 +355,7 @@ export interface ApiConfigurationsMessage {
 export interface CommitMessageInstructionsMessage {
   command: 'COMMIT_MESSAGE_INSTRUCTIONS'
   instructions: string
+  default_instructions: string
 }
 
 export interface AttachAsciiTreeOfContextMessage {
@@ -375,6 +376,7 @@ export interface SelectAllPromptsInCommitMessagesByDefaultMessage {
 export interface EditFilesSystemInstructionsMessage {
   command: 'EDIT_FILES_SYSTEM_INSTRUCTIONS'
   instructions: string
+  default_instructions: string
 }
 
 export interface GeminiUserIdMessage {

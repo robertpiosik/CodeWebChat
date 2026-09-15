@@ -1,16 +1,17 @@
 import * as vscode from 'vscode'
 import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
-import { commit_message_instructions } from '@/constants/instructions'
 
 export const handle_get_commit_message_instructions = async (
   provider: SettingsViewProvider
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
+  const default_instructions =
+    config.inspect<string>('commitMessageInstructions')?.defaultValue || ''
   const instructions =
-    config.get<string>('commitMessageInstructions') ||
-    commit_message_instructions
+    config.get<string>('commitMessageInstructions') || default_instructions
   provider.postMessage({
     command: 'COMMIT_MESSAGE_INSTRUCTIONS',
-    instructions
+    instructions,
+    default_instructions
   })
 }

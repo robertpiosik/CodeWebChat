@@ -15,7 +15,6 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { MakeApiCallMessage } from '@/views/prompt/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
-import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { build_user_content } from '@/utils/build-user-content'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { PromptBuilder } from '@/utils/prompt-builder'
@@ -221,11 +220,11 @@ export const handle_make_api_call = async (
         formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
       }
 
+      const config = vscode.workspace.getConfiguration('codeWebChat')
       system_instructions =
-        vscode.workspace
-          .getConfiguration('codeWebChat')
-          .get<string>('editFilesSystemInstructions') ||
-        default_system_instructions
+        config.get<string>('editFilesSystemInstructions') ||
+        config.inspect<string>('editFilesSystemInstructions')?.defaultValue ||
+        ''
 
       const { part1, part2 } = PromptBuilder.build_prompt({
         other_files,

@@ -15,9 +15,6 @@ import { GeneralSection } from './sections/GeneralSection'
 import { ApiFeature } from '@/views/shared/types/api-features'
 import { use_translation, TranslationKey } from '../i18n/use-translation'
 import { WebSection } from './sections/WebSection'
-import { commit_message_instructions as default_commit_message_instructions } from '@/constants/instructions'
-import { default_system_instructions } from '@shared/constants/default-system-instructions'
-
 export type NavItem =
   | 'section:general'
   | 'section:general:group:open-links'
@@ -86,7 +83,9 @@ type Props = {
   web_configurations: WebConfiguration[]
   defaults: Record<ApiFeature, string | null>
   edit_files_system_instructions: string
+  default_edit_files_system_instructions: string
   commit_message_instructions: string
+  default_commit_message_instructions: string
   attach_ascii_tree_of_context: 'ask' | 'always' | 'never'
   use_context_files_in_commit_message_prompt: 'ask' | 'always' | 'never'
   select_all_prompts_in_commit_messages_by_default: boolean
@@ -296,16 +295,18 @@ export const Home: React.FC<Props> = (props) => {
             if (
               commit_instructions == '' &&
               props.commit_message_instructions ==
-                default_commit_message_instructions
+                props.default_commit_message_instructions
             ) {
-              set_commit_instructions(default_commit_message_instructions)
+              set_commit_instructions(props.default_commit_message_instructions)
             }
           }}
-          default_commit_instructions={default_commit_message_instructions}
+          default_commit_instructions={
+            props.default_commit_message_instructions
+          }
           on_restore_commit_instructions={() => {
-            set_commit_instructions(default_commit_message_instructions)
+            set_commit_instructions(props.default_commit_message_instructions)
             props.on_commit_instructions_change(
-              default_commit_message_instructions
+              props.default_commit_message_instructions
             )
           }}
           on_open_external_url={props.on_open_external_url}
@@ -369,16 +370,22 @@ export const Home: React.FC<Props> = (props) => {
             if (
               edit_files_instructions == '' &&
               props.edit_files_system_instructions ==
-                default_system_instructions
+                props.default_edit_files_system_instructions
             ) {
-              set_edit_files_instructions(default_system_instructions)
+              set_edit_files_instructions(
+                props.default_edit_files_system_instructions
+              )
             }
           }}
-          default_edit_files_instructions={default_system_instructions}
+          default_edit_files_instructions={
+            props.default_edit_files_system_instructions
+          }
           on_restore_edit_files_instructions={() => {
-            set_edit_files_instructions(default_system_instructions)
+            set_edit_files_instructions(
+              props.default_edit_files_system_instructions
+            )
             props.on_edit_files_system_instructions_change(
-              default_system_instructions
+              props.default_edit_files_system_instructions
             )
           }}
         />

@@ -22,6 +22,10 @@ export const use_settings = (vscode: any) => {
   >(undefined)
   const [commit_message_instructions, set_commit_message_instructions] =
     useState<string | undefined>(undefined)
+  const [
+    default_commit_message_instructions,
+    set_default_commit_message_instructions
+  ] = useState<string | undefined>(undefined)
   const [attach_ascii_tree_of_context, set_attach_ascii_tree_of_context] =
     useState<'ask' | 'always' | 'never' | undefined>(undefined)
   const [
@@ -34,6 +38,10 @@ export const use_settings = (vscode: any) => {
   ] = useState<boolean | undefined>(undefined)
   const [edit_files_system_instructions, set_edit_files_system_instructions] =
     useState<string | undefined>(undefined)
+  const [
+    default_edit_files_system_instructions,
+    set_default_edit_files_system_instructions
+  ] = useState<string | undefined>(undefined)
   const [gemini_user_id, set_gemini_user_id] = useState<
     number | null | undefined
   >(undefined)
@@ -84,8 +92,10 @@ export const use_settings = (vscode: any) => {
         set_web_configurations(message.web_configurations)
       } else if (message.command == 'EDIT_FILES_SYSTEM_INSTRUCTIONS') {
         set_edit_files_system_instructions(message.instructions)
+        set_default_edit_files_system_instructions(message.default_instructions)
       } else if (message.command == 'COMMIT_MESSAGE_INSTRUCTIONS') {
         set_commit_message_instructions(message.instructions)
+        set_default_commit_message_instructions(message.default_instructions)
       } else if (message.command == 'ATTACH_ASCII_TREE_OF_CONTEXT') {
         set_attach_ascii_tree_of_context(message.value)
       } else if (
@@ -367,10 +377,12 @@ export const use_settings = (vscode: any) => {
     set_web_configurations,
     defaults,
     commit_message_instructions,
+    default_commit_message_instructions,
     attach_ascii_tree_of_context,
     use_context_files_in_commit_message_prompt,
     select_all_prompts_in_commit_messages_by_default,
     edit_files_system_instructions,
+    default_edit_files_system_instructions,
     gemini_user_id,
     ai_studio_user_id,
     send_with_shift_enter,

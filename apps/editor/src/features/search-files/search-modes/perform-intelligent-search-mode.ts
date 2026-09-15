@@ -18,10 +18,7 @@ import { ProvidersManager } from '@/services/providers-manager'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { display_token_count } from '@shared/utils/display-token-count'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
-import {
-  intelligent_search_task_instructions,
-  intelligent_file_search_format_for_prompt_view
-} from '@/constants/instructions'
+import { intelligent_file_search_format_for_prompt_view } from '@/constants/instructions'
 import { show_no_configurations_warning } from '@/utils/show-no-configurations-warning'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 
@@ -236,7 +233,9 @@ export const perform_intelligent_search_mode = async (params: {
           const config = vscode.workspace.getConfiguration('codeWebChat')
           const base_instructions =
             config.get<string>('intelligentSearchInstructions') ||
-            intelligent_search_task_instructions
+            config.inspect<string>('intelligentSearchInstructions')
+              ?.defaultValue ||
+            ''
 
           let display_folder_path = params.folder_path
           if (params.folder_path) {

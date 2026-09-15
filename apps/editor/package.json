@@ -933,7 +933,8 @@
         },
         "codeWebChat.commitMessageInstructions": {
           "type": "string",
-          "scope": "resource"
+          "scope": "resource",
+          "default": "Write a brief and precise summary for the changes, limited to a single sentence. Because the summary will be used for a commit message, don't use any markdown formatting and don't include a trailing dot. Use an imperative tone to ensure clarity and focus on the primary change or purpose."
         },
         "codeWebChat.attachAsciiTreeOfContext": {
           "type": "string",
@@ -985,11 +986,13 @@
         },
         "codeWebChat.intelligentSearchInstructions": {
           "type": "string",
-          "scope": "resource"
+          "scope": "resource",
+          "default": "Among the attached files, find the complete set of primary and structural files relevant to the query."
         },
         "codeWebChat.agenticSearchInstructions": {
           "type": "string",
-          "scope": "resource"
+          "scope": "resource",
+          "default": "In the project, find the complete set of primary and structural files relevant to the query."
         },
         "codeWebChat.agenticSearchAntigravityFlags": {
           "type": "array",
@@ -1042,7 +1045,8 @@
         },
         "codeWebChat.editFilesSystemInstructions": {
           "type": "string",
-          "scope": "resource"
+          "scope": "resource",
+          "default": "You're a helpful coding assistant."
         },
         "codeWebChat.chatbots": {
           "type": "array",
