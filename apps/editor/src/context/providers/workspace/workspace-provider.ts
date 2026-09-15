@@ -550,7 +550,7 @@ export class WorkspaceProvider
     if (element.isDirectory) {
       if (formatted_total) {
         if (formatted_selected && selected_token_count! < total_token_count!) {
-          display_description = `⭘ ${formatted_total} · ${formatted_selected} ${t('context.selected')}`
+          display_description = `◐ · ${formatted_total} · ${formatted_selected} ${t('context.selected')}`
         } else if (is_fully_selected) {
           display_description = formatted_total
         } else {
