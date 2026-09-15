@@ -17,7 +17,7 @@
 
 ## Introduction
 
-**CWC** enables a workflow that is 10X faster at one-tenth the cost of coding with agents alone.
+**CWC** proposes a workflow that is 10X faster at one-tenth the cost of coding with agents alone.
 
 #### The workflow
 
