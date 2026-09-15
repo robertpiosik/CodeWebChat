@@ -57,7 +57,8 @@ export const get_commit_message_api_configuration = async (params: {
         items: api_configurations,
         type: 'api',
         last_selected_id,
-        show_back_button
+        show_back_button,
+        ignore_focus_out: true
       })
 
       if (result == 'back' || !result) {

@@ -14,6 +14,7 @@ export type ShowConfigurationsQuickPickOptions<T> = {
   title?: string
   placeholder?: string
   show_back_button?: boolean
+  ignore_focus_out?: boolean
 }
 
 const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => {
@@ -136,6 +137,9 @@ export const show_configurations_quick_pick = async <T>(
   quick_pick.title = title
   quick_pick.placeholder = placeholder
   quick_pick.matchOnDescription = true
+  if (options.ignore_focus_out) {
+    quick_pick.ignoreFocusOut = true
+  }
 
   const close_button = {
     iconPath: new vscode.ThemeIcon('close'),

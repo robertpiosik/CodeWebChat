@@ -375,7 +375,6 @@ export const prepare_staged_changes = async (params: {
             quick_pick.placeholder = t(
               'command.generate-commit-message.select-files'
             )
-            quick_pick.ignoreFocusOut = true
 
             const close_button = {
               iconPath: new vscode.ThemeIcon('close'),

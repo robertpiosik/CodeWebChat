@@ -155,6 +155,7 @@ export const run_generate_action = async (params: {
                 'common.action-quick-pick.placeholder',
                 { tokens: display_token_count(base_token_count) }
               )
+              quick_pick.ignoreFocusOut = true
 
               const close_button = {
                 iconPath: new vscode.ThemeIcon('close'),
@@ -410,7 +411,8 @@ export const run_generate_action = async (params: {
               items: valid_web_configurations,
               type: 'web',
               last_selected_id: last_selected_name,
-              show_back_button: true
+              show_back_button: true,
+              ignore_focus_out: true
             })
 
             if (result == 'back') {
