@@ -181,7 +181,7 @@ export const select_workspace_file_command = (
           const workspace_name =
             workspace_provider.get_workspace_name(workspace_root)
           directory = directory
-            ? `${workspace_name} • ${directory}`
+            ? `${workspace_name} · ${directory}`
             : workspace_name
         }
 
