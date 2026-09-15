@@ -73,7 +73,7 @@ export const translations = {
   },
   'views.shared.actions.api.upsert-provider.options.extended-label': {
     en: '$(cloud-download) Open source model providers...',
-    pl: '$(cloud-download) Dostawcy modeli open source...',
+    pl: '$(cloud-download) Providerzy modeli open source...',
     'zh-cn': '$(cloud-download) 开源模型提供商...',
     ja: '$(cloud-download) オープンソースモデルプロバイダー...',
     'zh-tw': '$(cloud-download) 開源模型供應商...',
@@ -109,7 +109,7 @@ export const translations = {
   },
   'views.shared.actions.api.upsert-provider.options.extended-title': {
     en: 'Extended Providers',
-    pl: 'Rozszerzeni dostawcy',
+    pl: 'Rozszerzeni providerzy',
     'zh-cn': '扩展提供商',
     ja: '拡張プロバイダー',
     'zh-tw': '擴展提供商',
@@ -127,7 +127,7 @@ export const translations = {
   },
   'views.shared.actions.api.upsert-provider.options.extended-placeholder': {
     en: 'Choose a provider from Models.dev',
-    pl: 'Wybierz dostawcę z Models.dev',
+    pl: 'Wybierz providera z Models.dev',
     'zh-cn': '从 Models.dev 中选择提供商',
     ja: 'Models.devからプロバイダーを選択',
     'zh-tw': '從 Models.dev 中選擇提供商',
@@ -163,7 +163,7 @@ export const translations = {
   },
   'views.shared.actions.api.upsert-provider.options.title': {
     en: 'Providers',
-    pl: 'Dostawcy',
+    pl: 'Providerzy',
     'zh-cn': '提供商',
     ja: 'プロバイダー',
     'zh-tw': '供應商',
@@ -181,7 +181,7 @@ export const translations = {
   },
   'views.shared.actions.api.upsert-provider.options.placeholder': {
     en: 'Choose a predefined provider or add a custom endpoint',
-    pl: 'Wybierz wstępnie zdefiniowanego dostawcę lub dodaj niestandardowy punkt końcowy',
+    pl: 'Wybierz wstępnie zdefiniowanego providera lub dodaj niestandardowy punkt końcowy',
     'zh-cn': '选择预定义的提供商或添加自定义端点',
     ja: '定義済みのプロバイダーを選択するか、カスタムエンドポイントを追加します',
     'zh-tw': '選擇預定義的提供商或新增自訂端點',

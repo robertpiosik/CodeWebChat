@@ -129,7 +129,7 @@ export const translations = {
   },
   'views.prompt.handlers.voice-input.error.provider-not-found': {
     en: 'Provider {name} not found.',
-    pl: 'Nie znaleziono dostawcy {name}.',
+    pl: 'Nie znaleziono providera {name}.',
     'zh-cn': '未找到提供商 {name}。',
     ja: 'プロバイダー {name} が見つかりません。',
     'zh-tw': '找不到供應商 {name}。',

@@ -4,7 +4,7 @@ export const translations = {
   },
   'api.providers.title': {
     en: 'Providers',
-    pl: 'Dostawcy',
+    pl: 'Providerzy',
     'zh-cn': '提供商',
     ja: 'プロバイダー',
     'zh-tw': '供應商',
@@ -22,7 +22,7 @@ export const translations = {
   },
   'api.providers.missing-provider': {
     en: 'Missing provider',
-    pl: 'Brak dostawcy',
+    pl: 'Brak providera',
     'zh-cn': '缺少提供商',
     ja: 'プロバイダーが不足しています',
     'zh-tw': '缺少供應商',
@@ -78,7 +78,7 @@ export const translations = {
   },
   'api.providers.action.edit': {
     en: 'Edit provider',
-    pl: 'Edytuj dostawcę',
+    pl: 'Edytuj providera',
     'zh-cn': '编辑提供商',
     ja: 'プロバイダーを編集',
     'zh-tw': '編輯供應商',
@@ -96,7 +96,7 @@ export const translations = {
   },
   'api.providers.action.delete': {
     en: 'Delete provider',
-    pl: 'Usuń dostawcę',
+    pl: 'Usuń providera',
     'zh-cn': '删除提供商',
     ja: 'プロバイダーを削除',
     'zh-tw': '刪除供應商',
@@ -114,7 +114,7 @@ export const translations = {
   },
   'api.providers.item': {
     en: 'provider',
-    pl: 'dostawca',
+    pl: 'provider',
     'zh-cn': '提供商',
     ja: 'プロバイダー',
     'zh-tw': '供應商',
@@ -132,7 +132,7 @@ export const translations = {
   },
   'api.providers.items': {
     en: 'providers',
-    pl: 'dostawcy',
+    pl: 'providerzy',
     'zh-cn': '提供商',
     ja: 'プロバイダー',
     'zh-tw': '供應商',

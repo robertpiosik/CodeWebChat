@@ -415,7 +415,7 @@ export const translations = {
   },
   'common.error.api-provider-not-found': {
     en: 'API provider for the selected API tool configuration was not found.',
-    pl: 'Nie znaleziono dostawcy API dla wybranej konfiguracji narzędzia API.',
+    pl: 'Nie znaleziono providera API dla wybranej konfiguracji narzędzia API.',
     'zh-cn': '未找到所选 API 工具配置的 API 提供商。',
     ja: '選択されたAPIツール設定のAPIプロバイダーが見つかりませんでした。',
     'zh-tw': '未找到所選 API 工具設定的 API 供應商。',

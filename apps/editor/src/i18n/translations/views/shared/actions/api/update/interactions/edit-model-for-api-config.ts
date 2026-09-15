@@ -21,7 +21,7 @@ export const translations = {
   'views.shared.actions.api.update.interactions.edit-model-for-api-config.info.models-route-not-found-manual-entry':
     {
       en: "The '/models' route was not found for {provider_name}. This might mean the provider does not support listing models. You can enter model name manually.",
-      pl: "Nie znaleziono trasy '/models' dla dostawcy {provider_name}. Może to oznaczać, że dostawca nie obsługuje listowania modeli. Możesz wprowadzić nazwę modelu ręcznie.",
+      pl: "Nie znaleziono trasy '/models' dla providera {provider_name}. Może to oznaczać, że provider nie obsługuje listowania modeli. Możesz wprowadzić nazwę modelu ręcznie.",
       'zh-cn':
         "未找到 {provider_name} 的 '/models' 路由。这可能意味着该提供商不支持列出模型。您可以手动输入模型名称。",
       ja: "{provider_name} の '/models' ルートが見つかりませんでした。これは、プロバイダーがモデルのリスト表示をサポートしていないことを意味する場合があります。モデル名を手動で入力できます。",

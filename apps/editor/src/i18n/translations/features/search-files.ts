@@ -541,7 +541,7 @@ export const translations = {
   },
   'feature.search-files.error.provider-not-found': {
     en: 'API Provider not found.',
-    pl: 'Nie znaleziono dostawcy API.',
+    pl: 'Nie znaleziono providera API.',
     'zh-cn': '未找到 API 供应商。',
     ja: 'APIプロバイダーが見つかりません。',
     'zh-tw': '未找到 API 供應商。',

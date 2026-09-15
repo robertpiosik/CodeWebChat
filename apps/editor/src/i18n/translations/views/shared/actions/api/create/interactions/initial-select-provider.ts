@@ -2,7 +2,7 @@ export const translations = {
   'views.shared.actions.api.create.interactions.initial-select-provider.add-new':
     {
       en: '$(plus) New provider...',
-      pl: '$(plus) Nowy dostawca...',
+      pl: '$(plus) Nowy provider...',
       'zh-cn': '$(plus) 新提供商...',
       ja: '$(plus) 新しいプロバイダー...',
       'zh-tw': '$(plus) 新供應商...',
@@ -21,7 +21,7 @@ export const translations = {
   'views.shared.actions.api.create.interactions.initial-select-provider.separator':
     {
       en: 'providers',
-      pl: 'dostawcy',
+      pl: 'providerzy',
       'zh-cn': '提供商',
       ja: 'プロバイダー',
       'zh-tw': '供應商',
@@ -59,7 +59,7 @@ export const translations = {
   'views.shared.actions.api.create.interactions.initial-select-provider.placeholder':
     {
       en: 'Select a provider',
-      pl: 'Wybierz dostawcę',
+      pl: 'Wybierz providera',
       'zh-cn': '选择提供商',
       ja: 'プロバイダーを選択',
       'zh-tw': '選擇供應商',
@@ -78,7 +78,7 @@ export const translations = {
   'views.shared.actions.api.create.interactions.initial-select-provider.no-providers-found':
     {
       en: 'No providers found. Please add one first.',
-      pl: 'Nie znaleziono dostawców. Najpierw dodaj jednego.',
+      pl: 'Nie znaleziono providerów. Najpierw dodaj jednego.',
       'zh-cn': '未找到提供商。请先添加一个。',
       ja: 'プロバイダーが見つかりません。まず追加してください。',
       'zh-tw': '未找到供應商。請先新增一個。',

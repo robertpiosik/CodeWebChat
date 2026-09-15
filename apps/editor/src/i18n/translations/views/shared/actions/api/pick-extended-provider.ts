@@ -1,7 +1,7 @@
 export const translations = {
   'views.shared.actions.api.pick-extended-provider.error': {
     en: 'Failed to load providers from Models.dev',
-    pl: 'Nie udało się załadować dostawców z Models.dev',
+    pl: 'Nie udało się załadować providerów z Models.dev',
     'zh-cn': '无法从 Models.dev 加载提供商',
     ja: 'Models.dev からプロバイダーを読み込めませんでした',
     'zh-tw': '無法從 Models.dev 載入提供商',

@@ -161,9 +161,6 @@ export const MainView: React.FC<Props> = (props) => {
   const context_is_empty_warning =
     show_edit_format_selector && props.selected_files.length == 0
 
-  const has_no_api_configurations =
-    props.target == TARGET.API && props.api_configurations.length == 0
-
   const handle_input_change = (value: string) => {
     props.set_instructions(value)
   }
@@ -392,9 +389,10 @@ export const MainView: React.FC<Props> = (props) => {
                   ? props.web_prompt_type
                   : props.api_prompt_type) == 'edit-files' &&
                   !props.selected_files.length) ||
-                has_no_api_configurations
+                (props.target == TARGET.API &&
+                  props.api_configurations.length == 0)
               }
-              is_voice_input_disabled={has_no_api_configurations}
+              is_voice_input_disabled={props.api_configurations.length == 0}
               is_preview_disabled={
                 (props.target == TARGET.WEB
                   ? props.web_prompt_type

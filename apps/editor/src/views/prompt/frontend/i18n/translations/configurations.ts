@@ -1,7 +1,7 @@
 export const configurations = {
   'providers.missing-provider': {
     en: 'Missing provider',
-    pl: 'Brak dostawcy',
+    pl: 'Brak providera',
     'zh-cn': '缺少提供商',
     ja: 'プロバイダーが不足しています',
     'zh-tw': '缺少供應商',
