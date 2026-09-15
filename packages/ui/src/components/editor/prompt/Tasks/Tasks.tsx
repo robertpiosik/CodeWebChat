@@ -22,7 +22,6 @@ export namespace Tasks {
     on_add: () => void
     on_add_subtask?: (parent_task: Task) => void
     on_delete: (created_at: number) => void
-    on_forward: (text: string) => void
     translations: {
       placeholder: string
       add_new: string
@@ -64,6 +63,7 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
     null
   )
   const [editing_initial_text, set_editing_initial_text] = useState<string>('')
+  const [copied_timestamp, set_copied_timestamp] = useState<number | null>(null)
   const prevent_edit_ref = useRef(false)
   const is_canceling_ref = useRef(false)
 
@@ -208,15 +208,25 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
             >
               {params.task.text && (
                 <IconButton
-                  codicon_icon="forward"
+                  codicon_icon={
+                    copied_timestamp === params.task.created_at
+                      ? 'check'
+                      : 'copy'
+                  }
                   on_mouse_down={
                     is_editing ? (e) => e.preventDefault() : undefined
                   }
                   on_click={(e) => {
                     e.stopPropagation()
-                    props.on_forward(params.task.text)
+                    navigator.clipboard.writeText(params.task.text)
+                    set_copied_timestamp(params.task.created_at)
+                    setTimeout(() => {
+                      set_copied_timestamp((current) =>
+                        current === params.task.created_at ? null : current
+                      )
+                    }, 2000)
                   }}
-                  title="Forward to edit instructions"
+                  title="Copy text"
                 />
               )}
               <IconButton

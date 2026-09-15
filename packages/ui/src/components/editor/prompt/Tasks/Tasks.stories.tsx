@@ -133,10 +133,6 @@ export const Default = () => {
     set_tasks((prev) => delete_from_tree(prev, created_at))
   }
 
-  const handle_copy = (text: string) => {
-    console.log('Copied task:', text)
-  }
-
   return (
     <div
       style={{
@@ -151,7 +147,6 @@ export const Default = () => {
         on_add={handle_add}
         on_add_subtask={handle_add_subtask}
         on_delete={handle_delete}
-        on_forward={(text) => console.log('Forward task:', text)}
         translations={{
           placeholder: 'Click to add text...',
           add_new: 'Add new...'
@@ -182,7 +177,6 @@ export const NoReorder = () => {
         on_add={() => {}}
         on_add_subtask={() => {}}
         on_delete={() => {}}
-        on_forward={() => {}}
         translations={{
           placeholder: 'Click to add text...',
           add_new: 'Add new...'
