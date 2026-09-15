@@ -161,6 +161,10 @@
     gap: 4px;
   }
 
+  &__version {
+    color: var(--cwc-text-color-dimmed);
+  }
+
   a:hover {
     text-decoration: underline;
   }

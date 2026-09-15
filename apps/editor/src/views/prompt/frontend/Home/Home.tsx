@@ -311,7 +311,7 @@ export const Home: React.FC<Props> = (props) => {
           <div className={styles['bottom-wrapper']}>
             <div className={styles.bottom}>
               <div className={styles.bottom__links}>
-                <div>{props.version}</div>
+                <div className={styles.bottom__version}>{props.version}</div>
                 <div>
                   <Translation
                     id="home.footer.copyright"
