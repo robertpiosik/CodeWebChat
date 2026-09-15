@@ -33,8 +33,8 @@
 - agentic tool calling limited to file lookups
 - reusable context across related tasks
 - zero ever-growing sessions
-- easy to unpack intent shortens reasoning
-- iterate on instructions without context bloat
+- less thinking on lean, zero-overhead prompts
+- iteration on instructions without context bloat
 
 </details>
 
