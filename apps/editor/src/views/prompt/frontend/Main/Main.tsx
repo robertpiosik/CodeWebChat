@@ -325,12 +325,6 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_manage_chatbots = () => {
-    post_message(props.vscode, {
-      command: 'MANAGE_CHATBOTS'
-    })
-  }
-
   const handle_toggle_pinned_api_configuration = (id: string) => {
     post_message(props.vscode, {
       command: 'TOGGLE_PINNED_API_CONFIGURATION',
@@ -501,7 +495,6 @@ export const Main: React.FC<Props> = (props) => {
       on_create_api_configuration={handle_create_api_configuration}
       on_manage_models={handle_manage_models}
       on_manage_providers={handle_manage_providers}
-      on_manage_chatbots={handle_manage_chatbots}
       on_at_sign_click={handle_at_sign_click}
       on_hash_sign_click={handle_hash_sign_click}
       on_slash_click={handle_slash_click}

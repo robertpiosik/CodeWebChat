@@ -772,8 +772,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             open_settings.api.providers()
           } else if (message.command == 'MANAGE_MODELS') {
             open_settings.api.models()
-          } else if (message.command == 'MANAGE_CHATBOTS') {
-            open_settings.web.chatbots()
           } else if (message.command == 'PREVIEW_SWITCH_CHOICE') {
             if (this.preview_switch_choice_resolver) {
               this.preview_switch_choice_resolver(message.choice)

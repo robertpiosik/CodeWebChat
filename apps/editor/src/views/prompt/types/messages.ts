@@ -349,10 +349,6 @@ export interface ManageProvidersMessage extends BaseMessage {
   command: 'MANAGE_PROVIDERS'
 }
 
-export interface ManageChatbotsMessage extends BaseMessage {
-  command: 'MANAGE_CHATBOTS'
-}
-
 export interface UndoMessage extends BaseMessage {
   command: 'UNDO'
 }
@@ -612,7 +608,6 @@ export type FrontendMessage =
   | FixAllFailedFilesMessage
   | ManageModelsMessage
   | ManageProvidersMessage
-  | ManageChatbotsMessage
   | UndoMessage
   | ApplyResponseFromHistoryMessage
   | RemoveResponseHistoryItemMessage
