@@ -45,6 +45,11 @@
   &--last {
     margin-bottom: 8px;
   }
+
+  &--disabled {
+    opacity: var(--disabled-opacity) !important;
+    pointer-events: none;
+  }
 }
 
 .label {

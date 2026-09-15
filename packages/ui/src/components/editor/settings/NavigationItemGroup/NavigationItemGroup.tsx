@@ -8,6 +8,7 @@ type Props = {
   is_active: boolean
   has_warning?: boolean
   is_last?: boolean
+  is_disabled?: boolean
 }
 
 export const NavigationItemGroup: React.FC<Props> = (props) => {
@@ -16,7 +17,8 @@ export const NavigationItemGroup: React.FC<Props> = (props) => {
       href={props.href}
       className={cn(styles.container, {
         [styles['container--active']]: props.is_active,
-        [styles['container--last']]: props.is_last
+        [styles['container--last']]: props.is_last,
+        [styles['container--disabled']]: props.is_disabled
       })}
       onClick={props.on_click}
     >

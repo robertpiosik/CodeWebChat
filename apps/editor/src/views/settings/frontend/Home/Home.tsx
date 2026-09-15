@@ -164,8 +164,6 @@ export const Home: React.FC<Props> = (props) => {
     handle_nav_click
   } = use_scroll_to({
     nav_items_config: NAV_ITEMS_CONFIG,
-    providers_length: props.providers.length,
-    api_configurations_length: props.api_configurations.length,
     scroll_to_section_on_load: props.scroll_to_section_on_load
   })
 
@@ -205,21 +203,6 @@ export const Home: React.FC<Props> = (props) => {
 
           for (const item of NAV_ITEMS_CONFIG) {
             if (
-              [
-                'section:api:group:api-defaults',
-                'section:api:group:system-instructions'
-              ].includes(item.id) &&
-              props.api_configurations.length === 0
-            ) {
-              continue
-            }
-            if (
-              item.id === 'section:api:group:models' &&
-              props.providers.length === 0
-            ) {
-              continue
-            }
-            if (
               item.id.startsWith('section:') &&
               !item.id.includes(':group:')
             ) {
@@ -241,17 +224,29 @@ export const Home: React.FC<Props> = (props) => {
                   is_active={is_section_active}
                   has_warning={get_has_warning(section.parent.id)}
                 />
-                {section.groups.map((group, j) => (
-                  <UiNavigationItemGroup
-                    key={j}
-                    href={`#${group.id}`}
-                    label={t(group.label)}
-                    is_active={group.id === active_nav_item_id}
-                    has_warning={get_has_warning(group.id)}
-                    on_click={(e) => handle_nav_click(e, group.id)}
-                    is_last={j === section.groups.length - 1}
-                  />
-                ))}
+                {section.groups.map((group, j) => {
+                  const is_disabled =
+                    (group.id === 'section:api:group:models' &&
+                      props.providers.length === 0) ||
+                    ([
+                      'section:api:group:api-defaults',
+                      'section:api:group:system-instructions'
+                    ].includes(group.id) &&
+                      props.api_configurations.length === 0)
+
+                  return (
+                    <UiNavigationItemGroup
+                      key={j}
+                      href={`#${group.id}`}
+                      label={t(group.label)}
+                      is_active={group.id === active_nav_item_id}
+                      has_warning={get_has_warning(group.id)}
+                      on_click={(e) => handle_nav_click(e, group.id)}
+                      is_last={j === section.groups.length - 1}
+                      is_disabled={is_disabled}
+                    />
+                  )
+                })}
               </UiNavigationSection>
             )
           })

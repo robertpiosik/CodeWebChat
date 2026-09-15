@@ -1,6 +1,11 @@
 .wrapper {
   display: flex;
   flex-direction: column;
+
+  &--disabled {
+    opacity: var(--disabled-opacity);
+    pointer-events: none;
+  }
 }
 
 .title {

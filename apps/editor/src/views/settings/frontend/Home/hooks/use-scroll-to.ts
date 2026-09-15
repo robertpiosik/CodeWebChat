@@ -4,16 +4,9 @@ import type { NavItem, NavConfigItem } from '../Home'
 
 export const use_scroll_to = (params: {
   nav_items_config: NavConfigItem[]
-  providers_length: number
-  api_configurations_length: number
   scroll_to_section_on_load?: NavItem
 }) => {
-  const {
-    nav_items_config,
-    providers_length,
-    api_configurations_length,
-    scroll_to_section_on_load
-  } = params
+  const { nav_items_config, scroll_to_section_on_load } = params
 
   const scroll_container_ref = useRef<HTMLDivElement>(null)
   const section_refs = useRef<Partial<Record<NavItem, HTMLDivElement | null>>>(
@@ -33,24 +26,8 @@ export const use_scroll_to = (params: {
   const [is_layout_ready, set_is_layout_ready] = useState(false)
 
   const last_rendered_item_id = useMemo(() => {
-    let last_id = nav_items_config[0].id
-    for (const item of nav_items_config) {
-      if (
-        [
-          'section:api:group:api-defaults',
-          'section:api:group:system-instructions'
-        ].includes(item.id) &&
-        api_configurations_length === 0
-      ) {
-        continue
-      }
-      if (item.id === 'section:api:group:models' && providers_length === 0) {
-        continue
-      }
-      last_id = item.id
-    }
-    return last_id
-  }, [nav_items_config, providers_length, api_configurations_length])
+    return nav_items_config[nav_items_config.length - 1].id
+  }, [nav_items_config])
 
   useEffect(() => {
     const scroll_container = scroll_container_ref.current
@@ -120,18 +97,6 @@ export const use_scroll_to = (params: {
       let new_active_id = nav_items_config[0].id
 
       for (const item of nav_items_config) {
-        if (
-          [
-            'section:api:group:api-defaults',
-            'section:api:group:system-instructions'
-          ].includes(item.id) &&
-          api_configurations_length === 0
-        ) {
-          continue
-        }
-        if (item.id === 'section:api:group:models' && providers_length === 0) {
-          continue
-        }
         const el = section_refs.current[item.id]
         if (el) {
           const rect = el.getBoundingClientRect()
@@ -154,7 +119,7 @@ export const use_scroll_to = (params: {
       scroll_container.removeEventListener('scroll', handle_scroll)
       window.removeEventListener('resize', handle_scroll)
     }
-  }, [providers_length, api_configurations_length, nav_items_config])
+  }, [nav_items_config])
 
   const handle_scroll_to_section = useCallback(
     (item_id: NavItem) => {
