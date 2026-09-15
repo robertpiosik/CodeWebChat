@@ -1047,20 +1047,6 @@
         "codeWebChat.chatbots": {
           "type": "array",
           "scope": "resource",
-          "default": [
-            {
-              "name": "(0)",
-              "chatbot": "ChatGPT"
-            },
-            {
-              "name": "(1)",
-              "chatbot": "Gemini"
-            },
-            {
-              "name": "(2)",
-              "chatbot": "Claude"
-            }
-          ],
           "items": {
             "type": "object",
             "properties": {
