@@ -269,12 +269,12 @@ export const run_generate_action = async (params: {
                   quick_pick.items = [
                     {
                       label: skip_label,
-                      description: `${display_token_count(skip_tokens)} tokens`,
+                      description: display_token_count(skip_tokens),
                       id: 'skip'
                     },
                     {
                       label: attach_label,
-                      description: `+${display_token_count(additional_tokens)} tokens`,
+                      description: `+${display_token_count(additional_tokens)}`,
                       id: 'attach'
                     }
                   ]
