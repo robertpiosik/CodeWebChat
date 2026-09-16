@@ -22,9 +22,9 @@
 #### The workflow
 
 1. Type instructions
-2. Run [Agentic Search](#agentic-search) for task-relevant context files
+2. Run [Agentic Search](#-agentic-search) for task-relevant context files
 3. Select useful examples for model guidance
-4. Send a lean, [file editing](#file-editing) prompt with a chatbot or an API call
+4. Send a lean, [file editing](#-file-editing) prompt with a chatbot or an API call
 5. Apply the response
 
 <details>
