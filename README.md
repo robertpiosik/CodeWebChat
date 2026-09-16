@@ -34,7 +34,7 @@
 - clear intent in single-turn prompts shortens reasoning
 - iteration on instructions without context bloat
 - context reuse without ever-growing sessions
-- no cost coding in free chatbots
+- no-cost AI coding in free chatbots
 
 ## Privacy
 
