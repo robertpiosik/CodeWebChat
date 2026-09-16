@@ -232,24 +232,24 @@ export const FileItem: FC<Props> = (props) => {
       </div>
       {message_obj &&
         (() => {
-          let statusBarTheme: 'success' | 'error' | 'warning' | 'default' =
+          let status_bar_theme: 'success' | 'error' | 'warning' | 'default' =
             'default'
-          let statusBarIcon = ''
-          let statusBarIconSpin = false
+          let status_bar_icon = ''
+          let status_bar_icon_spin = false
 
-          if (message_obj.type === 'success') {
-            statusBarTheme = 'success'
-            statusBarIcon = 'codicon-check'
-          } else if (message_obj.type === 'error') {
-            statusBarTheme = 'error'
-            statusBarIcon = 'codicon-error'
-          } else if (message_obj.type === 'warning') {
-            statusBarTheme = 'warning'
-            statusBarIcon = 'codicon-warning'
-          } else if (message_obj.type === 'loading') {
-            statusBarTheme = 'default'
-            statusBarIcon = 'codicon-loading'
-            statusBarIconSpin = true
+          if (message_obj.type == 'success') {
+            status_bar_theme = 'success'
+            status_bar_icon = 'codicon-check'
+          } else if (message_obj.type == 'error') {
+            status_bar_theme = 'error'
+            status_bar_icon = 'codicon-error'
+          } else if (message_obj.type == 'warning') {
+            status_bar_theme = 'warning'
+            status_bar_icon = 'codicon-warning'
+          } else if (message_obj.type == 'loading') {
+            status_bar_theme = 'default'
+            status_bar_icon = 'codicon-loading'
+            status_bar_icon_spin = true
           }
 
           const message_actions = []
@@ -281,9 +281,9 @@ export const FileItem: FC<Props> = (props) => {
           return (
             <StatusBar
               placement="bottom"
-              theme={statusBarTheme}
-              icon={statusBarIcon}
-              icon_spin={statusBarIconSpin}
+              theme={status_bar_theme}
+              icon={status_bar_icon}
+              icon_spin={status_bar_icon_spin}
               label={message_obj.text}
               actions={message_actions}
             />

@@ -13,53 +13,48 @@ export type StatusBarAction = {
 }
 
 export type Props = {
+  label: React.ReactNode
   theme?: 'default' | 'warning' | 'success' | 'error' | 'blue' | 'purple'
   placement?: 'top' | 'bottom'
   icon?: string
   icon_spin?: boolean
-  label: React.ReactNode
   description?: React.ReactNode
   actions?: StatusBarAction[]
   className?: string
 }
 
-export const StatusBar: React.FC<Props> = ({
-  theme = 'default',
-  placement,
-  icon,
-  icon_spin,
-  label,
-  description,
-  actions,
-  className
-}) => {
+export const StatusBar: React.FC<Props> = (props) => {
+  const theme = props.theme ?? 'default'
+
   return (
     <div
       className={cn(
         styles.container,
         styles[`theme-${theme}`],
-        placement ? styles[`placement-${placement}`] : styles.rounded,
-        className
+        props.placement
+          ? styles[`placement-${props.placement}`]
+          : styles.rounded,
+        props.className
       )}
     >
       <div className={styles.content}>
-        {icon && (
+        {props.icon && (
           <span className={styles.icon}>
             <span
-              className={cn('codicon', icon, {
-                'codicon-modifier-spin': icon_spin
+              className={cn('codicon', props.icon, {
+                'codicon-modifier-spin': props.icon_spin
               })}
             />
           </span>
         )}
-        <label className={styles.label}>{label}</label>
-        {description && (
-          <span className={styles.description}>{description}</span>
+        <label className={styles.label}>{props.label}</label>
+        {props.description && (
+          <span className={styles.description}>{props.description}</span>
         )}
       </div>
-      {actions && actions.length > 0 && (
+      {props.actions && props.actions.length > 0 && (
         <div className={styles.actions}>
-          {actions.map((action) => {
+          {props.actions.map((action) => {
             const content = (
               <div
                 key={action.id}
