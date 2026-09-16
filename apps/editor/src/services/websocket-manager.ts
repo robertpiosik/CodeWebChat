@@ -459,7 +459,11 @@ export class WebSocketManager {
       model: web_configuration.model,
       target_browser_id,
       reasoning_effort: web_configuration.reasoningEffort,
-      system_instructions: web_configuration.systemInstructions,
+      system_instructions:
+        web_configuration.systemInstructions ||
+        (chatbot.supports_system_instructions
+          ? chatbot.default_system_instructions
+          : undefined),
       options: web_configuration.options,
       client_id: this.client_id!,
       raw_instructions: params.raw_instructions,
@@ -561,7 +565,11 @@ export class WebSocketManager {
       model: params.web_configuration.model,
       target_browser_id,
       reasoning_effort: params.web_configuration.reasoning_effort,
-      system_instructions: params.web_configuration.system_instructions,
+      system_instructions:
+        params.web_configuration.system_instructions ||
+        (chatbot.supports_system_instructions
+          ? chatbot.default_system_instructions
+          : undefined),
       options: params.web_configuration.options,
       client_id: this.client_id!,
       raw_instructions: params.raw_instructions,

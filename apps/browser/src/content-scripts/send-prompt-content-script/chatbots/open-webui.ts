@@ -1,4 +1,3 @@
-import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { Chatbot } from '../types/chatbot'
 import {
   add_apply_response_button,
@@ -24,9 +23,7 @@ export const open_webui: Chatbot = {
     await new Promise((resolve) => setTimeout(resolve, 500))
   },
   enter_system_instructions: async (chat) => {
-    const system_instructions =
-      chat.system_instructions || default_system_instructions
-    if (!system_instructions) return
+    if (!chat.system_instructions) return
     const controls_button = document.querySelector(
       'button[aria-label="Controls"]'
     ) as HTMLButtonElement
@@ -60,7 +57,7 @@ export const open_webui: Chatbot = {
       })
       return
     }
-    system_instructions_textarea.value = system_instructions
+    system_instructions_textarea.value = chat.system_instructions
     system_instructions_textarea.dispatchEvent(
       new Event('input', { bubbles: true })
     )
