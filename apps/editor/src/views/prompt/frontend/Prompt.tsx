@@ -100,7 +100,6 @@ export const Prompt = () => {
     raw_instructions,
     preview_item_created_at,
     handle_discard_user_changes_in_preview,
-    url,
     recent_api_configuration
   } = use_preview_manager(vscode)
 
@@ -215,7 +214,6 @@ export const Prompt = () => {
       raw_instructions: item.raw_instructions,
       files: item.files,
       created_at: item.created_at,
-      url: item.url,
       recent_api_configuration: item.recent_api_configuration
     })
   }
@@ -550,11 +548,6 @@ export const Prompt = () => {
               on_back_click={() => {
                 post_message(vscode, { command: 'RESPONSE_PREVIEW', files: [] })
               }}
-              header_slot={
-                url ? (
-                  <UiIconButton codicon_icon="link-external" href={url} />
-                ) : undefined
-              }
               footer_slot={
                 <UiResponsePreviewFooter
                   on_back={() => {

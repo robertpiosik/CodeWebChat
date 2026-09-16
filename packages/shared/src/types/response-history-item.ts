@@ -13,7 +13,6 @@ export type ResponseHistoryItem = {
   lines_added?: number
   lines_removed?: number
   files?: FileInPreview[]
-  url?: string
   recent_api_configuration?: RecentApiConfiguration
   is_not_looked_at?: boolean
 }

@@ -207,8 +207,7 @@ export class WebSocketManager {
         } else if (message.action == 'apply-response') {
           const apply_msg = message as ApplyResponseMessage
           vscode.commands.executeCommand('codeWebChat.applyResponse', {
-            raw_instructions: apply_msg.raw_instructions,
-            url: apply_msg.url
+            raw_instructions: apply_msg.raw_instructions
           } as ApplyResponseCommandArgs)
         }
       } catch (error) {

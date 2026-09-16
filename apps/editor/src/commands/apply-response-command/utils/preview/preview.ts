@@ -22,7 +22,6 @@ export const preview = async (params: {
   chat_response: string
   extension_context: vscode.ExtensionContext
   created_at?: number
-  url?: string
   recent_api_configuration?: RecentApiConfiguration
   workspace_provider: WorkspaceProvider
 }): Promise<{
@@ -132,7 +131,6 @@ export const preview = async (params: {
         items: items_for_preview,
         raw_instructions: params.raw_instructions,
         created_at: params.created_at,
-        url: params.url,
         recent_api_configuration: params.recent_api_configuration
       })
     }

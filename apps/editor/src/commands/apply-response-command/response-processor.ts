@@ -44,7 +44,6 @@ export type ApplyResponseCommandArgs = {
   }
   files_with_content?: FileInPreview[]
   created_at?: number
-  url?: string
   recent_api_configuration?: RecentApiConfiguration
 }
 

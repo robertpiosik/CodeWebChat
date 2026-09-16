@@ -204,8 +204,7 @@ export const setup_message_listeners = () => {
           send_message_to_server({
             action: 'apply-response',
             client_id: message.client_id,
-            raw_instructions: message.raw_instructions,
-            url: message.url
+            raw_instructions: message.raw_instructions
           } as ApplyResponseMessage)
         } else if (message.action == 'finished-responding') {
           if (sender.tab?.id && sender.tab.id == last_opened_tab_id) {

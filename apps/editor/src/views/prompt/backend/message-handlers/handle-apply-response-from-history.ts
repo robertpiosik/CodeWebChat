@@ -9,7 +9,6 @@ export const handle_apply_response_from_history = async (
     raw_instructions: message.raw_instructions,
     files_with_content: message.files,
     created_at: message.created_at,
-    url: message.url,
     recent_api_configuration: message.recent_api_configuration
   })
 }

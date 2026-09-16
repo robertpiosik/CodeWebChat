@@ -55,8 +55,7 @@ export function add_apply_response_button(params: {
       browser.runtime.sendMessage<Message>({
         action: 'apply-response',
         client_id,
-        raw_instructions,
-        url: window.location.href
+        raw_instructions
       })
     })
   })

@@ -25,7 +25,6 @@ export const preview_handler = async (params: {
   }
   raw_instructions?: string
   created_at?: number
-  url?: string
   recent_api_configuration?: RecentApiConfiguration
   is_code_at_cursor?: boolean
 }): Promise<boolean> => {
@@ -42,7 +41,6 @@ export const preview_handler = async (params: {
       chat_response: params.chat_response,
       extension_context: params.extension_context,
       created_at: params.created_at,
-      url: params.url,
       recent_api_configuration: params.recent_api_configuration,
       workspace_provider: params.workspace_provider
     })

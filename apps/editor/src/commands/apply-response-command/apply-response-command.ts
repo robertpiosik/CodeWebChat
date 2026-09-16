@@ -222,7 +222,6 @@ export const apply_response_command = (params: {
               response,
               raw_instructions: args?.raw_instructions,
               created_at: Date.now(),
-              url: args?.url,
               recent_api_configuration: args?.recent_api_configuration,
               is_not_looked_at: true
             }
@@ -475,7 +474,6 @@ export const apply_response_command = (params: {
                 lines_added: total_lines_added,
                 lines_removed: total_lines_removed,
                 files: files_for_history,
-                url: args?.url,
                 recent_api_configuration: args?.recent_api_configuration
               }
 
@@ -500,7 +498,6 @@ export const apply_response_command = (params: {
             original_editor_state: args?.original_editor_state,
             raw_instructions: args?.raw_instructions,
             created_at: created_at_for_preview,
-            url: args?.url,
             recent_api_configuration: args?.recent_api_configuration,
             is_code_at_cursor
           })

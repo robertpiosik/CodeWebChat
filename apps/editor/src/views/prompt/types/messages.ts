@@ -358,7 +358,6 @@ export interface ApplyResponseFromHistoryMessage extends BaseMessage {
   raw_instructions?: string
   files?: FileInPreview[]
   created_at: number
-  url?: string
   recent_api_configuration?: RecentApiConfiguration
 }
 
@@ -773,7 +772,6 @@ export interface ResponsePreviewStartedMessage extends BaseMessage {
   items: ItemInPreview[]
   raw_instructions?: string
   created_at?: number
-  url?: string
   recent_api_configuration?: RecentApiConfiguration
 }
 

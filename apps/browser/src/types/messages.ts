@@ -6,7 +6,6 @@ type ApplyResponseMessage = {
   action: 'apply-response'
   client_id: number
   raw_instructions?: string
-  url?: string
 }
 
 type FinishedRespondingMessage = {
