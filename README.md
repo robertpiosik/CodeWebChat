@@ -27,6 +27,13 @@
 4. Send a lean, [file editing](#-file-editing) prompt with a chatbot or an API call
 5. Apply the response
 
+#### Key takeaways
+
+- better safety by limiting tool calling to directory and file lookups
+- skills can be substituted by examples from the repository
+- iteration on instructions without context bloat
+- context reuse without ever-growing sessions
+
 ## Privacy
 
 **CWC** operates 100% on your machine—no code, prompts or usage data are collected.
