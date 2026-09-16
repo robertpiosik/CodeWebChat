@@ -30,7 +30,7 @@
 #### Key takeaways
 
 - agents become safe by limiting tool calling to directory and file lookups
-- skills can be substituted by examples from the repository
+- skills can be substituted by selected examples from the repository
 - clear intent in single-turn prompts shortens reasoning
 - iteration on instructions without context bloat
 - context reuse without ever-growing sessions
