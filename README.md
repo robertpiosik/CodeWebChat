@@ -27,6 +27,16 @@
 4. Send a zero-overhead [file editing](#-file-editing) prompt with a chatbot or an API call
 5. Apply the response
 
+<details>
+<summary>The workflow</summary>
+<br/>
+1. Type instructions
+2. Run [Agentic Search](#-agentic-search) for task-relevant context files
+3. Select useful examples for model guidance
+4. Send a zero-overhead [file editing](#-file-editing) prompt with a chatbot or an API call
+5. Apply the response
+</details>
+
 #### Key takeaways
 
 - agents become safe by limiting tool calling to directory and file lookups
