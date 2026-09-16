@@ -46,7 +46,7 @@
 
 **CWC** helps construct prompts for common day-to-day coding tasks.
 
-### Agentic search
+### 📄 Agentic search
 
 _Task-relevant files from your favorite coding agent, utilizing its one-off prompt (headless) mode._
 
@@ -79,7 +79,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 </details>
 
-### Intelligent search
+### 📄 Intelligent search
 
 _A quick way for task-relevant files from a single llm message._
 
@@ -141,7 +141,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 </details>
 
-### File editing
+### 📄 File editing
 
 _Implementing new features, fixing bugs or doing refactors._
 
@@ -166,7 +166,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 </details>
 
-### Asking about files
+### 📄 Asking about files
 
 _Multi-purpose: explanations, code reviews, you name it._
 
@@ -185,7 +185,7 @@ _Multi-purpose: explanations, code reviews, you name it._
 
 </details>
 
-### Code at cursor
+### 📄 Code at cursor
 
 _TAB completions from SOTA reasoning models._
 
@@ -235,7 +235,7 @@ Example:
 
 </details>
 
-### Commit messages
+### 📄 Commit messages
 
 _Generate commit messages based on staged changes and context files._
 
@@ -265,7 +265,7 @@ Write a brief and precise summary for the changes, limited to a single sentence.
 
 </details>
 
-### Patch repair
+### 📄 Patch repair
 
 _Applying malformed edits._
 
