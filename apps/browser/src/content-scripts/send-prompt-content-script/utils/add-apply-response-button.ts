@@ -52,11 +52,13 @@ export function add_apply_response_button(params: {
         console.error('Error reading CWC session data', error)
       }
 
-      browser.runtime.sendMessage<Message>({
-        action: 'apply-response',
-        client_id,
-        raw_instructions
-      })
+      browser.runtime
+        .sendMessage<Message>({
+          action: 'apply-response',
+          client_id,
+          raw_instructions
+        })
+        .catch((e) => console.debug('Failed to send apply-response message', e))
     })
   })
 
@@ -89,9 +91,13 @@ export function observe_for_responses(params: {
     }
 
     if (!has_sent_finished_responding) {
-      browser.runtime.sendMessage<Message>({
-        action: 'finished-responding'
-      })
+      browser.runtime
+        .sendMessage<Message>({
+          action: 'finished-responding'
+        })
+        .catch((e) =>
+          console.debug('Failed to send finished-responding message', e)
+        )
       has_sent_finished_responding = true
       show_response_ready_notification({ chatbot_name: params.chatbot_name })
     }

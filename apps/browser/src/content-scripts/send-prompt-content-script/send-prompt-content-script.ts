@@ -162,9 +162,11 @@ const initialize_chat = async (params: { message: string; chat: Chat }) => {
     document.addEventListener('keydown', handle_key_press)
     setTimeout(resolve, 2000)
   })
-  browser.runtime.sendMessage<Message>({
-    action: 'chat-initialized'
-  })
+  browser.runtime
+    .sendMessage<Message>({
+      action: 'chat-initialized'
+    })
+    .catch((e) => console.debug('Failed to send chat-initialized message', e))
 }
 
 const main = async () => {
@@ -182,7 +184,13 @@ const main = async () => {
     )
 
     const storage_key = `chat-init:${batch_id}`
-    const storage = await browser.storage.local.get(storage_key)
+    let storage: any
+    try {
+      storage = await browser.storage.local.get(storage_key)
+    } catch (e) {
+      console.debug('Failed to get chat init data', e)
+      return
+    }
     const stored_data = storage[storage_key] as {
       text: string
       current_chat: Chat
@@ -212,7 +220,11 @@ const main = async () => {
       chat: current_chat
     })
 
-    await browser.storage.local.remove(storage_key)
+    try {
+      await browser.storage.local.remove(storage_key)
+    } catch (e) {
+      console.debug('Failed to remove chat init data', e)
+    }
 
     if (chatbot?.setup_observer) {
       const inject_button = stored_data.inject_apply_response_button ?? false
