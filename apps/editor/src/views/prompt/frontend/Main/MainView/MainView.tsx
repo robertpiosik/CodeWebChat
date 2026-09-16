@@ -286,41 +286,22 @@ export const MainView: React.FC<Props> = (props) => {
 
           {props.target == TARGET.API &&
             props.setup_progress &&
-            !props.setup_progress.has_provider && (
+            (!props.setup_progress.has_provider ||
+              props.api_configurations.length == 0) && (
               <>
                 <UiStatusBar
                   theme="warning"
                   icon="codicon-warning"
-                  label={t('providers.missing-provider')}
+                  label={t('configurations.api-setup-incomplete')}
                   actions={[
                     {
                       id: 'settings',
                       icon: 'codicon-gear',
                       label: t('action.settings'),
                       title: t('action.settings'),
-                      on_click: props.on_manage_providers
-                    }
-                  ]}
-                />
-                <UiSeparator height={4} />
-              </>
-            )}
-
-          {props.target == TARGET.API &&
-            props.setup_progress?.has_provider &&
-            props.api_configurations.length == 0 && (
-              <>
-                <UiStatusBar
-                  theme="warning"
-                  icon="codicon-warning"
-                  label={t('configurations.missing-model')}
-                  actions={[
-                    {
-                      id: 'settings',
-                      icon: 'codicon-gear',
-                      label: t('action.settings'),
-                      title: t('action.settings'),
-                      on_click: props.on_manage_models
+                      on_click: !props.setup_progress.has_provider
+                        ? props.on_manage_providers
+                        : props.on_manage_models
                     }
                   ]}
                 />

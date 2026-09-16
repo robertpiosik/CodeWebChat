@@ -8,11 +8,9 @@ export const show_missing_configuration_notification = async (
   const open_settings_label = t('common.open-settings')
   const result = await vscode.window.showInformationMessage(
     type == 'api'
-      ? t(
-          'utils.show-missing-configuration-notification.no-model-configurations-created-yet'
-        )
+      ? t('utils.show-missing-configuration-notification.api-setup-incomplete')
       : t(
-          'utils.show-missing-configuration-notification.no-chatbot-configurations-created-yet'
+          'utils.show-missing-configuration-notification.no-chatbots-configured-yet'
         ),
     open_settings_label
   )

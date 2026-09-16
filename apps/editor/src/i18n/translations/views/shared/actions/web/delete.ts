@@ -18,21 +18,21 @@ export const translations = {
     bg: 'Без име'
   },
   'views.shared.actions.web.delete.deleted': {
-    en: 'Web configuration deleted.',
-    pl: 'Konfiguracja sieci Web usunięta.',
-    'zh-cn': 'Web 配置已删除。',
-    ja: 'Web構成が削除されました。',
-    'zh-tw': 'Web 配置已刪除。',
-    de: 'Web-Konfiguration gelöscht.',
-    es: 'Configuración web eliminada.',
-    fr: 'Configuration web supprimée.',
-    'pt-br': 'Configuração web excluída.',
-    ru: 'Веб-конфигурация удалена.',
-    ko: '웹 구성이 삭제되었습니다.',
-    it: 'Configurazione web eliminata.',
-    tr: 'Web yapılandırması silindi.',
-    cs: 'Webová konfigurace smazána.',
-    hu: 'Webes konfiguráció törölve.',
-    bg: 'Уеб конфигурацията е изтрита.'
+    en: 'Chatbot deleted.',
+    pl: 'Usunięto chatbota.',
+    'zh-cn': '聊天机器人已删除。',
+    ja: 'チャットボットが削除されました。',
+    'zh-tw': '聊天機器人已刪除。',
+    de: 'Chatbot gelöscht.',
+    es: 'Chatbot eliminado.',
+    fr: 'Chatbot supprimé.',
+    'pt-br': 'Chatbot excluído.',
+    ru: 'Чат-бот удален.',
+    ko: '챗봇이 삭제되었습니다.',
+    it: 'Chatbot eliminato.',
+    tr: 'Sohbet robotu silindi.',
+    cs: 'Chatbot smazán.',
+    hu: 'Chatbot törölve.',
+    bg: 'Чатботът е изтрит.'
   }
 } as const
