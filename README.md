@@ -30,9 +30,9 @@
 #### Key takeaways
 
 - agents become safe by limiting tool calling to directory and file lookups
-- skills can be substituted by concrete examples from the repository
+- substitute skills with concrete examples from the repository
 - clear intent in single-turn prompts shortens reasoning
-- iteration on instructions without context bloat
+- iterate on instructions without context bloat
 - context reuse without ever-growing sessions
 - no-cost AI coding in free chatbots
 
