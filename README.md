@@ -34,6 +34,7 @@
 - skills can be substituted by examples from the repository
 - iteration on instructions without context bloat
 - context reuse without ever-growing sessions
+- no cost coding in free chatbots
 
 ## Privacy
 
