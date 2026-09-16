@@ -29,6 +29,7 @@
 
 <details>
 <summary>The workflow</summary>
+
 ```
 1. Type instructions
 2. Run [Agentic Search](#-agentic-search) for task-relevant context files
@@ -36,6 +37,7 @@
 4. Send a zero-overhead [file editing](#-file-editing) prompt with a chatbot or an API call
 5. Apply the response
 ```
+
 </details>
 
 #### Key takeaways
