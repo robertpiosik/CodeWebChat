@@ -70,7 +70,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 ### 📄 Intelligent search
 
-_A quick way for task-relevant files from a single llm message._
+_A quick way for task-relevant files from a single message._
 
 <details>
 <summary>WEB</summary>
