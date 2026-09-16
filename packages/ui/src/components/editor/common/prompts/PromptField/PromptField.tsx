@@ -40,7 +40,6 @@ export type PromptFieldProps = {
   on_copy: () => void
   is_connected: boolean
   is_action_disabled?: boolean
-  is_preview_disabled?: boolean
   current_selection?: SelectionState | null
   on_caret_position_change: (caret_position: number) => void
   is_web_target: boolean
@@ -382,7 +381,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 props.on_preview_prompt?.()
                 close_dropdown()
               },
-              is_disabled: props.is_preview_disabled ?? props.is_action_disabled
+              is_disabled: props.is_action_disabled
             }
           ].filter((item) => !(!has_content && item.is_disabled))
 
@@ -418,7 +417,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 props.on_preview_prompt?.()
                 close_dropdown()
               },
-              is_disabled: props.is_preview_disabled ?? props.is_action_disabled
+              is_disabled: props.is_action_disabled
             }
           ].filter((item) => !(!has_content && item.is_disabled))
 
@@ -477,7 +476,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 ? props.translations.stop_recording
                 : props.translations.voice_input
             }
-            details={is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space'}
             offset={
               !props.is_copy_only &&
               (!props.is_web_target ||
@@ -541,7 +539,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               {is_edit_format_hovered && (
                 <Tooltip
                   message={props.translations.edit_format}
-                  details={is_mac ? '⌥' : 'Alt'}
                   align="center"
                 />
               )}
@@ -671,11 +668,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             {props.target && props.on_target_change && (
               <div className={styles['footer__right__target-switch']}>
                 {is_target_switch_hovered && (
-                  <Tooltip
-                    message={props.translations.target}
-                    details={is_mac ? '⌥' : 'Alt'}
-                    align="center"
-                  />
+                  <Tooltip message={props.translations.target} align="center" />
                 )}
                 <KeycapWrapper char={is_alt_pressed ? 'Esc' : undefined}>
                   <button
@@ -749,6 +742,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       onClick={handle_submit}
                       onMouseEnter={() => set_show_submit_tooltip(true)}
                       onMouseLeave={() => set_show_submit_tooltip(false)}
+                      disabled={props.is_action_disabled}
                     />
                   )}
                   {primary_dropdown_items.length > 0 && (

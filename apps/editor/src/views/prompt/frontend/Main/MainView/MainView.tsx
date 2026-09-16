@@ -342,18 +342,7 @@ export const MainView: React.FC<Props> = (props) => {
                 props.target == TARGET.WEB &&
                 (!props.is_connected || !props.web_configurations.length)
               }
-              is_action_disabled={
-                (props.target == TARGET.WEB
-                  ? props.web_prompt_type
-                  : props.api_prompt_type) == 'edit-files' &&
-                !props.selected_files.length
-              }
-              is_preview_disabled={
-                (props.target == TARGET.WEB
-                  ? props.web_prompt_type
-                  : props.api_prompt_type) == 'edit-files' &&
-                !props.selected_files.length
-              }
+              is_action_disabled={context_is_empty_warning}
               value={props.instructions}
               chat_history={props.chat_history}
               on_change={handle_input_change}
