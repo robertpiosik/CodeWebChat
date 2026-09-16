@@ -32,7 +32,7 @@
 
 - agentic tool calling limited to file lookups
 - reusable context across related tasks
-- zero ever-growing sessions
+- zero junk-filled, hard to unpack sessions
 - less thinking on lean, zero-overhead prompts
 - iteration on instructions without context bloat
 
