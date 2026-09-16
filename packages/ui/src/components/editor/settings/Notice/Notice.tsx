@@ -27,7 +27,7 @@ export const Notice: React.FC<Props> = (props) => {
             props.type == 'info' ? 'codicon-info' : 'codicon-warning'
           )}
         />
-        <span className={styles.content}>{props.children}</span>
+        <span>{props.children}</span>
       </div>
       {props.slot_right && <div>{props.slot_right}</div>}
     </div>
