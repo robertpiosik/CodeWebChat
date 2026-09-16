@@ -29,9 +29,9 @@
 
 #### Key takeaways
 
-- easier to unpack intent of single-turn prompts shortens reasoning
-- highest safety by limiting tool calling to directory and file lookups
+- agents become safe by limiting tool calling to directory and file lookups
 - skills can be substituted by examples from the repository
+- clear intent in single-turn prompts shortens reasoning
 - iteration on instructions without context bloat
 - context reuse without ever-growing sessions
 - no cost coding in free chatbots
