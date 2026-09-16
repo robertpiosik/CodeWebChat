@@ -33,8 +33,7 @@
 - skills can be substituted by selected examples from the repository
 - clear intent in single-turn prompts shortens reasoning
 - iteration on instructions without context bloat
-- context reuse without ever-growing sessions
-- low and mid tier models become viable
+- context reuse without context-filling sessions
 - no-cost AI coding in free chatbots
 
 ## Privacy
