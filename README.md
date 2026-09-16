@@ -29,8 +29,8 @@
 
 #### Key takeaways
 
-- better safety by limiting tool calling to directory and file lookups
 - easy to unpack intent in single-turn prompts shortens reasoning
+- better safety by limiting tool calling to directory and file lookups
 - skills can be substituted by examples from the repository
 - iteration on instructions without context bloat
 - context reuse without ever-growing sessions
