@@ -11,17 +11,21 @@ export const handle_update_api_configuration = async (
     updated_api_configuration: message.updated_api_configuration,
     origin: message.origin,
     is_new: message.is_new,
-    insertion_index: message.insertion_index,
-    api_feature: message.api_feature
+    insertion_index: message.insertion_index
   })
 
   if (result.success) {
     provider.send_message({ command: 'API_CONFIGURATION_UPDATED' })
 
-    if (message.is_new && message.origin === 'save' && result.new_id) {
+    if (
+      message.is_new &&
+      message.origin === 'save' &&
+      result.new_id &&
+      message.api_prompt_type
+    ) {
       provider.send_message({
         command: 'SELECTED_API_CONFIGURATION_CHANGED',
-        prompt_type: message.api_feature,
+        prompt_type: message.api_prompt_type,
         id: result.new_id
       })
     }

@@ -1193,13 +1193,7 @@
               "isDefaultForCodeAtCursor": {
                 "type": "boolean"
               },
-              "isDefaultForIntelligentFileSearch": {
-                "type": "boolean"
-              },
               "isDefaultForPatchRepair": {
-                "type": "boolean"
-              },
-              "isDefaultForCommitMessages": {
                 "type": "boolean"
               },
               "isDefaultForVoiceInput": {

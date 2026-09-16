@@ -119,10 +119,6 @@ export const update = async (params: {
       await providers_manager.set_default_code_at_cursor_api_configuration(
         new_config as any
       )
-    } else if (params.api_feature == 'commit-messages') {
-      await providers_manager.set_default_commit_messages_api_configuration(
-        new_config as any
-      )
     } else if (params.api_feature == 'patch-repair') {
       await providers_manager.set_default_patch_repair_api_configuration(
         new_config as any

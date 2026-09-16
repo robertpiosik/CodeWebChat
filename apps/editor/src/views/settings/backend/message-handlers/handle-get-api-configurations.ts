@@ -24,10 +24,6 @@ export const handle_get_api_configurations = async (
     await providers_manager.get_default_code_at_cursor_api_configuration()
   const def_pr =
     await providers_manager.get_default_patch_repair_api_configuration()
-  const def_cm =
-    await providers_manager.get_default_commit_messages_api_configuration()
-  const def_ifs =
-    await providers_manager.get_default_intelligent_file_search_api_configuration()
   const def_vi =
     await providers_manager.get_default_voice_input_api_configuration()
 
@@ -37,12 +33,7 @@ export const handle_get_api_configurations = async (
     defaults: {
       'code-at-cursor': def_cac ? get_api_configuration_id(def_cac) : null,
       'patch-repair': def_pr ? get_api_configuration_id(def_pr) : null,
-      'commit-messages': def_cm ? get_api_configuration_id(def_cm) : null,
-      'intelligent-file-search': def_ifs
-        ? get_api_configuration_id(def_ifs)
-        : null,
-      'voice-input': def_vi ? get_api_configuration_id(def_vi) : null,
-      'edit-files': null
+      'voice-input': def_vi ? get_api_configuration_id(def_vi) : null
     }
   })
 }

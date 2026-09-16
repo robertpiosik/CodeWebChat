@@ -335,41 +335,6 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               unset: t('api.configurations.action.unset-default')
             }}
           />
-          <DefaultConfigurationSelector
-            title={t('api.default-configurations.tool.commit-messages')}
-            value={props.defaults['commit-messages'] || null}
-            configurations={selector_configurations}
-            on_unset={() =>
-              props.on_set_default_api_configuration('commit-messages', null)
-            }
-            on_select={() =>
-              props.on_select_default_api_configuration('commit-messages')
-            }
-            translations={{
-              select: t('api.configurations.action.select-default'),
-              unset: t('api.configurations.action.unset-default')
-            }}
-          />
-          <DefaultConfigurationSelector
-            title={t('api.default-configurations.tool.intelligent-file-search')}
-            value={props.defaults['intelligent-file-search'] || null}
-            configurations={selector_configurations}
-            on_unset={() =>
-              props.on_set_default_api_configuration(
-                'intelligent-file-search',
-                null
-              )
-            }
-            on_select={() =>
-              props.on_select_default_api_configuration(
-                'intelligent-file-search'
-              )
-            }
-            translations={{
-              select: t('api.configurations.action.select-default'),
-              unset: t('api.configurations.action.unset-default')
-            }}
-          />
 
           <DefaultConfigurationSelector
             title={t('api.default-configurations.tool.voice-input')}

@@ -29,13 +29,7 @@ export const prompt_for_api_configuration = async (params: {
   let skipped = false
 
   if (!params.show_quick_pick) {
-    const default_api_configuration =
-      await params.providers_manager.get_default_intelligent_file_search_api_configuration()
-
-    if (default_api_configuration) {
-      selected_api_configuration = default_api_configuration
-      skipped = true
-    } else if (params.api_configurations.length == 1) {
+    if (params.api_configurations.length == 1) {
       selected_api_configuration = params.api_configurations[0]
       skipped = true
     }

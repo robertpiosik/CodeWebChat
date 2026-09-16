@@ -21,7 +21,7 @@ export const handle_create_api_configuration = async (
         id: get_api_configuration_id(result.config)
       },
       insertion_index: result.insertion_index,
-      api_feature: message.api_feature
+      api_prompt_type: message.api_prompt_type
     })
   }
 }

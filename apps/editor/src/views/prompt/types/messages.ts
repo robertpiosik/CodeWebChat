@@ -7,7 +7,6 @@ import {
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { Task } from '@shared/types/task'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import { ApiFeature } from '@/views/shared/types/api-features'
 import {
   BaseMessage,
   CancelPromptViewApiCallsManagerRequestMessage,
@@ -28,7 +27,7 @@ export interface StartApiConfigurationCreationMessage extends BaseMessage {
   command: 'START_API_CONFIGURATION_CREATION'
   api_configuration: ApiConfiguration
   insertion_index?: number
-  api_feature?: ApiFeature
+  api_prompt_type?: ApiPromptType
 }
 
 export type InstructionsState = {
@@ -414,7 +413,7 @@ export interface OpenWebsiteMessage extends BaseMessage {
 
 export interface CreateApiConfigurationMessage extends BaseMessage {
   command: 'CREATE_API_CONFIGURATION'
-  api_feature: ApiFeature
+  api_prompt_type?: ApiPromptType
   insertion_index?: number
   exact_insertion?: boolean
 }
@@ -478,7 +477,7 @@ export interface UpdateApiConfigurationMessage extends BaseMessage {
   origin?: 'cancel' | 'save'
   is_new?: boolean
   insertion_index?: number
-  api_feature?: ApiFeature
+  api_prompt_type?: ApiPromptType
 }
 
 export interface PickProviderMessage extends BaseMessage {

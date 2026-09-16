@@ -33,9 +33,7 @@ export const get_commit_message_api_configuration = async (params: {
     | CommitMessageApiConfiguration
     | null
     | undefined
-    | 'back' = show_quick_pick
-    ? undefined
-    : await providers_manager.get_default_commit_messages_api_configuration()
+    | 'back' = undefined
 
   if (!commit_message_api_configuration) {
     const api_configurations = await providers_manager.get_api_configurations()

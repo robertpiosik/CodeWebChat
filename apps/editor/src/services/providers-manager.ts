@@ -21,9 +21,7 @@ export type ConfigApiConfigurationFormat = {
   reasoningEffort?: string
   isPinned?: boolean
   isDefaultForCodeAtCursor?: boolean
-  isDefaultForIntelligentFileSearch?: boolean
   isDefaultForPatchRepair?: boolean
-  isDefaultForCommitMessages?: boolean
   isDefaultForVoiceInput?: boolean
 }
 
@@ -186,12 +184,8 @@ export class ProvidersManager {
 
       if (old_config?.isDefaultForCodeAtCursor)
         new_config.isDefaultForCodeAtCursor = true
-      if (old_config?.isDefaultForIntelligentFileSearch)
-        new_config.isDefaultForIntelligentFileSearch = true
       if (old_config?.isDefaultForPatchRepair)
         new_config.isDefaultForPatchRepair = true
-      if (old_config?.isDefaultForCommitMessages)
-        new_config.isDefaultForCommitMessages = true
       if (old_config?.isDefaultForVoiceInput)
         new_config.isDefaultForVoiceInput = true
       if (c.reasoning_effort !== undefined)
@@ -294,24 +288,6 @@ export class ProvidersManager {
     )
   }
 
-  public async get_default_commit_messages_api_configuration(): Promise<
-    ApiConfiguration | undefined
-  > {
-    await this._load_promise
-    return this._get_default_api_configuration_from_settings(
-      'isDefaultForCommitMessages'
-    )
-  }
-
-  public async set_default_commit_messages_api_configuration(
-    api_configuration: ApiConfiguration | null
-  ) {
-    await this._set_default_api_configuration_in_settings(
-      'isDefaultForCommitMessages',
-      api_configuration
-    )
-  }
-
   public async get_default_patch_repair_api_configuration(): Promise<
     ApiConfiguration | undefined
   > {
@@ -326,24 +302,6 @@ export class ProvidersManager {
   ) {
     await this._set_default_api_configuration_in_settings(
       'isDefaultForPatchRepair',
-      api_configuration
-    )
-  }
-
-  public async get_default_intelligent_file_search_api_configuration(): Promise<
-    ApiConfiguration | undefined
-  > {
-    await this._load_promise
-    return this._get_default_api_configuration_from_settings(
-      'isDefaultForIntelligentFileSearch'
-    )
-  }
-
-  public async set_default_intelligent_file_search_api_configuration(
-    api_configuration: ApiConfiguration | null
-  ) {
-    await this._set_default_api_configuration_in_settings(
-      'isDefaultForIntelligentFileSearch',
       api_configuration
     )
   }
