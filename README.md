@@ -30,10 +30,8 @@
 <details>
 <summary>Key takeaways</summary>
 
-- agentic tool calling limited to file lookups
-- reusable context across related tasks
-- zero junk-filled, hard to unpack sessions
-- less thinking on lean, zero-overhead prompts
+- agentic tool calling is limited to file lookups
+- short reasoning on zero-overhead prompts
 - iteration on instructions without context bloat
 
 </details>
