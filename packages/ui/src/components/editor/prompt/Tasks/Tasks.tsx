@@ -209,10 +209,11 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
               {params.task.text && (
                 <IconButton
                   codicon_icon={
-                    copied_timestamp === params.task.created_at
+                    copied_timestamp == params.task.created_at
                       ? 'check'
                       : 'copy'
                   }
+                  disabled={copied_timestamp == params.task.created_at}
                   on_mouse_down={
                     is_editing ? (e) => e.preventDefault() : undefined
                   }
@@ -224,7 +225,7 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
                       set_copied_timestamp((current) =>
                         current === params.task.created_at ? null : current
                       )
-                    }, 2000)
+                    }, 1500)
                   }}
                   title="Copy text"
                 />
