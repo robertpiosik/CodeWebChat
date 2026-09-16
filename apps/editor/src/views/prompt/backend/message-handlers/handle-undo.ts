@@ -2,13 +2,15 @@ import * as vscode from 'vscode'
 import {
   LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
   LAST_APPLIED_CHANGES_STATE_KEY,
-  LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
+  LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
+  LAST_APPLIED_RAW_INSTRUCTIONS_STATE_KEY
 } from '@/constants/state-keys'
 import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import { undo_files } from '@/commands/apply-response-command/utils/file-operations'
+import { CommitMessageDetails } from '@/utils/commit-message-details'
 
 export const handle_undo = async (
   prompt_view_provider: PromptViewProvider
@@ -24,6 +26,9 @@ export const handle_undo = async (
       }
     | undefined
   >(LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY)
+  const raw_instructions = extension_context.workspaceState.get<
+    string | undefined
+  >(LAST_APPLIED_RAW_INSTRUCTIONS_STATE_KEY)
 
   if (!original_states || original_states.length == 0) {
     vscode.window.showInformationMessage(
@@ -37,6 +42,13 @@ export const handle_undo = async (
 
     if (!success) {
       return
+    }
+
+    if (raw_instructions) {
+      CommitMessageDetails.remove({
+        extension_context,
+        prompt: raw_instructions
+      })
     }
 
     if (editor_state) {
@@ -70,6 +82,10 @@ export const handle_undo = async (
     )
     extension_context.workspaceState.update(
       LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
+      null
+    )
+    extension_context.workspaceState.update(
+      LAST_APPLIED_RAW_INSTRUCTIONS_STATE_KEY,
       null
     )
     prompt_view_provider.set_undo_button_state(false)

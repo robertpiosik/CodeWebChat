@@ -101,7 +101,8 @@ export const process_response = async (params: {
           prompt_view_provider: params.prompt_view_provider,
           states: augmented_states,
           applied_content: params.response,
-          original_editor_state: params.args?.original_editor_state
+          original_editor_state: params.args?.original_editor_state,
+          raw_instructions: params.args?.raw_instructions
         })
         return {
           original_states: augmented_states,
@@ -359,7 +360,8 @@ export const process_response = async (params: {
           prompt_view_provider: params.prompt_view_provider,
           states: all_original_states,
           applied_content: params.response,
-          original_editor_state: params.args?.original_editor_state
+          original_editor_state: params.args?.original_editor_state,
+          raw_instructions: params.args?.raw_instructions
         })
       }
 
@@ -513,7 +515,8 @@ export const process_response = async (params: {
         prompt_view_provider: params.prompt_view_provider,
         states: final_original_states,
         applied_content: params.response,
-        original_editor_state: params.args?.original_editor_state
+        original_editor_state: params.args?.original_editor_state,
+        raw_instructions: params.args?.raw_instructions
       })
 
       return {

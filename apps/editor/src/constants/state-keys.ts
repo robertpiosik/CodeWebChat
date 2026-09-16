@@ -3,6 +3,8 @@ export const LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY =
   'last-applied-changes-editor-state'
 export const LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY =
   'last-applied-clipboard-content'
+export const LAST_APPLIED_RAW_INSTRUCTIONS_STATE_KEY =
+  'last-applied-raw-instructions'
 export const RANGES_STATE_KEY = 'ranges'
 export const LAST_RANGES_SAVE_LOCATION_STATE_KEY = 'last-ranges-save-location'
 export const LAST_APPLY_CONTEXT_OPTION_STATE_KEY = 'last-apply-context-option'

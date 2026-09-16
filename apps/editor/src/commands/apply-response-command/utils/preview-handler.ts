@@ -182,7 +182,8 @@ export const preview_handler = async (params: {
         prompt_view_provider: params.prompt_view_provider,
         states: accepted_states,
         applied_content: params.chat_response,
-        original_editor_state: params.original_editor_state
+        original_editor_state: params.original_editor_state,
+        raw_instructions: params.raw_instructions
       })
 
       if (preview_result.active_editor_state) {
