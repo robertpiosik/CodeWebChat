@@ -27,15 +27,6 @@
 4. Send a lean, [file editing](#-file-editing) prompt with a chatbot or an API call
 5. Apply the response
 
-<details>
-<summary>Key takeaways</summary>
-
-- agentic tool calling is limited to file lookups
-- short reasoning on zero-overhead prompts
-- iteration on instructions without context bloat
-
-</details>
-
 ## Privacy
 
 **CWC** operates 100% on your machine—no code, prompts or usage data are collected.
