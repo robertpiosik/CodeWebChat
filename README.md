@@ -29,7 +29,7 @@
 
 #### Key takeaways
 
-- easy to unpack intent in single-turn prompts shortens reasoning
+- easier to unpack intent in single-turn prompts shortens reasoning
 - better safety by limiting tool calling to directory and file lookups
 - skills can be substituted by examples from the repository
 - iteration on instructions without context bloat
