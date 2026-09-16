@@ -2,15 +2,15 @@ import * as vscode from 'vscode'
 import { t } from '@/i18n'
 import { open_settings } from '@/views/settings/helpers/open-settings'
 
-export const show_missing_configuration_notification = async (
+export const show_incomplete_setup_warning = async (
   type: 'api' | 'web'
 ): Promise<void> => {
   const open_settings_label = t('common.open-settings')
-  const result = await vscode.window.showInformationMessage(
+  const result = await vscode.window.showWarningMessage(
     type == 'api'
       ? t('utils.show-missing-configuration-notification.api-setup-incomplete')
       : t(
-          'utils.show-missing-configuration-notification.no-chatbots-configured-yet'
+          'utils.show-missing-configuration-notification.no-chatbots-added-yet'
         ),
     open_settings_label
   )

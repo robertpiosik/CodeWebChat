@@ -4,7 +4,7 @@ import { Logger } from '@shared/utils/logger'
 import { LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { t } from '@/i18n'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
-import { show_missing_configuration_notification } from '@/utils/show-missing-configuration-notification'
+import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 
 export interface CommitMessageApiConfiguration {
   provider_name: string
@@ -39,7 +39,7 @@ export const get_commit_message_api_configuration = async (params: {
     const api_configurations = await providers_manager.get_api_configurations()
 
     if (api_configurations.length == 0) {
-      show_missing_configuration_notification('api')
+      show_incomplete_setup_warning('api')
       return null
     }
 

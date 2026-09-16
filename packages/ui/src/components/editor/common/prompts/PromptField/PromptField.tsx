@@ -257,8 +257,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   const is_mac = use_is_mac()
 
-  const is_action_disabled = props.is_action_disabled ?? false
-
   const highlighted_html = useMemo(() => {
     return get_highlighted_text({
       text: props.value,
@@ -346,7 +344,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       } as any)
                       close_dropdown()
                     },
-                    is_disabled: is_action_disabled
+                    is_disabled: props.is_action_disabled
                   }
                 ]
               : []),
@@ -354,7 +352,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               label: props.translations.send_with_ellipsis,
               shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
               on_click: handle_select_click,
-              is_disabled: is_action_disabled
+              is_disabled: props.is_action_disabled
             },
             ...(props.target == TARGET.WEB
               ? [
@@ -362,7 +360,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     label: props.translations.copy_prompt,
                     shortcut: is_mac ? '⌘C' : 'Ctrl+C',
                     on_click: handle_copy_click,
-                    is_disabled: is_action_disabled
+                    is_disabled: props.is_action_disabled
                   }
                 ]
               : []),
@@ -384,7 +382,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 props.on_preview_prompt?.()
                 close_dropdown()
               },
-              is_disabled: props.is_preview_disabled ?? is_action_disabled
+              is_disabled: props.is_preview_disabled ?? props.is_action_disabled
             }
           ].filter((item) => !(!has_content && item.is_disabled))
 
@@ -398,7 +396,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     label: props.translations.copy_prompt,
                     shortcut: is_mac ? '⌘C' : 'Ctrl+C',
                     on_click: handle_copy_click,
-                    is_disabled: is_action_disabled
+                    is_disabled: props.is_action_disabled
                   }
                 ]
               : []),
@@ -420,7 +418,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 props.on_preview_prompt?.()
                 close_dropdown()
               },
-              is_disabled: props.is_preview_disabled ?? is_action_disabled
+              is_disabled: props.is_preview_disabled ?? props.is_action_disabled
             }
           ].filter((item) => !(!has_content && item.is_disabled))
 
@@ -751,7 +749,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       onClick={handle_submit}
                       onMouseEnter={() => set_show_submit_tooltip(true)}
                       onMouseLeave={() => set_show_submit_tooltip(false)}
-                      disabled={is_action_disabled}
                     />
                   )}
                   {primary_dropdown_items.length > 0 && (
@@ -836,7 +833,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         props.on_copy()
                       }}
                       title={props.translations.copy_prompt}
-                      disabled={is_action_disabled}
+                      disabled={props.is_action_disabled}
                     />
                     {disconnected_dropdown_items.length > 0 && (
                       <>

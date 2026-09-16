@@ -18,7 +18,7 @@ import { create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
 import { set_file_applied_with_patch_repair } from '@/commands/apply-response-command/utils/preview'
 import { t } from '@/i18n'
-import { show_missing_configuration_notification } from '@/utils/show-missing-configuration-notification'
+import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { get_last_used_web_configuration_key } from '@/constants/state-keys'
 import {
@@ -265,7 +265,7 @@ export const handle_patch_repair = async (params: {
     )
 
     if (valid_web_configurations.length == 0) {
-      show_missing_configuration_notification('web')
+      show_incomplete_setup_warning('web')
       return
     }
 

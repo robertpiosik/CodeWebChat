@@ -14,7 +14,7 @@ import { voice_input_instructions } from '@/constants/instructions'
 import { LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { t } from '@/i18n'
-import { show_missing_configuration_notification } from '@/utils/show-missing-configuration-notification'
+import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 
 const MIN_RECORDING_DURATION = 1000
 
@@ -264,7 +264,7 @@ export const handle_voice_input = async (
     const api_configurations = await providers_manager.get_api_configurations()
 
     if (api_configurations.length == 0) {
-      show_missing_configuration_notification('api')
+      show_incomplete_setup_warning('api')
       prompt_view_provider.send_message({
         command: 'RECORDING_STATE',
         is_recording: false

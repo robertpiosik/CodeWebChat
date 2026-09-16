@@ -17,22 +17,22 @@ export const translations = {
     hu: 'Az API beállítása nem teljes.',
     bg: 'Настройката на API е непълна.'
   },
-  'utils.show-missing-configuration-notification.no-chatbots-configured-yet': {
-    en: 'No chatbots configured yet.',
-    pl: 'Nie skonfigurowano jeszcze żadnych chatbotów.',
-    'zh-cn': '尚未配置任何聊天机器人。',
-    ja: 'チャットボットがまだ設定されていません。',
-    'zh-tw': '尚未設定任何聊天機器人。',
-    de: 'Noch keine Chatbots konfiguriert.',
-    es: 'Aún no se han configurado chatbots.',
-    fr: 'Pas encore de chatbots configurés pour le moment.',
-    'pt-br': 'Não há chatbots configurados ainda.',
-    ru: 'Чат-боты еще не настроены.',
-    ko: '아직 구성된 챗봇이 없습니다.',
-    it: 'Non ci sono ancora chatbot configurati.',
-    tr: 'Henüz hiçbir sohbet robotu yapılandırılmadı.',
-    cs: 'Zatím nebyli nakonfigurováni žádní chatboti.',
-    hu: 'Még nincsenek chatbotok konfigurálva.',
-    bg: 'Все още няма конфигурирани чатботове.'
+  'utils.show-missing-configuration-notification.no-chatbots-added-yet': {
+    en: 'No chatbots added yet.',
+    pl: 'Nie dodano jeszcze żadnych chatbotów.',
+    'zh-cn': '尚未添加聊天机器人。',
+    ja: 'チャットボットはまだ追加されていません。',
+    'zh-tw': '尚未新增聊天機器人。',
+    de: 'Noch keine Chatbots hinzugefügt.',
+    es: 'Aún no se han añadido chatbots.',
+    fr: 'Aucun chatbot ajouté pour le moment.',
+    'pt-br': 'Nenhum chatbot adicionado ainda.',
+    ru: 'Чат-боты еще не добавлены.',
+    ko: '아직 추가된 챗봇이 없습니다.',
+    it: 'Nessun chatbot ancora aggiunto.',
+    tr: 'Henüz sohbet robotu eklenmedi.',
+    cs: 'Zatím nebyli přidáni žádní chatboti.',
+    hu: 'Még nincsenek hozzáadva chatbotok.',
+    bg: 'Все още няма добавени чатботове.'
   }
 } as const

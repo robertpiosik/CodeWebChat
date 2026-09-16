@@ -343,12 +343,10 @@ export const MainView: React.FC<Props> = (props) => {
                 (!props.is_connected || !props.web_configurations.length)
               }
               is_action_disabled={
-                ((props.target == TARGET.WEB
+                (props.target == TARGET.WEB
                   ? props.web_prompt_type
                   : props.api_prompt_type) == 'edit-files' &&
-                  !props.selected_files.length) ||
-                (props.target == TARGET.API &&
-                  props.api_configurations.length == 0)
+                !props.selected_files.length
               }
               is_preview_disabled={
                 (props.target == TARGET.WEB

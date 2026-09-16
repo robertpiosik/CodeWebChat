@@ -19,7 +19,7 @@ import { WebSocketManager } from '@/services/websocket-manager'
 import { display_token_count } from '@shared/utils/display-token-count'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { intelligent_file_search_format_for_prompt_view } from '@/constants/instructions'
-import { show_missing_configuration_notification } from '@/utils/show-missing-configuration-notification'
+import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 
 export const perform_intelligent_search_mode = async (params: {
@@ -293,7 +293,7 @@ export const perform_intelligent_search_mode = async (params: {
             )
 
             if (valid_web_configurations.length == 0) {
-              show_missing_configuration_notification('web')
+              show_incomplete_setup_warning('web')
               go_back_to_action = true
               continue
             }
@@ -358,7 +358,7 @@ export const perform_intelligent_search_mode = async (params: {
 
         if (action == 'make-api') {
           if (!has_api_configurations) {
-            show_missing_configuration_notification('api')
+            show_incomplete_setup_warning('api')
             go_back_to_action = true
             continue
           }

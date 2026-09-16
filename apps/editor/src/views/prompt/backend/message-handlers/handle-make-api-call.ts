@@ -26,6 +26,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE
 } from '@/constants/edit-format-instructions'
 import { PROVIDERS } from '@/constants/providers'
+import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 
 const get_last_used_config_id_key = () => {
   return LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
@@ -45,6 +46,7 @@ const get_api_configuration = async (params: {
     await params.providers_manager.get_api_configurations()
 
   if (api_configurations.length == 0) {
+    show_incomplete_setup_warning('api')
     return
   }
 
