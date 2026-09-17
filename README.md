@@ -34,7 +34,6 @@
 - live examples from the repository replace skills
 - context reuse without ever-growing sessions
 - iterate on instructions without context bloat
-- no-cost AI coding in free chatbots
 
 ## Privacy
 
