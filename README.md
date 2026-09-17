@@ -29,11 +29,10 @@
 
 #### Key takeaways
 
-- with prompt simplicity, reasoning gets shorter or even unnecessary
-- tool calling is limited to directory and file lookups
-- live examples from the repository replace skills
+- model spends less time 'thinking'
 - context reuse without ever-growing sessions
-- iterate on instructions without context bloat
+- iterating on instructions without context bloat
+- tool calling is limited to directory and file lookups
 
 ## Privacy
 
