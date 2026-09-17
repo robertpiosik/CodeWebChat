@@ -77,6 +77,7 @@ export const prompt_for_referencing_files = async (params: {
     quick_pick.items = quick_pick_items
     quick_pick.selectedItems = current_selected_items
     quick_pick.canSelectMany = true
+    quick_pick.matchOnDescription = true
     quick_pick.title = t('command.select-referencing-files.referencing-files')
 
     const base_placeholder = t('command.select-referencing-files.select-files')

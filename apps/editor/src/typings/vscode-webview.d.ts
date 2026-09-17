@@ -1,5 +1,5 @@
 declare function acquireVsCodeApi(): {
-  postMessage(message: any)
-  setState(state: any)
+  postMessage(message: any): void
+  setState(state: any): void
   getState(): any
 }
