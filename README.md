@@ -32,8 +32,8 @@
 - limiting tool calling to directory and file lookups
 - shorter reasoning when intent is easier to unpack
 - live examples from the repository replace skills
-- iterate on instructions without context bloat
 - context reuse without ever-growing sessions
+- iterate on instructions without context bloat
 - no-cost AI coding in free chatbots
 
 ## Privacy
