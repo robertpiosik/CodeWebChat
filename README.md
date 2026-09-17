@@ -32,7 +32,9 @@
 - context reuse without ever-growing convos
 - iterating on instructions without context bloat
 - tool calling limited to directory and file lookups
-- with prompt simplicity, less time is spent on 'thinking'
+- with its prompt simplicity:
+  - less time is spent on 'thinking'
+  - coding with mid-tier models is viable
 
 ## Privacy
 
