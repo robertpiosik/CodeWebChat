@@ -5,7 +5,6 @@ import {
   MODELS_ROUTE_NOT_FOUND_ERROR
 } from '@/services/model-fetcher'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@shared/constants/dictionary'
 import { verify_model } from './verify-model'
 import { t } from '@/i18n'
 
@@ -140,7 +139,10 @@ export const initial_select_model = async (
       error.message == MODELS_ROUTE_NOT_FOUND_ERROR
     ) {
       vscode.window.showInformationMessage(
-        dictionary.information_message.MODELS_ROUTE_NOT_FOUND(provider.name),
+        t(
+          'views.shared.actions.api.create.interactions.initial-select-model.models-route-not-found',
+          { provider_name: provider.name }
+        ),
         { modal: true }
       )
     } else {

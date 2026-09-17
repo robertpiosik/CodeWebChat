@@ -1,16 +1,5 @@
 export const dictionary = {
   information_message: {
-    MODELS_ROUTE_NOT_FOUND: (provider_name: string) =>
-      `The '/models' route was not found for ${provider_name}. This might mean the provider does not support listing models.`,
-    NAMED_TEMPLATE_DELETED: (template_name: string) =>
-      `Template "${template_name}" has been deleted.`,
-    NO_CHANGES_FOUND_BETWEEN_BRANCHES: (branch_name: string) =>
-      `No changes found between current branch and ${branch_name}.`,
-    NO_CHANGES_FOUND_BETWEEN_BRANCHES_IN_FOLDER: (
-      branch_name: string,
-      folder_name: string
-    ) =>
-      `No changes found between current branch and ${branch_name} in ${folder_name}.`,
     NO_CHECKED_FILES_IN_REPO_FOR_COMMIT: (
       folder_name: string,
       commit_hash: string

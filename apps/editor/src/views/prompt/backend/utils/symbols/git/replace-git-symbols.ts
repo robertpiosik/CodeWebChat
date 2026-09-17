@@ -228,9 +228,9 @@ export const replace_changes_symbol = async (params: {
 
         if (!diff || diff.length == 0) {
           vscode.window.showInformationMessage(
-            dictionary.information_message.NO_CHANGES_FOUND_BETWEEN_BRANCHES_IN_FOLDER(
-              branch_name,
-              folder_name
+            t(
+              'views.prompt.utils.symbols.git.replace-git-symbols.no-changes-found-between-branches-in-folder',
+              { branch_name, folder_name }
             )
           )
           if (params.symbols_cache) {
@@ -339,8 +339,9 @@ export const replace_changes_symbol = async (params: {
 
         if (!diff || diff.length == 0) {
           vscode.window.showInformationMessage(
-            dictionary.information_message.NO_CHANGES_FOUND_BETWEEN_BRANCHES(
-              branch_name
+            t(
+              'views.prompt.utils.symbols.git.replace-git-symbols.no-changes-found-between-branches',
+              { branch_name }
             )
           )
           if (params.symbols_cache) {
