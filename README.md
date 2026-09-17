@@ -29,7 +29,7 @@
 
 #### Key takeaways
 
-- single-turn prompts make intent easier to unpack, thus reasoning shorter or unnecessary
+- with prompt simplicity, reasoning gets shorter or even unnecessary
 - tool calling is limited to directory and file lookups
 - live examples from the repository replace skills
 - context reuse without ever-growing sessions
