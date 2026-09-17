@@ -24,15 +24,15 @@
 1. Type instructions
 2. Run [Agentic Search](#-agentic-search) for task-relevant context files
 3. Select useful examples for model guidance
-4. Send a zero-overhead [file editing](#-file-editing) prompt with a chatbot or an API call
+4. Send the [editing](#-editing) prompt with a chatbot or an API call
 5. Apply the response
 
 #### Key takeaways
 
-- model spends less time 'thinking'
 - context reuse without ever-growing convos
 - iterating on instructions without context bloat
-- tool calling is limited to directory and file lookups
+- tool calling limited to directory and file lookups
+- with prompt simplicity, less time is spent on 'thinking'
 
 ## Privacy
 
@@ -137,7 +137,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 </details>
 
-### 📄 File editing
+### 📄 Editing
 
 _Implementing new features, fixing bugs or doing refactors._
 
@@ -162,7 +162,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 </details>
 
-### 📄 Asking about files
+### 📄 Asking
 
 _Multi-purpose: explanations, code reviews, you name it._
 
