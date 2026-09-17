@@ -30,7 +30,7 @@
 #### Key takeaways
 
 - model spends less time 'thinking'
-- context reuse without ever-growing sessions
+- context reuse without ever-growing convos
 - iterating on instructions without context bloat
 - tool calling is limited to directory and file lookups
 
