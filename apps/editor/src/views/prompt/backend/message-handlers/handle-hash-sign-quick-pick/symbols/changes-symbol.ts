@@ -56,7 +56,9 @@ export const handle_changes_item = async (
 
     if (!has_any_branches) {
       vscode.window.showInformationMessage(
-        t('views.prompt.handlers.hash-sign.changes-symbol.no-branches')
+        t(
+          'views.prompt.handlers.handle-hash-sign-quick-pick.changes-symbol.no-branches'
+        )
       )
       return undefined
     }
@@ -135,7 +137,9 @@ export const handle_changes_item = async (
 
       if (selected_workspace.branches.length == 0) {
         vscode.window.showInformationMessage(
-          t('views.prompt.handlers.hash-sign.changes-symbol.no-other-branches')
+          t(
+            'views.prompt.handlers.handle-hash-sign-quick-pick.changes-symbol.no-other-branches'
+          )
         )
         if (workspace_with_branches.length > 1) {
           continue

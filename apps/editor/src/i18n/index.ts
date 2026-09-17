@@ -6,6 +6,7 @@ import { translations as features } from './translations/features'
 import { translations as utils } from './translations/utils'
 import { translations as views } from './translations/views'
 import { translations as misc } from './translations/misc'
+import { translations as services } from './translations/services'
 
 export type TranslationKey = keyof typeof translations
 
@@ -16,7 +17,8 @@ const translations = {
   ...features,
   ...utils,
   ...views,
-  ...misc
+  ...misc,
+  ...services
 }
 
 export const t = (

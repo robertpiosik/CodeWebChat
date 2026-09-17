@@ -15,7 +15,7 @@ export const save_file_selection_command = (params: {
       const checked_files = params.workspace_provider.get_checked_files()
       if (checked_files.length == 0) {
         vscode.window.showInformationMessage(
-          t('command.save-file-selection.nothing-in-context-to-save')
+          t('command.save-file-selection-command.nothing-in-context-to-save')
         )
         return
       }
@@ -27,7 +27,7 @@ export const save_file_selection_command = (params: {
 
         const { source } = await select_context_source({
           extension_context: params.extension_context,
-          title: t('command.save-file-selection.destination.title'),
+          title: t('command.save-file-selection-command.destination.title'),
           mode: 'save'
         })
 

@@ -9,10 +9,10 @@ import {
   handle_skill_item
 } from './symbols'
 
-const changes_label = `$(git-pull-request-draft) ${t('views.prompt.handlers.hash-sign.quick-pick.changes.label')}`
-const commit_label = `$(git-commit) ${t('views.prompt.handlers.hash-sign.quick-pick.commit.label')}`
-const saved_context_label = `$(checklist) ${t('views.prompt.handlers.hash-sign.quick-pick.saved-context.label')}`
-const skill_label = `$(thinking) ${t('views.prompt.handlers.hash-sign.quick-pick.skill.label')}`
+const changes_label = `$(git-pull-request-draft) ${t('views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.changes.label')}`
+const commit_label = `$(git-commit) ${t('views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.commit.label')}`
+const saved_context_label = `$(checklist) ${t('views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.saved-context.label')}`
+const skill_label = `$(thinking) ${t('views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.skill.label')}`
 
 const hash_sign_quick_pick = async (params: {
   extension_context: vscode.ExtensionContext
@@ -22,30 +22,32 @@ const hash_sign_quick_pick = async (params: {
     {
       label: changes_label,
       description: t(
-        'views.prompt.handlers.hash-sign.quick-pick.changes.description'
+        'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.changes.description'
       )
     },
     {
       label: commit_label,
       description: t(
-        'views.prompt.handlers.hash-sign.quick-pick.commit.description'
+        'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.commit.description'
       )
     },
     {
       label: saved_context_label,
       description: t(
-        'views.prompt.handlers.hash-sign.quick-pick.saved-context.description'
+        'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.saved-context.description'
       )
     },
     {
       label: skill_label,
       description: t(
-        'views.prompt.handlers.hash-sign.quick-pick.skill.description'
+        'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.skill.description'
       ),
       buttons: [
         {
           iconPath: new vscode.ThemeIcon('globe'),
-          tooltip: t('views.prompt.handlers.hash-sign.quick-pick.skill.tooltip')
+          tooltip: t(
+            'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.skill.tooltip'
+          )
         }
       ]
     }
@@ -63,14 +65,18 @@ const hash_sign_quick_pick = async (params: {
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = items
     quick_pick.placeholder = t(
-      'views.prompt.handlers.hash-sign.quick-pick.placeholder'
+      'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.placeholder'
     )
     quick_pick.matchOnDescription = true
-    quick_pick.title = t('views.prompt.handlers.hash-sign.quick-pick.title')
+    quick_pick.title = t(
+      'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.title'
+    )
     quick_pick.buttons = [
       {
         iconPath: new vscode.ThemeIcon('close'),
-        tooltip: t('views.prompt.handlers.hash-sign.quick-pick.close')
+        tooltip: t(
+          'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.close'
+        )
       }
     ]
 

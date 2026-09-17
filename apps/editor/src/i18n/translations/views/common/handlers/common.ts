@@ -35,5 +35,23 @@ export const translations = {
     cs: 'Pokud zahodíte, aktualizace {item type} budou ztraceny.',
     hu: 'Ha elveti, a(z) {item type} frissítései elvesznek.',
     bg: 'Ако отхвърлите, актуализациите на {item type} ще бъдат загубени.'
+  },
+  'views.common.handlers.common.reasoning-effort-not-supported': {
+    en: 'The selected reasoning effort is not supported by the model.',
+    pl: 'Wybrany poziom wnioskowania nie jest obsługiwany przez model.',
+    'zh-cn': '所选的推理级别不受该模型支持。',
+    ja: '選択した推論レベルはモデルでサポートされていません。',
+    'zh-tw': '所選的推理級別不受該模型支援。',
+    de: 'Der ausgewählte Denkaufwand wird vom Modell nicht unterstützt.',
+    es: 'El modelo no admite el esfuerzo de razonamiento seleccionado.',
+    fr: "L'effort de raisonnement sélectionné n'est pas pris en charge par le modèle.",
+    'pt-br': 'O esforço de raciocínio selecionado não é suportado pelo modelo.',
+    ru: 'Выбранный уровень рассуждения не поддерживается моделью.',
+    ko: '선택한 추론 수준은 모델에서 지원되지 않습니다.',
+    it: 'Lo sforzo di ragionamento selezionato non è supportato dal modello.',
+    tr: 'Seçilen akıl yürütme çabası model tarafından desteklenmiyor.',
+    cs: 'Vybrané úsilí o uvažování není modelem podporováno.',
+    hu: 'A kiválasztott gondolkodási erőfeszítést a modell nem támogatja.',
+    bg: 'Избраното усилие за разсъждение не се поддържа от модела.'
   }
 } as const

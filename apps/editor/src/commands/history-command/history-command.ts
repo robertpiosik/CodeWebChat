@@ -41,7 +41,7 @@ export const history_command = (params: {
     async () => {
       if (get_response_preview_promise_resolve()) {
         vscode.window.showWarningMessage(
-          t('command.history.disabled-during-preview')
+          t('command.history-command.disabled-during-preview')
         )
         return
       }
@@ -51,7 +51,7 @@ export const history_command = (params: {
         vscode.workspace.workspaceFolders.length == 0
       ) {
         vscode.window.showErrorMessage(
-          t('command.history.error.checkpoints-only-in-workspace')
+          t('command.history-command.error.checkpoints-only-in-workspace')
         )
         return
       }
@@ -73,7 +73,7 @@ export const history_command = (params: {
     async (args?: { highlight_checkpoint?: Checkpoint }) => {
       if (get_response_preview_promise_resolve()) {
         vscode.window.showWarningMessage(
-          t('command.history.disabled-during-preview')
+          t('command.history-command.disabled-during-preview')
         )
         return
       }
@@ -83,7 +83,7 @@ export const history_command = (params: {
         vscode.workspace.workspaceFolders.length == 0
       ) {
         vscode.window.showErrorMessage(
-          t('command.history.error.checkpoints-only-in-workspace')
+          t('command.history-command.error.checkpoints-only-in-workspace')
         )
         return
       }
@@ -93,13 +93,13 @@ export const history_command = (params: {
         const quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & { id?: string; checkpoint?: Checkpoint }
         >()
-        quick_pick.title = t('command.history.title')
-        quick_pick.placeholder = t('command.history.placeholder')
+        quick_pick.title = t('command.history-command.title')
+        quick_pick.placeholder = t('command.history-command.placeholder')
         quick_pick.matchOnDetail = true
 
         const clear_all_button: vscode.QuickInputButton = {
           iconPath: new vscode.ThemeIcon('trash'),
-          tooltip: t('command.history.clear-history')
+          tooltip: t('command.history-command.clear-history')
         }
 
         const close_button: vscode.QuickInputButton = {
@@ -119,7 +119,7 @@ export const history_command = (params: {
           if (temp_checkpoint_is_valid) {
             revert_item = {
               id: 'revert-last',
-              label: `$(discard) ${t('command.history.revert-last')}`
+              label: `$(discard) ${t('command.history-command.revert-last')}`
             }
           }
 
@@ -138,7 +138,9 @@ export const history_command = (params: {
           })
 
           const map_checkpoint_to_item = (c: Checkpoint) => {
-            const label_text = t(`command.history.trigger.${c.trigger}` as any)
+            const label_text = t(
+              `command.history-command.trigger.${c.trigger}` as any
+            )
             return {
               id: c.timestamp.toString(),
               label: label_text,
@@ -153,14 +155,14 @@ export const history_command = (params: {
                     c.is_pinned ? 'pinned' : 'pin'
                   ),
                   tooltip: c.is_pinned
-                    ? t('command.history.unpin')
-                    : t('command.history.pin')
+                    ? t('command.history-command.unpin')
+                    : t('command.history-command.pin')
                 },
                 ...(c.trigger == 'manual'
                   ? [
                       {
                         iconPath: new vscode.ThemeIcon('edit'),
-                        tooltip: t('command.history.edit-description')
+                        tooltip: t('command.history-command.edit-description')
                       }
                     ]
                   : []),
@@ -180,7 +182,7 @@ export const history_command = (params: {
             ...(pinned_checkpoints.length > 0
               ? [
                   {
-                    label: t('command.history.separator.pinned'),
+                    label: t('command.history-command.separator.pinned'),
                     kind: vscode.QuickPickItemKind.Separator
                   },
                   ...pinned_checkpoints.map(map_checkpoint_to_item)
@@ -189,7 +191,7 @@ export const history_command = (params: {
             ...(visible_checkpoints.length > 0
               ? [
                   {
-                    label: t('command.history.separator.recent'),
+                    label: t('command.history-command.separator.recent'),
                     kind: vscode.QuickPickItemKind.Separator
                   },
                   ...visible_checkpoints.map(map_checkpoint_to_item)
@@ -203,7 +205,7 @@ export const history_command = (params: {
             quick_pick.items = [
               {
                 id: 'add-new',
-                label: `$(add) ${t('command.history.new')}`
+                label: `$(add) ${t('command.history-command.new')}`
               },
               ...(revert_item ? [revert_item] : []),
               ...checkpoint_items
@@ -280,7 +282,9 @@ export const history_command = (params: {
               )
             if (!temp_checkpoint) {
               vscode.window.showErrorMessage(
-                t('command.history.error.could-not-find-temp-checkpoint')
+                t(
+                  'command.history-command.error.could-not-find-temp-checkpoint'
+                )
               )
               return
             }
@@ -329,7 +333,7 @@ export const history_command = (params: {
               )
             if (!checkpoints.some((c) => !c.is_pinned) && !temp_checkpoint) {
               vscode.window.showInformationMessage(
-                t('command.history.info.nothing-to-delete')
+                t('command.history-command.info.nothing-to-delete')
               )
               notification_count--
               quick_pick.show()
@@ -337,16 +341,16 @@ export const history_command = (params: {
             }
 
             const confirmation = await vscode.window.showWarningMessage(
-              t('command.history.warning.confirm-clear-all'),
+              t('command.history-command.warning.confirm-clear-all'),
               { modal: true },
-              t('command.history.clear-all-button')
+              t('command.history-command.clear-all-button')
             )
 
-            if (confirmation == t('command.history.clear-all-button')) {
+            if (confirmation == t('command.history-command.clear-all-button')) {
               active_delete_operation = null
               await clear_all_checkpoints(params.extension_context)
               vscode.window.showInformationMessage(
-                t('command.history.info.all-cleared')
+                t('command.history-command.info.all-cleared')
               )
             }
             await refresh_and_update_view()
@@ -363,8 +367,8 @@ export const history_command = (params: {
           if (!item.checkpoint) return
 
           if (
-            e.button.tooltip == t('command.history.pin') ||
-            e.button.tooltip == t('command.history.unpin')
+            e.button.tooltip == t('command.history-command.pin') ||
+            e.button.tooltip == t('command.history-command.unpin')
           ) {
             await toggle_checkpoint_pin({
               extension_context: params.extension_context,
@@ -384,13 +388,15 @@ export const history_command = (params: {
             return
           }
 
-          if (e.button.tooltip == t('command.history.edit-description')) {
+          if (
+            e.button.tooltip == t('command.history-command.edit-description')
+          ) {
             notification_count++
             const new_description = await vscode.window.showInputBox({
-              title: t('command.history.description.title'),
-              prompt: t('command.history.description.prompt'),
+              title: t('command.history-command.description.title'),
+              prompt: t('command.history-command.description.prompt'),
               value: item.checkpoint.description || '',
-              placeHolder: t('command.history.description.placeholder')
+              placeHolder: t('command.history-command.description.placeholder')
             })
             notification_count--
 

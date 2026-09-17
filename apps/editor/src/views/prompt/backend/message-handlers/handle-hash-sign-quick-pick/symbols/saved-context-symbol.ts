@@ -48,7 +48,7 @@ export const handle_saved_context_item = async (
     if (source_options.length == 0) {
       vscode.window.showInformationMessage(
         t(
-          'views.prompt.handlers.hash-sign.saved-context-symbol.no-saved-contexts-found'
+          'views.prompt.handlers.handle-hash-sign-quick-pick.saved-context-symbol.no-saved-contexts-found'
         )
       )
       return 'continue'
@@ -217,7 +217,9 @@ export const handle_saved_context_item = async (
     }
   } catch (error) {
     vscode.window.showErrorMessage(
-      t('views.prompt.handlers.hash-sign.saved-context-symbol.failed-to-load')
+      t(
+        'views.prompt.handlers.handle-hash-sign-quick-pick.saved-context-symbol.failed-to-load'
+      )
     )
     return 'continue'
   }

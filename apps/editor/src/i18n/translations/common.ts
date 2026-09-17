@@ -647,5 +647,41 @@ export const translations = {
     cs: 'Pokračovat v prohlížeči.',
     hu: 'Folytatás a böngészőben.',
     bg: 'Продължете в браузъра.'
+  },
+  'common.confirm-action': {
+    en: 'Confirm action',
+    pl: 'Potwierdź działanie',
+    'zh-cn': '确认操作',
+    ja: 'アクションを確認',
+    'zh-tw': '確認操作',
+    de: 'Aktion bestätigen',
+    es: 'Confirmar acción',
+    fr: "Confirmer l'action",
+    'pt-br': 'Confirmar ação',
+    ru: 'Подтвердите действие',
+    ko: '작업 확인',
+    it: 'Conferma azione',
+    tr: 'İşlemi onayla',
+    cs: 'Potvrdit akci',
+    hu: 'Művelet megerősítése',
+    bg: 'Потвърдете действието'
+  },
+  'common.confirm-delete-item': {
+    en: 'Are you sure you want to delete this {item}?',
+    pl: 'Czy na pewno chcesz usunąć: {item}?',
+    'zh-cn': '您确定要删除此 {item} 吗？',
+    ja: 'この {item} を削除してもよろしいですか？',
+    'zh-tw': '您確定要刪除此 {item} 嗎？',
+    de: 'Möchten Sie Folgendes wirklich löschen: {item}?',
+    es: '¿Estás seguro de que quieres eliminar: {item}?',
+    fr: 'Êtes-vous sûr de vouloir supprimer : {item} ?',
+    'pt-br': 'Tem certeza de que deseja excluir: {item}?',
+    ru: 'Вы уверены, что хотите удалить: {item}?',
+    ko: '이 {item}을(를) 삭제하시겠습니까?',
+    it: 'Sei sicuro di voler eliminare: {item}?',
+    tr: 'Şunu silmek istediğinizden emin misiniz: {item}?',
+    cs: 'Opravdu chcete smazat: {item}?',
+    hu: 'Biztosan törli a következőt: {item}?',
+    bg: 'Сигурни ли сте, че искате да изтриете: {item}?'
   }
 } as const

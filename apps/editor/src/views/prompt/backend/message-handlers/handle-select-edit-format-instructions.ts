@@ -14,49 +14,49 @@ export const handle_select_edit_format_instructions = async (
   const items: (vscode.QuickPickItem & { value: EditFormat })[] = [
     {
       label: t(
-        'views.prompt.handlers.select-edit-format-instructions.items.whole'
+        'views.prompt.handlers.handle-select-edit-format-instructions.items.whole'
       ),
       description: t(
-        'views.prompt.handlers.select-edit-format-instructions.items.whole.hint'
+        'views.prompt.handlers.handle-select-edit-format-instructions.items.whole.hint'
       ),
       detail: t(
-        'views.prompt.handlers.select-edit-format-instructions.items.whole.description'
+        'views.prompt.handlers.handle-select-edit-format-instructions.items.whole.description'
       ),
       value: 'whole'
     },
     {
       label: t(
-        'views.prompt.handlers.select-edit-format-instructions.items.search-replace'
+        'views.prompt.handlers.handle-select-edit-format-instructions.items.search-replace'
       ),
       description: t(
-        'views.prompt.handlers.select-edit-format-instructions.items.search-replace.hint'
+        'views.prompt.handlers.handle-select-edit-format-instructions.items.search-replace.hint'
       ),
       detail: t(
-        'views.prompt.handlers.select-edit-format-instructions.items.search-replace.description'
+        'views.prompt.handlers.handle-select-edit-format-instructions.items.search-replace.description'
       ),
       value: 'search-replace'
     },
     {
       label: t(
-        'views.prompt.handlers.select-edit-format-instructions.items.diff'
+        'views.prompt.handlers.handle-select-edit-format-instructions.items.diff'
       ),
       description: t(
-        'views.prompt.handlers.select-edit-format-instructions.items.diff.hint'
+        'views.prompt.handlers.handle-select-edit-format-instructions.items.diff.hint'
       ),
       detail: t(
-        'views.prompt.handlers.select-edit-format-instructions.items.diff.description'
+        'views.prompt.handlers.handle-select-edit-format-instructions.items.diff.description'
       ),
       value: 'diff'
     },
     {
       label: t(
-        'views.prompt.handlers.select-edit-format-instructions.items.truncated'
+        'views.prompt.handlers.handle-select-edit-format-instructions.items.truncated'
       ),
       description: t(
-        'views.prompt.handlers.select-edit-format-instructions.items.truncated.hint'
+        'views.prompt.handlers.handle-select-edit-format-instructions.items.truncated.hint'
       ),
       detail: t(
-        'views.prompt.handlers.select-edit-format-instructions.items.truncated.description'
+        'views.prompt.handlers.handle-select-edit-format-instructions.items.truncated.description'
       ),
       value: 'truncated'
     }
@@ -68,10 +68,10 @@ export const handle_select_edit_format_instructions = async (
   quick_pick.items = items
   quick_pick.activeItems = items.filter((item) => item.value == current_format)
   quick_pick.placeholder = t(
-    'views.prompt.handlers.select-edit-format-instructions.placeholder'
+    'views.prompt.handlers.handle-select-edit-format-instructions.placeholder'
   )
   quick_pick.title = t(
-    'views.prompt.handlers.select-edit-format-instructions.title'
+    'views.prompt.handlers.handle-select-edit-format-instructions.title'
   )
   quick_pick.buttons = [
     { iconPath: new vscode.ThemeIcon('close'), tooltip: t('common.close') }

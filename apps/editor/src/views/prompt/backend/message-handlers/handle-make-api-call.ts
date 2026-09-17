@@ -157,7 +157,7 @@ export const handle_make_api_call = async (
     prompt_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
       title: t(
-        'views.prompt.handlers.make-api-call.instructions-cannot-be-empty'
+        'views.prompt.handlers.handle-make-api-call.instructions-cannot-be-empty'
       ),
       type: 'warning'
     })
@@ -177,7 +177,9 @@ export const handle_make_api_call = async (
   if (!collected_files) {
     prompt_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
-      title: t('views.prompt.handlers.make-api-call.context-cannot-be-empty'),
+      title: t(
+        'views.prompt.handlers.handle-make-api-call.context-cannot-be-empty'
+      ),
       type: 'warning'
     })
     return

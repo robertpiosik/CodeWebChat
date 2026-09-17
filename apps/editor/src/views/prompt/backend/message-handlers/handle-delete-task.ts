@@ -54,7 +54,7 @@ export const handle_delete_task = async (
   }
 
   const selection = await vscode.window.showInformationMessage(
-    t('views.prompt.handlers.delete-task.task-deleted'),
+    t('views.prompt.handlers.handle-delete-task.task-deleted'),
     t('common.undo')
   )
 

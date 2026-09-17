@@ -77,7 +77,7 @@ export const get_git_repository = async (
   >()
   quick_pick.title = 'Workspaces'
   quick_pick.placeholder = t(
-    'command.generate-commit-message.select-repository'
+    'command.generate-commit-message-command.select-repository'
   )
   quick_pick.items = picks
   quick_pick.buttons = [
@@ -168,7 +168,7 @@ export const get_repository_for_commit = async (
   >()
   quick_pick.title = 'Workspaces'
   quick_pick.placeholder = t(
-    'command.generate-commit-message.select-repository'
+    'command.generate-commit-message-command.select-repository'
   )
   quick_pick.items = picks
   quick_pick.buttons = [
@@ -344,7 +344,7 @@ export const prepare_staged_changes = async (params: {
                 iconPath: new vscode.ThemeIcon(
                   'git-pull-request-go-to-changes'
                 ),
-                tooltip: t('command.generate-commit-message.show-diff')
+                tooltip: t('command.generate-commit-message-command.show-diff')
               },
               {
                 iconPath: new vscode.ThemeIcon('go-to-file'),
@@ -370,10 +370,10 @@ export const prepare_staged_changes = async (params: {
             quick_pick.canSelectMany = true
             quick_pick.matchOnDescription = true
             quick_pick.title = t(
-              'command.generate-commit-message.unstaged-files'
+              'command.generate-commit-message-command.unstaged-files'
             )
             quick_pick.placeholder = t(
-              'command.generate-commit-message.select-files'
+              'command.generate-commit-message-command.select-files'
             )
 
             const close_button = {
@@ -419,7 +419,7 @@ export const prepare_staged_changes = async (params: {
                 vscode.window.showTextDocument(uri, { preview: true })
               } else if (
                 event.button.tooltip ==
-                t('command.generate-commit-message.show-diff')
+                t('command.generate-commit-message-command.show-diff')
               ) {
                 const uri = vscode.Uri.file(event.item.fsPath)
                 await vscode.commands.executeCommand('git.openChange', uri)

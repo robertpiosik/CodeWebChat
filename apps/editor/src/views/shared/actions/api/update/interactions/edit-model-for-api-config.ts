@@ -152,8 +152,9 @@ export const edit_model_for_api_configuration = async (params: {
       }
     } else {
       vscode.window.showWarningMessage(
-        dictionary.warning_message.NO_MODELS_FOUND_MANUAL_ENTRY(
-          params.api_configuration.provider_name
+        t(
+          'views.shared.actions.api.update.interactions.edit-model-for-api-config.warning.no-models-found-manual-entry',
+          { provider_name: params.api_configuration.provider_name }
         )
       )
     }

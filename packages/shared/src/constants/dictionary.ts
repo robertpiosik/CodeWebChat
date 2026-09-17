@@ -1,89 +1,5 @@
 export const dictionary = {
-  information_message: {
-    NO_CHECKED_FILES_IN_REPO_FOR_COMMIT: (
-      folder_name: string,
-      commit_hash: string
-    ) =>
-      `No checked files in the "${folder_name}" repository for commit ${commit_hash}.`,
-    RESTORED_CONTEXT: (context_name: string) =>
-      `Restored context "${context_name}".`,
-    NO_GIT_REPOSITORY_FOUND_IN_WORKSPACE:
-      'No Git repository found in the workspace.',
-    NO_UNSTAGED_FILES_FOUND: 'No unstaged files found.',
-    SELECTED_FILES: (count: number) =>
-      `Selected ${count} file${count == 1 ? '' : 's'}.`,
-    DELETED_CONTEXT_FROM_WORKSPACE_STATE: 'Deleted context.',
-    CONTEXT_SAVED_SUCCESSFULLY: 'Saved successfully.',
-    TEMPLATE_RESTORED: 'Template has been restored.',
-    UNNAMED_TEMPLATE_DELETED: 'Unnamed template has been deleted.'
-  },
-
-  warning_message: {
-    PLEASE_CONFIRM: 'Please confirm',
-    CODE_AT_CURSOR_NO_SELECTION:
-      'Code completions are not supported with active text selection.',
-    CANNOT_REFERENCE_FILE_OUTSIDE_WORKSPACE:
-      'Cannot reference file outside of the workspace.',
-    NO_OPEN_EDITORS_SELECTED: 'No open editors selected.',
-    NO_EDITOR_OPEN: 'No editor is open.',
-    CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITH_SELECTION:
-      'Cannot copy prompt in code at cursor mode with an active selection.',
-    CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITHOUT_EDITOR:
-      'Cannot copy prompt in code at cursor mode without an active editor.',
-    CANNOT_PREVIEW_IN_CODE_COMPLETION_WITHOUT_EDITOR:
-      'Cannot preview in code at cursor mode without an active editor.',
-    BROWSER_EXTENSION_NOT_CONNECTED:
-      'Browser extension is not connected. Please install or reload it.',
-    URL_OVERRIDE_DIFFERENT_DOMAIN: (preset_name: string) =>
-      `URL override for preset "${preset_name}" was discarded because it uses a different domain.`,
-    COULD_NOT_DELETE_FILE: (file_path: string) =>
-      `Could not delete file: ${file_path}.`,
-    COULD_NOT_RECREATE_FILE: (file_path: string) =>
-      `Could not recreate file: ${file_path}.`,
-    COULD_NOT_UNDO_FILE_MAYBE_CLOSED: (file_path: string) =>
-      `Could not undo file: ${file_path}. It might have been closed or deleted.`,
-    CONFIRM_CLEAR_API_KEY: (provider_name: string) =>
-      `Are you sure you want to clear the API key for ${provider_name}? This action cannot be undone.`,
-    CONFIRM_DELETE_ITEM: (
-      item_type: 'file' | 'folder' | 'group' | 'configuration' | 'chatbot'
-    ) => `Are you sure you want to delete this ${item_type}?`,
-    CONFIRM_DELETE_NAMED_ITEM: (item_type: string, name: string) =>
-      `Are you sure you want to delete ${item_type} "${name}"?`,
-    CONFIRM_DELETE_CONFIGURATION: (model: string, provider: string) =>
-      `Are you sure you want to delete the configuration for model "${model}" provided by ${provider}?`,
-    CONFIRM_DELETE_PROVIDER: (provider_name: string) =>
-      `Are you sure you want to delete the provider "${provider_name}"?`,
-    NO_MODELS_FOUND_MANUAL_ENTRY: (provider_name: string) =>
-      `No models found for ${provider_name}. You can enter model name manually.`,
-    REASONING_EFFORT_NOT_SUPPORTED:
-      'The selected reasoning effort is not supported by the model.'
-  },
-
   error_message: {
-    FILE_NOT_FOUND: (file_path: string) => `File not found: ${file_path}.`,
-    INVALID_POSITION_FOR_CODE_COMPLETION: (file_path: string) =>
-      `Invalid position for code completion in ${file_path}.`,
-    UNSAFE_FILE_PATHS_SKIPPED: (count: number, list: string) =>
-      `Detected ${count} unsafe file path(s) that may attempt directory traversal:\n${list}\n\nThese files will be skipped.`,
-    FAILED_TO_CREATE_DIRECTORY: (dir_path: string) =>
-      `Failed to create directory: ${dir_path}.`,
-    FAILED_TO_WRITE_FILE: (file_path: string) =>
-      `Failed to write file: ${file_path}.`,
-    ERROR_PROCESSING_FILE: (file_path: string, message: string) =>
-      `Error processing file ${file_path}: ${message}.`,
-    ERROR_REPLACING_FILES: (message: string) =>
-      `An error occurred while replacing files: ${message}.`,
-    ERROR_APPLYING_CHANGES: (message: string) =>
-      `An error occurred while applying changes (${message}).`,
-    INVALID_FILE_PATH_TRAVERSAL: (file_path: string) =>
-      `Invalid file path: ${file_path}. Path may contain traversal attempts.`,
-    FAILED_TO_UNDO_CHANGES: (message: string) =>
-      `Failed to undo changes: ${message}.`,
-    ERROR_SELECTING_SAVED_CONTEXT: (message: string) =>
-      `Error selecting saved context: ${message}.`,
-    FAILED_TO_SELECT_UNSTAGED_FILES: (message: string) =>
-      `Failed to select unstaged files: ${message}.`,
-    FAILED_TO_DELETE: (message: string) => `Failed to delete: ${message}.`,
     COULD_NOT_DETERMINE_LOCATION_TO_CREATE_FILE:
       'Could not determine location to create file.',
     INVALID_FILE_NAME: (name: string) => `Invalid file name: '${name}'.`,
@@ -101,17 +17,12 @@ export const dictionary = {
     FILE_OR_FOLDER_ALREADY_EXISTS: (name: string) =>
       `A file or folder named '${name}' already exists.`,
     FAILED_TO_RENAME: (message: string) => `Failed to rename: ${message}.`,
-    ERROR_COLLECTING_FILES: (message: string) =>
-      `Error collecting files: ${message}.`,
-    ERROR_READING_FILE: (file_path: string, message: string) =>
-      `Error reading file ${file_path}: ${message}.`,
     FAILED_TO_INITIALIZE_WEBSOCKET_SERVER: (error: any) =>
       `Failed to initialize WebSocket server: ${error}.`,
     NO_WORKSPACE_FOLDERS_FOUND: 'No workspace folders found.',
     FAILED_TO_GET_GIT_BRANCHES:
       'Failed to get Git branches. Make sure you are in a Git repository.',
     NO_GIT_REPOSITORY_FOUND: 'No Git repository found.',
-    RESPONSE_TEXT_MISSING: 'Response text to apply is missing.',
     API_RATE_LIMIT_EXCEEDED: 'API request failed. Rate limit exceeded.',
     API_PAYLOAD_TOO_LARGE: 'API request failed. The context is too large.',
     API_BAD_REQUEST: 'API request failed. Bad request.',
@@ -128,10 +39,6 @@ export const dictionary = {
     COULD_NOT_GET_GIT_API: 'Could not get Git API.',
     PATCH_REPAIR_CONTEXT_NOT_FOUND:
       'Could not find the context for patch repair. Please apply the changes again.',
-    ORIGINAL_STATE_FOR_FILE_NOT_FOUND: (file_name: string) =>
-      `Could not find original state for file: ${file_name}.`,
-    UPDATE_INSTRUCTIONS_FOR_FILE_NOT_FOUND: (file_name: string) =>
-      `Could not find update instructions for file: ${file_name}.`,
     FAILED_TO_FETCH_OPEN_ROUTER_MODELS:
       'Failed to fetch Open Router models. Please check your connection.',
     FAILED_TO_GET_CHANGES_FROM_BRANCH: (branch_name: string) =>
@@ -152,15 +59,11 @@ export const dictionary = {
     PROVIDER_NOT_FOUND_BY_NAME: (name: string) =>
       `Provider "${name}" not found.`,
     NO_WORKSPACE_FOLDER_OPEN: 'No workspace folder open.',
-    CANNOT_PROCESS_MULTIPLE_FILES_WITHOUT_WORKSPACE:
-      'Cannot process multiple files without an open workspace folder.',
     NO_WORKSPACE_ROOT: 'No workspace root found.',
     API_PROVIDER_NOT_SPECIFIED_FOR_CODE_AT_CURSOR:
       'API provider is not specified for Code at Cursor tool.',
     MODEL_NOT_SPECIFIED_FOR_CODE_AT_CURSOR:
       'Model is not specified for Code at Cursor tool.',
-    CODE_COMPLETION_ERROR:
-      'An error occurred during code at cursor operation. See console for details.',
     EDIT_FILES_ERROR:
       'An error occurred during file editing. See console for details.',
     CONFIGURATION_ALREADY_EXISTS: 'Identical configuration already exists.',

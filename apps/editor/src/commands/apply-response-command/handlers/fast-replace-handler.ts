@@ -30,7 +30,7 @@ export const handle_fast_replace = async (params: {
       vscode.workspace.workspaceFolders.length == 0
     ) {
       vscode.window.showErrorMessage(
-        t('command.apply-response.error.no-workspace-folder')
+        t('command.apply-response-command.error.no-workspace-folder')
       )
       Logger.warn({
         function_name: 'handle_fast_replace',
@@ -77,7 +77,7 @@ export const handle_fast_replace = async (params: {
     if (unsafe_files.length > 0) {
       const unsafe_list = unsafe_files.join('\n')
       vscode.window.showErrorMessage(
-        t('command.apply-response.error.unsafe-file-paths-skipped', {
+        t('command.apply-response-command.error.unsafe-file-paths-skipped', {
           count: unsafe_files.length,
           list: unsafe_list
         })
@@ -175,7 +175,7 @@ export const handle_fast_replace = async (params: {
             data: { error, file_path: file.file_path }
           })
           vscode.window.showErrorMessage(
-            t('command.apply-response.error.processing-file', {
+            t('command.apply-response-command.error.processing-file', {
               path: file.file_path,
               msg: error.message || 'Unknown error'
             })
@@ -249,9 +249,12 @@ export const handle_fast_replace = async (params: {
                 data: { directory, error, file_path: file.file_path }
               })
               vscode.window.showErrorMessage(
-                t('command.apply-response.error.failed-to-create-directory', {
-                  path: file.file_path
-                })
+                t(
+                  'command.apply-response-command.error.failed-to-create-directory',
+                  {
+                    path: file.file_path
+                  }
+                )
               )
               continue
             }
@@ -271,7 +274,7 @@ export const handle_fast_replace = async (params: {
               data: { safe_path, error, file_path: file.file_path }
             })
             vscode.window.showErrorMessage(
-              t('command.apply-response.error.failed-to-write-file', {
+              t('command.apply-response-command.error.failed-to-write-file', {
                 path: file.file_path
               })
             )
@@ -285,7 +288,7 @@ export const handle_fast_replace = async (params: {
           data: { error, file_path: file.file_path }
         })
         vscode.window.showErrorMessage(
-          t('command.apply-response.error.processing-file', {
+          t('command.apply-response-command.error.processing-file', {
             path: file.file_path,
             msg: error.message || 'Unknown error'
           })
@@ -308,7 +311,7 @@ export const handle_fast_replace = async (params: {
     })
     console.error('Error during direct file replacement:', error)
     vscode.window.showErrorMessage(
-      t('command.apply-response.error.replacing-files', {
+      t('command.apply-response-command.error.replacing-files', {
         msg: error.message || 'Unknown error'
       })
     )

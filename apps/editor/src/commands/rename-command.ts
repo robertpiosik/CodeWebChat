@@ -17,7 +17,7 @@ export const rename_command = () => {
       const current_name = path.basename(old_path)
 
       const new_name = await vscode.window.showInputBox({
-        prompt: t('command.rename.prompt'),
+        prompt: t('command.rename-command.prompt'),
         placeHolder: '',
         value: current_name
       })

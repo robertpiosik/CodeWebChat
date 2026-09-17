@@ -6,7 +6,6 @@ import { WorkspaceProvider } from '../context/providers/workspace/workspace-prov
 import { GIT_LOG_SINCE_DURATION } from '../constants/values'
 import { get_git_repository } from '@/utils/git-repository-utils'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 import { display_token_count } from '@shared/utils/display-token-count'
 import { search_files } from '@/features/search-files'
@@ -43,7 +42,7 @@ export const select_files_of_commit_command = (
 
           if (!log_output) {
             vscode.window.showInformationMessage(
-              t('command.select-files-of-commit.no-commits')
+              t('command.select-files-of-commit-command.no-commits')
             )
             return
           }
@@ -59,7 +58,7 @@ export const select_files_of_commit_command = (
           })
 
           const ahead_of_branch_item = {
-            label: `$(git-branch) ${t('command.select-files-of-commit.ahead-of-branch')}`,
+            label: `$(git-branch) ${t('command.select-files-of-commit-command.ahead-of-branch')}`,
             detail: '',
             description: '',
             hash: 'ahead-of-branch'
@@ -74,12 +73,14 @@ export const select_files_of_commit_command = (
           const quick_pick = vscode.window.createQuickPick<
             vscode.QuickPickItem & { hash: string }
           >()
-          quick_pick.title = t('command.select-files-of-commit.title')
+          quick_pick.title = t('command.select-files-of-commit-command.title')
 
           const all_items = [ahead_of_branch_item, separator_item, ...commits]
           quick_pick.items = all_items
 
-          quick_pick.placeholder = t('command.select-files-of-commit.select')
+          quick_pick.placeholder = t(
+            'command.select-files-of-commit-command.select'
+          )
           quick_pick.matchOnDetail = true
           quick_pick.buttons = [
             { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
@@ -171,7 +172,7 @@ export const select_files_of_commit_command = (
 
               if (branches.length === 0) {
                 vscode.window.showInformationMessage(
-                  t('command.select-files-of-commit.no-other-branches')
+                  t('command.select-files-of-commit-command.no-other-branches')
                 )
                 break // back to commit selection
               }
@@ -179,10 +180,12 @@ export const select_files_of_commit_command = (
               const branch_qp = vscode.window.createQuickPick<
                 vscode.QuickPickItem & { name: string }
               >()
-              branch_qp.title = t('command.select-files-of-commit.branches')
+              branch_qp.title = t(
+                'command.select-files-of-commit-command.branches'
+              )
               branch_qp.items = branches
               branch_qp.placeholder = t(
-                'command.select-files-of-commit.select-branch'
+                'command.select-files-of-commit-command.select-branch'
               )
               branch_qp.buttons = [
                 vscode.QuickInputButtons.Back,
@@ -248,7 +251,7 @@ export const select_files_of_commit_command = (
 
               if (!files_output) {
                 vscode.window.showInformationMessage(
-                  t('command.select-files-of-commit.no-modified')
+                  t('command.select-files-of-commit-command.no-modified')
                 )
                 continue // retry branch selection
               }
@@ -269,7 +272,7 @@ export const select_files_of_commit_command = (
 
               if (!files_output) {
                 vscode.window.showInformationMessage(
-                  t('command.select-files-of-commit.no-modified')
+                  t('command.select-files-of-commit-command.no-modified')
                 )
                 break // back to commit selection
               }
@@ -314,7 +317,7 @@ export const select_files_of_commit_command = (
 
             if (valid_files.length === 0) {
               vscode.window.showInformationMessage(
-                t('command.select-files-of-commit.no-valid')
+                t('command.select-files-of-commit-command.no-valid')
               )
               if (is_ahead_of_branch) {
                 continue // retry branch selection
@@ -378,7 +381,9 @@ export const select_files_of_commit_command = (
               const file_items: any[] = []
               if (normal_items.length > 0) {
                 file_items.push({
-                  label: t('command.select-files-of-commit.committed-files'),
+                  label: t(
+                    'command.select-files-of-commit-command.committed-files'
+                  ),
                   kind: vscode.QuickPickItemKind.Separator
                 })
                 file_items.push(...normal_items)
@@ -388,8 +393,12 @@ export const select_files_of_commit_command = (
                 file_items.push({
                   label:
                     normal_items.length > 0
-                      ? t('command.select-files-of-commit.context-files')
-                      : t('command.select-files-of-commit.committed-files'),
+                      ? t(
+                          'command.select-files-of-commit-command.context-files'
+                        )
+                      : t(
+                          'command.select-files-of-commit-command.committed-files'
+                        ),
                   kind: vscode.QuickPickItemKind.Separator
                 })
                 file_items.push(...ascii_items)
@@ -402,13 +411,16 @@ export const select_files_of_commit_command = (
                 (i) => i.picked
               )
               quick_pick_files.title = is_ahead_of_branch
-                ? t('command.select-files-of-commit.files-ahead-of-branch', {
-                    branch: branch_name
-                  })
-                : t('command.select-files-of-commit.files-modified')
+                ? t(
+                    'command.select-files-of-commit-command.files-ahead-of-branch',
+                    {
+                      branch: branch_name
+                    }
+                  )
+                : t('command.select-files-of-commit-command.files-modified')
 
               const base_placeholder = t(
-                'command.select-files-of-commit.select-files'
+                'command.select-files-of-commit-command.select-files'
               )
 
               const update_title = () => {
@@ -604,9 +616,7 @@ export const select_files_of_commit_command = (
               await workspace_provider.set_checked_files(paths_to_apply)
 
               vscode.window.showInformationMessage(
-                dictionary.information_message.SELECTED_FILES(
-                  paths_to_apply.length
-                )
+                t('command.select-files-of-commit-command.context-updated')
               )
 
               file_action = 'finished'

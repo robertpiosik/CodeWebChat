@@ -60,7 +60,7 @@ export const process_response = async (params: {
     params.prompt_view_provider.send_message({
       command: 'SHOW_PROGRESS',
       title: t('common.progress.response-preview'),
-      subtitle: t('command.apply-response.progress.applying-edits'),
+      subtitle: t('command.apply-response-command.progress.applying-edits'),
       progress
     })
   }
@@ -383,7 +383,7 @@ export const process_response = async (params: {
 
     if (files.length == 0) {
       vscode.window.showErrorMessage(
-        t('command.apply-response.error.no-valid-response')
+        t('command.apply-response-command.error.no-valid-response')
       )
       return null
     }

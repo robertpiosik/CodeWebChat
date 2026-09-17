@@ -1,0 +1,57 @@
+export const translations = {
+  'command.select-clipboard-paths-command.no-valid': {
+    en: 'No valid file paths found in clipboard.',
+    pl: 'Nie znaleziono prawidłowych ścieżek plików w schowku.',
+    'zh-cn': '剪贴板中未找到有效的文件路径。',
+    ja: 'クリップボードに有効なファイルパスが見つかりませんでした。',
+    'zh-tw': '剪貼簿中未找到有效的檔案路徑。',
+    de: 'Keine gültigen Dateipfade in der Zwischenablage gefunden.',
+    es: 'No se encontraron rutas de archivo válidas en el portapapeles.',
+    fr: 'Aucun chemin de fichier valide trouvé dans le presse-papiers.',
+    'pt-br':
+      'Nenhum caminho de arquivo válido encontrado na área de transferência.',
+    ru: 'В буфере обмена не найдено действительных путей к файлам.',
+    ko: '클립보드에서 유효한 파일 경로를 찾을 수 없습니다.',
+    it: 'Nessun percorso di file valido trovato negli appunti.',
+    tr: 'Panoda geçerli bir dosya yolu bulunamadı.',
+    cs: 'Ve schránce nebyly nalezeny žádné platné cesty k souborům.',
+    hu: 'Nem találhatók érvényes fájlútvonalak a vágólapon.',
+    bg: 'В клипборда не са намерени валидни пътища към файлове.'
+  },
+  'command.select-clipboard-paths-command.title': {
+    en: 'Select Files from Clipboard',
+    pl: 'Wybierz pliki ze schowka',
+    'zh-cn': '从剪贴板选择文件',
+    ja: 'クリップボードからファイルを選択',
+    'zh-tw': '從剪貼簿選擇檔案',
+    de: 'Dateien aus der Zwischenablage auswählen',
+    es: 'Seleccionar archivos del portapapeles',
+    fr: 'Sélectionner des fichiers depuis le presse-papiers',
+    'pt-br': 'Selecionar arquivos da área de transferência',
+    ru: 'Выбрать файлы из буфера обмена',
+    ko: '클립보드에서 파일 선택',
+    it: 'Seleziona file dagli appunti',
+    tr: 'Panodan Dosyaları Seç',
+    cs: 'Vybrat soubory ze schránky',
+    hu: 'Fájlok kiválasztása a vágólapról',
+    bg: 'Избор на файлове от клипборда'
+  },
+  'command.select-clipboard-paths-command.include': {
+    en: 'Select files to include in context',
+    pl: 'Wybierz pliki do włączenia do kontekstu',
+    'zh-cn': '选择要包含在上下文中的文件',
+    ja: 'コンテキストに含めるファイルを選択',
+    'zh-tw': '選擇要包含在上下文中的檔案',
+    de: 'Dateien auswählen, die in den Kontext aufgenommen werden sollen',
+    es: 'Seleccionar archivos para incluir en el contexto',
+    fr: 'Sélectionner les fichiers à inclure dans le contexte',
+    'pt-br': 'Selecione arquivos para incluir no contexto',
+    ru: 'Выберите файлы для включения в контекст',
+    ko: '컨텍스트에 포함할 파일 선택',
+    it: 'Seleziona i file da includere nel contesto',
+    tr: 'Bağlama dahil edilecek dosyaları seçin',
+    cs: 'Vyberte soubory k zahrnutí do kontextu',
+    hu: 'Válassza ki a kontextusba foglalandó fájlokat',
+    bg: 'Изберете файлове за включване в контекста'
+  }
+} as const

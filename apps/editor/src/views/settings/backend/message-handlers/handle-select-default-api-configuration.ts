@@ -18,7 +18,9 @@ export const handle_select_default_api_configuration = async (
 
   if (api_configurations.length == 0) {
     vscode.window.showInformationMessage(
-      t('views.settings.handlers.select-default-api-configuration.no-configs')
+      t(
+        'views.settings.handlers.handle-select-default-api-configuration.no-configs'
+      )
     )
     return
   }

@@ -48,7 +48,7 @@ export const delete_checkpoint_with_undo = async (params: {
       })
     } catch (error: any) {
       vscode.window.showWarningMessage(
-        t('command.history.warning.could-not-delete', {
+        t('command.history-command.warning.could-not-delete', {
           error: error.message
         })
       )
@@ -61,7 +61,7 @@ export const delete_checkpoint_with_undo = async (params: {
   params.on_before_show_message?.()
   const undo_action = t('common.undo')
   const choice = await vscode.window.showInformationMessage(
-    t('command.history.success.deleted'),
+    t('command.history-command.success.deleted'),
     undo_action
   )
   params.on_after_show_message?.()
@@ -90,7 +90,7 @@ export const delete_checkpoint_with_undo = async (params: {
 
       params.on_before_show_message?.()
       await vscode.window.showInformationMessage(
-        t('command.history.success.restored')
+        t('command.history-command.success.restored')
       )
       params.on_after_show_message?.()
 
@@ -104,7 +104,7 @@ export const delete_checkpoint_with_undo = async (params: {
   } else if (choice == undo_action) {
     params.on_before_show_message?.()
     await vscode.window.showInformationMessage(
-      t('command.history.error.could-not-undo')
+      t('command.history-command.error.could-not-undo')
     )
     params.on_after_show_message?.()
     return false

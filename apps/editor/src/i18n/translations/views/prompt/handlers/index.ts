@@ -1,9 +1,9 @@
-import { translations as delete_task } from './delete-task'
-import { translations as hash_sign } from './hash-sign'
-import { translations as make_api_call } from './make-api-call'
-import { translations as select_edit_format_instructions } from './select-edit-format-instructions'
-import { translations as voice_input } from './voice-input'
-import { translations as copy_prompt } from './copy-prompt'
+import { translations as handle_delete_task } from './handle-delete-task'
+import { translations as handle_hash_sign_quick_pick } from './handle-hash-sign-quick-pick'
+import { translations as handle_make_api_call } from './handle-make-api-call'
+import { translations as handle_select_edit_format_instructions } from './handle-select-edit-format-instructions'
+import { translations as handle_voice_input } from './handle-voice-input'
+import { translations as handle_copy_prompt } from './handle-copy-prompt'
 import { translations as handle_undo } from './handle-undo'
 import { translations as utils } from './utils'
 import { translations as handle_pick_api_reasoning_effort } from './handle-pick-api-reasoning-effort'
@@ -14,12 +14,12 @@ import { translations as common } from './common'
 
 export const translations = {
   ...common,
-  ...delete_task,
-  ...hash_sign,
-  ...make_api_call,
-  ...select_edit_format_instructions,
-  ...voice_input,
-  ...copy_prompt,
+  ...handle_delete_task,
+  ...handle_hash_sign_quick_pick,
+  ...handle_make_api_call,
+  ...handle_select_edit_format_instructions,
+  ...handle_voice_input,
+  ...handle_copy_prompt,
   ...handle_undo,
   ...utils,
   ...handle_pick_api_reasoning_effort,

@@ -34,7 +34,7 @@ export const prompt_for_imported_files = async (params: {
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: t('command.select-imported-files.processing'),
+      title: t('command.select-imported-files-command.processing'),
       cancellable: true
     },
     async (progress, token) => {
@@ -109,7 +109,7 @@ export const prompt_for_imported_files = async (params: {
 
   const deep_search_button = {
     iconPath: new vscode.ThemeIcon('telescope'),
-    tooltip: t('command.select-imported-files.deep-search')
+    tooltip: t('command.select-imported-files-command.deep-search')
   }
 
   type ImportQuickPickItem = vscode.QuickPickItem & {
@@ -182,7 +182,7 @@ export const prompt_for_imported_files = async (params: {
 
     if (valid_immediate.length == 0 && valid_recursive.length == 0) {
       vscode.window.showInformationMessage(
-        t('command.select-imported-files.no-files')
+        t('command.select-imported-files-command.no-files')
       )
       return undefined
     }
@@ -192,7 +192,7 @@ export const prompt_for_imported_files = async (params: {
     if (valid_immediate.length > 0) {
       if (valid_recursive.length > 0) {
         quick_pick_items.push({
-          label: t('command.select-imported-files.immediate'),
+          label: t('command.select-imported-files-command.immediate'),
           kind: vscode.QuickPickItemKind.Separator
         })
       }
@@ -202,7 +202,7 @@ export const prompt_for_imported_files = async (params: {
 
     if (valid_recursive.length > 0) {
       quick_pick_items.push({
-        label: t('command.select-imported-files.recursive'),
+        label: t('command.select-imported-files-command.recursive'),
         kind: vscode.QuickPickItemKind.Separator
       })
       const recursive_items = await map_to_quick_pick(valid_recursive)
@@ -234,9 +234,11 @@ export const prompt_for_imported_files = async (params: {
     quick_pick.selectedItems = current_selected_items
     quick_pick.canSelectMany = true
     quick_pick.matchOnDescription = true
-    quick_pick.title = t('command.select-imported-files.title')
+    quick_pick.title = t('command.select-imported-files-command.title')
 
-    const base_placeholder = t('command.select-imported-files.placeholder')
+    const base_placeholder = t(
+      'command.select-imported-files-command.placeholder'
+    )
     const update_title = () => {
       const total = quick_pick.selectedItems.reduce(
         (sum, item) => sum + ((item as any).token_count || 0),
@@ -319,7 +321,7 @@ export const prompt_for_imported_files = async (params: {
             await vscode.window.showTextDocument(doc, { preview: true })
           } catch (error) {
             vscode.window.showErrorMessage(
-              t('command.select-imported-files.error-opening', {
+              t('command.select-imported-files-command.error-opening', {
                 error: String(error)
               })
             )
@@ -391,7 +393,9 @@ export const prompt_for_imported_files = async (params: {
       await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: t('command.select-imported-files.processing-recursive'),
+          title: t(
+            'command.select-imported-files-command.processing-recursive'
+          ),
           cancellable: true
         },
         async (progress, token) => {

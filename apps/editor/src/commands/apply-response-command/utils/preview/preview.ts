@@ -35,7 +35,7 @@ export const preview = async (params: {
 } | null> => {
   if (!vscode.workspace.workspaceFolders?.length) {
     vscode.window.showErrorMessage(
-      t('command.apply-response.error.no-workspace-folder')
+      t('command.apply-response-command.error.no-workspace-folder')
     )
     return null
   }

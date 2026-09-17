@@ -18,6 +18,7 @@ import { WebConfiguration } from '@shared/types/web-configuration'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { LAST_SELECTED_BROWSER_ID_STATE_KEY } from '@/constants/state-keys'
 import { ApplyResponseCommandArgs } from '@/commands/apply-response-command/response-processor'
+import { t } from '@/i18n'
 
 /**
  * Bridges the current workspace window and a WebSockets server
@@ -440,9 +441,9 @@ export class WebSocketManager {
         } else {
           url = chatbot.url
           vscode.window.showWarningMessage(
-            dictionary.warning_message.URL_OVERRIDE_DIFFERENT_DOMAIN(
-              web_configuration.name!
-            )
+            t('service.websocket-manager.url-override-different-domain', {
+              preset_name: web_configuration.name!
+            })
           )
         }
       } catch (error) {
@@ -546,9 +547,9 @@ export class WebSocketManager {
         } else {
           url = chatbot.url
           vscode.window.showWarningMessage(
-            dictionary.warning_message.URL_OVERRIDE_DIFFERENT_DOMAIN(
-              params.web_configuration.name!
-            )
+            t('service.websocket-manager.url-override-different-domain', {
+              preset_name: params.web_configuration.name!
+            })
           )
         }
       } catch (error) {

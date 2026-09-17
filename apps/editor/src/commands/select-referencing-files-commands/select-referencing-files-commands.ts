@@ -17,7 +17,7 @@ const handle_reference_selection = async (params: {
 
   if (matched_files.length == 0) {
     vscode.window.showInformationMessage(
-      t('command.select-referencing-files.no-files')
+      t('command.select-referencing-files-command.no-files')
     )
     return
   }
@@ -102,7 +102,7 @@ export const select_referencing_files_commands = (
           matched_files = await vscode.window.withProgress(
             {
               location: vscode.ProgressLocation.Window,
-              title: t('command.select-referencing-files.processing')
+              title: t('command.select-referencing-files-command.processing')
             },
             async () => {
               let definitions = await vscode.commands.executeCommand<any[]>(
@@ -157,7 +157,7 @@ export const select_referencing_files_commands = (
 
           if (starting_uris.length == 0) {
             vscode.window.showInformationMessage(
-              t('command.select-referencing-files.no-files')
+              t('command.select-referencing-files-command.no-files')
             )
             return
           }
@@ -167,7 +167,7 @@ export const select_referencing_files_commands = (
           matched_files = await vscode.window.withProgress(
             {
               location: vscode.ProgressLocation.Notification,
-              title: t('command.select-referencing-files.processing'),
+              title: t('command.select-referencing-files-command.processing'),
               cancellable: true
             },
             async (progress, token) => {
@@ -197,7 +197,7 @@ export const select_referencing_files_commands = (
         })
       } catch (error) {
         vscode.window.showErrorMessage(
-          t('command.select-referencing-files.failed', {
+          t('command.select-referencing-files-command.failed', {
             error: error instanceof Error ? error.message : String(error)
           })
         )
@@ -219,7 +219,7 @@ export const select_referencing_files_commands = (
 
           if (checked_files.length == 0) {
             vscode.window.showInformationMessage(
-              t('command.select-referencing-files.no-files')
+              t('command.select-referencing-files-command.no-files')
             )
             return
           }
@@ -232,7 +232,7 @@ export const select_referencing_files_commands = (
           const matched_files = await vscode.window.withProgress(
             {
               location: vscode.ProgressLocation.Notification,
-              title: t('command.select-referencing-files.processing'),
+              title: t('command.select-referencing-files-command.processing'),
               cancellable: true
             },
             async (progress, token) => {
@@ -261,7 +261,7 @@ export const select_referencing_files_commands = (
           })
         } catch (error) {
           vscode.window.showErrorMessage(
-            t('command.select-referencing-files.failed', {
+            t('command.select-referencing-files-command.failed', {
               error: error instanceof Error ? error.message : String(error)
             })
           )

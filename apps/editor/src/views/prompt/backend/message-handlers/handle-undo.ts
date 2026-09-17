@@ -5,12 +5,12 @@ import {
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
   LAST_APPLIED_RAW_INSTRUCTIONS_STATE_KEY
 } from '@/constants/state-keys'
-import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import { undo_files } from '@/commands/apply-response-command/utils/file-operations'
 import { CommitMessageDetails } from '@/utils/commit-message-details'
+import { Logger } from '@shared/utils/logger'
 
 export const handle_undo = async (
   prompt_view_provider: PromptViewProvider
@@ -94,12 +94,11 @@ export const handle_undo = async (
       title: 'Changes undone successfully',
       type: 'success'
     })
-  } catch (error: any) {
-    console.error('Error during undo:', error)
-    vscode.window.showErrorMessage(
-      dictionary.error_message.FAILED_TO_UNDO_CHANGES(
-        error.message || 'Unknown error'
-      )
-    )
+  } catch (error) {
+    Logger.error({
+      function_name: 'handle_undo',
+      message: 'Error during undo.',
+      data: error
+    })
   }
 }

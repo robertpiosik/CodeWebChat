@@ -144,7 +144,7 @@ export const restore_checkpoint = async (params: {
         }
       } catch (err: any) {
         vscode.window.showErrorMessage(
-          t('command.history.error.create-temp-failed', {
+          t('command.history-command.error.create-temp-failed', {
             error: err.message
           })
         )
@@ -210,7 +210,7 @@ export const restore_checkpoint = async (params: {
                       data: e
                     })
                     throw new Error(
-                      t('command.history.error.reject-changes-failed', {
+                      t('command.history-command.error.reject-changes-failed', {
                         folder: folder.name
                       })
                     )
@@ -260,7 +260,7 @@ export const restore_checkpoint = async (params: {
                         }
                       )
                       vscode.window.showWarningMessage(
-                        t('command.history.warning.diff-apply-issues', {
+                        t('command.history-command.warning.diff-apply-issues', {
                           folder: folder.name
                         })
                       )
@@ -271,7 +271,7 @@ export const restore_checkpoint = async (params: {
                         data: reject_error
                       })
                       throw new Error(
-                        t('command.history.error.diff-apply-failed', {
+                        t('command.history-command.error.diff-apply-failed', {
                           folder: folder.name
                         })
                       )
@@ -358,7 +358,7 @@ export const restore_checkpoint = async (params: {
                         }
                       )
                       vscode.window.showWarningMessage(
-                        t('command.history.warning.diff-apply-issues', {
+                        t('command.history-command.warning.diff-apply-issues', {
                           folder: folder.name
                         })
                       )
@@ -369,7 +369,7 @@ export const restore_checkpoint = async (params: {
                         data: reject_error
                       })
                       throw new Error(
-                        t('command.history.error.diff-apply-failed', {
+                        t('command.history-command.error.diff-apply-failed', {
                           folder: folder.name
                         })
                       )
@@ -524,7 +524,9 @@ export const restore_checkpoint = async (params: {
           undefined
         )
         vscode.window.showErrorMessage(
-          t('command.history.error.restore-failed', { error: err.message })
+          t('command.history-command.error.restore-failed', {
+            error: err.message
+          })
         )
         if (temp_checkpoint) {
           await delete_checkpoint({
@@ -547,8 +549,8 @@ export const restore_checkpoint = async (params: {
   }
 
   const title = params.options?.skip_confirmation
-    ? t('command.history.progress.reverting')
-    : t('command.history.progress.restoring')
+    ? t('command.history-command.progress.reverting')
+    : t('command.history-command.progress.restoring')
   let temp_check: Checkpoint | undefined
   try {
     temp_check = await vscode.window.withProgress(
@@ -564,11 +566,11 @@ export const restore_checkpoint = async (params: {
   }
 
   const message = params.options?.skip_confirmation
-    ? t('command.history.success.reverted')
-    : t('command.history.success.restored')
+    ? t('command.history-command.success.reverted')
+    : t('command.history-command.success.restored')
 
   if (temp_check) {
-    const action_label = t('command.history.action.revert')
+    const action_label = t('command.history-command.action.revert')
     const action = await vscode.window.showInformationMessage(
       message,
       action_label

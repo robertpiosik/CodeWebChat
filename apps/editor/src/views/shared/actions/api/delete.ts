@@ -3,7 +3,6 @@ import {
   ProvidersManager,
   get_api_configuration_id
 } from '@/services/providers-manager'
-import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 
 export const remove = async (params: {
@@ -24,13 +23,13 @@ export const remove = async (params: {
 
   const delete_button = t('common.delete')
   const confirmation = await vscode.window.showWarningMessage(
-    dictionary.warning_message.PLEASE_CONFIRM,
+    t('common.confirm-action'),
     {
       modal: true,
-      detail: dictionary.warning_message.CONFIRM_DELETE_CONFIGURATION(
-        api_config_to_delete.model,
-        api_config_to_delete.provider_name
-      )
+      detail: t('views.shared.actions.api.delete.confirm-delete', {
+        model: api_config_to_delete.model,
+        provider: api_config_to_delete.provider_name
+      })
     },
     delete_button
   )

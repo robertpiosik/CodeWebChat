@@ -34,5 +34,23 @@ export const translations = {
     cs: 'Chatbot smazán.',
     hu: 'Chatbot törölve.',
     bg: 'Чатботът е изтрит.'
+  },
+  'views.shared.actions.web.delete.confirm-delete-named-item': {
+    en: 'Are you sure you want to delete {item} "{name}"?',
+    pl: 'Czy na pewno chcesz usunąć {item} "{name}"?',
+    'zh-cn': '您确定要删除 {item} "{name}" 吗？',
+    ja: '{item} "{name}" を削除してもよろしいですか？',
+    'zh-tw': '您確定要刪除 {item} "{name}" 嗎？',
+    de: 'Möchten Sie {item} "{name}" wirklich löschen?',
+    es: '¿Estás seguro de que quieres eliminar {item} "{name}"?',
+    fr: 'Voulez-vous vraiment supprimer {item} "{name}" ?',
+    'pt-br': 'Tem certeza de que deseja excluir {item} "{name}"?',
+    ru: 'Вы уверены, что хотите удалить {item} "{name}"?',
+    ko: '{item} "{name}"을(를) 삭제하시겠습니까?',
+    it: 'Sei sicuro di voler eliminare {item} "{name}"?',
+    tr: '{item} "{name}" öğesini silmek istediğinizden emin misiniz?',
+    cs: 'Opravdu chcete smazat {item} "{name}"?',
+    hu: 'Biztosan törölni szeretné a(z) {item} "{name}" elemet?',
+    bg: 'Сигурни ли сте, че искате да изтриете {item} "{name}"?'
   }
 } as const

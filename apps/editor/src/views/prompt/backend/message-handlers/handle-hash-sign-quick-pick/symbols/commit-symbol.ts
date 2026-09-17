@@ -39,7 +39,9 @@ export const handle_commit_item = async (
 
     if (git_folders.length == 0) {
       vscode.window.showErrorMessage(
-        t('views.prompt.handlers.hash-sign.commit-symbol.no-git-repo')
+        t(
+          'views.prompt.handlers.handle-hash-sign-quick-pick.commit-symbol.no-git-repo'
+        )
       )
       return undefined
     }
@@ -124,10 +126,9 @@ export const handle_commit_item = async (
 
       if (!log_output.trim()) {
         vscode.window.showErrorMessage(
-          t('views.prompt.handlers.hash-sign.commit-symbol.no-commits').replace(
-            '{0}',
-            selected_folder.name
-          )
+          t(
+            'views.prompt.handlers.handle-hash-sign-quick-pick.commit-symbol.no-commits'
+          ).replace('{0}', selected_folder.name)
         )
         if (git_folders.length > 1) {
           continue
@@ -332,7 +333,9 @@ export const handle_commit_item = async (
     }
   } catch (error) {
     vscode.window.showErrorMessage(
-      t('views.prompt.handlers.hash-sign.commit-symbol.failed-to-get-commits')
+      t(
+        'views.prompt.handlers.handle-hash-sign-quick-pick.commit-symbol.failed-to-get-commits'
+      )
     )
     return 'continue'
   }

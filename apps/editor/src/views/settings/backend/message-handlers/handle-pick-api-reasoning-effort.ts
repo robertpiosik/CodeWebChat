@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
 import { SettingsViewProvider } from '../settings-view-provider'
 import { ProvidersManager } from '@/services/providers-manager'
-import { dictionary } from '@shared/constants/dictionary'
 import { edit_reasoning_effort_for_api_config } from '@/views/shared/actions/api/update/interactions'
 import { verify_reasoning_effort } from '@/views/shared/actions/api/create/interactions'
 import { t } from '@/i18n'
@@ -48,7 +47,7 @@ export const handle_pick_api_reasoning_effort = async (
         is_valid = false
         if (error?.message != 'Cancelled') {
           vscode.window.showWarningMessage(
-            dictionary.warning_message.REASONING_EFFORT_NOT_SUPPORTED
+            t('views.common.handlers.common.reasoning-effort-not-supported')
           )
         }
       }

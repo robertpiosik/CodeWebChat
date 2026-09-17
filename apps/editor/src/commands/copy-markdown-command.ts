@@ -6,6 +6,7 @@ import { FilesCollector } from '../utils/files-collector'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { OpenEditorsProvider } from '../context/providers/open-editors/open-editors-provider'
 import { t } from '../i18n'
+import { Logger } from '@shared/utils/logger'
 
 export const copy_markdown_commands = (
   workspace_provider: WorkspaceProvider,
@@ -24,12 +25,11 @@ export const copy_markdown_commands = (
         other_files = collected.other_files
         recent_files = collected.recent_files
       } catch (error: any) {
-        console.error('Error collecting files:', error)
-        vscode.window.showErrorMessage(
-          t('command.copy-markdown.error.collecting-files', {
-            message: error.message
-          })
-        )
+        Logger.error({
+          function_name: 'copy_markdown_command',
+          message: 'Error collecting files',
+          data: error
+        })
         return
       }
 
@@ -46,7 +46,7 @@ export const copy_markdown_commands = (
         }).full_prompt + '\n'
       await vscode.env.clipboard.writeText(context_text)
       vscode.window.showInformationMessage(
-        t('command.copy-markdown.info.context-copied')
+        t('command.copy-markdown-command.info.context-copied')
       )
     }),
 
@@ -58,7 +58,7 @@ export const copy_markdown_commands = (
 
         if (checked_files.length == 0) {
           vscode.window.showWarningMessage(
-            t('command.copy-markdown.warning.no-open-editors')
+            t('command.copy-markdown-command.warning.no-open-editors')
           )
           return
         }
@@ -112,7 +112,7 @@ export const copy_markdown_commands = (
             })
           } catch (error: any) {
             vscode.window.showErrorMessage(
-              t('command.copy-markdown.error.reading-file', {
+              t('command.copy-markdown-command.error.reading-file', {
                 filePath: file_path,
                 message: error.message
               })
@@ -129,7 +129,7 @@ export const copy_markdown_commands = (
           }).full_prompt + '\n'
         await vscode.env.clipboard.writeText(context_text)
         vscode.window.showInformationMessage(
-          t('command.copy-markdown.info.context-from-editors-copied')
+          t('command.copy-markdown-command.info.context-from-editors-copied')
         )
       }
     )

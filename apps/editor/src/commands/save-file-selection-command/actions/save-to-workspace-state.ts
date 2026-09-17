@@ -11,7 +11,6 @@ import {
   create_context_description
 } from '@/features/context-restoration'
 import { t } from '@/i18n'
-import { dictionary } from '@shared/constants/dictionary'
 import { normalize_path } from '@/utils/normalize-path'
 
 export const save_to_workspace_state = async (params: {
@@ -21,16 +20,16 @@ export const save_to_workspace_state = async (params: {
   let { merged: internal_contexts, context_to_roots } =
     load_and_merge_global_contexts(params.extension_context)
   const LABEL_SAVE_NEW_CONTEXT = t(
-    'command.save-file-selection.save-new-context.label'
+    'command.save-file-selection-command.save-new-context.label'
   )
 
   const edit_button = {
     iconPath: new vscode.ThemeIcon('edit'),
-    tooltip: t('command.save-file-selection.action.rename')
+    tooltip: t('command.save-file-selection-command.action.rename')
   }
   const delete_button = {
     iconPath: new vscode.ThemeIcon('trash'),
-    tooltip: t('command.save-file-selection.action.delete')
+    tooltip: t('command.save-file-selection-command.action.delete')
   }
 
   let name_to_highlight: string | undefined
@@ -41,7 +40,7 @@ export const save_to_workspace_state = async (params: {
 
     if (internal_contexts.length > 0) {
       items.push({
-        label: t('command.save-file-selection.recent-entries'),
+        label: t('command.save-file-selection-command.recent-entries'),
         kind: vscode.QuickPickItemKind.Separator
       })
       for (const context of internal_contexts) {
@@ -62,8 +61,12 @@ export const save_to_workspace_state = async (params: {
     }
 
     const quick_pick = vscode.window.createQuickPick<any>()
-    quick_pick.title = t('command.save-file-selection.select-saved.title')
-    quick_pick.placeholder = t('command.save-file-selection.save.placeholder')
+    quick_pick.title = t(
+      'command.save-file-selection-command.select-saved.title'
+    )
+    quick_pick.placeholder = t(
+      'command.save-file-selection-command.save.placeholder'
+    )
     quick_pick.items = items
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
@@ -113,8 +116,10 @@ export const save_to_workspace_state = async (params: {
 
       if (selection.triggeredButton === edit_button) {
         const input_box = vscode.window.createInputBox()
-        input_box.title = t('command.save-file-selection.rename.title')
-        input_box.prompt = t('command.save-file-selection.rename.prompt')
+        input_box.title = t('command.save-file-selection-command.rename.title')
+        input_box.prompt = t(
+          'command.save-file-selection-command.rename.prompt'
+        )
         input_box.value = old_name
         const new_name = await new Promise<string | undefined>((resolve) => {
           let accepted = false
@@ -123,7 +128,7 @@ export const save_to_workspace_state = async (params: {
             const trimmed = value.trim()
             if (!trimmed) {
               input_box.validationMessage = t(
-                'command.save-file-selection.rename.empty'
+                'command.save-file-selection-command.rename.empty'
               )
               return false
             }
@@ -133,7 +138,7 @@ export const save_to_workspace_state = async (params: {
               )
             ) {
               input_box.validationMessage = t(
-                'command.save-file-selection.rename.exists'
+                'command.save-file-selection-command.rename.exists'
               )
               return false
             }
@@ -185,12 +190,14 @@ export const save_to_workspace_state = async (params: {
           new_name && new_name != old_name ? new_name : old_name
       } else if (selection.triggeredButton === delete_button) {
         const choice = await vscode.window.showInformationMessage(
-          t('command.save-file-selection.delete.prompt', { name: old_name }),
+          t('command.save-file-selection-command.delete.prompt', {
+            name: old_name
+          }),
           { modal: true },
-          t('command.save-file-selection.delete.action')
+          t('command.save-file-selection-command.delete.action')
         )
 
-        if (choice == t('command.save-file-selection.delete.action')) {
+        if (choice == t('command.save-file-selection-command.delete.action')) {
           const roots = context_to_roots.get(old_name) || []
           for (const root of roots) {
             const root_contexts = load_contexts_for_workspace({
@@ -250,7 +257,7 @@ export const save_to_workspace_state = async (params: {
       }
 
       vscode.window.showInformationMessage(
-        dictionary.information_message.CONTEXT_SAVED_SUCCESSFULLY
+        t('command.save-file-selection-command.success.saved-successfully')
       )
 
       const reloaded = load_and_merge_global_contexts(params.extension_context)
@@ -263,14 +270,16 @@ export const save_to_workspace_state = async (params: {
     if (selection.context) {
       const context_name = selection.context.name
       const choice = await vscode.window.showWarningMessage(
-        t('command.save-file-selection.overwrite.prompt', {
+        t('command.save-file-selection-command.overwrite.prompt', {
           name: context_name
         }),
         { modal: true },
-        t('command.save-file-selection.overwrite.action')
+        t('command.save-file-selection-command.overwrite.action')
       )
 
-      if (choice === t('command.save-file-selection.overwrite.action')) {
+      if (
+        choice === t('command.save-file-selection-command.overwrite.action')
+      ) {
         const current_roots = context_to_roots.get(context_name) || []
         const all_roots = new Set([
           ...current_roots,
@@ -305,7 +314,7 @@ export const save_to_workspace_state = async (params: {
         }
 
         vscode.window.showInformationMessage(
-          t('command.save-file-selection.success.context-updated')
+          t('command.save-file-selection-command.success.context-updated')
         )
 
         const reloaded = load_and_merge_global_contexts(

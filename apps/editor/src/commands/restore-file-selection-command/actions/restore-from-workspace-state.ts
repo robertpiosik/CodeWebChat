@@ -2,7 +2,6 @@ import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
 import { SavedContext } from '@/types/context'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@shared/constants/dictionary'
 import {
   select_context_paths,
   load_and_merge_global_contexts,
@@ -30,11 +29,11 @@ export const restore_from_workspace_state = async (params: {
 
     const edit_button = {
       iconPath: new vscode.ThemeIcon('edit'),
-      tooltip: t('command.restore-file-selection.action.rename')
+      tooltip: t('command.restore-file-selection-command.action.rename')
     }
     const delete_button = {
       iconPath: new vscode.ThemeIcon('trash'),
-      tooltip: t('command.restore-file-selection.action.delete')
+      tooltip: t('command.restore-file-selection-command.action.delete')
     }
 
     while (true) {
@@ -47,7 +46,7 @@ export const restore_from_workspace_state = async (params: {
 
         if (contexts.length > 0) {
           items.push({
-            label: t('command.restore-file-selection.recent-entries'),
+            label: t('command.restore-file-selection-command.recent-entries'),
             kind: vscode.QuickPickItemKind.Separator
           })
 
@@ -79,9 +78,11 @@ export const restore_from_workspace_state = async (params: {
           : { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
 
       const quick_pick = vscode.window.createQuickPick()
-      quick_pick.title = t('command.restore-file-selection.select-saved.title')
+      quick_pick.title = t(
+        'command.restore-file-selection-command.select-saved.title'
+      )
       quick_pick.placeholder = t(
-        'command.restore-file-selection.select-saved.workspace'
+        'command.restore-file-selection-command.select-saved.workspace'
       )
       quick_pick.buttons = [back_or_close_button]
       quick_pick.items = await create_quick_pick_items(internal_contexts)
@@ -125,9 +126,11 @@ export const restore_from_workspace_state = async (params: {
             if (event.button === edit_button) {
               active_dialog_count++
               const input_box = vscode.window.createInputBox()
-              input_box.title = t('command.restore-file-selection.rename.title')
+              input_box.title = t(
+                'command.restore-file-selection-command.rename.title'
+              )
               input_box.prompt = t(
-                'command.restore-file-selection.rename.prompt'
+                'command.restore-file-selection-command.rename.prompt'
               )
               input_box.value = item.context.name
 
@@ -139,7 +142,7 @@ export const restore_from_workspace_state = async (params: {
                     const trimmed = value.trim()
                     if (!trimmed) {
                       input_box.validationMessage = t(
-                        'command.restore-file-selection.rename.empty'
+                        'command.restore-file-selection-command.rename.empty'
                       )
                       return false
                     }
@@ -150,7 +153,7 @@ export const restore_from_workspace_state = async (params: {
                       )
                     ) {
                       input_box.validationMessage = t(
-                        'command.restore-file-selection.rename.exists'
+                        'command.restore-file-selection-command.rename.exists'
                       )
                       return false
                     }
@@ -251,8 +254,7 @@ export const restore_from_workspace_state = async (params: {
 
               active_dialog_count++
               const choice = await vscode.window.showInformationMessage(
-                dictionary.information_message
-                  .DELETED_CONTEXT_FROM_WORKSPACE_STATE,
+                t('command.restore-file-selection-command.deleted'),
                 'Undo'
               )
               active_dialog_count--
@@ -260,7 +262,7 @@ export const restore_from_workspace_state = async (params: {
               if (active_deletion_timestamp !== current_timestamp) {
                 if (choice == 'Undo')
                   vscode.window.showInformationMessage(
-                    t('command.restore-file-selection.undo.failed')
+                    t('command.restore-file-selection-command.undo.failed')
                   )
                 quick_pick.show()
                 return
@@ -280,9 +282,9 @@ export const restore_from_workspace_state = async (params: {
                   })
                 }
                 vscode.window.showInformationMessage(
-                  dictionary.information_message.RESTORED_CONTEXT(
-                    deleted_context_name
-                  )
+                  t('command.restore-file-selection-command.restored', {
+                    name: deleted_context_name
+                  })
                 )
                 const reloaded_undo = refresh_contexts()
                 internal_contexts = reloaded_undo.merged
@@ -293,7 +295,7 @@ export const restore_from_workspace_state = async (params: {
 
               if (internal_contexts.length == 0) {
                 await vscode.window.showInformationMessage(
-                  t('command.restore-file-selection.delete.empty-state')
+                  t('command.restore-file-selection-command.delete.empty-state')
                 )
                 go_back_after_delete = true
                 quick_pick.hide()
@@ -394,9 +396,6 @@ export const restore_from_workspace_state = async (params: {
       return
     }
   } catch (error: any) {
-    vscode.window.showErrorMessage(
-      dictionary.error_message.ERROR_SELECTING_SAVED_CONTEXT(error.message)
-    )
     Logger.error({
       function_name: 'restore_from_workspace_state',
       message: 'Error selecting saved context',

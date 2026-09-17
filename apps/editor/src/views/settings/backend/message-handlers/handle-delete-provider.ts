@@ -2,7 +2,6 @@ import * as vscode from 'vscode'
 import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
 import { ProvidersManager } from '@/services/providers-manager'
 import { DeleteProviderMessage } from '@/views/settings/types/messages'
-import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 
 export const handle_delete_provider = async (
@@ -13,11 +12,12 @@ export const handle_delete_provider = async (
   const provider_name_to_delete = message.provider_name
 
   const confirmation = await vscode.window.showWarningMessage(
-    dictionary.warning_message.PLEASE_CONFIRM,
+    t('common.confirm-action'),
     {
       modal: true,
-      detail: dictionary.warning_message.CONFIRM_DELETE_PROVIDER(
-        provider_name_to_delete
+      detail: t(
+        'views.settings.handlers.handle-delete-provider.confirm-delete-provider',
+        { provider_name: provider_name_to_delete }
       )
     },
     t('common.delete')

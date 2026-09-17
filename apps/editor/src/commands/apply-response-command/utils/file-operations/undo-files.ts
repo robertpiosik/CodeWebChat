@@ -22,7 +22,7 @@ export const undo_files = async (params: {
       vscode.workspace.workspaceFolders.length == 0
     ) {
       vscode.window.showErrorMessage(
-        t('command.apply-response.error.no-workspace-folder')
+        t('command.apply-response-command.error.no-workspace-folder')
       )
       Logger.warn({
         function_name: 'undo_files',
@@ -112,9 +112,12 @@ export const undo_files = async (params: {
               data: { error: err, file_path: state.file_path }
             })
             vscode.window.showWarningMessage(
-              t('command.apply-response.warning.could-not-delete-file', {
-                path: state.file_path
-              })
+              t(
+                'command.apply-response-command.warning.could-not-delete-file',
+                {
+                  path: state.file_path
+                }
+              )
             )
           }
         }
@@ -172,9 +175,12 @@ export const undo_files = async (params: {
               data: { error: err, file_path: state.file_path }
             })
             vscode.window.showWarningMessage(
-              t('command.apply-response.warning.could-not-recreate-file', {
-                path: state.file_path
-              })
+              t(
+                'command.apply-response-command.warning.could-not-recreate-file',
+                {
+                  path: state.file_path
+                }
+              )
             )
           }
         } else {
@@ -221,7 +227,7 @@ export const undo_files = async (params: {
             })
             console.error(`Error undoing file ${state.file_path}:`, err)
             vscode.window.showWarningMessage(
-              t('command.apply-response.warning.could-not-undo-file', {
+              t('command.apply-response-command.warning.could-not-undo-file', {
                 path: state.file_path
               })
             )
@@ -243,7 +249,7 @@ export const undo_files = async (params: {
     })
     console.error('Error during undo:', error)
     vscode.window.showErrorMessage(
-      t('command.apply-response.error.failed-to-undo', {
+      t('command.apply-response-command.error.failed-to-undo', {
         msg: error.message || 'Unknown error'
       })
     )

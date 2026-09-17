@@ -36,7 +36,7 @@ export const select_modified_files_command = (
 
         if (git_api.repositories.length == 0) {
           vscode.window.showInformationMessage(
-            dictionary.information_message.NO_GIT_REPOSITORY_FOUND_IN_WORKSPACE
+            t('command.select-modified-files-command.no-git-repository')
           )
           return
         }
@@ -58,8 +58,7 @@ export const select_modified_files_command = (
 
         if (existing_modified_files.length == 0) {
           vscode.window.showInformationMessage(
-            t('command.select-modified-files.no-modified-files') ||
-              dictionary.information_message.NO_UNSTAGED_FILES_FOUND
+            t('command.select-modified-files-command.no-modified-files')
           )
           return
         }
@@ -76,7 +75,7 @@ export const select_modified_files_command = (
             )
           ) {
             vscode.window.showInformationMessage(
-              t('command.select-modified-files.all-selected')
+              t('command.select-modified-files-command.all-selected')
             )
             return
           }
@@ -109,7 +108,9 @@ export const select_modified_files_command = (
                     iconPath: new vscode.ThemeIcon(
                       'git-pull-request-go-to-changes'
                     ),
-                    tooltip: t('command.select-modified-files.show-diff')
+                    tooltip: t(
+                      'command.select-modified-files-command.show-diff'
+                    )
                   },
                   {
                     iconPath: new vscode.ThemeIcon('go-to-file'),
@@ -124,9 +125,11 @@ export const select_modified_files_command = (
             vscode.QuickPickItem & { file_path: string }
           >()
 
-          quick_pick.title = t('command.select-modified-files.title')
+          quick_pick.title = t('command.select-modified-files-command.title')
 
-          const base_placeholder = t('command.select-modified-files.include')
+          const base_placeholder = t(
+            'command.select-modified-files-command.include'
+          )
 
           const update_title = () => {
             const total = quick_pick.selectedItems.reduce(
@@ -190,7 +193,8 @@ export const select_modified_files_command = (
                 const uri = vscode.Uri.file(e.item.file_path)
                 vscode.window.showTextDocument(uri, { preview: true })
               } else if (
-                e.button.tooltip == t('command.select-modified-files.show-diff')
+                e.button.tooltip ==
+                t('command.select-modified-files-command.show-diff')
               ) {
                 const uri = vscode.Uri.file(e.item.file_path)
                 await vscode.commands.executeCommand('git.openChange', uri)
@@ -282,12 +286,6 @@ export const select_modified_files_command = (
           return
         }
       } catch (error) {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.FAILED_TO_SELECT_UNSTAGED_FILES?.(
-            error instanceof Error ? error.message : String(error)
-          ) ||
-            `Failed to select modified files: ${error instanceof Error ? error.message : String(error)}`
-        )
         Logger.error({
           function_name: 'select_modified_files_command',
           message: 'Failed to select modified files',

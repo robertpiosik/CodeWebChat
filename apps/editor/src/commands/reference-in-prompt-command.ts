@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
-import { dictionary } from '@shared/constants/dictionary'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
+import { t } from '@/i18n'
 
 export const reference_in_prompt_command = (params: {
   prompt_view_provider: PromptViewProvider | undefined
@@ -34,7 +34,7 @@ export const reference_in_prompt_command = (params: {
 
       if (!workspace_root) {
         vscode.window.showWarningMessage(
-          dictionary.warning_message.CANNOT_REFERENCE_FILE_OUTSIDE_WORKSPACE
+          t('command.reference-in-prompt-command.warning.outside-workspace')
         )
         return
       }

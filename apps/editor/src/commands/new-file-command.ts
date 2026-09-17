@@ -44,8 +44,8 @@ export const new_file_command = () => {
       } catch {}
 
       const input_box = vscode.window.createInputBox()
-      input_box.title = t('command.new-file.title')
-      input_box.prompt = t('command.new-file.prompt')
+      input_box.title = t('command.new-file-command.title')
+      input_box.prompt = t('command.new-file-command.prompt')
       input_box.placeholder = ''
 
       const close_button = {

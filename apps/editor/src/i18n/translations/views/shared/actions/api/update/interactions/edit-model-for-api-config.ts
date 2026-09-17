@@ -39,5 +39,25 @@ export const translations = {
       cs: "Trasa '/models' nebyla pro {provider name} nalezena. To může znamenat, že poskytovatel nepodporuje výpis modelů. Název modelu můžete zadat ručně.",
       hu: "A '/models' útvonal nem található a(z) {provider name} szolgáltatóhoz. Ez azt jelentheti, hogy a szolgáltató nem támogatja a modellek listázását. A modell nevét manuálisan is megadhatja.",
       bg: "Маршрутът '/models' не е намерен за {provider name}. Това може да означава, че доставчикът не поддържа списък с модели. Можете да въведете името на модела ръчно."
+    },
+  'views.shared.actions.api.update.interactions.edit-model-for-api-config.warning.no-models-found-manual-entry':
+    {
+      en: 'No models found for {provider name}. You can enter model name manually.',
+      pl: 'Nie znaleziono modeli dla {provider name}. Możesz wprowadzić nazwę modelu ręcznie.',
+      'zh-cn': '未找到 {provider name} 的模型。您可以手动输入模型名称。',
+      ja: '{provider name} のモデルが見つかりませんでした。モデル名を手動で入力できます。',
+      'zh-tw': '找不到 {provider name} 的模型。您可以手動輸入模型名稱。',
+      de: 'Es wurden keine Modelle für {provider name} gefunden. Sie können den Modellnamen manuell eingeben.',
+      es: 'No se encontraron modelos para {provider name}. Puedes ingresar el nombre del modelo manualmente.',
+      fr: 'Aucun modèle trouvé pour {provider name}. Vous pouvez entrer le nom du modèle manuellement.',
+      'pt-br':
+        'Nenhum modelo encontrado para {provider name}. Você pode inserir o nome do modelo manualmente.',
+      ru: 'Модели не найдены для {provider name}. Вы можете ввести имя модели вручную.',
+      ko: '{provider name}에 대한 모델을 찾을 수 없습니다. 모델 이름을 수동으로 입력할 수 있습니다.',
+      it: 'Nessun modello trovato per {provider name}. Puoi inserire manualmente il nome del modello.',
+      tr: '{provider name} için model bulunamadı. Model adını manuel olarak girebilirsiniz.',
+      cs: 'Nebyly nalezeny žádné modely pro {provider name}. Název modelu můžete zadat ručně.',
+      hu: 'Nem találhatók modellek a következőhöz: {provider name}. A modell nevét manuálisan is megadhatja.',
+      bg: 'Не са намерени модели за {provider name}. Можете да въведете името на модела ръчно.'
     }
 } as const

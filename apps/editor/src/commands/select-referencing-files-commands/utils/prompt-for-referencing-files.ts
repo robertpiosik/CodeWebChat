@@ -78,9 +78,13 @@ export const prompt_for_referencing_files = async (params: {
     quick_pick.selectedItems = current_selected_items
     quick_pick.canSelectMany = true
     quick_pick.matchOnDescription = true
-    quick_pick.title = t('command.select-referencing-files.referencing-files')
+    quick_pick.title = t(
+      'command.select-referencing-files-command.referencing-files'
+    )
 
-    const base_placeholder = t('command.select-referencing-files.select-files')
+    const base_placeholder = t(
+      'command.select-referencing-files-command.select-files'
+    )
     const update_title = () => {
       const total = quick_pick.selectedItems.reduce(
         (sum, item) => sum + ((item as any).token_count || 0),
@@ -164,7 +168,7 @@ export const prompt_for_referencing_files = async (params: {
             })
           } catch (error) {
             vscode.window.showErrorMessage(
-              t('command.select-referencing-files.error-opening', {
+              t('command.select-referencing-files-command.error-opening', {
                 error: String(error)
               })
             )

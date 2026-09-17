@@ -4,7 +4,6 @@ import * as fs from 'fs'
 import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
 import { SavedContext } from '@/types/context'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@shared/constants/dictionary'
 import {
   select_context_paths,
   load_and_merge_file_contexts,
@@ -30,11 +29,11 @@ export const restore_from_json_file = async (params: {
 
     const edit_button = {
       iconPath: new vscode.ThemeIcon('edit'),
-      tooltip: t('command.restore-file-selection.action.rename')
+      tooltip: t('command.restore-file-selection-command.action.rename')
     }
     const delete_button = {
       iconPath: new vscode.ThemeIcon('trash'),
-      tooltip: t('command.restore-file-selection.action.delete')
+      tooltip: t('command.restore-file-selection-command.action.delete')
     }
 
     let active_dialog_count = 0
@@ -49,7 +48,7 @@ export const restore_from_json_file = async (params: {
 
         if (file_contexts.length > 0) {
           items.push({
-            label: t('command.restore-file-selection.entries-az'),
+            label: t('command.restore-file-selection-command.entries-az'),
             kind: vscode.QuickPickItemKind.Separator
           })
 
@@ -78,9 +77,11 @@ export const restore_from_json_file = async (params: {
           : { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
 
       const quick_pick = vscode.window.createQuickPick<any>()
-      quick_pick.title = t('command.restore-file-selection.select-saved.title')
+      quick_pick.title = t(
+        'command.restore-file-selection-command.select-saved.title'
+      )
       quick_pick.placeholder = t(
-        'command.restore-file-selection.select-saved.file'
+        'command.restore-file-selection-command.select-saved.file'
       )
       quick_pick.buttons = [back_or_close_button]
       quick_pick.items = await create_items()
@@ -137,8 +138,12 @@ export const restore_from_json_file = async (params: {
         if (selection.triggeredButton === edit_button) {
           active_dialog_count++
           const input_box = vscode.window.createInputBox()
-          input_box.title = t('command.restore-file-selection.rename.title')
-          input_box.prompt = t('command.restore-file-selection.rename.prompt')
+          input_box.title = t(
+            'command.restore-file-selection-command.rename.title'
+          )
+          input_box.prompt = t(
+            'command.restore-file-selection-command.rename.prompt'
+          )
           input_box.value = old_name
           const new_name = await new Promise<string | undefined>((resolve) => {
             let accepted = false
@@ -147,7 +152,7 @@ export const restore_from_json_file = async (params: {
               const trimmed = value.trim()
               if (!trimmed) {
                 input_box.validationMessage = t(
-                  'command.restore-file-selection.rename.empty'
+                  'command.restore-file-selection-command.rename.empty'
                 )
                 return false
               }
@@ -157,7 +162,7 @@ export const restore_from_json_file = async (params: {
                 )
               ) {
                 input_box.validationMessage = t(
-                  'command.restore-file-selection.rename.exists'
+                  'command.restore-file-selection-command.rename.exists'
                 )
                 return false
               }
@@ -207,15 +212,17 @@ export const restore_from_json_file = async (params: {
         } else if (selection.triggeredButton === delete_button) {
           active_dialog_count++
           const choice = await vscode.window.showInformationMessage(
-            t('command.restore-file-selection.delete.prompt', {
+            t('command.restore-file-selection-command.delete.prompt', {
               name: old_name
             }),
             { modal: true },
-            t('command.restore-file-selection.delete.action')
+            t('command.restore-file-selection-command.delete.action')
           )
           active_dialog_count--
 
-          if (choice == t('command.restore-file-selection.delete.action')) {
+          if (
+            choice == t('command.restore-file-selection-command.delete.action')
+          ) {
             const roots_to_update = context_to_roots.get(old_name) || []
             for (const root of roots_to_update) {
               const p = get_contexts_file_path(root)
@@ -287,9 +294,6 @@ export const restore_from_json_file = async (params: {
       }
     }
   } catch (error: any) {
-    vscode.window.showErrorMessage(
-      dictionary.error_message.ERROR_SELECTING_SAVED_CONTEXT(error.message)
-    )
     Logger.error({
       function_name: 'restore_from_json_file',
       message: 'Error selecting saved context',

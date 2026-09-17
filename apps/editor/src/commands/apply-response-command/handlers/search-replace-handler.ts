@@ -33,7 +33,7 @@ export const handle_search_replace = async (params: {
       vscode.workspace.workspaceFolders.length == 0
     ) {
       vscode.window.showErrorMessage(
-        t('command.apply-response.error.no-workspace-folder')
+        t('command.apply-response-command.error.no-workspace-folder')
       )
       return { success: false }
     }
@@ -261,7 +261,7 @@ export const handle_search_replace = async (params: {
       data: error
     })
     vscode.window.showErrorMessage(
-      t('command.apply-response.error.applying-changes', {
+      t('command.apply-response-command.error.applying-changes', {
         msg: error.message || 'Unknown error'
       })
     )

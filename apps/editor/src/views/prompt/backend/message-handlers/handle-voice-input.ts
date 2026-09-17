@@ -39,25 +39,25 @@ const start_recording = (prompt_view_provider: PromptViewProvider) => {
     prompt_view_provider.recording_process.on('error', (error: any) => {
       if (error.code == 'ENOENT') {
         let error_message = t(
-          'views.prompt.handlers.voice-input.error.sox-missing'
+          'views.prompt.handlers.handle-voice-input.error.sox-missing'
         )
 
         if (process.platform == 'darwin') {
           error_message = t(
-            'views.prompt.handlers.voice-input.error.sox-missing.mac'
+            'views.prompt.handlers.handle-voice-input.error.sox-missing.mac'
           )
         } else if (process.platform == 'linux') {
           error_message = t(
-            'views.prompt.handlers.voice-input.error.sox-missing.linux'
+            'views.prompt.handlers.handle-voice-input.error.sox-missing.linux'
           )
         } else if (process.platform == 'win32') {
           error_message = t(
-            'views.prompt.handlers.voice-input.error.sox-missing.windows'
+            'views.prompt.handlers.handle-voice-input.error.sox-missing.windows'
           )
         }
 
         const learn_more = t(
-          'views.prompt.handlers.voice-input.button.learn-more'
+          'views.prompt.handlers.handle-voice-input.button.learn-more'
         )
 
         vscode.window
@@ -71,7 +71,7 @@ const start_recording = (prompt_view_provider: PromptViewProvider) => {
           })
       } else {
         vscode.window.showErrorMessage(
-          t('views.prompt.handlers.voice-input.error.start-failed', {
+          t('views.prompt.handlers.handle-voice-input.error.start-failed', {
             error: error.message
           })
         )
@@ -160,7 +160,9 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
 
       prompt_view_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: t('views.prompt.handlers.voice-input.progress.transcribing'),
+        title: t(
+          'views.prompt.handlers.handle-voice-input.progress.transcribing'
+        ),
         cancellable: true
       })
 
@@ -170,9 +172,12 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
 
       if (!provider) {
         vscode.window.showErrorMessage(
-          t('views.prompt.handlers.voice-input.error.provider-not-found', {
-            name: api_configuration!.provider_name
-          })
+          t(
+            'views.prompt.handlers.handle-voice-input.error.provider-not-found',
+            {
+              name: api_configuration!.provider_name
+            }
+          )
         )
         return
       }
@@ -218,7 +223,9 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
         if (result.response.trim().toUpperCase() == 'INAUDIBLE') {
           prompt_view_provider.send_message({
             command: 'SHOW_AUTO_CLOSING_MODAL',
-            title: t('views.prompt.handlers.voice-input.warning.inaudible'),
+            title: t(
+              'views.prompt.handlers.handle-voice-input.warning.inaudible'
+            ),
             type: 'warning'
           })
         } else {
@@ -236,7 +243,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
         data: { error }
       })
       vscode.window.showErrorMessage(
-        t('views.prompt.handlers.voice-input.error.process-failed', {
+        t('views.prompt.handlers.handle-voice-input.error.process-failed', {
           error: error.message
         })
       )

@@ -22,7 +22,7 @@ export const handle_restore_preview = async (
     vscode.workspace.workspaceFolders.length == 0
   ) {
     vscode.window.showErrorMessage(
-      t('command.apply-response.error.no-workspace-folder')
+      t('command.apply-response-command.error.no-workspace-folder')
     )
     Logger.warn({
       function_name: 'handle_restore_preview',
@@ -187,9 +187,12 @@ export const handle_restore_preview = async (
                 data: { directory, error, file_path: file.file_path }
               })
               vscode.window.showErrorMessage(
-                t('command.apply-response.error.failed-to-create-directory', {
-                  path: file.file_path
-                })
+                t(
+                  'command.apply-response-command.error.failed-to-create-directory',
+                  {
+                    path: file.file_path
+                  }
+                )
               )
               continue
             }
@@ -209,7 +212,7 @@ export const handle_restore_preview = async (
               data: { safe_path, error, file_path: file.file_path }
             })
             vscode.window.showErrorMessage(
-              t('command.apply-response.error.failed-to-write-file', {
+              t('command.apply-response-command.error.failed-to-write-file', {
                 path: file.file_path
               })
             )

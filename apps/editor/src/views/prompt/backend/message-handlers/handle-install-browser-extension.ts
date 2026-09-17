@@ -5,8 +5,10 @@ export const handle_install_browser_extension = async (): Promise<void> => {
   const quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & { url: string }
   >()
-  quick_pick.title = t('command.install-browser-extension.title')
-  quick_pick.placeholder = t('command.install-browser-extension.placeholder')
+  quick_pick.title = t('command.install-browser-extension-command.title')
+  quick_pick.placeholder = t(
+    'command.install-browser-extension-command.placeholder'
+  )
 
   quick_pick.items = [
     {

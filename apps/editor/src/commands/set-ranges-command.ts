@@ -30,7 +30,9 @@ export const set_ranges_command = (
       const workspace_folders = vscode.workspace.workspaceFolders || []
 
       if (!workspace_folder) {
-        vscode.window.showErrorMessage(t('command.ranges.not-in-workspace'))
+        vscode.window.showErrorMessage(
+          t('command.set-ranges-command.not-in-workspace')
+        )
         return
       }
 
@@ -72,9 +74,9 @@ export const set_ranges_command = (
       const current_range = file_range_value || state_range_value
 
       const new_ranges = await vscode.window.showInputBox({
-        prompt: t('command.ranges.prompt'),
-        title: t('command.ranges.title'),
-        placeHolder: t('command.ranges.placeholder'),
+        prompt: t('command.set-ranges-command.prompt'),
+        title: t('command.set-ranges-command.title'),
+        placeHolder: t('command.set-ranges-command.placeholder'),
         value: current_range,
         validateInput: (value) => {
           if (value.trim() == '') return null
@@ -92,36 +94,50 @@ export const set_ranges_command = (
           for (const part of parts) {
             const match = part.match(/^(\d+)?-(\d+)?$/)
             if (!match) {
-              return t('command.ranges.validation.invalid-format', { part })
+              return t('command.set-ranges-command.validation.invalid-format', {
+                part
+              })
             }
 
             const [, start_str, end_str] = match
 
             if (!start_str && !end_str) {
-              return t('command.ranges.validation.invalid-range')
+              return t('command.set-ranges-command.validation.invalid-range')
             }
 
             const start = start_str ? parseInt(start_str, 10) : null
             const end = end_str ? parseInt(end_str, 10) : null
 
             if (start !== null && start < 1) {
-              return t('command.ranges.validation.start-greater-than-0', {
-                part
-              })
+              return t(
+                'command.set-ranges-command.validation.start-greater-than-0',
+                {
+                  part
+                }
+              )
             }
 
             if (end !== null && end < 1) {
-              return t('command.ranges.validation.end-greater-than-0', { part })
+              return t(
+                'command.set-ranges-command.validation.end-greater-than-0',
+                { part }
+              )
             }
 
             if (start !== null && end !== null) {
               if (start > end) {
-                return t('command.ranges.validation.start-greater-than-end', {
-                  part
-                })
+                return t(
+                  'command.set-ranges-command.validation.start-greater-than-end',
+                  {
+                    part
+                  }
+                )
               }
               if (start == end) {
-                return t('command.ranges.validation.start-equals-end', { part })
+                return t(
+                  'command.set-ranges-command.validation.start-equals-end',
+                  { part }
+                )
               }
             }
             parsed_ranges.push({
@@ -134,7 +150,7 @@ export const set_ranges_command = (
 
           for (let i = 0; i < parsed_ranges.length - 1; i++) {
             if (parsed_ranges[i].end >= parsed_ranges[i + 1].start) {
-              return t('command.ranges.validation.overlap', {
+              return t('command.set-ranges-command.validation.overlap', {
                 part1: parsed_ranges[i].original,
                 part2: parsed_ranges[i + 1].original
               })
@@ -165,7 +181,9 @@ export const set_ranges_command = (
             changed = true
           } catch (error: any) {
             vscode.window.showErrorMessage(
-              t('command.ranges.error.update-file', { error: error.message })
+              t('command.set-ranges-command.error.update-file', {
+                error: error.message
+              })
             )
           }
         }
@@ -199,24 +217,28 @@ export const set_ranges_command = (
         const choice = await vscode.window.showQuickPick(
           [
             {
-              label: t('command.ranges.quick-pick.json-file'),
-              description: t('command.ranges.quick-pick.json-file-description'),
+              label: t('command.set-ranges-command.quick-pick.json-file'),
+              description: t(
+                'command.set-ranges-command.quick-pick.json-file-description'
+              ),
               picked: last_location != 'state'
             },
             {
-              label: t('command.ranges.quick-pick.workspace-state'),
+              label: t('command.set-ranges-command.quick-pick.workspace-state'),
               description: t(
-                'command.ranges.quick-pick.workspace-state-description'
+                'command.set-ranges-command.quick-pick.workspace-state-description'
               ),
               picked: last_location == 'state'
             }
           ],
-          { placeHolder: t('command.ranges.quick-pick.placeholder') }
+          {
+            placeHolder: t('command.set-ranges-command.quick-pick.placeholder')
+          }
         )
 
         if (!choice) return
         save_location =
-          choice.label == t('command.ranges.quick-pick.json-file')
+          choice.label == t('command.set-ranges-command.quick-pick.json-file')
             ? 'file'
             : 'state'
         await extension_context.workspaceState.update(
@@ -252,7 +274,9 @@ export const set_ranges_command = (
             }
           } catch (error: any) {
             vscode.window.showErrorMessage(
-              t('command.ranges.error.save-file', { error: error.message })
+              t('command.set-ranges-command.error.save-file', {
+                error: error.message
+              })
             )
           }
         } else {
@@ -280,7 +304,9 @@ export const set_ranges_command = (
               }
             } catch (error: any) {
               vscode.window.showErrorMessage(
-                t('command.ranges.error.cleanup-file', { error: error.message })
+                t('command.set-ranges-command.error.cleanup-file', {
+                  error: error.message
+                })
               )
             }
           }

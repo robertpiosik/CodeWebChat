@@ -51,22 +51,22 @@ const resolve_format = async (
 
   const options: Option[] = [
     {
-      label: t('command.copy-paths.format.bullet-list'),
+      label: t('command.copy-paths-command.format.bullet-list'),
       value: 'bullet-list'
     },
     {
-      label: t('command.copy-paths.format.comma-separated'),
+      label: t('command.copy-paths-command.format.comma-separated'),
       value: 'comma-separated'
     },
     {
-      label: t('command.copy-paths.format.ascii-tree'),
+      label: t('command.copy-paths-command.format.ascii-tree'),
       value: 'ascii-tree'
     }
   ]
 
   const quick_pick = vscode.window.createQuickPick<Option>()
-  quick_pick.title = t('command.copy-paths.title')
-  quick_pick.placeholder = t('command.copy-paths.placeholder')
+  quick_pick.title = t('command.copy-paths-command.title')
+  quick_pick.placeholder = t('command.copy-paths-command.placeholder')
   quick_pick.items = options
 
   if (last_format) {
@@ -139,7 +139,9 @@ export const copy_paths_commands = (
 
       const paths_text = format_paths(checked_files, format)
       await vscode.env.clipboard.writeText(paths_text)
-      vscode.window.showInformationMessage(t('command.copy-paths.copied'))
+      vscode.window.showInformationMessage(
+        t('command.copy-paths-command.copied')
+      )
     }),
 
     vscode.commands.registerCommand(
@@ -160,7 +162,9 @@ export const copy_paths_commands = (
 
         const paths_text = format_paths(checked_files, format)
         await vscode.env.clipboard.writeText(paths_text)
-        vscode.window.showInformationMessage(t('command.copy-paths.copied'))
+        vscode.window.showInformationMessage(
+          t('command.copy-paths-command.copied')
+        )
       }
     )
   ]

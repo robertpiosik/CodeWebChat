@@ -42,7 +42,7 @@ export const prompt_for_api_configuration = async (params: {
       )
 
     const placeholder = t(
-      'command.search-files.config.placeholder-with-tokens',
+      'command.search-files-command.config.placeholder-with-tokens',
       {
         tokens: display_token_count(params.tokens_to_process)
       }

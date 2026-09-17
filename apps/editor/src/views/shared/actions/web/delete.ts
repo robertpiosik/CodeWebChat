@@ -25,15 +25,15 @@ export const remove = async (params: { name: string }): Promise<void> => {
 
   const delete_button = t('common.delete')
   const result = await vscode.window.showWarningMessage(
-    dictionary.warning_message.PLEASE_CONFIRM,
+    t('common.confirm-action'),
     {
       modal: true,
       detail: is_unnamed
-        ? dictionary.warning_message.CONFIRM_DELETE_ITEM('chatbot')
-        : dictionary.warning_message.CONFIRM_DELETE_NAMED_ITEM(
-            'chatbot',
-            display_item_name
-          )
+        ? t('common.confirm-delete-item', { item: 'chatbot' })
+        : t('views.shared.actions.web.delete.confirm-delete-named-item', {
+            item: 'chatbot',
+            name: display_item_name
+          })
     },
     delete_button
   )

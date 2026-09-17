@@ -32,7 +32,7 @@ export const handle_truncated_edit = async (params: {
     vscode.workspace.workspaceFolders.length == 0
   ) {
     vscode.window.showErrorMessage(
-      t('command.apply-response.error.no-workspace-folder')
+      t('command.apply-response-command.error.no-workspace-folder')
     )
     return { success: false }
   }

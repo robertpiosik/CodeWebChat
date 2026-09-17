@@ -21,7 +21,7 @@ export const select_definition_file_command = (
         const definition_uri = await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Window,
-            title: t('command.context.select-definition.resolving')
+            title: t('command.select-definition-file-command.resolving')
           },
           async () => {
             const result = await vscode.commands.executeCommand<
@@ -42,7 +42,7 @@ export const select_definition_file_command = (
 
         if (!definition_uri) {
           vscode.window.showInformationMessage(
-            t('command.context.select-definition.no-definition')
+            t('command.select-definition-file-command.no-definition')
           )
           return
         }
@@ -51,14 +51,14 @@ export const select_definition_file_command = (
 
         if (!workspace_provider.get_workspace_root_for_file(file_path)) {
           vscode.window.showWarningMessage(
-            t('command.context.select-definition.outside-workspace')
+            t('command.select-definition-file-command.outside-workspace')
           )
           return
         }
 
         if (workspace_provider.is_ignored_by_patterns(file_path)) {
           vscode.window.showWarningMessage(
-            t('command.context.select-definition.ignored')
+            t('command.select-definition-file-command.ignored')
           )
           return
         }
@@ -74,11 +74,13 @@ export const select_definition_file_command = (
           added = true
         }
 
-        const open_button = t('command.context.select-definition.open-file')
+        const open_button = t(
+          'command.select-definition-file-command.open-file'
+        )
 
         const message = added
-          ? t('command.context.select-definition.added')
-          : t('command.context.select-definition.already-in-context')
+          ? t('command.select-definition-file-command.added')
+          : t('command.select-definition-file-command.already-in-context')
 
         const selection = await vscode.window.showInformationMessage(
           message,
@@ -91,7 +93,7 @@ export const select_definition_file_command = (
         }
       } catch (error) {
         vscode.window.showErrorMessage(
-          t('command.context.select-definition.failed', {
+          t('command.select-definition-file-command.failed', {
             error: error instanceof Error ? error.message : String(error)
           })
         )

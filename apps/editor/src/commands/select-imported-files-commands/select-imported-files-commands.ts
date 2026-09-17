@@ -36,7 +36,7 @@ export const select_imported_files_commands = (
 
         if (starting_uris.length == 0) {
           vscode.window.showInformationMessage(
-            t('command.select-imported-files.no-valid-files')
+            t('command.select-imported-files-command.no-valid-files')
           )
           return
         }
@@ -67,7 +67,7 @@ export const select_imported_files_commands = (
 
         if (checked_files.length == 0) {
           vscode.window.showInformationMessage(
-            t('command.select-imported-files.no-valid-files')
+            t('command.select-imported-files-command.no-valid-files')
           )
           return
         }

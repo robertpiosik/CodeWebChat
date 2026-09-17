@@ -67,7 +67,7 @@ const main = async () => {
     )
 
     log(`Successfully created ZIP archives for version ${version}`)
-  } catch (error: any) {
+  } catch (error) {
     log(`Error creating ZIP archives: ${error.message}`)
     process.exit(1)
   }

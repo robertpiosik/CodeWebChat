@@ -88,7 +88,7 @@ export const select_clipboard_paths_command = (
 
         if (workspaces_with_paths.length === 0) {
           vscode.window.showInformationMessage(
-            t('command.select-clipboard-paths.no-valid')
+            t('command.select-clipboard-paths-command.no-valid')
           )
           return
         }
@@ -228,10 +228,12 @@ export const select_clipboard_paths_command = (
                 vscode.QuickPickItem & { file_path: string }
               >()
 
-              quick_pick.title = t('command.select-clipboard-paths.title')
+              quick_pick.title = t(
+                'command.select-clipboard-paths-command.title'
+              )
 
               const base_placeholder = t(
-                'command.select-clipboard-paths.include'
+                'command.select-clipboard-paths-command.include'
               )
 
               const update_title = () => {

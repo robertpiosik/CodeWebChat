@@ -20,7 +20,7 @@ export const create_file_if_needed = async (params: {
     vscode.workspace.workspaceFolders.length == 0
   ) {
     vscode.window.showErrorMessage(
-      t('command.apply-response.error.no-workspace-folder')
+      t('command.apply-response-command.error.no-workspace-folder')
     )
     Logger.warn({
       function_name: 'create_file_if_needed',
@@ -53,7 +53,7 @@ export const create_file_if_needed = async (params: {
 
   if (!safe_path) {
     vscode.window.showErrorMessage(
-      t('command.apply-response.error.invalid-file-path-traversal', {
+      t('command.apply-response-command.error.invalid-file-path-traversal', {
         path: params.file_path
       })
     )
@@ -82,7 +82,7 @@ export const create_file_if_needed = async (params: {
         data: { directory: directory_uri.fsPath, error }
       })
       vscode.window.showErrorMessage(
-        t('command.apply-response.error.failed-to-create-directory', {
+        t('command.apply-response-command.error.failed-to-create-directory', {
           path: directory_uri.fsPath
         })
       )
@@ -108,7 +108,7 @@ export const create_file_if_needed = async (params: {
       data: { safe_path, error }
     })
     vscode.window.showErrorMessage(
-      t('command.apply-response.error.failed-to-write-file', {
+      t('command.apply-response-command.error.failed-to-write-file', {
         path: safe_path
       })
     )

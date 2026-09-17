@@ -45,7 +45,7 @@ export const perform_code_at_cursor = async (params: {
 
   if (!editor.selection.isEmpty) {
     vscode.window.showWarningMessage(
-      dictionary.warning_message.CODE_AT_CURSOR_NO_SELECTION
+      t('command.code-at-cursor-command.warning.no-selection')
     )
     return
   }
@@ -67,11 +67,11 @@ export const perform_code_at_cursor = async (params: {
       completion_instructions = await new Promise<string | undefined>(
         (resolve) => {
           const input = vscode.window.createInputBox()
-          input.title = t('command.code-at-cursor.progress.title')
+          input.title = t('command.code-at-cursor-command.progress.title')
           input.placeholder = t(
-            'command.code-at-cursor.instructions.placeholder'
+            'command.code-at-cursor-command.instructions.placeholder'
           )
-          input.prompt = t('command.code-at-cursor.instructions.prompt')
+          input.prompt = t('command.code-at-cursor-command.instructions.prompt')
           input.value = last_value
 
           const close_button = {
@@ -155,7 +155,7 @@ export const perform_code_at_cursor = async (params: {
           quick_pick.activeItems = [quick_pick.items[0]]
         }
 
-        quick_pick.title = t('command.code-at-cursor.progress.title')
+        quick_pick.title = t('command.code-at-cursor-command.progress.title')
         quick_pick.placeholder = t(
           'common.action-quick-pick.placeholder.no-tokens'
         )
@@ -416,19 +416,23 @@ export const perform_code_at_cursor = async (params: {
     })
 
     const cursor_listener = vscode.window.onDidChangeTextEditorSelection(() => {
-      abort_controller.abort(t('command.code-at-cursor.cancel.cursor-moved'))
+      abort_controller.abort(
+        t('command.code-at-cursor-command.cancel.cursor-moved')
+      )
     })
 
     try {
       const completion_result = await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: t('command.code-at-cursor.progress.title'),
+          title: t('command.code-at-cursor-command.progress.title'),
           cancellable: true
         },
         async (progress, token) => {
           token.onCancellationRequested(() => {
-            abort_controller.abort(t('command.code-at-cursor.cancel.user'))
+            abort_controller.abort(
+              t('command.code-at-cursor-command.cancel.user')
+            )
           })
 
           progress.report({
@@ -541,7 +545,9 @@ export const perform_code_at_cursor = async (params: {
       }
     } catch (err: any) {
       if (axios.isCancel(err)) {
-        if (err.message == t('command.code-at-cursor.cancel.cursor-moved')) {
+        if (
+          err.message == t('command.code-at-cursor-command.cancel.cursor-moved')
+        ) {
           break
         }
         show_quick_pick = true

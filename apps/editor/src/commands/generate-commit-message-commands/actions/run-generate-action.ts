@@ -43,7 +43,7 @@ export const run_generate_action = async (params: {
 }) => {
   if (get_response_preview_promise_resolve()) {
     vscode.window.showInformationMessage(
-      t('command.generate-commit-message.disabled-during-preview')
+      t('command.generate-commit-message-command.disabled-during-preview')
     )
     return
   }
@@ -149,7 +149,7 @@ export const run_generate_action = async (params: {
               }
 
               quick_pick.title = t(
-                'command.generate-commit-message.action-quick-pick.title'
+                'command.generate-commit-message-command.action-quick-pick.title'
               )
               quick_pick.placeholder = t(
                 'common.action-quick-pick.placeholder',
@@ -250,10 +250,10 @@ export const run_generate_action = async (params: {
                 skip_tokens
 
               const attach_label = t(
-                'command.generate-commit-message.attach-context-files.attach'
+                'command.generate-commit-message-command.attach-context-files.attach'
               )
               const skip_label = t(
-                'command.generate-commit-message.attach-context-files.skip'
+                'command.generate-commit-message-command.attach-context-files.skip'
               )
               const last_selected_id =
                 params.extension_context.workspaceState.get<string>(
@@ -283,10 +283,10 @@ export const run_generate_action = async (params: {
                       quick_pick.items[1]
                   ]
                   quick_pick.title = t(
-                    'command.generate-commit-message.attach-context-files.title'
+                    'command.generate-commit-message-command.attach-context-files.title'
                   )
                   quick_pick.placeholder = t(
-                    'command.generate-commit-message.attach-context-files.placeholder'
+                    'command.generate-commit-message-command.attach-context-files.placeholder'
                   )
                   quick_pick.ignoreFocusOut = true
                   const close_button = {
@@ -374,9 +374,6 @@ export const run_generate_action = async (params: {
 
         if (action == 'autofill') {
           if (!params.websocket_manager.is_connected_with_browser()) {
-            vscode.window.showWarningMessage(
-              dictionary.warning_message.BROWSER_EXTENSION_NOT_CONNECTED
-            )
             current_action = undefined
             continue
           }
@@ -503,7 +500,9 @@ export const run_generate_action = async (params: {
             } else {
               if (error?.message == 'API request returned an empty response') {
                 vscode.window.showErrorMessage(
-                  t('command.generate-commit-message.error.empty-response')
+                  t(
+                    'command.generate-commit-message-command.error.empty-response'
+                  )
                 )
               }
               show_quick_pick = true
@@ -583,10 +582,10 @@ export const run_generate_action = async (params: {
         attach_tree = true
       } else if (attach_tree_setting == 'ask') {
         const attach_label = t(
-          'command.generate-commit-message.attach-ascii-tree.attach'
+          'command.generate-commit-message-command.attach-ascii-tree.attach'
         )
         const skip_label = t(
-          'command.generate-commit-message.attach-ascii-tree.skip'
+          'command.generate-commit-message-command.attach-ascii-tree.skip'
         )
 
         const last_selected_id =
@@ -609,10 +608,10 @@ export const run_generate_action = async (params: {
                 quick_pick.items[1]
             ]
             quick_pick.title = t(
-              'command.generate-commit-message.attach-ascii-tree.title'
+              'command.generate-commit-message-command.attach-ascii-tree.title'
             )
             quick_pick.placeholder = t(
-              'command.generate-commit-message.attach-ascii-tree.placeholder'
+              'command.generate-commit-message-command.attach-ascii-tree.placeholder'
             )
             quick_pick.ignoreFocusOut = true
             const close_button = {
@@ -695,8 +694,12 @@ export const run_generate_action = async (params: {
           (resolve) => {
             const input_box = vscode.window.createInputBox()
             input_box.value = final_edited_message
-            input_box.title = t('command.generate-commit-message.input.title')
-            input_box.prompt = t('command.generate-commit-message.input.prompt')
+            input_box.title = t(
+              'command.generate-commit-message-command.input.title'
+            )
+            input_box.prompt = t(
+              'command.generate-commit-message-command.input.prompt'
+            )
             input_box.ignoreFocusOut = true
 
             const has_more_steps = relevant_prompts.length > 0
@@ -706,7 +709,7 @@ export const run_generate_action = async (params: {
               ),
               tooltip: has_more_steps
                 ? t('common.next')
-                : t('command.generate-commit-message.input.accept')
+                : t('command.generate-commit-message-command.input.accept')
             }
 
             const close_button = {

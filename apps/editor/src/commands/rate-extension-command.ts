@@ -8,8 +8,8 @@ export const rate_extension_command = () => {
       const quick_pick = vscode.window.createQuickPick<
         vscode.QuickPickItem & { url: string }
       >()
-      quick_pick.title = t('command.rate.title')
-      quick_pick.placeholder = t('command.rate.placeholder')
+      quick_pick.title = t('command.rate-extension-command.title')
+      quick_pick.placeholder = t('command.rate-extension-command.placeholder')
 
       quick_pick.items = [
         {

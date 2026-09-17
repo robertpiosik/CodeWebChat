@@ -63,7 +63,7 @@ export const clear_all_checkpoints = async (
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: t('command.history.progress.clearing-all'),
+      title: t('command.history-command.progress.clearing-all'),
       cancellable: false
     },
     clear_task

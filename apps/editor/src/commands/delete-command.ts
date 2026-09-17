@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
-import { dictionary } from '@shared/constants/dictionary'
+import { t } from '@/i18n'
+import { Logger } from '@shared/utils/logger'
 
 export const delete_command = () => {
   return vscode.commands.registerCommand(
@@ -16,15 +17,14 @@ export const delete_command = () => {
         const stats = await vscode.workspace.fs.stat(uri)
         const item_type = stats.type == vscode.FileType.File ? 'file' : 'folder'
 
+        const delete_button = t('common.delete')
         const result = await vscode.window.showWarningMessage(
-          dictionary.warning_message.CONFIRM_DELETE_ITEM(
-            item_type as 'file' | 'folder'
-          ),
+          t('common.confirm-delete-item', { item: item_type }),
           { modal: true },
-          'Delete'
+          delete_button
         )
 
-        if (result != 'Delete') {
+        if (result != delete_button) {
           return
         }
 
@@ -51,10 +51,12 @@ export const delete_command = () => {
         if (!applied) {
           throw new Error('Failed to apply delete edit')
         }
-      } catch (error: any) {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.FAILED_TO_DELETE(error.message)
-        )
+      } catch (error) {
+        Logger.error({
+          function_name: 'delete_command',
+          message: 'Failed to delete',
+          data: error
+        })
       }
     }
   )
