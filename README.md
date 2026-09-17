@@ -34,7 +34,7 @@
 - tool calling limited to directory and file lookups
 - with its prompt simplicity:
   - less time is spent on 'thinking'
-  - coding with mid-tier models is viable
+  - mid-tier models are sufficiently capable
 
 ## Privacy
 
