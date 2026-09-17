@@ -29,8 +29,8 @@
 
 #### Key takeaways
 
-- shorter reasoning when intent is easier to unpack
-- limiting tool calling to directory and file lookups
+- single-turn prompts make intent easier to unpack, thus reasoning shorter or unnecessary
+- tool calling is limited to directory and file lookups
 - live examples from the repository replace skills
 - context reuse without ever-growing sessions
 - iterate on instructions without context bloat
