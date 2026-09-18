@@ -28,6 +28,11 @@
    - [EDIT](#-edit)—multi-file changes in a single response
    - [ASK](#-edit)—general help in a conversation
 
+#### Efficiency and speed
+
+- In [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over mid-tiers.
+- Compiled [EDIT](#-edit)/[ASK](#-edit) prompts have no noise, making intent easy to unpack, thus reasoning short.
+
 ## Privacy
 
 **CWC** operates 100% on your machine—no code, prompts or usage data are collected.
