@@ -17,7 +17,7 @@ export const pick_chatbot = async (params: {
 
   const quick_pick = vscode.window.createQuickPick()
   quick_pick.items = items
-  quick_pick.title = t('views.shared.actions.web.pick-chatbot.title')
+  quick_pick.title = t('common.title.chatbots')
   quick_pick.placeholder = t(
     'views.shared.actions.web.pick-chatbot.placeholder'
   )

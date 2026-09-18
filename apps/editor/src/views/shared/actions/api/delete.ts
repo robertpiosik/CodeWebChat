@@ -45,7 +45,7 @@ export const remove = async (params: {
 
   const undo_action = t('common.undo')
   const choice = await vscode.window.showInformationMessage(
-    t('views.shared.actions.api.delete.deleted'),
+    t('common.success.item-deleted', { item: 'Model' }),
     undo_action
   )
 

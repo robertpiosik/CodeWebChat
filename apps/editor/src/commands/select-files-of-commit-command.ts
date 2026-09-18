@@ -42,7 +42,7 @@ export const select_files_of_commit_command = (
 
           if (!log_output) {
             vscode.window.showInformationMessage(
-              t('command.select-files-of-commit-command.no-commits')
+              t('common.info.no-items-found', { items: 'commits' })
             )
             return
           }
@@ -180,12 +180,10 @@ export const select_files_of_commit_command = (
               const branch_qp = vscode.window.createQuickPick<
                 vscode.QuickPickItem & { name: string }
               >()
-              branch_qp.title = t(
-                'command.select-files-of-commit-command.branches'
-              )
+              branch_qp.title = t('common.title.branches')
               branch_qp.items = branches
               branch_qp.placeholder = t(
-                'command.select-files-of-commit-command.select-branch'
+                'common.placeholder.select-branch-to-compare'
               )
               branch_qp.buttons = [
                 vscode.QuickInputButtons.Back,
@@ -420,7 +418,7 @@ export const select_files_of_commit_command = (
                 : t('command.select-files-of-commit-command.files-modified')
 
               const base_placeholder = t(
-                'command.select-files-of-commit-command.select-files'
+                'common.placeholder.select-files-to-add'
               )
 
               const update_title = () => {
@@ -616,7 +614,7 @@ export const select_files_of_commit_command = (
               await workspace_provider.set_checked_files(paths_to_apply)
 
               vscode.window.showInformationMessage(
-                t('command.select-files-of-commit-command.context-updated')
+                t('common.success.context-updated')
               )
 
               file_action = 'finished'

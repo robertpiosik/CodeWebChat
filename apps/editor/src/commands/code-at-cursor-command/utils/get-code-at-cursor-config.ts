@@ -72,7 +72,11 @@ export const get_code_at_cursor_api_configuration = async (params: {
   )
 
   if (!provider) {
-    vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))
+    vscode.window.showErrorMessage(
+      t('common.error.provider-not-found', {
+        name: selected_api_configuration.provider_name
+      })
+    )
     Logger.warn({
       function_name: 'get_code_at_cursor_api_configuration',
       message: 'API provider not found for Code at Cursor tool.'

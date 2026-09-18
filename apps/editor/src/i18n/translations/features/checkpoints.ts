@@ -35,23 +35,5 @@ export const translations = {
     cs: 'V současné době probíhá jiná operace s kontrolními body. Počkejte prosím na její dokončení.',
     hu: 'Jelenleg egy másik ellenőrzőpont művelet van folyamatban. Kérjük, várja meg, amíg befejeződik.',
     bg: 'В момента се изпълнява друга операция с контролна точка. Моля, изчакайте да завърши.'
-  },
-  'feature.checkpoints.progress.creating': {
-    en: 'Creating checkpoint...',
-    pl: 'Tworzenie punktu kontrolnego...',
-    'zh-cn': '正在创建检查点...',
-    ja: 'チェックポイントを作成しています...',
-    'zh-tw': '正在建立檢查點...',
-    de: 'Erstelle Prüfpunkt...',
-    es: 'Creando punto de control...',
-    fr: 'Création du point de contrôle...',
-    'pt-br': 'Criando ponto de verificação...',
-    ru: 'Создание контрольной точки...',
-    ko: '체크포인트 생성 중...',
-    it: 'Creazione del punto di controllo...',
-    tr: 'Kontrol noktası oluşturuluyor...',
-    cs: 'Vytváření kontrolního bodu...',
-    hu: 'Ellenőrzőpont létrehozása...',
-    bg: 'Създаване на контролна точка...'
   }
 } as const

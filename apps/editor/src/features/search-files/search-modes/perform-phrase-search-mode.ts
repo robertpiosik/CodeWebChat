@@ -106,7 +106,7 @@ export const perform_phrase_search_mode = async (params: {
     }
 
     if (matched_files.length == 0) {
-      vscode.window.showInformationMessage(t('feature.search-files.no-files'))
+      vscode.window.showInformationMessage(t('common.info.no-files-found'))
       continue
     }
 

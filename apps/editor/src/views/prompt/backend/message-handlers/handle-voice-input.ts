@@ -56,9 +56,7 @@ const start_recording = (prompt_view_provider: PromptViewProvider) => {
           )
         }
 
-        const learn_more = t(
-          'views.prompt.handlers.handle-voice-input.button.learn-more'
-        )
+        const learn_more = t('common.action.learn-more')
 
         vscode.window
           .showErrorMessage(error_message, learn_more)
@@ -172,12 +170,9 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
 
       if (!provider) {
         vscode.window.showErrorMessage(
-          t(
-            'views.prompt.handlers.handle-voice-input.error.provider-not-found',
-            {
-              name: api_configuration!.provider_name
-            }
-          )
+          t('common.error.provider-not-found', {
+            name: api_configuration!.provider_name
+          })
         )
         return
       }

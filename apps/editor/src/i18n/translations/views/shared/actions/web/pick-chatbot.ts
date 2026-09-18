@@ -1,22 +1,4 @@
 export const translations = {
-  'views.shared.actions.web.pick-chatbot.title': {
-    en: 'Chatbots',
-    pl: 'Chatboty',
-    'zh-cn': '聊天机器人',
-    ja: 'チャットボット',
-    'zh-tw': '聊天機器人',
-    de: 'Chatbots',
-    es: 'Chatbots',
-    fr: 'Chatbots',
-    'pt-br': 'Chatbots',
-    ru: 'Чат-боты',
-    ko: '챗봇',
-    it: 'Chatbot',
-    tr: 'Sohbet Robotları',
-    cs: 'Chatboti',
-    hu: 'Chatbotok',
-    bg: 'Чатботове'
-  },
   'views.shared.actions.web.pick-chatbot.placeholder': {
     en: 'Choose a chatbot',
     pl: 'Wybierz chatbota',

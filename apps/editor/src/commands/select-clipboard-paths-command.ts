@@ -233,7 +233,7 @@ export const select_clipboard_paths_command = (
               )
 
               const base_placeholder = t(
-                'command.select-clipboard-paths-command.include'
+                'common.placeholder.select-files-to-include'
               )
 
               const update_title = () => {

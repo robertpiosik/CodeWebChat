@@ -46,7 +46,7 @@ export const copy_markdown_commands = (
         }).full_prompt + '\n'
       await vscode.env.clipboard.writeText(context_text)
       vscode.window.showInformationMessage(
-        t('command.copy-markdown-command.info.context-copied')
+        t('common.info.copied-to-clipboard', { item: 'Context' })
       )
     }),
 
@@ -129,7 +129,9 @@ export const copy_markdown_commands = (
           }).full_prompt + '\n'
         await vscode.env.clipboard.writeText(context_text)
         vscode.window.showInformationMessage(
-          t('command.copy-markdown-command.info.context-from-editors-copied')
+          t('common.info.copied-to-clipboard', {
+            item: 'Context from open editors'
+          })
         )
       }
     )

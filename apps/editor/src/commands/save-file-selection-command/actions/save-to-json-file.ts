@@ -29,11 +29,11 @@ export const save_to_json_file = async (params: {
 
   const edit_button = {
     iconPath: new vscode.ThemeIcon('edit'),
-    tooltip: t('command.save-file-selection-command.action.rename')
+    tooltip: t('common.action.rename')
   }
   const delete_button = {
     iconPath: new vscode.ThemeIcon('trash'),
-    tooltip: t('command.save-file-selection-command.action.delete')
+    tooltip: t('common.delete')
   }
 
   let name_to_highlight: string | undefined
@@ -44,7 +44,7 @@ export const save_to_json_file = async (params: {
 
     if (file_contexts.length > 0) {
       items.push({
-        label: t('command.save-file-selection-command.entries-az'),
+        label: t('common.label.entries-az'),
         kind: vscode.QuickPickItemKind.Separator
       })
       for (const context of file_contexts) {
@@ -65,9 +65,7 @@ export const save_to_json_file = async (params: {
     }
 
     const quick_pick = vscode.window.createQuickPick<any>()
-    quick_pick.title = t(
-      'command.save-file-selection-command.select-saved.title'
-    )
+    quick_pick.title = t('common.context.saved-entries')
     quick_pick.placeholder = t(
       'command.save-file-selection-command.save.placeholder'
     )
@@ -120,10 +118,10 @@ export const save_to_json_file = async (params: {
 
       if (selection.triggeredButton === edit_button) {
         const input_box = vscode.window.createInputBox()
-        input_box.title = t('command.save-file-selection-command.rename.title')
-        input_box.prompt = t(
-          'command.save-file-selection-command.rename.prompt'
-        )
+        input_box.title = t('common.context.rename.title')
+        input_box.prompt = t('common.prompt.enter-name', {
+          item: 'new context'
+        })
         input_box.value = old_name
         const new_name = await new Promise<string | undefined>((resolve) => {
           let accepted = false
@@ -131,9 +129,7 @@ export const save_to_json_file = async (params: {
           const validate = (value: string) => {
             const trimmed = value.trim()
             if (!trimmed) {
-              input_box.validationMessage = t(
-                'command.save-file-selection-command.rename.empty'
-              )
+              input_box.validationMessage = t('common.context.rename.empty')
               return false
             }
             if (
@@ -141,9 +137,7 @@ export const save_to_json_file = async (params: {
                 (c) => c.name === trimmed && c.name !== old_name
               )
             ) {
-              input_box.validationMessage = t(
-                'command.save-file-selection-command.rename.exists'
-              )
+              input_box.validationMessage = t('common.context.rename.exists')
               return false
             }
             input_box.validationMessage = ''
@@ -189,14 +183,15 @@ export const save_to_json_file = async (params: {
           new_name && new_name != old_name ? new_name : old_name
       } else if (selection.triggeredButton === delete_button) {
         const choice = await vscode.window.showInformationMessage(
-          t('command.save-file-selection-command.delete.prompt', {
+          t('common.confirm-delete-named-item', {
+            item: 'context',
             name: old_name
           }),
           { modal: true },
-          t('command.save-file-selection-command.delete.action')
+          t('common.delete')
         )
 
-        if (choice == t('command.save-file-selection-command.delete.action')) {
+        if (choice == t('common.delete')) {
           const roots_to_update = context_to_roots.get(old_name) || []
           for (const root of roots_to_update) {
             const p = get_contexts_file_path(root)

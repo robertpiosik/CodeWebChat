@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
 import { execSync, exec } from 'child_process'
 import { promisify } from 'util'
-import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 import { LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY } from '@/constants/state-keys'
 import { display_token_count } from '@shared/utils/display-token-count'
@@ -16,7 +15,7 @@ export const handle_changes_item = async (
     const workspace_folders = vscode.workspace.workspaceFolders
     if (!workspace_folders || workspace_folders.length == 0) {
       vscode.window.showErrorMessage(
-        dictionary.error_message.NO_WORKSPACE_FOLDERS_FOUND
+        t('common.error.no-workspace-folders-found')
       )
       return undefined
     }
@@ -55,11 +54,7 @@ export const handle_changes_item = async (
     }
 
     if (!has_any_branches) {
-      vscode.window.showInformationMessage(
-        t(
-          'views.prompt.handlers.handle-hash-sign-quick-pick.changes-symbol.no-branches'
-        )
-      )
+      vscode.window.showInformationMessage(t('common.info.no-branches-found'))
       return undefined
     }
 
@@ -137,9 +132,7 @@ export const handle_changes_item = async (
 
       if (selected_workspace.branches.length == 0) {
         vscode.window.showInformationMessage(
-          t(
-            'views.prompt.handlers.handle-hash-sign-quick-pick.changes-symbol.no-other-branches'
-          )
+          t('common.info.no-other-branches-to-compare')
         )
         if (workspace_with_branches.length > 1) {
           continue
@@ -298,7 +291,9 @@ export const handle_changes_item = async (
     }
   } catch (error) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.FAILED_TO_GET_GIT_BRANCHES
+      t(
+        'views.prompt.handlers.handle-hash-sign-quick-pick.changes-symbol.failed-to-get-git-branches'
+      )
     )
     return 'continue'
   }

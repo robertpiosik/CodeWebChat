@@ -1,28 +1,5 @@
 export const dictionary = {
   error_message: {
-    COULD_NOT_DETERMINE_LOCATION_TO_CREATE_FILE:
-      'Could not determine location to create file.',
-    INVALID_FILE_NAME: (name: string) => `Invalid file name: '${name}'.`,
-    FILE_ALREADY_EXISTS: (name: string) => `File '${name}' already exists.`,
-    FAILED_TO_CREATE_FILE: (message: string) =>
-      `Failed to create file: ${message}.`,
-    COULD_NOT_DETERMINE_LOCATION_TO_CREATE_FOLDER:
-      'Could not determine location to create folder.',
-    INVALID_FOLDER_NAME: (name: string) => `Invalid folder name: '${name}'.`,
-    FOLDER_ALREADY_EXISTS: (name: string) => `Folder '${name}' already exists.`,
-    FAILED_TO_CREATE_FOLDER: (message: string) =>
-      `Failed to create folder: ${message}.`,
-    FAILED_TO_OPEN_URL: 'Failed to open url in a web browser.',
-    INVALID_NAME: (name: string) => `Invalid name: '${name}'.`,
-    FILE_OR_FOLDER_ALREADY_EXISTS: (name: string) =>
-      `A file or folder named '${name}' already exists.`,
-    FAILED_TO_RENAME: (message: string) => `Failed to rename: ${message}.`,
-    FAILED_TO_INITIALIZE_WEBSOCKET_SERVER: (error: any) =>
-      `Failed to initialize WebSocket server: ${error}.`,
-    NO_WORKSPACE_FOLDERS_FOUND: 'No workspace folders found.',
-    FAILED_TO_GET_GIT_BRANCHES:
-      'Failed to get Git branches. Make sure you are in a Git repository.',
-    NO_GIT_REPOSITORY_FOUND: 'No Git repository found.',
     API_RATE_LIMIT_EXCEEDED: 'API request failed. Rate limit exceeded.',
     API_PAYLOAD_TOO_LARGE: 'API request failed. The context is too large.',
     API_BAD_REQUEST: 'API request failed. Bad request.',

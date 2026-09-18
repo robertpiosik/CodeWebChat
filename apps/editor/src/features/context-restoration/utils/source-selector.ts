@@ -29,9 +29,7 @@ export const select_context_source = async (params: {
     internal_contexts.length == 0 &&
     file_contexts_count == 0
   ) {
-    vscode.window.showInformationMessage(
-      t('feature.context-restoration.no-saved')
-    )
+    vscode.window.showInformationMessage(t('common.context.no-saved-contexts'))
     return { source: undefined, skipped_menu: false }
   }
 
@@ -41,7 +39,7 @@ export const select_context_source = async (params: {
 
   if (params.mode === 'save' || internal_contexts.length > 0) {
     main_quick_pick_options.push({
-      label: t('feature.context-restoration.sources.workspace-state'),
+      label: t('common.source.workspace-state'),
       description: `${internal_contexts.length} ${
         internal_contexts.length == 1 ? 'entry' : 'entries'
       }`,
@@ -56,7 +54,7 @@ export const select_context_source = async (params: {
 
   if (params.mode === 'save' || file_contexts_count > 0) {
     main_quick_pick_options.push({
-      label: t('feature.context-restoration.sources.json-file'),
+      label: t('common.source.json-file'),
       description: `${file_contexts_count} ${
         file_contexts_count == 1 ? 'entry' : 'entries'
       }`,
@@ -115,7 +113,7 @@ export const select_context_source = async (params: {
                 label: f.name,
                 folder: f
               })),
-              { placeHolder: t('feature.context-restoration.select-folder') }
+              { placeHolder: t('common.placeholder.select-workspace-folder') }
             )
             if (picked) {
               file_path = get_contexts_file_path(picked.folder.uri.fsPath)

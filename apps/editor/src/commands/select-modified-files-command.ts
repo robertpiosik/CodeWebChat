@@ -36,7 +36,7 @@ export const select_modified_files_command = (
 
         if (git_api.repositories.length == 0) {
           vscode.window.showInformationMessage(
-            t('command.select-modified-files-command.no-git-repository')
+            t('common.error.no-git-repository-found')
           )
           return
         }
@@ -58,7 +58,7 @@ export const select_modified_files_command = (
 
         if (existing_modified_files.length == 0) {
           vscode.window.showInformationMessage(
-            t('command.select-modified-files-command.no-modified-files')
+            t('common.info.no-items-found', { items: 'modified files' })
           )
           return
         }
@@ -108,9 +108,7 @@ export const select_modified_files_command = (
                     iconPath: new vscode.ThemeIcon(
                       'git-pull-request-go-to-changes'
                     ),
-                    tooltip: t(
-                      'command.select-modified-files-command.show-diff'
-                    )
+                    tooltip: t('common.action.show-diff')
                   },
                   {
                     iconPath: new vscode.ThemeIcon('go-to-file'),
@@ -128,7 +126,7 @@ export const select_modified_files_command = (
           quick_pick.title = t('command.select-modified-files-command.title')
 
           const base_placeholder = t(
-            'command.select-modified-files-command.include'
+            'common.placeholder.select-files-to-include'
           )
 
           const update_title = () => {
@@ -192,10 +190,7 @@ export const select_modified_files_command = (
               if (e.button.tooltip == t('common.go-to-file')) {
                 const uri = vscode.Uri.file(e.item.file_path)
                 vscode.window.showTextDocument(uri, { preview: true })
-              } else if (
-                e.button.tooltip ==
-                t('command.select-modified-files-command.show-diff')
-              ) {
+              } else if (e.button.tooltip == t('common.action.show-diff')) {
                 const uri = vscode.Uri.file(e.item.file_path)
                 await vscode.commands.executeCommand('git.openChange', uri)
               }

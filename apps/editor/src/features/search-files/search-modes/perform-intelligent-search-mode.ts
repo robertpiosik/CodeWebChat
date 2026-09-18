@@ -161,7 +161,7 @@ export const perform_intelligent_search_mode = async (params: {
               quick_pick.activeItems = [quick_pick.items[0]]
             }
 
-            quick_pick.title = t('feature.search-files.title.intelligent')
+            quick_pick.title = t('common.title.intelligent-search')
             quick_pick.placeholder = t(
               'common.action-quick-pick.placeholder.no-tokens'
             )
@@ -278,6 +278,7 @@ export const perform_intelligent_search_mode = async (params: {
               : analysis.full_tokens
             vscode.window.showInformationMessage(
               t('common.info.copied-to-clipboard', {
+                item: 'Prompt',
                 tokens: display_token_count(token_count)
               })
             )
@@ -412,9 +413,7 @@ export const perform_intelligent_search_mode = async (params: {
               continue
             }
             if (api_result == 'error_no_files') {
-              vscode.window.showWarningMessage(
-                t('feature.search-files.no-files')
-              )
+              vscode.window.showWarningMessage(t('common.info.no-files-found'))
               go_back_to_term = true
               break
             }

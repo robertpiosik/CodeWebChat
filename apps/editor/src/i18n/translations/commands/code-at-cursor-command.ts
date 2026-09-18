@@ -89,24 +89,6 @@ export const translations = {
     hu: 'Kód a kurzornál',
     bg: 'Код при курсора'
   },
-  'command.code-at-cursor-command.cancel.user': {
-    en: 'User cancelled the operation',
-    pl: 'Użytkownik anulował operację',
-    'zh-cn': '用户取消了操作',
-    ja: 'ユーザーが操作をキャンセルしました',
-    'zh-tw': '使用者取消了操作',
-    de: 'Benutzer hat den Vorgang abgebrochen',
-    es: 'El usuario canceló la operación',
-    fr: "L'utilisateur a annulé l'opération",
-    'pt-br': 'O usuário cancelou a operação',
-    ru: 'Пользователь отменил операцию',
-    ko: '사용자가 작업을 취소했습니다',
-    it: "L'utente ha annullato l'operazione",
-    tr: 'Kullanıcı işlemi iptal etti',
-    cs: 'Uživatel zrušil operaci',
-    hu: 'A felhasználó megszakította a műveletet',
-    bg: 'Потребителят отмени операцията'
-  },
   'command.code-at-cursor-command.warning.no-selection': {
     en: 'Code at cursor is not supported with active text selection.',
     pl: 'Kod w miejscu kursora nie jest obsługiwany z aktywnym zaznaczeniem tekstu.',

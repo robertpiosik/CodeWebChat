@@ -14,14 +14,12 @@ export const handle_delete_template = async (
     return
   }
 
-  const delete_action = t(
-    'views.settings.handlers.handle-delete-template.action.delete'
-  )
+  const delete_action = t('common.delete')
   const confirmation = await vscode.window.showWarningMessage(
     t('views.settings.handlers.handle-delete-template.confirm-title'),
     {
       modal: true,
-      detail: t('views.settings.handlers.handle-delete-template.confirm-detail')
+      detail: t('common.confirm-delete-item', { item: 'template' })
     },
     delete_action
   )
@@ -41,7 +39,7 @@ export const handle_delete_template = async (
 
   const undo_action = t('common.undo')
   const choice = await vscode.window.showInformationMessage(
-    t('views.settings.handlers.handle-delete-template.deleted'),
+    t('common.success.item-deleted', { item: 'Template' }),
     undo_action
   )
 

@@ -30,7 +30,7 @@ export const remove = async (params: { name: string }): Promise<void> => {
       modal: true,
       detail: is_unnamed
         ? t('common.confirm-delete-item', { item: 'chatbot' })
-        : t('views.shared.actions.web.delete.confirm-delete-named-item', {
+        : t('common.confirm-delete-named-item', {
             item: 'chatbot',
             name: display_item_name
           })
@@ -54,7 +54,7 @@ export const remove = async (params: { name: string }): Promise<void> => {
 
     const undo_action = t('common.undo')
     const choice = await vscode.window.showInformationMessage(
-      t('views.shared.actions.web.delete.deleted'),
+      t('common.success.item-deleted', { item: 'Chatbot' }),
       undo_action
     )
 

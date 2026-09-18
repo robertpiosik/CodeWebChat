@@ -35,23 +35,5 @@ export const translations = {
     cs: 'Vybrat soubory ze schránky',
     hu: 'Fájlok kiválasztása a vágólapról',
     bg: 'Избор на файлове от клипборда'
-  },
-  'command.select-clipboard-paths-command.include': {
-    en: 'Select files to include in context',
-    pl: 'Wybierz pliki do włączenia do kontekstu',
-    'zh-cn': '选择要包含在上下文中的文件',
-    ja: 'コンテキストに含めるファイルを選択',
-    'zh-tw': '選擇要包含在上下文中的檔案',
-    de: 'Dateien auswählen, die in den Kontext aufgenommen werden sollen',
-    es: 'Seleccionar archivos para incluir en el contexto',
-    fr: 'Sélectionner les fichiers à inclure dans le contexte',
-    'pt-br': 'Selecione arquivos para incluir no contexto',
-    ru: 'Выберите файлы для включения в контекст',
-    ko: '컨텍스트에 포함할 파일 선택',
-    it: 'Seleziona i file da includere nel contesto',
-    tr: 'Bağlama dahil edilecek dosyaları seçin',
-    cs: 'Vyberte soubory k zahrnutí do kontextu',
-    hu: 'Válassza ki a kontextusba foglalandó fájlokat',
-    bg: 'Изберете файлове за включване в контекста'
   }
 } as const

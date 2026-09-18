@@ -54,24 +54,6 @@ export const translations = {
     hu: 'Futtassa a "sudo apt install sox" parancsot a terminálban hang rögzítéséhez.',
     bg: 'Изпълнете "sudo apt install sox" във вашия терминал, за да записвате аудио.'
   },
-  'views.prompt.handlers.handle-voice-input.button.learn-more': {
-    en: 'Learn more',
-    pl: 'Dowiedz się więcej',
-    'zh-cn': '了解更多',
-    ja: '詳細を見る',
-    'zh-tw': '了解更多',
-    de: 'Mehr erfahren',
-    es: 'Más información',
-    fr: 'En savoir plus',
-    'pt-br': 'Saiba mais',
-    ru: 'Узнать больше',
-    ko: '자세히 알아보기',
-    it: 'Scopri di più',
-    tr: 'Daha fazla bilgi',
-    cs: 'Zjistit více',
-    hu: 'Tudjon meg többet',
-    bg: 'Научете повече'
-  },
   'views.prompt.handlers.handle-voice-input.error.sox-missing.windows': {
     en: 'Run "winget install sox.sox" and add it to your PATH to record audio.',
     pl: 'Uruchom "winget install sox.sox" i dodaj go do zmiennej PATH, aby nagrywać dźwięk.',
@@ -127,24 +109,6 @@ export const translations = {
     hu: 'Átírás...',
     bg: 'Транскрибиране...'
   },
-  'views.prompt.handlers.handle-voice-input.error.provider-not-found': {
-    en: 'Provider {name} not found.',
-    pl: 'Nie znaleziono providera {name}.',
-    'zh-cn': '未找到提供商 {name}。',
-    ja: 'プロバイダー {name} が見つかりません。',
-    'zh-tw': '找不到供應商 {name}。',
-    de: 'Anbieter {name} nicht gefunden.',
-    es: 'No se encontró el proveedor {name}.',
-    fr: 'Fournisseur {name} introuvable.',
-    'pt-br': 'Provedor {name} não encontrado.',
-    ru: 'Провайдер {name} не найден.',
-    ko: '공급자 {name}을(를) 찾을 수 없습니다.',
-    it: 'Provider {name} non trovato.',
-    tr: 'Sağlayıcı {name} bulunamadı.',
-    cs: 'Poskytovatel {name} nebyl nalezen.',
-    hu: 'A(z) {name} szolgáltató nem található.',
-    bg: 'Доставчикът {name} не е намерен.'
-  },
   'views.prompt.handlers.handle-voice-input.warning.inaudible': {
     en: 'Inaudible voice input',
     pl: 'Nierozpoznano mowy',
@@ -198,24 +162,5 @@ export const translations = {
     cs: 'Nebyla nalezena žádná konfigurace',
     hu: 'Nem található konfiguráció',
     bg: 'Не е намерена конфигурация'
-  },
-  'views.prompt.handlers.handle-voice-input.warning.no-config.detail': {
-    en: 'No API configurations found. Add one to use this feature.',
-    pl: 'Nie znaleziono konfiguracji API. Dodaj jedną, aby korzystać z tej funkcji.',
-    'zh-cn': '未找到 API 配置。添加一个以使用此功能。',
-    ja: 'API設定が見つかりません。この機能を使用するには設定を追加してください。',
-    'zh-tw': '找不到 API 配置。新增一個以使用此功能。',
-    de: 'Keine API-Konfigurationen gefunden. Fügen Sie eine hinzu, um diese Funktion zu nutzen.',
-    es: 'No se encontraron configuraciones de API. Añade una para usar esta función.',
-    fr: "Aucune configuration d'API trouvée. Ajoutez-en une pour utiliser cette fonctionnalité.",
-    'pt-br':
-      'Nenhuma configuração de API encontrada. Adicione uma para usar este recurso.',
-    ru: 'Конфигурации API не найдены. Добавьте одну, чтобы использовать эту функцию.',
-    ko: 'API 구성을 찾을 수 없습니다. 이 기능을 사용하려면 하나를 추가하세요.',
-    it: 'Nessuna configurazione API trovata. Aggiungine una per usare questa funzione.',
-    tr: 'API yapılandırması bulunamadı. Bu özelliği kullanmak için bir tane ekleyin.',
-    cs: 'Nebyly nalezeny žádné konfigurace API. Přidejte jednu, abyste mohli tuto funkci používat.',
-    hu: 'Nem találhatók API konfigurációk. Adjon hozzá egyet a funkció használatához.',
-    bg: 'Не са намерени API конфигурации. Добавете една, за да използвате тази функция.'
   }
 } as const

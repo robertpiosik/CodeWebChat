@@ -89,24 +89,6 @@ export const translations = {
     hu: 'Válasszon egy tárolót a commit üzenet generálásához',
     bg: 'Изберете хранилище за генериране на commit съобщение'
   },
-  'command.generate-commit-message-command.unstaged-files': {
-    en: 'Unstaged Files',
-    pl: 'Nieprzygotowane pliki',
-    'zh-cn': '未暂存的文件',
-    ja: 'ステージされていないファイル',
-    'zh-tw': '未暫存的檔案',
-    de: 'Nicht bereitgestellte Dateien',
-    es: 'Archivos no preparados',
-    fr: 'Fichiers non indexés',
-    'pt-br': 'Arquivos não preparados',
-    ru: 'Неиндексированные файлы',
-    ko: '스테이징되지 않은 파일',
-    it: 'File non in stage',
-    tr: 'Hazırlanmamış (Unstaged) Dosyalar',
-    cs: 'Nepřipravené soubory',
-    hu: 'Nem előkészített fájlok',
-    bg: 'Неиндексирани файлове'
-  },
   'command.generate-commit-message-command.select-files': {
     en: 'Select files to commit',
     pl: 'Wybierz pliki do commita',
@@ -125,24 +107,6 @@ export const translations = {
     hu: 'Válassza ki a commitálandó fájlokat',
     bg: 'Изберете файлове за commit'
   },
-  'command.generate-commit-message-command.show-diff': {
-    en: 'Show Diff',
-    pl: 'Pokaż zmiany',
-    'zh-cn': '显示差异',
-    ja: '変更を表示',
-    'zh-tw': '顯示差異',
-    de: 'Änderungen anzeigen',
-    es: 'Mostrar cambios',
-    fr: 'Afficher les modifications',
-    'pt-br': 'Mostrar alterações',
-    ru: 'Показать изменения',
-    ko: '차이 보기',
-    it: 'Mostra differenze',
-    tr: 'Değişiklikleri Göster',
-    cs: 'Zobrazit změny',
-    hu: 'Eltérések megjelenítése',
-    bg: 'Покажи разликите'
-  },
   'command.generate-commit-message-command.attach-ascii-tree.attach': {
     en: 'Attach',
     pl: 'Dołącz',
@@ -160,24 +124,6 @@ export const translations = {
     cs: 'Připojit',
     hu: 'Csatolás',
     bg: 'Прикачи'
-  },
-  'command.generate-commit-message-command.attach-ascii-tree.skip': {
-    en: 'Skip',
-    pl: 'Pomiń',
-    'zh-cn': '跳过',
-    ja: 'スキップ',
-    'zh-tw': '跳過',
-    de: 'Überspringen',
-    es: 'Omitir',
-    fr: 'Ignorer',
-    'pt-br': 'Ignorar',
-    ru: 'Пропустить',
-    ko: '건너뛰기',
-    it: 'Salta',
-    tr: 'Atla',
-    cs: 'Přeskočit',
-    hu: 'Kihagyás',
-    bg: 'Пропусни'
   },
   'command.generate-commit-message-command.attach-ascii-tree.title': {
     en: 'ASCII File Tree',
@@ -288,24 +234,6 @@ export const translations = {
     cs: 'Použít',
     hu: 'Használat',
     bg: 'Използвай'
-  },
-  'command.generate-commit-message-command.attach-context-files.skip': {
-    en: 'Skip',
-    pl: 'Pomiń',
-    'zh-cn': '跳过',
-    ja: 'スキップ',
-    'zh-tw': '跳過',
-    de: 'Überspringen',
-    es: 'Omitir',
-    fr: 'Ignorer',
-    'pt-br': 'Ignorar',
-    ru: 'Пропустить',
-    ko: '건너뛰기',
-    it: 'Salta',
-    tr: 'Atla',
-    cs: 'Přeskočit',
-    hu: 'Kihagyás',
-    bg: 'Пропусни'
   },
   'command.generate-commit-message-command.attach-context-files.title': {
     en: 'Context Files',

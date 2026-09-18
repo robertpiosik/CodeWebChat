@@ -1,22 +1,4 @@
 export const translations = {
-  'command.select-files-of-commit-command.no-commits': {
-    en: 'No commits found in the repository.',
-    pl: 'Brak commitów w repozytorium.',
-    'zh-cn': '未在存储库中找到提交。',
-    ja: 'リポジトリにコミットが見つかりません。',
-    'zh-tw': '未在儲存庫中找到提交。',
-    de: 'Keine Commits im Repository gefunden.',
-    es: 'No se encontraron commits en el repositorio.',
-    fr: 'Aucun commit trouvé dans le dépôt.',
-    'pt-br': 'Nenhum commit encontrado no repositório.',
-    ru: 'Коммиты в репозитории не найдены.',
-    ko: '저장소에서 커밋을 찾을 수 없습니다.',
-    it: 'Nessun commit trovato nel repository.',
-    tr: 'Depoda işleme bulunamadı.',
-    cs: 'V repozitáři nebyly nalezeny žádné commity.',
-    hu: 'Nem találhatók commitok a tárolóban.',
-    bg: 'Няма намерени къмити в хранилището.'
-  },
   'command.select-files-of-commit-command.title': {
     en: 'Commits',
     pl: 'Commity',
@@ -71,42 +53,6 @@ export const translations = {
     hu: 'Az ág előtti összes commit...',
     bg: 'Всички къмити пред клон...'
   },
-  'command.select-files-of-commit-command.branches': {
-    en: 'Branches',
-    pl: 'Gałęzie',
-    'zh-cn': '分支',
-    ja: 'ブランチ',
-    'zh-tw': '分支',
-    de: 'Zweige',
-    es: 'Ramas',
-    fr: 'Branches',
-    'pt-br': 'Branches',
-    ru: 'Ветки',
-    ko: '브랜치',
-    it: 'Rami',
-    tr: 'Dallar',
-    cs: 'Větve',
-    hu: 'Ágak',
-    bg: 'Клонове'
-  },
-  'command.select-files-of-commit-command.select-branch': {
-    en: 'Select a branch to compare with',
-    pl: 'Wybierz gałąź do porównania',
-    'zh-cn': '选择一个分支进行比较',
-    ja: '比較するブランチを選択',
-    'zh-tw': '選擇一個分支進行比較',
-    de: 'Wählen Sie einen Zweig zum Vergleichen',
-    es: 'Seleccione una rama para comparar',
-    fr: 'Sélectionnez une branche avec laquelle comparer',
-    'pt-br': 'Selecione uma branch para comparar',
-    ru: 'Выберите ветку для сравнения',
-    ko: '비교할 브랜치 선택',
-    it: 'Seleziona un ramo con cui confrontare',
-    tr: 'Karşılaştırılacak bir dal seçin',
-    cs: 'Vyberte větev k porovnání',
-    hu: 'Válasszon egy ágat az összehasonlításhoz',
-    bg: 'Изберете клон за сравнение'
-  },
   'command.select-files-of-commit-command.no-other-branches': {
     en: 'No other branches found in the repository.',
     pl: 'Nie znaleziono innych gałęzi w repozytorium.',
@@ -160,24 +106,6 @@ export const translations = {
     cs: 'Z tohoto commitu nebyly nalezeny žádné platné existující soubory.',
     hu: 'Nem találhatók érvényes létező fájlok ebből a commitból.',
     bg: 'Не са намерени валидни съществуващи файлове от този commit.'
-  },
-  'command.select-files-of-commit-command.select-files': {
-    en: 'Select files to add to context',
-    pl: 'Wybierz pliki do dodania do kontekstu',
-    'zh-cn': '选择要添加到上下文的文件',
-    ja: 'コンテキストに追加するファイルを選択',
-    'zh-tw': '選擇要加入上下文的檔案',
-    de: 'Wählen Sie Dateien aus, die zum Kontext hinzugefügt werden sollen',
-    es: 'Seleccione archivos para agregar al contexto',
-    fr: 'Sélectionnez les fichiers à ajouter au contexte',
-    'pt-br': 'Selecione arquivos para adicionar ao contexto',
-    ru: 'Выберите файлы для добавления в контекст',
-    ko: '컨텍스트에 추가할 파일 선택',
-    it: 'Seleziona i file da aggiungere al contesto',
-    tr: 'Bağlama eklenecek dosyaları seçin',
-    cs: 'Vyberte soubory, které chcete přidat do kontextu',
-    hu: 'Válasszon fájlokat a kontextushoz adáshoz',
-    bg: 'Изберете файлове за добавяне към контекста'
   },
   'command.select-files-of-commit-command.files-modified': {
     en: 'Files of commit',
@@ -250,23 +178,5 @@ export const translations = {
     cs: 'kontextové soubory',
     hu: 'kontextus fájlok',
     bg: 'контекстни файлове'
-  },
-  'command.select-files-of-commit-command.context-updated': {
-    en: 'Context has been updated.',
-    pl: 'Kontekst został zaktualizowany.',
-    'zh-cn': '上下文已更新。',
-    ja: 'コンテキストが更新されました。',
-    'zh-tw': '上下文已更新。',
-    de: 'Kontext wurde aktualisiert.',
-    es: 'El contexto ha sido actualizado.',
-    fr: 'Le contexte a été mis à jour.',
-    'pt-br': 'O contexto foi atualizado.',
-    ru: 'Контекст обновлен.',
-    ko: '컨텍스트가 업데이트되었습니다.',
-    it: 'Il contesto è stato aggiornato.',
-    tr: 'Bağlam güncellendi.',
-    cs: 'Kontext byl aktualizován.',
-    hu: 'A kontextus frissítve lett.',
-    bg: 'Контекстът е актуализиран.'
   }
 } as const

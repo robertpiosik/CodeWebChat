@@ -20,7 +20,6 @@ import {
 import { get_prompt_data } from './get-prompt-data'
 import { display_token_count } from '@shared/utils/display-token-count'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
-import { dictionary } from '@shared/constants/dictionary'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 import { normalize_path } from '@/utils/normalize-path'
@@ -252,9 +251,7 @@ export const run_generate_action = async (params: {
               const attach_label = t(
                 'command.generate-commit-message-command.attach-context-files.attach'
               )
-              const skip_label = t(
-                'command.generate-commit-message-command.attach-context-files.skip'
-              )
+              const skip_label = t('common.action.skip')
               const last_selected_id =
                 params.extension_context.workspaceState.get<string>(
                   LAST_USE_CONTEXT_FILES_STATE_KEY,
@@ -361,6 +358,7 @@ export const run_generate_action = async (params: {
           await vscode.env.clipboard.writeText(final_chatbot_prompt!)
           vscode.window.showInformationMessage(
             t('common.info.copied-to-clipboard', {
+              item: 'Prompt',
               tokens: display_token_count(
                 Math.ceil(final_api_prompt!.length / 4)
               )
@@ -584,9 +582,7 @@ export const run_generate_action = async (params: {
         const attach_label = t(
           'command.generate-commit-message-command.attach-ascii-tree.attach'
         )
-        const skip_label = t(
-          'command.generate-commit-message-command.attach-ascii-tree.skip'
-        )
+        const skip_label = t('common.action.skip')
 
         const last_selected_id =
           params.extension_context.workspaceState.get<string>(

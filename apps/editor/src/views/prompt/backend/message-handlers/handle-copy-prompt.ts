@@ -50,5 +50,7 @@ export const handle_copy_prompt = async (params: {
 
   vscode.env.clipboard.writeText(text.trim())
 
-  vscode.window.showInformationMessage(t('common.info.copied-to-clipboard'))
+  vscode.window.showInformationMessage(
+    t('common.info.copied-to-clipboard', { item: 'Prompt' })
+  )
 }

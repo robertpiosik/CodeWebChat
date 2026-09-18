@@ -72,7 +72,7 @@ export const show_configurations_quick_pick = async <T>(
     last_selected_id,
     title = type === 'api'
       ? t('common.select-model.title')
-      : t('views.shared.actions.web.pick-chatbot.title'),
+      : t('common.title.chatbots'),
     placeholder = type === 'api'
       ? t('common.select-model.placeholder')
       : t('views.shared.actions.web.pick-chatbot.placeholder'),

@@ -74,9 +74,7 @@ const hash_sign_quick_pick = async (params: {
     quick_pick.buttons = [
       {
         iconPath: new vscode.ThemeIcon('close'),
-        tooltip: t(
-          'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.close'
-        )
+        tooltip: t('common.close')
       }
     ]
 

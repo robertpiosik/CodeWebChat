@@ -1,79 +1,23 @@
 export const translations = {
-  'views.prompt.handlers.handle-hash-sign-quick-pick.changes-symbol.no-branches':
+  'views.prompt.handlers.handle-hash-sign-quick-pick.changes-symbol.failed-to-get-git-branches':
     {
-      en: 'No branches found in the repository.',
-      pl: 'Brak gałęzi w repozytorium.',
-      'zh-cn': '未在存储库中找到分支。',
-      ja: 'リポジトリにブランチが見つかりません。',
-      'zh-tw': '未在儲存庫中找到分支。',
-      de: 'Keine Zweige im Repository gefunden.',
-      es: 'No se encontraron ramas en el repositorio.',
-      fr: 'Aucune branche trouvée dans le dépôt.',
-      'pt-br': 'Nenhuma branch encontrada no repositório.',
-      ru: 'Ветки в репозитории не найдены.',
-      ko: '저장소에서 브랜치를 찾을 수 없습니다.',
-      it: 'Nessun ramo trovato nel repository.',
-      tr: 'Depoda dal bulunamadı.',
-      cs: 'V repozitáři nebyly nalezeny žádné větve.',
-      hu: 'Nem találhatók ágak a tárolóban.',
-      bg: 'Няма намерени клонове в хранилището.'
-    },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.changes-symbol.no-other-branches':
-    {
-      en: 'No other branches found in the repository to compare with.',
-      pl: 'Nie znaleziono innych gałęzi w repozytorium do porównania.',
-      'zh-cn': '未在存储库中找到其他可供比较的分支。',
-      ja: 'リポジトリに比較する他のブランチが見つかりません。',
-      'zh-tw': '未在儲存庫中找到其他可供比較的變更分支。',
-      de: 'Keine anderen Zweige im Repository zum Vergleichen gefunden.',
-      es: 'No se encontraron otras ramas en el repositorio para comparar.',
-      fr: 'Aucune autre branche trouvée dans le dépôt pour comparer.',
-      'pt-br': 'Nenhuma outra branch encontrada no repositório para comparar.',
-      ru: 'В репозитории не найдено других веток для сравнения.',
-      ko: '저장소에서 비교할 다른 브랜치를 찾을 수 없습니다.',
-      it: 'Nessun altro ramo trovato nel repository con cui confrontare.',
-      tr: 'Depoda karşılaştırılacak başka dal bulunamadı.',
-      cs: 'V repozitáři nebyly nalezeny žádné další větve k porovnání.',
-      hu: 'Nem találhatók más ágak a tárolóban az összehasonlításhoz.',
-      bg: 'Няма намерени други клонове в хранилището за сравнение.'
-    },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.saved-context-symbol.no-saved-contexts-found':
-    {
-      en: 'No saved contexts found.',
-      pl: 'Nie znaleziono zapisanych kontekstów.',
-      'zh-cn': '未找到保存的上下文。',
-      ja: '保存されたコンテキストが見つかりません。',
-      'zh-tw': '未找到儲存的上下文。',
-      de: 'Keine gespeicherten Kontexte gefunden.',
-      es: 'No se encontraron contextos guardados.',
-      fr: 'Aucun contexte enregistré trouvé.',
-      'pt-br': 'Nenhum contexto salvo encontrado.',
-      ru: 'Сохраненные контексты не найдены.',
-      ko: '저장된 컨텍스트를 찾을 수 없습니다.',
-      it: 'Nessun contesto salvato trovato.',
-      tr: 'Kaydedilmiş bağlam bulunamadı.',
-      cs: 'Nebyly nalezeny žádné uložené kontexty.',
-      hu: 'Nem találhatók mentett kontextusok.',
-      bg: 'Няма намерени запазени контексти.'
-    },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.commit-symbol.no-git-repo':
-    {
-      en: 'No Git repository found in the workspace.',
-      pl: 'Nie znaleziono repozytorium Git w obszarze roboczym.',
-      'zh-cn': '工作区中未找到 Git 存储库。',
-      ja: 'ワークスペースに Git リポジトリが見つかりません。',
-      'zh-tw': '工作區中未找到 Git 儲存庫。',
-      de: 'Kein Git-Repository im Arbeitsbereich gefunden.',
-      es: 'No se encontró ningún repositorio Git en el espacio de trabajo.',
-      fr: "Aucun dépôt Git trouvé dans l'espace de travail.",
-      'pt-br': 'Nenhum repositório Git encontrado no espaço de trabalho.',
-      ru: 'В рабочей области не найден репозиторий Git.',
-      ko: '작업 공간에서 Git 저장소를 찾을 수 없습니다.',
-      it: "Nessun repository Git trovato nell'area di lavoro.",
-      tr: 'Çalışma alanında Git deposu bulunamadı.',
-      cs: 'V pracovním prostoru nebylo nalezeno žádné úložiště Git.',
-      hu: 'Nem található Git tároló a munkaterületen.',
-      bg: 'Не е намерено Git хранилище в работното пространство.'
+      en: 'Failed to get Git branches. Make sure you are in a Git repository.',
+      pl: 'Nie udało się pobrać gałęzi Git. Upewnij się, że jesteś w repozytorium Git.',
+      'zh-cn': '获取 Git 分支失败。请确保您在 Git 存储库中。',
+      ja: 'Git ブランチの取得に失敗しました。Git リポジトリにいることを確認してください。',
+      'zh-tw': '獲取 Git 分支失敗。請確保您在 Git 儲存庫中。',
+      de: 'Fehler beim Abrufen der Git-Zweige. Stellen Sie sicher, dass Sie sich in einem Git-Repository befinden.',
+      es: 'Error al obtener las ramas de Git. Asegúrese de estar en un repositorio Git.',
+      fr: "Échec de l'obtention des branches Git. Assurez-vous d'être dans un dépôt Git.",
+      'pt-br':
+        'Falha ao obter as branches do Git. Certifique-se de estar em um repositório Git.',
+      ru: 'Не удалось получить ветки Git. Убедитесь, что вы находитесь в репозитории Git.',
+      ko: 'Git 브랜치를 가져오는 데 실패했습니다. Git 저장소에 있는지 확인하십시오.',
+      it: 'Impossibile ottenere i rami Git. Assicurati di essere in un repository Git.',
+      tr: 'Git dalları alınamadı. Bir Git deposunda olduğunuzdan emin olun.',
+      cs: 'Nepodařilo se získat větve Git. Ujistěte se, že jste v repozitáři Git.',
+      hu: 'Nem sikerült lekérni a Git ágakat. Győződjön meg arról, hogy Git tárolóban van.',
+      bg: 'Неуспешно получаване на Git клонове. Уверете се, че сте в Git хранилище.'
     },
   'views.prompt.handlers.handle-hash-sign-quick-pick.commit-symbol.no-commits':
     {
@@ -374,23 +318,5 @@ export const translations = {
     cs: 'Symboly',
     hu: 'Szimbólumok',
     bg: 'Символи'
-  },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.close': {
-    en: 'Close',
-    pl: 'Zamknij',
-    'zh-cn': '关闭',
-    ja: '閉じる',
-    'zh-tw': '關閉',
-    de: 'Schließen',
-    es: 'Cerrar',
-    fr: 'Fermer',
-    'pt-br': 'Fechar',
-    ru: 'Закрыть',
-    ko: '닫기',
-    it: 'Chiudi',
-    tr: 'Kapat',
-    cs: 'Zavřít',
-    hu: 'Bezárás',
-    bg: 'Затвори'
   }
 } as const

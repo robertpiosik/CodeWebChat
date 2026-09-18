@@ -29,7 +29,7 @@ export const copy_merge_commit_details_command = (): vscode.Disposable => {
 
         if (!branches_output) {
           vscode.window.showInformationMessage(
-            t('command.copy-merge-commit-details-command.no-branches')
+            t('common.info.no-branches-found')
           )
           return
         }
@@ -48,7 +48,7 @@ export const copy_merge_commit_details_command = (): vscode.Disposable => {
 
         if (branches.length === 0) {
           vscode.window.showInformationMessage(
-            t('command.copy-merge-commit-details-command.no-other-branches')
+            t('common.info.no-other-branches-to-compare')
           )
           return
         }
@@ -56,10 +56,10 @@ export const copy_merge_commit_details_command = (): vscode.Disposable => {
         const quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & { name: string }
         >()
-        quick_pick.title = t('command.copy-merge-commit-details-command.title')
+        quick_pick.title = t('common.title.branches')
         quick_pick.items = branches
         quick_pick.placeholder = t(
-          'command.copy-merge-commit-details-command.select'
+          'common.placeholder.select-branch-to-compare'
         )
         quick_pick.matchOnDetail = true
         quick_pick.buttons = [
@@ -163,7 +163,7 @@ export const copy_merge_commit_details_command = (): vscode.Disposable => {
 
         await vscode.env.clipboard.writeText(final_text)
         vscode.window.showInformationMessage(
-          t('command.copy-merge-commit-details-command.copied')
+          t('common.info.copied-to-clipboard', { item: 'Merge commit details' })
         )
       } catch (error) {
         vscode.window.showErrorMessage(

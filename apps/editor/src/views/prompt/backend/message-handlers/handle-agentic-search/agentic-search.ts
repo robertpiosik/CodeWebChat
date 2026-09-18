@@ -126,9 +126,7 @@ export const agentic_search = async (params: {
       }
       const doc_button = {
         iconPath: new vscode.ThemeIcon('question'),
-        tooltip: t(
-          'views.prompt.handlers.handle-agentic-search.agent.learn-more'
-        )
+        tooltip: t('common.action.learn-more')
       }
 
       type AgentPickItem = vscode.QuickPickItem & {
@@ -318,9 +316,7 @@ export const agentic_search = async (params: {
                   const undo_action = t('common.undo')
                   vscode.window
                     .showInformationMessage(
-                      t(
-                        'views.prompt.handlers.handle-agentic-search.agent.deleted'
-                      ),
+                      t('common.success.item-deleted', { item: 'Flags' }),
                       undo_action
                     )
                     .then((choice) => {
@@ -594,7 +590,7 @@ export const agentic_search = async (params: {
           await vscode.window.withProgress(
             {
               location: vscode.ProgressLocation.Notification,
-              title: t('views.prompt.handlers.handle-agentic-search.title'),
+              title: t('common.title.agentic-search'),
               cancellable: true
             },
             async (progress, token) => {
@@ -730,7 +726,7 @@ export const agentic_search = async (params: {
 
         if (agent_output.trim() == '') {
           vscode.window.showInformationMessage(
-            t('views.prompt.handlers.handle-agentic-search.info.no-files')
+            t('common.info.no-items-found', { items: 'files' })
           )
           go_back_to_query = true
           break
@@ -761,7 +757,7 @@ export const agentic_search = async (params: {
 
         if (absolute_paths.length === 0) {
           vscode.window.showInformationMessage(
-            t('views.prompt.handlers.handle-agentic-search.info.no-files')
+            t('common.info.no-items-found', { items: 'files' })
           )
           go_back_to_query = true
           break

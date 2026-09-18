@@ -84,7 +84,11 @@ export const get_commit_message_api_configuration = async (params: {
   )
 
   if (!provider) {
-    vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))
+    vscode.window.showErrorMessage(
+      t('common.error.provider-not-found', {
+        name: commit_message_api_configuration.provider_name
+      })
+    )
     Logger.warn({
       function_name: 'get_commit_message_api_configuration',
       message: 'API provider not found for Commit Messages tool.'

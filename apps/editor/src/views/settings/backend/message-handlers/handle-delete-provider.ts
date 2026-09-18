@@ -15,10 +15,10 @@ export const handle_delete_provider = async (
     t('common.confirm-action'),
     {
       modal: true,
-      detail: t(
-        'views.settings.handlers.handle-delete-provider.confirm-delete-provider',
-        { provider_name: provider_name_to_delete }
-      )
+      detail: t('common.confirm-delete-named-item', {
+        item: 'provider',
+        name: provider_name_to_delete
+      })
     },
     t('common.delete')
   )
@@ -45,7 +45,7 @@ export const handle_delete_provider = async (
 
   const undo_action = t('common.undo')
   const choice = await vscode.window.showInformationMessage(
-    t('views.settings.handlers.handle-delete-provider.deleted'),
+    t('common.success.item-deleted', { item: 'Provider' }),
     undo_action
   )
 

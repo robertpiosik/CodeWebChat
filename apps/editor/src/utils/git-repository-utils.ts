@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
-import { dictionary } from '@shared/constants/dictionary'
 import * as path from 'path'
 import { t } from '@/i18n'
 import { MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE } from '@/constants/values'
@@ -35,9 +34,7 @@ const get_all_git_repositories = (): GitRepository[] | null => {
   const repositories: GitRepository[] = git_api.repositories
 
   if (!repositories || repositories.length == 0) {
-    vscode.window.showErrorMessage(
-      dictionary.error_message.NO_GIT_REPOSITORY_FOUND
-    )
+    vscode.window.showErrorMessage(t('common.error.no-git-repository-found'))
     return null
   }
 
@@ -344,7 +341,7 @@ export const prepare_staged_changes = async (params: {
                 iconPath: new vscode.ThemeIcon(
                   'git-pull-request-go-to-changes'
                 ),
-                tooltip: t('command.generate-commit-message-command.show-diff')
+                tooltip: t('common.action.show-diff')
               },
               {
                 iconPath: new vscode.ThemeIcon('go-to-file'),
@@ -369,12 +366,8 @@ export const prepare_staged_changes = async (params: {
 
             quick_pick.canSelectMany = true
             quick_pick.matchOnDescription = true
-            quick_pick.title = t(
-              'command.generate-commit-message-command.unstaged-files'
-            )
-            quick_pick.placeholder = t(
-              'command.generate-commit-message-command.select-files'
-            )
+            quick_pick.title = t('common.title.unstaged-files')
+            quick_pick.placeholder = t('common.placeholder.select-files-to-add')
 
             const close_button = {
               iconPath: new vscode.ThemeIcon('close'),
@@ -417,10 +410,7 @@ export const prepare_staged_changes = async (params: {
               if (event.button.tooltip == t('common.go-to-file')) {
                 const uri = vscode.Uri.file(event.item.fsPath)
                 vscode.window.showTextDocument(uri, { preview: true })
-              } else if (
-                event.button.tooltip ==
-                t('command.generate-commit-message-command.show-diff')
-              ) {
+              } else if (event.button.tooltip == t('common.action.show-diff')) {
                 const uri = vscode.Uri.file(event.item.fsPath)
                 await vscode.commands.executeCommand('git.openChange', uri)
               }

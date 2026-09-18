@@ -259,7 +259,9 @@ export const perform_code_at_cursor = async (params: {
 
     if (action === 'copy') {
       await vscode.env.clipboard.writeText(chatbot_prompt)
-      vscode.window.showInformationMessage(t('common.info.copied-to-clipboard'))
+      vscode.window.showInformationMessage(
+        t('common.info.copied-to-clipboard', { item: 'Prompt' })
+      )
       return
     }
 
@@ -430,9 +432,7 @@ export const perform_code_at_cursor = async (params: {
         },
         async (progress, token) => {
           token.onCancellationRequested(() => {
-            abort_controller.abort(
-              t('command.code-at-cursor-command.cancel.user')
-            )
+            abort_controller.abort(t('common.cancel.user'))
           })
 
           progress.report({

@@ -120,49 +120,31 @@ export const verify_model = async (params: {
   if (error) {
     if (error.status) {
       const status = error.status
-      let reason = t(
-        'views.shared.actions.api.create.interactions.verify-model.status.server-error'
-      )
+      let reason = t('common.network.error.server-error')
       switch (status) {
         case 400:
-          reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.status.bad-request'
-          )
+          reason = t('common.network.error.bad-request')
           break
         case 401:
-          reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.status.authentication'
-          )
+          reason = t('common.network.error.authentication')
           break
         case 403:
-          reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.status.forbidden'
-          )
+          reason = t('common.network.error.forbidden')
           break
         case 404:
-          reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.status.not-found'
-          )
+          reason = t('common.network.error.not-found')
           break
         case 429:
-          reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.status.rate-limit'
-          )
+          reason = t('common.network.error.rate-limit')
           break
         case 500:
-          reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.status.internal'
-          )
+          reason = t('common.network.error.internal')
           break
         case 502:
-          reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.status.bad-gateway'
-          )
+          reason = t('common.network.error.bad-gateway')
           break
         case 503:
-          reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.status.service-unavailable'
-          )
+          reason = t('common.network.error.service-unavailable')
           break
       }
       detail = params.is_voice_input

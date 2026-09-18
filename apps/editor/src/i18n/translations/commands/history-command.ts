@@ -221,24 +221,6 @@ export const translations = {
     hu: 'Nem sikerült törölni az ellenőrzőpont fájljait: {error}',
     bg: 'Неуспешно изтриване на файловете на контролната точка: {error}'
   },
-  'command.history-command.success.deleted': {
-    en: 'Checkpoint deleted.',
-    pl: 'Usunięto punkt kontrolny.',
-    'zh-cn': '已删除检查点。',
-    ja: 'チェックポイントを削除しました。',
-    'zh-tw': '已刪除檢查点。',
-    de: 'Prüfpunkt gelöscht.',
-    es: 'Punto de control eliminado.',
-    fr: 'Point de contrôle supprimé.',
-    'pt-br': 'Ponto de verificação excluído.',
-    ru: 'Контрольная точка удалена.',
-    ko: '체크포인트가 삭제되었습니다.',
-    it: 'Punto di controllo eliminato.',
-    tr: 'Kontrol noktası silindi.',
-    cs: 'Kontrolní bod smazán.',
-    hu: 'Ellenőrzőpont törölve.',
-    bg: 'Контролната точка е изтрита.'
-  },
 
   'command.history-command.error.could-not-undo': {
     en: 'Could not undo. Another checkpoint was deleted.',

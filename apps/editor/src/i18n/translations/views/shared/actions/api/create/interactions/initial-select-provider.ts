@@ -18,25 +18,6 @@ export const translations = {
       hu: '$(plus) Új szolgáltató...',
       bg: '$(plus) Нов доставчик...'
     },
-  'views.shared.actions.api.create.interactions.initial-select-provider.separator':
-    {
-      en: 'providers',
-      pl: 'providerzy',
-      'zh-cn': '提供商',
-      ja: 'プロバイダー',
-      'zh-tw': '供應商',
-      de: 'Anbieter',
-      es: 'proveedores',
-      fr: 'fournisseurs',
-      'pt-br': 'provedores',
-      ru: 'провайдеры',
-      ko: '제공자',
-      it: 'fornitori',
-      tr: 'sağlayıcılar',
-      cs: 'poskytovatelé',
-      hu: 'szolgáltatók',
-      bg: 'доставчици'
-    },
   'views.shared.actions.api.create.interactions.initial-select-provider.title':
     {
       en: 'New Configuration',

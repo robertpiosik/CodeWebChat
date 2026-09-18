@@ -345,23 +345,5 @@ export const translations = {
     cs: 'Aplikují se úpravy...',
     hu: 'Szerkesztések alkalmazása...',
     bg: 'Прилагане на редакциите...'
-  },
-  'command.apply-response-command.progress.creating-checkpoint': {
-    en: 'Creating checkpoint...',
-    pl: 'Tworzę punkt kontrolny...',
-    'zh-cn': '正在创建检查点...',
-    ja: 'チェックポイントを作成しています...',
-    'zh-tw': '正在建立檢查點...',
-    de: 'Prüfpunkt wird erstellt...',
-    es: 'Creando punto de control...',
-    fr: 'Création du point de contrôle...',
-    'pt-br': 'Criando ponto de verificação...',
-    ru: 'Создание контрольной точки...',
-    ko: '체크포인트 생성 중...',
-    it: 'Creazione punto di controllo...',
-    tr: 'Denetim noktası oluşturuluyor...',
-    cs: 'Vytváření kontrolního bodu...',
-    hu: 'Ellenőrzőpont létrehozása...',
-    bg: 'Създаване на контролна точка...'
   }
 } as const

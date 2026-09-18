@@ -159,7 +159,7 @@ export const replace_changes_symbol = async (params: {
       const workspace_folders = vscode.workspace.workspaceFolders
       if (!workspace_folders) {
         vscode.window.showErrorMessage(
-          dictionary.error_message.NO_WORKSPACE_FOLDERS_FOUND
+          t('common.error.no-workspace-folders-found')
         )
         if (params.symbols_cache) {
           params.symbols_cache.set(full_match, '', '')
@@ -284,7 +284,7 @@ export const replace_changes_symbol = async (params: {
       const repository = await get_git_repository()
       if (!repository) {
         vscode.window.showErrorMessage(
-          dictionary.error_message.NO_GIT_REPOSITORY_FOUND
+          t('common.error.no-git-repository-found')
         )
         if (params.symbols_cache) {
           params.symbols_cache.set(full_match, '', '')

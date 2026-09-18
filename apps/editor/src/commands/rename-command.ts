@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { dictionary } from '@shared/constants/dictionary'
+import { Logger } from '@shared/utils/logger'
 import { create_safe_path } from '../utils/path-sanitizer'
 import { t } from '../i18n'
 
@@ -17,7 +17,7 @@ export const rename_command = () => {
       const current_name = path.basename(old_path)
 
       const new_name = await vscode.window.showInputBox({
-        prompt: t('command.rename-command.prompt'),
+        prompt: t('common.prompt.enter-name', { item: 'new' }),
         placeHolder: '',
         value: current_name
       })
@@ -30,18 +30,15 @@ export const rename_command = () => {
         const new_path = create_safe_path(dir_name, new_name)
 
         if (!new_path) {
-          vscode.window.showErrorMessage(
-            dictionary.error_message.INVALID_NAME(new_name)
-          )
           return
         }
 
         try {
           await vscode.workspace.fs.stat(vscode.Uri.file(new_path))
-          vscode.window.showErrorMessage(
-            dictionary.error_message.FILE_OR_FOLDER_ALREADY_EXISTS(
-              path.basename(new_path)
-            )
+          vscode.window.showInformationMessage(
+            t('common.info.file-or-folder-already-exists', {
+              name: path.basename(new_path)
+            })
           )
           return
         } catch {
@@ -58,9 +55,10 @@ export const rename_command = () => {
           throw new Error('Failed to apply rename edit')
         }
       } catch (error: any) {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.FAILED_TO_RENAME(error.message)
-        )
+        Logger.error({
+          function_name: 'rename_command',
+          message: `Failed to rename: ${error.message}`
+        })
       }
     }
   )

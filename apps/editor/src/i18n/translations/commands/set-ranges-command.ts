@@ -200,24 +200,6 @@ export const translations = {
     hu: 'A tartományok nem fedhetik egymást: "{part1}" és "{part2}".',
     bg: 'Диапазоните не могат да се припокриват: "{part1}" и "{part2}".'
   },
-  'command.set-ranges-command.quick-pick.json-file': {
-    en: 'JSON File',
-    pl: 'Plik JSON',
-    'zh-cn': 'JSON 文件',
-    ja: 'JSON ファイル',
-    'zh-tw': 'JSON 檔案',
-    de: 'JSON-Datei',
-    es: 'Archivo JSON',
-    fr: 'Fichier JSON',
-    'pt-br': 'Arquivo JSON',
-    ru: 'JSON файл',
-    ko: 'JSON 파일',
-    it: 'File JSON',
-    tr: 'JSON Dosyası',
-    cs: 'Soubor JSON',
-    hu: 'JSON fájl',
-    bg: 'JSON файл'
-  },
   'command.set-ranges-command.quick-pick.json-file-description': {
     en: '.vscode/ranges.json',
     pl: '.vscode/ranges.json',
@@ -235,24 +217,6 @@ export const translations = {
     cs: '.vscode/ranges.json',
     hu: '.vscode/ranges.json',
     bg: '.vscode/ranges.json'
-  },
-  'command.set-ranges-command.quick-pick.workspace-state': {
-    en: 'Workspace State',
-    pl: 'Stan obszaru roboczego',
-    'zh-cn': '工作区状态',
-    ja: 'ワークスペースの状態',
-    'zh-tw': '工作區狀態',
-    de: 'Arbeitsbereichs-Status',
-    es: 'Estado del espacio de trabajo',
-    fr: 'État de l’espace de travail',
-    'pt-br': 'Estado do espaço de trabalho',
-    ru: 'Состояние рабочей области',
-    ko: '작업 영역 상태',
-    it: 'Stato dell’area di lavoro',
-    tr: 'Çalışma Alanı Durumu',
-    cs: 'Stav pracovního prostoru',
-    hu: 'Munkaterület állapota',
-    bg: 'Състояние на работното пространство'
   },
   'command.set-ranges-command.quick-pick.workspace-state-description': {
     en: 'Internal storage',

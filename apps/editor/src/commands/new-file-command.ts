@@ -3,6 +3,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { create_safe_path } from '../utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
+import { Logger } from '@shared/utils/logger'
 import { t } from '../i18n'
 
 export const new_file_command = () => {
@@ -30,9 +31,10 @@ export const new_file_command = () => {
       }
 
       if (!parent_path) {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.COULD_NOT_DETERMINE_LOCATION_TO_CREATE_FILE
-        )
+        Logger.error({
+          function_name: 'new_file_command',
+          message: 'Could not determine location to create file.'
+        })
         return
       }
 
@@ -45,7 +47,7 @@ export const new_file_command = () => {
 
       const input_box = vscode.window.createInputBox()
       input_box.title = t('command.new-file-command.title')
-      input_box.prompt = t('command.new-file-command.prompt')
+      input_box.prompt = t('common.prompt.enter-name', { item: 'file' })
       input_box.placeholder = ''
 
       const close_button = {
@@ -92,9 +94,10 @@ export const new_file_command = () => {
         const file_path = create_safe_path(parent_path, file_name)
 
         if (!file_path) {
-          vscode.window.showErrorMessage(
-            dictionary.error_message.INVALID_FILE_NAME(file_name)
-          )
+          Logger.error({
+            function_name: 'new_file_command',
+            message: `Invalid file name: '${file_name}'.`
+          })
           return
         }
 
@@ -102,10 +105,10 @@ export const new_file_command = () => {
 
         try {
           await vscode.workspace.fs.stat(fileUri)
-          vscode.window.showErrorMessage(
-            dictionary.error_message.FILE_ALREADY_EXISTS(
-              path.basename(file_path)
-            )
+          vscode.window.showInformationMessage(
+            t('common.info.file-already-exists', {
+              name: path.basename(file_path)
+            })
           )
           return
         } catch {}
@@ -128,8 +131,10 @@ export const new_file_command = () => {
         const document = await vscode.workspace.openTextDocument(fileUri)
         await vscode.window.showTextDocument(document, { preview: false })
       } catch (error: any) {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.FAILED_TO_CREATE_FILE(error.message)
+        vscode.window.showInformationMessage(
+          t('common.info.failed-to-create-file', {
+            message: error.message
+          })
         )
       }
     }

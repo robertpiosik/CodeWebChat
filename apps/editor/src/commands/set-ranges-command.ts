@@ -217,14 +217,14 @@ export const set_ranges_command = (
         const choice = await vscode.window.showQuickPick(
           [
             {
-              label: t('command.set-ranges-command.quick-pick.json-file'),
+              label: t('common.source.json-file'),
               description: t(
                 'command.set-ranges-command.quick-pick.json-file-description'
               ),
               picked: last_location != 'state'
             },
             {
-              label: t('command.set-ranges-command.quick-pick.workspace-state'),
+              label: t('common.source.workspace-state'),
               description: t(
                 'command.set-ranges-command.quick-pick.workspace-state-description'
               ),
@@ -238,9 +238,7 @@ export const set_ranges_command = (
 
         if (!choice) return
         save_location =
-          choice.label == t('command.set-ranges-command.quick-pick.json-file')
-            ? 'file'
-            : 'state'
+          choice.label == t('common.source.json-file') ? 'file' : 'state'
         await extension_context.workspaceState.update(
           LAST_RANGES_SAVE_LOCATION_STATE_KEY,
           save_location

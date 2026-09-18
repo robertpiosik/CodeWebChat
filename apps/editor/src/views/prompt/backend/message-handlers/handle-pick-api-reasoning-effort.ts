@@ -29,9 +29,7 @@ export const handle_pick_api_reasoning_effort = async (
         await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Notification,
-            title: t(
-              'views.prompt.handlers.handle-pick-api-reasoning-effort.checking-support'
-            ),
+            title: t('common.progress.checking-reasoning-effort'),
             cancellable: true
           },
           async (_progress, token) => {

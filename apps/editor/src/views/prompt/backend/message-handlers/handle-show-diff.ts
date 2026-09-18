@@ -3,6 +3,7 @@ import * as path from 'path'
 import { ShowDiffMessage } from '@/views/prompt/types/messages'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
+import { t } from '@/i18n'
 
 export const handle_show_diff = async (
   message: ShowDiffMessage
@@ -15,7 +16,7 @@ export const handle_show_diff = async (
       message: 'No workspace folders open'
     })
     vscode.window.showWarningMessage(
-      dictionary.error_message.NO_WORKSPACE_FOLDERS_FOUND
+      t('common.error.no-workspace-folders-found')
     )
     return
   }

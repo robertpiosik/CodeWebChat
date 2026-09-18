@@ -19,7 +19,7 @@ export const handle_commit_item = async (
     const workspace_folders = vscode.workspace.workspaceFolders
     if (!workspace_folders || workspace_folders.length == 0) {
       vscode.window.showErrorMessage(
-        dictionary.error_message.NO_WORKSPACE_FOLDERS_FOUND
+        t('common.error.no-workspace-folders-found')
       )
       return undefined
     }
@@ -38,11 +38,7 @@ export const handle_commit_item = async (
     }
 
     if (git_folders.length == 0) {
-      vscode.window.showErrorMessage(
-        t(
-          'views.prompt.handlers.handle-hash-sign-quick-pick.commit-symbol.no-git-repo'
-        )
-      )
+      vscode.window.showErrorMessage(t('common.error.no-git-repository-found'))
       return undefined
     }
 

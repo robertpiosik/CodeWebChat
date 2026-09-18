@@ -19,7 +19,7 @@ export const prompt_for_search_term = async (
         ? t('feature.search-files.title.filename')
         : t('feature.search-files.title.keywords')
       : mode == 'intelligent'
-        ? t('feature.search-files.title.intelligent')
+        ? t('common.title.intelligent-search')
         : t('feature.search-files.title.phrase')
   input_box.prompt =
     mode == 'keywords'
@@ -32,7 +32,7 @@ export const prompt_for_search_term = async (
   input_box.placeholder =
     mode == 'keywords'
       ? t('feature.search-files.placeholder.keywords')
-      : t('feature.search-files.placeholder')
+      : t('common.action.search')
   input_box.value = initial_search_term
   input_box.ignoreFocusOut = true
   input_box.buttons = [vscode.QuickInputButtons.Back, close_button]

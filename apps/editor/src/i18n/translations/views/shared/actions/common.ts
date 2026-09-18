@@ -1,23 +1,23 @@
 export const translations = {
-  'views.shared.actions.api.create.create.title': {
+  'views.shared.actions.placement.title': {
     en: 'Placement',
     pl: 'Umiejscowienie',
-    'zh-cn': '放置位置',
+    'zh-cn': '位置',
     ja: '配置',
-    'zh-tw': '放置位置',
+    'zh-tw': '位置',
     de: 'Platzierung',
     es: 'Colocación',
     fr: 'Placement',
     'pt-br': 'Posicionamento',
     ru: 'Размещение',
-    ko: '배치',
+    ko: '위치',
     it: 'Posizionamento',
     tr: 'Yerleştirme',
     cs: 'Umístění',
     hu: 'Elhelyezés',
     bg: 'Разположение'
   },
-  'views.shared.actions.api.create.create.placeholder': {
+  'views.shared.actions.placement.placeholder': {
     en: 'Where to insert?',
     pl: 'Gdzie wstawić?',
     'zh-cn': '插入到哪里？',

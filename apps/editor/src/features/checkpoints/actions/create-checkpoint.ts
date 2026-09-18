@@ -234,7 +234,7 @@ export const create_checkpoint = async (params: {
       await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: t('feature.checkpoints.progress.creating'),
+          title: t('common.progress.creating-checkpoint'),
           cancellable: false
         },
         create_checkpoint_task

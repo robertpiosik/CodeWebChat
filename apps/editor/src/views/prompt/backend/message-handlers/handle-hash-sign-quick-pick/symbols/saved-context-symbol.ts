@@ -47,9 +47,7 @@ export const handle_saved_context_item = async (
 
     if (source_options.length == 0) {
       vscode.window.showInformationMessage(
-        t(
-          'views.prompt.handlers.handle-hash-sign-quick-pick.saved-context-symbol.no-saved-contexts-found'
-        )
+        t('common.context.no-saved-contexts')
       )
       return 'continue'
     }

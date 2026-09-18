@@ -66,7 +66,7 @@ export const update = async (params: {
   }
 
   if (params.origin == 'cancel') {
-    const discard_button = t('views.shared.actions.web.update.discard')
+    const discard_button = t('common.action.discard')
     const result = await vscode.window.showWarningMessage(
       t('views.common.handlers.common.confirm-discard-unsaved-changes', {
         item_type: 'chatbot'

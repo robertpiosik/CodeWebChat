@@ -6,7 +6,7 @@ export const ask_for_new_context_name = async (
 ): Promise<string | 'back' | undefined> => {
   const input_box = vscode.window.createInputBox()
   input_box.title = t('feature.context-restoration.ask-name.title')
-  input_box.prompt = t('feature.context-restoration.ask-name.prompt')
+  input_box.prompt = t('common.prompt.enter-name', { item: 'context' })
   input_box.placeholder = t('feature.context-restoration.ask-name.placeholder')
 
   return new Promise((resolve) => {

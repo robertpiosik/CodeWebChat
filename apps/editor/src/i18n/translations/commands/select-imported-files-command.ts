@@ -1,22 +1,4 @@
 export const translations = {
-  'command.select-imported-files-command.processing': {
-    en: 'Processing imports...',
-    pl: 'Przetwarzanie importów...',
-    'zh-cn': '正在处理导入...',
-    ja: 'インポートを処理中...',
-    'zh-tw': '正在處理匯入...',
-    de: 'Importe werden verarbeitet...',
-    es: 'Procesando importaciones...',
-    fr: 'Traitement des importations...',
-    'pt-br': 'Processando importações...',
-    ru: 'Обработка импортов...',
-    ko: '가져오기 처리 중...',
-    it: 'Elaborazione delle importazioni...',
-    tr: 'İçe aktarmalar işleniyor...',
-    cs: 'Zpracování importů...',
-    hu: 'Importálások feldolgozása...',
-    bg: 'Обработка на импортиранията...'
-  },
   'command.select-imported-files-command.deep-search': {
     en: 'Deep Search Imports',
     pl: 'Głębokie wyszukiwanie importów',
@@ -125,42 +107,7 @@ export const translations = {
     hu: 'Importált fájlok',
     bg: 'Импортирани файлове'
   },
-  'command.select-imported-files-command.error-opening': {
-    en: 'Error opening file: {error}',
-    pl: 'Błąd otwierania pliku: {error}',
-    'zh-cn': '打开文件出错：{error}',
-    ja: 'ファイルを開く際のエラー: {error}',
-    'zh-tw': '開啟檔案出錯：{error}',
-    de: 'Fehler beim Öffnen der Datei: {error}',
-    es: 'Error al abrir el archivo: {error}',
-    fr: 'Erreur lors de l’ouverture du fichier : {error}',
-    'pt-br': 'Erro ao abrir arquivo: {error}',
-    ru: 'Ошибка открытия файла: {error}',
-    ko: '파일 열기 오류: {error}',
-    it: 'Errore durante l’apertura del file: {error}',
-    tr: 'Dosya açma hatası: {error}',
-    cs: 'Chyba při otevírání souboru: {error}',
-    hu: 'Hiba a fájl megnyitásakor: {error}',
-    bg: 'Грешка при отваряне на файл: {error}'
-  },
-  'command.select-imported-files-command.no-files': {
-    en: 'No imports found.',
-    pl: 'Nie znaleziono importów.',
-    'zh-cn': '未找到导入。',
-    ja: 'インポートが見つかりません。',
-    'zh-tw': '找不到匯入。',
-    de: 'Keine Importe gefunden.',
-    es: 'No se encontraron importaciones.',
-    fr: 'Aucune importation trouvée.',
-    'pt-br': 'Nenhuma importação encontrada.',
-    ru: 'Импорты не найдены.',
-    ko: '가져오기를 찾을 수 없습니다.',
-    it: 'Nessuna importazione trovata.',
-    tr: 'İçe aktarma bulunamadı.',
-    cs: 'Nebyly nalezeny žádné importy.',
-    hu: 'Nem találhatók importálások.',
-    bg: 'Не са намерени импортирания.'
-  },
+
   'command.select-imported-files-command.processing-recursive': {
     en: 'Processing recursive imports...',
     pl: 'Przetwarzanie rekurencyjnych importów...',
@@ -178,23 +125,5 @@ export const translations = {
     cs: 'Zpracování rekurzivních importů...',
     hu: 'Rekurzív importálások feldolgozása...',
     bg: 'Обработка на рекурсивни импортирания...'
-  },
-  'command.select-imported-files-command.no-valid-files': {
-    en: 'No valid files found.',
-    pl: 'Nie znaleziono prawidłowych plików.',
-    'zh-cn': '未找到有效文件。',
-    ja: '有効なファイルが見つかりません。',
-    'zh-tw': '找不到有效檔案。',
-    de: 'Keine gültigen Dateien gefunden.',
-    es: 'No se encontraron archivos válidos.',
-    fr: 'Aucun fichier valide trouvé.',
-    'pt-br': 'Nenhum arquivo válido encontrado.',
-    ru: 'Действительные файлы не найдены.',
-    ko: '유효한 파일을 찾을 수 없습니다.',
-    it: 'Nessun file valido trovato.',
-    tr: 'Geçerli dosya bulunamadı.',
-    cs: 'Nebyly nalezeny žádné platné soubory.',
-    hu: 'Nem találhatók érvényes fájlok.',
-    bg: 'Не са намерени валидни файлове.'
   }
 } as const

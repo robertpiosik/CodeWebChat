@@ -35,7 +35,7 @@ export const select_workspace_file_command = (
           quick_pick.items = items
           quick_pick.activeItems = []
           quick_pick.placeholder = t(
-            'command.select-workspace-file-command.select-workspace'
+            'common.placeholder.select-workspace-folder'
           )
           quick_pick.title = t(
             'command.select-workspace-file-command.workspace-folders'
@@ -79,9 +79,7 @@ export const select_workspace_file_command = (
     quick_pick.title = t(
       'command.select-workspace-file-command.workspace-files'
     )
-    quick_pick.placeholder = t(
-      'command.select-workspace-file-command.select-file'
-    )
+    quick_pick.placeholder = t('common.placeholder.select-files-to-add')
     quick_pick.matchOnDescription = true
     quick_pick.value = last_search_query
     quick_pick.ignoreFocusOut = true
@@ -200,7 +198,7 @@ export const select_workspace_file_command = (
 
         buttons.push({
           iconPath: new vscode.ThemeIcon('go-to-file'),
-          tooltip: t('command.select-workspace-file-command.go-to-file')
+          tooltip: t('common.go-to-file')
         })
 
         return {

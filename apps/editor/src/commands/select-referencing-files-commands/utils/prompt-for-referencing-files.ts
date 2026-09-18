@@ -168,7 +168,7 @@ export const prompt_for_referencing_files = async (params: {
             })
           } catch (error) {
             vscode.window.showErrorMessage(
-              t('command.select-referencing-files-command.error-opening', {
+              t('common.error.opening-file', {
                 error: String(error)
               })
             )

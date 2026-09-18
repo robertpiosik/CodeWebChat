@@ -1,22 +1,4 @@
 export const translations = {
-  'command.copy-markdown-command.info.context-copied': {
-    en: 'Context copied to clipboard.',
-    pl: 'Kontekst skopiowany do schowka.',
-    'zh-cn': '上下文已复制到剪贴板。',
-    ja: 'コンテキストがクリップボードにコピーされました。',
-    'zh-tw': '上下文已複製到剪貼簿。',
-    de: 'Kontext in die Zwischenablage kopiert.',
-    es: 'Contexto copiado al portapapeles.',
-    fr: 'Contexte copié dans le presse-papiers.',
-    'pt-br': 'Contexto copiado para a área de transferência.',
-    ru: 'Контекст скопирован в буфер обмена.',
-    ko: '컨텍스트가 클립보드에 복사되었습니다.',
-    it: 'Contesto copiato negli appunti.',
-    tr: 'Bağlam panoya kopyalandı.',
-    cs: 'Kontext zkopírován do schránky.',
-    hu: 'Kontextus a vágólapra másolva.',
-    bg: 'Контекстът е копиран в клипборда.'
-  },
   'command.copy-markdown-command.warning.no-open-editors': {
     en: 'No open editors selected.',
     pl: 'Nie wybrano otwartych edytorów.',
@@ -52,24 +34,5 @@ export const translations = {
     cs: 'Chyba při čtení souboru {filePath}: {message}.',
     hu: 'Hiba a(z) {filePath} fájl olvasásakor: {message}.',
     bg: 'Грешка при четене на файл {filePath}: {message}.'
-  },
-  'command.copy-markdown-command.info.context-from-editors-copied': {
-    en: 'Context from open editors copied to clipboard.',
-    pl: 'Kontekst z otwartych edytorów skopiowany do schowka.',
-    'zh-cn': '来自打开的编辑器的上下文已复制到剪贴板。',
-    ja: '開いているエディタからのコンテキストがクリップボードにコピーされました。',
-    'zh-tw': '來自開啟的編輯器的上下文已複製到剪貼簿。',
-    de: 'Kontext aus geöffneten Editoren in die Zwischenablage kopiert.',
-    es: 'Contexto de los editores abiertos copiado al portapapeles.',
-    fr: 'Contexte des éditeurs ouverts copié dans le presse-papiers.',
-    'pt-br':
-      'Contexto dos editores abertos copiado para a área de transferência.',
-    ru: 'Контекст из открытых редакторов скопирован в буфер обмена.',
-    ko: '열린 편집기의 컨텍스트가 클립보드에 복사되었습니다.',
-    it: 'Contesto dagli editor aperti copiato negli appunti.',
-    tr: 'Açık düzenleyicilerden bağlam panoya kopyalandı.',
-    cs: 'Kontext z otevřených editorů zkopírován do schránky.',
-    hu: 'A megnyitott szerkesztők kontextusa a vágólapra másolva.',
-    bg: 'Контекстът от отворените редактори е копиран в клипборда.'
   }
 } as const

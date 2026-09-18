@@ -75,7 +75,11 @@ export const get_patch_repair_config = async (params: {
   )
 
   if (!provider) {
-    vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))
+    vscode.window.showErrorMessage(
+      t('common.error.provider-not-found', {
+        name: selected_api_configuration.provider_name
+      })
+    )
     Logger.warn({
       function_name: 'get_patch_repair_config',
       message: 'API provider not found for the Patch Repair tool.'

@@ -30,10 +30,8 @@ export const create = async (params: {
           },
           { label: t('common.placement-below') }
         ]
-        quick_pick.title = t('views.shared.actions.api.create.create.title')
-        quick_pick.placeholder = t(
-          'views.shared.actions.api.create.create.placeholder'
-        )
+        quick_pick.title = t('views.shared.actions.placement.title')
+        quick_pick.placeholder = t('views.shared.actions.placement.placeholder')
         quick_pick.buttons = [
           {
             iconPath: new vscode.ThemeIcon('close'),

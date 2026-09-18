@@ -61,7 +61,7 @@ export const delete_checkpoint_with_undo = async (params: {
   params.on_before_show_message?.()
   const undo_action = t('common.undo')
   const choice = await vscode.window.showInformationMessage(
-    t('command.history-command.success.deleted'),
+    t('common.success.item-deleted', { item: 'Checkpoint' }),
     undo_action
   )
   params.on_after_show_message?.()

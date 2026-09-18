@@ -20,7 +20,7 @@ export const prompt_for_shrink_mode = async (params: {
 
   const shrink_quick_pick = vscode.window.createQuickPick()
   shrink_quick_pick.items = shrink_items
-  shrink_quick_pick.title = t('feature.search-files.title')
+  shrink_quick_pick.title = t('common.title.search')
   shrink_quick_pick.placeholder = t('feature.search-files.shrink.placeholder')
   shrink_quick_pick.activeItems = [
     params.should_shrink ? shrink_items[1] : shrink_items[0]

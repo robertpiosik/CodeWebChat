@@ -11,9 +11,7 @@ export const handle_agentic_search = async (
   prompt_view_provider: PromptViewProvider
 ) => {
   if (agentic_search_in_progress) {
-    vscode.window.showInformationMessage(
-      t('views.prompt.handlers.handle-agentic-search.info.search-in-progress')
-    )
+    vscode.window.showInformationMessage(t('common.info.search-in-progress'))
     return
   }
 

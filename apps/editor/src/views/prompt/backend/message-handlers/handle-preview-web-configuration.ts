@@ -79,7 +79,7 @@ export const handle_preview_web_configuration = async (
   if (sent) {
     prompt_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
-      title: t('views.prompt.handlers.common.continue-in-browser'),
+      title: t('common.info.continue-in-browser'),
       type: 'success'
     })
   }

@@ -33,10 +33,8 @@ export const pick_model = async (params: {
 
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = items
-    quick_pick.title = t('views.shared.actions.web.pick-model.title')
-    quick_pick.placeholder = t(
-      'views.shared.actions.web.pick-model.placeholder'
-    )
+    quick_pick.title = t('common.select-model.title')
+    quick_pick.placeholder = t('common.select-model.placeholder')
 
     if (params.current_model_id) {
       const active_item = items.find(

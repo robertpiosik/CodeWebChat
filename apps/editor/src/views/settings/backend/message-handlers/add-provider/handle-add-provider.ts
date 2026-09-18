@@ -24,12 +24,8 @@ export const handle_add_provider = async (
             label: t('common.placement-below')
           }
         ]
-        quick_pick.title = t(
-          'views.shared.actions.api.upsert-provider.placement.title'
-        )
-        quick_pick.placeholder = t(
-          'views.shared.actions.api.upsert-provider.placement.placeholder'
-        )
+        quick_pick.title = t('views.shared.actions.placement.title')
+        quick_pick.placeholder = t('views.shared.actions.placement.placeholder')
         quick_pick.buttons = [
           {
             iconPath: new vscode.ThemeIcon('close'),

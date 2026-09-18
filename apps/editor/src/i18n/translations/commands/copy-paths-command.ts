@@ -88,23 +88,5 @@ export const translations = {
     cs: 'ASCII Strom',
     hu: 'ASCII Fa',
     bg: 'ASCII дърво'
-  },
-  'command.copy-paths-command.copied': {
-    en: 'Paths copied to clipboard.',
-    pl: 'Ścieżki skopiowane do schowka.',
-    'zh-cn': '路径已复制到剪贴板。',
-    ja: 'パスがクリップボードにコピーされました。',
-    'zh-tw': '路徑已複製到剪貼簿。',
-    de: 'Pfade in die Zwischenablage kopiert.',
-    es: 'Rutas copiadas al portapapeles.',
-    fr: 'Chemins copiés dans le presse-papiers.',
-    'pt-br': 'Caminhos copiados para a área de transferência.',
-    ru: 'Пути скопированы в буфер обмена.',
-    ko: '경로가 클립보드에 복사되었습니다.',
-    it: 'Percorsi copiati negli appunti.',
-    tr: 'Yollar panoya kopyalandı.',
-    cs: 'Cesty zkopírovány do schránky.',
-    hu: 'Útvonalak a vágólapra másolva.',
-    bg: 'Пътищата са копирани в клипборда.'
   }
 } as const

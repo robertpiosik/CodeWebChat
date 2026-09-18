@@ -29,11 +29,11 @@ export const restore_from_workspace_state = async (params: {
 
     const edit_button = {
       iconPath: new vscode.ThemeIcon('edit'),
-      tooltip: t('command.restore-file-selection-command.action.rename')
+      tooltip: t('common.action.rename')
     }
     const delete_button = {
       iconPath: new vscode.ThemeIcon('trash'),
-      tooltip: t('command.restore-file-selection-command.action.delete')
+      tooltip: t('common.delete')
     }
 
     while (true) {
@@ -46,7 +46,7 @@ export const restore_from_workspace_state = async (params: {
 
         if (contexts.length > 0) {
           items.push({
-            label: t('command.restore-file-selection-command.recent-entries'),
+            label: t('common.label.recent-entries'),
             kind: vscode.QuickPickItemKind.Separator
           })
 
@@ -78,9 +78,7 @@ export const restore_from_workspace_state = async (params: {
           : { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
 
       const quick_pick = vscode.window.createQuickPick()
-      quick_pick.title = t(
-        'command.restore-file-selection-command.select-saved.title'
-      )
+      quick_pick.title = t('common.context.saved-entries')
       quick_pick.placeholder = t(
         'command.restore-file-selection-command.select-saved.workspace'
       )
@@ -126,12 +124,10 @@ export const restore_from_workspace_state = async (params: {
             if (event.button === edit_button) {
               active_dialog_count++
               const input_box = vscode.window.createInputBox()
-              input_box.title = t(
-                'command.restore-file-selection-command.rename.title'
-              )
-              input_box.prompt = t(
-                'command.restore-file-selection-command.rename.prompt'
-              )
+              input_box.title = t('common.context.rename.title')
+              input_box.prompt = t('common.prompt.enter-name', {
+                item: 'new context'
+              })
               input_box.value = item.context.name
 
               const new_name = await new Promise<string | undefined | 'back'>(
@@ -142,7 +138,7 @@ export const restore_from_workspace_state = async (params: {
                     const trimmed = value.trim()
                     if (!trimmed) {
                       input_box.validationMessage = t(
-                        'command.restore-file-selection-command.rename.empty'
+                        'common.context.rename.empty'
                       )
                       return false
                     }
@@ -153,7 +149,7 @@ export const restore_from_workspace_state = async (params: {
                       )
                     ) {
                       input_box.validationMessage = t(
-                        'command.restore-file-selection-command.rename.exists'
+                        'common.context.rename.exists'
                       )
                       return false
                     }
@@ -254,7 +250,7 @@ export const restore_from_workspace_state = async (params: {
 
               active_dialog_count++
               const choice = await vscode.window.showInformationMessage(
-                t('command.restore-file-selection-command.deleted'),
+                t('common.success.item-deleted', { item: 'Context' }),
                 'Undo'
               )
               active_dialog_count--
@@ -262,7 +258,7 @@ export const restore_from_workspace_state = async (params: {
               if (active_deletion_timestamp !== current_timestamp) {
                 if (choice == 'Undo')
                   vscode.window.showInformationMessage(
-                    t('command.restore-file-selection-command.undo.failed')
+                    t('common.context.undo.failed')
                   )
                 quick_pick.show()
                 return

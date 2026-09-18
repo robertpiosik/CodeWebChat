@@ -140,7 +140,7 @@ export const copy_paths_commands = (
       const paths_text = format_paths(checked_files, format)
       await vscode.env.clipboard.writeText(paths_text)
       vscode.window.showInformationMessage(
-        t('command.copy-paths-command.copied')
+        t('common.info.copied-to-clipboard', { item: 'Paths' })
       )
     }),
 
@@ -163,7 +163,7 @@ export const copy_paths_commands = (
         const paths_text = format_paths(checked_files, format)
         await vscode.env.clipboard.writeText(paths_text)
         vscode.window.showInformationMessage(
-          t('command.copy-paths-command.copied')
+          t('common.info.copied-to-clipboard', { item: 'Paths' })
         )
       }
     )

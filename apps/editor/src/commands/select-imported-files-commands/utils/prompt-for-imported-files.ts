@@ -34,7 +34,7 @@ export const prompt_for_imported_files = async (params: {
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: t('command.select-imported-files-command.processing'),
+      title: t('common.progress.processing-items', { items: 'imports' }),
       cancellable: true
     },
     async (progress, token) => {
@@ -182,7 +182,7 @@ export const prompt_for_imported_files = async (params: {
 
     if (valid_immediate.length == 0 && valid_recursive.length == 0) {
       vscode.window.showInformationMessage(
-        t('command.select-imported-files-command.no-files')
+        t('common.info.no-items-found', { items: 'imports' })
       )
       return undefined
     }
@@ -321,7 +321,7 @@ export const prompt_for_imported_files = async (params: {
             await vscode.window.showTextDocument(doc, { preview: true })
           } catch (error) {
             vscode.window.showErrorMessage(
-              t('command.select-imported-files-command.error-opening', {
+              t('common.error.opening-file', {
                 error: String(error)
               })
             )

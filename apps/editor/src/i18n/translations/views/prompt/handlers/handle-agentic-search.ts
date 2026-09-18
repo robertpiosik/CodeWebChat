@@ -1,22 +1,4 @@
 export const translations = {
-  'views.prompt.handlers.handle-agentic-search.info.search-in-progress': {
-    en: 'Agentic search is already in progress.',
-    pl: 'Wyszukiwanie agentowe jest już w toku.',
-    'zh-cn': '智能体搜索已经在进行中。',
-    ja: 'エージェント検索は既に進行中です。',
-    'zh-tw': '智能體搜尋已經在進行中。',
-    de: 'Agentische Suche läuft bereits.',
-    es: 'La búsqueda de agentes ya está en progreso.',
-    fr: "La recherche d'agents est déjà en cours.",
-    'pt-br': 'A pesquisa de agentes já está em andamento.',
-    ru: 'Агентный поиск уже выполняется.',
-    ko: '에이전트 검색이 이미 진행 중입니다.',
-    it: 'La ricerca degli agenti è già in corso.',
-    tr: 'Aracı araması zaten devam ediyor.',
-    cs: 'Agentní vyhledávání již probíhá.',
-    hu: 'Az ügynökkeresés már folyamatban van.',
-    bg: 'Агентното търсене вече се изпълнява.'
-  },
   'views.prompt.handlers.handle-agentic-search.info.no-agents': {
     en: 'No agents available.',
     pl: 'Brak dostępnych agentów.',
@@ -89,24 +71,6 @@ export const translations = {
     hu: 'Jelzők törlése',
     bg: 'Изтриване на флагове'
   },
-  'views.prompt.handlers.handle-agentic-search.agent.learn-more': {
-    en: 'Learn more',
-    pl: 'Dowiedz się więcej',
-    'zh-cn': '了解更多',
-    ja: '詳細',
-    'zh-tw': '了解更多',
-    de: 'Mehr erfahren',
-    es: 'Saber más',
-    fr: 'En savoir plus',
-    'pt-br': 'Saiba mais',
-    ru: 'Узнать больше',
-    ko: '더 알아보기',
-    it: 'Scopri di più',
-    tr: 'Daha fazla bilgi',
-    cs: 'Zjistit více',
-    hu: 'Tudjon meg többet',
-    bg: 'Научете повече'
-  },
   'views.prompt.handlers.handle-agentic-search.agent.select-agent': {
     en: 'Select Agent',
     pl: 'Wybierz agenta',
@@ -144,24 +108,7 @@ export const translations = {
       hu: 'Válasszon ügynököt a keresés végrehajtásához',
       bg: 'Изберете агент, който да извърши търсенето'
     },
-  'views.prompt.handlers.handle-agentic-search.agent.deleted': {
-    en: 'Flags deleted.',
-    pl: 'Flagi usunięte.',
-    'zh-cn': '标志已删除。',
-    ja: 'フラグが削除されました。',
-    'zh-tw': '標誌已刪除。',
-    de: 'Flags gelöscht.',
-    es: 'Banderas eliminadas.',
-    fr: 'Drapeaux supprimés.',
-    'pt-br': 'Sinalizadores excluídos.',
-    ru: 'Флаги удалены.',
-    ko: '플래그가 삭제되었습니다.',
-    it: 'Flag eliminati.',
-    tr: 'Bayraklar silindi.',
-    cs: 'Příznaky odstraněny.',
-    hu: 'Jelzők törölve.',
-    bg: 'Флаговете са изтрити.'
-  },
+
   'views.prompt.handlers.handle-agentic-search.agent.edit-flags-prompt': {
     en: 'Enter custom CLI flags for the agent',
     pl: 'Wprowadź niestandardowe flagi CLI dla agenta',
@@ -235,24 +182,6 @@ export const translations = {
       hu: 'Válassza ki a munkaterületet, amelyben az ügynök futni fog',
       bg: 'Изберете работното пространство, в което да работи агентът'
     },
-  'views.prompt.handlers.handle-agentic-search.title': {
-    en: 'Agentic Search',
-    pl: 'Wyszukiwanie agentowe',
-    'zh-cn': '智能体搜索',
-    ja: 'エージェント検索',
-    'zh-tw': '智能體搜尋',
-    de: 'Agentische Suche',
-    es: 'Búsqueda de agentes',
-    fr: "Recherche d'agents",
-    'pt-br': 'Pesquisa de agentes',
-    ru: 'Агентный поиск',
-    ko: '에이전트 검색',
-    it: 'Ricerca agenti',
-    tr: 'Aracı Araması',
-    cs: 'Agentní vyhledávání',
-    hu: 'Ügynökkeresés',
-    bg: 'Агентно търсене'
-  },
   'views.prompt.handlers.handle-agentic-search.agent.waiting-for-agent': {
     en: 'waiting for agent...',
     pl: 'oczekiwanie na agenta...',
@@ -307,24 +236,7 @@ export const translations = {
     hu: 'Az ügynök befejezte {duration} alatt.',
     bg: 'Агентът завърши за {duration}.'
   },
-  'views.prompt.handlers.handle-agentic-search.info.no-files': {
-    en: 'No files found by the agent.',
-    pl: 'Agent nie znalazł żadnych plików.',
-    'zh-cn': '智能体未找到任何文件。',
-    ja: 'エージェントによってファイルが見つかりませんでした。',
-    'zh-tw': '智能體未找到任何檔案。',
-    de: 'Keine Dateien vom Agenten gefunden.',
-    es: 'El agente no encontró archivos.',
-    fr: "Aucun fichier trouvé par l'agent.",
-    'pt-br': 'Nenhum arquivo encontrado pelo agente.',
-    ru: 'Агент не нашел ни одного файла.',
-    ko: '에이전트가 찾은 파일이 없습니다.',
-    it: "Nessun file trovato dall'agente.",
-    tr: 'Aracı tarafından hiçbir dosya bulunamadı.',
-    cs: 'Agent nenalezl žádné soubory.',
-    hu: 'Az ügynök nem talált fájlokat.',
-    bg: 'Не са намерени файлове от агента.'
-  },
+
   'views.prompt.handlers.handle-agentic-search.results': {
     en: 'Agentic Search Results',
     pl: 'Wyniki wyszukiwania agentowego',

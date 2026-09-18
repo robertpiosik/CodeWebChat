@@ -1,40 +1,4 @@
 export const translations = {
-  'command.select-referencing-files-command.processing': {
-    en: 'Processing references...',
-    pl: 'Przetwarzanie odwołań...',
-    'zh-cn': '正在处理引用...',
-    ja: '参照を処理中...',
-    'zh-tw': '正在處理參考...',
-    de: 'Referenzen werden verarbeitet...',
-    es: 'Procesando referencias...',
-    fr: 'Traitement des références...',
-    'pt-br': 'Processando referências...',
-    ru: 'Обработка ссылок...',
-    ko: '참조 처리 중...',
-    it: 'Elaborazione dei riferimenti...',
-    tr: 'Referanslar işleniyor...',
-    cs: 'Zpracování referencí...',
-    hu: 'Hivatkozások feldolgozása...',
-    bg: 'Обработка на референциите...'
-  },
-  'command.select-referencing-files-command.no-files': {
-    en: 'No references found.',
-    pl: 'Nie znaleziono odwołań.',
-    'zh-cn': '未找到引用。',
-    ja: '参照が見つかりません。',
-    'zh-tw': '找不到參考。',
-    de: 'Keine Referenzen gefunden.',
-    es: 'No se encontraron referencias.',
-    fr: 'Aucune référence trouvée.',
-    'pt-br': 'Nenhuma referência encontrada.',
-    ru: 'Ссылки не найдены.',
-    ko: '참조를 찾을 수 없습니다.',
-    it: 'Nessun riferimento trovato.',
-    tr: 'Referans bulunamadı.',
-    cs: 'Nebyly nalezeny žádné reference.',
-    hu: 'Nem találhatók hivatkozások.',
-    bg: 'Не са намерени референции.'
-  },
   'command.select-referencing-files-command.failed': {
     en: 'Reference check failed: {error}',
     pl: 'Sprawdzenie odwołań nie powiodło się: {error}',
@@ -88,23 +52,5 @@ export const translations = {
     cs: 'Odkazující soubory',
     hu: 'Hivatkozó fájlok',
     bg: 'Рефериращи файлове'
-  },
-  'command.select-referencing-files-command.error-opening': {
-    en: 'Error opening file: {error}',
-    pl: 'Błąd otwierania pliku: {error}',
-    'zh-cn': '打开文件出错：{error}',
-    ja: 'ファイルを開く際のエラー: {error}',
-    'zh-tw': '開啟檔案出錯：{error}',
-    de: 'Fehler beim Öffnen der Datei: {error}',
-    es: 'Error al abrir el archivo: {error}',
-    fr: 'Erreur lors de l’ouverture du fichier : {error}',
-    'pt-br': 'Erro ao abrir arquivo: {error}',
-    ru: 'Ошибка открытия файла: {error}',
-    ko: '파일 열기 오류: {error}',
-    it: 'Errore durante l’apertura del file: {error}',
-    tr: 'Dosya açma hatası: {error}',
-    cs: 'Chyba při otevírání souboru: {error}',
-    hu: 'Hiba a fájl megnyitásakor: {error}',
-    bg: 'Грешка при отваряне на файл: {error}'
   }
 } as const

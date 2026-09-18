@@ -61,7 +61,7 @@ export const search_files_by_intelligent = async (
       },
       async (progress, token) => {
         token.onCancellationRequested(() => {
-          abort_controller.abort(t('feature.search-files.cancel.user'))
+          abort_controller.abort(t('common.cancel.user'))
         })
         progress.report({ message: t('common.progress.waiting-for-server') })
         return await send_llm_message({

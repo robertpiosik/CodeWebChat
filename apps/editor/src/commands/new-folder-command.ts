@@ -3,6 +3,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { create_safe_path } from '../utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
+import { Logger } from '@shared/utils/logger'
 import { t } from '../i18n'
 
 export const new_folder_command = () => {
@@ -35,9 +36,10 @@ export const new_folder_command = () => {
       }
 
       if (!parent_path) {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.COULD_NOT_DETERMINE_LOCATION_TO_CREATE_FOLDER
-        )
+        Logger.error({
+          function_name: 'new_folder_command',
+          message: 'Could not determine location to create folder.'
+        })
         return
       }
 
@@ -53,7 +55,7 @@ export const new_folder_command = () => {
 
       const input_box = vscode.window.createInputBox()
       input_box.title = t('command.new-folder-command.title')
-      input_box.prompt = t('command.new-folder-command.prompt')
+      input_box.prompt = t('common.prompt.enter-name', { item: 'folder' })
       input_box.placeholder = ''
 
       const close_button = {
@@ -103,11 +105,12 @@ export const new_folder_command = () => {
         const target_path = create_safe_path(parent_path, folder_name)
 
         if (!target_path) {
-          vscode.window.showErrorMessage(
-            is_file_like
-              ? dictionary.error_message.INVALID_FILE_NAME(folder_name)
-              : dictionary.error_message.INVALID_FOLDER_NAME(folder_name)
-          )
+          Logger.error({
+            function_name: 'new_folder_command',
+            message: is_file_like
+              ? `Invalid file name: '${folder_name}'.`
+              : `Invalid folder name: '${folder_name}'.`
+          })
           return
         }
 
@@ -116,10 +119,10 @@ export const new_folder_command = () => {
 
           try {
             await vscode.workspace.fs.stat(fileUri)
-            vscode.window.showErrorMessage(
-              dictionary.error_message.FILE_ALREADY_EXISTS(
-                path.basename(target_path)
-              )
+            vscode.window.showInformationMessage(
+              t('common.info.file-already-exists', {
+                name: path.basename(target_path)
+              })
             )
             return
           } catch {}
@@ -144,10 +147,10 @@ export const new_folder_command = () => {
 
         try {
           await vscode.workspace.fs.stat(vscode.Uri.file(target_path))
-          vscode.window.showErrorMessage(
-            dictionary.error_message.FOLDER_ALREADY_EXISTS(
-              path.basename(target_path)
-            )
+          vscode.window.showInformationMessage(
+            t('common.info.folder-already-exists', {
+              name: path.basename(target_path)
+            })
           )
           return
         } catch {
@@ -157,12 +160,16 @@ export const new_folder_command = () => {
         await vscode.workspace.fs.createDirectory(vscode.Uri.file(target_path))
       } catch (error: any) {
         if (is_file_like) {
-          vscode.window.showErrorMessage(
-            dictionary.error_message.FAILED_TO_CREATE_FILE(error.message)
+          vscode.window.showInformationMessage(
+            t('common.info.failed-to-create-file', {
+              message: error.message
+            })
           )
         } else {
-          vscode.window.showErrorMessage(
-            dictionary.error_message.FAILED_TO_CREATE_FOLDER(error.message)
+          vscode.window.showInformationMessage(
+            t('common.info.failed-to-create-folder', {
+              message: error.message
+            })
           )
         }
       }

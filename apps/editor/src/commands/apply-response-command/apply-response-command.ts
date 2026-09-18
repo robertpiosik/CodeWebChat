@@ -316,9 +316,7 @@ export const apply_response_command = (params: {
             params.prompt_view_provider.send_message({
               command: 'SHOW_PROGRESS',
               title: t('common.progress.response-preview'),
-              subtitle: t(
-                'command.apply-response-command.progress.creating-checkpoint'
-              )
+              subtitle: t('common.progress.creating-checkpoint')
             })
 
             before_checkpoint = await create_checkpoint({

@@ -38,9 +38,7 @@ export const initial_select_model = async (
 
     if (models.length > 0) {
       const manual_entry_item: vscode.QuickPickItem = {
-        label: `$(add) ${t(
-          'views.shared.actions.api.create.interactions.initial-select-model.enter-manually'
-        )}`,
+        label: `$(add) ${t('common.action.enter-manually')}`,
         alwaysShow: true
       }
 
@@ -157,9 +155,7 @@ export const initial_select_model = async (
   while (true) {
     const input = await vscode.window.showInputBox({
       title: t('common.select-model.title'),
-      prompt: t(
-        'views.shared.actions.api.create.interactions.initial-select-model.prompt'
-      )
+      prompt: t('common.prompt.enter-model-name')
     })
 
     if (!input) return undefined

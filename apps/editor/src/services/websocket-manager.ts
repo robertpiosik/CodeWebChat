@@ -69,9 +69,6 @@ export class WebSocketManager {
         message: 'Error initializing WebSocket server',
         data: error
       })
-      vscode.window.showErrorMessage(
-        dictionary.error_message.FAILED_TO_INITIALIZE_WEBSOCKET_SERVER(error)
-      )
     }
   }
 

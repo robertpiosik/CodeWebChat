@@ -34,23 +34,5 @@ export const translations = {
     cs: 'Nadřazené složky',
     hu: 'Szülőmappák',
     bg: 'Родителски папки'
-  },
-  'utils.show-parent-folder-quick-pick.select-folder': {
-    en: 'Select a folder to add to context',
-    pl: 'Wybierz folder do dodania do kontekstu',
-    'zh-cn': '选择要添加到上下文的文件夹',
-    ja: 'コンテキストに追加するフォルダを選択',
-    'zh-tw': '選擇要加入上下文的資料夾',
-    de: 'Ordner auswählen, um ihn zum Kontext hinzuzufügen',
-    es: 'Seleccione una carpeta para agregarla al contexto',
-    fr: 'Sélectionnez un dossier à ajouter au contexte',
-    'pt-br': 'Selecione uma pasta para adicionar ao contexto',
-    ru: 'Выберите папку для добавления в контекст',
-    ko: '컨텍스트에 추가할 폴더 선택',
-    it: 'Seleziona una cartella da aggiungere al contesto',
-    tr: 'Bağlama eklenecek bir klasör seçin',
-    cs: 'Vyberte složku, kterou chcete přidat do kontextu',
-    hu: 'Válasszon mappát a kontextushoz adáshoz',
-    bg: 'Изберете папка за добавяне към контекста'
   }
 } as const

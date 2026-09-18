@@ -35,9 +35,7 @@ export const select_imported_files_commands = (
           await workspace_provider.get_all_files_for_uri(target_uri)
 
         if (starting_uris.length == 0) {
-          vscode.window.showInformationMessage(
-            t('command.select-imported-files-command.no-valid-files')
-          )
+          vscode.window.showInformationMessage(t('common.info.no-files-found'))
           return
         }
 
@@ -66,9 +64,7 @@ export const select_imported_files_commands = (
         const checked_files = workspace_provider.get_checked_files()
 
         if (checked_files.length == 0) {
-          vscode.window.showInformationMessage(
-            t('command.select-imported-files-command.no-valid-files')
-          )
+          vscode.window.showInformationMessage(t('common.info.no-files-found'))
           return
         }
 

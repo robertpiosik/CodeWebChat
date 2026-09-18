@@ -107,7 +107,7 @@ export const show_search_results_quick_pick = async (params: {
   quick_pick.matchOnDescription = true
   quick_pick.title = params.title
 
-  const base_placeholder = t('feature.search-files.select-files')
+  const base_placeholder = t('common.placeholder.select-files-to-add')
 
   const update_title = () => {
     const total = quick_pick.selectedItems.reduce(
@@ -224,7 +224,7 @@ export const show_search_results_quick_pick = async (params: {
           })
         } catch (error) {
           vscode.window.showErrorMessage(
-            t('feature.search-files.error.opening-file', {
+            t('common.error.opening-file', {
               error: String(error)
             })
           )

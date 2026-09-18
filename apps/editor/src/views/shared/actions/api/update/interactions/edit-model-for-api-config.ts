@@ -59,9 +59,7 @@ export const edit_model_for_api_configuration = async (params: {
 
     if (models.length > 0) {
       const manual_entry_item: vscode.QuickPickItem = {
-        label: `$(add) ${t(
-          'views.shared.actions.api.create.interactions.initial-select-model.enter-manually'
-        )}`,
+        label: `$(add) ${t('common.action.enter-manually')}`,
         alwaysShow: true
       }
 
@@ -188,9 +186,7 @@ export const edit_model_for_api_configuration = async (params: {
     const new_model_input = await vscode.window.showInputBox({
       title: t('common.select-model.title'),
       value: params.api_configuration.model,
-      prompt: t(
-        'views.shared.actions.api.update.interactions.edit-model-for-api-config.prompt'
-      )
+      prompt: t('common.prompt.enter-model-name')
     })
 
     if (!new_model_input) return undefined

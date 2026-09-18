@@ -1,22 +1,4 @@
 export const translations = {
-  'command.select-workspace-file-command.select-workspace': {
-    en: 'Select a workspace folder to browse files',
-    pl: 'Wybierz folder obszaru roboczego, aby przeglądać pliki',
-    'zh-cn': '选择一个工作区文件夹以浏览文件',
-    ja: 'ファイルを参照するワークスペースフォルダを選択してください',
-    'zh-tw': '選擇一個工作區資料夾以瀏覽檔案',
-    de: 'Wählen Sie einen Arbeitsbereich-Ordner zum Durchsuchen von Dateien',
-    es: 'Seleccione una carpeta del espacio de trabajo para explorar archivos',
-    fr: 'Sélectionnez un dossier de l’espace de travail pour parcourir les fichiers',
-    'pt-br': 'Selecione uma pasta da área de trabalho para procurar arquivos',
-    ru: 'Выберите папку рабочей области для просмотра файлов',
-    ko: '파일을 찾아볼 작업 영역 폴더 선택',
-    it: 'Seleziona una cartella dell’area di lavoro per sfogliare i file',
-    tr: 'Dosyalara göz atmak için bir çalışma alanı klasörü seçin',
-    cs: 'Vyberte složku pracovního prostoru pro procházení souborů',
-    hu: 'Válasszon munkaterület mappát a fájlok böngészéséhez',
-    bg: 'Изберете папка от работното пространство за преглед на файлове'
-  },
   'command.select-workspace-file-command.workspace-folders': {
     en: 'Workspace Folders',
     pl: 'Foldery obszaru roboczego',
@@ -53,24 +35,7 @@ export const translations = {
     hu: 'Munkaterület fájlok',
     bg: 'Файлове на работното пространство'
   },
-  'command.select-workspace-file-command.select-file': {
-    en: 'Select a file to add to context',
-    pl: 'Wybierz plik do dodania do kontekstu',
-    'zh-cn': '选择要添加到上下文的文件',
-    ja: 'コンテキストに追加するファイルを選択',
-    'zh-tw': '選擇要加入上下文的檔案',
-    de: 'Datei auswählen, um sie zum Kontext hinzuzufügen',
-    es: 'Seleccione un archivo para agregarlo al contexto',
-    fr: 'Sélectionnez un fichier à ajouter au contexte',
-    'pt-br': 'Selecione um arquivo para adicionar ao contexto',
-    ru: 'Выберите файл для добавления в контекст',
-    ko: '컨텍스트에 추가할 파일 선택',
-    it: 'Seleziona un file da aggiungere al contesto',
-    tr: 'Bağlama eklenecek bir dosya seçin',
-    cs: 'Vyberte soubor, který chcete přidat do kontextu',
-    hu: 'Válasszon fájlt a kontextushoz adáshoz',
-    bg: 'Изберете файл за добавяне към контекста'
-  },
+
   'command.select-workspace-file-command.add': {
     en: 'Add to context',
     pl: 'Dodaj do kontekstu',
@@ -106,23 +71,5 @@ export const translations = {
     cs: 'Odebrat z kontextu',
     hu: 'Eltávolítás a kontextusból',
     bg: 'Премахване от контекста'
-  },
-  'command.select-workspace-file-command.go-to-file': {
-    en: 'Go to file',
-    pl: 'Przejdź do pliku',
-    'zh-cn': '转到文件',
-    ja: 'ファイルへ移動',
-    'zh-tw': '前往檔案',
-    de: 'Gehe zu Datei',
-    es: 'Ir al archivo',
-    fr: 'Aller au fichier',
-    'pt-br': 'Ir para o arquivo',
-    ru: 'Перейти к файлу',
-    ko: '파일로 이동',
-    it: 'Vai al file',
-    tr: 'Dosyaya git',
-    cs: 'Přejít na soubor',
-    hu: 'Ugrás a fájlhoz',
-    bg: 'Към файла'
   }
 } as const

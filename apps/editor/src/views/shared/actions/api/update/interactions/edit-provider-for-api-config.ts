@@ -18,9 +18,7 @@ export const edit_provider_for_api_configuration = async (
       vscode.window.createQuickPick<(typeof provider_items)[0]>()
     quick_pick.ignoreFocusOut = true
     quick_pick.items = provider_items
-    quick_pick.title = t(
-      'views.shared.actions.api.upsert-provider.options.title'
-    )
+    quick_pick.title = t('common.title.providers')
     quick_pick.placeholder = t(
       'views.shared.actions.api.create.interactions.initial-select-provider.placeholder'
     )

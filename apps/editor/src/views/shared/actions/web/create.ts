@@ -24,10 +24,8 @@ export const create = async (params: {
           { label: t('common.placement-above') },
           { label: t('common.placement-below') }
         ]
-        quick_pick.title = t('views.shared.actions.web.create.title')
-        quick_pick.placeholder = t(
-          'views.shared.actions.web.create.placeholder'
-        )
+        quick_pick.title = t('views.shared.actions.placement.title')
+        quick_pick.placeholder = t('views.shared.actions.placement.placeholder')
         quick_pick.buttons = [
           {
             iconPath: new vscode.ThemeIcon('close'),
@@ -81,7 +79,7 @@ export const create = async (params: {
 
       const quick_pick = vscode.window.createQuickPick()
       quick_pick.items = items
-      quick_pick.title = t('views.shared.actions.web.create.chatbots.title')
+      quick_pick.title = t('common.title.chatbots')
       quick_pick.placeholder = t(
         'views.shared.actions.web.create.chatbots.placeholder'
       )

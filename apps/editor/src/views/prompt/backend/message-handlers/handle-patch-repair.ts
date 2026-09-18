@@ -250,7 +250,9 @@ export const handle_patch_repair = async (params: {
     chatbot_prompt += `# Task\n\n${patch_repair_task_instructions}`
 
     await vscode.env.clipboard.writeText(chatbot_prompt)
-    vscode.window.showInformationMessage(t('common.info.copied-to-clipboard'))
+    vscode.window.showInformationMessage(
+      t('common.info.copied-to-clipboard', { item: 'Prompt' })
+    )
     return
   }
 

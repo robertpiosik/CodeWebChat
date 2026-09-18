@@ -74,7 +74,9 @@ export const prompt_for_api_configuration = async (params: {
   )
   if (!provider) {
     vscode.window.showErrorMessage(
-      t('feature.search-files.error.provider-not-found')
+      t('common.error.provider-not-found', {
+        name: selected_api_configuration.provider_name
+      })
     )
     return 'cancel'
   }

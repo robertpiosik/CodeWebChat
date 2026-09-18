@@ -17,7 +17,7 @@ const handle_reference_selection = async (params: {
 
   if (matched_files.length == 0) {
     vscode.window.showInformationMessage(
-      t('command.select-referencing-files-command.no-files')
+      t('common.info.no-items-found', { items: 'references' })
     )
     return
   }
@@ -102,7 +102,9 @@ export const select_referencing_files_commands = (
           matched_files = await vscode.window.withProgress(
             {
               location: vscode.ProgressLocation.Window,
-              title: t('command.select-referencing-files-command.processing')
+              title: t('common.progress.processing-items', {
+                items: 'references'
+              })
             },
             async () => {
               let definitions = await vscode.commands.executeCommand<any[]>(
@@ -157,7 +159,7 @@ export const select_referencing_files_commands = (
 
           if (starting_uris.length == 0) {
             vscode.window.showInformationMessage(
-              t('command.select-referencing-files-command.no-files')
+              t('common.info.no-items-found', { items: 'references' })
             )
             return
           }
@@ -167,7 +169,9 @@ export const select_referencing_files_commands = (
           matched_files = await vscode.window.withProgress(
             {
               location: vscode.ProgressLocation.Notification,
-              title: t('command.select-referencing-files-command.processing'),
+              title: t('common.progress.processing-items', {
+                items: 'references'
+              }),
               cancellable: true
             },
             async (progress, token) => {
@@ -219,7 +223,7 @@ export const select_referencing_files_commands = (
 
           if (checked_files.length == 0) {
             vscode.window.showInformationMessage(
-              t('command.select-referencing-files-command.no-files')
+              t('common.info.no-items-found', { items: 'references' })
             )
             return
           }
@@ -232,7 +236,9 @@ export const select_referencing_files_commands = (
           const matched_files = await vscode.window.withProgress(
             {
               location: vscode.ProgressLocation.Notification,
-              title: t('command.select-referencing-files-command.processing'),
+              title: t('common.progress.processing-items', {
+                items: 'references'
+              }),
               cancellable: true
             },
             async (progress, token) => {

@@ -180,9 +180,7 @@ export const perform_keywords_search_mode = async (params: {
         }
 
         if (matched_files.length == 0) {
-          vscode.window.showInformationMessage(
-            t('feature.search-files.no-files')
-          )
+          vscode.window.showInformationMessage(t('common.info.no-files-found'))
           if (positive_keywords.length <= 1) {
             go_back_to_target = true
             break

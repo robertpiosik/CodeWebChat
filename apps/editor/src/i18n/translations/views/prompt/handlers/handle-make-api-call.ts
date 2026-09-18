@@ -54,24 +54,6 @@ export const translations = {
       hu: 'Válassza ki az API konfigurációt a kurzornál lévő kódhoz',
       bg: 'Изберете API конфигурация за кода при курсора'
     },
-  'views.prompt.handlers.handle-make-api-call.intelligent-search': {
-    en: 'Intelligent Search',
-    pl: 'Inteligentne wyszukiwanie',
-    'zh-cn': '智能搜索',
-    ja: 'インテリジェント検索',
-    'zh-tw': '智慧搜尋',
-    de: 'Intelligente Suche',
-    es: 'Búsqueda inteligente',
-    fr: 'Recherche intelligente',
-    'pt-br': 'Busca Inteligente',
-    ru: 'Умный поиск',
-    ko: '지능형 검색',
-    it: 'Ricerca Intelligente',
-    tr: 'Akıllı Arama',
-    cs: 'Inteligentní vyhledávání',
-    hu: 'Intelligens keresés',
-    bg: 'Интелигентно търсене'
-  },
   'views.prompt.handlers.handle-make-api-call.find-intelligent-search-error': {
     en: 'Find Intelligent Search error. See console for details.',
     pl: 'Błąd inteligentnego wyszukiwania. Sprawdź konsolę, aby uzyskać szczegóły.',
