@@ -15,7 +15,7 @@
     box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
     overflow: hidden;
 
-    :global([data-modern-ui='true']) & {
+    @include modern-ui {
       :global {
         .simplebar-track.simplebar-vertical {
           margin: 4px 0;
@@ -81,7 +81,7 @@
   }
 
   &--disabled {
-     opacity: var(--disabled-opacity);
+    opacity: var(--disabled-opacity);
     cursor: default;
   }
 }

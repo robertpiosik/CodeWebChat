@@ -7,7 +7,7 @@
   gap: 8px;
   height: var(--height);
 
-  :global([data-modern-ui='true']) & {
+  @include modern-ui {
     padding: 0 10px;
   }
 

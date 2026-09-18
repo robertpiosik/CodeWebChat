@@ -4,7 +4,7 @@
   padding: 4px 0 12px 0;
   gap: 8px;
 
-  :global([data-modern-ui='true']) & {
+  @include modern-ui {
     padding: 4px 0 10px 0;
   }
 }
@@ -19,7 +19,7 @@
   border-radius: 8px;
   overflow: hidden;
 
-  :global([data-modern-ui='true']) & {
+  @include modern-ui {
     margin: 0 10px;
   }
 
@@ -94,7 +94,7 @@
     -webkit-line-clamp: unset;
   }
 
-  :global([data-modern-ui='true']) & {
+  @include modern-ui {
     margin: 0 10px;
   }
 
@@ -116,7 +116,7 @@
   border-radius: 6px;
   background-color: var(--cwc-bg-tertiary);
 
-  :global([data-modern-ui='true']) & {
+  @include modern-ui {
     margin: 0 10px;
   }
 
@@ -209,7 +209,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 
-  :global([data-modern-ui='true']) & {
+  @include modern-ui {
     margin: 4px 10px 0 10px;
   }
 }

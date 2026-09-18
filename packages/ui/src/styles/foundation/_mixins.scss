@@ -3,3 +3,9 @@
   font-weight: 500;
   letter-spacing: 0.08em;
 }
+
+@mixin modern-ui {
+  :global([data-modern-ui='true']) & {
+    @content;
+  }
+}

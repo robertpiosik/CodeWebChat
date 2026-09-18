@@ -4,7 +4,7 @@
   width: 100%;
   --task-item-padding-left: 10px;
 
-  :global([data-modern-ui='true']) & {
+  @include modern-ui {
     --task-item-padding-left: 6px;
   }
 }
@@ -20,7 +20,7 @@
   gap: 4px;
   position: relative;
 
-  :global([data-modern-ui='true']) & {
+  @include modern-ui {
     padding: 1px 6px 6px 6px;
     margin: 0 4px;
     border-radius: var(--border-radius-small);
@@ -166,7 +166,7 @@
   align-items: center;
   cursor: pointer;
 
-  :global([data-modern-ui='true']) & {
+  @include modern-ui {
     margin: 0 4px;
     border-radius: var(--border-radius-small);
   }

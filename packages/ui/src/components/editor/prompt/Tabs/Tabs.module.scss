@@ -6,7 +6,7 @@
   margin: 0 12px;
   border-bottom: 1px solid var(--cwc-red-background);
 
-  :global([data-modern-ui='true']) & {
+  @include modern-ui {
     margin: 0 10px;
   }
 

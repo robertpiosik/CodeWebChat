@@ -10,7 +10,7 @@
   padding: 0 12px 49px 0;
   pointer-events: none;
 
-  :global([data-modern-ui='true']) & {
+  @include modern-ui {
     padding: 0 10px 38px 0;
   }
 }
@@ -43,7 +43,7 @@
   animation: slideIn var(--transition-duration-250)
     var(--transition-timing-function);
 
-  :global([data-modern-ui='true']) & {
+  @include modern-ui {
     :global {
       .simplebar-track.simplebar-vertical {
         margin: 4px 0;
@@ -100,7 +100,7 @@
     font-size: 12px;
     color: var(--cwc-text-color-dimmed);
 
-    :global([data-modern-ui='true']) & {
+    @include modern-ui {
       padding: 0 10px 0 8px;
     }
 
@@ -131,7 +131,7 @@
     pointer-events: none;
     padding-right: 8px;
 
-    :global([data-modern-ui='true']) & {
+    @include modern-ui {
       padding-right: 6px;
     }
 

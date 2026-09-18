@@ -8,7 +8,7 @@
   word-wrap: break-word;
   user-select: text;
 
-  :global([data-modern-ui='true']) & {
+  @include modern-ui {
     margin: 3px 10px 6px 10px;
   }
 
@@ -62,7 +62,7 @@
   position: relative;
   cursor: pointer;
 
-  :global([data-modern-ui='true']) & {
+  @include modern-ui {
     margin: 0 10px;
   }
 

@@ -18,7 +18,7 @@
       transform var(--transition-duration-250) var(--transition-timing-function),
       opacity var(--transition-duration-250) var(--transition-timing-function);
 
-    :global([data-modern-ui='true']) & {
+    @include modern-ui {
       padding: 0 10px;
     }
 
@@ -94,7 +94,7 @@
     border-radius: 10px;
     position: relative;
 
-    :global([data-modern-ui='true']) & {
+    @include modern-ui {
       margin: 0 10px;
     }
 

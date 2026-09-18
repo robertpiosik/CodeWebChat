@@ -52,7 +52,7 @@
   flex: 1;
   overflow: hidden;
   display: flex;
-  :global([data-modern-ui='true']) & {
+  @include modern-ui {
     :global {
       .simplebar-track.simplebar-vertical {
         margin: 4px 0;
