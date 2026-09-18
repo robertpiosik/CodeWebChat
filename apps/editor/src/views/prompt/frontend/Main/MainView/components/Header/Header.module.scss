@@ -11,14 +11,15 @@
     padding: 0 10px;
   }
 
-  @include is-landscape {
+  @include landscape {
     height: auto;
     align-items: flex-start;
     padding: unset;
-    margin: 12px 0 0 12px;
+    margin: 6px 0 0 12px;
 
     @include modern-ui {
-      margin: 10px 0 0 10px;
+      padding: unset;
+      margin: 6px 0 0 10px;
     }
   }
 
@@ -28,7 +29,7 @@
     padding: 4px 0;
     gap: 4px;
 
-    @include is-landscape {
+    @include landscape {
       flex-direction: column;
       align-items: flex-start;
       padding: 0;

@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
 
+const MIN_WIDTH = 450
+
 export const use_is_landscape = () => {
   const [is_landscape, set_is_landscape] = useState(
-    window.innerWidth > window.innerHeight && window.innerWidth >= 400
+    window.innerWidth > window.innerHeight && window.innerWidth >= MIN_WIDTH
   )
 
   useEffect(() => {
     const handle_resize = () => {
       set_is_landscape(
-        window.innerWidth > window.innerHeight && window.innerWidth >= 400
+        window.innerWidth > window.innerHeight && window.innerWidth >= MIN_WIDTH
       )
     }
 

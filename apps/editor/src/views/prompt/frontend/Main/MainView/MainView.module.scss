@@ -18,7 +18,7 @@
     flex-shrink: 0;
   }
 
-  @include is-landscape {
+  @include landscape {
     height: auto;
   }
 }
@@ -41,6 +41,9 @@
 
     &--prompt {
       flex: 1.5;
+      @include modern-ui {
+        margin-right: -10px;
+      }
 
       .content {
         padding-bottom: 8px;
