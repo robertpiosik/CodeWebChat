@@ -474,7 +474,8 @@ export const handle_patch_repair = async (params: {
             !axios.isCancel(error) &&
             error.message != 'User cancelled the operation' &&
             error.message !=
-              'Batch operation failed, triggering configuration selection.'
+              'Batch operation failed, triggering configuration selection.' &&
+            error.message != 'Preview finished.'
           ) {
             Logger.error({
               function_name: 'handle_patch_repair',
@@ -489,11 +490,16 @@ export const handle_patch_repair = async (params: {
             )
           }
 
-          batch_abort_controllers.forEach((controller) => {
-            controller.abort(
-              'Batch operation failed, triggering configuration selection.'
-            )
-          })
+          if (
+            error.message != 'Preview finished.' &&
+            error.message != 'User cancelled the operation'
+          ) {
+            batch_abort_controllers.forEach((controller) => {
+              controller.abort(
+                'Batch operation failed, triggering configuration selection.'
+              )
+            })
+          }
 
           throw error
         } finally {
@@ -518,6 +524,13 @@ export const handle_patch_repair = async (params: {
       })
     )
   } catch (error: any) {
+    if (
+      error.message == 'Preview finished.' ||
+      error.message == 'User cancelled the operation'
+    ) {
+      return
+    }
+
     const remaining_files = params.files_to_fix.filter((f) => {
       const key = f.workspace_name
         ? `${f.workspace_name}:${f.file_path}`
