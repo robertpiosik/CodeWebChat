@@ -30,7 +30,7 @@
 
 #### Mid-tier model friendliness
 
-Without the concept of a big session, there is no context bloat. Efficient, workhorse models thrive in lean task-focused prompts, whether in Agentic Search, code editing or while getting assistance.
+Without the concept of a big session, there is no context bloat. Efficient, workhorse models thrive in lean, task-focused prompts, whether in Agentic Search, code editing or while getting assistance.
 
 ## Privacy
 
