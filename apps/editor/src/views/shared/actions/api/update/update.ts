@@ -1,5 +1,4 @@
 import * as vscode from 'vscode'
-import { dictionary } from '@shared/constants/dictionary'
 import {
   ProvidersManager,
   get_api_configuration_id
@@ -29,10 +28,10 @@ export const update = async (params: {
 
     if (api_configuration_index == -1 && params.origin != 'cancel') {
       vscode.window.showErrorMessage(
-        dictionary.error_message.COULD_NOT_UPDATE_ITEM_NOT_FOUND(
-          'API configuration',
-          params.updating_api_configuration.id
-        )
+        t('common.error.could-not-update-item-not-found', {
+          item_type: 'API configuration',
+          name: params.updating_api_configuration.id
+        })
       )
       return { success: false, has_changes: false }
     }
@@ -90,7 +89,7 @@ export const update = async (params: {
   if (is_duplicate) {
     const discard_button = 'Discard'
     const result = await vscode.window.showWarningMessage(
-      dictionary.error_message.CONFIGURATION_ALREADY_EXISTS,
+      t('common.error.configuration-already-exists'),
       { modal: true },
       discard_button
     )

@@ -1,5 +1,4 @@
 import * as vscode from 'vscode'
-import { dictionary } from '@shared/constants/dictionary'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import {
   ConfigWebConfigurationFormat,
@@ -34,10 +33,10 @@ export const update = async (params: {
         `chatbot with original name "${params.updating_web_configuration.name}" not found.`
       )
       vscode.window.showErrorMessage(
-        dictionary.error_message.COULD_NOT_UPDATE_ITEM_NOT_FOUND(
-          'chatbot',
-          params.updating_web_configuration.name!
-        )
+        t('common.error.could-not-update-item-not-found', {
+          item_type: 'chatbot',
+          name: params.updating_web_configuration.name!
+        })
       )
       return { success: false, has_changes: false }
     }

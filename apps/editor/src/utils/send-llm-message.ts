@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import axios, { AxiosResponse } from 'axios'
-import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
+import { t } from '@/i18n'
 
 type StreamCallback = (tokens_per_second: number, total_tokens: number) => void
 type ThinkingStreamCallback = (text: string) => void
@@ -481,21 +481,15 @@ export const send_llm_message = async (params: {
     }
 
     if (axios.isAxiosError(error) && error.response?.status == 429) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.API_RATE_LIMIT_EXCEEDED
-      )
+      vscode.window.showErrorMessage(t('common.error.api-rate-limit-exceeded'))
     } else if (axios.isAxiosError(error) && error.response?.status == 413) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.API_PAYLOAD_TOO_LARGE
-      )
+      vscode.window.showErrorMessage(t('common.error.api-payload-too-large'))
     } else if (axios.isAxiosError(error) && error.response?.status == 400) {
-      vscode.window.showErrorMessage(dictionary.error_message.API_BAD_REQUEST)
+      vscode.window.showErrorMessage(t('common.error.api-bad-request'))
     } else if (axios.isAxiosError(error) && error.response?.status == 401) {
-      vscode.window.showErrorMessage(dictionary.error_message.API_INVALID_KEY)
+      vscode.window.showErrorMessage(t('common.error.api-invalid-key'))
     } else {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.API_REQUEST_FAILED
-      )
+      vscode.window.showErrorMessage(t('common.error.api-request-failed'))
     }
     Logger.error({
       function_name: 'send_llm_message',

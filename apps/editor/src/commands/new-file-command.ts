@@ -2,7 +2,6 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import { create_safe_path } from '../utils/path-sanitizer'
-import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { t } from '../i18n'
 
@@ -20,7 +19,7 @@ export const new_file_command = () => {
           parent_path = vscode.workspace.workspaceFolders[0].uri.fsPath
         } else {
           vscode.window.showErrorMessage(
-            dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
+            t('common.error.no-workspace-folder-open')
           )
           return
         }

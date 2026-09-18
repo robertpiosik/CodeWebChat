@@ -8,7 +8,6 @@ import {
   MODELS_ROUTE_NOT_FOUND_ERROR
 } from '@/services/model-fetcher'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@shared/constants/dictionary'
 import { verify_model } from '../../create/interactions/verify-model'
 import { t } from '@/i18n'
 
@@ -22,9 +21,9 @@ export const edit_model_for_api_configuration = async (params: {
   )
   if (!provider_from_manager) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.PROVIDER_NOT_FOUND_BY_NAME(
-        params.api_configuration.provider_name
-      )
+      t('common.error.provider-not-found', {
+        name: params.api_configuration.provider_name
+      })
     )
     return undefined
   }
@@ -33,9 +32,9 @@ export const edit_model_for_api_configuration = async (params: {
 
   if (!base_url) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.BASE_URL_NOT_FOUND_FOR_PROVIDER(
-        params.api_configuration.provider_name
-      )
+      t('common.error.base-url-not-found-for-provider', {
+        name: params.api_configuration.provider_name
+      })
     )
     return undefined
   }

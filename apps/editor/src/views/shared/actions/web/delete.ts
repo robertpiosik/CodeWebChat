@@ -1,5 +1,4 @@
 import * as vscode from 'vscode'
-import { dictionary } from '@shared/constants/dictionary'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { t } from '@/i18n'
 
@@ -69,9 +68,12 @@ export const remove = async (params: { name: string }): Promise<void> => {
         vscode.ConfigurationTarget.Global
       )
     }
-  } catch (error) {
+  } catch (error: any) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.FAILED_TO_DELETE_ITEM('chatbot', error)
+      t('common.error.failed-to-delete-item', {
+        item_type: 'chatbot',
+        error: error.message || error
+      })
     )
   }
 }

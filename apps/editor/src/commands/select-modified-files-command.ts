@@ -2,7 +2,6 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
-import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
 import { search_files } from '@/features/search-files'
@@ -29,7 +28,7 @@ export const select_modified_files_command = (
         const git_api = git_extension.getAPI(1)
         if (!git_api) {
           vscode.window.showErrorMessage(
-            dictionary.error_message.COULD_NOT_GET_GIT_API
+            t('common.error.could-not-get-git-api')
           )
           return
         }

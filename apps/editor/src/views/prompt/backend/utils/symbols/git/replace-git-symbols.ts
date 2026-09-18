@@ -3,7 +3,6 @@ import { execSync } from 'child_process'
 import { get_git_repository } from '@/utils/git-repository-utils'
 import { AsciiTree } from '@/utils/ascii-tree/ascii-tree'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 import { SymbolCacheManager } from '../symbol-cache'
 
@@ -173,7 +172,7 @@ export const replace_changes_symbol = async (params: {
       )
       if (!target_folder) {
         vscode.window.showErrorMessage(
-          dictionary.error_message.WORKSPACE_FOLDER_NOT_FOUND(folder_name)
+          t('common.error.workspace-folder-not-found', { folder_name })
         )
         if (params.symbols_cache) {
           params.symbols_cache.set(full_match, '', '')
@@ -264,10 +263,10 @@ export const replace_changes_symbol = async (params: {
         )
       } catch (error) {
         vscode.window.showErrorMessage(
-          dictionary.error_message.FAILED_TO_GET_CHANGES_FROM_BRANCH_IN_FOLDER(
+          t('common.error.failed-to-get-changes-from-branch-in-folder', {
             branch_name,
             folder_name
-          )
+          })
         )
         Logger.error({
           function_name: 'replace_changes_symbol',
@@ -374,9 +373,7 @@ export const replace_changes_symbol = async (params: {
         )
       } catch (error) {
         vscode.window.showErrorMessage(
-          dictionary.error_message.FAILED_TO_GET_CHANGES_FROM_BRANCH(
-            branch_name
-          )
+          t('common.error.failed-to-get-changes-from-branch', { branch_name })
         )
         Logger.error({
           function_name: 'replace_changes_symbol',
@@ -516,7 +513,7 @@ export const replace_commit_symbol = async (params: {
     )
     if (!target_folder) {
       vscode.window.showErrorMessage(
-        dictionary.error_message.WORKSPACE_FOLDER_NOT_FOUND(folder_name)
+        t('common.error.workspace-folder-not-found', { folder_name })
       )
       if (params.symbols_cache) {
         params.symbols_cache.set(full_match, '', '')
@@ -612,7 +609,7 @@ export const replace_commit_symbol = async (params: {
       }
     } catch (error) {
       vscode.window.showErrorMessage(
-        dictionary.error_message.FAILED_TO_GET_DIFF_FOR_COMMIT(commit_hash)
+        t('common.error.failed-to-get-diff-for-commit', { commit_hash })
       )
       Logger.error({
         function_name: 'replace_commit_symbol',

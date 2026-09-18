@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
-import { dictionary } from '@shared/constants/dictionary'
 import {
   LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY,
   LAST_SELECTED_COMMIT_REFERENCE_ACTION_STATE_KEY

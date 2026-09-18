@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 import {
   load_and_merge_global_contexts,
@@ -14,7 +13,7 @@ export const handle_saved_context_item = async (
   try {
     const workspace_folders = vscode.workspace.workspaceFolders || []
     if (workspace_folders.length == 0) {
-      vscode.window.showErrorMessage(dictionary.error_message.NO_WORKSPACE_ROOT)
+      vscode.window.showErrorMessage(t('common.error.no-workspace-root'))
       return undefined
     }
 

@@ -10,7 +10,6 @@ import {
 import { FilesCollector } from '../../../utils/files-collector'
 import { ProvidersManager } from '../../../services/providers-manager'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from '../../../utils/apply-reasoning-effort'
 import { t } from '@/i18n'
 import { build_user_content } from '../../../utils/build-user-content'
@@ -357,7 +356,7 @@ export const perform_code_at_cursor = async (params: {
 
     if (!code_at_cursor_api_configuration.provider_name) {
       vscode.window.showErrorMessage(
-        dictionary.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
+        t('common.error.api-provider-not-specified-for-code-at-cursor')
       )
       Logger.warn({
         function_name: 'perform_code_at_cursor',
@@ -367,7 +366,7 @@ export const perform_code_at_cursor = async (params: {
       continue
     } else if (!code_at_cursor_api_configuration.model) {
       vscode.window.showErrorMessage(
-        dictionary.error_message.MODEL_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
+        t('common.error.model-not-specified-for-code-at-cursor')
       )
       Logger.warn({
         function_name: 'perform_code_at_cursor',

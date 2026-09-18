@@ -7,7 +7,6 @@ import {
   LAST_USED_PATCH_REPAIR_ACTION_STATE_KEY
 } from '@/constants/state-keys'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
-import { dictionary } from '@shared/constants/dictionary'
 import { parse_response } from '@/commands/apply-response-command/utils/response-parser'
 import { ProvidersManager } from '@/services/providers-manager'
 import {
@@ -44,7 +43,7 @@ export const handle_patch_repair = async (params: {
 
   if (!original_states || !last_response) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.PATCH_REPAIR_CONTEXT_NOT_FOUND
+      t('common.error.patch-repair-context-not-found')
     )
     return
   }
@@ -484,9 +483,9 @@ export const handle_patch_repair = async (params: {
             })
 
             vscode.window.showErrorMessage(
-              dictionary.error_message.APPLYING_CHANGES_GENERIC_ERROR(
-                error.message
-              )
+              t('common.error.applying-changes-generic-error', {
+                msg: error.message
+              })
             )
           }
 

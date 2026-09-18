@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
 
@@ -82,7 +81,7 @@ export const pick_model = async (params: {
     })
     vscode.window.showErrorMessage(
       params.chatbot_name == 'OpenRouter'
-        ? dictionary.error_message.FAILED_TO_FETCH_OPEN_ROUTER_MODELS
+        ? t('common.error.failed-to-fetch-open-router-models')
         : t('views.shared.actions.web.pick-model.error.failed-to-pick')
     )
     return undefined

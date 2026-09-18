@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { GoToFileMessage } from '@/views/prompt/types/messages'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@shared/constants/dictionary'
+import { t } from '@/i18n'
 
 export const handle_go_to_file = async (
   message: GoToFileMessage
@@ -53,7 +53,7 @@ export const handle_go_to_file = async (
       data: { file_path }
     })
     vscode.window.showErrorMessage(
-      dictionary.error_message.WORKSPACE_NOT_FOUND_FOR_FILE(file_path)
+      t('common.error.workspace-not-found-for-file', { file_path })
     )
     return
   }
@@ -70,7 +70,7 @@ export const handle_go_to_file = async (
       data: { error, file_uri: file_uri.toString() }
     })
     vscode.window.showErrorMessage(
-      dictionary.error_message.COULD_NOT_OPEN_FILE(file_path)
+      t('common.error.could-not-open-file', { file_path })
     )
   }
 }

@@ -3,7 +3,6 @@ import { SettingsViewProvider } from '../settings-view-provider'
 import { ProvidersManager, Provider } from '@/services/providers-manager'
 import { generate_unique_name } from '@/views/shared/utils/generate-unique-name'
 import { UpdateProviderMessage } from '@/views/settings/types/messages'
-import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 
 export const handle_update_provider = async (
@@ -86,10 +85,10 @@ export const handle_update_provider = async (
     )
     if (existing_index == -1) {
       vscode.window.showErrorMessage(
-        dictionary.error_message.COULD_NOT_UPDATE_ITEM_NOT_FOUND(
-          'provider',
-          message.original_name!
-        )
+        t('common.error.could-not-update-item-not-found', {
+          item_type: 'provider',
+          name: message.original_name!
+        })
       )
       return
     }

@@ -14,7 +14,6 @@ import { EditFormat } from '@shared/types/edit-format'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { MakeApiCallMessage } from '@/views/prompt/types/messages'
-import { dictionary } from '@shared/constants/dictionary'
 import { build_user_content } from '@/utils/build-user-content'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { PromptBuilder } from '@/utils/prompt-builder'
@@ -320,7 +319,7 @@ export const handle_make_api_call = async (
         data: error
       })
       if (!error_occurred) {
-        const err_msg = dictionary.error_message.EDIT_FILES_ERROR
+        const err_msg = t('common.error.edit-files-error')
         vscode.window.showErrorMessage(err_msg)
         error_occurred = true
       }

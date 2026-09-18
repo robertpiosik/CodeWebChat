@@ -2,7 +2,6 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { ShowDiffMessage } from '@/views/prompt/types/messages'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 
 export const handle_show_diff = async (
@@ -37,8 +36,9 @@ export const handle_show_diff = async (
   }
 
   if (!target_workspace) {
-    const error_message =
-      dictionary.error_message.WORKSPACE_NOT_FOUND_FOR_FILE(file_path)
+    const error_message = t('common.error.workspace-not-found-for-file', {
+      file_path
+    })
     Logger.error({
       function_name: 'handle_show_diff',
       message: error_message,

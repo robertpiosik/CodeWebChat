@@ -110,7 +110,6 @@ import { TARGET, Target } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Logger } from '@shared/utils/logger'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
-import { dictionary } from '@shared/constants/dictionary'
 import { ProvidersManager } from '@/services/providers-manager'
 import { SharedContextState } from '@/context/shared-context-state'
 import { webview_html } from '@/views/shared/utils/webview-html'
@@ -119,6 +118,7 @@ import { normalize_path } from '@/utils/normalize-path'
 import { open_settings } from '@/views/settings/helpers/open-settings'
 import { replace_symbols } from './utils/symbols/replace-symbols'
 import { SymbolCacheManager } from './utils/symbols/symbol-cache'
+import { t } from '@/i18n'
 
 export class PromptViewProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri
@@ -858,7 +858,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             data: { message, error }
           })
           vscode.window.showErrorMessage(
-            dictionary.error_message.ERROR_HANDLING_MESSAGE(error.message)
+            t('common.error.error-handling-message', { message: error.message })
           )
         }
       }
