@@ -30,11 +30,11 @@
 
 #### Efficiency and speed
 
-- In [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over mid-tiers.
+- With the [Agentic Search](#-agentic-search) prompt, SOTA models offer diminishing returns over mid-tiers.
 - Thanks to precompiled nature of [EDIT](#-edit)/[ASK](#-edit) prompts:
   - intent is easy to unpack, thus models 'think' less,
   - iteration on instructions and related tasks don't bloat context window,
-  - you can seamlessly switch between model tiers based on task complexity.
+  - model tier can be choosen based on task complexity.
 
 ## Privacy
 
