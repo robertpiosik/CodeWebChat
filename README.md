@@ -28,6 +28,10 @@
    - [EDIT](#-edit)—multi-file changes in a single response
    - [ASK](#-edit)—general help in a conversation
 
+#### Mid-tier model friendliness
+
+Without the concept of a big session, there is no context bloat. Efficient, workhorse models thrive in task-focused prompts, whether in Agentic Search, code editing or getting assistance.
+
 ## Privacy
 
 **CWC** operates 100% on your machine—no code, prompts or usage data are collected.
