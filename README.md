@@ -24,18 +24,9 @@
 1. Type instructions
 2. Run [Agentic Search](#-agentic-search) for task-relevant context files
 3. Select examples for model guidance
-4. Send the [editing](#-editing) prompt with a chatbot or an API call
-5. Apply the response
-
-#### Key takeaways
-
-- examples can replace skills
-- context reuse without ever-growing convos
-- iterating on instructions without context bloat
-- tool calling limited to directory and file lookups
-- with its simple prompts:
-  - less time is spent on 'thinking'
-  - mid-tier models are sufficiently capable
+4. Send prompt with a chatbot or an API call
+   - [EDIT](#-edit)—multi-file changes in a single response
+   - [ASK](#-edit)—general help in a conversation
 
 ## Privacy
 
