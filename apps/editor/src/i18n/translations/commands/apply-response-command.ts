@@ -345,5 +345,23 @@ export const translations = {
     cs: 'Aplikují se úpravy...',
     hu: 'Szerkesztések alkalmazása...',
     bg: 'Прилагане на редакциите...'
+  },
+  'command.apply-response-command.success.patched-successfully': {
+    en: 'Patched successfully',
+    pl: 'Zastosowano pomyślnie',
+    'zh-cn': '补丁应用成功',
+    ja: 'パッチが正常に適用されました',
+    'zh-tw': '補丁應用成功',
+    de: 'Erfolgreich gepatcht',
+    es: 'Parcheado con éxito',
+    fr: 'Correction appliquée avec succès',
+    'pt-br': 'Corrigido com sucesso',
+    ru: 'Успешно исправлено',
+    ko: '패치 성공',
+    it: 'Patch applicata con successo',
+    tr: 'Yama başarıyla uygulandı',
+    cs: 'Úspěšně záplatováno',
+    hu: 'Sikeresen javítva',
+    bg: 'Успешно пачване'
   }
 } as const
