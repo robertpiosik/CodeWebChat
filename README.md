@@ -34,7 +34,6 @@
 - Thanks to precompiled nature of [EDIT](#-edit)/[ASK](#-edit) prompts:
   - intent is easy to unpack, thus models 'think' less,
   - iteration on instructions and related tasks don't bloat context window,
-  - model tier can be choosen based on task complexity.
 
 ## Privacy
 
