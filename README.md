@@ -25,8 +25,8 @@
 2. Run [Agentic Search](#-agentic-search) for task-relevant context files
 3. Select examples for model guidance
 4. Send prompt with a chatbot or an API call
-   - [EDIT](#-edit)—multi-file changes in a single response
-   - [ASK](#-edit)—general help in a conversation
+   - [EDIT](#-editing)—multi-file changes in a single response
+   - [ASK](#-asking)—general help in a conversation
 
 #### Efficiency and speed
 
