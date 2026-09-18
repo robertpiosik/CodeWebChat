@@ -32,8 +32,8 @@
 
 - With the [Agentic Search](#-agentic-search) prompt, SOTA models offer diminishing returns over mid-tiers.
 - Thanks to precompiled, zero-overhead nature of [EDIT](#-edit)/[ASK](#-edit) prompts:
-  - all the intent are task instructions, thus model's reasoning is shorter,
-  - iteration on instructions, subsequent related tasks don't bloat context window,
+  - all the intent are the task instructions, thus model's reasoning is shorter,
+  - iteration on instructions, subsequent related tasks don't bloat context window.
 
 ## Privacy
 
