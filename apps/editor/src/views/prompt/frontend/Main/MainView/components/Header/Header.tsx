@@ -19,6 +19,7 @@ type Props = {
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
   is_alt_pressed: boolean
+  is_landscape: boolean
 }
 
 export const Header: React.FC<Props> = (props) => {
@@ -42,9 +43,10 @@ export const Header: React.FC<Props> = (props) => {
                 is_active={props.web_prompt_type == 'edit-files'}
                 active_color="blue"
                 is_compact={
-                  props.web_prompt_type == 'edit-files'
+                  !props.is_landscape &&
+                  (props.web_prompt_type == 'edit-files'
                     ? compact_step >= 2
-                    : compact_step >= 1
+                    : compact_step >= 1)
                 }
                 on_click={() => props.on_web_prompt_type_change('edit-files')}
               />
@@ -56,9 +58,10 @@ export const Header: React.FC<Props> = (props) => {
                 is_active={props.web_prompt_type == 'ask-about-files'}
                 active_color="purple"
                 is_compact={
-                  props.web_prompt_type == 'ask-about-files'
+                  !props.is_landscape &&
+                  (props.web_prompt_type == 'ask-about-files'
                     ? compact_step >= 2
-                    : compact_step >= 1
+                    : compact_step >= 1)
                 }
                 on_click={() =>
                   props.on_web_prompt_type_change('ask-about-files')
@@ -73,7 +76,7 @@ export const Header: React.FC<Props> = (props) => {
             icon="edit-sparkle"
             is_active={props.api_prompt_type == 'edit-files'}
             active_color="blue"
-            is_compact={compact_step >= 1}
+            is_compact={!props.is_landscape && compact_step >= 1}
             on_click={() => props.on_api_prompt_type_change('edit-files')}
           />
         )}

@@ -9,3 +9,9 @@
     @content;
   }
 }
+
+@mixin is-landscape {
+  @media (orientation: landscape) and (min-width: 400px) {
+    @content;
+  }
+}

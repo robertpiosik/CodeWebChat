@@ -17,4 +17,46 @@
   > * {
     flex-shrink: 0;
   }
+
+  @include is-landscape {
+    height: auto;
+  }
+}
+
+.landscape {
+  display: flex;
+  height: 100%;
+  width: 100%;
+
+  &__column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0;
+
+    &--header {
+      flex: 0 0 max-content;
+    }
+
+    &--prompt {
+      flex: 1.5;
+
+      .content {
+        padding-bottom: 8px;
+
+        @include modern-ui {
+          padding-bottom: 6px;
+        }
+      }
+    }
+
+    &--configurations {
+      border-left: 1px solid var(--cwc-border-color-dimmed);
+
+      @include modern-ui {
+        border-left: none;
+      }
+    }
+  }
 }
