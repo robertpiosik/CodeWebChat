@@ -48,9 +48,10 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
             exclude: /node_modules/,
             use: [
               {
-                loader: 'babel-loader',
+                loader: 'esbuild-loader',
                 options: {
-                  presets: ['@babel/preset-env', '@babel/preset-typescript']
+                  loader: 'ts',
+                  target: 'es2022'
                 }
               }
             ]
@@ -189,18 +190,11 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
             exclude: /node_modules/,
             use: [
               {
-                loader: 'babel-loader',
+                loader: 'esbuild-loader',
                 options: {
-                  presets: [
-                    '@babel/preset-env',
-                    [
-                      '@babel/preset-react',
-                      {
-                        runtime: 'automatic'
-                      }
-                    ],
-                    '@babel/preset-typescript'
-                  ]
+                  loader: 'tsx',
+                  target: 'es2022',
+                  jsx: 'automatic'
                 }
               }
             ]

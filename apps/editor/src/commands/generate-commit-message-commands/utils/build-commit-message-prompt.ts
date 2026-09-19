@@ -1,7 +1,10 @@
 import * as vscode from 'vscode'
 import { commit_message_format } from '@/constants/instructions'
 import type { GitRepository } from '@/utils/git-repository-utils'
-import { MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE } from '@/constants/values'
+import {
+  MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE,
+  DIFF_PLACEHOLDERS
+} from '@/constants/values'
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 
@@ -84,10 +87,35 @@ export const build_commit_message_prompt = async (
         }
       }
 
+      let is_ignored = false
+
+      if (file_path && workspace_provider) {
+        const absolute_path = vscode.Uri.joinPath(
+          repository.rootUri,
+          file_path
+        ).fsPath
+        if (
+          workspace_provider.is_ignored_by_patterns(absolute_path) ||
+          workspace_provider.is_excluded(file_path)
+        ) {
+          is_ignored = true
+        }
+      }
+
       if (is_binary) {
-        if (status == 'created') final_diff_content = 'Binary file created'
-        else if (status == 'deleted') final_diff_content = 'Binary file deleted'
-        else final_diff_content = 'Binary file modified'
+        if (status == 'created')
+          final_diff_content = DIFF_PLACEHOLDERS.BINARY_FILE_CREATED
+        else if (status == 'deleted')
+          final_diff_content = DIFF_PLACEHOLDERS.BINARY_FILE_DELETED
+        else final_diff_content = DIFF_PLACEHOLDERS.BINARY_FILE_MODIFIED
+      } else if (is_ignored) {
+        if (status == 'created')
+          final_diff_content = DIFF_PLACEHOLDERS.FILE_CREATED
+        else if (status == 'deleted')
+          final_diff_content = DIFF_PLACEHOLDERS.FILE_DELETED
+        else if (status == 'renamed')
+          final_diff_content = DIFF_PLACEHOLDERS.FILE_RENAMED
+        else final_diff_content = DIFF_PLACEHOLDERS.FILE_MODIFIED
       } else {
         const hunk_start_index = final_diff_content.indexOf('\n@@ ')
         if (hunk_start_index != -1) {
@@ -99,22 +127,7 @@ export const build_commit_message_prompt = async (
         }
       }
 
-      let should_include_full_content = true
-
-      if (!is_deleted && file_path && !is_binary) {
-        if (workspace_provider) {
-          const absolute_path = vscode.Uri.joinPath(
-            repository.rootUri,
-            file_path
-          ).fsPath
-          if (
-            workspace_provider.is_ignored_by_patterns(absolute_path) ||
-            workspace_provider.is_excluded(file_path)
-          ) {
-            should_include_full_content = false
-          }
-        }
-      }
+      const should_include_full_content = !is_ignored
 
       if (
         !is_deleted &&

@@ -2,7 +2,10 @@ import * as vscode from 'vscode'
 import { execSync } from 'child_process'
 import * as path from 'path'
 import { t } from '@/i18n'
-import { MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE } from '@/constants/values'
+import {
+  MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE,
+  DIFF_PLACEHOLDERS
+} from '@/constants/values'
 import { PromptBuilder } from './prompt-builder'
 import { display_token_count } from '@shared/utils/display-token-count'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
@@ -251,7 +254,7 @@ export const prepare_staged_changes = async (params: {
               status = 'created'
               const content = await vscode.workspace.fs.readFile(change.uri)
               if (content.includes(0)) {
-                final_diff_content = 'Binary file added'
+                final_diff_content = DIFF_PLACEHOLDERS.BINARY_FILE_ADDED
               } else {
                 full_content = Buffer.from(content).toString('utf8')
                 const lines = full_content.split('\n')
@@ -282,7 +285,7 @@ export const prepare_staged_changes = async (params: {
                   raw_diff.includes('\nBinary files ') ||
                   raw_diff.startsWith('Binary files ')
                 ) {
-                  final_diff_content = 'Binary file modified'
+                  final_diff_content = DIFF_PLACEHOLDERS.BINARY_FILE_MODIFIED
                 } else {
                   const hunk_start_index = raw_diff.indexOf('\n@@ ')
                   if (hunk_start_index !== -1) {

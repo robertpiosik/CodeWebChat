@@ -1,4 +1,5 @@
 import { normalize_path } from './normalize-path'
+import { DIFF_PLACEHOLDERS } from '@/constants/values'
 
 export namespace PromptBuilder {
   export const build_file_context = (params: {
@@ -37,8 +38,16 @@ export namespace PromptBuilder {
 
     if (params.diff_content?.trimEnd()) {
       const diff_content = params.diff_content.trimEnd()
-      const backticks = diff_content.includes('```') ? '````' : '```'
-      result += `${backticks}diff\n${diff_content}\n${backticks}\n\n`
+
+      const is_placeholder =
+        Object.values(DIFF_PLACEHOLDERS).includes(diff_content)
+
+      if (is_placeholder) {
+        result += `${diff_content}\n\n`
+      } else {
+        const backticks = diff_content.includes('```') ? '````' : '```'
+        result += `${backticks}diff\n${diff_content}\n${backticks}\n\n`
+      }
     }
 
     if (params.full_content?.trimEnd()) {
