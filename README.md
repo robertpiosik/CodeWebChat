@@ -31,7 +31,7 @@
 #### Efficiency and speed
 
 - For the [Agentic Search](#-agentic-search) prompt, SOTA models offer diminishing returns over mid-tiers.
-- Zero ever-growing sessions prolonging 'thinking' and/or lowering accuracy.
+- Thanks to the session-less design, models 'think' shorter for the same output quality.
 
 ## Privacy
 
