@@ -75,7 +75,7 @@ export const BrowserConnectionStatus: React.FC<Props> = (props) => {
         }
         actions={actions}
       />
-      <UiSeparator height={4} />
+      <UiSeparator height={6} />
     </>
   )
 }

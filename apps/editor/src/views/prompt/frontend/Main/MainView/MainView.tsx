@@ -274,7 +274,7 @@ export const MainView: React.FC<Props> = (props) => {
 
   const prompt_section = (
     <>
-      <UiSeparator height={is_landscape ? 4 : 2} />
+      <UiSeparator height={is_landscape ? 6 : 4} />
 
       <BrowserConnectionStatus
         is_visible={props.target == TARGET.WEB}
@@ -309,11 +309,9 @@ export const MainView: React.FC<Props> = (props) => {
                 }
               ]}
             />
-            <UiSeparator height={4} />
+            <UiSeparator height={6} />
           </>
         )}
-
-      <UiSeparator height={2} />
 
       {props.response_history.length > 0 &&
         (props.target == TARGET.WEB

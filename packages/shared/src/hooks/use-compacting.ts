@@ -41,7 +41,7 @@ export const use_compacting = (options?: { is_disabled?: boolean }) => {
   useEffect(() => {
     if (is_disabled) {
       set_compact_step(0)
-      set_thresholds({})
+      set_thresholds((prev) => (Object.keys(prev).length == 0 ? prev : {}))
       return
     }
 
