@@ -14,6 +14,7 @@ import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrolla
 import { BrowserConnectionStatus } from './components/BrowserConnectionStatus'
 import { ApiConfiguration, SetupProgress } from '@/views/prompt/types/messages'
 import { use_last_choice_tooltip } from './hooks/use-last-choice-tooltip'
+import { use_browser_connection_status } from './hooks/use-browser-connection-status'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { Header } from './components/Header'
 import { SelectionState } from '@/views/prompt/types/messages'
@@ -202,6 +203,8 @@ export const MainView: React.FC<Props> = (props) => {
     is_disabled: props.are_keyboard_shortcuts_disabled
   })
 
+  const browser_connection = use_browser_connection_status(props.is_connected)
+
   const web_configurations: UiConfigurations.Configuration[] =
     props.web_configurations.map((web_configuration, index) => {
       const is_unnamed =
@@ -269,6 +272,7 @@ export const MainView: React.FC<Props> = (props) => {
       on_api_prompt_type_change={props.on_api_prompt_type_change}
       is_alt_pressed={is_alt_pressed}
       is_landscape={is_landscape}
+      is_browser_connection_status_bar_closed={browser_connection.is_closed}
     />
   )
 
@@ -279,6 +283,8 @@ export const MainView: React.FC<Props> = (props) => {
       <BrowserConnectionStatus
         is_visible={props.target == TARGET.WEB}
         is_connected={props.is_connected}
+        is_closed={browser_connection.is_closed}
+        on_close={browser_connection.handle_close}
         on_install={props.on_install_browser_extension}
         translations={{
           connected: t('main.browser-connection.connected'),
@@ -482,6 +488,8 @@ export const MainView: React.FC<Props> = (props) => {
           }}
         />
       )}
+
+      {is_landscape && <UiSeparator height={6} />}
     </>
   )
 

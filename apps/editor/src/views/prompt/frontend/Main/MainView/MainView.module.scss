@@ -19,7 +19,8 @@
   }
 
   @include landscape {
-    height: auto;
+    height: max-content;
+    min-height: 100%;
   }
 }
 
@@ -46,11 +47,7 @@
       }
 
       .content {
-        padding-bottom: 8px;
-
-        @include modern-ui {
-          padding-bottom: 6px;
-        }
+        justify-content: center;
       }
     }
 

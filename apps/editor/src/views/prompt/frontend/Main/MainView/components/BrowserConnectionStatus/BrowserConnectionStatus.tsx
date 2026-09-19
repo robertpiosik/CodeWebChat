@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { StatusBar } from '@ui/components/editor/prompt/StatusBar'
 import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
 
 type Props = {
   is_connected: boolean
   is_visible: boolean
+  is_closed: boolean
   translations: {
     connected: string
     not_connected: string
@@ -12,28 +13,11 @@ type Props = {
     hide: string
   }
   on_install: () => void
+  on_close: () => void
 }
 
 export const BrowserConnectionStatus: React.FC<Props> = (props) => {
-  const [is_closed, setIsClosed] = useState(false)
-  const [has_been_closed, setHasBeenClosed] = useState(false)
-
-  useEffect(() => {
-    if (!props.is_connected) {
-      setIsClosed(false)
-    }
-  }, [props.is_connected])
-
-  useEffect(() => {
-    if (props.is_connected && !is_closed && has_been_closed) {
-      const timer = setTimeout(() => {
-        setIsClosed(true)
-      }, 3000)
-      return () => clearTimeout(timer)
-    }
-  }, [props.is_connected, is_closed, has_been_closed])
-
-  if (is_closed || !props.is_visible) {
+  if (props.is_closed || !props.is_visible) {
     return null
   }
 
@@ -52,10 +36,7 @@ export const BrowserConnectionStatus: React.FC<Props> = (props) => {
       icon: 'codicon-close-small',
       label: props.translations.hide,
       title: props.translations.hide,
-      on_click: () => {
-        setIsClosed(true)
-        setHasBeenClosed(true)
-      }
+      on_click: props.on_close
     })
   }
 

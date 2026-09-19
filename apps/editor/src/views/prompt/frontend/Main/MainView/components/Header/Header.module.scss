@@ -12,14 +12,14 @@
   }
 
   @include landscape {
-    height: auto;
-    align-items: flex-start;
+    height: 100%;
+    align-items: center;
     padding: unset;
-    margin: 6px 0 0 12px;
+    margin: 0 0 0 12px;
 
     @include modern-ui {
       padding: unset;
-      margin: 6px 0 0 10px;
+      margin: 0 0 0 10px;
     }
   }
 
@@ -28,15 +28,27 @@
     align-items: center;
     padding: 4px 0;
     gap: 4px;
+    height: 100%;
 
     @include landscape {
       flex-direction: column;
       align-items: flex-start;
-      padding: 0;
+      padding: 6px 0;
+    }
+  }
 
-      > :first-child {
-        order: 1;
-      }
+  &__back {
+    display: flex;
+  }
+
+  &__types {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    @include landscape {
+      flex-direction: column;
+      margin: auto 0;
     }
   }
 }
