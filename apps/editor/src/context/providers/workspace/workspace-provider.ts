@@ -498,7 +498,7 @@ export class WorkspaceProvider
     this._refresh_timeout = setTimeout(() => {
       this._on_did_change_tree_data.fire()
       this._refresh_timeout = null
-    }, 3000)
+    }, 1500)
   }
 
   public async clear_checks(): Promise<void> {
