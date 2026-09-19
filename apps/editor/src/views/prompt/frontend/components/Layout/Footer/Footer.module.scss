@@ -4,7 +4,7 @@
   display: flex;
   justify-content: space-between;
   padding: 8px;
-  border-top: 1px solid var(--cwc-border-color-dimmed);
+  border-top: 1px solid var(--cwc-original-border-color);
   gap: 4px;
 
   @include modern-ui {

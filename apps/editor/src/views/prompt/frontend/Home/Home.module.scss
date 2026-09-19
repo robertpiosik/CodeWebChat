@@ -241,7 +241,7 @@
     }
 
     &--tasks {
-      border-left: 1px solid var(--cwc-border-color-dimmed);
+      border-left: 1px solid var(--cwc-original-border-color);
 
       @include modern-ui {
         border-left: none;

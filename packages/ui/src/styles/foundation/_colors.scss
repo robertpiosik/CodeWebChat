@@ -50,6 +50,7 @@
     var(--vscode-foreground) 7%,
     transparent
   );
+  --cwc-original-border-color: var(--vscode-sideBarSectionHeader-border);
   --cwc-border-color: color-mix(
     in srgb,
     var(--vscode-foreground) 25%,

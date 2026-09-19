@@ -29,7 +29,7 @@
 
 .footer {
   padding: 10px 12px;
-  border-top: 1px solid var(--cwc-border-color-dimmed);
+  border-top: 1px solid var(--cwc-original-border-color);
 
   @include modern-ui {
     padding: 10px;
