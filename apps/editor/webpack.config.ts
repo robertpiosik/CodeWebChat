@@ -5,6 +5,7 @@ import CopyWebpackPlugin from 'copy-webpack-plugin'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+import { EsbuildPlugin } from 'esbuild-loader'
 
 const config: ((env: any, argv: any) => webpack.Configuration)[] = [
   // Extension Configuration (Node.js environment)
@@ -24,7 +25,14 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
         libraryTarget: 'commonjs2',
         devtoolModuleFilenameTemplate: '../[resource-path]'
       },
-      devtool: is_production ? false : 'eval-source-map',
+      devtool: is_production ? false : 'eval-cheap-module-source-map',
+      optimization: {
+        minimizer: [
+          new EsbuildPlugin({
+            target: 'es2022'
+          })
+        ]
+      },
       cache: {
         type: 'filesystem',
         buildDependencies: {
@@ -118,7 +126,15 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
       performance: {
         hints: false
       },
-      devtool: isProduction ? false : 'eval-source-map',
+      devtool: isProduction ? false : 'eval-cheap-module-source-map',
+      optimization: {
+        minimizer: [
+          new EsbuildPlugin({
+            target: 'es2022',
+            css: true
+          })
+        ]
+      },
       cache: {
         type: 'filesystem',
         buildDependencies: {

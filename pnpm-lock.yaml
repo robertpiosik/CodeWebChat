@@ -283,9 +283,6 @@ importers:
       style-loader:
         specifier: ^3.3.4
         version: 3.3.4(webpack@5.109.2)
-      ts-loader:
-        specifier: ^9.5.2
-        version: 9.5.4(typescript@5.9.3)(webpack@5.109.2)
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@20.17.11)(typescript@5.9.3)
@@ -21291,16 +21288,6 @@ snapshots:
       source-map: 0.7.4
       typescript: 5.9.3
       webpack: 5.102.1(webpack-cli@5.1.4)
-
-  ts-loader@9.5.4(typescript@5.9.3)(webpack@5.109.2):
-    dependencies:
-      chalk: 4.1.2
-      enhanced-resolve: 5.18.0
-      micromatch: 4.0.8
-      semver: 7.7.2
-      source-map: 0.7.4
-      typescript: 5.9.3
-      webpack: 5.109.2(postcss@8.5.4)(webpack-cli@6.0.1)
 
   ts-node@10.9.2(@types/node@20.17.11)(typescript@5.9.3):
     dependencies:
