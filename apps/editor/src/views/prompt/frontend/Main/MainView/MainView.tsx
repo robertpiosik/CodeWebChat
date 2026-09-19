@@ -274,7 +274,7 @@ export const MainView: React.FC<Props> = (props) => {
 
   const prompt_section = (
     <>
-      <UiSeparator height={2} />
+      <UiSeparator height={is_landscape ? 4 : 2} />
 
       <BrowserConnectionStatus
         is_visible={props.target == TARGET.WEB}

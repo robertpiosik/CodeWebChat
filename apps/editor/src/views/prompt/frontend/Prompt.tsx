@@ -23,7 +23,6 @@ import { ResponsePreviewFooter as UiResponsePreviewFooter } from '@ui/components
 import { RecentDonations as UiRecentDonations } from '@ui/components/editor/prompt/RecentDonations/RecentDonations'
 import { use_recent_donations } from './hooks/use-recent-donations'
 import { RecentDonationsFooter } from './components/recent-donations/RecentDonationsFooter'
-import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import { use_modal_manager } from './hooks/use-modal-manager'
 import { use_response_history } from './hooks/use-response-history'
 import { use_preview_manager } from './hooks/use-preview-manager'

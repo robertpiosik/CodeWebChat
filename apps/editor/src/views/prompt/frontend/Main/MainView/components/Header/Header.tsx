@@ -24,7 +24,9 @@ type Props = {
 
 export const Header: React.FC<Props> = (props) => {
   const { t } = use_translation()
-  const { container_ref, compact_step } = use_compacting()
+  const { container_ref, compact_step } = use_compacting({
+    is_disabled: props.is_landscape
+  })
 
   return (
     <div className={styles.header} ref={container_ref}>

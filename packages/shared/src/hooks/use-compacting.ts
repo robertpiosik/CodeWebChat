@@ -1,13 +1,15 @@
 import { useState, useEffect, useRef, useLayoutEffect } from 'react'
 
-export const use_compacting = () => {
+export const use_compacting = (options?: { is_disabled?: boolean }) => {
   const container_ref = useRef<HTMLDivElement>(null)
   const [compact_step, set_compact_step] = useState(0)
   const [thresholds, set_thresholds] = useState<Record<number, number>>({})
   const [trigger_measure, set_trigger_measure] = useState(0)
 
+  const is_disabled = options?.is_disabled
+
   useLayoutEffect(() => {
-    if (!container_ref.current) return
+    if (is_disabled || !container_ref.current) return
     const container = container_ref.current
 
     const original_width = container.style.width
@@ -34,9 +36,15 @@ export const use_compacting = () => {
       if (prev[compact_step] == threshold) return prev
       return { ...prev, [compact_step]: threshold }
     })
-  }, [compact_step, trigger_measure])
+  }, [compact_step, trigger_measure, is_disabled])
 
   useEffect(() => {
+    if (is_disabled) {
+      set_compact_step(0)
+      set_thresholds({})
+      return
+    }
+
     const observer = new ResizeObserver((entries) => {
       const container = entries[0].target as HTMLElement
       const width = container.getBoundingClientRect().width
@@ -73,7 +81,7 @@ export const use_compacting = () => {
 
     if (container_ref.current) observer.observe(container_ref.current)
     return () => observer.disconnect()
-  }, [thresholds, compact_step])
+  }, [thresholds, compact_step, is_disabled])
 
   return {
     container_ref,

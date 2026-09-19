@@ -145,43 +145,45 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
 
   return (
     <div className={styles.container}>
-      {pinned_configurations.length > 0 && (
-        <>
-          <div className={styles.configurations}>
-            {pinned_configurations.map((i) =>
-              render_configuration_item(
-                i,
-                true,
-                props.configurations.findIndex((c) => c.id === i.id)
-              )
-            )}
-          </div>
-          <div className={styles.separator} />
-        </>
-      )}
-      {props.configurations.length == 0 && (
-        <div className={styles.empty}>{props.translations.empty}</div>
-      )}
-      <div className={styles.configurations}>
-        <ReactSortable
-          list={props.configurations}
-          setList={(new_state) => {
-            const has_order_changed =
-              new_state.length != props.configurations.length ||
-              new_state.some(
-                (item, index) => item.id != props.configurations[index].id
-              )
+      <div>
+        {pinned_configurations.length > 0 && (
+          <>
+            <div className={styles.configurations}>
+              {pinned_configurations.map((i) =>
+                render_configuration_item(
+                  i,
+                  true,
+                  props.configurations.findIndex((c) => c.id === i.id)
+                )
+              )}
+            </div>
+            <div className={styles.separator} />
+          </>
+        )}
+        {props.configurations.length == 0 && (
+          <div className={styles.empty}>{props.translations.empty}</div>
+        )}
+        <div className={styles.configurations}>
+          <ReactSortable
+            list={props.configurations}
+            setList={(new_state) => {
+              const has_order_changed =
+                new_state.length != props.configurations.length ||
+                new_state.some(
+                  (item, index) => item.id != props.configurations[index].id
+                )
 
-            if (has_order_changed) {
-              props.on_reorder(new_state)
-            }
-          }}
-          animation={150}
-        >
-          {props.configurations.map((i, index) =>
-            render_configuration_item(i, false, index)
-          )}
-        </ReactSortable>
+              if (has_order_changed) {
+                props.on_reorder(new_state)
+              }
+            }}
+            animation={150}
+          >
+            {props.configurations.map((i, index) =>
+              render_configuration_item(i, false, index)
+            )}
+          </ReactSortable>
+        </div>
       </div>
       <div className={styles.footer}>
         <Button on_click={() => props.on_create && props.on_create({})}>

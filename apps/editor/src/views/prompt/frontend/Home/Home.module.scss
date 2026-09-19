@@ -4,6 +4,16 @@
   width: 100%;
   height: var(--height);
 
+  @include landscape {
+    height: unset;
+    width: unset;
+    margin: 6px 0 0 12px;
+
+    @include modern-ui {
+      margin: 6px 0 0 10px;
+    }
+  }
+
   &__normal {
     position: absolute;
     inset: 0;
@@ -27,9 +37,22 @@
       transform: translateY(-15px);
       pointer-events: none;
     }
+
+    @include landscape {
+      position: static;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      padding: 0;
+      transition: none;
+
+      @include modern-ui {
+        padding: 0;
+      }
+    }
   }
 
-  &__left {
+  &__icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -40,10 +63,16 @@
     color: var(--vscode-icon-foreground);
   }
 
-  &__right {
+  &__links {
     display: flex;
     align-items: center;
     gap: 4px;
+
+    @include landscape {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-left: -2px;
+    }
   }
 
   &__targets {
@@ -178,4 +207,45 @@
 
 .bottom-spacer {
   flex-shrink: 0;
+}
+
+.landscape {
+  display: flex;
+  height: 100%;
+  width: 100%;
+
+  &__column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0;
+
+    &--header {
+      flex: 0 0 max-content;
+    }
+
+    &--targets {
+      flex: 0.7;
+      @include modern-ui {
+        margin-right: -10px;
+      }
+
+      .content {
+        padding-bottom: 8px;
+
+        @include modern-ui {
+          padding-bottom: 6px;
+        }
+      }
+    }
+
+    &--tasks {
+      border-left: 1px solid var(--cwc-border-color-dimmed);
+
+      @include modern-ui {
+        border-left: none;
+      }
+    }
+  }
 }
