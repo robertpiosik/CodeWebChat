@@ -74,7 +74,6 @@ type Props = {
   selected_files_token_count: number
   edit_instructions_token_count: number
   ask_instructions_token_count: number
-  bottom_spacer_height?: number
   on_preview_prompt: () => void
   on_changes_click?: (branch_name: string) => void
   on_commit_click?: (
@@ -564,7 +563,6 @@ export const Main: React.FC<Props> = (props) => {
       on_tab_delete={props.on_tab_delete}
       on_tabs_reorder={props.on_tabs_reorder}
       voice_input_push_to_talk={props.voice_input_push_to_talk}
-      bottom_spacer_height={props.bottom_spacer_height}
       on_preview_prompt={props.on_preview_prompt}
       on_changes_click={props.on_changes_click}
       on_commit_click={props.on_commit_click}

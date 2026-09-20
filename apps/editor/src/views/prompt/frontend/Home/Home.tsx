@@ -29,7 +29,6 @@ type Props = {
   is_setup_complete: boolean
   is_connected: boolean
   on_donate_click: () => void
-  bottom_spacer_height?: number
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
 }
@@ -323,13 +322,6 @@ export const Home: React.FC<Props> = (props) => {
           </div>
         </div>
       </div>
-      {props.bottom_spacer_height !== undefined &&
-        props.bottom_spacer_height > 0 && (
-          <div
-            className={styles['bottom-spacer']}
-            style={{ height: props.bottom_spacer_height }}
-          />
-        )}
     </div>
   )
 

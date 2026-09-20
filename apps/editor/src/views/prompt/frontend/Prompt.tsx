@@ -12,7 +12,6 @@ import { post_message } from './utils/post-message'
 import { ResponsePreview as UiResponsePreview } from '@ui/components/editor/prompt/ResponsePreview'
 import { Modal as UiModal } from '@ui/components/editor/prompt/modals/Modal'
 import { ProgressModal as UiProgressModal } from '@ui/components/editor/prompt/modals/ProgressModal'
-import { OngoingApiCallsModal as UiOngoingApiCallsModal } from '@ui/components/editor/prompt/modals/OngoingApiCallsModal'
 import { QRCodeModal as UiQRCodeModal } from '@ui/components/editor/prompt/modals/QRCodeModal'
 import { AutoClosingModal as UiAutoClosingModal } from '@ui/components/editor/prompt/modals/AutoClosingModal'
 import { use_panel } from './hooks/use-prompt'
@@ -134,7 +133,6 @@ export const Prompt = () => {
   const {
     progress_state,
     set_progress_state,
-    prompt_view_api_calls_manager_progress_state,
     auto_closing_modal_data,
     set_auto_closing_modal_data,
     is_preview_ongoing_modal_visible,
@@ -145,10 +143,6 @@ export const Prompt = () => {
     name: string
     address: string
   }>()
-
-  const [api_calls_modal_height, set_api_calls_modal_height] = useState(0)
-  const bottom_spacer_height =
-    api_calls_modal_height > 0 ? api_calls_modal_height + 16 : 0
 
   const { viewing_donations, set_viewing_donations, ...donations_state } =
     use_recent_donations()
@@ -271,7 +265,6 @@ export const Prompt = () => {
               <Main
                 api_configurations={api_configurations}
                 set_api_configurations={set_api_configurations}
-                bottom_spacer_height={bottom_spacer_height}
                 scroll_reset_key={main_view_scroll_reset_key}
                 are_keyboard_shortcuts_disabled={
                   are_keyboard_shortcuts_disabled
@@ -374,7 +367,6 @@ export const Prompt = () => {
               })}
             >
               <Home
-                bottom_spacer_height={bottom_spacer_height}
                 vscode={vscode}
                 is_active={active_view == 'home'}
                 is_connected={is_connected}
@@ -519,24 +511,6 @@ export const Prompt = () => {
                 }}
               />
             </UiPage>
-          </div>
-        )}
-
-        {Object.keys(prompt_view_api_calls_manager_progress_state).length >
-          0 && (
-          <div className={styles.slot}>
-            <UiOngoingApiCallsModal
-              progress_items={Object.entries(
-                prompt_view_api_calls_manager_progress_state
-              ).map(([id, state]) => ({ id, ...state }))}
-              on_cancel={(id) => {
-                post_message(vscode, {
-                  command: 'CANCEL_PROMPT_VIEW_API_CALLS_MANAGER_REQUEST',
-                  id
-                })
-              }}
-              on_height_change={set_api_calls_modal_height}
-            />
           </div>
         )}
 

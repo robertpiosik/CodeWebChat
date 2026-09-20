@@ -7,15 +7,11 @@ import {
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { Task } from '@shared/types/task'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import {
-  BaseMessage,
-  CancelPromptViewApiCallsManagerRequestMessage,
-  ShowPromptViewApiCallsManagerProgressMessage,
-  HidePromptViewApiCallsManagerProgressMessage
-} from '@/views/shared/types/messages'
 import { Target } from '@shared/types/mode'
 
-export type { BaseMessage }
+type BaseMessage = {
+  command: string
+}
 
 export interface StartWebConfigurationCreationMessage extends BaseMessage {
   command: 'START_WEB_CONFIGURATION_CREATION'
@@ -582,7 +578,6 @@ export type FrontendMessage =
   | ShowAtSignQuickPickMessage
   | ShowHashSignQuickPickMessage
   | SaveWebPromptTypeMessage
-  | CancelPromptViewApiCallsManagerRequestMessage
   | GetWebPromptTypeMessage
   | GetApiPromptTypeMessage
   | SaveApiPromptTypeMessage
@@ -918,8 +913,6 @@ export type BackendMessage =
   | SelectedApiConfigurationChangedMessage
   | ShowProgressMessage
   | HideProgressMessage
-  | ShowPromptViewApiCallsManagerProgressMessage
-  | HidePromptViewApiCallsManagerProgressMessage
   | ShowAutoClosingModalMessage
   | ShowNeverClosingModalMessage
   | UpdateFileInPreviewMessage

@@ -2,7 +2,10 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { ChatsViewProvider } from '@/views/chats/backend/chats-view-provider'
 import { send_llm_message } from '@/utils/send-llm-message'
 import { randomUUID, createHash } from 'crypto'
+import { display_token_count } from '@shared/utils/display-token-count'
 import { Logger } from '@shared/utils/logger'
+import * as vscode from 'vscode'
+import { t } from '@/i18n'
 
 const CHAIN_RESOLUTION_DELAY_MS = 5000
 
@@ -76,122 +79,155 @@ export class PromptViewApiCallsManager {
       })
     }
 
-    try {
-      const is_queued =
-        previous_waiting && previous_waiting.body_hash == body_hash
+    return await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: t('service.prompt-view-api-calls-manager.sent-request'),
+        cancellable: true
+      },
+      async (progress, token) => {
+        token.onCancellationRequested(() => {
+          this.cancel_api_call(request_id)
+        })
 
-      this.broadcast_message({
-        command: 'SHOW_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS',
-        id: request_id,
-        status: is_queued ? 'Queued...' : 'Waiting for server...',
-        provider_name: params.provider_name,
-        model: params.model,
-        reasoning_effort: params.reasoning_effort
-      })
+        try {
+          const is_queued =
+            previous_waiting && previous_waiting.body_hash == body_hash
 
-      if (is_queued) {
-        if (abort_controller.signal.aborted) {
-          throw abort_controller.signal.reason
-        }
+          const queued_msg = t('common.progress.queued')
+          const waiting_msg = t('common.progress.waiting-for-server')
+          const thinking_msg = t('common.progress.thinking')
+          const receiving_msg = t('common.progress.receiving')
 
-        const abort_promise = new Promise<void>((_, reject) => {
-          abort_controller.signal.addEventListener(
-            'abort',
-            () => {
-              reject(abort_controller.signal.reason)
+          progress.report({ message: is_queued ? queued_msg : waiting_msg })
+
+          this.broadcast_message({
+            command: 'SHOW_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS',
+            id: request_id,
+            status: is_queued ? queued_msg : waiting_msg,
+            provider_name: params.provider_name,
+            model: params.model,
+            reasoning_effort: params.reasoning_effort
+          })
+
+          if (is_queued) {
+            if (abort_controller.signal.aborted) {
+              throw abort_controller.signal.reason
+            }
+
+            const abort_promise = new Promise<void>((_, reject) => {
+              abort_controller.signal.addEventListener(
+                'abort',
+                () => {
+                  reject(abort_controller.signal.reason)
+                },
+                { once: true }
+              )
+            })
+
+            await Promise.race([previous_waiting.promise, abort_promise])
+
+            progress.report({ message: waiting_msg })
+
+            this.broadcast_message({
+              command: 'SHOW_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS',
+              id: request_id,
+              status: waiting_msg,
+              provider_name: params.provider_name,
+              model: params.model,
+              reasoning_effort: params.reasoning_effort
+            })
+          }
+
+          const result = await send_llm_message({
+            base_url: params.base_url,
+            api_key: params.api_key,
+            body: params.body,
+            abort_signal: abort_controller.signal,
+            on_thinking_chunk: () => {
+              schedule_chain_resolution()
+              progress.report({ message: thinking_msg })
+              this.broadcast_message({
+                command: 'SHOW_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS',
+                id: request_id,
+                status: thinking_msg,
+                provider_name: params.provider_name,
+                model: params.model,
+                reasoning_effort: params.reasoning_effort
+              })
             },
-            { once: true }
-          )
-        })
+            on_chunk: (tokens_per_second, total_tokens) => {
+              schedule_chain_resolution()
 
-        await Promise.race([previous_waiting.promise, abort_promise])
+              const msg =
+                tokens_per_second && total_tokens
+                  ? t('common.progress.receiving-stats', {
+                      total_tokens: display_token_count(total_tokens),
+                      tokens_per_second: Math.round(tokens_per_second)
+                    })
+                  : receiving_msg
 
-        this.broadcast_message({
-          command: 'SHOW_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS',
-          id: request_id,
-          status: 'Waiting for server...',
-          provider_name: params.provider_name,
-          model: params.model,
-          reasoning_effort: params.reasoning_effort
-        })
-      }
-
-      const result = await send_llm_message({
-        base_url: params.base_url,
-        api_key: params.api_key,
-        body: params.body,
-        abort_signal: abort_controller.signal,
-        on_thinking_chunk: () => {
-          schedule_chain_resolution()
-          this.broadcast_message({
-            command: 'SHOW_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS',
-            id: request_id,
-            status: 'Thinking...',
-            provider_name: params.provider_name,
-            model: params.model,
-            reasoning_effort: params.reasoning_effort
+              progress.report({ message: msg })
+              this.broadcast_message({
+                command: 'SHOW_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS',
+                id: request_id,
+                status: msg,
+                tokens_per_second,
+                total_tokens,
+                provider_name: params.provider_name,
+                model: params.model,
+                reasoning_effort: params.reasoning_effort
+              })
+            }
           })
-        },
-        on_chunk: (tokens_per_second, total_tokens) => {
-          schedule_chain_resolution()
-          this.broadcast_message({
-            command: 'SHOW_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS',
-            id: request_id,
-            status: 'Receiving...',
-            tokens_per_second,
-            total_tokens,
-            provider_name: params.provider_name,
-            model: params.model,
-            reasoning_effort: params.reasoning_effort
+
+          if (result) {
+            this.chats_view_provider.add_chat({
+              timestamp: Date.now(),
+              provider_name: params.provider_name,
+              model: params.model,
+              reasoning_effort: params.reasoning_effort,
+              raw_instructions: params.raw_instructions,
+              response: result.response,
+              thoughts: result.thoughts
+            })
+          }
+
+          return result
+        } catch (error: any) {
+          if (abort_controller.signal.aborted) {
+            throw error
+          }
+
+          Logger.error({
+            function_name: 'send_llm_message',
+            message: 'API call error',
+            data: error
           })
+
+          return null
+        } finally {
+          if (!is_chain_resolution_scheduled) {
+            resolve_current()
+          }
+
+          this.broadcast_message({
+            command: 'HIDE_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS',
+            id: request_id
+          })
+          this.abort_controllers.delete(request_id)
+
+          const now = Date.now()
+          const wait_until = Math.max(now, this.next_allowed_finish_time)
+          const delay = wait_until - now
+          this.next_allowed_finish_time = wait_until + 500
+
+          if (delay > 0) {
+            await new Promise((resolve) => setTimeout(resolve, delay))
+          }
         }
-      })
-
-      if (result) {
-        this.chats_view_provider.add_chat({
-          timestamp: Date.now(),
-          provider_name: params.provider_name,
-          model: params.model,
-          reasoning_effort: params.reasoning_effort,
-          raw_instructions: params.raw_instructions,
-          response: result.response,
-          thoughts: result.thoughts
-        })
       }
-
-      return result
-    } catch (error: any) {
-      if (abort_controller.signal.aborted) {
-        throw error
-      }
-
-      Logger.error({
-        function_name: 'send_llm_message',
-        message: 'API call error',
-        data: error
-      })
-
-      return null
-    } finally {
-      if (!is_chain_resolution_scheduled) {
-        resolve_current()
-      }
-
-      this.broadcast_message({
-        command: 'HIDE_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS',
-        id: request_id
-      })
-      this.abort_controllers.delete(request_id)
-
-      const now = Date.now()
-      const wait_until = Math.max(now, this.next_allowed_finish_time)
-      const delay = wait_until - now
-      this.next_allowed_finish_time = wait_until + 500
-
-      if (delay > 0) {
-        await new Promise((resolve) => setTimeout(resolve, delay))
-      }
-    }
+    )
   }
 
   public cancel_api_call(request_id: string) {

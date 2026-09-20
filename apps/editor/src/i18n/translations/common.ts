@@ -701,6 +701,24 @@ export const translations = {
     hu: 'Ugrás a fájlhoz',
     bg: 'Отиди на файла'
   },
+  'common.progress.queued': {
+    en: 'queued...',
+    pl: 'w kolejce...',
+    'zh-cn': '排队中...',
+    ja: 'キュー待機中...',
+    'zh-tw': '排隊中...',
+    de: 'in der Warteschlange...',
+    es: 'en cola...',
+    fr: "en file d'attente...",
+    'pt-br': 'na fila...',
+    ru: 'в очереди...',
+    ko: '대기열에서 대기 중...',
+    it: 'in coda...',
+    tr: 'sırada...',
+    cs: 've frontě...',
+    hu: 'sorba állítva...',
+    bg: 'на опашката...'
+  },
   'common.progress.waiting-for-server': {
     en: 'waiting for server...',
     pl: 'oczekiwanie na serwer...',
@@ -754,6 +772,24 @@ export const translations = {
     cs: 'přijímání...',
     hu: 'fogadás...',
     bg: 'получаване...'
+  },
+  'common.progress.receiving-stats': {
+    en: 'received {total_tokens} tokens at {tokens_per_second} tok/s...',
+    pl: 'odebrano {total_tokens} tokenów ({tokens_per_second} tok/s)...',
+    'zh-cn': '已接收 {total_tokens} 个 token ({tokens_per_second} tok/s)...',
+    ja: '{total_tokens} トークンを受信しました ({tokens_per_second} tok/s)...',
+    'zh-tw': '已接收 {total_tokens} 個 token ({tokens_per_second} tok/s)...',
+    de: '{total_tokens} Tokens empfangen ({tokens_per_second} tok/s)...',
+    es: 'recibidos {total_tokens} tokens a {tokens_per_second} tok/s...',
+    fr: '{total_tokens} tokens reçus à {tokens_per_second} tok/s...',
+    'pt-br': '{total_tokens} tokens recebidos a {tokens_per_second} tok/s...',
+    ru: 'получено {total_tokens} токенов ({tokens_per_second} tok/s)...',
+    ko: '{total_tokens} 토큰 수신됨 ({tokens_per_second} tok/s)...',
+    it: 'ricevuti {total_tokens} token a {tokens_per_second} tok/s...',
+    tr: '{total_tokens} token alındı ({tokens_per_second} tok/s)...',
+    cs: 'přijato {total_tokens} tokenů ({tokens_per_second} tok/s)...',
+    hu: '{total_tokens} token fogadva ({tokens_per_second} tok/s)...',
+    bg: 'получени {total_tokens} токена ({tokens_per_second} ток/сек)...'
   },
   'common.progress.thinking': {
     en: 'thinking...',

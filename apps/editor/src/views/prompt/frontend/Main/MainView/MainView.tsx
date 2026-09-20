@@ -116,7 +116,6 @@ type Props = {
   on_tab_delete: (index: number) => void
   on_tabs_reorder: (new_order: number[]) => void
   voice_input_push_to_talk: boolean
-  bottom_spacer_height?: number
   on_preview_prompt: () => void
   on_changes_click?: (branch_name: string) => void
   on_commit_click?: (
@@ -592,15 +591,6 @@ export const MainView: React.FC<Props> = (props) => {
             <div className={styles.content}>
               <UiSpacer height={6} />
               {configurations_section}
-              {props.bottom_spacer_height !== undefined &&
-                props.bottom_spacer_height > 0 && (
-                  <div
-                    style={{
-                      height: props.bottom_spacer_height,
-                      flexShrink: 0
-                    }}
-                  />
-                )}
               <UiSpacer height={12} />
             </div>
           </UiScrollable>
@@ -623,12 +613,6 @@ export const MainView: React.FC<Props> = (props) => {
           <UiSpacer height={6} />
 
           {configurations_section}
-          {props.bottom_spacer_height !== undefined &&
-            props.bottom_spacer_height > 0 && (
-              <div
-                style={{ height: props.bottom_spacer_height, flexShrink: 0 }}
-              />
-            )}
           <UiSpacer height={12} />
         </div>
       </UiScrollable>
