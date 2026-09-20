@@ -59,12 +59,23 @@ export const handle_autofill = async (params: {
   const {
     other_files,
     recent_files,
+    collected_files,
     processed_instructions,
     skill_definitions
   } = await build_prompt_payload({
     prompt_view_provider: params.prompt_view_provider,
     remove_images: true
   })
+
+  if (
+    params.prompt_view_provider.web_prompt_type == 'edit-files' &&
+    !collected_files
+  ) {
+    vscode.window.showInformationMessage(
+      t('views.prompt.handlers.handle-autofill.context-cannot-be-empty')
+    )
+    return
+  }
 
   let formatted_system_instructions = ''
   const user_instructions = processed_instructions
