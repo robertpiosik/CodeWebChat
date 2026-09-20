@@ -157,12 +157,11 @@ export const handle_make_api_call = async (
   const current_instructions = prompt_view_provider.current_instructions
 
   if (!current_instructions) {
-    prompt_view_provider.send_message({
-      command: 'SHOW_AUTO_CLOSING_MODAL',
-      title: t(
+    vscode.window.showInformationMessage(
+      t(
         'views.prompt.handlers.handle-make-api-call.instructions-cannot-be-empty'
       )
-    })
+    )
     return
   }
 
