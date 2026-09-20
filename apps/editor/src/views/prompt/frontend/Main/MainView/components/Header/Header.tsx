@@ -24,6 +24,7 @@ type Props = {
   is_landscape: boolean
   is_browser_connection_status_bar_closed: boolean
   is_content_scrollable: boolean
+  is_api_warning_visible: boolean
 }
 
 export const Header: React.FC<Props> = (props) => {
@@ -67,6 +68,35 @@ export const Header: React.FC<Props> = (props) => {
                       {
                         id: 'install',
                         icon: 'codicon-add',
+                        label: '',
+                        title: '',
+                        on_click: () => {}
+                      }
+                    ]}
+                  />
+                  <UiSpacer height={6} />
+                </div>
+              </>
+            )}
+          {props.is_landscape &&
+            props.target == TARGET.API &&
+            props.is_api_warning_visible &&
+            !props.is_content_scrollable && (
+              <>
+                <div
+                  style={{
+                    visibility: 'hidden',
+                    pointerEvents: 'none',
+                    width: 0
+                  }}
+                >
+                  <UiStatusBar
+                    icon="codicon-warning"
+                    label=""
+                    actions={[
+                      {
+                        id: 'settings',
+                        icon: 'codicon-gear',
                         label: '',
                         title: '',
                         on_click: () => {}

@@ -262,6 +262,11 @@ export const MainView: React.FC<Props> = (props) => {
       }
     })
 
+  const is_api_warning_visible =
+    props.target == TARGET.API &&
+    !!props.setup_progress &&
+    (!props.setup_progress.has_provider || props.api_configurations.length == 0)
+
   const header = (
     <Header
       target={props.target}
@@ -274,6 +279,7 @@ export const MainView: React.FC<Props> = (props) => {
       is_landscape={is_landscape}
       is_browser_connection_status_bar_closed={browser_connection.is_closed}
       is_content_scrollable={is_content_scrollable}
+      is_api_warning_visible={is_api_warning_visible}
     />
   )
 
@@ -295,30 +301,27 @@ export const MainView: React.FC<Props> = (props) => {
         }}
       />
 
-      {props.target == TARGET.API &&
-        props.setup_progress &&
-        (!props.setup_progress.has_provider ||
-          props.api_configurations.length == 0) && (
-          <>
-            <UiStatusBar
-              theme="warning"
-              icon="codicon-warning"
-              label={t('configurations.api-setup-incomplete')}
-              actions={[
-                {
-                  id: 'settings',
-                  icon: 'codicon-gear',
-                  label: t('action.settings'),
-                  title: t('action.settings'),
-                  on_click: !props.setup_progress.has_provider
-                    ? props.on_manage_providers
-                    : props.on_manage_models
-                }
-              ]}
-            />
-            <UiSpacer height={6} />
-          </>
-        )}
+      {is_api_warning_visible && (
+        <>
+          <UiStatusBar
+            theme="warning"
+            icon="codicon-warning"
+            label={t('configurations.api-setup-incomplete')}
+            actions={[
+              {
+                id: 'settings',
+                icon: 'codicon-gear',
+                label: t('action.settings'),
+                title: t('action.settings'),
+                on_click: !props.setup_progress!.has_provider
+                  ? props.on_manage_providers
+                  : props.on_manage_models
+              }
+            ]}
+          />
+          <UiSpacer height={6} />
+        </>
+      )}
 
       {props.response_history.length > 0 &&
         (props.target == TARGET.WEB
