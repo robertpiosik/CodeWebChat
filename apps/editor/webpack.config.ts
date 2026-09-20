@@ -29,7 +29,7 @@ const build_status_plugin = {
       if (is_initial_build) {
         active_compilers--
         if (active_compilers === 0) {
-          console.log('Done')
+          console.log('Done.')
         }
         is_initial_build = false
       }
