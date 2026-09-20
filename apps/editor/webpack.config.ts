@@ -103,19 +103,15 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
           dangerouslyAllowCleanPatternsOutsideProject: true,
           dry: false
         }),
-        ...(argv.watch
-          ? []
-          : [
-              new ForkTsCheckerWebpackPlugin({
-                typescript: {
-                  configFile: path.resolve(__dirname, 'tsconfig.json'),
-                  diagnosticOptions: {
-                    semantic: true,
-                    syntactic: true
-                  }
-                }
-              })
-            ]),
+        new ForkTsCheckerWebpackPlugin({
+          typescript: {
+            configFile: path.resolve(__dirname, 'tsconfig.json'),
+            diagnosticOptions: {
+              semantic: true,
+              syntactic: true
+            }
+          }
+        }),
         new CopyWebpackPlugin({
           patterns: [
             {
