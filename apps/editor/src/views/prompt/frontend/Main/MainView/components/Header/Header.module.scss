@@ -43,12 +43,19 @@
 
   &__types {
     display: flex;
-    align-items: center;
-    gap: 4px;
 
     @include landscape {
       flex-direction: column;
       margin: auto 0;
+    }
+
+    &__inner {
+      display: flex;
+      gap: 4px;
+
+      @include landscape {
+        flex-direction: column;
+      }
     }
   }
 }

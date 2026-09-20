@@ -44,77 +44,93 @@ export const Header: React.FC<Props> = (props) => {
         <div className={styles.header__types}>
           {props.target == TARGET.WEB && (
             <>
-              <UiKeycapWrapper char={props.is_alt_pressed ? 'E' : undefined}>
-                <UiIconAccentButton
-                  label={web_prompt_type_labels['edit-files']}
-                  icon="edit-sparkle"
-                  is_active={props.web_prompt_type == 'edit-files'}
-                  active_color="blue"
-                  is_compact={
-                    !props.is_landscape &&
-                    (props.web_prompt_type == 'edit-files'
-                      ? compact_step >= 2
-                      : compact_step >= 1)
-                  }
-                  on_click={() => props.on_web_prompt_type_change('edit-files')}
-                />
-              </UiKeycapWrapper>
-              <UiKeycapWrapper char={props.is_alt_pressed ? 'A' : undefined}>
-                <UiIconAccentButton
-                  label={web_prompt_type_labels['ask-about-files']}
-                  icon="chat-sparkle"
-                  is_active={props.web_prompt_type == 'ask-about-files'}
-                  active_color="purple"
-                  is_compact={
-                    !props.is_landscape &&
-                    (props.web_prompt_type == 'ask-about-files'
-                      ? compact_step >= 2
-                      : compact_step >= 1)
-                  }
-                  on_click={() =>
-                    props.on_web_prompt_type_change('ask-about-files')
-                  }
-                />
-              </UiKeycapWrapper>
-              {props.is_landscape && (
-                <div
-                  style={{
-                    visibility: 'hidden',
-                    pointerEvents: 'none',
-                    width: 0
-                  }}
-                >
-                  <UiIconButton codicon_icon="chevron-left" />
-                  {props.is_browser_connection_status_bar_closed && (
-                    <UiStatusBar
-                      icon="codicon-debug-disconnect"
-                      label=""
-                      actions={[
-                        {
-                          id: 'install',
-                          icon: 'codicon-add',
-                          label: '',
-                          title: '',
-                          on_click: () => {}
-                        }
-                      ]}
-                    />
-                  )}
-                </div>
-              )}
+              <div className={styles.header__types__inner}>
+                <UiKeycapWrapper char={props.is_alt_pressed ? 'E' : undefined}>
+                  <UiIconAccentButton
+                    label={web_prompt_type_labels['edit-files']}
+                    icon="edit-sparkle"
+                    is_active={props.web_prompt_type == 'edit-files'}
+                    active_color="blue"
+                    is_compact={
+                      !props.is_landscape &&
+                      (props.web_prompt_type == 'edit-files'
+                        ? compact_step >= 2
+                        : compact_step >= 1)
+                    }
+                    on_click={() =>
+                      props.on_web_prompt_type_change('edit-files')
+                    }
+                  />
+                </UiKeycapWrapper>
+                <UiKeycapWrapper char={props.is_alt_pressed ? 'A' : undefined}>
+                  <UiIconAccentButton
+                    label={web_prompt_type_labels['ask-about-files']}
+                    icon="chat-sparkle"
+                    is_active={props.web_prompt_type == 'ask-about-files'}
+                    active_color="purple"
+                    is_compact={
+                      !props.is_landscape &&
+                      (props.web_prompt_type == 'ask-about-files'
+                        ? compact_step >= 2
+                        : compact_step >= 1)
+                    }
+                    on_click={() =>
+                      props.on_web_prompt_type_change('ask-about-files')
+                    }
+                  />
+                </UiKeycapWrapper>
+              </div>
             </>
           )}
           {props.target == TARGET.API && (
-            <UiIconAccentButton
-              label={api_prompt_type_labels['edit-files']}
-              icon="edit-sparkle"
-              is_active={props.api_prompt_type == 'edit-files'}
-              active_color="blue"
-              is_compact={!props.is_landscape && compact_step >= 1}
-              on_click={() => props.on_api_prompt_type_change('edit-files')}
-            />
+            <>
+              <UiIconAccentButton
+                label={api_prompt_type_labels['edit-files']}
+                icon="edit-sparkle"
+                is_active={props.api_prompt_type == 'edit-files'}
+                active_color="blue"
+                is_compact={!props.is_landscape && compact_step >= 1}
+                on_click={() => props.on_api_prompt_type_change('edit-files')}
+              />
+            </>
+          )}
+          {props.is_landscape && (
+            <div
+              style={{
+                visibility: 'hidden',
+                pointerEvents: 'none',
+                width: 0
+              }}
+            >
+              {props.is_browser_connection_status_bar_closed && (
+                <UiStatusBar
+                  icon="codicon-debug-disconnect"
+                  label=""
+                  actions={[
+                    {
+                      id: 'install',
+                      icon: 'codicon-add',
+                      label: '',
+                      title: '',
+                      on_click: () => {}
+                    }
+                  ]}
+                />
+              )}
+            </div>
           )}
         </div>
+
+        {props.is_landscape && (
+          <div
+            style={{
+              visibility: 'hidden',
+              pointerEvents: 'none'
+            }}
+          >
+            <UiIconButton codicon_icon="chevron-left" />
+          </div>
+        )}
       </div>
     </div>
   )

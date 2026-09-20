@@ -160,6 +160,18 @@ export const Home: React.FC<Props> = (props) => {
             codicon="coffee"
             is_compact={is_landscape || compact_step >= 2}
           />
+          {is_landscape && (
+            <div
+              style={{
+                visibility: 'hidden',
+                pointerEvents: 'none'
+              }}
+            >
+              <div className={styles.header__icon}>
+                <span className="codicon codicon-home" />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -337,6 +349,7 @@ export const Home: React.FC<Props> = (props) => {
               <div className={styles.inner}>
                 <UiSeparator height={6} />
                 {targets_section}
+                <UiSeparator height={6} />
               </div>
             </div>
           </UiScrollable>
