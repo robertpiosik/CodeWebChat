@@ -14,6 +14,7 @@ import { handle_update_last_used_web_configuration } from './handle-update-last-
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { t } from '@/i18n'
+import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 
 export const handle_autofill = async (params: {
   prompt_view_provider: PromptViewProvider
@@ -23,6 +24,9 @@ export const handle_autofill = async (params: {
   if (
     !params.prompt_view_provider.websocket_server_instance.is_connected_with_browser()
   ) {
+    vscode.window.showInformationMessage(
+      t('views.prompt.handlers.handle-autofill.browser-not-connected')
+    )
     return
   }
 
@@ -34,6 +38,7 @@ export const handle_autofill = async (params: {
   })
 
   if (!resolution.web_configuration_name) {
+    show_incomplete_setup_warning('web')
     return
   }
   const resolved_web_configuration_name = resolution.web_configuration_name

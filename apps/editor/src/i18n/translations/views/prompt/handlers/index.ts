@@ -9,6 +9,7 @@ import { translations as utils } from './utils'
 import { translations as handle_template_quick_pick } from './handle-template-quick-pick'
 import { translations as handle_patch_repair } from './handle-patch-repair'
 import { translations as handle_agentic_search } from './handle-agentic-search'
+import { translations as handle_autofill } from './handle-autofill'
 
 export const translations = {
   ...handle_delete_task,
@@ -21,5 +22,6 @@ export const translations = {
   ...utils,
   ...handle_template_quick_pick,
   ...handle_patch_repair,
-  ...handle_agentic_search
+  ...handle_agentic_search,
+  ...handle_autofill
 }

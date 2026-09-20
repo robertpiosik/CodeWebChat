@@ -26,7 +26,7 @@ export namespace Configurations {
     }) => void
     on_edit: (id: string) => void
     on_delete: (id: string) => void
-    disable_invocation?: boolean
+    is_dimmed?: boolean
     translations: {
       empty: string
       add_new: string
@@ -55,15 +55,10 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         className={cn(styles.configurations__item, {
           [styles['configurations__item--highlighted']]:
             active_configuration_id == configuration.id,
-          [styles['configurations__item--disabled-invocation']]:
-            props.disable_invocation
+          [styles['configurations__item--dimmed']]: props.is_dimmed
         })}
-        onClick={
-          props.disable_invocation
-            ? undefined
-            : () => props.on_configuration_click(configuration.id)
-        }
-        role={props.disable_invocation ? undefined : 'button'}
+        onClick={() => props.on_configuration_click(configuration.id)}
+        role="button"
       >
         <div className={styles.configurations__item__left}>
           {!is_dragging_disabled && (

@@ -32,13 +32,7 @@
       }
     }
 
-    &--disabled-invocation {
-      cursor: default;
-
-      &:hover {
-        background-color: unset;
-      }
-
+    &--dimmed {
       .configurations__item__left__icon,
       .configurations__item__left__text {
         opacity: var(--dimmed-opacity);

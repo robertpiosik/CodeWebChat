@@ -162,7 +162,7 @@ export const MainView: React.FC<Props> = (props) => {
     (props.target == TARGET.WEB && props.web_prompt_type == 'edit-files') ||
     (props.target == TARGET.API && props.api_prompt_type == 'edit-files')
 
-  const context_is_empty_warning =
+  const is_context_empty =
     show_edit_format_selector && props.selected_files.length == 0
 
   const handle_input_change = (value: string) => {
@@ -353,7 +353,7 @@ export const MainView: React.FC<Props> = (props) => {
             props.target == TARGET.WEB &&
             (!props.is_connected || !props.web_configurations.length)
           }
-          is_action_disabled={context_is_empty_warning}
+          is_action_disabled={is_context_empty}
           value={props.instructions}
           chat_history={props.chat_history}
           on_change={handle_input_change}
@@ -392,7 +392,7 @@ export const MainView: React.FC<Props> = (props) => {
           target={props.target}
           on_target_change={(target) => props.on_target_change(target)}
           active_border_color={
-            context_is_empty_warning
+            is_context_empty
               ? 'yellow'
               : props.target == TARGET.WEB
                 ? props.web_prompt_type == 'edit-files'
@@ -453,7 +453,7 @@ export const MainView: React.FC<Props> = (props) => {
         />
       </div>
 
-      {context_is_empty_warning ? (
+      {is_context_empty ? (
         <UiStatusBar
           placement="bottom"
           theme="warning"
@@ -501,7 +501,7 @@ export const MainView: React.FC<Props> = (props) => {
       {props.target == TARGET.WEB && (
         <UiConfigurations
           configurations={web_configurations}
-          disable_invocation={context_is_empty_warning || !props.is_connected}
+          is_dimmed={is_context_empty || !props.is_connected}
           on_create={(params) => {
             props.on_create_web_configuration(params)
           }}
@@ -542,9 +542,7 @@ export const MainView: React.FC<Props> = (props) => {
       {props.target == TARGET.API && (
         <UiConfigurations
           configurations={api_configurations_ui}
-          disable_invocation={
-            context_is_empty_warning || !props.api_configurations.length
-          }
+          is_dimmed={is_context_empty || !props.api_configurations.length}
           on_configuration_click={props.on_api_configuration_click}
           on_reorder={(reordered) =>
             props.on_api_configurations_reorder(reordered)
