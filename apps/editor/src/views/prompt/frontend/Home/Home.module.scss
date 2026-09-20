@@ -110,6 +110,11 @@
   > * {
     flex-shrink: 0;
   }
+
+  @include landscape {
+    height: max-content;
+    min-height: 100%;
+  }
 }
 
 .inner {
