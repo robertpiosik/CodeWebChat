@@ -145,7 +145,15 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
 
   return (
     <div className={styles.container}>
-      <div>
+      {props.configurations.length == 0 && (
+        <div
+          className={styles.footer}
+          style={{ visibility: 'hidden', pointerEvents: 'none' }}
+        >
+          <Button>{props.translations.add_new}</Button>
+        </div>
+      )}
+      <div className={styles.list}>
         {pinned_configurations.length > 0 && (
           <>
             <div className={styles.configurations}>
