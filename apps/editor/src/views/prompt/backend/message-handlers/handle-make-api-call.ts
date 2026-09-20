@@ -161,8 +161,7 @@ export const handle_make_api_call = async (
       command: 'SHOW_AUTO_CLOSING_MODAL',
       title: t(
         'views.prompt.handlers.handle-make-api-call.instructions-cannot-be-empty'
-      ),
-      type: 'warning'
+      )
     })
     return
   }

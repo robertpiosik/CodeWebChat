@@ -116,8 +116,7 @@ export const handle_autofill = async (params: {
   if (sent) {
     params.prompt_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
-      title: t('common.info.continue-in-browser'),
-      type: 'success'
+      title: t('common.info.continue-in-browser')
     })
   }
 

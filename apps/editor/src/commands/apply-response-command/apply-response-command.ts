@@ -189,8 +189,7 @@ export const apply_response_command = (params: {
               command: 'SHOW_AUTO_CLOSING_MODAL',
               title: t(
                 'command.apply-response-command.success.patched-successfully'
-              ),
-              type: 'success'
+              )
             })
           } finally {
             params.workspace_provider.resume_file_watcher()

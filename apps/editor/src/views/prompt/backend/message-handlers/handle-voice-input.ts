@@ -220,8 +220,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
             command: 'SHOW_AUTO_CLOSING_MODAL',
             title: t(
               'views.prompt.handlers.handle-voice-input.warning.inaudible'
-            ),
-            type: 'warning'
+            )
           })
         } else {
           prompt_view_provider.add_text_at_cursor_position(result.response)

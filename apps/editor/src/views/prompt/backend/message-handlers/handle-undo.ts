@@ -91,8 +91,7 @@ export const handle_undo = async (
     prompt_view_provider.set_undo_button_state(false)
     prompt_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
-      title: 'Changes undone successfully',
-      type: 'success'
+      title: 'Changes undone successfully'
     })
   } catch (error) {
     Logger.error({

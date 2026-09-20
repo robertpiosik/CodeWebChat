@@ -815,7 +815,6 @@ export interface HideProgressMessage extends BaseMessage {
 export interface ShowAutoClosingModalMessage extends BaseMessage {
   command: 'SHOW_AUTO_CLOSING_MODAL'
   title: string
-  type: 'success' | 'warning' | 'error' | 'info'
   non_dismissable?: boolean
 }
 
