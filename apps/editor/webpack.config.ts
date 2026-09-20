@@ -7,6 +7,36 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import { EsbuildPlugin } from 'esbuild-loader'
 
+let active_compilers = 0
+
+const build_status_plugin = {
+  apply(compiler: webpack.Compiler) {
+    let is_initial_build = true
+
+    const on_start = () => {
+      if (is_initial_build) {
+        if (active_compilers === 0) {
+          console.log('Building...')
+        }
+        active_compilers++
+      }
+    }
+
+    compiler.hooks.run.tap('BuildStatusPlugin', on_start)
+    compiler.hooks.watchRun.tap('BuildStatusPlugin', on_start)
+
+    compiler.hooks.done.tap('BuildStatusPlugin', () => {
+      if (is_initial_build) {
+        active_compilers--
+        if (active_compilers === 0) {
+          console.log('Done')
+        }
+        is_initial_build = false
+      }
+    })
+  }
+}
+
 const config: ((env: any, argv: any) => webpack.Configuration)[] = [
   // Extension Configuration (Node.js environment)
   (env: any, argv: any): webpack.Configuration => {
@@ -67,20 +97,25 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
         ]
       },
       plugins: [
+        build_status_plugin,
         new CleanWebpackPlugin({
           cleanOnceBeforeBuildPatterns: ['../*.vsix'],
           dangerouslyAllowCleanPatternsOutsideProject: true,
           dry: false
         }),
-        new ForkTsCheckerWebpackPlugin({
-          typescript: {
-            configFile: path.resolve(__dirname, 'tsconfig.json'),
-            diagnosticOptions: {
-              semantic: true,
-              syntactic: true
-            }
-          }
-        }),
+        ...(argv.watch
+          ? []
+          : [
+              new ForkTsCheckerWebpackPlugin({
+                typescript: {
+                  configFile: path.resolve(__dirname, 'tsconfig.json'),
+                  diagnosticOptions: {
+                    semantic: true,
+                    syntactic: true
+                  }
+                }
+              })
+            ]),
         new CopyWebpackPlugin({
           patterns: [
             {
@@ -108,10 +143,10 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
   },
   // View Configuration (Web environment)
   (env: any, argv: any): webpack.Configuration => {
-    const isProduction = argv.mode === 'production'
+    const is_production = argv.mode === 'production'
     return {
       name: 'view',
-      mode: isProduction ? 'production' : 'development',
+      mode: is_production ? 'production' : 'development',
       target: 'web',
       entry: {
         prompt: './src/views/prompt/frontend/App.tsx',
@@ -126,7 +161,7 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
       performance: {
         hints: false
       },
-      devtool: isProduction ? false : 'eval-cheap-module-source-map',
+      devtool: is_production ? false : 'eval-cheap-module-source-map',
       optimization: {
         minimizer: [
           new EsbuildPlugin({
@@ -166,23 +201,23 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
                     getLocalIdent: (
                       context: webpack.LoaderContext<any>,
                       _: any,
-                      localName: string
+                      local_name: string
                     ) => {
                       const filename = context.resourcePath
-                      const isModule = /\.module\.(scss|css)$/i.test(filename)
-                      if (isModule) {
-                        const moduleName = path
+                      const is_module = /\.module\.(scss|css)$/i.test(filename)
+                      if (is_module) {
+                        const module_name = path
                           .basename(filename as string)
                           .replace(/\.module\.(scss|css)$/i, '')
                         const hash = crypto
                           .createHash('md5')
-                          .update(`${filename}${localName}`)
+                          .update(`${filename}${local_name}`)
                           .digest('hex')
                           .substring(0, 5)
-                        return `${moduleName}__${localName}__${hash}`
+                        return `${module_name}__${local_name}__${hash}`
                       }
                       // Return original name for non-module files
-                      return localName
+                      return local_name
                     }
                   },
                   importLoaders: 1
@@ -222,6 +257,7 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
         ]
       },
       plugins: [
+        build_status_plugin,
         new MiniCssExtractPlugin({
           filename: '[name].css'
         }) as unknown as webpack.WebpackPluginInstance
