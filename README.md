@@ -31,7 +31,7 @@
 #### Efficiency and speed
 
 - For the [Agentic Search](#-agentic-search) prompt, SOTA models offer diminishing returns over mid-tiers.
-- Zero sessions—lean prompts make reasoning shorter, for the same or higher output quality.
+- Lean prompts make reasoning shorter, for the same or higher output quality.
 
 ## Privacy
 
