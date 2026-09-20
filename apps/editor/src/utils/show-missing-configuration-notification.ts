@@ -8,7 +8,7 @@ export const show_incomplete_setup_warning = async (
   const open_settings_label = t('common.open-settings')
   const result = await vscode.window.showWarningMessage(
     type == 'api'
-      ? t('common.warning.no-api-configs')
+      ? t('common.warning.setup-incomplete')
       : t('common.info.no-items-created-yet', { items: 'chatbots' }),
     open_settings_label
   )

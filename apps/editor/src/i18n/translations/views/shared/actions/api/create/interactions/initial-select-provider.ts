@@ -58,21 +58,21 @@ export const translations = {
     },
   'views.shared.actions.api.create.interactions.initial-select-provider.no-providers-found':
     {
-      en: 'No providers found. Please add one first.',
-      pl: 'Nie znaleziono providerów. Najpierw dodaj jednego.',
-      'zh-cn': '未找到提供商。请先添加一个。',
-      ja: 'プロバイダーが見つかりません。まず追加してください。',
-      'zh-tw': '未找到供應商。請先新增一個。',
-      de: 'Keine Anbieter gefunden. Bitte fügen Sie zuerst einen hinzu.',
-      es: 'No se encontraron proveedores. Por favor, añade uno primero.',
-      fr: "Aucun fournisseur trouvé. Veuillez d'abord en ajouter un.",
-      'pt-br': 'Nenhum provedor encontrado. Por favor, adicione um primeiro.',
-      ru: 'Провайдеры не найдены. Пожалуйста, сначала добавьте одного.',
-      ko: '제공자를 찾을 수 없습니다. 먼저 추가해 주세요.',
-      it: 'Nessun fornitore trovato. Aggiungine prima uno.',
-      tr: 'Sağlayıcı bulunamadı. Lütfen önce bir tane ekleyin.',
-      cs: 'Nebyli nalezeni žádní poskytovatelé. Nejprve prosím nějakého přidejte.',
-      hu: 'Nem találhatók szolgáltatók. Kérjük, először adjon hozzá egyet.',
-      bg: 'Не са намерени доставчици. Моля, първо добавете един.'
+      en: 'No providers found.',
+      pl: 'Nie znaleziono providerów.',
+      'zh-cn': '未找到提供商。',
+      ja: 'プロバイダーが見つかりません。',
+      'zh-tw': '找不到供應商。',
+      de: 'Keine Anbieter gefunden.',
+      es: 'No se encontraron proveedores.',
+      fr: 'Aucun fournisseur trouvé.',
+      'pt-br': 'Nenhum provedor encontrado.',
+      ru: 'Провайдеры не найдены.',
+      ko: '제공자를 찾을 수 없습니다.',
+      it: 'Nessun fornitore trovato.',
+      tr: 'Sağlayıcı bulunamadı.',
+      cs: 'Nebyli nalezeni žádní poskytovatelé.',
+      hu: 'Nem találhatók szolgáltatók.',
+      bg: 'Не са намерени доставчици.'
     }
 } as const

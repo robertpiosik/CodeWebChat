@@ -1,21 +1,21 @@
 export const configurations = {
-  'configurations.api-setup-incomplete': {
-    en: 'API setup incomplete',
-    pl: 'Konfiguracja API niekompletna',
-    'zh-cn': 'API 设置不完整',
-    ja: 'API の設定が不完全です',
-    'zh-tw': 'API 設定不完整',
-    de: 'API-Einrichtung unvollständig',
-    es: 'Configuración de API incompleta',
-    fr: 'Configuration de l’API incomplète',
-    'pt-br': 'Configuração da API incompleta',
-    ru: 'Настройка API не завершена',
-    ko: 'API 설정이 불완전합니다',
-    it: 'Configurazione API incompleta',
-    tr: 'API kurulumu eksik',
-    cs: 'Nastavení API je neúplné',
-    hu: 'Az API beállítása nem teljes',
-    bg: 'Настройката на API е непълна'
+  'configurations.setup-incomplete': {
+    en: 'Setup incomplete',
+    pl: 'Konfiguracja niekompletna',
+    'zh-cn': '设置不完整',
+    ja: '設定が不完全です',
+    'zh-tw': '設定不完整',
+    de: 'Einrichtung unvollständig',
+    es: 'Configuración incompleta',
+    fr: 'Configuration incomplète',
+    'pt-br': 'Configuração incompleta',
+    ru: 'Настройка не завершена',
+    ko: '설정이 불완전합니다',
+    it: 'Configurazione incompleta',
+    tr: 'Kurulum eksik',
+    cs: 'Nastavení je neúplné',
+    hu: 'A beállítás nem teljes',
+    bg: 'Настройката е непълна'
   },
   'configurations.empty': {
     en: 'No models configured yet',

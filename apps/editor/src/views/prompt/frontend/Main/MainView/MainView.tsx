@@ -306,7 +306,7 @@ export const MainView: React.FC<Props> = (props) => {
           <UiStatusBar
             theme="warning"
             icon="codicon-warning"
-            label={t('configurations.api-setup-incomplete')}
+            label={t('configurations.setup-incomplete')}
             actions={[
               {
                 id: 'settings',

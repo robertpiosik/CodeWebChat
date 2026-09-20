@@ -11,7 +11,7 @@ export const initial_select_provider = async (
 
   if (providers.length == 0) {
     const open_settings_btn = t('common.open-settings')
-    const selection = await vscode.window.showInformationMessage(
+    const selection = await vscode.window.showWarningMessage(
       t(
         'views.shared.actions.api.create.interactions.initial-select-provider.no-providers-found'
       ),

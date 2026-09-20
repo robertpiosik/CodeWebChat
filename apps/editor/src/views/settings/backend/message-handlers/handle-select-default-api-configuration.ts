@@ -17,7 +17,6 @@ export const handle_select_default_api_configuration = async (
   const api_configurations = await providers_manager.get_api_configurations()
 
   if (api_configurations.length == 0) {
-    vscode.window.showInformationMessage(t('common.warning.no-api-configs'))
     return
   }
 
