@@ -248,107 +248,109 @@ export const run_generate_action = async (params: {
                 Math.ceil(prompt_with_context.api_prompt.length / 4) -
                 skip_tokens
 
-              const attach_label = t(
-                'command.generate-commit-message-command.attach-context-files.attach'
-              )
-              const skip_label = t('common.action.skip')
-              const last_selected_id =
-                params.extension_context.workspaceState.get<string>(
-                  LAST_USE_CONTEXT_FILES_STATE_KEY,
-                  'attach'
+              if (additional_tokens > 0) {
+                const attach_label = t(
+                  'command.generate-commit-message-command.attach-context-files.attach'
+                )
+                const skip_label = t('common.action.skip')
+                const last_selected_id =
+                  params.extension_context.workspaceState.get<string>(
+                    LAST_USE_CONTEXT_FILES_STATE_KEY,
+                    'attach'
+                  )
+
+                const answer = await new Promise<string | undefined | 'back'>(
+                  (resolve) => {
+                    const quick_pick = vscode.window.createQuickPick<
+                      vscode.QuickPickItem & { id: string }
+                    >()
+                    quick_pick.items = [
+                      {
+                        label: skip_label,
+                        description: display_token_count(skip_tokens),
+                        id: 'skip'
+                      },
+                      {
+                        label: attach_label,
+                        description: `+${display_token_count(additional_tokens)}`,
+                        id: 'attach'
+                      }
+                    ]
+                    quick_pick.activeItems = [
+                      quick_pick.items.find((i) => i.id === last_selected_id) ||
+                        quick_pick.items[1]
+                    ]
+                    quick_pick.title = t(
+                      'command.generate-commit-message-command.attach-context-files.title'
+                    )
+                    quick_pick.placeholder = t(
+                      'command.generate-commit-message-command.attach-context-files.placeholder'
+                    )
+                    quick_pick.ignoreFocusOut = true
+                    const close_button = {
+                      iconPath: new vscode.ThemeIcon('close'),
+                      tooltip: t('common.close')
+                    }
+                    quick_pick.buttons = [
+                      vscode.QuickInputButtons.Back,
+                      close_button
+                    ]
+
+                    let is_resolved = false
+
+                    quick_pick.onDidTriggerButton((button) => {
+                      if (button === vscode.QuickInputButtons.Back) {
+                        is_resolved = true
+                        resolve('back')
+                        quick_pick.hide()
+                      } else if (button === close_button) {
+                        is_resolved = true
+                        resolve(undefined)
+                        quick_pick.hide()
+                      }
+                    })
+
+                    quick_pick.onDidAccept(() => {
+                      is_resolved = true
+                      resolve(quick_pick.selectedItems[0]?.id)
+                      quick_pick.hide()
+                    })
+
+                    quick_pick.onDidHide(() => {
+                      if (!is_resolved) {
+                        resolve('back')
+                      }
+                      quick_pick.dispose()
+                    })
+
+                    quick_pick.show()
+                  }
                 )
 
-              const answer = await new Promise<string | undefined | 'back'>(
-                (resolve) => {
-                  const quick_pick = vscode.window.createQuickPick<
-                    vscode.QuickPickItem & { id: string }
-                  >()
-                  quick_pick.items = [
-                    {
-                      label: skip_label,
-                      description: display_token_count(skip_tokens),
-                      id: 'skip'
-                    },
-                    {
-                      label: attach_label,
-                      description: `+${display_token_count(additional_tokens)}`,
-                      id: 'attach'
-                    }
-                  ]
-                  quick_pick.activeItems = [
-                    quick_pick.items.find((i) => i.id === last_selected_id) ||
-                      quick_pick.items[1]
-                  ]
-                  quick_pick.title = t(
-                    'command.generate-commit-message-command.attach-context-files.title'
-                  )
-                  quick_pick.placeholder = t(
-                    'command.generate-commit-message-command.attach-context-files.placeholder'
-                  )
-                  quick_pick.ignoreFocusOut = true
-                  const close_button = {
-                    iconPath: new vscode.ThemeIcon('close'),
-                    tooltip: t('common.close')
+                if (answer === 'back') {
+                  current_action = undefined
+                  continue
+                }
+
+                if (answer === undefined) {
+                  if (was_empty_stage) {
+                    await vscode.commands.executeCommand(
+                      'git.unstageAll',
+                      repository
+                    )
                   }
-                  quick_pick.buttons = [
-                    vscode.QuickInputButtons.Back,
-                    close_button
-                  ]
-
-                  let is_resolved = false
-
-                  quick_pick.onDidTriggerButton((button) => {
-                    if (button === vscode.QuickInputButtons.Back) {
-                      is_resolved = true
-                      resolve('back')
-                      quick_pick.hide()
-                    } else if (button === close_button) {
-                      is_resolved = true
-                      resolve(undefined)
-                      quick_pick.hide()
-                    }
-                  })
-
-                  quick_pick.onDidAccept(() => {
-                    is_resolved = true
-                    resolve(quick_pick.selectedItems[0]?.id)
-                    quick_pick.hide()
-                  })
-
-                  quick_pick.onDidHide(() => {
-                    if (!is_resolved) {
-                      resolve('back')
-                    }
-                    quick_pick.dispose()
-                  })
-
-                  quick_pick.show()
+                  return
                 }
-              )
 
-              if (answer === 'back') {
-                current_action = undefined
-                continue
-              }
+                params.extension_context.workspaceState.update(
+                  LAST_USE_CONTEXT_FILES_STATE_KEY,
+                  answer
+                )
 
-              if (answer === undefined) {
-                if (was_empty_stage) {
-                  await vscode.commands.executeCommand(
-                    'git.unstageAll',
-                    repository
-                  )
+                if (answer === 'attach') {
+                  final_api_prompt = prompt_with_context.api_prompt
+                  final_chatbot_prompt = prompt_with_context.chatbot_prompt
                 }
-                return
-              }
-
-              params.extension_context.workspaceState.update(
-                LAST_USE_CONTEXT_FILES_STATE_KEY,
-                answer
-              )
-
-              if (answer === 'attach') {
-                final_api_prompt = prompt_with_context.api_prompt
-                final_chatbot_prompt = prompt_with_context.chatbot_prompt
               }
             }
           }
