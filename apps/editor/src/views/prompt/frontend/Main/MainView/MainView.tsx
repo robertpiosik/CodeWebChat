@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/prompt/Configurations'
 import { PromptField as UiPromptField } from '@ui/components/editor/common/prompts/PromptField'
@@ -155,6 +156,7 @@ const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
 export const MainView: React.FC<Props> = (props) => {
   const { t } = use_translation()
   const is_landscape = use_is_landscape()
+  const [is_content_scrollable, set_is_content_scrollable] = useState(false)
 
   const show_edit_format_selector =
     (props.target == TARGET.WEB && props.web_prompt_type == 'edit-files') ||
@@ -273,6 +275,7 @@ export const MainView: React.FC<Props> = (props) => {
       is_alt_pressed={is_alt_pressed}
       is_landscape={is_landscape}
       is_browser_connection_status_bar_closed={browser_connection.is_closed}
+      is_content_scrollable={is_content_scrollable}
     />
   )
 
@@ -576,7 +579,11 @@ export const MainView: React.FC<Props> = (props) => {
         <div
           className={`${styles.landscape__column} ${styles['landscape__column--prompt']}`}
         >
-          <UiScrollable scroll_to_top_key={props.scroll_reset_key} top_shadow>
+          <UiScrollable
+            scroll_to_top_key={props.scroll_reset_key}
+            top_shadow
+            on_scrollable_change={set_is_content_scrollable}
+          >
             <div className={styles.content}>{prompt_section}</div>
           </UiScrollable>
         </div>
@@ -606,7 +613,11 @@ export const MainView: React.FC<Props> = (props) => {
   return (
     <>
       {header}
-      <UiScrollable scroll_to_top_key={props.scroll_reset_key} top_shadow>
+      <UiScrollable
+        scroll_to_top_key={props.scroll_reset_key}
+        top_shadow
+        on_scrollable_change={set_is_content_scrollable}
+      >
         <div className={styles.content}>
           {prompt_section}
 

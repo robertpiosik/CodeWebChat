@@ -17,6 +17,7 @@ type Props = {
   initial_scroll_top?: number
   on_scroll?: (top: number) => void
   on_scrolled_change?: (is_scrolled: boolean) => void
+  on_scrollable_change?: (is_scrollable: boolean) => void
   scroll_trigger?: number
   top_shadow?: boolean
   bottom_shadow?: boolean
@@ -58,6 +59,7 @@ export const Scrollable = forwardRef<any, Props>((props, ref) => {
       set_has_bottom_shadow(is_scrollable && !is_scrolled_bottom)
       if (props.on_scroll) props.on_scroll(scrollTop)
       if (props.on_scrolled_change) props.on_scrolled_change(is_scrolled)
+      if (props.on_scrollable_change) props.on_scrollable_change(is_scrollable)
     }
 
     update()
@@ -74,7 +76,7 @@ export const Scrollable = forwardRef<any, Props>((props, ref) => {
       scroll_element.removeEventListener('scroll', update)
       resize_observer.disconnect()
     }
-  }, [props.on_scroll, props.on_scrolled_change])
+  }, [props.on_scroll, props.on_scrolled_change, props.on_scrollable_change])
 
   useEffect(() => {
     const simplebar_instance = simplebar_ref.current

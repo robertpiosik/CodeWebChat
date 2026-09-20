@@ -11,6 +11,7 @@ import {
 } from '../../prompt-type-labels'
 import { use_translation } from '@/views/prompt/frontend/i18n/use-translation'
 import { StatusBar as UiStatusBar } from '@ui/components/editor/prompt/StatusBar'
+import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
 
 type Props = {
   target: Target
@@ -22,6 +23,7 @@ type Props = {
   is_alt_pressed: boolean
   is_landscape: boolean
   is_browser_connection_status_bar_closed: boolean
+  is_content_scrollable: boolean
 }
 
 export const Header: React.FC<Props> = (props) => {
@@ -31,7 +33,11 @@ export const Header: React.FC<Props> = (props) => {
   })
 
   return (
-    <div className={styles.header} ref={container_ref}>
+    <div
+      className={styles.header}
+      ref={container_ref}
+      data-is-content-scrollable={props.is_content_scrollable}
+    >
       <div className={styles.header__left}>
         <div className={styles.header__back}>
           <UiIconButton
@@ -42,6 +48,34 @@ export const Header: React.FC<Props> = (props) => {
         </div>
 
         <div className={styles.header__types}>
+          {props.is_landscape &&
+            !props.is_browser_connection_status_bar_closed &&
+            !props.is_content_scrollable && (
+              <>
+                <div
+                  style={{
+                    visibility: 'hidden',
+                    pointerEvents: 'none',
+                    width: 0
+                  }}
+                >
+                  <UiStatusBar
+                    icon="codicon-debug-disconnect"
+                    label=""
+                    actions={[
+                      {
+                        id: 'install',
+                        icon: 'codicon-add',
+                        label: '',
+                        title: '',
+                        on_click: () => {}
+                      }
+                    ]}
+                  />
+                  <UiSeparator height={6} />
+                </div>
+              </>
+            )}
           {props.target == TARGET.WEB && (
             <>
               <div className={styles.header__types__inner}>
@@ -102,21 +136,19 @@ export const Header: React.FC<Props> = (props) => {
                 width: 0
               }}
             >
-              {props.is_browser_connection_status_bar_closed && (
-                <UiStatusBar
-                  icon="codicon-debug-disconnect"
-                  label=""
-                  actions={[
-                    {
-                      id: 'install',
-                      icon: 'codicon-add',
-                      label: '',
-                      title: '',
-                      on_click: () => {}
-                    }
-                  ]}
-                />
-              )}
+              <UiStatusBar
+                icon="codicon-debug-disconnect"
+                label=""
+                actions={[
+                  {
+                    id: 'install',
+                    icon: 'codicon-add',
+                    label: '',
+                    title: '',
+                    on_click: () => {}
+                  }
+                ]}
+              />
             </div>
           )}
         </div>
