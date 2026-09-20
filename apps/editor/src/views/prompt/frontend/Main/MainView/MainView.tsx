@@ -464,7 +464,7 @@ export const MainView: React.FC<Props> = (props) => {
               id: 'agentic-search',
               icon: 'codicon-search-sparkle',
               label: t('selected-files.agentic-search'),
-              keycap: is_alt_pressed ? '/' : undefined,
+              keycap: is_alt_pressed ? 'F' : undefined,
               on_click: props.on_agentic_search
             }
           ]}

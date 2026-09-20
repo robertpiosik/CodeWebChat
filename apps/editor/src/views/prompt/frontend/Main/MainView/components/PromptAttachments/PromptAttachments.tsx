@@ -38,7 +38,7 @@ export const PromptAttachments: React.FC<Props> = (props) => {
           id: 'agentic-search',
           icon: 'codicon-search-sparkle',
           label: props.translations.agentic_search,
-          keycap: props.is_alt_pressed ? '/' : undefined,
+          keycap: props.is_alt_pressed ? 'F' : undefined,
           on_click: props.on_agentic_search
         }
       ]}

@@ -134,7 +134,7 @@ export const use_keyboard_shortcuts = (params: {
         return
       }
 
-      if (event.code == 'Slash' || event.key == '/') {
+      if (event.code == 'KeyF') {
         event.preventDefault()
         params.on_agentic_search?.()
         return
