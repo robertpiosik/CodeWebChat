@@ -6,19 +6,19 @@ import { WebConfiguration } from '@shared/types/web-configuration'
 
 export const use_last_choice_tooltip = (params: {
   target: Target
-  selected_web_configuration_or_group_name?: string
+  selected_web_configuration_name?: string
   web_configurations: WebConfiguration[]
   selected_api_configuration_id?: string
   api_configurations: ApiConfiguration[]
 }): { name: string; details?: string } | undefined => {
   return useMemo(() => {
     if (params.target == TARGET.WEB) {
-      if (params.selected_web_configuration_or_group_name) {
-        if (params.selected_web_configuration_or_group_name == 'Ungrouped') {
+      if (params.selected_web_configuration_name) {
+        if (params.selected_web_configuration_name == 'Ungrouped') {
           return { name: 'Ungrouped' }
         } else {
           const web_configuration = params.web_configurations.find(
-            (p) => p.name == params.selected_web_configuration_or_group_name
+            (p) => p.name == params.selected_web_configuration_name
           )
           if (web_configuration) {
             const is_unnamed =
@@ -68,10 +68,9 @@ export const use_last_choice_tooltip = (params: {
         }
       }
     } else {
-      // MODE.API
       if (params.selected_api_configuration_id !== undefined) {
         const configuration = params.api_configurations.find(
-          (c) => c.id === params.selected_api_configuration_id
+          (c) => c.id == params.selected_api_configuration_id
         )
         if (configuration) {
           const description_parts = [configuration.provider_name]
@@ -86,7 +85,7 @@ export const use_last_choice_tooltip = (params: {
     return undefined
   }, [
     params.target,
-    params.selected_web_configuration_or_group_name,
+    params.selected_web_configuration_name,
     params.web_configurations,
     params.selected_api_configuration_id,
     params.api_configurations

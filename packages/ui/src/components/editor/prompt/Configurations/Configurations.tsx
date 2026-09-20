@@ -41,8 +41,7 @@ export namespace Configurations {
 
 export const Configurations: React.FC<Configurations.Props> = (props) => {
   const pinned_configurations = props.configurations.filter((c) => c.is_pinned)
-  const active_configuration_id =
-    props.selected_configuration_id ?? props.configurations[0]?.id
+  const active_configuration_id = props.selected_configuration_id
 
   const render_configuration_item = (
     configuration: Configurations.Configuration,

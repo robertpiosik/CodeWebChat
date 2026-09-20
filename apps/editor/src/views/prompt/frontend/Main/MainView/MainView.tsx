@@ -188,8 +188,7 @@ export const MainView: React.FC<Props> = (props) => {
 
   const last_choice_tooltip = use_last_choice_tooltip({
     target: props.target,
-    selected_web_configuration_or_group_name:
-      props.selected_web_configuration_name,
+    selected_web_configuration_name: props.selected_web_configuration_name,
     web_configurations: props.web_configurations,
     selected_api_configuration_id: props.selected_api_configuration_id,
     api_configurations: props.api_configurations
