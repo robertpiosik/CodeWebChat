@@ -142,4 +142,14 @@
   > button {
     flex: 1;
   }
+
+  &--landscape-placeholder {
+    display: none;
+    visibility: hidden;
+    pointer-events: none;
+
+    @include landscape {
+      display: flex;
+    }
+  }
 }

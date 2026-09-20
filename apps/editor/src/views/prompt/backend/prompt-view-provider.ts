@@ -688,10 +688,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
               this.api_call_abort_controller.abort('Cancelled by user.')
               this.api_call_abort_controller = null
             }
-          } else if (
-            message.command == 'CANCEL_PROMPT_VIEW_API_CALLS_MANAGER_REQUEST'
-          ) {
-            this.prompt_view_api_calls_manager.cancel_api_call(message.id)
           } else if (message.command == 'GET_API_CONFIGURATIONS') {
             await handle_get_api_configurations(this)
           } else if (message.command == 'REORDER_API_CONFIGURATIONS') {

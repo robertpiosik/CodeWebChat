@@ -142,8 +142,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
     <div className={styles.container}>
       {props.configurations.length == 0 && (
         <div
-          className={styles.footer}
-          style={{ visibility: 'hidden', pointerEvents: 'none' }}
+          className={cn(styles.footer, styles['footer--landscape-placeholder'])}
         >
           <Button>{props.translations.add_new}</Button>
         </div>
