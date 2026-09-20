@@ -49,6 +49,7 @@ export const Header: React.FC<Props> = (props) => {
 
         <div className={styles.header__types}>
           {props.is_landscape &&
+            props.target == TARGET.WEB &&
             !props.is_browser_connection_status_bar_closed &&
             !props.is_content_scrollable && (
               <>
