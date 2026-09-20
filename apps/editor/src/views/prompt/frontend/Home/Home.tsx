@@ -7,7 +7,7 @@ import { KeycapWrapper as UiKeycapWrapper } from '@ui/components/editor/prompt/K
 import cn from 'classnames'
 import { post_message } from '../utils/post-message'
 import { BackendMessage } from '@/views/prompt/types/messages'
-import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
+import { Spacer as UiSpacer } from '@ui/components/editor/prompt/Spacer'
 import { Translation, use_translation } from '../i18n/use-translation'
 import { CompactableActionButton } from '@ui/components/editor/prompt/CompactableActionButton'
 import { Tasks as UiTasks } from '@ui/components/editor/prompt/Tasks'
@@ -276,7 +276,7 @@ export const Home: React.FC<Props> = (props) => {
         }
       />
 
-      <UiSeparator height={4} />
+      <UiSpacer height={4} />
 
       <div className={styles.inner__tasks}>
         <UiTasks
@@ -347,9 +347,9 @@ export const Home: React.FC<Props> = (props) => {
           <UiScrollable on_scroll={handle_scroll} top_shadow>
             <div className={styles.content}>
               <div className={styles.inner}>
-                <UiSeparator height={6} />
+                <UiSpacer height={6} />
                 {targets_section}
-                <UiSeparator height={6} />
+                <UiSpacer height={6} />
               </div>
             </div>
           </UiScrollable>
@@ -360,7 +360,7 @@ export const Home: React.FC<Props> = (props) => {
           <UiScrollable top_shadow>
             <div className={styles.content}>
               <div className={styles.inner}>
-                <UiSeparator height={6} />
+                <UiSpacer height={6} />
                 {tasks_section}
               </div>
               {footer}
@@ -377,9 +377,9 @@ export const Home: React.FC<Props> = (props) => {
       <UiScrollable on_scroll={handle_scroll} top_shadow>
         <div className={styles.content}>
           <div className={styles.inner}>
-            <UiSeparator height={4} />
+            <UiSpacer height={2} />
             {targets_section}
-            <UiSeparator height={10} />
+            <UiSpacer height={10} />
             {tasks_section}
           </div>
           {footer}

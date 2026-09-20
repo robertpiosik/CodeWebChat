@@ -11,7 +11,7 @@ import {
 } from '../../prompt-type-labels'
 import { use_translation } from '@/views/prompt/frontend/i18n/use-translation'
 import { StatusBar as UiStatusBar } from '@ui/components/editor/prompt/StatusBar'
-import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
+import { Spacer as UiSpacer } from '@ui/components/editor/prompt/Spacer'
 
 type Props = {
   target: Target
@@ -72,7 +72,7 @@ export const Header: React.FC<Props> = (props) => {
                       }
                     ]}
                   />
-                  <UiSeparator height={6} />
+                  <UiSpacer height={6} />
                 </div>
               </>
             )}

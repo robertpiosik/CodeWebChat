@@ -1,6 +1,6 @@
 import React from 'react'
 import { StatusBar } from '@ui/components/editor/prompt/StatusBar'
-import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
+import { Spacer as UiSpacer } from '@ui/components/editor/prompt/Spacer'
 
 type Props = {
   is_connected: boolean
@@ -56,7 +56,7 @@ export const BrowserConnectionStatus: React.FC<Props> = (props) => {
         }
         actions={actions}
       />
-      <UiSeparator height={6} />
+      <UiSpacer height={6} />
     </>
   )
 }

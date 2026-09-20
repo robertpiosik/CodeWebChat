@@ -1,9 +1,9 @@
-export namespace Separator {
+export namespace Spacer {
   export type Props = {
     height: number
   }
 }
 
-export const Separator: React.FC<Separator.Props> = (props) => {
+export const Spacer: React.FC<Spacer.Props> = (props) => {
   return <div style={{ height: `${props.height}px` }} />
 }

@@ -3,7 +3,7 @@ import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/prompt/Configurations'
 import { PromptField as UiPromptField } from '@ui/components/editor/common/prompts/PromptField'
 import { PromptAttachments } from './components/PromptAttachments'
-import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
+import { Spacer as UiSpacer } from '@ui/components/editor/prompt/Spacer'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { Responses as UiResponses } from '@ui/components/editor/prompt/Responses'
 import { StatusBar as UiStatusBar } from '@ui/components/editor/prompt/StatusBar'
@@ -281,7 +281,7 @@ export const MainView: React.FC<Props> = (props) => {
 
   const prompt_section = (
     <>
-      <UiSeparator height={is_landscape ? 6 : 4} />
+      <UiSpacer height={is_landscape ? 6 : 2} />
 
       <BrowserConnectionStatus
         is_visible={props.target == TARGET.WEB}
@@ -318,7 +318,7 @@ export const MainView: React.FC<Props> = (props) => {
                 }
               ]}
             />
-            <UiSeparator height={6} />
+            <UiSpacer height={6} />
           </>
         )}
 
@@ -492,7 +492,7 @@ export const MainView: React.FC<Props> = (props) => {
         />
       )}
 
-      {is_landscape && <UiSeparator height={6} />}
+      {is_landscape && <UiSpacer height={6} />}
     </>
   )
 
@@ -602,7 +602,7 @@ export const MainView: React.FC<Props> = (props) => {
                     }}
                   />
                 )}
-              <UiSeparator height={12} />
+              <UiSpacer height={12} />
             </div>
           </UiScrollable>
         </div>
@@ -621,7 +621,7 @@ export const MainView: React.FC<Props> = (props) => {
         <div className={styles.content}>
           {prompt_section}
 
-          <UiSeparator height={6} />
+          <UiSpacer height={6} />
 
           {configurations_section}
           {props.bottom_spacer_height !== undefined &&
@@ -630,7 +630,7 @@ export const MainView: React.FC<Props> = (props) => {
                 style={{ height: props.bottom_spacer_height, flexShrink: 0 }}
               />
             )}
-          <UiSeparator height={12} />
+          <UiSpacer height={12} />
         </div>
       </UiScrollable>
     </>

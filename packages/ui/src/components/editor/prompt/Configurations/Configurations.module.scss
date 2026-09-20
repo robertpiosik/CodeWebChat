@@ -114,7 +114,7 @@
 
 .separator {
   height: 1px;
-  background-color: var(--vscode-menu-separatorBackground);
+  background-color: (--cwc-original-border-color);
   margin: 4px 0;
 
   @include modern-ui {
