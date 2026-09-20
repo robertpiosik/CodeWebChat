@@ -590,7 +590,7 @@ export const MainView: React.FC<Props> = (props) => {
         >
           <UiScrollable scroll_to_top_key={props.scroll_reset_key} top_shadow>
             <div className={styles.content}>
-              <UiSpacer height={4} />
+              <UiSpacer height={6} />
               {configurations_section}
               {props.bottom_spacer_height !== undefined &&
                 props.bottom_spacer_height > 0 && (
