@@ -5,6 +5,7 @@
     var(--vscode-foreground) 75%,
     transparent
   );
+  --cwc-link-color: var(--vscode-textLink-foreground);
   --cwc-green-foreground: var(--vscode-charts-green);
   --cwc-green-foreground-dimmed: color-mix(
     in srgb,
