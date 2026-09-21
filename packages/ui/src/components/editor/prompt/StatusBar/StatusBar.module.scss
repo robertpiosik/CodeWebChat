@@ -32,7 +32,7 @@
   color: var(--cwc-text-color);
   background: var(--cwc-bg-tertiary);
   background: linear-gradient(
-    40deg,
+    45deg,
     var(--cwc-bg-secondary) 40px,
     var(--cwc-bg-tertiary) 140px
   );
@@ -42,7 +42,7 @@
 .theme-warning {
   color: var(--cwc-yellow-foreground);
   background: linear-gradient(
-    40deg,
+    45deg,
     var(--cwc-yellow-background) 40px,
     var(--cwc-bg-tertiary) 140px
   );
@@ -52,7 +52,7 @@
 .theme-success {
   color: var(--cwc-green-foreground);
   background: linear-gradient(
-    40deg,
+    45deg,
     var(--cwc-green-background) 40px,
     var(--cwc-bg-tertiary) 140px
   );
@@ -62,7 +62,7 @@
 .theme-error {
   color: var(--cwc-red-foreground);
   background: linear-gradient(
-    40deg,
+    45deg,
     var(--cwc-red-background) 40px,
     var(--cwc-bg-tertiary) 140px
   );
@@ -72,7 +72,7 @@
 .theme-blue {
   color: var(--cwc-blue-foreground);
   background: linear-gradient(
-    40deg,
+    45deg,
     var(--cwc-blue-background) 40px,
     var(--cwc-bg-tertiary) 140px
   );
@@ -82,7 +82,7 @@
 .theme-purple {
   color: var(--cwc-purple-foreground);
   background: linear-gradient(
-    40deg,
+    45deg,
     var(--cwc-purple-background) 40px,
     var(--cwc-bg-tertiary) 140px
   );
@@ -139,7 +139,7 @@
   cursor: pointer;
   white-space: nowrap;
   padding: 0 7px 0 4px;
-  color: var(--cwc-link-color);
+  color: var(--cwc-text-color-dimmed);
 
   &:hover {
     background-color: var(--cwc-bg-tertiary);
