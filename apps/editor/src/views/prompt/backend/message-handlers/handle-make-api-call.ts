@@ -158,9 +158,7 @@ export const handle_make_api_call = async (
 
   if (!current_instructions) {
     vscode.window.showInformationMessage(
-      t(
-        'views.prompt.handlers.handle-make-api-call.instructions-cannot-be-empty'
-      )
+      t('views.common.handlers.common.instructions-cannot-be-empty')
     )
     return
   }
@@ -177,7 +175,7 @@ export const handle_make_api_call = async (
 
   if (!collected_files) {
     vscode.window.showInformationMessage(
-      t('views.prompt.handlers.handle-make-api-call.context-cannot-be-empty')
+      t('views.common.handlers.common.context-cannot-be-empty')
     )
     return
   }

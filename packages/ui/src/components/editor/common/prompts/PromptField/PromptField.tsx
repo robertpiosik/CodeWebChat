@@ -380,8 +380,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               on_click: () => {
                 props.on_preview_prompt?.()
                 close_dropdown()
-              },
-              is_disabled: props.is_action_disabled
+              }
             }
           ].filter((item) => !(!has_content && item.is_disabled))
 
@@ -416,8 +415,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               on_click: () => {
                 props.on_preview_prompt?.()
                 close_dropdown()
-              },
-              is_disabled: props.is_action_disabled
+              }
             }
           ].filter((item) => !(!has_content && item.is_disabled))
 
