@@ -252,10 +252,20 @@ export const Prompt = () => {
     !!items_in_preview ||
     active_view != 'main'
 
+  const is_main_slot_hidden =
+    !!updating_web_configuration ||
+    !!updating_api_configuration ||
+    viewing_donations ||
+    !!items_in_preview
+
   return (
     <LayoutContext.Provider value={layout_context_value}>
       <div data-modern-ui={is_modern_ui}>
-        <div className={styles.slot}>
+        <div
+          className={cn(styles.slot, {
+            [styles['slot--hidden']]: is_main_slot_hidden
+          })}
+        >
           <Layout on_history_click={handle_history_click}>
             <div
               className={cn(styles.content, {

@@ -8,6 +8,10 @@
   > * {
     pointer-events: all;
   }
+
+  &--hidden {
+    visibility: hidden;
+  }
 }
 
 .content {

@@ -38,8 +38,8 @@
   color: var(--cwc-yellow-foreground);
   background: linear-gradient(
     45deg,
-    var(--cwc-yellow-background) 10px,
-    var(--cwc-bg-tertiary) 40px
+    var(--cwc-yellow-background) 40px,
+    var(--cwc-bg-tertiary) 140px
   );
   --theme-description-color: var(--cwc-yellow-foreground-dimmed);
 }
@@ -48,8 +48,8 @@
   color: var(--cwc-green-foreground);
   background: linear-gradient(
     45deg,
-    var(--cwc-green-background) 10px,
-    var(--cwc-bg-tertiary) 40px
+    var(--cwc-green-background) 40px,
+    var(--cwc-bg-tertiary) 140px
   );
   --theme-description-color: var(--cwc-green-foreground-dimmed);
 }
@@ -58,8 +58,8 @@
   color: var(--cwc-red-foreground);
   background: linear-gradient(
     45deg,
-    var(--cwc-red-background) 10px,
-    var(--cwc-bg-tertiary) 40px
+    var(--cwc-red-background) 40px,
+    var(--cwc-bg-tertiary) 140px
   );
   --theme-description-color: var(--cwc-red-foreground-dimmed);
 }
@@ -68,8 +68,8 @@
   color: var(--cwc-blue-foreground);
   background: linear-gradient(
     45deg,
-    var(--cwc-blue-background) 10px,
-    var(--cwc-bg-tertiary) 40px
+    var(--cwc-blue-background) 40px,
+    var(--cwc-bg-tertiary) 140px
   );
   --theme-description-color: var(--cwc-blue-foreground-dimmed);
 }
@@ -78,8 +78,8 @@
   color: var(--cwc-purple-foreground);
   background: linear-gradient(
     45deg,
-    var(--cwc-purple-background) 10px,
-    var(--cwc-bg-tertiary) 40px
+    var(--cwc-purple-background) 40px,
+    var(--cwc-bg-tertiary) 140px
   );
   --theme-description-color: var(--cwc-purple-foreground-dimmed);
 }
@@ -134,9 +134,10 @@
   cursor: pointer;
   white-space: nowrap;
   padding: 0 7px 0 4px;
-  color: var(--vscode-textLink-foreground);
+  color: var(--cwc-text-color-dimmed);
 
   &:hover {
+    color: var(--cwc-text-color);
     background-color: var(--cwc-bg-tertiary);
   }
 }
