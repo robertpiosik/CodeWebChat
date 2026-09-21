@@ -37,6 +37,49 @@ export const close_preview_diff_editors = async (
   await Promise.all(promises)
 }
 
+const get_first_changed_line = (
+  original_content: string,
+  new_content: string
+): number => {
+  const original_lines = original_content.split(/\r?\n/)
+  const new_lines = new_content.split(/\r?\n/)
+  const max_common_lines = Math.min(original_lines.length, new_lines.length)
+
+  let line = 0
+  while (line < max_common_lines && original_lines[line] === new_lines[line]) {
+    line++
+  }
+  return line
+}
+
+const scroll_to_first_changed_line = (params: {
+  right_doc_uri: vscode.Uri
+  original_content: string
+  new_content: string
+}) => {
+  const first_changed_line = get_first_changed_line(
+    params.original_content,
+    params.new_content
+  )
+
+  const active_editor = vscode.window.activeTextEditor
+  if (
+    active_editor &&
+    active_editor.document.uri.toString() == params.right_doc_uri.toString()
+  ) {
+    const line = Math.min(
+      first_changed_line,
+      active_editor.document.lineCount - 1
+    )
+    const position = new vscode.Position(line, 0)
+    active_editor.selection = new vscode.Selection(position, position)
+    active_editor.revealRange(
+      new vscode.Range(position, position),
+      vscode.TextEditorRevealType.InCenter
+    )
+  }
+}
+
 export const show_diff_with_actions = async (
   prepared_file: PreparedFile
 ): Promise<PreviewResult> => {
@@ -55,6 +98,12 @@ export const show_diff_with_actions = async (
         preview: false
       }
     )
+
+    scroll_to_first_changed_line({
+      right_doc_uri,
+      original_content: prepared_file.original_content,
+      new_content: prepared_file.previewable_file.content
+    })
   }
 
   return new Promise<PreviewResult>((resolve) => {
