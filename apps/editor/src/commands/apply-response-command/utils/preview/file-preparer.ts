@@ -5,6 +5,7 @@ import * as vscode from 'vscode'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { get_diff_stats } from './diff-utils'
 import { PreparedFile, PreviewableFile } from './types'
+import { resolve_workspace_root } from '../workspace'
 
 export const prepare_files_from_original_states = async (params: {
   original_states: OriginalFileState[]
@@ -14,13 +15,11 @@ export const prepare_files_from_original_states = async (params: {
   const prepared_files: PreparedFile[] = []
 
   for (const state of params.original_states) {
-    let workspace_root = params.default_workspace
-    if (
-      state.workspace_name &&
-      params.workspace_map.has(state.workspace_name)
-    ) {
-      workspace_root = params.workspace_map.get(state.workspace_name)!
-    }
+    const workspace_root = resolve_workspace_root({
+      workspace_name: state.workspace_name,
+      workspace_map: params.workspace_map,
+      default_workspace: params.default_workspace
+    })
 
     const sanitized_file_path = create_safe_path(
       workspace_root,
@@ -96,7 +95,8 @@ export const prepare_files_from_original_states = async (params: {
       is_checked: state.is_checked ?? true,
       apply_failed: state.apply_failed,
       ai_content: state.ai_content,
-      applied_with_patch_repair: state.applied_with_patch_repair
+      applied_with_patch_repair: state.applied_with_patch_repair,
+      added_in_preview: state.added_in_preview
     }
 
     prepared_files.push({
@@ -108,15 +108,11 @@ export const prepare_files_from_original_states = async (params: {
     })
 
     if (state.file_path_to_restore) {
-      let restore_workspace_root = params.default_workspace
-      if (
-        state.restore_workspace_name &&
-        params.workspace_map.has(state.restore_workspace_name)
-      ) {
-        restore_workspace_root = params.workspace_map.get(
-          state.restore_workspace_name
-        )!
-      }
+      const restore_workspace_root = resolve_workspace_root({
+        workspace_name: state.restore_workspace_name,
+        workspace_map: params.workspace_map,
+        default_workspace: params.default_workspace
+      })
 
       const restored_sanitized_file_path = create_safe_path(
         restore_workspace_root,

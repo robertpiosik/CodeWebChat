@@ -1,16 +1,13 @@
 import * as vscode from 'vscode'
-import * as fs from 'fs'
 import {
+  accept_checkpoint,
   create_checkpoint,
   delete_checkpoint
 } from '@/features/checkpoints/actions'
-import { FileInPreview } from '@shared/types/file-in-preview'
-import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { get_response_preview_promise_resolve } from './utils/preview'
-import { get_diff_stats } from './utils/preview/diff-utils'
-import { create_safe_path } from '@/utils/path-sanitizer'
+import { build_history_files } from './utils/preview/build-history-files'
 import {
   preview_handler,
   ongoing_preview_cleanup_promise
@@ -19,7 +16,6 @@ import {
   process_response,
   ApplyResponseCommandArgs
 } from './response-processor'
-import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { PromptViewApiCallsManager } from '@/services/prompt-view-api-calls-manager'
 import { t } from '@/i18n'
@@ -28,26 +24,20 @@ import {
   CwcPreviewProvider
 } from './utils/preview/virtual-document-provider'
 import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-files'
-import { parse_response } from './utils/response-parser'
+import { parse_response, PatchRepairItem } from './utils/response-parser'
 import { Checkpoint } from '@/features/checkpoints/types'
 import { WebSocketManager } from '@/services/websocket-manager'
-import { set_file_applied_with_patch_repair } from './utils/preview/workspace-listener'
+import { handle_patch_repair } from './response-processor/handlers/patch-repair-handler'
+import {
+  capture_tab_groups,
+  restore_tab_groups,
+  SavedTabGroups
+} from './utils/tab-group-manager'
 
 let in_progress = false
 let initialization_mutex = Promise.resolve()
 let command_lifecycle_promise: Promise<void> | null = null
 let resolve_command_lifecycle: (() => void) | null = null
-
-interface SavedEditorState {
-  uri: string
-  view_column: vscode.ViewColumn
-  is_active: boolean
-}
-
-interface SavedTabGroups {
-  editors: SavedEditorState[]
-  active_editor_uri?: string
-}
 
 export const apply_response_command = (params: {
   extension_context: vscode.ExtensionContext
@@ -138,62 +128,20 @@ export const apply_response_command = (params: {
           (i) => i.type == 'intelligent-file-search-results'
         )
 
-        const is_patch_repair = response_items.some(
-          (item) => item.type == 'patch-repair'
+        const patch_repair_items = response_items.filter(
+          (item): item is PatchRepairItem => item.type == 'patch-repair'
         )
 
-        if (is_patch_repair) {
+        if (patch_repair_items.length > 0) {
           if (!resolve_fn) {
             return
           }
 
-          const workspace_map = new Map<string, string>()
-          vscode.workspace.workspaceFolders!.forEach((folder) => {
-            workspace_map.set(folder.name, folder.uri.fsPath)
+          await handle_patch_repair({
+            patch_items: patch_repair_items,
+            prompt_view_provider: params.prompt_view_provider,
+            workspace_provider: params.workspace_provider
           })
-          const default_workspace =
-            vscode.workspace.workspaceFolders![0].uri.fsPath
-
-          params.workspace_provider.pause_file_watcher()
-          try {
-            for (const item of response_items) {
-              if (item.type == 'patch-repair') {
-                const patch_item = item as any
-                let workspace_root = default_workspace
-                if (
-                  patch_item.workspace_name &&
-                  workspace_map.has(patch_item.workspace_name)
-                ) {
-                  workspace_root = workspace_map.get(patch_item.workspace_name)!
-                }
-                const safe_path = create_safe_path(
-                  workspace_root,
-                  patch_item.file_path
-                )
-                if (safe_path) {
-                  await vscode.workspace.fs.writeFile(
-                    vscode.Uri.file(safe_path),
-                    Buffer.from(patch_item.content, 'utf8')
-                  )
-                  if (set_file_applied_with_patch_repair) {
-                    set_file_applied_with_patch_repair({
-                      file_path: patch_item.file_path,
-                      workspace_name: patch_item.workspace_name
-                    })
-                  }
-                }
-              }
-            }
-
-            params.prompt_view_provider.send_message({
-              command: 'SHOW_AUTO_CLOSING_MODAL',
-              title: t(
-                'command.apply-response-command.success.patched-successfully'
-              )
-            })
-          } finally {
-            params.workspace_provider.resume_file_watcher()
-          }
           return
         }
 
@@ -295,23 +243,7 @@ export const apply_response_command = (params: {
       try {
         if (!is_intelligent_file_search_results) {
           // Save current tab groups before entering preview
-          saved_tab_groups = {
-            editors: [],
-            active_editor_uri:
-              vscode.window.activeTextEditor?.document.uri.toString()
-          }
-
-          for (const tab_group of vscode.window.tabGroups.all) {
-            for (const tab of tab_group.tabs) {
-              if (tab.input instanceof vscode.TabInputText) {
-                saved_tab_groups.editors.push({
-                  uri: tab.input.uri.toString(),
-                  view_column: tab_group.viewColumn,
-                  is_active: tab.isActive
-                })
-              }
-            }
-          }
+          saved_tab_groups = capture_tab_groups()
 
           const has_valid_blocks =
             (args?.files_with_content && args.files_with_content.length > 0) ||
@@ -356,112 +288,13 @@ export const apply_response_command = (params: {
         if (preview_data) {
           let created_at_for_preview = args?.created_at
           if (!args?.files_with_content) {
-            let total_lines_added = 0
-            let total_lines_removed = 0
-            const files_for_history: FileInPreview[] = []
-
-            const workspace_map = new Map<string, string>()
-            vscode.workspace.workspaceFolders!.forEach((folder) => {
-              workspace_map.set(folder.name, folder.uri.fsPath)
+            const {
+              files_for_history,
+              total_lines_added,
+              total_lines_removed
+            } = await build_history_files({
+              original_states: preview_data.original_states
             })
-            const default_workspace =
-              vscode.workspace.workspaceFolders![0].uri.fsPath
-
-            for (const state of preview_data.original_states) {
-              let workspace_root = default_workspace
-              if (
-                state.workspace_name &&
-                workspace_map.has(state.workspace_name)
-              ) {
-                workspace_root = workspace_map.get(state.workspace_name)!
-              }
-
-              const sanitized_file_path = create_safe_path(
-                workspace_root,
-                state.file_path
-              )
-              if (!sanitized_file_path) {
-                continue
-              }
-
-              let current_content = ''
-              let file_exists = false
-              try {
-                if (fs.existsSync(sanitized_file_path)) {
-                  file_exists = true
-                  if (state.proposed_content !== undefined) {
-                    current_content = state.proposed_content
-                  } else {
-                    const document =
-                      await vscode.workspace.openTextDocument(
-                        sanitized_file_path
-                      )
-                    current_content = document.getText()
-                  }
-                } else if (state.proposed_content !== undefined) {
-                  current_content = state.proposed_content
-                }
-              } catch (error) {
-                continue
-              }
-
-              const is_rename = !!state.file_path_to_restore
-
-              const diff_stats = get_diff_stats({
-                original_content: is_rename ? '' : state.content,
-                new_content: current_content
-              })
-
-              total_lines_added += diff_stats.lines_added
-              total_lines_removed += diff_stats.lines_removed
-
-              const is_deleted =
-                state.file_state != 'new' && !file_exists && state.content != ''
-
-              files_for_history.push({
-                type: 'file',
-                file_path: state.file_path,
-                workspace_name: state.workspace_name,
-                file_state:
-                  state.file_state == 'new' || is_rename
-                    ? 'new'
-                    : is_deleted
-                      ? 'deleted'
-                      : undefined,
-                lines_added: diff_stats.lines_added,
-                lines_removed: diff_stats.lines_removed,
-                diff_application_method: state.diff_application_method,
-                content: current_content,
-                proposed_content:
-                  state.proposed_content ?? state.ai_content ?? current_content,
-                is_checked: true,
-                apply_failed: state.apply_failed,
-                ai_content: state.ai_content,
-                applied_with_patch_repair: state.applied_with_patch_repair
-              })
-
-              if (state.file_path_to_restore) {
-                const deleted_diff_stats = get_diff_stats({
-                  original_content: state.content,
-                  new_content: ''
-                })
-
-                total_lines_removed += deleted_diff_stats.lines_removed
-
-                files_for_history.push({
-                  type: 'file',
-                  file_path: state.file_path_to_restore,
-                  workspace_name:
-                    state.restore_workspace_name ?? state.workspace_name,
-                  file_state: 'deleted',
-                  lines_added: 0,
-                  lines_removed: deleted_diff_stats.lines_removed,
-                  content: '',
-                  proposed_content: '',
-                  is_checked: true
-                })
-              }
-            }
             const history = params.prompt_view_provider.response_history
 
             const item_to_update =
@@ -512,44 +345,12 @@ export const apply_response_command = (params: {
           if (changes_accepted) {
             params.prompt_view_api_calls_manager.cancel_all_requests()
             if (before_checkpoint) {
-              const checkpoints =
-                params.extension_context.workspaceState.get<Checkpoint[]>(
-                  CHECKPOINTS_STATE_KEY,
-                  []
-                ) ?? []
-              const checkpoint_index = checkpoints.findIndex(
-                (c) => c.timestamp == before_checkpoint!.timestamp
-              )
-              if (checkpoint_index != -1) {
-                const checkpoint_to_update = checkpoints[checkpoint_index]
-                const old_timestamp = checkpoint_to_update.timestamp
-                const new_timestamp = Date.now()
-                const old_path = get_checkpoint_path(old_timestamp)
-                const new_path = get_checkpoint_path(new_timestamp)
-                try {
-                  await vscode.workspace.fs.rename(
-                    vscode.Uri.file(old_path),
-                    vscode.Uri.file(new_path)
-                  )
-                  checkpoint_to_update.timestamp = new_timestamp
-                } catch (err) {
-                  console.error(
-                    `Failed to rename checkpoint directory for timestamp update:`,
-                    err
-                  )
-                }
-                checkpoint_to_update.trigger = 'response-accepted'
-                checkpoint_to_update.response_history = history_for_checkpoint
-                checkpoint_to_update.response_preview_item_created_at =
-                  created_at_for_preview
-
-                checkpoints.sort((a, b) => b.timestamp - a.timestamp)
-
-                await params.extension_context.workspaceState.update(
-                  CHECKPOINTS_STATE_KEY,
-                  checkpoints
-                )
-              }
+              await accept_checkpoint({
+                extension_context: params.extension_context,
+                checkpoint: before_checkpoint,
+                history_for_checkpoint,
+                created_at_for_preview
+              })
             }
 
             before_checkpoint = undefined
@@ -583,96 +384,4 @@ export const apply_response_command = (params: {
       }
     }
   )
-}
-
-const restore_tab_groups = async (
-  saved_state: SavedTabGroups
-): Promise<void> => {
-  try {
-    const current_editors: SavedEditorState[] = []
-    for (const tab_group of vscode.window.tabGroups.all) {
-      for (const tab of tab_group.tabs) {
-        if (tab.input instanceof vscode.TabInputText) {
-          current_editors.push({
-            uri: tab.input.uri.toString(),
-            view_column: tab_group.viewColumn,
-            is_active: tab.isActive
-          })
-        }
-      }
-    }
-
-    const are_states_equal =
-      current_editors.length == saved_state.editors.length &&
-      current_editors.every((editor) =>
-        saved_state.editors.some((saved) => saved.uri == editor.uri)
-      )
-
-    if (are_states_equal) {
-      if (saved_state.active_editor_uri) {
-        const current_active_uri =
-          vscode.window.activeTextEditor?.document.uri.toString()
-        if (current_active_uri != saved_state.active_editor_uri) {
-          try {
-            const active_uri = vscode.Uri.parse(saved_state.active_editor_uri)
-            await vscode.window.showTextDocument(active_uri, {
-              preserveFocus: false
-            })
-          } catch (error) {
-            console.error('Failed to restore active editor focus:', error)
-          }
-        }
-      }
-      return
-    }
-
-    if (current_editors.length > saved_state.editors.length) {
-      const tabs_to_close: vscode.Tab[] = []
-      for (const tab_group of vscode.window.tabGroups.all) {
-        for (const tab of tab_group.tabs) {
-          if (tab.input instanceof vscode.TabInputText) {
-            const uri = tab.input.uri.toString()
-            const is_saved = saved_state.editors.some(
-              (saved) =>
-                saved.uri == uri && saved.view_column == tab_group.viewColumn
-            )
-            if (!is_saved) {
-              tabs_to_close.push(tab)
-            }
-          }
-        }
-      }
-      if (tabs_to_close.length > 0) {
-        await vscode.window.tabGroups.close(tabs_to_close)
-      }
-    } else {
-      await vscode.commands.executeCommand('workbench.action.closeAllEditors')
-
-      for (const editor of saved_state.editors) {
-        try {
-          const uri = vscode.Uri.parse(editor.uri)
-          await vscode.window.showTextDocument(uri, {
-            viewColumn: editor.view_column,
-            preview: false,
-            preserveFocus: !editor.is_active
-          })
-        } catch (error) {
-          console.error(`Failed to restore editor for ${editor.uri}:`, error)
-        }
-      }
-    }
-
-    if (saved_state.active_editor_uri) {
-      try {
-        const active_uri = vscode.Uri.parse(saved_state.active_editor_uri)
-        await vscode.window.showTextDocument(active_uri, {
-          preserveFocus: false
-        })
-      } catch (error) {
-        console.error('Failed to restore active editor:', error)
-      }
-    }
-  } catch (error) {
-    console.error('Failed to restore tab groups:', error)
-  }
 }

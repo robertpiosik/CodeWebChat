@@ -14,6 +14,7 @@ import { close_preview_diff_editors, show_diff_with_actions } from './vscode-ui'
 import { PreparedFile, PreviewableFile } from './types'
 import { ItemInPreview } from '@shared/types/file-in-preview'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
+import { get_workspace_map_and_default } from '../workspace'
 
 export const preview = async (params: {
   original_states: OriginalFileState[]
@@ -44,11 +45,7 @@ export const preview = async (params: {
     return null
   }
 
-  const workspace_map = new Map<string, string>()
-  vscode.workspace.workspaceFolders.forEach((folder) => {
-    workspace_map.set(folder.name, folder.uri.fsPath)
-  })
-  const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
+  const { workspace_map, default_workspace } = get_workspace_map_and_default()
 
   let prepared_files: PreparedFile[] = []
   let listener_disposer: { dispose: () => void } | undefined

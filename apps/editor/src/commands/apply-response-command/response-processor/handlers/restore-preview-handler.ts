@@ -4,9 +4,13 @@ import * as fs from 'fs'
 import { Logger } from '@shared/utils/logger'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { t } from '@/i18n'
-import { OriginalFileState } from '../types/original-file-state'
+import { OriginalFileState } from '../../types/original-file-state'
 import { FileInPreview } from '@shared/types/file-in-preview'
-import { remove_directory_if_empty } from '../utils/file-operations'
+import {
+  get_workspace_map_and_default,
+  resolve_workspace_root
+} from '../../utils/workspace'
+import { remove_directory_if_empty } from '../../utils/file-operations'
 
 export const handle_restore_preview = async (
   files: FileInPreview[]
@@ -31,24 +35,18 @@ export const handle_restore_preview = async (
     return { success: false }
   }
 
-  const workspace_map = new Map<string, string>()
-  vscode.workspace.workspaceFolders.forEach((folder) => {
-    workspace_map.set(folder.name, folder.uri.fsPath)
-  })
-  const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
+  const { workspace_map, default_workspace } = get_workspace_map_and_default()
 
   const original_states: OriginalFileState[] = []
 
   for (const file of files) {
-    let workspace_root = default_workspace
-    if (file.workspace_name && workspace_map.has(file.workspace_name)) {
-      workspace_root = workspace_map.get(file.workspace_name)!
-    } else if (file.workspace_name) {
-      Logger.warn({
-        function_name: 'handle_restore_preview',
-        message: `Workspace '${file.workspace_name}' not found for file '${file.file_path}'. Using default.`
-      })
-    }
+    const workspace_root = resolve_workspace_root({
+      workspace_name: file.workspace_name,
+      workspace_map,
+      default_workspace,
+      file_path: file.file_path,
+      function_name: 'handle_restore_preview'
+    })
 
     const safe_path = create_safe_path(workspace_root, file.file_path)
 

@@ -16,6 +16,7 @@ export type FileInPreview = {
   apply_progress?: number
   apply_tokens_per_second?: number
   applied_with_patch_repair?: boolean
+  added_in_preview?: boolean
 }
 
 export type TextContentInPreview = {

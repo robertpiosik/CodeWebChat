@@ -4,13 +4,17 @@ import * as fs from 'fs'
 import { Logger } from '@shared/utils/logger'
 import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
 import { t } from '@/i18n'
-import { FileItem } from '../utils/response-parser'
+import { FileItem } from '../../utils/response-parser'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
+import {
+  get_workspace_map_and_default,
+  resolve_workspace_root
+} from '../../utils/workspace'
 import {
   cleanup_rename_source,
   handle_deleted_file_item,
   get_rename_source_info
-} from '../utils/file-operations'
+} from '../../utils/file-operations'
 
 export const handle_fast_replace = async (params: {
   files: FileItem[]
@@ -39,23 +43,16 @@ export const handle_fast_replace = async (params: {
       return { success: false }
     }
 
-    const workspace_map = new Map<string, string>()
-    vscode.workspace.workspaceFolders.forEach((folder) => {
-      workspace_map.set(folder.name, folder.uri.fsPath)
-    })
-
-    const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
+    const { workspace_map, default_workspace } = get_workspace_map_and_default()
 
     for (const file of params.files) {
-      let workspace_root = default_workspace
-      if (file.workspace_name && workspace_map.has(file.workspace_name)) {
-        workspace_root = workspace_map.get(file.workspace_name)!
-      } else if (file.workspace_name) {
-        Logger.warn({
-          function_name: 'handle_fast_replace',
-          message: `Workspace '${file.workspace_name}' not found for file '${file.file_path}'. Using default.`
-        })
-      }
+      const workspace_root = resolve_workspace_root({
+        workspace_name: file.workspace_name,
+        workspace_map,
+        default_workspace,
+        file_path: file.file_path,
+        function_name: 'handle_fast_replace'
+      })
 
       const sanitized_path = sanitize_file_name(file.file_path)
 
@@ -98,10 +95,11 @@ export const handle_fast_replace = async (params: {
     for (let i = 0; i < total_files; i++) {
       params.on_progress(Math.round((i / total_files) * 100))
       const file = safe_files[i]
-      let workspace_root = default_workspace
-      if (file.workspace_name && workspace_map.has(file.workspace_name)) {
-        workspace_root = workspace_map.get(file.workspace_name)!
-      }
+      const workspace_root = resolve_workspace_root({
+        workspace_name: file.workspace_name,
+        workspace_map,
+        default_workspace
+      })
 
       const safe_path = create_safe_path(workspace_root, file.file_path)
 

@@ -59,6 +59,18 @@ export const use_preview_manager = (vscode: any) => {
             return [...items, { ...message.file, is_checked: true }]
           }
         })
+      } else if (message.command == 'REMOVE_FILE_FROM_PREVIEW') {
+        set_items_in_preview((current_items) => {
+          if (!current_items) return undefined
+          return current_items.filter(
+            (item) =>
+              !(
+                item.type === 'file' &&
+                item.file_path === message.file_path &&
+                item.workspace_name === message.workspace_name
+              )
+          )
+        })
       } else if (message.command == 'UPDATE_FILE_PROGRESS') {
         set_items_in_preview((current_items) => {
           if (!current_items) return undefined

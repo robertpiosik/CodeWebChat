@@ -7,6 +7,10 @@ import { create_safe_path } from '@/utils/path-sanitizer'
 import { uri_exists } from './uri-exists'
 import { remove_directory_if_empty } from './remove-directory-if-empty'
 import { relocate_file } from './relocate-file'
+import {
+  get_workspace_map_and_default,
+  resolve_workspace_root
+} from '../workspace'
 
 export const undo_files = async (params: {
   original_states: OriginalFileState[]
@@ -31,23 +35,16 @@ export const undo_files = async (params: {
       return false
     }
 
-    const workspace_map = new Map<string, string>()
-    vscode.workspace.workspaceFolders.forEach((folder) => {
-      workspace_map.set(folder.name, folder.uri.fsPath)
-    })
-
-    const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
+    const { workspace_map, default_workspace } = get_workspace_map_and_default()
 
     for (const state of params.original_states) {
-      let workspace_root = default_workspace
-      if (state.workspace_name && workspace_map.has(state.workspace_name)) {
-        workspace_root = workspace_map.get(state.workspace_name)!
-      } else if (state.workspace_name) {
-        Logger.warn({
-          function_name: 'undo_files',
-          message: `Workspace '${state.workspace_name}' not found for file '${state.file_path}'. Using default.`
-        })
-      }
+      const workspace_root = resolve_workspace_root({
+        workspace_name: state.workspace_name,
+        workspace_map,
+        default_workspace,
+        file_path: state.file_path,
+        function_name: 'undo_files'
+      })
 
       let safe_path = create_safe_path(workspace_root, state.file_path)
 
@@ -124,15 +121,11 @@ export const undo_files = async (params: {
       } else {
         let file_was_relocated = false
         if (state.file_path_to_restore) {
-          let restore_workspace_root = default_workspace
-          if (
-            state.restore_workspace_name &&
-            workspace_map.has(state.restore_workspace_name)
-          ) {
-            restore_workspace_root = workspace_map.get(
-              state.restore_workspace_name
-            )!
-          }
+          const restore_workspace_root = resolve_workspace_root({
+            workspace_name: state.restore_workspace_name,
+            workspace_map,
+            default_workspace
+          })
 
           if (safe_path && (await uri_exists(vscode.Uri.file(safe_path)))) {
             await relocate_file({

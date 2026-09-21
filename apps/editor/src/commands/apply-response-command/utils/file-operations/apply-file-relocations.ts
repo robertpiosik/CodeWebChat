@@ -3,6 +3,10 @@ import { OriginalFileState } from '@/commands/apply-response-command/types/origi
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { uri_exists } from './uri-exists'
 import { relocate_file } from './relocate-file'
+import {
+  get_workspace_map_and_default,
+  resolve_workspace_root
+} from '../workspace'
 
 export const apply_file_relocations = async (
   original_states: OriginalFileState[]
@@ -14,12 +18,7 @@ export const apply_file_relocations = async (
     return
   }
 
-  const workspace_map = new Map<string, string>()
-  vscode.workspace.workspaceFolders.forEach((folder) => {
-    workspace_map.set(folder.name, folder.uri.fsPath)
-  })
-
-  const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
+  const { workspace_map, default_workspace } = get_workspace_map_and_default()
 
   for (const state of original_states) {
     if (
@@ -27,18 +26,19 @@ export const apply_file_relocations = async (
       (state.new_file_path !== state.file_path ||
         state.new_workspace_name !== state.workspace_name)
     ) {
-      let workspace_root = default_workspace
-      if (state.workspace_name && workspace_map.has(state.workspace_name)) {
-        workspace_root = workspace_map.get(state.workspace_name)!
-      }
+      const workspace_root = resolve_workspace_root({
+        workspace_name: state.workspace_name,
+        workspace_map,
+        default_workspace
+      })
 
-      let new_workspace_root = workspace_root
-      if (
-        state.new_workspace_name &&
-        workspace_map.has(state.new_workspace_name)
-      ) {
-        new_workspace_root = workspace_map.get(state.new_workspace_name)!
-      }
+      const new_workspace_root = state.new_workspace_name
+        ? resolve_workspace_root({
+            workspace_name: state.new_workspace_name,
+            workspace_map,
+            default_workspace
+          })
+        : workspace_root
 
       const old_safe_path = create_safe_path(workspace_root, state.file_path)
       const new_safe_path = create_safe_path(

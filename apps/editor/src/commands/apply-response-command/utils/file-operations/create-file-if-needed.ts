@@ -4,6 +4,10 @@ import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { uri_exists } from './uri-exists'
+import {
+  get_workspace_map_and_default,
+  resolve_workspace_root
+} from '../workspace'
 
 export const create_file_if_needed = async (params: {
   file_path: string
@@ -29,25 +33,15 @@ export const create_file_if_needed = async (params: {
     return false
   }
 
-  let workspace_folder_path: string | undefined
+  const { workspace_map, default_workspace } = get_workspace_map_and_default()
 
-  if (params.workspace_name) {
-    const target_workspace = vscode.workspace.workspaceFolders.find(
-      (folder) => folder.name == params.workspace_name
-    )
-    if (target_workspace) {
-      workspace_folder_path = target_workspace.uri.fsPath
-    } else {
-      Logger.warn({
-        function_name: 'create_file_if_needed',
-        message: `Workspace named "${params.workspace_name}" not found. Falling back to the first workspace.`,
-        data: params.file_path
-      })
-      workspace_folder_path = vscode.workspace.workspaceFolders[0].uri.fsPath
-    }
-  } else {
-    workspace_folder_path = vscode.workspace.workspaceFolders[0].uri.fsPath
-  }
+  const workspace_folder_path = resolve_workspace_root({
+    workspace_name: params.workspace_name,
+    workspace_map,
+    default_workspace,
+    file_path: params.file_path,
+    function_name: 'create_file_if_needed'
+  })
 
   const safe_path = create_safe_path(workspace_folder_path, params.file_path)
 

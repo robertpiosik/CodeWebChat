@@ -279,6 +279,12 @@ export interface ToggleFileInPreviewMessage extends BaseMessage {
   is_checked: boolean
 }
 
+export interface RemoveFileFromPreviewMessage extends BaseMessage {
+  command: 'REMOVE_FILE_FROM_PREVIEW'
+  file_path: string
+  workspace_name?: string
+}
+
 export interface DiscardUserChangesInPreviewMessage extends BaseMessage {
   command: 'DISCARD_USER_CHANGES_IN_PREVIEW'
   file_path: string
@@ -589,6 +595,7 @@ export type FrontendMessage =
   | ResponsePreviewMessage
   | GetSendWithShiftEnterMessage
   | ToggleFileInPreviewMessage
+  | RemoveFileFromPreviewMessage
   | DiscardUserChangesInPreviewMessage
   | FocusOnFileInPreviewMessage
   | GoToFileMessage
@@ -916,6 +923,7 @@ export type BackendMessage =
   | ShowAutoClosingModalMessage
   | ShowNeverClosingModalMessage
   | UpdateFileInPreviewMessage
+  | RemoveFileFromPreviewMessage
   | CurrentlyOpenFileTextMessage
   | ShowPreviewOngoingModalMessage
   | TasksMessage

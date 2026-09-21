@@ -4,15 +4,19 @@ import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
 import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
 import { t } from '@/i18n'
-import { FileItem } from '../utils/response-parser'
-import { OriginalFileState } from '../types/original-file-state'
+import { FileItem } from '../../utils/response-parser'
+import { OriginalFileState } from '../../types/original-file-state'
+import {
+  get_workspace_map_and_default,
+  resolve_workspace_root
+} from '../../utils/workspace'
 import {
   cleanup_rename_source,
   handle_deleted_file_item,
   get_rename_source_info
-} from '../utils/file-operations'
-import { apply_search_replace_to_content } from '../../../utils/changes-integration/search-replace-processor/apply-search-replace-to-content'
-import { parse_search_replace_segments } from '../../../utils/changes-integration/search-replace-processor/parse-search-replace-segments'
+} from '../../utils/file-operations'
+import { apply_search_replace_to_content } from '../../../../utils/changes-integration/search-replace-processor/apply-search-replace-to-content'
+import { parse_search_replace_segments } from '../../../../utils/changes-integration/search-replace-processor/parse-search-replace-segments'
 
 export const handle_search_replace = async (params: {
   files: FileItem[]
@@ -38,11 +42,7 @@ export const handle_search_replace = async (params: {
       return { success: false }
     }
 
-    const workspace_map = new Map<string, string>()
-    vscode.workspace.workspaceFolders.forEach((folder) => {
-      workspace_map.set(folder.name, folder.uri.fsPath)
-    })
-    const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
+    const { workspace_map, default_workspace } = get_workspace_map_and_default()
 
     const original_states: OriginalFileState[] = []
     const failed_files: FileItem[] = []
@@ -51,10 +51,11 @@ export const handle_search_replace = async (params: {
     for (let i = 0; i < total_files; i++) {
       params.on_progress(Math.round((i / total_files) * 100))
       const file = params.files[i]
-      let workspace_root = default_workspace
-      if (file.workspace_name && workspace_map.has(file.workspace_name)) {
-        workspace_root = workspace_map.get(file.workspace_name)!
-      }
+      const workspace_root = resolve_workspace_root({
+        workspace_name: file.workspace_name,
+        workspace_map,
+        default_workspace
+      })
 
       const sanitized_path = sanitize_file_name(file.file_path)
       const safe_path = create_safe_path(workspace_root, sanitized_path)

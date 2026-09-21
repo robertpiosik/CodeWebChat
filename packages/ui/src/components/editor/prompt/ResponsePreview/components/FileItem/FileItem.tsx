@@ -203,7 +203,8 @@ export const FileItem: FC<Props> = (props) => {
                   />
                 )}
                 {props.file.file_state != 'new' &&
-                  props.file.file_state != 'deleted' && (
+                  props.file.file_state != 'deleted' &&
+                  !props.file.added_in_preview && (
                     <IconButton
                       codicon_icon="sparkle"
                       title="Apply with Patch Repair"
@@ -253,7 +254,7 @@ export const FileItem: FC<Props> = (props) => {
           }
 
           const message_actions = []
-          if (!props.file.is_applying) {
+          if (!props.file.is_applying && !props.file.added_in_preview) {
             message_actions.push({
               id: 'fix',
               icon: 'codicon-sparkle',

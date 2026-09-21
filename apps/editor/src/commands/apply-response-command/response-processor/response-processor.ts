@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
-import { OriginalFileState } from './types/original-file-state'
+import { OriginalFileState } from '../types/original-file-state'
 import { RecentApiConfiguration } from '@shared/types/response-history-item'
 import { handle_restore_preview } from './handlers/restore-preview-handler'
 import {
@@ -9,19 +9,19 @@ import {
   DiffItem,
   IntelligentFileSearchResultsItem,
   ResponseItem
-} from './utils/response-parser'
+} from '../utils/response-parser'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
 import {
   apply_git_patch,
   sanitize_patch_content
 } from './handlers/diff-handler'
-import { apply_file_relocations } from './utils/file-operations'
+import { apply_file_relocations } from '../utils/file-operations'
 import { handle_fast_replace } from './handlers/fast-replace-handler'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { FileInPreview } from '@shared/types/file-in-preview'
-import { update_undo_button_state } from './utils/state-manager'
-import { check_for_conflict_markers } from './utils/file-checks'
+import { update_undo_button_state } from '../utils/state-manager'
+import { check_for_conflict_markers } from '../utils/file-checks'
 import { handle_search_replace } from './handlers/search-replace-handler'
 import { handle_truncated_edit } from './handlers/truncated-handler'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
@@ -29,6 +29,10 @@ import { natural_sort } from '@/utils/natural-sort'
 import { t } from '@/i18n'
 import { is_truncation_line } from '@/utils/changes-integration/truncations-processor/utils/is-truncation-line'
 import { WebSocketManager } from '@/services/websocket-manager'
+import {
+  get_workspace_map_and_default,
+  resolve_workspace_root
+} from '../utils/workspace'
 
 export type PreviewData = {
   original_states: OriginalFileState[]
@@ -93,7 +97,8 @@ export const process_response = async (params: {
             is_checked: file_in_preview?.is_checked,
             apply_failed: file_in_preview?.apply_failed,
             applied_with_patch_repair:
-              file_in_preview?.applied_with_patch_repair
+              file_in_preview?.applied_with_patch_repair,
+            added_in_preview: file_in_preview?.added_in_preview
           }
         })
         update_undo_button_state({
@@ -283,12 +288,7 @@ export const process_response = async (params: {
       })
     }
 
-    const workspace_map = new Map<string, string>()
-    vscode.workspace.workspaceFolders!.forEach((folder) => {
-      workspace_map.set(folder.name, folder.uri.fsPath)
-    })
-
-    const default_workspace = vscode.workspace.workspaceFolders![0].uri.fsPath
+    const { workspace_map, default_workspace } = get_workspace_map_and_default()
 
     let all_original_states: OriginalFileState[] = []
     const applied_patches: {
@@ -304,11 +304,11 @@ export const process_response = async (params: {
       for (let i = 0; i < total_patches; i++) {
         on_progress(Math.round((i / total_patches) * 100))
         const patch = patches[i]
-        let workspace_path = default_workspace
-
-        if (patch.workspace_name && workspace_map.has(patch.workspace_name)) {
-          workspace_path = workspace_map.get(patch.workspace_name)!
-        }
+        const workspace_path = resolve_workspace_root({
+          workspace_name: patch.workspace_name,
+          workspace_map,
+          default_workspace
+        })
 
         const sanitized_patch_content = sanitize_patch_content(
           patch.content,
@@ -437,12 +437,8 @@ export const process_response = async (params: {
         const failed_files = result.failed_files || []
 
         if (failed_files.length > 0) {
-          const workspace_map = new Map<string, string>()
-          vscode.workspace.workspaceFolders!.forEach((folder) => {
-            workspace_map.set(folder.name, folder.uri.fsPath)
-          })
-          const default_workspace =
-            vscode.workspace.workspaceFolders![0].uri.fsPath
+          const { workspace_map, default_workspace } =
+            get_workspace_map_and_default()
 
           failed_files.forEach((file) => {
             successful_states.push(
@@ -471,12 +467,8 @@ export const process_response = async (params: {
         const failed_files: FileItem[] = result.failed_files || []
 
         if (failed_files.length > 0) {
-          const workspace_map = new Map<string, string>()
-          vscode.workspace.workspaceFolders!.forEach((folder) => {
-            workspace_map.set(folder.name, folder.uri.fsPath)
-          })
-          const default_workspace =
-            vscode.workspace.workspaceFolders![0].uri.fsPath
+          const { workspace_map, default_workspace } =
+            get_workspace_map_and_default()
 
           failed_files.forEach((file) => {
             successful_states.push(
@@ -552,13 +544,11 @@ const create_failed_file_state = (params: {
   default_workspace: string
   workspace_map: Map<string, string>
 }): OriginalFileState => {
-  let workspace_root = params.default_workspace
-  if (
-    params.file.workspace_name &&
-    params.workspace_map.has(params.file.workspace_name)
-  ) {
-    workspace_root = params.workspace_map.get(params.file.workspace_name)!
-  }
+  const workspace_root = resolve_workspace_root({
+    workspace_name: params.file.workspace_name,
+    workspace_map: params.workspace_map,
+    default_workspace: params.default_workspace
+  })
   const safe_path = create_safe_path(workspace_root, params.file.file_path)
   let content = ''
 

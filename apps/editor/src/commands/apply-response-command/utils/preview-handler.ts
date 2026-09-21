@@ -10,6 +10,10 @@ import { update_undo_button_state } from './state-manager'
 import { CommitMessageDetails } from '@/utils/commit-message-details'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { normalize_path } from '@/utils/normalize-path'
+import {
+  get_workspace_map_and_default,
+  resolve_workspace_root
+} from './workspace'
 
 export let ongoing_preview_cleanup_promise: Promise<void> | null = null
 
@@ -126,19 +130,16 @@ export const preview_handler = async (params: {
         })
       }
 
-      const workspace_map = new Map<string, string>()
-      vscode.workspace.workspaceFolders?.forEach((folder) => {
-        workspace_map.set(folder.name, folder.uri.fsPath)
-      })
-      const default_workspace =
-        vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
+      const { workspace_map, default_workspace } =
+        get_workspace_map_and_default()
 
       const files_by_workspace = new Map<string, string[]>()
       for (const state of accepted_states) {
-        let workspace_root = default_workspace
-        if (state.workspace_name && workspace_map.has(state.workspace_name)) {
-          workspace_root = workspace_map.get(state.workspace_name)!
-        }
+        const workspace_root = resolve_workspace_root({
+          workspace_name: state.workspace_name,
+          workspace_map,
+          default_workspace
+        })
         if (workspace_root) {
           const current_files = files_by_workspace.get(workspace_root) || []
           if (!current_files.includes(state.file_path)) {
