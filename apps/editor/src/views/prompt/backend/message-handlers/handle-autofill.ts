@@ -15,6 +15,7 @@ import { show_configurations_quick_pick } from '@/utils/show-configurations-quic
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { t } from '@/i18n'
 import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
+import { CHATBOTS } from '@shared/constants/chatbots'
 
 export const handle_autofill = async (params: {
   prompt_view_provider: PromptViewProvider
@@ -38,7 +39,6 @@ export const handle_autofill = async (params: {
   })
 
   if (!resolution.web_configuration_name) {
-    show_incomplete_setup_warning('web')
     return
   }
   const resolved_web_configuration_name = resolution.web_configuration_name
@@ -130,9 +130,6 @@ const show_web_configuration_quick_pick = async (params: {
   extension_context: vscode.ExtensionContext
   prompt_type: WebPromptType
   prompt_view_provider: PromptViewProvider
-  get_is_web_configuration_disabled: (
-    web_configuration: ConfigWebConfigurationFormat
-  ) => boolean
 }): Promise<{ web_configuration_name: string | undefined } | undefined> => {
   const {
     web_configurations,
@@ -141,7 +138,9 @@ const show_web_configuration_quick_pick = async (params: {
     prompt_view_provider
   } = params
 
-  const valid_web_configurations = web_configurations.filter((c) => c.chatbot)
+  const valid_web_configurations = web_configurations.filter(
+    (c) => c.chatbot && Object.keys(CHATBOTS).includes(c.chatbot)
+  )
 
   if (valid_web_configurations.length == 0) {
     return
@@ -164,10 +163,6 @@ const show_web_configuration_quick_pick = async (params: {
   }
 
   const web_configuration = result.item
-
-  if (params.get_is_web_configuration_disabled(web_configuration)) {
-    return
-  }
 
   if (web_configuration.name) {
     handle_update_last_used_web_configuration({
@@ -193,21 +188,21 @@ const resolve_web_configuration = async (params: {
     'chatbots',
     []
   )
-  const get_is_web_configuration_disabled = (
-    web_configuration: ConfigWebConfigurationFormat
-  ) =>
-    (web_configuration.chatbot &&
-      !params.prompt_view_provider.websocket_server_instance.is_connected_with_browser()) ||
-    false
+
+  const valid_web_configurations = all_web_configurations.filter(
+    (c) => c.chatbot && Object.keys(CHATBOTS).includes(c.chatbot)
+  )
+
+  if (valid_web_configurations.length == 0) {
+    show_incomplete_setup_warning('web')
+    return { web_configuration_name: undefined }
+  }
 
   if (params.web_configuration_name !== undefined) {
     const web_configuration = all_web_configurations.find(
       (p) => p.name == params.web_configuration_name
     )
     if (web_configuration) {
-      if (get_is_web_configuration_disabled(web_configuration)) {
-        return { web_configuration_name: undefined }
-      }
       return { web_configuration_name: params.web_configuration_name }
     }
   }
@@ -223,24 +218,14 @@ const resolve_web_configuration = async (params: {
         (p) => p.name == last_selected_name
       )
       if (item) {
-        if (item.chatbot) {
-          if (get_is_web_configuration_disabled(item)) {
-            return { web_configuration_name: undefined }
-          } else {
-            return { web_configuration_name: last_selected_name }
-          }
+        if (item.chatbot && Object.keys(CHATBOTS).includes(item.chatbot)) {
+          return { web_configuration_name: last_selected_name }
         }
       }
     }
 
-    const valid_web_configurations = all_web_configurations.filter(
-      (c) => c.chatbot
-    )
     if (valid_web_configurations.length == 1) {
       const web_configuration = valid_web_configurations[0]
-      if (get_is_web_configuration_disabled(web_configuration)) {
-        return { web_configuration_name: undefined }
-      }
       return { web_configuration_name: web_configuration.name }
     }
   }
@@ -249,8 +234,7 @@ const resolve_web_configuration = async (params: {
     web_configurations: all_web_configurations,
     extension_context: params.extension_context,
     prompt_type: params.prompt_view_provider.web_prompt_type,
-    prompt_view_provider: params.prompt_view_provider,
-    get_is_web_configuration_disabled
+    prompt_view_provider: params.prompt_view_provider
   })
 
   return resolution ?? { web_configuration_name: undefined }
