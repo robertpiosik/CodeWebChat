@@ -5,6 +5,7 @@ import * as fs from 'fs'
 export const replace_image_symbol = async (params: {
   instruction: string
   remove?: boolean
+  as_paths?: boolean
 }): Promise<string> => {
   const regex = /#Image\(([a-fA-F0-9]+)\)/g
 
@@ -21,13 +22,28 @@ export const replace_image_symbol = async (params: {
   const replacements = await Promise.all(
     matches.map(async (match) => {
       const hash = match[1]
-      const filename = `cwc-image-${hash}.txt`
-      const file_path = path.join(os.tmpdir(), filename)
+      const txt_filename = `cwc-image-${hash}.txt`
+      const txt_path = path.join(os.tmpdir(), txt_filename)
+      const png_filename = `cwc-image-${hash}.png`
+      const png_path = path.join(os.tmpdir(), png_filename)
+
       try {
-        const content_base64 = await fs.promises.readFile(file_path, 'utf-8')
-        return {
-          content_base64,
-          success: true
+        if (params.as_paths) {
+          if (!fs.existsSync(png_path)) {
+            const content_base64 = await fs.promises.readFile(txt_path, 'utf-8')
+            const buffer = Buffer.from(content_base64, 'base64')
+            await fs.promises.writeFile(png_path, buffer)
+          }
+          return {
+            path: png_path,
+            success: true
+          }
+        } else {
+          const content_base64 = await fs.promises.readFile(txt_path, 'utf-8')
+          return {
+            content_base64,
+            success: true
+          }
         }
       } catch (error) {
         return {
@@ -46,8 +62,14 @@ export const replace_image_symbol = async (params: {
 
     result_string += params.instruction.slice(last_index, match.index)
 
-    if (replacement.success && replacement.content_base64) {
-      result_string += `<cwc-image>${replacement.content_base64}</cwc-image>`
+    if (replacement.success) {
+      if (params.as_paths && replacement.path) {
+        result_string += replacement.path
+      } else if (replacement.content_base64) {
+        result_string += `<cwc-image>${replacement.content_base64}</cwc-image>`
+      } else {
+        result_string += match[0]
+      }
     } else {
       result_string += match[0]
     }

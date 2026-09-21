@@ -17,6 +17,7 @@ export const replace_symbols = async (params: {
   extension_context: vscode.ExtensionContext
   workspace_provider: WorkspaceProvider
   remove_images?: boolean
+  image_as_paths?: boolean
   symbols_cache?: SymbolCacheManager
 }): Promise<{ instructions: string; skill_definitions: string }> => {
   let processed_instructions = params.instructions
@@ -66,7 +67,8 @@ export const replace_symbols = async (params: {
   if (processed_instructions.includes('#Image(')) {
     processed_instructions = await replace_image_symbol({
       instruction: processed_instructions,
-      remove: params.remove_images
+      remove: params.remove_images,
+      as_paths: params.image_as_paths
     })
   }
 

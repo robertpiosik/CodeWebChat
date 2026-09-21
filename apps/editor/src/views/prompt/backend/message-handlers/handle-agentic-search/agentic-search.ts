@@ -605,7 +605,7 @@ export const agentic_search = async (params: {
                   instructions: query,
                   extension_context: params.extension_context,
                   workspace_provider: params.workspace_provider,
-                  remove_images: true
+                  image_as_paths: true
                 })
 
               if (token.isCancellationRequested) {
