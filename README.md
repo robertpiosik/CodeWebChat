@@ -22,16 +22,17 @@
 #### The workflow
 
 1. Type instructions
-2. Run [Agentic Search](#-agentic-search) for task-relevant context files
+2. Send the [Agentic Search prompt](#-agentic-search) for task-relevant context files
 3. Select examples for model guidance
-4. Send prompt with a chatbot or an API call
+4. Send the static-context prompt with a chatbot or an API call
    - [EDIT](#-editing)—multi-file changes in a single response
    - [ASK](#-asking)—general help in a conversation
 
 #### Efficiency and speed
 
-- For the [Agentic Search](#-agentic-search) prompt, SOTA models offer diminishing returns over mid-tiers.
+- For the [Agentic Search prompt](#-agentic-search), SOTA models offer diminishing returns over mid-tiers.
 - Zero ever-growing sessions—shorter 'thinking', for the same or higher output quality.
+- Iterate on instructions without bloating the context window.
 
 ## Privacy
 
