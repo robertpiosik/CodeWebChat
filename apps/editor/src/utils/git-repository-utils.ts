@@ -371,6 +371,7 @@ export const prepare_staged_changes = async (params: {
             quick_pick.matchOnDescription = true
             quick_pick.title = t('common.title.unstaged-files')
             quick_pick.placeholder = t('common.placeholder.select-files-to-add')
+            quick_pick.ignoreFocusOut = true
 
             const close_button = {
               iconPath: new vscode.ThemeIcon('close'),
