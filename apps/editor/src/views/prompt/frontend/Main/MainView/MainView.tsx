@@ -283,6 +283,29 @@ export const MainView: React.FC<Props> = (props) => {
     />
   )
 
+  const prompt_attachments = (
+    <PromptAttachments
+      token_count={props.selected_files_token_count}
+      files_count={props.selected_files.length}
+      theme={
+        props.target == TARGET.WEB
+          ? props.web_prompt_type == 'edit-files'
+            ? 'blue'
+            : 'purple'
+          : props.api_prompt_type == 'edit-files'
+            ? 'blue'
+            : 'purple'
+      }
+      is_alt_pressed={is_alt_pressed}
+      on_agentic_search={props.on_agentic_search}
+      translations={{
+        attaching_file: t('selected-files.attaching-file'),
+        attaching_files: t('selected-files.attaching-files'),
+        agentic_search: t('selected-files.agentic-search')
+      }}
+    />
+  )
+
   const prompt_section = (
     <>
       <UiSpacer height={is_landscape ? 6 : 2} />
@@ -471,29 +494,61 @@ export const MainView: React.FC<Props> = (props) => {
           ]}
         />
       ) : (
-        <PromptAttachments
-          token_count={props.selected_files_token_count}
-          files_count={props.selected_files.length}
-          theme={
-            props.target == TARGET.WEB
-              ? props.web_prompt_type == 'edit-files'
-                ? 'blue'
-                : 'purple'
-              : props.api_prompt_type == 'edit-files'
-                ? 'blue'
-                : 'purple'
-          }
-          is_alt_pressed={is_alt_pressed}
-          on_agentic_search={props.on_agentic_search}
-          translations={{
-            attaching_file: t('selected-files.attaching-file'),
-            attaching_files: t('selected-files.attaching-files'),
-            agentic_search: t('selected-files.agentic-search')
-          }}
-        />
+        prompt_attachments
       )}
 
       {is_landscape && <UiSpacer height={6} />}
+    </>
+  )
+
+  const configurations_placeholder_above = (
+    <>
+      {props.target == TARGET.WEB && !browser_connection.is_closed && (
+        <>
+          <UiStatusBar
+            icon="codicon-debug-disconnect"
+            label=""
+            actions={[
+              {
+                id: 'install',
+                icon: 'codicon-add',
+                label: '',
+                title: '',
+                on_click: () => {}
+              }
+            ]}
+          />
+          <UiSpacer height={6} />
+        </>
+      )}
+      {props.target == TARGET.API && is_api_warning_visible && (
+        <>
+          <UiStatusBar
+            icon="codicon-warning"
+            label=""
+            actions={[
+              {
+                id: 'settings',
+                icon: 'codicon-gear',
+                label: '',
+                title: '',
+                on_click: () => {}
+              }
+            ]}
+          />
+          <UiSpacer height={6} />
+        </>
+      )}
+    </>
+  )
+
+  const configurations_placeholder_below = (
+    <>
+      {props.target == TARGET.WEB && !browser_connection.is_closed && (
+        <div style={{ visibility: 'hidden', pointerEvents: 'none' }}>
+          {prompt_attachments}
+        </div>
+      )}
     </>
   )
 
@@ -502,6 +557,7 @@ export const MainView: React.FC<Props> = (props) => {
       {props.target == TARGET.WEB && (
         <UiConfigurations
           configurations={web_configurations}
+          empty_landscape_placeholder_above={configurations_placeholder_above}
           is_dimmed={is_context_empty || !props.is_connected}
           on_create={(params) => {
             props.on_create_web_configuration(params)
@@ -553,6 +609,8 @@ export const MainView: React.FC<Props> = (props) => {
           on_delete={props.on_delete_api_configuration}
           selected_configuration_id={props.selected_api_configuration_id}
           on_create={props.on_create_api_configuration}
+          empty_landscape_placeholder_above={configurations_placeholder_above}
+          empty_landscape_placeholder_below={configurations_placeholder_below}
           translations={{
             empty: t('configurations.empty'),
             add_new: t('action.add-new'),

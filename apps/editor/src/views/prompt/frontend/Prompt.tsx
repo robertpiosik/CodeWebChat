@@ -254,7 +254,7 @@ export const Prompt = () => {
 
   return (
     <LayoutContext.Provider value={layout_context_value}>
-      <div className={styles.container} data-modern-ui={is_modern_ui}>
+      <div data-modern-ui={is_modern_ui}>
         <div className={styles.slot}>
           <Layout on_history_click={handle_history_click}>
             <div

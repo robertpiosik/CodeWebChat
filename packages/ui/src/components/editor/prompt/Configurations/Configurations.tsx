@@ -27,6 +27,8 @@ export namespace Configurations {
     on_edit: (id: string) => void
     on_delete: (id: string) => void
     is_dimmed?: boolean
+    empty_landscape_placeholder_above?: React.ReactNode
+    empty_landscape_placeholder_below?: React.ReactNode
     translations: {
       empty: string
       add_new: string
@@ -139,13 +141,6 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
 
   return (
     <div className={styles.container}>
-      {props.configurations.length == 0 && (
-        <div
-          className={cn(styles.footer, styles['footer--landscape-placeholder'])}
-        >
-          <Button>{props.translations.add_new}</Button>
-        </div>
-      )}
       <div className={styles.list}>
         {pinned_configurations.length > 0 && (
           <>
@@ -154,7 +149,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
                 render_configuration_item(
                   i,
                   true,
-                  props.configurations.findIndex((c) => c.id === i.id)
+                  props.configurations.findIndex((c) => c.id == i.id)
                 )
               )}
             </div>
@@ -162,8 +157,19 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           </>
         )}
         {props.configurations.length == 0 && (
-          <div className={styles.empty}>{props.translations.empty}</div>
+          <div className={styles.empty}>
+            <div className={styles['landscape-placeholder']}>
+              {props.empty_landscape_placeholder_above}
+            </div>
+            {props.translations.empty}
+            {props.empty_landscape_placeholder_below && (
+              <div className={styles['landscape-placeholder']}>
+                {props.empty_landscape_placeholder_below}
+              </div>
+            )}
+          </div>
         )}
+
         <div className={styles.configurations}>
           <ReactSortable
             list={props.configurations}

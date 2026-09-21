@@ -118,16 +118,29 @@
 
 .empty {
   display: flex;
+  flex-direction: column;
   align-items: center;
   text-align: center;
   font-style: italic;
   justify-content: center;
   padding: 4px 12px 3px 12px;
   flex: 1;
+  gap: 12px;
   color: var(--cwc-text-color-dimmed);
 
   @include modern-ui {
     padding: 4px 10px 3px 10px;
+  }
+}
+
+.landscape-placeholder {
+  display: none;
+  visibility: hidden;
+  pointer-events: none;
+
+  @include landscape {
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -141,15 +154,5 @@
 
   > button {
     flex: 1;
-  }
-
-  &--landscape-placeholder {
-    display: none;
-    visibility: hidden;
-    pointer-events: none;
-
-    @include landscape {
-      display: flex;
-    }
   }
 }
