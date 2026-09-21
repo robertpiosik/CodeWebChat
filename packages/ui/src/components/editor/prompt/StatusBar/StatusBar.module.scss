@@ -134,7 +134,7 @@
   cursor: pointer;
   white-space: nowrap;
   padding: 0 7px 0 4px;
-  color: var(--cwc-text-color);
+  color: var(--vscode-textLink-foreground);
 
   &:hover {
     background-color: var(--cwc-bg-tertiary);
