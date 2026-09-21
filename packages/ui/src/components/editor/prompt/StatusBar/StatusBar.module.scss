@@ -32,9 +32,9 @@
   color: var(--cwc-text-color);
   background: var(--cwc-bg-tertiary);
   background: linear-gradient(
-    45deg,
-    var(--cwc-bg-secondary) 40px,
-    var(--cwc-bg-tertiary) 140px
+    90deg,
+    var(--cwc-bg-secondary) var(--gradient-start, 40px),
+    var(--cwc-bg-tertiary) var(--gradient-end, 140px)
   );
   --theme-description-color: var(--cwc-text-color-dimmed);
 }
@@ -42,9 +42,9 @@
 .theme-warning {
   color: var(--cwc-yellow-foreground);
   background: linear-gradient(
-    45deg,
-    var(--cwc-yellow-background) 40px,
-    var(--cwc-bg-tertiary) 140px
+    90deg,
+    var(--cwc-yellow-background) var(--gradient-start, 40px),
+    var(--cwc-bg-tertiary) var(--gradient-end, 140px)
   );
   --theme-description-color: var(--cwc-yellow-foreground-dimmed);
 }
@@ -52,9 +52,9 @@
 .theme-success {
   color: var(--cwc-green-foreground);
   background: linear-gradient(
-    45deg,
-    var(--cwc-green-background) 40px,
-    var(--cwc-bg-tertiary) 140px
+    90deg,
+    var(--cwc-green-background) var(--gradient-start, 40px),
+    var(--cwc-bg-tertiary) var(--gradient-end, 140px)
   );
   --theme-description-color: var(--cwc-green-foreground-dimmed);
 }
@@ -62,9 +62,9 @@
 .theme-error {
   color: var(--cwc-red-foreground);
   background: linear-gradient(
-    45deg,
-    var(--cwc-red-background) 40px,
-    var(--cwc-bg-tertiary) 140px
+    90deg,
+    var(--cwc-red-background) var(--gradient-start, 40px),
+    var(--cwc-bg-tertiary) var(--gradient-end, 140px)
   );
   --theme-description-color: var(--cwc-red-foreground-dimmed);
 }
@@ -72,9 +72,9 @@
 .theme-blue {
   color: var(--cwc-blue-foreground);
   background: linear-gradient(
-    45deg,
-    var(--cwc-blue-background) 40px,
-    var(--cwc-bg-tertiary) 140px
+    90deg,
+    var(--cwc-blue-background) var(--gradient-start, 40px),
+    var(--cwc-bg-tertiary) var(--gradient-end, 140px)
   );
   --theme-description-color: var(--cwc-blue-foreground-dimmed);
 }
@@ -82,9 +82,9 @@
 .theme-purple {
   color: var(--cwc-purple-foreground);
   background: linear-gradient(
-    45deg,
-    var(--cwc-purple-background) 40px,
-    var(--cwc-bg-tertiary) 140px
+    90deg,
+    var(--cwc-purple-background) var(--gradient-start, 40px),
+    var(--cwc-bg-tertiary) var(--gradient-end, 140px)
   );
   --theme-description-color: var(--cwc-purple-foreground-dimmed);
 }

@@ -515,14 +515,14 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
 
   public async send_token_count() {
     const edit_instructions_result = await replace_symbols({
-      instructions: this.current_edit_files_instruction,
+      instructions: this.current_edit_files_instruction.trim(),
       extension_context: this.extension_context,
       workspace_provider: this.workspace_provider,
       remove_images: true,
       symbols_cache: this.symbols_cache
     })
     const ask_instructions_result = await replace_symbols({
-      instructions: this.current_ask_about_context_instruction,
+      instructions: this.current_ask_about_context_instruction.trim(),
       extension_context: this.extension_context,
       workspace_provider: this.workspace_provider,
       remove_images: true,

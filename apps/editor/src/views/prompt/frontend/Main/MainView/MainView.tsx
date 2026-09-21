@@ -558,7 +558,6 @@ export const MainView: React.FC<Props> = (props) => {
         <UiConfigurations
           configurations={web_configurations}
           empty_landscape_placeholder_above={configurations_placeholder_above}
-          is_dimmed={is_context_empty || !props.is_connected}
           on_create={(params) => {
             props.on_create_web_configuration(params)
           }}
@@ -599,7 +598,6 @@ export const MainView: React.FC<Props> = (props) => {
       {props.target == TARGET.API && (
         <UiConfigurations
           configurations={api_configurations_ui}
-          is_dimmed={is_context_empty || !props.api_configurations.length}
           on_configuration_click={props.on_api_configuration_click}
           on_reorder={(reordered) =>
             props.on_api_configurations_reorder(reordered)

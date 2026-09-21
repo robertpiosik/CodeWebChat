@@ -18,7 +18,7 @@ export const handle_preview_web_configuration = async (
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 
-  const current_instructions = prompt_view_provider.current_instructions
+  const current_instructions = prompt_view_provider.current_instructions.trim()
 
   const {
     other_files,

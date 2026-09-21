@@ -154,7 +154,7 @@ export const handle_make_api_call = async (
     prompt_view_provider.extension_context
   )
 
-  const current_instructions = prompt_view_provider.current_instructions
+  const current_instructions = prompt_view_provider.current_instructions.trim()
 
   if (!current_instructions) {
     vscode.window.showInformationMessage(

@@ -54,7 +54,8 @@ export const handle_autofill = async (params: {
 
   let sent = false
 
-  const current_instructions = params.prompt_view_provider.current_instructions
+  const current_instructions =
+    params.prompt_view_provider.current_instructions.trim()
 
   const {
     other_files,

@@ -26,6 +26,16 @@ export type Props = {
 export const StatusBar: React.FC<Props> = (props) => {
   const theme = props.theme ?? 'default'
 
+  let char_count = 0
+  if (typeof props.label === 'string') {
+    char_count = props.label.length
+  } else if (typeof props.label === 'number') {
+    char_count = props.label.toString().length
+  }
+
+  const gradient_start = char_count * 3 + 20
+  const gradient_end = gradient_start + 100
+
   return (
     <div
       className={cn(
@@ -36,6 +46,12 @@ export const StatusBar: React.FC<Props> = (props) => {
           : styles.rounded,
         props.className
       )}
+      style={
+        {
+          '--gradient-start': `${gradient_start}px`,
+          '--gradient-end': `${gradient_end}px`
+        } as React.CSSProperties
+      }
     >
       <div className={styles.content}>
         {props.icon && (

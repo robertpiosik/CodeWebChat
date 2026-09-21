@@ -26,7 +26,6 @@ export namespace Configurations {
     }) => void
     on_edit: (id: string) => void
     on_delete: (id: string) => void
-    is_dimmed?: boolean
     empty_landscape_placeholder_above?: React.ReactNode
     empty_landscape_placeholder_below?: React.ReactNode
     translations: {
@@ -55,8 +54,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         key={configuration.id}
         className={cn(styles.configurations__item, {
           [styles['configurations__item--highlighted']]:
-            active_configuration_id == configuration.id,
-          [styles['configurations__item--dimmed']]: props.is_dimmed
+            active_configuration_id == configuration.id
         })}
         onClick={() => props.on_configuration_click(configuration.id)}
         role="button"

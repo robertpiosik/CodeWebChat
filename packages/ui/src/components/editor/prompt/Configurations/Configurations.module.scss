@@ -32,13 +32,6 @@
       }
     }
 
-    &--dimmed {
-      .configurations__item__left__icon,
-      .configurations__item__left__text {
-        opacity: var(--dimmed-opacity);
-      }
-    }
-
     &--highlighted {
       background-color: var(--vscode-list-inactiveSelectionBackground);
 

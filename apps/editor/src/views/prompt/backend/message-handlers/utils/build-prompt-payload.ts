@@ -27,7 +27,7 @@ export const build_prompt_payload = async (params: {
 
   const { instructions: processed_instructions, skill_definitions } =
     await replace_symbols({
-      instructions: prompt_view_provider.current_instructions || '',
+      instructions: prompt_view_provider.current_instructions.trim() || '',
       extension_context: prompt_view_provider.extension_context,
       workspace_provider: prompt_view_provider.workspace_provider,
       remove_images

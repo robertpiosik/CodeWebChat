@@ -15,7 +15,7 @@ export const handle_agentic_search = async (
     return
   }
 
-  const current_instructions = prompt_view_provider.current_instructions
+  const current_instructions = prompt_view_provider.current_instructions.trim()
 
   const last_query_state =
     prompt_view_provider.extension_context.workspaceState.get<{

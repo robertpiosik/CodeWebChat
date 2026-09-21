@@ -168,7 +168,8 @@ export const Main: React.FC<Props> = (props) => {
     props.target == TARGET.WEB ? props.web_prompt_type : props.api_prompt_type
 
   const update_chat_history = (instruction: string) => {
-    if (!instruction.trim()) {
+    const trimmed_instruction = instruction.trim()
+    if (!trimmed_instruction) {
       return
     }
 
@@ -188,10 +189,13 @@ export const Main: React.FC<Props> = (props) => {
     }
 
     const is_duplicate =
-      history && history.length > 0 && history[0] === instruction
+      history && history.length > 0 && history[0] == trimmed_instruction
 
     if (!is_duplicate) {
-      const new_history = [instruction, ...(history || [])].slice(0, 100)
+      const new_history = [trimmed_instruction, ...(history || [])].slice(
+        0,
+        100
+      )
       set_history(new_history)
 
       post_message(props.vscode, {
