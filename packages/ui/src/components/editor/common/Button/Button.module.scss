@@ -34,16 +34,16 @@
   }
 
   &--secondary {
-    background-color: var(--vscode-button-secondaryBackground);
-    color: var(--vscode-button-secondaryForeground);
+    background-color: var(--cwc-bg-secondary);
+    color: var(--cwc-text-color);
 
     &:hover {
-      background-color: var(--vscode-button-secondaryHoverBackground);
+      background-color: var(--cwc-bg-primary);
     }
 
     &:disabled {
       &:hover {
-        background-color: var(--vscode-button-secondaryBackground);
+        background-color: var(--cwc-bg-secondary);
       }
     }
   }
