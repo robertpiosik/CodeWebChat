@@ -280,6 +280,7 @@ export const MainView: React.FC<Props> = (props) => {
       is_browser_connection_status_bar_closed={browser_connection.is_closed}
       is_content_scrollable={is_content_scrollable}
       is_api_warning_visible={is_api_warning_visible}
+      response_history={props.response_history}
     />
   )
 
@@ -503,40 +504,74 @@ export const MainView: React.FC<Props> = (props) => {
 
   const configurations_placeholder_above = (
     <>
-      {props.target == TARGET.WEB && !browser_connection.is_closed && (
+      {props.target == TARGET.WEB && (
         <>
-          <UiStatusBar
-            icon="codicon-debug-disconnect"
-            label=""
-            actions={[
-              {
-                id: 'install',
-                icon: 'codicon-add',
-                label: '',
-                title: '',
-                on_click: () => {}
-              }
-            ]}
-          />
-          <UiSpacer height={6} />
+          {!browser_connection.is_closed && (
+            <>
+              <UiStatusBar
+                icon="codicon-debug-disconnect"
+                label=""
+                actions={[
+                  {
+                    id: 'install',
+                    icon: 'codicon-add',
+                    label: '',
+                    title: '',
+                    on_click: () => {}
+                  }
+                ]}
+              />
+              <UiSpacer height={6} />
+            </>
+          )}
+          {props.response_history.length > 0 &&
+            props.web_prompt_type === 'edit-files' && (
+              <UiResponses
+                response_history={props.response_history}
+                on_response_history_item_click={() => {}}
+                on_selected_history_item_change={() => {}}
+                on_response_history_item_remove={() => {}}
+                translations={{
+                  applied_manually: '',
+                  reject: ''
+                }}
+              />
+            )}
         </>
       )}
-      {props.target == TARGET.API && is_api_warning_visible && (
+      {props.target == TARGET.API && (
         <>
-          <UiStatusBar
-            icon="codicon-warning"
-            label=""
-            actions={[
-              {
-                id: 'settings',
-                icon: 'codicon-gear',
-                label: '',
-                title: '',
-                on_click: () => {}
-              }
-            ]}
-          />
-          <UiSpacer height={6} />
+          {is_api_warning_visible && (
+            <>
+              <UiStatusBar
+                icon="codicon-warning"
+                label=""
+                actions={[
+                  {
+                    id: 'settings',
+                    icon: 'codicon-gear',
+                    label: '',
+                    title: '',
+                    on_click: () => {}
+                  }
+                ]}
+              />
+              <UiSpacer height={6} />
+            </>
+          )}
+          {props.response_history.length > 0 &&
+            props.api_prompt_type === 'edit-files' && (
+              <UiResponses
+                response_history={props.response_history}
+                on_response_history_item_click={() => {}}
+                on_selected_history_item_change={() => {}}
+                on_response_history_item_remove={() => {}}
+                translations={{
+                  applied_manually: '',
+                  reject: ''
+                }}
+              />
+            )}
         </>
       )}
     </>
