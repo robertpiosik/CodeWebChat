@@ -117,11 +117,16 @@ export const create_handle_paste =
         ignore_file_paths: true
       }).length > 0
 
+    const trimmed_text = text.trim()
+    const is_single_character_or_number =
+      trimmed_text.length == 1 || /^\d+$/.test(trimmed_text)
+
     if (
       !refs.is_shift_pressed_ref.current &&
-      text.trim().length > 0 &&
+      trimmed_text.length > 0 &&
       !is_fragment_paste &&
-      !has_symbols
+      !has_symbols &&
+      !is_single_character_or_number
     ) {
       const selection = window.getSelection()
       if (
