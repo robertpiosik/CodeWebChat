@@ -29,7 +29,7 @@
 2. Run [Agentic Search](#-agentic-search) for task-relevant file selection
 3. Select examples for model guidance
 4. Send the constructed prompt with a chatbot or an API call
-5. Accept edits or re-send with refined instructions
+5. Apply response or re-send with refined instructions
 
 #### Efficiency and speed
 
