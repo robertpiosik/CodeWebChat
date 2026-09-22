@@ -22,16 +22,11 @@
 #### The workflow
 
 1. Type instructions
-2. Send the [Agentic Search prompt](#-agentic-search) for task-relevant file selection
+2. Run [Agentic Search](#-agentic-search) for task-relevant file selection
 3. Select examples for model guidance
 4. Send the constructed prompt with a chatbot or an API call
    - [EDIT prompt](#-editing)—multi-file changes in a single response
    - [ASK prompt](#-asking)—general help in a conversation
-
-#### Efficiency and speed
-
-- For the [Agentic Search prompt](#-agentic-search), SOTA models offer diminishing returns over mid-tiers.
-- Zero ever-growing sessions—less reasoning, for the same or higher output quality.
 
 ## Privacy
 
