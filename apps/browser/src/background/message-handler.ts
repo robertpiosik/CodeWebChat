@@ -15,7 +15,7 @@ interface ChatQueueItem {
 const chat_queue: ChatQueueItem[] = []
 let is_processing = false
 let is_waiting_for_focus = false
-let is_first_focus_for_queue = true
+let is_first_item_in_queue = true
 let last_opened_tab_id: number | undefined
 let is_finished_responding = false
 
@@ -63,12 +63,12 @@ const process_next_chat = async () => {
   }
 
   const has_focus = await check_browser_focus()
-  if (!has_focus) {
+  if (!has_focus && !is_first_item_in_queue) {
     is_waiting_for_focus = true
     return
   }
 
-  is_first_focus_for_queue = false
+  is_first_item_in_queue = false
 
   const current_queue_item = chat_queue[0]
 
@@ -156,7 +156,7 @@ const process_next_chat = async () => {
 const start_processing = async () => {
   if (!is_processing && chat_queue.length > 0) {
     is_processing = true
-    is_first_focus_for_queue = true
+    is_first_item_in_queue = true
     await process_next_chat()
   }
 }
@@ -183,14 +183,9 @@ export const setup_message_listeners = () => {
     if (window_id !== browser.windows.WINDOW_ID_NONE) {
       if (is_waiting_for_focus) {
         is_waiting_for_focus = false
-        if (is_first_focus_for_queue) {
-          is_first_focus_for_queue = false
+        setTimeout(() => {
           process_next_chat()
-        } else {
-          setTimeout(() => {
-            process_next_chat()
-          }, 2000)
-        }
+        }, 2000)
       }
     }
   })
