@@ -15,6 +15,10 @@
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
+## Privacy
+
+**CWC** operates 100% on your machine—no code, prompts or usage data are collected.
+
 ## Introduction
 
 **CWC** proposes a workflow that is 10X faster at one-tenth the cost of coding with agents alone.
@@ -24,13 +28,7 @@
 1. Type instructions
 2. Run [Agentic Search](#-agentic-search) for task-relevant file selection
 3. Select examples for model guidance
-4. Send the constructed prompt with a chatbot or an API call
-   - [EDIT prompt](#-editing)—multi-file changes in a single response
-   - [ASK prompt](#-asking)—general help in a conversation
-
-## Privacy
-
-**CWC** operates 100% on your machine—no code, prompts or usage data are collected.
+4. Send a static prompt with a chatbot or an API call
 
 ## Prompts
 
