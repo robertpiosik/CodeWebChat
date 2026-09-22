@@ -108,8 +108,10 @@ export const save_contexts_to_file = async (params: {
         'utf8'
       )
     }
-  } catch (error: any) {
-    throw new Error(`Failed to save contexts to file: ${error.message}`)
+  } catch (error) {
+    throw new Error(
+      `Failed to save contexts to file: ${error instanceof Error ? error.message : String(error)}`
+    )
   }
 }
 

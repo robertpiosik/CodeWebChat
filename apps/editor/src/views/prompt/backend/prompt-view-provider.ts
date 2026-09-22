@@ -847,14 +847,16 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'AGENTIC_SEARCH') {
             await handle_agentic_search(this)
           }
-        } catch (error: any) {
+        } catch (error) {
           Logger.error({
             function_name: 'resolveWebviewView',
             message: 'Error handling message',
             data: { message, error }
           })
           vscode.window.showErrorMessage(
-            t('common.error.error-handling-message', { message: error.message })
+            t('common.error.error-handling-message', {
+              message: error instanceof Error ? error.message : String(error)
+            })
           )
         }
       }

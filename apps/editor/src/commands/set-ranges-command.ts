@@ -179,10 +179,10 @@ export const set_ranges_command = (
               )
             }
             changed = true
-          } catch (error: any) {
+          } catch (error) {
             vscode.window.showErrorMessage(
               t('command.set-ranges-command.error.update-file', {
-                error: error.message
+                error: error instanceof Error ? error.message : String(error)
               })
             )
           }
@@ -270,10 +270,10 @@ export const set_ranges_command = (
                 updated_state
               )
             }
-          } catch (error: any) {
+          } catch (error) {
             vscode.window.showErrorMessage(
               t('command.set-ranges-command.error.save-file', {
-                error: error.message
+                error: error instanceof Error ? error.message : String(error)
               })
             )
           }
@@ -300,10 +300,10 @@ export const set_ranges_command = (
                   JSON.stringify(file_ranges, null, 2)
                 )
               }
-            } catch (error: any) {
+            } catch (error) {
               vscode.window.showErrorMessage(
                 t('command.set-ranges-command.error.cleanup-file', {
-                  error: error.message
+                  error: error instanceof Error ? error.message : String(error)
                 })
               )
             }

@@ -54,10 +54,10 @@ export const rename_command = () => {
         if (!applied) {
           throw new Error('Failed to apply rename edit')
         }
-      } catch (error: any) {
+      } catch (error) {
         Logger.error({
           function_name: 'rename_command',
-          message: `Failed to rename: ${error.message}`
+          message: `Failed to rename: ${error instanceof Error ? error.message : String(error)}`
         })
       }
     }

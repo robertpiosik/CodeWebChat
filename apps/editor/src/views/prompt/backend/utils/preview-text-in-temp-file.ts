@@ -35,9 +35,9 @@ export const preview_text_in_temp_file = async (params: {
     await vscode.window.showTextDocument(document, {
       preview: true
     })
-  } catch (error: any) {
+  } catch (error) {
     vscode.window.showErrorMessage(
-      `Failed to open view: ${error.message || 'Unknown error'}`
+      `Failed to open view: ${error instanceof Error ? error.message : String(error)}`
     )
   }
 }

@@ -24,7 +24,7 @@ export const copy_markdown_commands = (
         })
         other_files = collected.other_files
         recent_files = collected.recent_files
-      } catch (error: any) {
+      } catch (error) {
         Logger.error({
           function_name: 'copy_markdown_command',
           message: 'Error collecting files',
@@ -110,11 +110,11 @@ export const copy_markdown_commands = (
               filepath: display_path,
               content
             })
-          } catch (error: any) {
+          } catch (error) {
             vscode.window.showErrorMessage(
               t('command.copy-markdown-command.error.reading-file', {
                 filePath: file_path,
-                message: error.message
+                message: error instanceof Error ? error.message : String(error)
               })
             )
           }

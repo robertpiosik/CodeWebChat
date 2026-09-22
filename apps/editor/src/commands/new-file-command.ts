@@ -129,10 +129,10 @@ export const new_file_command = () => {
 
         const document = await vscode.workspace.openTextDocument(fileUri)
         await vscode.window.showTextDocument(document, { preview: false })
-      } catch (error: any) {
+      } catch (error) {
         vscode.window.showInformationMessage(
           t('common.info.failed-to-create-file', {
-            message: error.message
+            message: error instanceof Error ? error.message : String(error)
           })
         )
       }

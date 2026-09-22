@@ -284,7 +284,7 @@ export const restore_from_json_file = async (params: {
         return
       }
     }
-  } catch (error: any) {
+  } catch (error) {
     Logger.error({
       function_name: 'restore_from_json_file',
       message: 'Error selecting saved context',

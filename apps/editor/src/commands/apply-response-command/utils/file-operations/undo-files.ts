@@ -234,7 +234,7 @@ export const undo_files = async (params: {
       message: 'Changes successfully undone.'
     })
     return true
-  } catch (error: any) {
+  } catch (error) {
     Logger.error({
       function_name: 'undo_files',
       message: 'Error during undo',
@@ -243,7 +243,7 @@ export const undo_files = async (params: {
     console.error('Error during undo:', error)
     vscode.window.showErrorMessage(
       t('command.apply-response-command.error.failed-to-undo', {
-        msg: error.message || 'Unknown error'
+        msg: error instanceof Error ? error.message : String(error)
       })
     )
     return false

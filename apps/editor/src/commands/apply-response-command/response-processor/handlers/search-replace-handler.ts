@@ -173,7 +173,7 @@ export const handle_search_replace = async (params: {
             message: 'Applied search replace edit to file',
             data: safe_path
           })
-        } catch (error: any) {
+        } catch (error) {
           Logger.error({
             function_name: 'handle_search_replace',
             message: 'Failed to apply search replace edit',
@@ -243,7 +243,7 @@ export const handle_search_replace = async (params: {
             ai_content: file.content,
             proposed_content: final_content
           })
-        } catch (error: any) {
+        } catch (error) {
           Logger.error({
             function_name: 'handle_search_replace',
             message: 'Error replacing file content (fallback)',
@@ -255,7 +255,7 @@ export const handle_search_replace = async (params: {
     }
 
     return { success: true, original_states, failed_files }
-  } catch (error: any) {
+  } catch (error) {
     Logger.error({
       function_name: 'handle_search_replace',
       message: 'Error during search replace edit',
@@ -263,7 +263,7 @@ export const handle_search_replace = async (params: {
     })
     vscode.window.showErrorMessage(
       t('command.apply-response-command.error.applying-changes', {
-        msg: error.message || 'Unknown error'
+        msg: error instanceof Error ? error.message : String(error)
       })
     )
     return { success: false }

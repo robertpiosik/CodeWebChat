@@ -46,10 +46,10 @@ export const delete_checkpoint_with_undo = async (params: {
       await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
         recursive: true
       })
-    } catch (error: any) {
+    } catch (error) {
       vscode.window.showWarningMessage(
         t('command.history-command.warning.could-not-delete', {
-          error: error.message
+          error: error instanceof Error ? error.message : String(error)
         })
       )
     }

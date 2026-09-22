@@ -16,8 +16,8 @@ export const handle_open_prompt_image = async (
     let content_base64: string
     try {
       content_base64 = await fs.promises.readFile(txt_path, 'utf-8')
-    } catch (err: any) {
-      if (err.code == 'ENOENT') {
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException).code == 'ENOENT') {
         vscode.window.showErrorMessage(
           'Image file not found (it may have been deleted).'
         )

@@ -170,7 +170,7 @@ export const process_file = async (params: {
       }
     })
     return final_content
-  } catch (error: any) {
+  } catch (error) {
     if (axios.isCancel(error)) {
       Logger.info({
         function_name: 'process_file',

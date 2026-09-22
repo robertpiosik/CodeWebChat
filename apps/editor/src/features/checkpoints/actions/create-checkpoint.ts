@@ -242,9 +242,11 @@ export const create_checkpoint = async (params: {
     }
 
     return new_checkpoint
-  } catch (err: any) {
+  } catch (err) {
     vscode.window.showErrorMessage(
-      t('feature.checkpoints.error.create-failed', { error: err.message })
+      t('feature.checkpoints.error.create-failed', {
+        error: err instanceof Error ? err.message : String(err)
+      })
     )
     await params.extension_context.workspaceState.update(
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,

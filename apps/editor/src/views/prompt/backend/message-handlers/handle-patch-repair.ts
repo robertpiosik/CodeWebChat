@@ -469,13 +469,15 @@ export const handle_patch_repair = async (params: {
               workspace_name ? `${workspace_name}:${file_path}` : file_path
             )
           }
-        } catch (error: any) {
+        } catch (error) {
+          const error_msg =
+            error instanceof Error ? error.message : String(error)
           if (
             !axios.isCancel(error) &&
-            error.message != 'User cancelled the operation' &&
-            error.message !=
+            error_msg != 'User cancelled the operation' &&
+            error_msg !=
               'Batch operation failed, triggering configuration selection.' &&
-            error.message != 'Preview finished.'
+            error_msg != 'Preview finished.'
           ) {
             Logger.error({
               function_name: 'handle_patch_repair',
@@ -485,14 +487,14 @@ export const handle_patch_repair = async (params: {
 
             vscode.window.showErrorMessage(
               t('common.error.applying-changes-generic-error', {
-                msg: error.message
+                msg: error_msg
               })
             )
           }
 
           if (
-            error.message != 'Preview finished.' &&
-            error.message != 'User cancelled the operation'
+            error_msg != 'Preview finished.' &&
+            error_msg != 'User cancelled the operation'
           ) {
             batch_abort_controllers.forEach((controller) => {
               controller.abort(
@@ -523,10 +525,11 @@ export const handle_patch_repair = async (params: {
         }
       })
     )
-  } catch (error: any) {
+  } catch (error) {
+    const error_msg = error instanceof Error ? error.message : String(error)
     if (
-      error.message == 'Preview finished.' ||
-      error.message == 'User cancelled the operation'
+      error_msg == 'Preview finished.' ||
+      error_msg == 'User cancelled the operation'
     ) {
       return
     }

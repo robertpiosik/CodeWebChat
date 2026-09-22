@@ -68,11 +68,11 @@ export const remove = async (params: { name: string }): Promise<void> => {
         vscode.ConfigurationTarget.Global
       )
     }
-  } catch (error: any) {
+  } catch (error) {
     vscode.window.showErrorMessage(
       t('common.error.failed-to-delete-item', {
         item_type: 'chatbot',
-        error: error.message || error
+        error: error instanceof Error ? error.message : String(error)
       })
     )
   }

@@ -166,7 +166,7 @@ export const handle_fast_replace = async (params: {
           })
 
           continue
-        } catch (error: any) {
+        } catch (error) {
           Logger.error({
             function_name: 'handle_fast_replace',
             message: 'Error handling rename',
@@ -175,7 +175,7 @@ export const handle_fast_replace = async (params: {
           vscode.window.showErrorMessage(
             t('command.apply-response-command.error.processing-file', {
               path: file.file_path,
-              msg: error.message || 'Unknown error'
+              msg: error instanceof Error ? error.message : String(error)
             })
           )
           continue
@@ -279,7 +279,7 @@ export const handle_fast_replace = async (params: {
             continue
           }
         }
-      } catch (error: any) {
+      } catch (error) {
         Logger.error({
           function_name: 'handle_fast_replace',
           message: 'Error processing file during replacement',
@@ -288,7 +288,7 @@ export const handle_fast_replace = async (params: {
         vscode.window.showErrorMessage(
           t('command.apply-response-command.error.processing-file', {
             path: file.file_path,
-            msg: error.message || 'Unknown error'
+            msg: error instanceof Error ? error.message : String(error)
           })
         )
         continue
@@ -301,7 +301,7 @@ export const handle_fast_replace = async (params: {
       data: { file_count: safe_files.length }
     })
     return { success: true, original_states }
-  } catch (error: any) {
+  } catch (error) {
     Logger.error({
       function_name: 'handle_fast_replace',
       message: 'Error during direct file replacement',
@@ -310,7 +310,7 @@ export const handle_fast_replace = async (params: {
     console.error('Error during direct file replacement:', error)
     vscode.window.showErrorMessage(
       t('command.apply-response-command.error.replacing-files', {
-        msg: error.message || 'Unknown error'
+        msg: error instanceof Error ? error.message : String(error)
       })
     )
     return { success: false }

@@ -43,9 +43,10 @@ export const handle_pick_api_reasoning_effort = async (
             })
           }
         )
-      } catch (error: any) {
+      } catch (error) {
         is_valid = false
-        if (error?.message != 'Cancelled') {
+        const error_msg = error instanceof Error ? error.message : String(error)
+        if (error_msg != 'Cancelled') {
           vscode.window.showWarningMessage(
             t('views.common.handlers.common.reasoning-effort-not-supported')
           )

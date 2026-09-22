@@ -490,15 +490,17 @@ export const run_generate_action = async (params: {
               message: final_api_prompt!
             })
             action_completed = true
-          } catch (error: any) {
+          } catch (error) {
+            const error_msg =
+              error instanceof Error ? error.message : String(error)
             if (
               axios.isCancel(error) ||
-              error?.message == 'Operation cancelled by user'
+              error_msg == 'Operation cancelled by user'
             ) {
               show_quick_pick = true
               continue
             } else {
-              if (error?.message == 'API request returned an empty response') {
+              if (error_msg == 'API request returned an empty response') {
                 vscode.window.showErrorMessage(
                   t(
                     'command.generate-commit-message-command.error.empty-response'

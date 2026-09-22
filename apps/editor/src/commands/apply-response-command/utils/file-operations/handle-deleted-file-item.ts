@@ -49,11 +49,14 @@ export const handle_deleted_file_item = async (params: {
         message: 'File deleted',
         data: params.safe_path
       })
-    } catch (error: any) {
+    } catch (error) {
       Logger.error({
         function_name: params.function_name,
         message: 'Failed to delete file',
-        data: { error: error.message || error, file_path: params.safe_path }
+        data: {
+          error: error instanceof Error ? error.message : String(error),
+          file_path: params.safe_path
+        }
       })
       return { success: false }
     }

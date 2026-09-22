@@ -157,17 +157,17 @@ export const new_folder_command = () => {
         }
 
         await vscode.workspace.fs.createDirectory(vscode.Uri.file(target_path))
-      } catch (error: any) {
+      } catch (error) {
         if (is_file_like) {
           vscode.window.showInformationMessage(
             t('common.info.failed-to-create-file', {
-              message: error.message
+              message: error instanceof Error ? error.message : String(error)
             })
           )
         } else {
           vscode.window.showInformationMessage(
             t('common.info.failed-to-create-folder', {
-              message: error.message
+              message: error instanceof Error ? error.message : String(error)
             })
           )
         }

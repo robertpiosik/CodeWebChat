@@ -35,9 +35,9 @@ export const handle_preview_generated_code = async (
     await vscode.commands.executeCommand(
       'workbench.action.moveEditorToNewWindow'
     )
-  } catch (error: any) {
+  } catch (error) {
     vscode.window.showErrorMessage(
-      `Failed to open view: ${error.message || 'Unknown error'}`
+      `Failed to open view: ${error instanceof Error ? error.message : String(error)}`
     )
   }
 }

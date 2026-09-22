@@ -391,7 +391,7 @@ export const restore_from_workspace_state = async (params: {
       params.on_context_selected()
       return
     }
-  } catch (error: any) {
+  } catch (error) {
     Logger.error({
       function_name: 'restore_from_workspace_state',
       message: 'Error selecting saved context',

@@ -68,9 +68,9 @@ export const get_git_diff = async (
       if (tracked_diff) {
         total_diff += tracked_diff
       }
-    } catch (err: any) {
-      if (err.status === 1 && err.stdout) {
-        total_diff += err.stdout.toString()
+    } catch (err) {
+      if ((err as any).status === 1 && (err as any).stdout) {
+        total_diff += (err as any).stdout.toString()
       } else {
         throw err
       }
@@ -97,9 +97,9 @@ export const get_git_diff = async (
           maxBuffer: 50 * 1024 * 1024
         })
         return diff_chunk
-      } catch (err: any) {
-        if (err.status === 1 && err.stdout) {
-          return err.stdout.toString()
+      } catch (err) {
+        if ((err as any).status === 1 && (err as any).stdout) {
+          return (err as any).stdout.toString()
         } else {
           Logger.warn({
             function_name: 'get_git_diff',

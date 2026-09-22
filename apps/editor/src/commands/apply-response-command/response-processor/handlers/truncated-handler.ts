@@ -136,11 +136,14 @@ export const handle_truncated_edit = async (params: {
           data: safe_path
         })
         continue
-      } catch (error: any) {
+      } catch (error) {
         Logger.error({
           function_name: 'handle_truncated_edit',
           message: 'Failed to process truncated file for rename',
-          data: { error: error.message, file_path: safe_path }
+          data: {
+            error: error instanceof Error ? error.message : String(error),
+            file_path: safe_path
+          }
         })
         failed_files.push(file)
         continue
@@ -166,11 +169,14 @@ export const handle_truncated_edit = async (params: {
           ai_content: file.content,
           proposed_content: new_content
         })
-      } catch (error: any) {
+      } catch (error) {
         Logger.error({
           function_name: 'handle_truncated_edit',
           message: 'Failed to create new file',
-          data: { error: error.message, file_path: safe_path }
+          data: {
+            error: error instanceof Error ? error.message : String(error),
+            file_path: safe_path
+          }
         })
         failed_files.push(file)
       }
@@ -205,11 +211,14 @@ export const handle_truncated_edit = async (params: {
         message: 'Applied truncated edit',
         data: safe_path
       })
-    } catch (error: any) {
+    } catch (error) {
       Logger.error({
         function_name: 'handle_truncated_edit',
         message: 'Failed to process truncated file',
-        data: { error: error.message, file_path: safe_path }
+        data: {
+          error: error instanceof Error ? error.message : String(error),
+          file_path: safe_path
+        }
       })
       failed_files.push(file)
     }

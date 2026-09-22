@@ -36,8 +36,8 @@ const start_recording = (prompt_view_provider: PromptViewProvider) => {
       }
     )
 
-    prompt_view_provider.recording_process.on('error', (error: any) => {
-      if (error.code == 'ENOENT') {
+    prompt_view_provider.recording_process.on('error', (error) => {
+      if ((error as NodeJS.ErrnoException).code == 'ENOENT') {
         let error_message = t(
           'views.prompt.handlers.handle-voice-input.error.sox-missing'
         )
@@ -89,7 +89,7 @@ const start_recording = (prompt_view_provider: PromptViewProvider) => {
       })
       prompt_view_provider.recording_process = null
     })
-  } catch (error: any) {
+  } catch (error) {
     Logger.error({
       function_name: 'start_recording',
       message: 'Failed to start recording',
@@ -226,7 +226,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
           prompt_view_provider.add_text_at_cursor_position(result.response)
         }
       }
-    } catch (error: any) {
+    } catch (error) {
       if (axios.isCancel(error)) {
         return
       }
@@ -238,7 +238,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
       })
       vscode.window.showErrorMessage(
         t('views.prompt.handlers.handle-voice-input.error.process-failed', {
-          error: error.message
+          error: error instanceof Error ? error.message : String(error)
         })
       )
     } finally {

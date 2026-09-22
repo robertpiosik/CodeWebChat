@@ -371,11 +371,14 @@ const handle_new_file_patch = async (
     await fs.promises.writeFile(safe_path, new_content, 'utf8')
 
     return { success: true, original_states }
-  } catch (error: any) {
+  } catch (error) {
     Logger.error({
       function_name: 'handle_new_file_patch',
       message: 'Failed to create new file from patch.',
-      data: { error: error.message, file_path }
+      data: {
+        error: error instanceof Error ? error.message : String(error),
+        file_path
+      }
     })
     // Attempt cleanup if file was created but something went wrong.
     if (fs.existsSync(safe_path)) await fs.promises.unlink(safe_path)
@@ -449,11 +452,14 @@ const handle_deleted_file_patch = async (
     }
 
     return { success: true, original_states }
-  } catch (error: any) {
+  } catch (error) {
     Logger.error({
       function_name: 'handle_deleted_file_patch',
       message: 'Failed to delete file from patch.',
-      data: { error: error.message, file_path }
+      data: {
+        error: error instanceof Error ? error.message : String(error),
+        file_path
+      }
     })
     return { success: false, original_states }
   }
@@ -669,11 +675,14 @@ export const apply_git_patch = async (
       // All methods failed, throw the last logged error to be handled by the outer catch
       throw last_error
     }
-  } catch (error: any) {
+  } catch (error) {
     // This outer catch handles setup errors and final application failures
     await reopen_closed_files(closed_files)
 
-    const has_rejects = error?.message?.includes('.rej')
+    const has_rejects =
+      error instanceof Error
+        ? error.message.includes('.rej')
+        : String(error).includes('.rej')
     if (has_rejects) {
       const file_paths = extract_file_paths_from_patch(patch_content)
       await process_modified_files(file_paths, workspace_path)

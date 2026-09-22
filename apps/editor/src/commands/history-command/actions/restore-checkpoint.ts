@@ -142,10 +142,10 @@ export const restore_checkpoint = async (params: {
             temp_checkpoint
           )
         }
-      } catch (err: any) {
+      } catch (err) {
         vscode.window.showErrorMessage(
           t('command.history-command.error.create-temp-failed', {
-            error: err.message
+            error: err instanceof Error ? err.message : String(err)
           })
         )
         await params.extension_context.workspaceState.update(
@@ -518,14 +518,14 @@ export const restore_checkpoint = async (params: {
             })
           }
         }
-      } catch (err: any) {
+      } catch (err) {
         await params.extension_context.workspaceState.update(
           CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
           undefined
         )
         vscode.window.showErrorMessage(
           t('command.history-command.error.restore-failed', {
-            error: err.message
+            error: err instanceof Error ? err.message : String(err)
           })
         )
         if (temp_checkpoint) {
