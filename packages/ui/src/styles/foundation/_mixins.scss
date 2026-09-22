@@ -11,7 +11,7 @@
 }
 
 @mixin landscape {
-  @media (orientation: landscape) and (min-width: 450px) {
+  @media (orientation: landscape) and (min-width: 600px) {
     @content;
   }
 }
