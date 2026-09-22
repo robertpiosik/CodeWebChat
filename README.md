@@ -34,7 +34,7 @@
 #### Efficiency and speed
 
 - For [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
-- On lean, bloat-free prompts, models 'think' briefly and stay accurate infinitely.
+- Given lean, bloat-free prompts, models 'think' briefly at their baseline accuracy.
 
 ## Prompts
 
