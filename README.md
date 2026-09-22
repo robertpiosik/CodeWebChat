@@ -23,20 +23,20 @@
 
 ## Introduction
 
-**CWC** proposes a sessionless workflow that is 10X faster at 1/10th the cost of coding with agents alone.
+**CWC** is a sessionless workflow that is 10X faster at 1/10th the cost of coding with agents alone.
 
 #### The workflow
 
 1. Type instructions
 2. Run [Agentic Search](#-agentic-search) for task-relevant file selection
 3. Select examples for model guidance
-4. Send the constructed prompt with a chatbot or an API call
+4. Send prompt with a chatbot or an API call
 5. Apply response
 
 #### Efficiency and speed
 
 - For [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
-- Given lean, bloat-free prompts, models 'think' briefly, at their baseline accuracy.
+- Given lean, bloat-free prompts, models 'think' less and stay at their baseline accuracy.
 
 ## Prompts
 
