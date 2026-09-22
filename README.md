@@ -278,10 +278,6 @@ Apply the attached changes to the file without explanations or any other text.
 
 </details>
 
-## Prompt caching
-
-**CWC** orders context files by modification and selection recency. This, combined with instructions placement at the message's very end effecively utilizes prompt caching, across related tasks.
-
 ## Enabling autofill
 
 Automatically place prompts in your favorite chatbot via the official browser extension ([source code](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser)).
@@ -320,6 +316,10 @@ Automatically place prompts in your favorite chatbot via the official browser ex
 
 > [!NOTE]
 > Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
+
+## Prompt caching
+
+**CWC** orders context files by modification and selection recency. This, combined with instructions placement at the message's very end effecively utilizes prompt caching, across related tasks.
 
 ## Commands
 
