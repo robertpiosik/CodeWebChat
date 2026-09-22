@@ -28,7 +28,7 @@
 1. Type instructions
 2. Run [Agentic Search](#-agentic-search) for task-relevant file selection
 3. Select examples for model guidance
-4. Send the constructed prompt with a chatbot or an API call
+4. Copy the constructed prompt for a chatbot or send API request
 
 ## Prompts
 
