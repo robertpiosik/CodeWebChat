@@ -125,6 +125,9 @@ export const select_referencing_files_commands = (
               const ignore_paths: string[] = []
               const target_uris: string[] = [target_uri!.toString()]
 
+              let search_uri = target_uri!
+              let search_position = target_position!
+
               if (definitions) {
                 for (const d of definitions) {
                   const uri = d.uri || d.targetUri
@@ -135,11 +138,25 @@ export const select_referencing_files_commands = (
                     }
                   }
                 }
+
+                if (definitions.length > 0) {
+                  const first_def = definitions[0]
+                  const def_uri = first_def.uri || first_def.targetUri
+                  const def_range =
+                    first_def.targetSelectionRange ||
+                    first_def.targetRange ||
+                    first_def.range
+
+                  if (def_uri && def_range) {
+                    search_uri = def_uri
+                    search_position = def_range.start
+                  }
+                }
               }
 
               return await get_referencing_files_for_position({
-                uri: target_uri!,
-                position: target_position,
+                uri: search_uri,
+                position: search_position,
                 workspace_provider,
                 ignore_paths,
                 target_uris
