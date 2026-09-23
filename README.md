@@ -97,9 +97,9 @@ Your response must begin with "**Intelligent file search results:**", then a bul
 
 **Intelligent file search results:**
 
-* `src/index.ts`
-* `src/greetings/hello.ts`
-* `src/greetings/welcome.ts`
+- `src/index.ts`
+- `src/greetings/hello.ts`
+- `src/greetings/welcome.ts`
 
 These files contain the core greeting logic and module exports.
 
@@ -126,9 +126,9 @@ Among the attached files, find the complete set of primary and structural files 
 
 Output strictly as a bulleted list of file paths without explanations or any other text. Example:
 
-* `src/index.ts`
-* `src/greetings/hello.ts`
-* `src/greetings/welcome.ts`
+- `src/index.ts`
+- `src/greetings/hello.ts`
+- `src/greetings/welcome.ts`
 
 # Query
 
