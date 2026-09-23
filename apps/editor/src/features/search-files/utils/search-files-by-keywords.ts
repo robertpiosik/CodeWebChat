@@ -13,6 +13,7 @@ export const search_files_by_keywords = async (params: {
   keywords_match_mode?: 'all' | 'some'
   progress?: vscode.Progress<{ message?: string; increment?: number }>
   token?: vscode.CancellationToken
+  get_file_content?: (file_path: string) => Promise<string | undefined>
 }): Promise<string[]> => {
   const matched_files: string[] = []
 
@@ -62,31 +63,44 @@ export const search_files_by_keywords = async (params: {
         continue
       }
 
-      const stats = await fs.promises.stat(file_path)
       let text_to_check = ''
+      let content: string | undefined
+      if (params.get_file_content) {
+        content = await params.get_file_content(file_path)
+      }
 
-      if (stats.size > 1024 * 1024) {
+      if (content !== undefined) {
         if (params.keywords_target == 'both') {
-          text_to_check = file_name
+          text_to_check = file_name + '\n' + content
         } else {
-          continue
+          text_to_check = content
         }
       } else {
-        const buffer = await fs.promises.readFile(file_path)
-        const is_binary = buffer.includes(0)
+        const stats = await fs.promises.stat(file_path)
 
-        if (is_binary) {
+        if (stats.size > 1024 * 1024) {
           if (params.keywords_target == 'both') {
             text_to_check = file_name
           } else {
             continue
           }
         } else {
-          const content = buffer.toString('utf-8')
-          if (params.keywords_target == 'both') {
-            text_to_check = file_name + '\n' + content
+          const buffer = await fs.promises.readFile(file_path)
+          const is_binary = buffer.includes(0)
+
+          if (is_binary) {
+            if (params.keywords_target == 'both') {
+              text_to_check = file_name
+            } else {
+              continue
+            }
           } else {
-            text_to_check = content
+            content = buffer.toString('utf-8')
+            if (params.keywords_target == 'both') {
+              text_to_check = file_name + '\n' + content
+            } else {
+              text_to_check = content
+            }
           }
         }
       }

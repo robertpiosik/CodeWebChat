@@ -10,6 +10,7 @@ export const search_files_by_phrase = async (params: {
   search_term: string
   progress?: vscode.Progress<{ message?: string; increment?: number }>
   token?: vscode.CancellationToken
+  get_file_content?: (file_path: string) => Promise<string | undefined>
 }): Promise<string[]> => {
   const matched_files: string[] = []
   const positive_regex = create_search_regex(params.search_term)
@@ -32,14 +33,21 @@ export const search_files_by_phrase = async (params: {
         continue
       }
 
-      const stats = await fs.promises.stat(file_path)
-      if (stats.size > 1024 * 1024) continue
+      let content: string | undefined
+      if (params.get_file_content) {
+        content = await params.get_file_content(file_path)
+      }
 
-      const buffer = await fs.promises.readFile(file_path)
-      const is_binary = buffer.includes(0)
-      if (is_binary) continue
+      if (content === undefined) {
+        const stats = await fs.promises.stat(file_path)
+        if (stats.size > 1024 * 1024) continue
 
-      const content = buffer.toString('utf-8')
+        const buffer = await fs.promises.readFile(file_path)
+        const is_binary = buffer.includes(0)
+        if (is_binary) continue
+
+        content = buffer.toString('utf-8')
+      }
 
       if (positive_regex.test(content)) {
         matched_files.push(file_path)

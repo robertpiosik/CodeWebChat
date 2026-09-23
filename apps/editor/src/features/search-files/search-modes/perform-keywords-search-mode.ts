@@ -27,6 +27,7 @@ export const perform_keywords_search_mode = async (params: {
   >
   is_search_in_selected?: boolean
   is_sub_search?: boolean
+  get_file_content?: (file_path: string) => Promise<string | undefined>
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | undefined
@@ -146,7 +147,8 @@ export const perform_keywords_search_mode = async (params: {
             files,
             search_term,
             keywords_target,
-            keywords_match_mode
+            keywords_match_mode,
+            get_file_content: params.get_file_content
           })
         } else {
           matched_files = await vscode.window.withProgress(
@@ -165,7 +167,8 @@ export const perform_keywords_search_mode = async (params: {
                 keywords_target,
                 keywords_match_mode,
                 progress,
-                token
+                token,
+                get_file_content: params.get_file_content
               })
             }
           )

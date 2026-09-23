@@ -21,6 +21,7 @@ export interface FileAnalysisResult {
 export const analyze_files = async (params: {
   workspace_provider: WorkspaceProvider
   files: string[]
+  get_file_content?: (file_path: string) => Promise<string | undefined>
 }): Promise<FileAnalysisResult> => {
   let full_tokens = 0
   let shrink_tokens = 0
@@ -37,13 +38,21 @@ export const analyze_files = async (params: {
     async () => {
       for (const file_path of params.files) {
         try {
-          const stats = await fs.promises.stat(file_path)
-          if (stats.size > 1024 * 1024) continue
+          let content: string | undefined
+          if (params.get_file_content) {
+            content = await params.get_file_content(file_path)
+          }
 
-          const buffer = await fs.promises.readFile(file_path)
-          if (buffer.includes(0)) continue
+          if (content === undefined) {
+            const stats = await fs.promises.stat(file_path)
+            if (stats.size > 1024 * 1024) continue
 
-          const content = buffer.toString('utf8')
+            const buffer = await fs.promises.readFile(file_path)
+            if (buffer.includes(0)) continue
+
+            content = buffer.toString('utf8')
+          }
+
           const shrunk_content = shrink_file(content, path.extname(file_path))
 
           const workspace_root =

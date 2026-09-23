@@ -324,6 +324,13 @@ export const prepare_staged_changes = async (params: {
                 : undefined
           })
 
+          const file_content = [
+            final_diff_content ? final_diff_content : '',
+            !is_deleted && full_content && !is_too_large ? full_content : ''
+          ]
+            .filter(Boolean)
+            .join('\n\n')
+
           const token_count = Math.ceil(file_md.length / 4)
           const description_parts = []
 
@@ -339,6 +346,7 @@ export const prepare_staged_changes = async (params: {
             picked: true,
             fsPath: change.uri.fsPath,
             token_count,
+            file_content,
             buttons: [
               {
                 iconPath: new vscode.ThemeIcon(
@@ -453,6 +461,10 @@ export const prepare_staged_changes = async (params: {
 
           const search_result = await search_files({
             get_files: async () => current_selected_fs_paths,
+            get_file_content: async (file_path: string) => {
+              const item = items.find((i) => i.fsPath === file_path)
+              return item?.file_content
+            },
             workspace_provider: params.workspace_provider,
             extension_context: params.extension_context,
             websocket_manager: params.websocket_manager,
