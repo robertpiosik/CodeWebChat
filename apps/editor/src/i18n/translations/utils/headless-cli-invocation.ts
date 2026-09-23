@@ -71,25 +71,25 @@ export const translations = {
     hu: 'Jelzők törlése',
     bg: 'Изтриване на флагове'
   },
-  'utils.headless-cli-invocation.agent.select-agent': {
-    en: 'Select Agent',
-    pl: 'Wybierz agenta',
-    'zh-cn': '选择智能体',
-    ja: 'エージェントを選択',
-    'zh-tw': '選擇智能體',
-    de: 'Agenten auswählen',
-    es: 'Seleccionar agente',
-    fr: 'Sélectionner un agent',
-    'pt-br': 'Selecionar agente',
-    ru: 'Выбрать агента',
-    ko: '에이전트 선택',
-    it: 'Seleziona agente',
-    tr: 'Aracı Seç',
-    cs: 'Vybrat agenta',
-    hu: 'Ügynök kiválasztása',
-    bg: 'Изберете агент'
+  'utils.headless-cli-invocation.agent.installed-coding-agents': {
+    en: 'Installed Coding Agents',
+    pl: 'Zainstalowani agenci programistyczni',
+    'zh-cn': '已安装的编程智能体',
+    ja: 'インストール済みのコーディングエージェント',
+    'zh-tw': '已安裝的編程智能體',
+    de: 'Installierte Coding-Agenten',
+    es: 'Agentes de programación instalados',
+    fr: 'Agents de codage installés',
+    'pt-br': 'Agentes de codificação instalados',
+    ru: 'Установленные агенты программирования',
+    ko: '설치된 코딩 에이전트',
+    it: 'Agenti di programmazione installati',
+    tr: 'Yüklü Kodlama Aracıları',
+    cs: 'Nainstalovaní programovací agenti',
+    hu: 'Telepített kódoló ügynökök',
+    bg: 'Инсталирани агенти за програмиране'
   },
-  'utils.headless-cli-invocation.agent.select-agent-placeholder': {
+  'utils.headless-cli-invocation.agent.installed-coding-agents-placeholder': {
     en: 'Select an agent to perform the search',
     pl: 'Wybierz agenta, aby wykonać wyszukiwanie',
     'zh-cn': '选择一个智能体来执行搜索',

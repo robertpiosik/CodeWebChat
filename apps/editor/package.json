@@ -1007,49 +1007,49 @@
           "scope": "resource",
           "default": "In the project, find the complete set of primary and structural files relevant to the query."
         },
-        "codeWebChat.agenticSearchAntigravityFlags": {
+        "codeWebChat.cliFlagsAntigravity": {
           "type": "array",
           "scope": "resource",
           "items": {
             "type": "string"
           }
         },
-        "codeWebChat.agenticSearchClaudeFlags": {
+        "codeWebChat.cliFlagsClaude": {
           "type": "array",
           "scope": "resource",
           "items": {
             "type": "string"
           }
         },
-        "codeWebChat.agenticSearchCodexFlags": {
+        "codeWebChat.cliFlagsCodex": {
           "type": "array",
           "scope": "resource",
           "items": {
             "type": "string"
           }
         },
-        "codeWebChat.agenticSearchCursorFlags": {
+        "codeWebChat.cliFlagsCursor": {
           "type": "array",
           "scope": "resource",
           "items": {
             "type": "string"
           }
         },
-        "codeWebChat.agenticSearchGrokFlags": {
+        "codeWebChat.cliFlagsGrok": {
           "type": "array",
           "scope": "resource",
           "items": {
             "type": "string"
           }
         },
-        "codeWebChat.agenticSearchMuseFlags": {
+        "codeWebChat.cliFlagsMuse": {
           "type": "array",
           "scope": "resource",
           "items": {
             "type": "string"
           }
         },
-        "codeWebChat.agenticSearchOpencodeFlags": {
+        "codeWebChat.cliFlagsOpencode": {
           "type": "array",
           "scope": "resource",
           "items": {

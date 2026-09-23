@@ -23,7 +23,6 @@ export const invoke_headless_cli = async (params: {
   waiting_message: string
   last_used_agent_state_key: string
   last_selected_workspace_state_key: string
-  config_key_prefix: string
   show_back_button?: boolean
   cli_prompt_type?: 'edit-files' | 'ask-about-files'
 }): Promise<
@@ -79,9 +78,9 @@ export const invoke_headless_cli = async (params: {
       const agent_picks: AgentPickItem[] = []
 
       for (const a of available_agents) {
-        const configKey = `${params.config_key_prefix}${a.id.charAt(0).toUpperCase() + a.id.slice(1)}Flags`
+        const config_key = `cliFlags${a.id.charAt(0).toUpperCase() + a.id.slice(1)}`
         const config = vscode.workspace.getConfiguration('codeWebChat')
-        let flags = config.get<string[]>(configKey)
+        let flags = config.get<string[]>(config_key)
         if (!Array.isArray(flags)) {
           flags = []
         }
@@ -106,7 +105,7 @@ export const invoke_headless_cli = async (params: {
             agent_id: a.id,
             flag_index: index > 0 ? index - 1 : -1,
             flag_value: flag,
-            configKey,
+            configKey: config_key,
             buttons
           })
         })
@@ -147,10 +146,10 @@ export const invoke_headless_cli = async (params: {
     }
 
     agent_quick_pick.title = t(
-      'utils.headless-cli-invocation.agent.select-agent'
+      'utils.headless-cli-invocation.agent.installed-coding-agents'
     )
     agent_quick_pick.placeholder = t(
-      'utils.headless-cli-invocation.agent.select-agent-placeholder'
+      'utils.headless-cli-invocation.agent.installed-coding-agents-placeholder'
     )
     agent_quick_pick.buttons = params.show_back_button
       ? [vscode.QuickInputButtons.Back, close_button]
