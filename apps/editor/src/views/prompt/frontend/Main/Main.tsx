@@ -409,11 +409,11 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_invoke_headless_cli = () => {
+  const handle_invoke_agentic_cli = () => {
     const instructions = get_current_instructions()
 
     post_message(props.vscode, {
-      command: 'INVOKE_HEADLESS_CLI'
+      command: 'INVOKE_AGENTIC_CLI'
     })
 
     if (instructions.trim()) {
@@ -557,7 +557,7 @@ export const Main: React.FC<Props> = (props) => {
       target={props.target}
       on_target_change={props.on_target_change}
       on_make_api_call={handle_make_api_call}
-      on_invoke_headless_cli={handle_invoke_headless_cli}
+      on_invoke_agentic_cli={handle_invoke_agentic_cli}
       caret_position_to_set={caret_position_to_set}
       on_caret_position_set={() => set_caret_position_to_set(undefined)}
       chat_input_focus_and_select_key={props.chat_input_focus_and_select_key}

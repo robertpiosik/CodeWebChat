@@ -235,8 +235,8 @@ export interface SaveCliPromptTypeMessage extends BaseMessage {
   prompt_type: CliPromptType
 }
 
-export interface InvokeHeadlessCliMessage extends BaseMessage {
-  command: 'INVOKE_HEADLESS_CLI'
+export interface InvokeAgenticCliMessage extends BaseMessage {
+  command: 'INVOKE_AGENTIC_CLI'
 }
 
 export interface GetWebPromptTypeMessage extends BaseMessage {
@@ -606,7 +606,7 @@ export type FrontendMessage =
   | SaveApiPromptTypeMessage
   | GetCliPromptTypeMessage
   | SaveCliPromptTypeMessage
-  | InvokeHeadlessCliMessage
+  | InvokeAgenticCliMessage
   | GetApiConfigurationsMessage
   | ReorderApiConfigurationsMessage
   | TogglePinnedApiConfigurationMessage

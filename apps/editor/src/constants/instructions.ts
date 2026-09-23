@@ -70,8 +70,8 @@ export const voice_input_instructions =
   'Respond with a transcription of the following audio recording or text "INAUDIBLE", and nothing else.'
 
 export const cli_edit_requirements = `- This is a read-only session.
-- Read all the listed files using their project-relative paths in full, and nothing else.
+- Read all the listed files provided as project-relative paths in full, and nothing else.
 - Formulate response adhering to the output formatting, in plain text.`
 
 export const cli_ask_requirements = `- This is a read-only session.
-- Read all attached files using their project-relative paths in full, and nothing else.`
+- Read all the listed files provided as project-relative paths in full, and nothing else.`

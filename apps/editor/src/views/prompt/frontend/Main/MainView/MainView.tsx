@@ -88,7 +88,7 @@ type Props = {
   target: Target
   on_target_change: (value: Target) => void
   on_make_api_call: (use_quick_pick: boolean) => void
-  on_invoke_headless_cli: () => void
+  on_invoke_agentic_cli: () => void
   caret_position_to_set?: number
   on_caret_position_set?: () => void
   chat_input_focus_and_select_key: number
@@ -182,7 +182,7 @@ export const MainView: React.FC<Props> = (props) => {
     } else if (props.target == 'API') {
       props.on_make_api_call(false)
     } else if (props.target == 'CLI') {
-      props.on_invoke_headless_cli()
+      props.on_invoke_agentic_cli()
     }
   }
 
@@ -194,7 +194,7 @@ export const MainView: React.FC<Props> = (props) => {
     } else if (props.target == 'API') {
       props.on_make_api_call(true)
     } else if (props.target == 'CLI') {
-      props.on_invoke_headless_cli()
+      props.on_invoke_agentic_cli()
     }
   }
 

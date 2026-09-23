@@ -3,19 +3,19 @@ import * as os from 'os'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { t } from '@/i18n'
 import { spawn } from 'child_process'
-import { HEADLESS_CLI_AGENTS } from './agents'
+import { AGENTIC_CLI_AGENTS } from './agents'
 import { Logger } from '@shared/utils/logger'
 
 let _output_channel: vscode.OutputChannel | undefined
 
 const get_output_channel = () => {
   if (!_output_channel) {
-    _output_channel = vscode.window.createOutputChannel('Headless CLI Agent')
+    _output_channel = vscode.window.createOutputChannel('Agentic CLI')
   }
   return _output_channel
 }
 
-export const invoke_headless_cli = async (params: {
+export const invoke_agentic_cli = async (params: {
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
   build_prompt: (selected_root: string) => Promise<string>
@@ -40,26 +40,26 @@ export const invoke_headless_cli = async (params: {
   let active_flag_index: number | undefined
 
   while (true) {
-    const available_agents = HEADLESS_CLI_AGENTS.filter((a) => a.is_installed())
+    const available_agents = AGENTIC_CLI_AGENTS.filter((a) => a.is_installed())
 
     if (available_agents.length == 0) {
       vscode.window.showInformationMessage(
-        t('utils.headless-cli-invocation.info.no-agents')
+        t('utils.agentic-cli-invocation.info.no-agents')
       )
       return undefined
     }
 
     const add_button = {
       iconPath: new vscode.ThemeIcon('flag'),
-      tooltip: t('utils.headless-cli-invocation.agent.add-flags')
+      tooltip: t('utils.agentic-cli-invocation.agent.add-flags')
     }
     const edit_button = {
       iconPath: new vscode.ThemeIcon('edit'),
-      tooltip: t('utils.headless-cli-invocation.agent.edit-flags')
+      tooltip: t('utils.agentic-cli-invocation.agent.edit-flags')
     }
     const delete_button = {
       iconPath: new vscode.ThemeIcon('trash'),
-      tooltip: t('utils.headless-cli-invocation.agent.delete-flags')
+      tooltip: t('utils.agentic-cli-invocation.agent.delete-flags')
     }
     const doc_button = {
       iconPath: new vscode.ThemeIcon('question'),
@@ -146,10 +146,10 @@ export const invoke_headless_cli = async (params: {
     }
 
     agent_quick_pick.title = t(
-      'utils.headless-cli-invocation.agent.installed-coding-agents'
+      'utils.agentic-cli-invocation.agent.installed-coding-agents'
     )
     agent_quick_pick.placeholder = t(
-      'utils.headless-cli-invocation.agent.installed-coding-agents-placeholder'
+      'utils.agentic-cli-invocation.agent.installed-coding-agents-placeholder'
     )
     agent_quick_pick.buttons = params.show_back_button
       ? [vscode.QuickInputButtons.Back, close_button]
@@ -317,10 +317,10 @@ export const invoke_headless_cli = async (params: {
       active_flag_index = -1
 
       const new_flags = await vscode.window.showInputBox({
-        title: t('utils.headless-cli-invocation.agent.add-flags'),
-        prompt: t('utils.headless-cli-invocation.agent.edit-flags-prompt'),
+        title: t('utils.agentic-cli-invocation.agent.add-flags'),
+        prompt: t('utils.agentic-cli-invocation.agent.edit-flags-prompt'),
         placeHolder: t(
-          'utils.headless-cli-invocation.agent.edit-flags-placeholder'
+          'utils.agentic-cli-invocation.agent.edit-flags-placeholder'
         ),
         value: '',
         ignoreFocusOut: true
@@ -348,10 +348,10 @@ export const invoke_headless_cli = async (params: {
       active_flag_index = index
 
       const new_flags = await vscode.window.showInputBox({
-        title: t('utils.headless-cli-invocation.agent.edit-flags'),
-        prompt: t('utils.headless-cli-invocation.agent.edit-flags-prompt'),
+        title: t('utils.agentic-cli-invocation.agent.edit-flags'),
+        prompt: t('utils.agentic-cli-invocation.agent.edit-flags-prompt'),
         placeHolder: t(
-          'utils.headless-cli-invocation.agent.edit-flags-placeholder'
+          'utils.agentic-cli-invocation.agent.edit-flags-placeholder'
         ),
         value: value,
         ignoreFocusOut: true
@@ -414,10 +414,10 @@ export const invoke_headless_cli = async (params: {
           quick_pick.activeItems = [active_item]
         }
         quick_pick.title = t(
-          'utils.headless-cli-invocation.agent.select-workspace'
+          'utils.agentic-cli-invocation.agent.select-workspace'
         )
         quick_pick.placeholder = t(
-          'utils.headless-cli-invocation.agent.select-workspace-placeholder'
+          'utils.agentic-cli-invocation.agent.select-workspace-placeholder'
         )
         quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
         quick_pick.ignoreFocusOut = true
@@ -620,7 +620,7 @@ export const invoke_headless_cli = async (params: {
                   }
                 }
                 Logger.info({
-                  function_name: 'invoke_headless_cli',
+                  function_name: 'invoke_agentic_cli',
                   message: "Agent's response",
                   data: agent_output
                 })
@@ -629,7 +629,7 @@ export const invoke_headless_cli = async (params: {
 
               child.on('error', (err) => {
                 Logger.error({
-                  function_name: 'invoke_headless_cli',
+                  function_name: 'invoke_agentic_cli',
                   message: 'Agent execution failed',
                   data: err
                 })
@@ -640,7 +640,7 @@ export const invoke_headless_cli = async (params: {
         )
       } catch (err) {
         vscode.window.showErrorMessage(
-          t('utils.headless-cli-invocation.error.failed', {
+          t('utils.agentic-cli-invocation.error.failed', {
             error: String(err)
           })
         )

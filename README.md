@@ -30,7 +30,7 @@
 1. Type instructions
 2. Run [Agentic Search](#-agentic-search) for task-relevant file selection
 3. Select examples for model guidance
-4. Send prompt with a chatbot, an API call or a headless CLI invocation
+4. Send prompt with a chatbot, an API call or an agentic CLI invocation
 5. Apply response
 
 #### Efficiency and speed
@@ -178,7 +178,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 # Rules
 
 * This is a read-only session.
-* Read all the listed files using their project-relative paths in full, and nothing else.
+* Read all the listed files provided as project-relative paths in full, and nothing else.
 * Formulate response adhering to the output formatting, in plain text.
 
 # Task
@@ -219,7 +219,7 @@ _Multi-purpose: explanations, code reviews, you name it._
 # Rules
 
 - This is a read-only session.
-- Read all attached files using their project-relative paths in full, and nothing else.
+- Read all the listed files provided as project-relative paths in full, and nothing else.
 
 # Task
 

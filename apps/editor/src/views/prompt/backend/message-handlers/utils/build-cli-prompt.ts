@@ -33,7 +33,7 @@ export const build_cli_prompt = async (params: {
     const roots = prompt_view_provider.workspace_provider.get_workspace_roots()
     const last_selected_root =
       prompt_view_provider.extension_context.workspaceState.get<string>(
-        'last_selected_workspace_in_headless_cli_state_key'
+        'last_selected_workspace_in_agentic_cli_state_key'
       )
     selected_root =
       last_selected_root && roots.includes(last_selected_root)

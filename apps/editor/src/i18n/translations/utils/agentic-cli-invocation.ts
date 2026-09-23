@@ -1,5 +1,5 @@
 export const translations = {
-  'utils.headless-cli-invocation.info.no-agents': {
+  'utils.agentic-cli-invocation.info.no-agents': {
     en: 'No agents available.',
     pl: 'Brak dostępnych agentów.',
     'zh-cn': '没有可用的智能体。',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Nincsenek elérhető ügynökök.',
     bg: 'Няма налични агенти.'
   },
-  'utils.headless-cli-invocation.agent.add-flags': {
+  'utils.agentic-cli-invocation.agent.add-flags': {
     en: 'Add flags',
     pl: 'Dodaj flagi',
     'zh-cn': '添加标志',
@@ -35,7 +35,7 @@ export const translations = {
     hu: 'Jelzők hozzáadása',
     bg: 'Добавяне на флагове'
   },
-  'utils.headless-cli-invocation.agent.edit-flags': {
+  'utils.agentic-cli-invocation.agent.edit-flags': {
     en: 'Edit flags',
     pl: 'Edytuj flagi',
     'zh-cn': '编辑标志',
@@ -53,7 +53,7 @@ export const translations = {
     hu: 'Jelzők szerkesztése',
     bg: 'Редактиране на флагове'
   },
-  'utils.headless-cli-invocation.agent.delete-flags': {
+  'utils.agentic-cli-invocation.agent.delete-flags': {
     en: 'Delete flags',
     pl: 'Usuń flagi',
     'zh-cn': '删除标志',
@@ -71,7 +71,7 @@ export const translations = {
     hu: 'Jelzők törlése',
     bg: 'Изтриване на флагове'
   },
-  'utils.headless-cli-invocation.agent.installed-coding-agents': {
+  'utils.agentic-cli-invocation.agent.installed-coding-agents': {
     en: 'Installed Coding Agents',
     pl: 'Zainstalowani agenci programistyczni',
     'zh-cn': '已安装的编程智能体',
@@ -89,7 +89,7 @@ export const translations = {
     hu: 'Telepített kódoló ügynökök',
     bg: 'Инсталирани агенти за програмиране'
   },
-  'utils.headless-cli-invocation.agent.installed-coding-agents-placeholder': {
+  'utils.agentic-cli-invocation.agent.installed-coding-agents-placeholder': {
     en: 'Select an agent to perform the search',
     pl: 'Wybierz agenta, aby wykonać wyszukiwanie',
     'zh-cn': '选择一个智能体来执行搜索',
@@ -107,7 +107,7 @@ export const translations = {
     hu: 'Válasszon ügynököt a keresés végrehajtásához',
     bg: 'Изберете агент, който да извърши търсенето'
   },
-  'utils.headless-cli-invocation.agent.edit-flags-prompt': {
+  'utils.agentic-cli-invocation.agent.edit-flags-prompt': {
     en: 'Enter custom CLI flags for the agent',
     pl: 'Wprowadź niestandardowe flagi CLI dla agenta',
     'zh-cn': '输入智能体的自定义 CLI 标志',
@@ -125,7 +125,7 @@ export const translations = {
     hu: 'Adjon meg egyéni CLI jelzőket az ügynökhöz',
     bg: 'Въведете персонализирани CLI флагове за агента'
   },
-  'utils.headless-cli-invocation.agent.edit-flags-placeholder': {
+  'utils.agentic-cli-invocation.agent.edit-flags-placeholder': {
     en: 'e.g. --verbose --max-steps 10',
     pl: 'np. --verbose --max-steps 10',
     'zh-cn': '例如 --verbose --max-steps 10',
@@ -143,7 +143,7 @@ export const translations = {
     hu: 'pl. --verbose --max-steps 10',
     bg: 'напр. --verbose --max-steps 10'
   },
-  'utils.headless-cli-invocation.agent.select-workspace': {
+  'utils.agentic-cli-invocation.agent.select-workspace': {
     en: 'Select Workspace',
     pl: 'Wybierz obszar roboczy',
     'zh-cn': '选择工作区',
@@ -161,7 +161,7 @@ export const translations = {
     hu: 'Munkaterület kiválasztása',
     bg: 'Изберете работно пространство'
   },
-  'utils.headless-cli-invocation.agent.select-workspace-placeholder': {
+  'utils.agentic-cli-invocation.agent.select-workspace-placeholder': {
     en: 'Select the workspace for the agent to run in',
     pl: 'Wybierz obszar roboczy, w którym agent zostanie uruchomiony',
     'zh-cn': '选择智能体运行的工作区',
@@ -179,7 +179,7 @@ export const translations = {
     hu: 'Válassza ki a munkaterületet, amelyben az ügynök futni fog',
     bg: 'Изберете работното пространство, в което да работи агентът'
   },
-  'utils.headless-cli-invocation.agent.waiting-for-agent': {
+  'utils.agentic-cli-invocation.agent.waiting-for-agent': {
     en: 'waiting for agent...',
     pl: 'oczekiwanie na agenta...',
     'zh-cn': '等待代理...',
@@ -197,7 +197,7 @@ export const translations = {
     hu: 'várakozás az ügynökre...',
     bg: 'изчакване на агент...'
   },
-  'utils.headless-cli-invocation.error.failed': {
+  'utils.agentic-cli-invocation.error.failed': {
     en: 'Agent execution failed: {error}',
     pl: 'Wykonywanie agenta nie powiodło się: {error}',
     'zh-cn': '智能体执行失败: {error}',
@@ -215,7 +215,7 @@ export const translations = {
     hu: 'Az ügynök futtatása sikertelen: {error}',
     bg: 'Изпълнението на агента се провали: {error}'
   },
-  'utils.headless-cli-invocation.agent.finished': {
+  'utils.agentic-cli-invocation.agent.finished': {
     en: 'Agent finished in {duration}.',
     pl: 'Agent zakończył działanie w {duration}.',
     'zh-cn': '智能体完成于 {duration}。',

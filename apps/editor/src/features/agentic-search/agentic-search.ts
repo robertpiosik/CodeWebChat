@@ -16,7 +16,7 @@ import { build_agent_prompt } from './utils/build-agent-prompt'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
 import { search_files } from '@/features/search-files'
 import { WebSocketManager } from '@/services/websocket-manager'
-import { invoke_headless_cli } from '@/utils/headless-cli-invocation'
+import { invoke_agentic_cli } from '@/utils/agentic-cli-invocation'
 
 export const agentic_search = async (params: {
   workspace_provider: WorkspaceProvider
@@ -62,17 +62,16 @@ export const agentic_search = async (params: {
       }
     )
 
-    const result = await invoke_headless_cli({
+    const result = await invoke_agentic_cli({
       workspace_provider: params.workspace_provider,
       extension_context: params.extension_context,
       title: t('common.title.agentic-search'),
       waiting_message: t(
-        'utils.headless-cli-invocation.agent.waiting-for-agent'
+        'utils.agentic-cli-invocation.agent.waiting-for-agent'
       ),
       last_used_agent_state_key: LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY,
       last_selected_workspace_state_key:
         LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY,
-      config_key_prefix: 'agenticSearch',
       show_back_button: true,
       build_prompt: async () => {
         const { instructions: processed_query, skill_definitions } =

@@ -41,7 +41,7 @@ import {
   handle_save_api_prompt_type,
   handle_get_cli_prompt_type,
   handle_save_cli_prompt_type,
-  handle_invoke_headless_cli,
+  handle_invoke_agentic_cli,
   handle_get_target,
   handle_get_workspace_state,
   handle_get_version,
@@ -724,8 +724,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             handle_get_cli_prompt_type(this)
           } else if (message.command == 'SAVE_CLI_PROMPT_TYPE') {
             await handle_save_cli_prompt_type(this, message.prompt_type)
-          } else if (message.command == 'INVOKE_HEADLESS_CLI') {
-            await handle_invoke_headless_cli(this)
+          } else if (message.command == 'INVOKE_AGENTIC_CLI') {
+            await handle_invoke_agentic_cli(this)
           } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
             handle_get_edit_format_instructions(this)
           } else if (message.command == 'GET_EDIT_FORMAT') {

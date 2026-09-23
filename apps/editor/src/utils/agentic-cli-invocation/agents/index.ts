@@ -6,7 +6,7 @@ import { opencode_agent } from './opencode'
 import { grok_agent } from './grok'
 import { muse_agent } from './muse'
 
-export const HEADLESS_CLI_AGENTS = [
+export const AGENTIC_CLI_AGENTS = [
   antigravity_agent,
   codex_agent,
   claude_agent,

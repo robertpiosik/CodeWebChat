@@ -1,5 +1,5 @@
 export const translations = {
-  'views.prompt.handlers.handle-invoke-headless-cli.title': {
+  'views.prompt.handlers.handle-invoke-agentic-cli.title': {
     en: 'Edit With CLI',
     pl: 'Edytuj z CLI',
     'zh-cn': '使用 CLI 编辑',
