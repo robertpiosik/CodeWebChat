@@ -238,14 +238,42 @@ export const Header: React.FC<Props> = (props) => {
           )}
           {props.target == 'CLI' && (
             <>
-              <UiIconAccentButton
-                label={cli_prompt_type_labels['edit-files']}
-                icon="edit-sparkle"
-                is_active={props.cli_prompt_type == 'edit-files'}
-                active_color="blue"
-                is_compact={!props.is_landscape && compact_step >= 1}
-                on_click={() => props.on_cli_prompt_type_change('edit-files')}
-              />
+              <div className={styles.header__types__inner}>
+                <UiKeycapWrapper char={props.is_alt_pressed ? 'E' : undefined}>
+                  <UiIconAccentButton
+                    label={cli_prompt_type_labels['edit-files']}
+                    icon="edit-sparkle"
+                    is_active={props.cli_prompt_type == 'edit-files'}
+                    active_color="blue"
+                    is_compact={
+                      !props.is_landscape &&
+                      (props.cli_prompt_type == 'edit-files'
+                        ? compact_step >= 2
+                        : compact_step >= 1)
+                    }
+                    on_click={() =>
+                      props.on_cli_prompt_type_change('edit-files')
+                    }
+                  />
+                </UiKeycapWrapper>
+                <UiKeycapWrapper char={props.is_alt_pressed ? 'A' : undefined}>
+                  <UiIconAccentButton
+                    label={cli_prompt_type_labels['ask-about-files']}
+                    icon="chat-sparkle"
+                    is_active={props.cli_prompt_type == 'ask-about-files'}
+                    active_color="purple"
+                    is_compact={
+                      !props.is_landscape &&
+                      (props.cli_prompt_type == 'ask-about-files'
+                        ? compact_step >= 2
+                        : compact_step >= 1)
+                    }
+                    on_click={() =>
+                      props.on_cli_prompt_type_change('ask-about-files')
+                    }
+                  />
+                </UiKeycapWrapper>
+              </div>
             </>
           )}
           {props.is_landscape && (

@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import * as os from 'os'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { t } from '@/i18n'
 import { spawn } from 'child_process'
@@ -24,6 +25,7 @@ export const invoke_headless_cli = async (params: {
   last_selected_workspace_state_key: string
   config_key_prefix: string
   show_back_button?: boolean
+  cli_prompt_type?: 'edit-files' | 'ask-about-files'
 }): Promise<
   { agent_output: string; selected_root: string } | undefined | 'back'
 > => {
@@ -506,6 +508,32 @@ export const invoke_headless_cli = async (params: {
         }
       }
 
+      if (params.cli_prompt_type === 'ask-about-files') {
+        const final_prompt = await params.build_prompt(selected_root!)
+        const base_args = agent_info.get_ask_args
+          ? agent_info.get_ask_args(final_prompt)
+          : [final_prompt]
+        const args = [...base_args, ...custom_args]
+
+        const quote_arg = (arg: string) => {
+          if (os.platform() === 'win32') {
+            return `"${arg.replace(/"/g, '""')}"`
+          } else {
+            return `'${arg.replace(/'/g, "'\\''")}'`
+          }
+        }
+
+        const command = [executable, ...args.map(quote_arg)].join(' ')
+        const terminal = vscode.window.createTerminal({
+          name: `${agent_info.label} (Ask)`,
+          cwd: selected_root
+        })
+        terminal.show()
+        terminal.sendText(command)
+
+        return { agent_output: '', selected_root: selected_root! }
+      }
+
       let agent_output = ''
       let raw_stream_output = ''
       let is_cancelled = false
@@ -529,7 +557,7 @@ export const invoke_headless_cli = async (params: {
               return
             }
 
-            const base_args = agent_info.get_args(final_prompt)
+            const base_args = agent_info.get_edit_args(final_prompt)
             const args = [...base_args, ...custom_args]
 
             return new Promise<void>((resolve, reject) => {

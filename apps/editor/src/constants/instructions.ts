@@ -69,6 +69,9 @@ These files contain the core greeting logic and module exports.`
 export const voice_input_instructions =
   'Respond with a transcription of the following audio recording or text "INAUDIBLE", and nothing else.'
 
-export const cli_requirements = `- This is a read-only session.
+export const cli_edit_requirements = `- This is a read-only session.
 - Read all attached files using their project-relative paths in full, and nothing else.
 - Formulate response adhering to the output formatting, in plain text.`
+
+export const cli_ask_requirements = `- This is a read-only session.
+- Read all attached files using their project-relative paths in full, and nothing else.`

@@ -207,6 +207,27 @@ _Multi-purpose: explanations, code reviews, you name it._
 
 </details>
 
+<details>
+<summary>CLI</summary>
+
+```
+# Files
+
+- `[SELECTED FILE PATH 1]`
+- `[SELECTED FILE PATH 2]`
+
+# Requirements
+
+* This is a read-only session.
+* Read all attached files using their project-relative paths in full, and nothing else.
+
+# Task
+
+[INSTRUCTIONS]
+```
+
+</details>
+
 ### 📄 Code at cursor
 
 _TAB completions from SOTA reasoning models._

@@ -27,7 +27,7 @@ export const claude_agent: CodingAgent = {
   cmd: 'claude',
   is_installed: () => check_command_exists('claude'),
   get_documentation_url: () => 'https://code.claude.com/docs/en/headless',
-  get_args: (prompt: string) => [
+  get_edit_args: (prompt: string) => [
     '-p',
     prompt,
     '--output-format',
@@ -37,6 +37,7 @@ export const claude_agent: CodingAgent = {
     '--permission-mode',
     'auto'
   ],
+  get_ask_args: (prompt: string) => ['-p', prompt],
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type == 'stream_event' && parsed.event) {
       if (

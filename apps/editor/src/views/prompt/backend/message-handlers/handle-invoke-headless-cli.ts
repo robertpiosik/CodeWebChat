@@ -30,6 +30,7 @@ export const handle_invoke_headless_cli = async (
     last_selected_workspace_state_key:
       LAST_SELECTED_WORKSPACE_IN_HEADLESS_CLI_STATE_KEY,
     config_key_prefix: 'headlessCli',
+    cli_prompt_type: prompt_view_provider.cli_prompt_type,
     build_prompt: async (selected_root: string) => {
       return build_cli_prompt({
         prompt_view_provider,
@@ -44,7 +45,7 @@ export const handle_invoke_headless_cli = async (
 
   const { agent_output } = result
 
-  if (agent_output && prompt_view_provider.cli_prompt_type === 'edit-files') {
+  if (agent_output && prompt_view_provider.cli_prompt_type == 'edit-files') {
     vscode.commands.executeCommand('codeWebChat.applyResponse', {
       response: agent_output,
       raw_instructions: current_instructions,

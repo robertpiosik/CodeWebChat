@@ -7,13 +7,14 @@ export const cursor_agent: CodingAgent = {
   cmd: 'agent',
   is_installed: () => check_command_exists('agent'),
   get_documentation_url: () => 'https://cursor.com/docs/cli/headless',
-  get_args: (prompt: string) => [
+  get_edit_args: (prompt: string) => [
     '-p',
     prompt,
     '--output-format',
     'stream-json',
     '--force'
   ],
+  get_ask_args: (prompt: string) => ['-p', prompt],
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type == 'tool_call') {
       if (parsed.subtype == 'started' || !parsed.subtype) {

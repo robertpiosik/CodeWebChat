@@ -20,7 +20,8 @@ export const API_PROMPT_TYPES = Object.keys(
 ) as ApiPromptType[]
 
 export const cli_prompt_type_labels: Record<CliPromptType, string> = {
-  'edit-files': 'Edit'
+  'edit-files': 'Edit',
+  'ask-about-files': 'Ask'
 }
 export const CLI_PROMPT_TYPES = Object.keys(
   cli_prompt_type_labels

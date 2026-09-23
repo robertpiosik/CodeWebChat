@@ -1,6 +1,9 @@
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
-import { cli_requirements } from '@/constants/instructions'
+import {
+  cli_edit_requirements,
+  cli_ask_requirements
+} from '@/constants/instructions'
 import {
   EDIT_FORMAT_INSTRUCTIONS_DIFF,
   EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
@@ -65,7 +68,11 @@ export const build_cli_prompt = async (params: {
     }
   }
 
-  const requirements_section = `# Requirements\n\n${cli_requirements}`
+  const requirements_section = `# Requirements\n\n${
+    prompt_view_provider.cli_prompt_type == 'ask-about-files'
+      ? cli_ask_requirements
+      : cli_edit_requirements
+  }`
   const task_section = `# Task\n\n${processed_query}`
 
   const parts = [

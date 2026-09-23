@@ -13,10 +13,11 @@ export const muse_agent: CodingAgent = {
   is_installed: () => check_command_exists('muse'),
   get_documentation_url: () =>
     'https://dev.meta.ai/docs/muse-code/extending#headless',
-  get_args: (prompt: string) => {
+  get_edit_args: (prompt: string) => {
     accumulated_output = ''
     return ['exec', '--json', '--yolo', prompt]
   },
+  get_ask_args: (prompt: string) => [prompt],
   parse_stream_line: (parsed, report_progress) => {
     const payload = parsed.payload || parsed
     let action_name = ''

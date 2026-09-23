@@ -9,7 +9,7 @@ export const grok_agent: CodingAgent = {
   cmd: 'grok',
   is_installed: () => check_command_exists('grok'),
   get_documentation_url: () => 'https://docs.x.ai/build/cli/headless-scripting',
-  get_args: (prompt: string) => {
+  get_edit_args: (prompt: string) => {
     accumulated_output = ''
     return [
       '-p',
@@ -20,6 +20,7 @@ export const grok_agent: CodingAgent = {
       '--no-auto-update'
     ]
   },
+  get_ask_args: (prompt: string) => ['-p', prompt],
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type === 'tool_call' && parsed.tool) {
       report_progress(parsed.tool)

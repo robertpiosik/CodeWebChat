@@ -11,7 +11,14 @@ export const opencode_agent: CodingAgent = {
   cmd: 'opencode',
   is_installed: () => check_command_exists('opencode'),
   get_documentation_url: () => 'https://opencode.ai/docs/cli/',
-  get_args: (prompt: string) => ['run', prompt, '--format', 'json', '--auto'],
+  get_edit_args: (prompt: string) => [
+    'run',
+    prompt,
+    '--format',
+    'json',
+    '--auto'
+  ],
+  get_ask_args: (prompt: string) => [prompt],
   parse_stream_line: (parsed, report_progress) => {
     let action_name = ''
     if (parsed.type == 'tool_use' && parsed.part?.tool) {

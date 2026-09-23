@@ -135,10 +135,16 @@ export const use_keyboard_shortcuts = (params: {
         return
       }
 
-      if (event.code == 'KeyA' && params.target == 'WEB') {
-        event.preventDefault()
-        params.on_web_prompt_type_change('ask-about-files')
-        return
+      if (event.code == 'KeyA') {
+        if (params.target == 'WEB') {
+          event.preventDefault()
+          params.on_web_prompt_type_change('ask-about-files')
+          return
+        } else if (params.target == 'CLI') {
+          event.preventDefault()
+          params.on_cli_prompt_type_change('ask-about-files')
+          return
+        }
       }
 
       if (event.code == 'KeyF') {
