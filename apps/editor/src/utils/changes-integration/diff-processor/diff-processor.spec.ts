@@ -1,6 +1,6 @@
-import { apply_diff } from './diff-processor'
 import * as fs from 'fs'
 import * as path from 'path'
+import { apply_diff } from './diff-processor'
 
 describe('diff-processor', () => {
   const load_test_case_file = (

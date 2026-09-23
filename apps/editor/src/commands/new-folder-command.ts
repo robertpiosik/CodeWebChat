@@ -1,6 +1,6 @@
-import * as vscode from 'vscode'
-import * as path from 'path'
 import * as fs from 'fs'
+import * as path from 'path'
+import * as vscode from 'vscode'
 import { create_safe_path } from '../utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
 import { t } from '../i18n'

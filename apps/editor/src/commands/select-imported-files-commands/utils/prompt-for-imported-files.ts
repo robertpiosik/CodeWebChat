@@ -1,5 +1,5 @@
-import * as vscode from 'vscode'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { display_token_count } from '@shared/utils/display-token-count'
 import { is_valid_uri } from './is-valid-uri'

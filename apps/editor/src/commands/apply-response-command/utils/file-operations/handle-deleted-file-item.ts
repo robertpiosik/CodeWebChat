@@ -1,6 +1,6 @@
-import * as vscode from 'vscode'
-import * as path from 'path'
 import * as fs from 'fs'
+import * as path from 'path'
+import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import { FileItem } from '../response-parser'

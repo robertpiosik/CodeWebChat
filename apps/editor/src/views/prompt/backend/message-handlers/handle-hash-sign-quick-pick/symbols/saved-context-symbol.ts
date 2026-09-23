@@ -1,5 +1,5 @@
-import * as vscode from 'vscode'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { t } from '@/i18n'
 import {
   load_and_merge_global_contexts,

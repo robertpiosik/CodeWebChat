@@ -1,3 +1,4 @@
+import * as path from 'path'
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import type { Checkpoint, CheckpointTab } from '@/features/checkpoints/types'
@@ -10,7 +11,6 @@ import {
   get_git_info,
   is_git_repository
 } from '@/features/checkpoints/utils/git-utils'
-import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
 
 export const create_temporary_checkpoint = async (

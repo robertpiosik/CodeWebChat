@@ -1,5 +1,5 @@
-import * as vscode from 'vscode'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { PreviewDecision, PreviewResult, PreparedFile } from './types'
 
 export let response_preview_promise_resolve:

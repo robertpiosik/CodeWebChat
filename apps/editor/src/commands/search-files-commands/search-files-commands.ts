@@ -1,5 +1,5 @@
-import * as vscode from 'vscode'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'

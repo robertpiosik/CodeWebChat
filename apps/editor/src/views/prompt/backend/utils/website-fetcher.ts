@@ -1,3 +1,7 @@
+import * as crypto from 'crypto'
+import * as fs from 'fs'
+import * as os from 'os'
+import * as path from 'path'
 import axios from 'axios'
 import { JSDOM } from 'jsdom'
 import { Readability, isProbablyReaderable } from '@mozilla/readability'
@@ -5,10 +9,6 @@ import createDOMPurify from 'dompurify'
 import TurndownServiceJoplin from '@joplin/turndown'
 import * as turndownPluginGfm from '@joplin/turndown-plugin-gfm'
 import type TurndownService from 'turndown'
-import * as fs from 'fs'
-import * as os from 'os'
-import * as path from 'path'
-import * as crypto from 'crypto'
 
 const remove_markdown_images = (text: string) => {
   const without_images = text.replace(/!\[([^\]]*)\]\(([^)]*)\)/g, '')

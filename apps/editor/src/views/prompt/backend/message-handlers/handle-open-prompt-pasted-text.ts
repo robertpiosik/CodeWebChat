@@ -1,6 +1,6 @@
-import * as vscode from 'vscode'
 import * as os from 'os'
 import * as path from 'path'
+import * as vscode from 'vscode'
 
 export const handle_open_prompt_pasted_text = async (message: {
   hash: string

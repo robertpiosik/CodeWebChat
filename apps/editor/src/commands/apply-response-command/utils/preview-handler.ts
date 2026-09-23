@@ -1,5 +1,5 @@
-import * as vscode from 'vscode'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '../types/original-file-state'
 import { RecentApiConfiguration } from '@shared/types/response-history-item'

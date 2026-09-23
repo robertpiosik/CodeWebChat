@@ -1,5 +1,5 @@
-import * as path from 'path'
 import * as crypto from 'crypto'
+import * as path from 'path'
 import * as webpack from 'webpack'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'

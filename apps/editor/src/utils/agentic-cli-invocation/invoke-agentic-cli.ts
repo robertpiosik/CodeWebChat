@@ -3,14 +3,14 @@ import * as os from 'os'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { t } from '@/i18n'
 import { spawn } from 'child_process'
-import { AGENTIC_CLI_AGENTS } from './agents'
+import { CLI_AGENTS } from './agents'
 import { Logger } from '@shared/utils/logger'
 
 let _output_channel: vscode.OutputChannel | undefined
 
 const get_output_channel = () => {
   if (!_output_channel) {
-    _output_channel = vscode.window.createOutputChannel('Agentic CLI')
+    _output_channel = vscode.window.createOutputChannel('CWC CLI Agent')
   }
   return _output_channel
 }
@@ -40,7 +40,7 @@ export const invoke_agentic_cli = async (params: {
   let active_flag_index: number | undefined
 
   while (true) {
-    const available_agents = AGENTIC_CLI_AGENTS.filter((a) => a.is_installed())
+    const available_agents = CLI_AGENTS.filter((a) => a.is_installed())
 
     if (available_agents.length == 0) {
       vscode.window.showInformationMessage(

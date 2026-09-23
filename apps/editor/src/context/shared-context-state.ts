@@ -1,6 +1,6 @@
-import * as vscode from 'vscode'
-import * as path from 'path'
 import * as fs from 'fs'
+import * as path from 'path'
+import * as vscode from 'vscode'
 import {
   WorkspaceProvider,
   FileItem

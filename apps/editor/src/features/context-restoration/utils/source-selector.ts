@@ -1,6 +1,6 @@
-import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { load_and_merge_global_contexts } from './global-storage-utils'
 import { load_all_contexts, get_contexts_file_path } from './context-file-utils'
 import { t } from '@/i18n'

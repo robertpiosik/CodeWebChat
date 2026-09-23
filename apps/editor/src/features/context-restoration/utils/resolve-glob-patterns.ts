@@ -1,5 +1,5 @@
-import * as path from 'path'
 import * as fs from 'fs'
+import * as path from 'path'
 import * as glob from 'glob'
 import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'

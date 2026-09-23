@@ -1,5 +1,5 @@
-import * as vscode from 'vscode'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { t } from '@/i18n'
 
 export const handle_open_allow_patterns_settings = async (): Promise<void> => {

@@ -1,5 +1,5 @@
-import * as vscode from 'vscode'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { SavedContext } from '@/types/context'
 import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'

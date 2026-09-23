@@ -1,5 +1,5 @@
-import * as vscode from 'vscode'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { PromptBuilder } from '../utils/prompt-builder'
 import { is_binary_file } from '../utils/is-binary'
 import { FilesCollector } from '../utils/files-collector'

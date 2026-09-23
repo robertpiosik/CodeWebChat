@@ -1,6 +1,6 @@
-import { cleanup_api_response } from './cleanup-api-response'
 import * as fs from 'fs'
 import * as path from 'path'
+import { cleanup_api_response } from './cleanup-api-response'
 
 describe('cleanup_api_response', () => {
   const load_test_case_file = (test_case: string, filename: string): string => {

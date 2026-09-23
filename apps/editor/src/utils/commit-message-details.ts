@@ -1,6 +1,6 @@
-import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 import { normalize_path } from './normalize-path'
 

@@ -1,3 +1,4 @@
+import * as path from 'path'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
 import {
@@ -10,7 +11,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
   EDIT_FORMAT_INSTRUCTIONS_WHOLE
 } from '@/constants/edit-format-instructions'
-import * as path from 'path'
+import { LAST_SELECTED_WORKSPACE_IN_AGENTIC_CLI_STATE_KEY } from '@/constants/state-keys'
 
 export const build_cli_prompt = async (params: {
   prompt_view_provider: PromptViewProvider
@@ -33,7 +34,7 @@ export const build_cli_prompt = async (params: {
     const roots = prompt_view_provider.workspace_provider.get_workspace_roots()
     const last_selected_root =
       prompt_view_provider.extension_context.workspaceState.get<string>(
-        'last_selected_workspace_in_agentic_cli_state_key'
+        LAST_SELECTED_WORKSPACE_IN_AGENTIC_CLI_STATE_KEY
       )
     selected_root =
       last_selected_root && roots.includes(last_selected_root)

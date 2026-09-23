@@ -1,6 +1,6 @@
-import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 
 const MIGRATION_ID = 'commit-message-details-filename-migration-20260805'

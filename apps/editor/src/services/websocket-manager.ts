@@ -1,9 +1,9 @@
-import * as WebSocket from 'ws'
-import * as vscode from 'vscode'
 import * as child_process from 'child_process'
 import * as http from 'http'
-import * as path from 'path'
 import * as net from 'net'
+import * as path from 'path'
+import * as WebSocket from 'ws'
+import * as vscode from 'vscode'
 import {
   ApplyResponseMessage,
   ConnectedBrowser,

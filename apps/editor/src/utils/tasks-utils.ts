@@ -1,6 +1,6 @@
-import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { Task } from '@shared/types/task'
 
 export namespace TasksUtils {

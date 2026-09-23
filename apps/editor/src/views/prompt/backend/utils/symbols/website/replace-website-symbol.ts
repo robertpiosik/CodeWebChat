@@ -1,7 +1,7 @@
+import * as crypto from 'crypto'
+import * as fs from 'fs'
 import * as os from 'os'
 import * as path from 'path'
-import * as fs from 'fs'
-import * as crypto from 'crypto'
 import { fetch_and_save_website } from '../../website-fetcher'
 import { SymbolCacheManager } from '../symbol-cache'
 

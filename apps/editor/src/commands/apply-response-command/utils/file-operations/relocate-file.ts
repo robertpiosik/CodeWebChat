@@ -1,5 +1,5 @@
-import * as vscode from 'vscode'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { uri_exists } from './uri-exists'

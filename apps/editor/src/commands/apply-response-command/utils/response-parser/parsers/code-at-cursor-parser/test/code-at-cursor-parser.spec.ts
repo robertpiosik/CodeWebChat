@@ -1,6 +1,6 @@
-import { parse_response } from '../../..'
 import * as fs from 'fs'
 import * as path from 'path'
+import { parse_response } from '../../..'
 
 describe('code-at-cursor-parser', () => {
   const load_test_case_file = (test_case: string, filename: string): string => {

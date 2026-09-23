@@ -1,3 +1,4 @@
+import * as path from 'path'
 import * as vscode from 'vscode'
 import {
   CHECKPOINTS_STATE_KEY,
@@ -17,7 +18,6 @@ import {
   get_git_info,
   is_git_repository
 } from '../utils/git-utils'
-import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'

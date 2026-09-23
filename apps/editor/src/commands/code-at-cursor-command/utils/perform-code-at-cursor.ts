@@ -1,6 +1,6 @@
+import * as path from 'path'
 import * as vscode from 'vscode'
 import axios from 'axios'
-import * as path from 'path'
 import he from 'he'
 import { send_llm_message } from '../../../utils/send-llm-message'
 import {

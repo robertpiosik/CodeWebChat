@@ -1,5 +1,5 @@
-import * as vscode from 'vscode'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { CommitMessageDetails } from '../utils/commit-message-details'
 import { normalize_path } from '../utils/normalize-path'
 

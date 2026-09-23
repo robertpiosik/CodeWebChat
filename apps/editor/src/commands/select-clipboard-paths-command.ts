@@ -1,6 +1,6 @@
-import * as vscode from 'vscode'
-import * as path from 'path'
 import * as fs from 'fs'
+import * as path from 'path'
+import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-files'
 import { display_token_count } from '@shared/utils/display-token-count'

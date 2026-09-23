@@ -1,6 +1,6 @@
-import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { show_ghost_text } from './utils/show-ghost-text'
 import { normalize_path } from '@/utils/normalize-path'

@@ -1,6 +1,6 @@
-import * as vscode from 'vscode'
 import { execSync } from 'child_process'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { t } from '@/i18n'
 import {
   MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE,

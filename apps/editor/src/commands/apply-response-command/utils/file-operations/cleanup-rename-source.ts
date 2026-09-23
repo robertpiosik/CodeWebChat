@@ -1,5 +1,5 @@
-import * as vscode from 'vscode'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { close_file_tabs } from './close-file-tabs'
 import { remove_directory_if_empty } from './remove-directory-if-empty'
 

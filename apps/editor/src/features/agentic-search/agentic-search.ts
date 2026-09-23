@@ -1,8 +1,8 @@
+import * as fs from 'fs'
+import * as path from 'path'
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { t } from '@/i18n'
-import * as path from 'path'
-import * as fs from 'fs'
 import {
   LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY,
   LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY,

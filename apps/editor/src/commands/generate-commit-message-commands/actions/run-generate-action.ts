@@ -1,5 +1,5 @@
-import * as vscode from 'vscode'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { get_repository_for_commit } from '../../../utils/git-repository-utils'
 import { get_commit_message_api_configuration } from '../utils/get-commit-message-config'
 import { generate_commit_message_with_api } from '../utils/generate-commit-message-with-api'

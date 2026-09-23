@@ -1,5 +1,5 @@
-import * as vscode from 'vscode'
 import * as path from 'path'
+import * as vscode from 'vscode'
 
 export const get_imports_for_uri = async (
   document_uri: vscode.Uri,

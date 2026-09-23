@@ -1,7 +1,7 @@
-import * as vscode from 'vscode'
+import * as fs from 'fs'
 import * as os from 'os'
 import * as path from 'path'
-import * as fs from 'fs'
+import * as vscode from 'vscode'
 import { OpenPromptImageMessage } from '../../types/messages'
 
 export const handle_open_prompt_image = async (

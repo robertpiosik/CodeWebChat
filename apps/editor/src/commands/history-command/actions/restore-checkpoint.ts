@@ -1,7 +1,7 @@
-import * as vscode from 'vscode'
-import * as path from 'path'
-import * as os from 'os'
 import { execSync } from 'child_process'
+import * as os from 'os'
+import * as path from 'path'
+import * as vscode from 'vscode'
 import {
   TEMPORARY_CHECKPOINT_STATE_KEY,
   CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,

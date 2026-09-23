@@ -1,6 +1,6 @@
-import { shrink_file } from './shrink-file'
 import * as fs from 'fs'
 import * as path from 'path'
+import { shrink_file } from './shrink-file'
 
 describe('shrink_file', () => {
   const load_test_case = (

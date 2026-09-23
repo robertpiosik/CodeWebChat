@@ -1,6 +1,6 @@
-import * as vscode from 'vscode'
-import * as path from 'path'
 import * as fs from 'fs'
+import * as path from 'path'
+import * as vscode from 'vscode'
 import { SavedContext } from '@/types/context'
 
 export const get_contexts_file_path = (workspace_root: string): string => {
