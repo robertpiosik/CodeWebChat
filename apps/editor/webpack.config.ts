@@ -15,7 +15,7 @@ const build_status_plugin = {
 
     const on_start = () => {
       if (is_initial_build) {
-        if (active_compilers === 0) {
+        if (active_compilers == 0) {
           console.log('Building...')
         }
         active_compilers++
@@ -28,7 +28,7 @@ const build_status_plugin = {
     compiler.hooks.done.tap('BuildStatusPlugin', () => {
       if (is_initial_build) {
         active_compilers--
-        if (active_compilers === 0) {
+        if (active_compilers == 0) {
           console.log('Done.')
         }
         is_initial_build = false
@@ -139,7 +139,7 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
   },
   // View Configuration (Web environment)
   (env: any, argv: any): webpack.Configuration => {
-    const is_production = argv.mode === 'production'
+    const is_production = argv.mode == 'production'
     return {
       name: 'view',
       mode: is_production ? 'production' : 'development',
