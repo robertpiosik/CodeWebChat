@@ -1,9 +1,6 @@
 import { CodingAgent } from '../types'
-import {
-  build_agent_prompt,
-  check_command_exists,
-  get_progress_dots
-} from '../utils'
+import { check_command_exists } from '../utils/check-command-exists'
+import { get_progress_dots } from '../utils/get-progress-dots'
 
 let last_action_name = ''
 let action_count = 0
@@ -14,9 +11,9 @@ export const antigravity_agent: CodingAgent = {
   cmd: 'agy',
   is_installed: () => check_command_exists('agy'),
   get_documentation_url: () => 'https://antigravity.google/docs/cli/headless/',
-  get_args: (query: string) => [
+  get_args: (prompt: string) => [
     '-p',
-    build_agent_prompt(query),
+    prompt,
     '--output-format',
     'stream-json',
     '--dangerously-skip-permissions'

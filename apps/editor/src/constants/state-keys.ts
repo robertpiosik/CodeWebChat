@@ -31,6 +31,7 @@ export const DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY =
 export const EDIT_FORMAT_STATE_KEY = 'edit-format'
 export const WEB_TARGET_STATE_KEY = 'web-target'
 export const API_TARGET_STATE_KEY = 'api-target'
+export const CLI_TARGET_STATE_KEY = 'cli-target'
 export const PROMPT_VIEW_TARGET_STATE_KEY = 'prompt-view-target'
 
 export const INSTRUCTIONS_EDIT_FILES_STATE_KEY = 'instructions-edit-files'

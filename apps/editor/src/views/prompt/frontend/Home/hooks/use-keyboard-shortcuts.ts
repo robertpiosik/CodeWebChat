@@ -5,6 +5,7 @@ type Params = {
   on_go_forward: () => void
   on_chatbots_click: () => void
   on_api_calls_click: () => void
+  on_cli_calls_click: () => void
 }
 
 export const use_keyboard_shortcuts = (params: Params) => {
@@ -37,6 +38,9 @@ export const use_keyboard_shortcuts = (params: Params) => {
         } else if (event.code == 'KeyA') {
           event.preventDefault()
           params.on_api_calls_click()
+        } else if (event.code == 'KeyC') {
+          event.preventDefault()
+          params.on_cli_calls_click()
         }
       }
     }

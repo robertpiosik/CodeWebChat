@@ -10,6 +10,7 @@ import { translations as handle_template_quick_pick } from './handle-template-qu
 import { translations as handle_patch_repair } from './handle-patch-repair'
 import { translations as handle_agentic_search } from './handle-agentic-search'
 import { translations as handle_autofill } from './handle-autofill'
+import { translations as handle_invoke_headless_cli } from './handle-invoke-headless-cli'
 
 export const translations = {
   ...handle_delete_task,
@@ -23,5 +24,6 @@ export const translations = {
   ...handle_template_quick_pick,
   ...handle_patch_repair,
   ...handle_agentic_search,
-  ...handle_autofill
+  ...handle_autofill,
+  ...handle_invoke_headless_cli
 }

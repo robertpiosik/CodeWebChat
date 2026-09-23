@@ -1,9 +1,6 @@
 import { CodingAgent } from '../types'
-import {
-  build_agent_prompt,
-  check_command_exists,
-  get_progress_dots
-} from '../utils'
+import { check_command_exists } from '../utils/check-command-exists'
+import { get_progress_dots } from '../utils/get-progress-dots'
 
 let last_action_name = ''
 let action_count = 0
@@ -30,9 +27,9 @@ export const claude_agent: CodingAgent = {
   cmd: 'claude',
   is_installed: () => check_command_exists('claude'),
   get_documentation_url: () => 'https://code.claude.com/docs/en/headless',
-  get_args: (query: string) => [
+  get_args: (prompt: string) => [
     '-p',
-    build_agent_prompt(query),
+    prompt,
     '--output-format',
     'stream-json',
     '--verbose',

@@ -1,6 +1,7 @@
 export const TARGET = {
   WEB: 'WEB',
-  API: 'API'
+  API: 'API',
+  CLI: 'CLI'
 }
 
 export type Target = (typeof TARGET)[keyof typeof TARGET]

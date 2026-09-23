@@ -48,6 +48,7 @@ export const Prompt = () => {
     target,
     web_prompt_type,
     api_prompt_type,
+    cli_prompt_type,
     chat_input_focus_key,
     set_chat_input_focus_key,
     chat_input_focus_and_select_key,
@@ -56,6 +57,7 @@ export const Prompt = () => {
     handle_instructions_change,
     handle_web_prompt_type_change,
     handle_api_prompt_type_change,
+    handle_cli_prompt_type_change,
     handle_target_change,
     handle_paste_image,
     handle_open_image,
@@ -155,6 +157,7 @@ export const Prompt = () => {
     web_prompt_type === undefined ||
     is_connected === undefined ||
     api_prompt_type === undefined ||
+    cli_prompt_type === undefined ||
     current_selection === undefined ||
     workspace_folder_count === undefined
   ) {
@@ -174,7 +177,12 @@ export const Prompt = () => {
   }
 
   const get_current_instructions_state = () => {
-    const prompt_type = target == TARGET.WEB ? web_prompt_type : api_prompt_type
+    const prompt_type =
+      target == TARGET.WEB
+        ? web_prompt_type
+        : target == TARGET.API
+          ? api_prompt_type
+          : cli_prompt_type
     if (prompt_type == 'ask-about-files') return ask_about_context_instructions
     if (prompt_type == 'edit-files') return edit_files_instructions
     return undefined
@@ -314,6 +322,7 @@ export const Prompt = () => {
                 target={target}
                 web_prompt_type={web_prompt_type}
                 api_prompt_type={api_prompt_type}
+                cli_prompt_type={cli_prompt_type}
                 on_target_change={(new_target) =>
                   handle_target_change(new_target, true)
                 }
@@ -321,6 +330,7 @@ export const Prompt = () => {
                 current_selection={current_selection}
                 on_web_prompt_type_change={handle_web_prompt_type_change}
                 on_api_prompt_type_change={handle_api_prompt_type_change}
+                on_cli_prompt_type_change={handle_cli_prompt_type_change}
                 response_history={response_history}
                 on_response_history_item_click={
                   handle_response_history_item_click
@@ -382,6 +392,7 @@ export const Prompt = () => {
                 is_connected={is_connected}
                 web_prompt_type={web_prompt_type}
                 api_prompt_type={api_prompt_type}
+                cli_prompt_type={cli_prompt_type}
                 on_go_forward={() => set_active_view('main')}
                 on_chatbots_click={() => {
                   set_active_view('main')
@@ -393,6 +404,12 @@ export const Prompt = () => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
                   handle_target_change(TARGET.API)
+                  set_chat_input_focus_key((k) => k + 1)
+                }}
+                on_cli_calls_click={() => {
+                  set_active_view('main')
+                  set_main_view_scroll_reset_key((k) => k + 1)
+                  handle_target_change(TARGET.CLI)
                   set_chat_input_focus_key((k) => k + 1)
                 }}
                 version={version}

@@ -162,6 +162,32 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 </details>
 
+<details>
+<summary>CLI</summary>
+
+```
+# Files
+
+- `[SELECTED FILE PATH 1]`
+- `[SELECTED FILE PATH 2]`
+
+# Output formatting
+
+[EDIT FORMAT INSTRUCTIONS]
+
+# Requirements
+
+* This is a read-only session.
+* Read all attached files using their project-relative paths in full, and nothing else.
+* Formulate response adhering to the output formatting, in plain text.
+
+# Task
+
+[INSTRUCTIONS]
+```
+
+</details>
+
 ### 📄 Asking
 
 _Multi-purpose: explanations, code reviews, you name it._

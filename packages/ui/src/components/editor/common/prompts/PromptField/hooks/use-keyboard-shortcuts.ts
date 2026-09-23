@@ -44,7 +44,11 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
           e.preventDefault()
           if (props.on_target_change) {
             props.on_target_change(
-              props.target == TARGET.WEB ? TARGET.API : TARGET.WEB
+              props.target == TARGET.WEB
+                ? TARGET.API
+                : props.target == TARGET.API
+                  ? TARGET.CLI
+                  : TARGET.WEB
             )
           }
           return

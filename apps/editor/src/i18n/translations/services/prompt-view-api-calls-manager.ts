@@ -1,20 +1,20 @@
 export const translations = {
-  'service.prompt-view-api-calls-manager.sent-request': {
-    en: 'Sent request',
-    pl: 'Wysłano request',
-    'zh-cn': '已发送请求',
-    ja: 'リクエストを送信しました',
-    'zh-tw': '已發送請求',
-    de: 'Anfrage gesendet',
-    es: 'Solicitud enviada',
-    fr: 'Requête envoyée',
-    'pt-br': 'Solicitação enviada',
-    ru: 'Запрос отправлен',
-    ko: '요청 전송됨',
-    it: 'Richiesta inviata',
-    tr: 'İstek gönderildi',
-    cs: 'Požadavek odeslán',
-    hu: 'Kérés elküldve',
-    bg: 'Изпратена заявка'
+  'service.prompt-view-api-calls-manager.edit-with-api': {
+    en: 'Edit With API',
+    pl: 'Edytuj z API',
+    'zh-cn': '使用 API 编辑',
+    ja: 'APIで編集',
+    'zh-tw': '使用 API 編輯',
+    de: 'Mit API bearbeiten',
+    es: 'Editar con API',
+    fr: "Modifier avec l'API",
+    'pt-br': 'Editar com API',
+    ru: 'Редактировать с помощью API',
+    ko: 'API로 편집',
+    it: 'Modifica con API',
+    tr: 'API ile Düzenle',
+    cs: 'Upravit pomocí API',
+    hu: 'Szerkesztés API-val',
+    bg: 'Редактиране с API'
   }
 } as const

@@ -82,7 +82,7 @@ export class PromptViewApiCallsManager {
     return await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: t('service.prompt-view-api-calls-manager.sent-request'),
+        title: t('service.prompt-view-api-calls-manager.edit-with-api'),
         cancellable: true
       },
       async (progress, token) => {

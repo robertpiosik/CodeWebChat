@@ -1,11 +1,16 @@
 import { useState } from 'react'
 import { TARGET, Target } from '@shared/types/mode'
-import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import {
+  ApiPromptType,
+  WebPromptType,
+  CliPromptType
+} from '@shared/types/prompt-types'
 
 type Params = {
   target: Target
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
+  cli_prompt_type: CliPromptType
 }
 
 export const use_invocation_counts = (params: Params) => {
@@ -16,7 +21,9 @@ export const use_invocation_counts = (params: Params) => {
   const current_invocation_key =
     params.target == TARGET.WEB
       ? `${params.target}:${params.web_prompt_type}`
-      : `${params.target}:${params.api_prompt_type}`
+      : params.target == TARGET.API
+        ? `${params.target}:${params.api_prompt_type}`
+        : `${params.target}:${params.cli_prompt_type}`
 
   const current_invocation_count =
     invocation_counts[current_invocation_key] ?? 1

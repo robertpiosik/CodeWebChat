@@ -1,11 +1,16 @@
 import { useEffect, useState, useRef } from 'react'
 import { TARGET, Target } from '@shared/types/mode'
-import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import {
+  ApiPromptType,
+  WebPromptType,
+  CliPromptType
+} from '@shared/types/prompt-types'
 
 export const use_keyboard_shortcuts = (params: {
   target: Target
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
+  on_cli_prompt_type_change: (prompt_type: CliPromptType) => void
   on_show_home: () => void
   on_agentic_search?: () => void
   is_disabled: boolean
@@ -122,6 +127,8 @@ export const use_keyboard_shortcuts = (params: {
 
         if (params.target == TARGET.API) {
           params.on_api_prompt_type_change('edit-files')
+        } else if (params.target == TARGET.CLI) {
+          params.on_cli_prompt_type_change('edit-files')
         } else {
           params.on_web_prompt_type_change('edit-files')
         }
@@ -150,6 +157,7 @@ export const use_keyboard_shortcuts = (params: {
     params.target,
     params.on_web_prompt_type_change,
     params.on_api_prompt_type_change,
+    params.on_cli_prompt_type_change,
     params.on_agentic_search,
     params.is_disabled
   ])

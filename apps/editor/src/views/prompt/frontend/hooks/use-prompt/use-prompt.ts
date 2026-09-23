@@ -6,7 +6,11 @@ import {
   ApiConfiguration
 } from '../../../types/messages'
 import { Target, TARGET } from '@shared/types/mode'
-import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import {
+  ApiPromptType,
+  WebPromptType,
+  CliPromptType
+} from '@shared/types/prompt-types'
 import { post_message } from '../../utils/post-message'
 import { use_instructions } from './hooks/use-instructions'
 
@@ -23,6 +27,7 @@ export const use_prompt = (vscode: any) => {
   const [target, set_target] = useState<Target>()
   const [web_prompt_type, set_web_mode] = useState<WebPromptType>()
   const [api_prompt_type, set_api_mode] = useState<ApiPromptType>()
+  const [cli_prompt_type, set_cli_mode] = useState<CliPromptType>()
   const [chat_input_focus_key, set_chat_input_focus_key] = useState(0)
   const [chat_input_focus_and_select_key, set_chat_input_focus_and_select_key] =
     useState(0)
@@ -43,7 +48,13 @@ export const use_prompt = (vscode: any) => {
     handle_new_tab,
     handle_tab_delete,
     handle_tabs_reorder
-  } = use_instructions(vscode, target, web_prompt_type, api_prompt_type)
+  } = use_instructions(
+    vscode,
+    target,
+    web_prompt_type,
+    api_prompt_type,
+    cli_prompt_type
+  )
 
   const [can_undo, set_can_undo] = useState<boolean>(false)
   const [send_with_shift_enter, set_send_with_shift_enter] = useState(false)
@@ -155,6 +166,8 @@ export const use_prompt = (vscode: any) => {
         set_web_mode(message.prompt_type)
       } else if (message.command == 'API_PROMPT_TYPE') {
         set_api_mode(message.prompt_type)
+      } else if (message.command == 'CLI_PROMPT_TYPE') {
+        set_cli_mode(message.prompt_type)
       } else if (message.command == 'SEND_WITH_SHIFT_ENTER') {
         set_send_with_shift_enter(message.enabled)
       } else if (message.command == 'FOCUS_PROMPT_FIELD') {
@@ -190,6 +203,7 @@ export const use_prompt = (vscode: any) => {
       { command: 'GET_TARGET' },
       { command: 'GET_WEB_PROMPT_TYPE' },
       { command: 'GET_API_PROMPT_TYPE' },
+      { command: 'GET_CLI_PROMPT_TYPE' },
       { command: 'GET_CONNECTION_STATUS' },
       { command: 'GET_SEND_WITH_SHIFT_ENTER' },
       { command: 'REQUEST_CAN_UNDO' },
@@ -235,6 +249,21 @@ export const use_prompt = (vscode: any) => {
     })
   }
 
+  const handle_cli_prompt_type_change = (
+    prompt_type: CliPromptType,
+    prevent_selection?: boolean
+  ) => {
+    set_cli_mode(prompt_type)
+    if (!prevent_selection) {
+      set_chat_input_focus_and_select_key((k) => k + 1)
+    }
+    set_main_view_scroll_reset_key((k) => k + 1)
+    post_message(vscode, {
+      command: 'SAVE_CLI_PROMPT_TYPE',
+      prompt_type: prompt_type
+    })
+  }
+
   const handle_target_change = (
     new_target: Target,
     sync_prompt_type?: boolean
@@ -242,12 +271,23 @@ export const use_prompt = (vscode: any) => {
     if (target == new_target) return
 
     if (sync_prompt_type) {
-      if (new_target == TARGET.API && web_prompt_type) {
+      if (
+        (new_target == TARGET.API || new_target == TARGET.CLI) &&
+        web_prompt_type
+      ) {
         if (web_prompt_type == 'edit-files') {
-          handle_api_prompt_type_change(web_prompt_type, true)
+          if (new_target == TARGET.API)
+            handle_api_prompt_type_change(web_prompt_type, true)
+          else handle_cli_prompt_type_change(web_prompt_type, true)
         }
-      } else if (new_target == TARGET.WEB && api_prompt_type) {
-        handle_web_prompt_type_change(api_prompt_type, true)
+      } else if (
+        new_target == TARGET.WEB &&
+        (api_prompt_type || cli_prompt_type)
+      ) {
+        const type_to_sync =
+          target == TARGET.API ? api_prompt_type : cli_prompt_type
+        if (type_to_sync)
+          handle_web_prompt_type_change(type_to_sync as any, true)
       }
     }
 
@@ -277,6 +317,7 @@ export const use_prompt = (vscode: any) => {
     target,
     web_prompt_type,
     api_prompt_type,
+    cli_prompt_type,
     chat_input_focus_key,
     set_chat_input_focus_key,
     chat_input_focus_and_select_key,
@@ -285,6 +326,7 @@ export const use_prompt = (vscode: any) => {
     handle_instructions_change,
     handle_web_prompt_type_change,
     handle_api_prompt_type_change,
+    handle_cli_prompt_type_change,
     handle_target_change,
     handle_paste_image,
     handle_open_image,

@@ -6,7 +6,11 @@ import {
 } from '@shared/types/response-history-item'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { Task } from '@shared/types/task'
-import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import {
+  ApiPromptType,
+  WebPromptType,
+  CliPromptType
+} from '@shared/types/prompt-types'
 import { Target } from '@shared/types/mode'
 
 type BaseMessage = {
@@ -220,6 +224,19 @@ export interface ShowHashSignQuickPickMessage extends BaseMessage {
 
 export interface CancelApiRequestMessage extends BaseMessage {
   command: 'CANCEL_API_REQUEST'
+}
+
+export interface GetCliPromptTypeMessage extends BaseMessage {
+  command: 'GET_CLI_PROMPT_TYPE'
+}
+
+export interface SaveCliPromptTypeMessage extends BaseMessage {
+  command: 'SAVE_CLI_PROMPT_TYPE'
+  prompt_type: CliPromptType
+}
+
+export interface InvokeHeadlessCliMessage extends BaseMessage {
+  command: 'INVOKE_HEADLESS_CLI'
 }
 
 export interface GetWebPromptTypeMessage extends BaseMessage {
@@ -587,6 +604,9 @@ export type FrontendMessage =
   | GetWebPromptTypeMessage
   | GetApiPromptTypeMessage
   | SaveApiPromptTypeMessage
+  | GetCliPromptTypeMessage
+  | SaveCliPromptTypeMessage
+  | InvokeHeadlessCliMessage
   | GetApiConfigurationsMessage
   | ReorderApiConfigurationsMessage
   | TogglePinnedApiConfigurationMessage
@@ -743,6 +763,11 @@ export interface WebPromptTypeMessage extends BaseMessage {
 export interface ApiPromptTypeMessage extends BaseMessage {
   command: 'API_PROMPT_TYPE'
   prompt_type: ApiPromptType
+}
+
+export interface CliPromptTypeMessage extends BaseMessage {
+  command: 'CLI_PROMPT_TYPE'
+  prompt_type: CliPromptType
 }
 
 export interface VersionMessage extends BaseMessage {
@@ -908,6 +933,7 @@ export type BackendMessage =
   | TargetMessage
   | WebPromptTypeMessage
   | ApiPromptTypeMessage
+  | CliPromptTypeMessage
   | VersionMessage
   | SelectedFilesMessage
   | SendWithShiftEnterMessage

@@ -15,7 +15,11 @@ import { use_tasks } from './hooks/use-tasks'
 import { use_has_scrolled_past_target_button } from './hooks/use-has-scrolled-past-mode-button'
 import { use_compacting } from '@shared/hooks'
 import { TARGET } from '@shared/types/mode'
-import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import {
+  ApiPromptType,
+  WebPromptType,
+  CliPromptType
+} from '@shared/types/prompt-types'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { use_is_landscape } from '../hooks/use-is-landscape'
 
@@ -25,12 +29,14 @@ type Props = {
   on_go_forward: () => void
   on_chatbots_click: () => void
   on_api_calls_click: () => void
+  on_cli_calls_click: () => void
   version: string
   is_setup_complete: boolean
   is_connected: boolean
   on_donate_click: () => void
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
+  cli_prompt_type: CliPromptType
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -132,7 +138,8 @@ export const Home: React.FC<Props> = (props) => {
     is_active: props.is_active,
     on_go_forward: props.on_go_forward,
     on_chatbots_click: props.on_chatbots_click,
-    on_api_calls_click: props.on_api_calls_click
+    on_api_calls_click: props.on_api_calls_click,
+    on_cli_calls_click: props.on_cli_calls_click
   })
 
   const header = (
@@ -200,6 +207,16 @@ export const Home: React.FC<Props> = (props) => {
             }
           />
         </UiKeycapWrapper>
+        <UiKeycapWrapper char={is_alt_pressed ? 'C' : undefined} full_width>
+          <UiTargetButton
+            label={TARGET.CLI}
+            on_click={props.on_cli_calls_click}
+            is_compact
+            hover_color={
+              props.cli_prompt_type == 'edit-files' ? 'blue' : 'purple'
+            }
+          />
+        </UiKeycapWrapper>
       </div>
     </div>
   )
@@ -227,6 +244,16 @@ export const Home: React.FC<Props> = (props) => {
           on_click={props.on_api_calls_click}
           hover_color={
             props.api_prompt_type == 'edit-files' ? 'blue' : 'purple'
+          }
+        />
+      </UiKeycapWrapper>
+      <UiKeycapWrapper char={is_alt_pressed ? 'C' : undefined} full_width>
+        <UiTargetButton
+          label={TARGET.CLI}
+          description={t('home.target.cli.description')}
+          on_click={props.on_cli_calls_click}
+          hover_color={
+            props.cli_prompt_type == 'edit-files' ? 'blue' : 'purple'
           }
         />
       </UiKeycapWrapper>

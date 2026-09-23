@@ -39,6 +39,9 @@ import {
   handle_target_changed,
   handle_get_api_prompt_type,
   handle_save_api_prompt_type,
+  handle_get_cli_prompt_type,
+  handle_save_cli_prompt_type,
+  handle_invoke_headless_cli,
   handle_get_target,
   handle_get_workspace_state,
   handle_get_version,
@@ -98,6 +101,7 @@ import {
   INSTRUCTIONS_EDIT_FILES_STATE_KEY,
   PROMPT_VIEW_TARGET_STATE_KEY,
   WEB_TARGET_STATE_KEY,
+  CLI_TARGET_STATE_KEY,
   LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
   get_last_used_web_configuration_key
 } from '@/constants/state-keys'
@@ -107,7 +111,11 @@ import {
 } from '@/utils/web-configuration-format-converters'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { TARGET, Target } from '@shared/types/mode'
-import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import {
+  ApiPromptType,
+  WebPromptType,
+  CliPromptType
+} from '@shared/types/prompt-types'
 import { Logger } from '@shared/utils/logger'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { ProvidersManager } from '@/services/providers-manager'
@@ -143,6 +151,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
   public web_prompt_type: WebPromptType
   public edit_format: EditFormat
   public api_prompt_type: ApiPromptType
+  public cli_prompt_type: CliPromptType
   public target: Target = TARGET.WEB
   public patch_repair_abort_controllers: {
     controller: AbortController
@@ -178,10 +187,12 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     )
   }
 
-  public get prompt_type(): WebPromptType | ApiPromptType {
+  public get prompt_type(): WebPromptType | ApiPromptType | CliPromptType {
     return this.target == TARGET.WEB
       ? this.web_prompt_type
-      : this.api_prompt_type
+      : this.target == TARGET.API
+        ? this.api_prompt_type
+        : this.cli_prompt_type
   }
 
   public get active_instructions_state(): InstructionsState {
@@ -316,6 +327,11 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     this.api_prompt_type =
       this.extension_context.workspaceState.get<ApiPromptType>(
         API_TARGET_STATE_KEY,
+        'edit-files'
+      )
+    this.cli_prompt_type =
+      this.extension_context.workspaceState.get<CliPromptType>(
+        CLI_TARGET_STATE_KEY,
         'edit-files'
       )
 
@@ -700,6 +716,12 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             handle_get_api_prompt_type(this)
           } else if (message.command == 'SAVE_API_PROMPT_TYPE') {
             await handle_save_api_prompt_type(this, message.prompt_type)
+          } else if (message.command == 'GET_CLI_PROMPT_TYPE') {
+            handle_get_cli_prompt_type(this)
+          } else if (message.command == 'SAVE_CLI_PROMPT_TYPE') {
+            await handle_save_cli_prompt_type(this, message.prompt_type)
+          } else if (message.command == 'INVOKE_HEADLESS_CLI') {
+            await handle_invoke_headless_cli(this)
           } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
             handle_get_edit_format_instructions(this)
           } else if (message.command == 'GET_EDIT_FORMAT') {

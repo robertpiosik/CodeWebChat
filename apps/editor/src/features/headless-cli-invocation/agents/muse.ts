@@ -1,9 +1,6 @@
 import { CodingAgent } from '../types'
-import {
-  build_agent_prompt,
-  check_command_exists,
-  get_progress_dots
-} from '../utils'
+import { check_command_exists } from '../utils/check-command-exists'
+import { get_progress_dots } from '../utils/get-progress-dots'
 
 let accumulated_output = ''
 let last_action_name = ''
@@ -16,9 +13,9 @@ export const muse_agent: CodingAgent = {
   is_installed: () => check_command_exists('muse'),
   get_documentation_url: () =>
     'https://dev.meta.ai/docs/muse-code/extending#headless',
-  get_args: (query: string) => {
+  get_args: (prompt: string) => {
     accumulated_output = ''
-    return ['exec', '--json', '--yolo', build_agent_prompt(query)]
+    return ['exec', '--json', '--yolo', prompt]
   },
   parse_stream_line: (parsed, report_progress) => {
     const payload = parsed.payload || parsed

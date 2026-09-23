@@ -10,7 +10,11 @@ import { StatusBar as UiStatusBar } from '@ui/components/editor/prompt/StatusBar
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { EditFormat } from '@shared/types/edit-format'
 import { TARGET, Target } from '@shared/types/mode'
-import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import {
+  ApiPromptType,
+  WebPromptType,
+  CliPromptType
+} from '@shared/types/prompt-types'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { BrowserConnectionStatus } from './components/BrowserConnectionStatus'
 import { ApiConfiguration, SetupProgress } from '@/views/prompt/types/messages'
@@ -64,8 +68,10 @@ type Props = {
   ask_instructions_token_count: number
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
+  cli_prompt_type: CliPromptType
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
+  on_cli_prompt_type_change: (prompt_type: CliPromptType) => void
   edit_format: EditFormat
   on_edit_format_change: (format?: EditFormat) => void
   on_web_configurations_reorder: (
@@ -82,6 +88,7 @@ type Props = {
   target: Target
   on_target_change: (value: Target) => void
   on_make_api_call: (use_quick_pick: boolean) => void
+  on_invoke_headless_cli: () => void
   caret_position_to_set?: number
   on_caret_position_set?: () => void
   chat_input_focus_and_select_key: number
@@ -159,7 +166,8 @@ export const MainView: React.FC<Props> = (props) => {
 
   const show_edit_format_selector =
     (props.target == TARGET.WEB && props.web_prompt_type == 'edit-files') ||
-    (props.target == TARGET.API && props.api_prompt_type == 'edit-files')
+    (props.target == TARGET.API && props.api_prompt_type == 'edit-files') ||
+    (props.target == TARGET.CLI && props.cli_prompt_type == 'edit-files')
 
   const is_context_empty =
     show_edit_format_selector && props.selected_files.length == 0
@@ -171,8 +179,10 @@ export const MainView: React.FC<Props> = (props) => {
   const handle_submit = async () => {
     if (props.target == TARGET.WEB) {
       props.initialize_chats({})
-    } else {
+    } else if (props.target == TARGET.API) {
       props.on_make_api_call(false)
+    } else if (props.target == TARGET.CLI) {
+      props.on_invoke_headless_cli()
     }
   }
 
@@ -181,8 +191,10 @@ export const MainView: React.FC<Props> = (props) => {
       props.initialize_chats({
         show_quick_pick: true
       })
-    } else {
+    } else if (props.target == TARGET.API) {
       props.on_make_api_call(true)
+    } else if (props.target == TARGET.CLI) {
+      props.on_invoke_headless_cli()
     }
   }
 
@@ -198,6 +210,7 @@ export const MainView: React.FC<Props> = (props) => {
     target: props.target,
     on_web_prompt_type_change: props.on_web_prompt_type_change,
     on_api_prompt_type_change: props.on_api_prompt_type_change,
+    on_cli_prompt_type_change: props.on_cli_prompt_type_change,
     on_show_home: props.on_show_home,
     on_agentic_search: props.on_agentic_search,
     is_disabled: props.are_keyboard_shortcuts_disabled
@@ -275,6 +288,8 @@ export const MainView: React.FC<Props> = (props) => {
       on_web_prompt_type_change={props.on_web_prompt_type_change}
       api_prompt_type={props.api_prompt_type}
       on_api_prompt_type_change={props.on_api_prompt_type_change}
+      cli_prompt_type={props.cli_prompt_type}
+      on_cli_prompt_type_change={props.on_cli_prompt_type_change}
       is_alt_pressed={is_alt_pressed}
       is_landscape={is_landscape}
       is_browser_connection_status_bar_closed={browser_connection.is_closed}
@@ -293,9 +308,13 @@ export const MainView: React.FC<Props> = (props) => {
           ? props.web_prompt_type == 'edit-files'
             ? 'blue'
             : 'purple'
-          : props.api_prompt_type == 'edit-files'
-            ? 'blue'
-            : 'purple'
+          : props.target == TARGET.API
+            ? props.api_prompt_type == 'edit-files'
+              ? 'blue'
+              : 'purple'
+            : props.cli_prompt_type == 'edit-files'
+              ? 'blue'
+              : 'purple'
       }
       is_alt_pressed={is_alt_pressed}
       on_agentic_search={props.on_agentic_search}
@@ -350,7 +369,9 @@ export const MainView: React.FC<Props> = (props) => {
       {props.response_history.length > 0 &&
         (props.target == TARGET.WEB
           ? props.web_prompt_type
-          : props.api_prompt_type) == 'edit-files' && (
+          : props.target == TARGET.API
+            ? props.api_prompt_type
+            : props.cli_prompt_type) == 'edit-files' && (
           <UiResponses
             response_history={props.response_history}
             on_response_history_item_click={
@@ -398,7 +419,9 @@ export const MainView: React.FC<Props> = (props) => {
           prompt_token_count={
             (props.target == TARGET.WEB
               ? props.web_prompt_type
-              : props.api_prompt_type) == 'edit-files'
+              : props.target == TARGET.API
+                ? props.api_prompt_type
+                : props.cli_prompt_type) == 'edit-files'
               ? props.edit_instructions_token_count
               : props.ask_instructions_token_count
           }
@@ -423,9 +446,13 @@ export const MainView: React.FC<Props> = (props) => {
                 ? props.web_prompt_type == 'edit-files'
                   ? 'blue'
                   : 'purple'
-                : props.api_prompt_type == 'edit-files'
-                  ? 'blue'
-                  : 'purple'
+                : props.target == TARGET.API
+                  ? props.api_prompt_type == 'edit-files'
+                    ? 'blue'
+                    : 'purple'
+                  : props.cli_prompt_type == 'edit-files'
+                    ? 'blue'
+                    : 'purple'
           }
           on_paste_image={props.on_paste_image}
           on_open_image={props.on_open_image}
@@ -574,6 +601,23 @@ export const MainView: React.FC<Props> = (props) => {
             )}
         </>
       )}
+      {props.target == TARGET.CLI && (
+        <>
+          {props.response_history.length > 0 &&
+            props.cli_prompt_type === 'edit-files' && (
+              <UiResponses
+                response_history={props.response_history}
+                on_response_history_item_click={() => {}}
+                on_selected_history_item_change={() => {}}
+                on_response_history_item_remove={() => {}}
+                translations={{
+                  applied_manually: '',
+                  reject: ''
+                }}
+              />
+            )}
+        </>
+      )}
     </>
   )
 
@@ -655,6 +699,8 @@ export const MainView: React.FC<Props> = (props) => {
           }}
         />
       )}
+
+      {props.target == TARGET.CLI && <></>}
     </>
   )
 

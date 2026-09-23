@@ -1,13 +1,18 @@
 import { TARGET, Target } from '@shared/types/mode'
 import { use_compacting } from '@shared/hooks'
-import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import {
+  ApiPromptType,
+  WebPromptType,
+  CliPromptType
+} from '@shared/types/prompt-types'
 import { IconAccentButton as UiIconAccentButton } from '@ui/components/editor/prompt/IconAccentButton'
 import { KeycapWrapper as UiKeycapWrapper } from '@ui/components/editor/prompt/KeycapWrapper'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import styles from './Header.module.scss'
 import {
   api_prompt_type_labels,
-  web_prompt_type_labels
+  web_prompt_type_labels,
+  cli_prompt_type_labels
 } from '../../prompt-type-labels'
 import { use_translation } from '@/views/prompt/frontend/i18n/use-translation'
 import { StatusBar as UiStatusBar } from '@ui/components/editor/prompt/StatusBar'
@@ -20,8 +25,10 @@ type Props = {
   on_show_home: () => void
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
+  cli_prompt_type: CliPromptType
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
+  on_cli_prompt_type_change: (prompt_type: CliPromptType) => void
   is_alt_pressed: boolean
   is_landscape: boolean
   is_browser_connection_status_bar_closed: boolean
@@ -86,6 +93,35 @@ export const Header: React.FC<Props> = (props) => {
                   )}
                   {props.response_history.length > 0 &&
                     props.web_prompt_type === 'edit-files' && (
+                      <UiResponses
+                        response_history={props.response_history}
+                        on_response_history_item_click={() => {}}
+                        on_selected_history_item_change={() => {}}
+                        on_response_history_item_remove={() => {}}
+                        translations={{
+                          applied_manually: '',
+                          reject: ''
+                        }}
+                      />
+                    )}
+                </div>
+              </>
+            )}
+          {props.is_landscape &&
+            props.target == TARGET.CLI &&
+            props.response_history.length > 0 &&
+            props.cli_prompt_type === 'edit-files' &&
+            !props.is_content_scrollable && (
+              <>
+                <div
+                  style={{
+                    visibility: 'hidden',
+                    pointerEvents: 'none',
+                    width: 0
+                  }}
+                >
+                  {props.response_history.length > 0 &&
+                    props.cli_prompt_type === 'edit-files' && (
                       <UiResponses
                         response_history={props.response_history}
                         on_response_history_item_click={() => {}}
@@ -197,6 +233,18 @@ export const Header: React.FC<Props> = (props) => {
                 active_color="blue"
                 is_compact={!props.is_landscape && compact_step >= 1}
                 on_click={() => props.on_api_prompt_type_change('edit-files')}
+              />
+            </>
+          )}
+          {props.target == TARGET.CLI && (
+            <>
+              <UiIconAccentButton
+                label={cli_prompt_type_labels['edit-files']}
+                icon="edit-sparkle"
+                is_active={props.cli_prompt_type == 'edit-files'}
+                active_color="blue"
+                is_compact={!props.is_landscape && compact_step >= 1}
+                on_click={() => props.on_cli_prompt_type_change('edit-files')}
               />
             </>
           )}

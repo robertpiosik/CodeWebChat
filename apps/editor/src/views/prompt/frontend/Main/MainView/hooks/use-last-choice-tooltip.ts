@@ -67,7 +67,7 @@ export const use_last_choice_tooltip = (params: {
           }
         }
       }
-    } else {
+    } else if (params.target == TARGET.API) {
       if (params.selected_api_configuration_id !== undefined) {
         const configuration = params.api_configurations.find(
           (c) => c.id == params.selected_api_configuration_id

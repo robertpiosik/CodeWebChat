@@ -1,5 +1,5 @@
 import { CodingAgent } from '../types'
-import { build_agent_prompt, check_command_exists } from '../utils'
+import { check_command_exists } from '../utils/check-command-exists'
 
 export const cursor_agent: CodingAgent = {
   id: 'cursor',
@@ -7,9 +7,9 @@ export const cursor_agent: CodingAgent = {
   cmd: 'agent',
   is_installed: () => check_command_exists('agent'),
   get_documentation_url: () => 'https://cursor.com/docs/cli/headless',
-  get_args: (query: string) => [
+  get_args: (prompt: string) => [
     '-p',
-    build_agent_prompt(query),
+    prompt,
     '--output-format',
     'stream-json',
     '--force'

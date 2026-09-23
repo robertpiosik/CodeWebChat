@@ -329,13 +329,16 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   const render_footer = () => {
     const primary_dropdown_items =
-      props.target == TARGET.API && !props.value
+      (props.target == TARGET.API || props.target == TARGET.CLI) && !props.value
         ? []
         : [
             ...(!props.value
               ? [
                   {
-                    label: props.translations.send,
+                    label:
+                      props.target != TARGET.CLI
+                        ? props.translations.send
+                        : props.translations.send_with_ellipsis,
                     shortcut: is_mac ? '↩' : 'Enter',
                     on_click: () => {
                       handle_submit({
@@ -347,13 +350,17 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   }
                 ]
               : []),
-            {
-              label: props.translations.send_with_ellipsis,
-              shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
-              on_click: handle_select_click,
-              is_disabled: props.is_action_disabled
-            },
-            ...(props.target == TARGET.WEB
+            ...(props.target != TARGET.CLI
+              ? [
+                  {
+                    label: props.translations.send_with_ellipsis,
+                    shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
+                    on_click: handle_select_click,
+                    is_disabled: props.is_action_disabled
+                  }
+                ]
+              : []),
+            ...(props.target == TARGET.WEB || props.target == TARGET.CLI
               ? [
                   {
                     label: props.translations.copy_prompt,
@@ -385,7 +392,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           ].filter((item) => !(!has_content && item.is_disabled))
 
     const disconnected_dropdown_items =
-      props.target == TARGET.API && !props.value
+      (props.target == TARGET.API || props.target == TARGET.CLI) && !props.value
         ? []
         : [
             ...(!props.value
@@ -459,10 +466,14 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             offset={48}
           />
         )}
-        {props.last_choice_tooltip && show_submit_tooltip && (
+        {show_submit_tooltip && (
           <Tooltip
-            message={`${props.translations.send_with} ${props.last_choice_tooltip.name}`}
-            details={props.last_choice_tooltip.details}
+            message={
+              props.last_choice_tooltip
+                ? `${props.translations.send_with} ${props.last_choice_tooltip.name}`
+                : props.translations.send_with_ellipsis
+            }
+            details={props.last_choice_tooltip?.details}
             offset={28}
             align="right"
           />
@@ -677,7 +688,11 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     onClick={(e) => {
                       e.stopPropagation()
                       props.on_target_change!(
-                        props.target == TARGET.WEB ? TARGET.API : TARGET.WEB
+                        props.target == TARGET.WEB
+                          ? TARGET.API
+                          : props.target == TARGET.API
+                            ? TARGET.CLI
+                            : TARGET.WEB
                       )
                     }}
                     onMouseEnter={() => set_is_target_switch_hovered(true)}
@@ -686,7 +701,11 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     <span
                       className={styles['footer__right__target-switch__label']}
                     >
-                      {props.target == TARGET.WEB ? 'WEB' : 'API'}
+                      {props.target == TARGET.WEB
+                        ? 'WEB'
+                        : props.target == TARGET.API
+                          ? 'API'
+                          : 'CLI'}
                     </span>
                   </button>
                 </KeycapWrapper>

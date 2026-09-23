@@ -178,5 +178,23 @@ export const home = {
     cs: 'Odeslat požadavky',
     hu: 'Kérések küldése',
     bg: 'Изпращане на заявки'
+  },
+  'home.target.cli.description': {
+    en: 'Invoke headlessly',
+    pl: 'Wywołaj w headless',
+    'zh-cn': '无头模式调用',
+    ja: 'ヘッドレスで呼び出す',
+    'zh-tw': '無頭模式調用',
+    de: 'Headless aufrufen',
+    es: 'Invocar en modo headless',
+    fr: 'Invoquer en mode headless',
+    'pt-br': 'Invocar em modo headless',
+    ru: 'Вызвать в headless-режиме',
+    ko: '헤드리스로 호출',
+    it: 'Invoca in modalità headless',
+    tr: 'Headless olarak çağır',
+    cs: 'Vyvolat v headless režimu',
+    hu: 'Meghívás headless módban',
+    bg: 'Извикване в headless режим'
   }
 } as const

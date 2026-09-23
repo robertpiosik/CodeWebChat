@@ -3,7 +3,11 @@ import { MainView } from './MainView'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { EditFormat } from '@shared/types/edit-format'
 import { TARGET, Target } from '@shared/types/mode'
-import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import {
+  ApiPromptType,
+  WebPromptType,
+  CliPromptType
+} from '@shared/types/prompt-types'
 import {
   BackendMessage,
   WebConfigurationsMessage,
@@ -39,9 +43,11 @@ type Props = {
   target: Target
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
+  cli_prompt_type: CliPromptType
   on_target_change: (target: Target) => void
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
+  on_cli_prompt_type_change: (prompt_type: CliPromptType) => void
   currently_open_file_path?: string
   current_selection?: SelectionState | null
   chat_input_focus_and_select_key: number
@@ -165,7 +171,11 @@ export const Main: React.FC<Props> = (props) => {
   }, [])
 
   const current_prompt_type =
-    props.target == TARGET.WEB ? props.web_prompt_type : props.api_prompt_type
+    props.target == TARGET.WEB
+      ? props.web_prompt_type
+      : props.target == TARGET.API
+        ? props.api_prompt_type
+        : props.cli_prompt_type
 
   const update_chat_history = (instruction: string) => {
     const trimmed_instruction = instruction.trim()
@@ -399,6 +409,18 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
+  const handle_invoke_headless_cli = () => {
+    const instructions = get_current_instructions()
+
+    post_message(props.vscode, {
+      command: 'INVOKE_HEADLESS_CLI'
+    })
+
+    if (instructions.trim()) {
+      update_chat_history(instructions)
+    }
+  }
+
   const handle_at_sign_click = () => {
     post_message(props.vscode, {
       command: 'SHOW_AT_SIGN_QUICK_PICK'
@@ -513,8 +535,10 @@ export const Main: React.FC<Props> = (props) => {
       ask_instructions_token_count={props.ask_instructions_token_count}
       web_prompt_type={props.web_prompt_type}
       api_prompt_type={props.api_prompt_type}
+      cli_prompt_type={props.cli_prompt_type}
       on_web_prompt_type_change={props.on_web_prompt_type_change}
       on_api_prompt_type_change={props.on_api_prompt_type_change}
+      on_cli_prompt_type_change={props.on_cli_prompt_type_change}
       edit_format={edit_format}
       on_edit_format_change={handle_edit_format_change}
       on_web_configurations_reorder={handle_web_configurations_reorder}
@@ -533,6 +557,7 @@ export const Main: React.FC<Props> = (props) => {
       target={props.target}
       on_target_change={props.on_target_change}
       on_make_api_call={handle_make_api_call}
+      on_invoke_headless_cli={handle_invoke_headless_cli}
       caret_position_to_set={caret_position_to_set}
       on_caret_position_set={() => set_caret_position_to_set(undefined)}
       chat_input_focus_and_select_key={props.chat_input_focus_and_select_key}

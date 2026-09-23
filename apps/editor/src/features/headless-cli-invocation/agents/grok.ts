@@ -1,5 +1,5 @@
 import { CodingAgent } from '../types'
-import { build_agent_prompt, check_command_exists } from '../utils'
+import { check_command_exists } from '../utils/check-command-exists'
 
 let accumulated_output = ''
 
@@ -9,11 +9,11 @@ export const grok_agent: CodingAgent = {
   cmd: 'grok',
   is_installed: () => check_command_exists('grok'),
   get_documentation_url: () => 'https://docs.x.ai/build/cli/headless-scripting',
-  get_args: (query: string) => {
+  get_args: (prompt: string) => {
     accumulated_output = ''
     return [
       '-p',
-      build_agent_prompt(query),
+      prompt,
       '--output-format',
       'streaming-json',
       '--always-approve',

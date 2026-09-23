@@ -2,13 +2,18 @@ import { useState, useEffect } from 'react'
 import { BackendMessage, InstructionsState } from '../../../../types/messages'
 import { post_message } from '../../../utils/post-message'
 import { Target, TARGET } from '@shared/types/mode'
-import { WebPromptType, ApiPromptType } from '@shared/types/prompt-types'
+import {
+  WebPromptType,
+  ApiPromptType,
+  CliPromptType
+} from '@shared/types/prompt-types'
 
 export const use_instructions = (
   vscode: any,
   target: Target | undefined,
   web_prompt_type: WebPromptType | undefined,
-  api_prompt_type: ApiPromptType | undefined
+  api_prompt_type: ApiPromptType | undefined,
+  cli_prompt_type: CliPromptType | undefined
 ) => {
   const [ask_about_context_instructions, set_ask_about_context_instructions] =
     useState<InstructionsState | undefined>()
@@ -53,7 +58,11 @@ export const use_instructions = (
 
   const handle_tab_change = (index: number) => {
     const prompt_type = (
-      target == TARGET.WEB ? web_prompt_type : api_prompt_type
+      target == TARGET.WEB
+        ? web_prompt_type
+        : target == TARGET.API
+          ? api_prompt_type
+          : cli_prompt_type
     ) as any
     const update = (
       state: InstructionsState | undefined,
@@ -80,7 +89,11 @@ export const use_instructions = (
 
   const handle_new_tab = () => {
     const prompt_type = (
-      target == TARGET.WEB ? web_prompt_type : api_prompt_type
+      target == TARGET.WEB
+        ? web_prompt_type
+        : target == TARGET.API
+          ? api_prompt_type
+          : cli_prompt_type
     ) as any
     const update = (
       state: InstructionsState | undefined,
@@ -110,7 +123,11 @@ export const use_instructions = (
 
   const handle_tab_delete = (index: number) => {
     const prompt_type = (
-      target == TARGET.WEB ? web_prompt_type : api_prompt_type
+      target == TARGET.WEB
+        ? web_prompt_type
+        : target == TARGET.API
+          ? api_prompt_type
+          : cli_prompt_type
     ) as any
     const update = (
       state: InstructionsState | undefined,
@@ -148,7 +165,11 @@ export const use_instructions = (
 
   const handle_tabs_reorder = (new_order: number[]) => {
     const prompt_type = (
-      target == TARGET.WEB ? web_prompt_type : api_prompt_type
+      target == TARGET.WEB
+        ? web_prompt_type
+        : target == TARGET.API
+          ? api_prompt_type
+          : cli_prompt_type
     ) as any
     const update = (
       state: InstructionsState | undefined,

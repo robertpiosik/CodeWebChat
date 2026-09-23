@@ -1,9 +1,6 @@
 import { CodingAgent } from '../types'
-import {
-  build_agent_prompt,
-  check_command_exists,
-  get_progress_dots
-} from '../utils'
+import { check_command_exists } from '../utils/check-command-exists'
+import { get_progress_dots } from '../utils/get-progress-dots'
 
 let last_action_name = ''
 let action_count = 0
@@ -14,13 +11,7 @@ export const opencode_agent: CodingAgent = {
   cmd: 'opencode',
   is_installed: () => check_command_exists('opencode'),
   get_documentation_url: () => 'https://opencode.ai/docs/cli/',
-  get_args: (query: string) => [
-    'run',
-    build_agent_prompt(query),
-    '--format',
-    'json',
-    '--auto'
-  ],
+  get_args: (prompt: string) => ['run', prompt, '--format', 'json', '--auto'],
   parse_stream_line: (parsed, report_progress) => {
     let action_name = ''
     if (parsed.type == 'tool_use' && parsed.part?.tool) {
