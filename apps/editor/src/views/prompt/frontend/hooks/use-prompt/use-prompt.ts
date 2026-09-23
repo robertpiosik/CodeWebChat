@@ -5,7 +5,7 @@ import {
   SetupProgress,
   ApiConfiguration
 } from '../../../types/messages'
-import { Target, TARGET } from '@shared/types/target'
+import { Target } from '@shared/types/target'
 import {
   ApiPromptType,
   WebPromptType,
@@ -271,21 +271,14 @@ export const use_prompt = (vscode: any) => {
     if (target == new_target) return
 
     if (sync_prompt_type) {
-      if (
-        (new_target == TARGET.API || new_target == TARGET.CLI) &&
-        web_prompt_type
-      ) {
+      if ((new_target == 'API' || new_target == 'CLI') && web_prompt_type) {
         if (web_prompt_type == 'edit-files') {
-          if (new_target == TARGET.API)
+          if (new_target == 'API')
             handle_api_prompt_type_change(web_prompt_type, true)
           else handle_cli_prompt_type_change(web_prompt_type, true)
         }
-      } else if (
-        new_target == TARGET.WEB &&
-        (api_prompt_type || cli_prompt_type)
-      ) {
-        const type_to_sync =
-          target == TARGET.API ? api_prompt_type : cli_prompt_type
+      } else if (new_target == 'WEB' && (api_prompt_type || cli_prompt_type)) {
+        const type_to_sync = target == 'API' ? api_prompt_type : cli_prompt_type
         if (type_to_sync)
           handle_web_prompt_type_change(type_to_sync as any, true)
       }

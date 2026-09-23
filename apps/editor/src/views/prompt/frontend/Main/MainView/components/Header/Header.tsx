@@ -1,4 +1,4 @@
-import { TARGET, Target } from '@shared/types/target'
+import { Target } from '@shared/types/target'
 import { use_compacting } from '@shared/hooks'
 import {
   ApiPromptType,
@@ -60,7 +60,7 @@ export const Header: React.FC<Props> = (props) => {
 
         <div className={styles.header__types}>
           {props.is_landscape &&
-            props.target == TARGET.WEB &&
+            props.target == 'WEB' &&
             (!props.is_browser_connection_status_bar_closed ||
               (props.response_history.length > 0 &&
                 props.web_prompt_type === 'edit-files')) &&
@@ -108,7 +108,7 @@ export const Header: React.FC<Props> = (props) => {
               </>
             )}
           {props.is_landscape &&
-            props.target == TARGET.CLI &&
+            props.target == 'CLI' &&
             props.response_history.length > 0 &&
             props.cli_prompt_type === 'edit-files' &&
             !props.is_content_scrollable && (
@@ -137,7 +137,7 @@ export const Header: React.FC<Props> = (props) => {
               </>
             )}
           {props.is_landscape &&
-            props.target == TARGET.API &&
+            props.target == 'API' &&
             (props.is_api_warning_visible ||
               (props.response_history.length > 0 &&
                 props.api_prompt_type === 'edit-files')) &&
@@ -184,7 +184,7 @@ export const Header: React.FC<Props> = (props) => {
                 </div>
               </>
             )}
-          {props.target == TARGET.WEB && (
+          {props.target == 'WEB' && (
             <>
               <div className={styles.header__types__inner}>
                 <UiKeycapWrapper char={props.is_alt_pressed ? 'E' : undefined}>
@@ -224,7 +224,7 @@ export const Header: React.FC<Props> = (props) => {
               </div>
             </>
           )}
-          {props.target == TARGET.API && (
+          {props.target == 'API' && (
             <>
               <UiIconAccentButton
                 label={api_prompt_type_labels['edit-files']}
@@ -236,7 +236,7 @@ export const Header: React.FC<Props> = (props) => {
               />
             </>
           )}
-          {props.target == TARGET.CLI && (
+          {props.target == 'CLI' && (
             <>
               <UiIconAccentButton
                 label={cli_prompt_type_labels['edit-files']}

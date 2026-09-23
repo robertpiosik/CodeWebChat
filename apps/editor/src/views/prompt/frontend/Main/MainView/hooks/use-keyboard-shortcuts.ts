@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { TARGET, Target } from '@shared/types/target'
+import { Target } from '@shared/types/target'
 import {
   ApiPromptType,
   WebPromptType,
@@ -125,9 +125,9 @@ export const use_keyboard_shortcuts = (params: {
       if (event.code == 'KeyE') {
         event.preventDefault()
 
-        if (params.target == TARGET.API) {
+        if (params.target == 'API') {
           params.on_api_prompt_type_change('edit-files')
-        } else if (params.target == TARGET.CLI) {
+        } else if (params.target == 'CLI') {
           params.on_cli_prompt_type_change('edit-files')
         } else {
           params.on_web_prompt_type_change('edit-files')
@@ -135,7 +135,7 @@ export const use_keyboard_shortcuts = (params: {
         return
       }
 
-      if (event.code == 'KeyA' && params.target == TARGET.WEB) {
+      if (event.code == 'KeyA' && params.target == 'WEB') {
         event.preventDefault()
         params.on_web_prompt_type_change('ask-about-files')
         return

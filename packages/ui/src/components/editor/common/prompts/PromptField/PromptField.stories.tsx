@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { PromptField, type EditFormat } from './PromptField'
-import { TARGET } from '@shared/types/target'
 
 export default {
   component: PromptField
@@ -19,7 +18,7 @@ export const Empty = () => (
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_target={false}
-    target={TARGET.API}
+    target="API"
     on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -86,7 +85,7 @@ export const WithText = () => (
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_target={false}
-    target={TARGET.API}
+    target="API"
     on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -154,7 +153,7 @@ export const LongText = () => (
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_target={false}
-    target={TARGET.API}
+    target="API"
     on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -219,7 +218,7 @@ export const WithPlaceholderSavedContext = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    target={TARGET.API}
+    target="API"
     on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -286,7 +285,7 @@ export const WithCommit = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    target={TARGET.API}
+    target="API"
     on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -352,7 +351,7 @@ export const WithCommitWithQuotes = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    target={TARGET.API}
+    target="API"
     on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -422,7 +421,7 @@ export const WithEditFormatSelector = () => {
       currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
       is_web_target={false}
-      target={TARGET.API}
+      target="API"
       on_target_change={(target) => console.log('Target changed:', target)}
       on_at_sign_click={() => console.log('@ clicked')}
       on_hash_sign_click={() => console.log('# clicked')}
@@ -495,7 +494,7 @@ export const WithWarning = () => (
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_target={true}
-    target={TARGET.WEB}
+    target="WEB"
     on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -560,7 +559,7 @@ export const WithFilePaths = () => (
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_target={false}
-    target={TARGET.API}
+    target="API"
     on_target_change={(target) => console.log('Target changed:', target)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
@@ -655,7 +654,7 @@ export const WithTabs = () => {
       currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
       is_web_target={false}
-      target={TARGET.API}
+      target="API"
       on_target_change={(target) => console.log('Target changed:', target)}
       on_at_sign_click={() => console.log('@ clicked')}
       on_hash_sign_click={() => console.log('# clicked')}

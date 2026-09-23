@@ -1,7 +1,6 @@
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { build_prompt_payload } from './utils/build-prompt-payload'
 import { build_cli_prompt } from './utils/build-cli-prompt'
-import { TARGET } from '@shared/types/target'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
@@ -28,7 +27,7 @@ export const handle_preview_prompt = async (params: {
 
   let text = ''
 
-  if (params.prompt_view_provider.target == TARGET.CLI) {
+  if (params.prompt_view_provider.target == 'CLI') {
     text = await build_cli_prompt({
       prompt_view_provider: params.prompt_view_provider
     })

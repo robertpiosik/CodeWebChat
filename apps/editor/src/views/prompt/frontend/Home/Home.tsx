@@ -13,7 +13,6 @@ import { Tasks as UiTasks } from '@ui/components/editor/prompt/Tasks'
 import { use_tasks } from './hooks/use-tasks'
 import { use_has_scrolled_past_target_button } from './hooks/use-has-scrolled-past-mode-button'
 import { use_compacting } from '@shared/hooks'
-import { TARGET } from '@shared/types/target'
 import {
   ApiPromptType,
   WebPromptType,
@@ -187,7 +186,7 @@ export const Home: React.FC<Props> = (props) => {
         })}
       >
         <UiTargetButton
-          label={TARGET.WEB}
+          label="WEB"
           on_click={props.on_chatbots_click}
           is_compact
           hover_color={
@@ -196,7 +195,7 @@ export const Home: React.FC<Props> = (props) => {
           keycap_char={is_alt_pressed ? 'W' : undefined}
         />
         <UiTargetButton
-          label={TARGET.API}
+          label="API"
           on_click={props.on_api_calls_click}
           is_compact
           hover_color={
@@ -205,7 +204,7 @@ export const Home: React.FC<Props> = (props) => {
           keycap_char={is_alt_pressed ? 'A' : undefined}
         />
         <UiTargetButton
-          label={TARGET.CLI}
+          label="CLI"
           on_click={props.on_cli_calls_click}
           is_compact
           hover_color={
@@ -220,7 +219,7 @@ export const Home: React.FC<Props> = (props) => {
   const targets_section = (
     <div className={styles.inner__target} ref={target_ref}>
       <UiTargetButton
-        label={TARGET.WEB}
+        label="WEB"
         description={
           props.is_connected
             ? t('home.target.web.description-connected')
@@ -231,14 +230,14 @@ export const Home: React.FC<Props> = (props) => {
         keycap_char={is_alt_pressed ? 'W' : undefined}
       />
       <UiTargetButton
-        label={TARGET.API}
+        label="API"
         description={t('home.target.api.description')}
         on_click={props.on_api_calls_click}
         hover_color={props.api_prompt_type == 'edit-files' ? 'blue' : 'purple'}
         keycap_char={is_alt_pressed ? 'A' : undefined}
       />
       <UiTargetButton
-        label={TARGET.CLI}
+        label="CLI"
         description={t('home.target.cli.description')}
         on_click={props.on_cli_calls_click}
         hover_color={props.cli_prompt_type == 'edit-files' ? 'blue' : 'purple'}

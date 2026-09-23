@@ -110,7 +110,7 @@ import {
   ConfigWebConfigurationFormat
 } from '@/utils/web-configuration-format-converters'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { TARGET, Target } from '@shared/types/target'
+import { Target } from '@shared/types/target'
 import {
   ApiPromptType,
   WebPromptType,
@@ -152,7 +152,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
   public edit_format: EditFormat
   public api_prompt_type: ApiPromptType
   public cli_prompt_type: CliPromptType
-  public target: Target = TARGET.WEB
+  public target: Target = 'WEB'
   public patch_repair_abort_controllers: {
     controller: AbortController
     file_path: string
@@ -188,9 +188,9 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
   }
 
   public get prompt_type(): WebPromptType | ApiPromptType | CliPromptType {
-    return this.target == TARGET.WEB
+    return this.target == 'WEB'
       ? this.web_prompt_type
-      : this.target == TARGET.API
+      : this.target == 'API'
         ? this.api_prompt_type
         : this.cli_prompt_type
   }
@@ -317,7 +317,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       this.extension_context.globalState.get<Target>(
         PROMPT_VIEW_TARGET_STATE_KEY
       ) ??
-      TARGET.WEB
+      'WEB'
 
     this.web_prompt_type =
       this.extension_context.workspaceState.get<WebPromptType>(

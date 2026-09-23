@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { TARGET, Target } from '@shared/types/target'
+import { Target } from '@shared/types/target'
 import {
   ApiPromptType,
   WebPromptType,
@@ -19,9 +19,9 @@ export const use_invocation_counts = (params: Params) => {
   >({})
 
   const current_invocation_key =
-    params.target == TARGET.WEB
+    params.target == 'WEB'
       ? `${params.target}:${params.web_prompt_type}`
-      : params.target == TARGET.API
+      : params.target == 'API'
         ? `${params.target}:${params.api_prompt_type}`
         : `${params.target}:${params.cli_prompt_type}`
 

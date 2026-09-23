@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import type { PromptFieldProps, EditFormat } from '../PromptField'
-import { TARGET } from '@shared/types/target'
 
 export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
   const [is_alt_pressed, set_is_alt_pressed] = useState(false)
@@ -44,11 +43,11 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
           e.preventDefault()
           if (props.on_target_change) {
             props.on_target_change(
-              props.target == TARGET.WEB
-                ? TARGET.API
-                : props.target == TARGET.API
-                  ? TARGET.CLI
-                  : TARGET.WEB
+              props.target == 'WEB'
+                ? 'API'
+                : props.target == 'API'
+                  ? 'CLI'
+                  : 'WEB'
             )
           }
           return
@@ -148,11 +147,7 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
       left_alt_pressed_ref.current &&
       (e.ctrlKey || e.metaKey)
     ) {
-      if (
-        !props.is_action_disabled &&
-        props.on_copy &&
-        props.target == TARGET.WEB
-      ) {
+      if (!props.is_action_disabled && props.on_copy && props.target == 'WEB') {
         e.stopPropagation()
         e.preventDefault()
         props.on_copy()

@@ -12,7 +12,7 @@ import { DropdownMenu } from '../../DropdownMenu'
 import { use_is_mac } from '@shared/hooks'
 import { Tooltip } from '../../Tooltip'
 import { KeycapWrapper } from '../../../prompt/KeycapWrapper'
-import { TARGET, Target } from '@shared/types/target'
+import { Target } from '@shared/types/target'
 import { display_token_count } from '@shared/utils/display-token-count'
 import {
   get_caret_position_from_div,
@@ -329,14 +329,14 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   const render_footer = () => {
     const primary_dropdown_items =
-      (props.target == TARGET.API || props.target == TARGET.CLI) && !props.value
+      (props.target == 'API' || props.target == 'CLI') && !props.value
         ? []
         : [
             ...(!props.value
               ? [
                   {
                     label:
-                      props.target != TARGET.CLI
+                      props.target != 'CLI'
                         ? props.translations.send
                         : props.translations.send_with_ellipsis,
                     shortcut: is_mac ? '↩' : 'Enter',
@@ -350,7 +350,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   }
                 ]
               : []),
-            ...(props.target != TARGET.CLI
+            ...(props.target != 'CLI'
               ? [
                   {
                     label: props.translations.send_with_ellipsis,
@@ -360,7 +360,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   }
                 ]
               : []),
-            ...(props.target == TARGET.WEB || props.target == TARGET.CLI
+            ...(props.target == 'WEB' || props.target == 'CLI'
               ? [
                   {
                     label: props.translations.copy_prompt,
@@ -393,7 +393,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           ].filter((item) => !(!has_content && item.is_disabled))
 
     const disconnected_dropdown_items =
-      (props.target == TARGET.API || props.target == TARGET.CLI) && !props.value
+      (props.target == 'API' || props.target == 'CLI') && !props.value
         ? []
         : [
             ...(!props.value
@@ -690,11 +690,11 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     onClick={(e) => {
                       e.stopPropagation()
                       props.on_target_change!(
-                        props.target == TARGET.WEB
-                          ? TARGET.API
-                          : props.target == TARGET.API
-                            ? TARGET.CLI
-                            : TARGET.WEB
+                        props.target == 'WEB'
+                          ? 'API'
+                          : props.target == 'API'
+                            ? 'CLI'
+                            : 'WEB'
                       )
                     }}
                     onMouseEnter={() => set_is_target_switch_hovered(true)}
@@ -703,9 +703,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     <span
                       className={styles['footer__right__target-switch__label']}
                     >
-                      {props.target == TARGET.WEB
+                      {props.target == 'WEB'
                         ? 'WEB'
-                        : props.target == TARGET.API
+                        : props.target == 'API'
                           ? 'API'
                           : 'CLI'}
                     </span>

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { TARGET, Target } from '@shared/types/target'
+import { Target } from '@shared/types/target'
 import { ApiConfiguration } from '@/views/prompt/types/messages'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { WebConfiguration } from '@shared/types/web-configuration'
@@ -12,7 +12,7 @@ export const use_last_choice_tooltip = (params: {
   api_configurations: ApiConfiguration[]
 }): { name: string; details?: string } | undefined => {
   return useMemo(() => {
-    if (params.target == TARGET.WEB) {
+    if (params.target == 'WEB') {
       if (params.selected_web_configuration_name) {
         if (params.selected_web_configuration_name == 'Ungrouped') {
           return { name: 'Ungrouped' }
@@ -67,7 +67,7 @@ export const use_last_choice_tooltip = (params: {
           }
         }
       }
-    } else if (params.target == TARGET.API) {
+    } else if (params.target == 'API') {
       if (params.selected_api_configuration_id !== undefined) {
         const configuration = params.api_configurations.find(
           (c) => c.id == params.selected_api_configuration_id

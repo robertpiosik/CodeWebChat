@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { MainView } from './MainView'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { EditFormat } from '@shared/types/edit-format'
-import { TARGET, Target } from '@shared/types/target'
+import { Target } from '@shared/types/target'
 import {
   ApiPromptType,
   WebPromptType,
@@ -171,9 +171,9 @@ export const Main: React.FC<Props> = (props) => {
   }, [])
 
   const current_prompt_type =
-    props.target == TARGET.WEB
+    props.target == 'WEB'
       ? props.web_prompt_type
-      : props.target == TARGET.API
+      : props.target == 'API'
         ? props.api_prompt_type
         : props.cli_prompt_type
 
