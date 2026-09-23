@@ -14,7 +14,7 @@ export const cursor_agent: CodingAgent = {
     'stream-json',
     '--force'
   ],
-  get_ask_args: (prompt: string) => ['-p', prompt],
+  get_ask_args: (prompt: string) => [prompt],
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type == 'tool_call') {
       if (parsed.subtype == 'started' || !parsed.subtype) {

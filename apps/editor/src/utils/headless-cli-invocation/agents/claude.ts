@@ -37,7 +37,7 @@ export const claude_agent: CodingAgent = {
     '--permission-mode',
     'auto'
   ],
-  get_ask_args: (prompt: string) => ['-p', prompt],
+  get_ask_args: (prompt: string) => [prompt],
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type == 'stream_event' && parsed.event) {
       if (
