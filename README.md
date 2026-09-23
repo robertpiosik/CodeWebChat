@@ -23,7 +23,7 @@
 
 ## Introduction
 
-**CWC** is a sessionless workflow that is 10X faster at 1/10th the cost of coding with agents alone.
+**CWC** proposes a workflow that is 10X faster at 1/10th the cost of coding with agents alone.
 
 #### The workflow
 
