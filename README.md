@@ -13,7 +13,7 @@
 
 <p align="center"><strong>Blazing fast AI coding for everyone</strong></p>
 
-<p align="center"><i>free and privacy-first</br>built independently</i></p>
+<p align="center"><i>chatbots, APIs, CLIs</br>free and privacy-first</i></p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
