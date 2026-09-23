@@ -126,6 +126,7 @@ import { normalize_path } from '@/utils/normalize-path'
 import { open_settings } from '@/views/settings/helpers/open-settings'
 import { replace_symbols } from './utils/symbols/replace-symbols'
 import { SymbolCacheManager } from './utils/symbols/symbol-cache'
+import { AgenticSearchState } from '@/features/agentic-search'
 import { t } from '@/i18n'
 
 export class PromptViewProvider implements vscode.WebviewViewProvider {
@@ -164,6 +165,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
   public response_history: ResponseHistoryItem[] = []
   public message_listeners: ((message: BackendMessage) => void)[] = []
   public symbols_cache = new SymbolCacheManager()
+  public agentic_search_state: AgenticSearchState
 
   // Voice input
   public is_recording = false
@@ -277,6 +279,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     extension_context: vscode.ExtensionContext
     websocket_server_instance: WebSocketManager
     shared_context_state: SharedContextState
+    agentic_search_state: AgenticSearchState
   }) {
     this.extension_uri = params.extension_uri
     this.workspace_provider = params.workspace_provider
@@ -284,6 +287,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     this.extension_context = params.extension_context
     this.websocket_server_instance = params.websocket_server_instance
     this.shared_context_state = params.shared_context_state
+    this.agentic_search_state = params.agentic_search_state
 
     this.websocket_server_instance.on_connection_status_change((connected) => {
       if (this.webview_view) {

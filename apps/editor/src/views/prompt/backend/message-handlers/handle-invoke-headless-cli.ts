@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { t } from '@/i18n'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
-import { invoke_headless_cli } from '@/features/headless-cli-invocation'
+import { invoke_headless_cli } from '@/utils/headless-cli-invocation'
 import { build_cli_prompt } from './utils/build-cli-prompt'
 
 const LAST_USED_HEADLESS_CLI_AGENT_STATE_KEY =
@@ -25,9 +25,7 @@ export const handle_invoke_headless_cli = async (
     workspace_provider: prompt_view_provider.workspace_provider,
     extension_context: prompt_view_provider.extension_context,
     title: t('views.prompt.handlers.handle-invoke-headless-cli.title'),
-    waiting_message: t(
-      'feature.headless-cli-invocation.agent.waiting-for-agent'
-    ),
+    waiting_message: t('utils.headless-cli-invocation.agent.waiting-for-agent'),
     last_used_agent_state_key: LAST_USED_HEADLESS_CLI_AGENT_STATE_KEY,
     last_selected_workspace_state_key:
       LAST_SELECTED_WORKSPACE_IN_HEADLESS_CLI_STATE_KEY,

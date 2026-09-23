@@ -2,15 +2,13 @@ import * as vscode from 'vscode'
 import { PromptViewProvider } from '../../prompt-view-provider'
 import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
-import { agentic_search } from './agentic-search'
+import { agentic_search } from '@/features/agentic-search'
 import { LAST_AGENTIC_SEARCH_QUERY_STATE_KEY } from '@/constants/state-keys'
-
-let agentic_search_in_progress = false
 
 export const handle_agentic_search = async (
   prompt_view_provider: PromptViewProvider
 ) => {
-  if (agentic_search_in_progress) {
+  if (prompt_view_provider.agentic_search_state.in_progress) {
     vscode.window.showInformationMessage(t('common.info.search-in-progress'))
     return
   }
@@ -32,7 +30,7 @@ export const handle_agentic_search = async (
     initial_query = last_query_state.query
   }
 
-  agentic_search_in_progress = true
+  prompt_view_provider.agentic_search_state.in_progress = true
   try {
     const result = await agentic_search({
       workspace_provider: prompt_view_provider.workspace_provider,
@@ -69,6 +67,6 @@ export const handle_agentic_search = async (
 
     vscode.window.showInformationMessage(t('common.success.context-updated'))
   } finally {
-    agentic_search_in_progress = false
+    prompt_view_provider.agentic_search_state.in_progress = false
   }
 }

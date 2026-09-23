@@ -46,6 +46,7 @@
   "codeWebChat.searchSelectedFiles.title": "Search Files...",
   "codeWebChat.searchFilesFromDirectory.title": "Search Files...",
   "codeWebChat.searchSelectedFilesFromDirectory.title": "Search Files...",
+  "codeWebChat.agenticSearch.title": "Agentic Search",
   "codeWebChat.selectReferencingFilesForSelected.title": "Select Referencing Files...",
   "codeWebChat.selectReferencingFiles.title": "Select Referencing Files...",
   "codeWebChat.selectImportedFilesForSelected.title": "Select Imported Files...",

@@ -356,6 +356,11 @@
         "category": "Code Web Chat"
       },
       {
+        "command": "codeWebChat.agenticSearch",
+        "title": "%codeWebChat.agenticSearch.title%",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.selectReferencingFiles",
         "title": "%codeWebChat.selectReferencingFiles.title%",
         "category": "Code Web Chat"

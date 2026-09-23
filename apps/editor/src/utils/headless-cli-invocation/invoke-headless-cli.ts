@@ -43,22 +43,22 @@ export const invoke_headless_cli = async (params: {
 
     if (available_agents.length == 0) {
       vscode.window.showInformationMessage(
-        t('feature.headless-cli-invocation.info.no-agents')
+        t('utils.headless-cli-invocation.info.no-agents')
       )
       return undefined
     }
 
     const add_button = {
       iconPath: new vscode.ThemeIcon('flag'),
-      tooltip: t('feature.headless-cli-invocation.agent.add-flags')
+      tooltip: t('utils.headless-cli-invocation.agent.add-flags')
     }
     const edit_button = {
       iconPath: new vscode.ThemeIcon('edit'),
-      tooltip: t('feature.headless-cli-invocation.agent.edit-flags')
+      tooltip: t('utils.headless-cli-invocation.agent.edit-flags')
     }
     const delete_button = {
       iconPath: new vscode.ThemeIcon('trash'),
-      tooltip: t('feature.headless-cli-invocation.agent.delete-flags')
+      tooltip: t('utils.headless-cli-invocation.agent.delete-flags')
     }
     const doc_button = {
       iconPath: new vscode.ThemeIcon('question'),
@@ -145,10 +145,10 @@ export const invoke_headless_cli = async (params: {
     }
 
     agent_quick_pick.title = t(
-      'feature.headless-cli-invocation.agent.select-agent'
+      'utils.headless-cli-invocation.agent.select-agent'
     )
     agent_quick_pick.placeholder = t(
-      'feature.headless-cli-invocation.agent.select-agent-placeholder'
+      'utils.headless-cli-invocation.agent.select-agent-placeholder'
     )
     agent_quick_pick.buttons = params.show_back_button
       ? [vscode.QuickInputButtons.Back, close_button]
@@ -316,10 +316,10 @@ export const invoke_headless_cli = async (params: {
       active_flag_index = -1
 
       const new_flags = await vscode.window.showInputBox({
-        title: t('feature.headless-cli-invocation.agent.add-flags'),
-        prompt: t('feature.headless-cli-invocation.agent.edit-flags-prompt'),
+        title: t('utils.headless-cli-invocation.agent.add-flags'),
+        prompt: t('utils.headless-cli-invocation.agent.edit-flags-prompt'),
         placeHolder: t(
-          'feature.headless-cli-invocation.agent.edit-flags-placeholder'
+          'utils.headless-cli-invocation.agent.edit-flags-placeholder'
         ),
         value: '',
         ignoreFocusOut: true
@@ -347,10 +347,10 @@ export const invoke_headless_cli = async (params: {
       active_flag_index = index
 
       const new_flags = await vscode.window.showInputBox({
-        title: t('feature.headless-cli-invocation.agent.edit-flags'),
-        prompt: t('feature.headless-cli-invocation.agent.edit-flags-prompt'),
+        title: t('utils.headless-cli-invocation.agent.edit-flags'),
+        prompt: t('utils.headless-cli-invocation.agent.edit-flags-prompt'),
         placeHolder: t(
-          'feature.headless-cli-invocation.agent.edit-flags-placeholder'
+          'utils.headless-cli-invocation.agent.edit-flags-placeholder'
         ),
         value: value,
         ignoreFocusOut: true
@@ -413,10 +413,10 @@ export const invoke_headless_cli = async (params: {
           quick_pick.activeItems = [active_item]
         }
         quick_pick.title = t(
-          'feature.headless-cli-invocation.agent.select-workspace'
+          'utils.headless-cli-invocation.agent.select-workspace'
         )
         quick_pick.placeholder = t(
-          'feature.headless-cli-invocation.agent.select-workspace-placeholder'
+          'utils.headless-cli-invocation.agent.select-workspace-placeholder'
         )
         quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
         quick_pick.ignoreFocusOut = true
@@ -613,7 +613,7 @@ export const invoke_headless_cli = async (params: {
         )
       } catch (err) {
         vscode.window.showErrorMessage(
-          t('feature.headless-cli-invocation.error.failed', {
+          t('utils.headless-cli-invocation.error.failed', {
             error: String(err)
           })
         )

@@ -369,8 +369,9 @@ Automatically place prompts in your favorite chatbot via the official browser ex
 - `Save File Selection` - Save the current context.
 - `Restore File Selection` - Restore a saved context.
 - `Select Workspace File...` - Select a file from the workspace.
-- `Search Files...` - Select files based on a search query.
-- `Search in Selected Files...` - Search within currently selected files.
+- `Search Files...` - Find files based on a search query.
+- `Search in Selected Files...` - Find within currently selected files.
+- `Agentic Search...` - Find task-relevant files using a headless CLI invocation.
 - `Select Clipboard Paths...` - Select files based on paths in your clipboard.
 - `Select Unstaged Files...` - Select files with unstaged changes.
 - `Select Files of Commit...` - Select files modified in a specific commit.

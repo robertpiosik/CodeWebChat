@@ -15,6 +15,7 @@ import {
   migrate_settings_keys_to_chatbots_and_models
 } from './migrations'
 import {
+  agentic_search_command,
   apply_response_command,
   copy_markdown_commands,
   copy_paths_commands,
@@ -50,6 +51,7 @@ import {
 import { setup_git_discard_file_watcher } from './services/git-discard-file-watcher'
 import { SettingsViewProvider } from './views/settings/backend/settings-view-provider'
 import { get_current_preview_url } from './views/prompt/backend/message-handlers/handle-open-website'
+import { AgenticSearchState } from './features/agentic-search'
 import { t } from '@/i18n'
 
 let websocket_server_instance: WebSocketManager | null = null
@@ -83,13 +85,16 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
 
   await migrations()
 
+  const agentic_search_state = new AgenticSearchState()
+
   const prompt_view_provider = new PromptViewProvider({
     extension_uri: extension_context.extensionUri,
     workspace_provider,
     open_editors_provider,
     extension_context: extension_context,
     websocket_server_instance,
-    shared_context_state
+    shared_context_state,
+    agentic_search_state
   })
 
   const chats_view_provider = new ChatsViewProvider(
@@ -214,6 +219,12 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       extension_context,
       websocket_server_instance
     ),
+    agentic_search_command({
+      workspace_provider,
+      extension_context,
+      websocket_manager: websocket_server_instance,
+      agentic_search_state
+    }),
     select_definition_file_command(workspace_provider),
     open_url_command({
       command: 'codeWebChat.visitWebsite',
