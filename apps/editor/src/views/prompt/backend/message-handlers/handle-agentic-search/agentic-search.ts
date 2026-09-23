@@ -67,7 +67,7 @@ export const agentic_search = async (params: {
       extension_context: params.extension_context,
       title: t('common.title.agentic-search'),
       waiting_message: t(
-        'views.prompt.handlers.handle-agentic-search.agent.waiting-for-agent'
+        'feature.headless-cli-invocation.agent.waiting-for-agent'
       ),
       last_used_agent_state_key: LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY,
       last_selected_workspace_state_key:

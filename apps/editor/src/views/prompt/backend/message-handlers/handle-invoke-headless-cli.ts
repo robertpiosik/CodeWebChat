@@ -26,7 +26,7 @@ export const handle_invoke_headless_cli = async (
     extension_context: prompt_view_provider.extension_context,
     title: t('views.prompt.handlers.handle-invoke-headless-cli.title'),
     waiting_message: t(
-      'views.prompt.handlers.handle-agentic-search.agent.waiting-for-agent'
+      'feature.headless-cli-invocation.agent.waiting-for-agent'
     ),
     last_used_agent_state_key: LAST_USED_HEADLESS_CLI_AGENT_STATE_KEY,
     last_selected_workspace_state_key:
