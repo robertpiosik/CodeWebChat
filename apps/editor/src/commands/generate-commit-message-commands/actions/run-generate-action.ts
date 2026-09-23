@@ -669,7 +669,7 @@ export const run_generate_action = async (params: {
         const display_paths = selected_files_to_attach.map((p) =>
           normalize_path(vscode.workspace.asRelativePath(p))
         )
-        return '\n\n```\n' + AsciiTree.generate(display_paths) + '\n```'
+        return '\n\n' + AsciiTree.generate(display_paths)
       }
 
       return ''

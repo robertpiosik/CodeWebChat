@@ -156,7 +156,7 @@ export const copy_merge_commit_details_command = (): vscode.Disposable => {
         const extracted_paths = AsciiTree.extract_paths(log_output)
         let tree_text = ''
         if (extracted_paths.length > 0) {
-          tree_text = '```\n' + AsciiTree.generate(extracted_paths) + '\n```'
+          tree_text = AsciiTree.generate(extracted_paths)
         }
 
         const final_text = `${final_bullets}${tree_text ? '\n\n' + tree_text : ''}`
