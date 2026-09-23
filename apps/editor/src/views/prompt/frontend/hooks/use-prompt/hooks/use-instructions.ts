@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { BackendMessage, InstructionsState } from '../../../../types/messages'
 import { post_message } from '../../../utils/post-message'
-import { Target, TARGET } from '@shared/types/mode'
+import { Target, TARGET } from '@shared/types/target'
 import {
   WebPromptType,
   ApiPromptType,

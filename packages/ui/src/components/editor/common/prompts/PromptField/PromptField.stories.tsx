@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { PromptField, type EditFormat } from './PromptField'
-import { TARGET } from '@shared/types/mode'
+import { TARGET } from '@shared/types/target'
 
 export default {
   component: PromptField

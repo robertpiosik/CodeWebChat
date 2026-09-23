@@ -13,7 +13,7 @@ import { Tasks as UiTasks } from '@ui/components/editor/prompt/Tasks'
 import { use_tasks } from './hooks/use-tasks'
 import { use_has_scrolled_past_target_button } from './hooks/use-has-scrolled-past-mode-button'
 import { use_compacting } from '@shared/hooks'
-import { TARGET } from '@shared/types/mode'
+import { TARGET } from '@shared/types/target'
 import {
   ApiPromptType,
   WebPromptType,

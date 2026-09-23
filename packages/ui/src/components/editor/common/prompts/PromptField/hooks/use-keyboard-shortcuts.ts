@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import type { PromptFieldProps, EditFormat } from '../PromptField'
-import { TARGET } from '@shared/types/mode'
+import { TARGET } from '@shared/types/target'
 
 export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
   const [is_alt_pressed, set_is_alt_pressed] = useState(false)

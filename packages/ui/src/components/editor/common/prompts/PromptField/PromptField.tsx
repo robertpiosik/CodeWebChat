@@ -12,7 +12,7 @@ import { DropdownMenu } from '../../DropdownMenu'
 import { use_is_mac } from '@shared/hooks'
 import { Tooltip } from '../../Tooltip'
 import { KeycapWrapper } from '../../../prompt/KeycapWrapper'
-import { TARGET, Target } from '@shared/types/mode'
+import { TARGET, Target } from '@shared/types/target'
 import { display_token_count } from '@shared/utils/display-token-count'
 import {
   get_caret_position_from_div,

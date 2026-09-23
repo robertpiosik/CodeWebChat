@@ -2,7 +2,7 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import * as vscode from 'vscode'
 import { build_prompt_payload } from './utils/build-prompt-payload'
 import { build_cli_prompt } from './utils/build-cli-prompt'
-import { TARGET } from '@shared/types/mode'
+import { TARGET } from '@shared/types/target'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,

@@ -9,7 +9,7 @@ import { Responses as UiResponses } from '@ui/components/editor/prompt/Responses
 import { StatusBar as UiStatusBar } from '@ui/components/editor/prompt/StatusBar'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { EditFormat } from '@shared/types/edit-format'
-import { TARGET, Target } from '@shared/types/mode'
+import { TARGET, Target } from '@shared/types/target'
 import {
   ApiPromptType,
   WebPromptType,

@@ -110,7 +110,7 @@ import {
   ConfigWebConfigurationFormat
 } from '@/utils/web-configuration-format-converters'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { TARGET, Target } from '@shared/types/mode'
+import { TARGET, Target } from '@shared/types/target'
 import {
   ApiPromptType,
   WebPromptType,

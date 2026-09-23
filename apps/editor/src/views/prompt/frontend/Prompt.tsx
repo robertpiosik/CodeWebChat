@@ -4,7 +4,6 @@ import { Button as UiButton } from '@ui/components/editor/common/Button'
 import { Page as UiPage } from '@ui/components/editor/prompt/Page'
 import { EditWebConfigurationForm } from '@/views/shared/forms/EditWebConfigurationForm'
 import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
-import { TARGET } from '@shared/types/mode'
 import { Home } from './Home'
 import styles from './Prompt.module.scss'
 import cn from 'classnames'
@@ -178,9 +177,9 @@ export const Prompt = () => {
 
   const get_current_instructions_state = () => {
     const prompt_type =
-      target == TARGET.WEB
+      target == 'WEB'
         ? web_prompt_type
-        : target == TARGET.API
+        : target == 'API'
           ? api_prompt_type
           : cli_prompt_type
     if (prompt_type == 'ask-about-files') return ask_about_context_instructions
@@ -397,19 +396,19 @@ export const Prompt = () => {
                 on_chatbots_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
-                  handle_target_change(TARGET.WEB)
+                  handle_target_change('WEB')
                   set_chat_input_focus_key((k) => k + 1)
                 }}
                 on_api_calls_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
-                  handle_target_change(TARGET.API)
+                  handle_target_change('API')
                   set_chat_input_focus_key((k) => k + 1)
                 }}
                 on_cli_calls_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
-                  handle_target_change(TARGET.CLI)
+                  handle_target_change('CLI')
                   set_chat_input_focus_key((k) => k + 1)
                 }}
                 version={version}

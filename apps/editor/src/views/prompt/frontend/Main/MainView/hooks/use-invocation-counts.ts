@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { TARGET, Target } from '@shared/types/mode'
+import { TARGET, Target } from '@shared/types/target'
 import {
   ApiPromptType,
   WebPromptType,

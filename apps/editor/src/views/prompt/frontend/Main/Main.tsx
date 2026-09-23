@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { MainView } from './MainView'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { EditFormat } from '@shared/types/edit-format'
-import { TARGET, Target } from '@shared/types/mode'
+import { TARGET, Target } from '@shared/types/target'
 import {
   ApiPromptType,
   WebPromptType,

@@ -11,7 +11,7 @@ import {
   WebPromptType,
   CliPromptType
 } from '@shared/types/prompt-types'
-import { Target } from '@shared/types/mode'
+import { Target } from '@shared/types/target'
 
 type BaseMessage = {
   command: string

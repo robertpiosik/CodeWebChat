@@ -1,4 +1,4 @@
-import { TARGET, Target } from '@shared/types/mode'
+import { TARGET, Target } from '@shared/types/target'
 import { use_compacting } from '@shared/hooks'
 import {
   ApiPromptType,

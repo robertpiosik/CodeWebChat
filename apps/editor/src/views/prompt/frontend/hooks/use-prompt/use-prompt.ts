@@ -5,7 +5,7 @@ import {
   SetupProgress,
   ApiConfiguration
 } from '../../../types/messages'
-import { Target, TARGET } from '@shared/types/mode'
+import { Target, TARGET } from '@shared/types/target'
 import {
   ApiPromptType,
   WebPromptType,
