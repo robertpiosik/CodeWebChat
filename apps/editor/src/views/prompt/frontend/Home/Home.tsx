@@ -3,7 +3,6 @@ import styles from './Home.module.scss'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { Tabs as UiTabs } from '@ui/components/editor/prompt/Tabs'
 import { TargetButton as UiTargetButton } from '@ui/components/editor/prompt/TargetButton'
-import { KeycapWrapper as UiKeycapWrapper } from '@ui/components/editor/prompt/KeycapWrapper'
 import cn from 'classnames'
 import { post_message } from '../utils/post-message'
 import { BackendMessage } from '@/views/prompt/types/messages'
@@ -187,76 +186,64 @@ export const Home: React.FC<Props> = (props) => {
           [styles['header__targets--visible']]: has_scrolled_past_target_button
         })}
       >
-        <UiKeycapWrapper char={is_alt_pressed ? 'W' : undefined} full_width>
-          <UiTargetButton
-            label={TARGET.WEB}
-            on_click={props.on_chatbots_click}
-            is_compact
-            hover_color={
-              props.web_prompt_type == 'edit-files' ? 'blue' : 'purple'
-            }
-          />
-        </UiKeycapWrapper>
-        <UiKeycapWrapper char={is_alt_pressed ? 'A' : undefined} full_width>
-          <UiTargetButton
-            label={TARGET.API}
-            on_click={props.on_api_calls_click}
-            is_compact
-            hover_color={
-              props.api_prompt_type == 'edit-files' ? 'blue' : 'purple'
-            }
-          />
-        </UiKeycapWrapper>
-        <UiKeycapWrapper char={is_alt_pressed ? 'C' : undefined} full_width>
-          <UiTargetButton
-            label={TARGET.CLI}
-            on_click={props.on_cli_calls_click}
-            is_compact
-            hover_color={
-              props.cli_prompt_type == 'edit-files' ? 'blue' : 'purple'
-            }
-          />
-        </UiKeycapWrapper>
+        <UiTargetButton
+          label={TARGET.WEB}
+          on_click={props.on_chatbots_click}
+          is_compact
+          hover_color={
+            props.web_prompt_type == 'edit-files' ? 'blue' : 'purple'
+          }
+          keycap_char={is_alt_pressed ? 'W' : undefined}
+        />
+        <UiTargetButton
+          label={TARGET.API}
+          on_click={props.on_api_calls_click}
+          is_compact
+          hover_color={
+            props.api_prompt_type == 'edit-files' ? 'blue' : 'purple'
+          }
+          keycap_char={is_alt_pressed ? 'A' : undefined}
+        />
+        <UiTargetButton
+          label={TARGET.CLI}
+          on_click={props.on_cli_calls_click}
+          is_compact
+          hover_color={
+            props.cli_prompt_type == 'edit-files' ? 'blue' : 'purple'
+          }
+          keycap_char={is_alt_pressed ? 'C' : undefined}
+        />
       </div>
     </div>
   )
 
   const targets_section = (
     <div className={styles.inner__target} ref={target_ref}>
-      <UiKeycapWrapper char={is_alt_pressed ? 'W' : undefined} full_width>
-        <UiTargetButton
-          label={TARGET.WEB}
-          description={
-            props.is_connected
-              ? t('home.target.web.description-connected')
-              : t('home.target.web.description')
-          }
-          on_click={props.on_chatbots_click}
-          hover_color={
-            props.web_prompt_type == 'edit-files' ? 'blue' : 'purple'
-          }
-        />
-      </UiKeycapWrapper>
-      <UiKeycapWrapper char={is_alt_pressed ? 'A' : undefined} full_width>
-        <UiTargetButton
-          label={TARGET.API}
-          description={t('home.target.api.description')}
-          on_click={props.on_api_calls_click}
-          hover_color={
-            props.api_prompt_type == 'edit-files' ? 'blue' : 'purple'
-          }
-        />
-      </UiKeycapWrapper>
-      <UiKeycapWrapper char={is_alt_pressed ? 'C' : undefined} full_width>
-        <UiTargetButton
-          label={TARGET.CLI}
-          description={t('home.target.cli.description')}
-          on_click={props.on_cli_calls_click}
-          hover_color={
-            props.cli_prompt_type == 'edit-files' ? 'blue' : 'purple'
-          }
-        />
-      </UiKeycapWrapper>
+      <UiTargetButton
+        label={TARGET.WEB}
+        description={
+          props.is_connected
+            ? t('home.target.web.description-connected')
+            : t('home.target.web.description')
+        }
+        on_click={props.on_chatbots_click}
+        hover_color={props.web_prompt_type == 'edit-files' ? 'blue' : 'purple'}
+        keycap_char={is_alt_pressed ? 'W' : undefined}
+      />
+      <UiTargetButton
+        label={TARGET.API}
+        description={t('home.target.api.description')}
+        on_click={props.on_api_calls_click}
+        hover_color={props.api_prompt_type == 'edit-files' ? 'blue' : 'purple'}
+        keycap_char={is_alt_pressed ? 'A' : undefined}
+      />
+      <UiTargetButton
+        label={TARGET.CLI}
+        description={t('home.target.cli.description')}
+        on_click={props.on_cli_calls_click}
+        hover_color={props.cli_prompt_type == 'edit-files' ? 'blue' : 'purple'}
+        keycap_char={is_alt_pressed ? 'C' : undefined}
+      />
     </div>
   )
 

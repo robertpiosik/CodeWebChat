@@ -1,6 +1,7 @@
 import styles from './TargetButton.module.scss'
 import cn from 'classnames'
 import { AsciiArtEffect } from '../AsciiArtEffect'
+import { KeycapWrapper } from '../KeycapWrapper'
 
 type Props = {
   label: string
@@ -9,6 +10,7 @@ type Props = {
   is_compact?: boolean
   disabled?: boolean
   hover_color?: 'blue' | 'purple'
+  keycap_char?: string
 }
 
 export const TargetButton: React.FC<Props> = (props) => {
@@ -27,17 +29,22 @@ export const TargetButton: React.FC<Props> = (props) => {
         disabled={!!props.disabled}
       >
         <AsciiArtEffect />
-        <div className={styles['button__label']}>
-          {props.label.split('').map((char, index) => (
-            <span
-              key={index}
-              className={styles['button__label-char']}
-              style={{ animationDelay: `${index * 0.05}s` }}
-            >
-              {char == ' ' ? '\u00A0' : char}
-            </span>
-          ))}
-        </div>
+        <KeycapWrapper
+          char={props.keycap_char}
+          className={styles['button__keycap-wrapper']}
+        >
+          <div className={styles['button__label']}>
+            {props.label.split('').map((char, index) => (
+              <span
+                key={index}
+                className={styles['button__label-char']}
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
+                {char == ' ' ? '\u00A0' : char}
+              </span>
+            ))}
+          </div>
+        </KeycapWrapper>
         {props.description && !props.is_compact && (
           <div className={styles['button__description']}>
             <span>{props.description}</span>
