@@ -73,7 +73,7 @@ export const handle_autofill = async (params: {
     !collected_files
   ) {
     vscode.window.showInformationMessage(
-      t('views.prompt.handlers.handle-autofill.context-cannot-be-empty')
+      t('views.common.handlers.common.context-cannot-be-empty')
     )
     return
   }
