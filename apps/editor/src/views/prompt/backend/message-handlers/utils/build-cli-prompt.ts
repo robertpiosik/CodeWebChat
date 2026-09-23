@@ -68,7 +68,7 @@ export const build_cli_prompt = async (params: {
     }
   }
 
-  const requirements_section = `# Requirements\n\n${
+  const requirements_section = `# Rules\n\n${
     prompt_view_provider.cli_prompt_type == 'ask-about-files'
       ? cli_ask_requirements
       : cli_edit_requirements

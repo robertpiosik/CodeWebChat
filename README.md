@@ -175,10 +175,10 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 [EDIT FORMAT INSTRUCTIONS]
 
-# Requirements
+# Rules
 
 * This is a read-only session.
-* Read all attached files using their project-relative paths in full, and nothing else.
+* Read all the listed files using their project-relative paths in full, and nothing else.
 * Formulate response adhering to the output formatting, in plain text.
 
 # Task
@@ -216,10 +216,10 @@ _Multi-purpose: explanations, code reviews, you name it._
 - `[SELECTED FILE PATH 1]`
 - `[SELECTED FILE PATH 2]`
 
-# Requirements
+# Rules
 
-* This is a read-only session.
-* Read all attached files using their project-relative paths in full, and nothing else.
+- This is a read-only session.
+- Read all attached files using their project-relative paths in full, and nothing else.
 
 # Task
 
