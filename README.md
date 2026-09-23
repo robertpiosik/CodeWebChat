@@ -30,7 +30,7 @@
 1. Type instructions
 2. Run [Agentic Search](#-agentic-search) for task-relevant file selection
 3. Select examples for model guidance
-4. Send prompt with a chatbot or an API call
+4. Send prompt with a chatbot, an API call or a headless CLI invocation
 5. Apply response
 
 #### Efficiency and speed
