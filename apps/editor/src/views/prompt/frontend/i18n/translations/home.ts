@@ -107,24 +107,6 @@ export const home = {
     hu: 'Szerzői jog © {year} {link}',
     bg: 'Авторско право © {year} {link}'
   },
-  'home.shrink-source-code': {
-    en: 'Strip function bodies',
-    pl: 'Usuń ciała funkcji',
-    'zh-cn': '剥离函数体',
-    ja: '関数本体を取り除く',
-    'zh-tw': '剝離函數主體',
-    de: 'Funktionskörper entfernen',
-    es: 'Eliminar cuerpos de funciones',
-    fr: 'Supprimer les corps de fonction',
-    'pt-br': 'Remover corpos de funções',
-    ru: 'Удалить тела функций',
-    ko: '함수 본문 제거',
-    it: 'Rimuovi corpi di funzioni',
-    tr: 'İşlev gövdelerini kaldır',
-    cs: 'Odstranit těla funkcí',
-    hu: 'Függvénytestek eltávolítása',
-    bg: 'Премахване на телата на функциите'
-  },
   'home.target.web.description': {
     en: 'Copy prompts',
     pl: 'Kopiuj prompty',

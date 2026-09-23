@@ -93,27 +93,32 @@ export const perform_intelligent_search_mode = async (params: {
     let go_back_to_term = false
 
     while (true) {
-      const should_shrink =
-        params.extension_context.workspaceState.get<boolean>(
+      let shrink_result: boolean | 'back' | 'cancel' = false
+      const skip_shrink = analysis.full_tokens == analysis.shrink_tokens
+
+      if (!skip_shrink) {
+        const should_shrink =
+          params.extension_context.workspaceState.get<boolean>(
+            LAST_INTELLIGENT_FILE_SEARCH_SHRINK_STATE_KEY,
+            false
+          )
+        shrink_result = await prompt_for_shrink_mode({
+          should_shrink,
+          full_tokens: analysis.full_tokens,
+          shrink_tokens: analysis.shrink_tokens
+        })
+
+        if (shrink_result == 'back') {
+          go_back_to_term = true
+          break
+        }
+        if (shrink_result == 'cancel') return undefined
+
+        await params.extension_context.workspaceState.update(
           LAST_INTELLIGENT_FILE_SEARCH_SHRINK_STATE_KEY,
-          false
+          shrink_result
         )
-      const shrink_result = await prompt_for_shrink_mode({
-        should_shrink,
-        full_tokens: analysis.full_tokens,
-        shrink_tokens: analysis.shrink_tokens
-      })
-
-      if (shrink_result == 'back') {
-        go_back_to_term = true
-        break
       }
-      if (shrink_result == 'cancel') return undefined
-
-      await params.extension_context.workspaceState.update(
-        LAST_INTELLIGENT_FILE_SEARCH_SHRINK_STATE_KEY,
-        shrink_result
-      )
 
       let go_back_to_shrink = false
 
@@ -207,7 +212,11 @@ export const perform_intelligent_search_mode = async (params: {
         )
 
         if (action == 'back') {
-          go_back_to_shrink = true
+          if (skip_shrink) {
+            go_back_to_term = true
+          } else {
+            go_back_to_shrink = true
+          }
           break
         }
         if (!action) return undefined
