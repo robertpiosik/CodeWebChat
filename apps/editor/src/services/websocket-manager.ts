@@ -11,7 +11,7 @@ import {
   WebSocketMessage
 } from '@shared/types/websocket-message'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
+import { DEFAULT_PORT, SECURITY_TOKENS } from '@/constants/websocket'
 import { Logger } from '@shared/utils/logger'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
@@ -26,7 +26,7 @@ import { t } from '@/i18n'
 export class WebSocketManager {
   private extension_context: vscode.ExtensionContext
   private port: number = DEFAULT_PORT
-  private security_token: string = SECURITY_TOKENS.VSCODE
+  private security_token: string = SECURITY_TOKENS.EDITOR
   private client: WebSocket.WebSocket | null = null
   private _on_connection_status_change: vscode.EventEmitter<boolean> =
     new vscode.EventEmitter<boolean>()
