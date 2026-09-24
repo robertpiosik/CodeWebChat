@@ -207,16 +207,16 @@ export const handle_commit_item = async (
         let msg_token_count = 0
 
         try {
-          let commit_message_body = ''
+          let commit_message = ''
           const raw_msg = execSync(`git show -s --format=%B ${commit_hash}`, {
             cwd: selected_folder.uri.fsPath,
             encoding: 'utf-8'
           }).toString()
-          commit_message_body = AsciiTree.strip_from_text(raw_msg)
+          commit_message = AsciiTree.strip_from_text(raw_msg)
 
-          if (commit_message_body) {
+          if (commit_message) {
             msg_token_count = Math.ceil(
-              `---\n\n${commit_message_body}\n\n---\n\n`.length / 4
+              `---\n\n${commit_message}\n\n---\n\n`.length / 4
             )
           }
 
@@ -225,13 +225,13 @@ export const handle_commit_item = async (
             encoding: 'utf-8'
           }).toString()
 
-          const replacement_text = build_commit_changes_markdown(
+          const replacement_text = build_commit_changes_markdown({
             diff,
-            selected_folder.uri.fsPath,
             commit_hash,
-            workspace_folders.length > 1 ? selected_folder.name : undefined,
-            commit_message_body
-          )
+            path_prefix:
+              workspace_folders.length > 1 ? selected_folder.name : undefined,
+            commit_message
+          })
           diff_token_count = Math.ceil(replacement_text.length / 4)
         } catch (error) {
           // ignore

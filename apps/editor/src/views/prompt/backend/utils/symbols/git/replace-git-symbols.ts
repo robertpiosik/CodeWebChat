@@ -56,15 +56,15 @@ const clean_git_diff = (diff_text: string): string => {
     .join('\n')
 }
 
-export const build_changes_markdown = (
-  diff: string,
-  cwd: string,
-  diff_base: string,
-  branch_name: string,
+export const build_changes_markdown = (params: {
+  diff: string
+  branch_name: string
   path_prefix?: string
-): string => {
+}): string => {
   // Split diff into per-file sections. Each section starts with 'diff --git '.
-  const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
+  const file_diffs = params.diff
+    .split(/^diff --git /m)
+    .filter((d) => d.trim() != '')
   if (file_diffs.length == 0) {
     return ''
   }
@@ -93,16 +93,16 @@ export const build_changes_markdown = (
     }
 
     if (file_path) {
-      const display_path = path_prefix
-        ? `${path_prefix}/${file_path}`
+      const display_path = params.path_prefix
+        ? `${params.path_prefix}/${file_path}`
         : file_path
 
       changes_content += `### File: \`${display_path}\`\n\n`
 
-      if (path_prefix) {
+      if (params.path_prefix) {
         full_file_diff = patch_diff_paths(
           full_file_diff,
-          path_prefix,
+          params.path_prefix,
           file_path,
           old_path,
           new_path
@@ -116,7 +116,7 @@ export const build_changes_markdown = (
   }
 
   return changes_content
-    ? `# Diff with ${branch_name}\n\n${changes_content}`
+    ? `# Diff with ${params.branch_name}\n\n${changes_content}`
     : ''
 }
 
@@ -229,7 +229,7 @@ export const replace_changes_symbol = async (params: {
           vscode.window.showInformationMessage(
             t(
               'views.prompt.utils.symbols.git.replace-git-symbols.no-changes-found-between-branches-in-folder',
-              { branch_name, folder_name }
+              { 'branch name': branch_name, 'folder name': folder_name }
             )
           )
           if (params.symbols_cache) {
@@ -239,13 +239,11 @@ export const replace_changes_symbol = async (params: {
           continue
         }
 
-        const replacement_text = build_changes_markdown(
+        const replacement_text = build_changes_markdown({
           diff,
-          target_folder.uri.fsPath,
-          diff_base,
           branch_name,
-          workspace_folders.length > 1 ? folder_name : undefined
-        )
+          path_prefix: workspace_folders.length > 1 ? folder_name : undefined
+        })
         const link_hash = `diff-with-${branch_name
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, '-')
@@ -340,7 +338,7 @@ export const replace_changes_symbol = async (params: {
           vscode.window.showInformationMessage(
             t(
               'views.prompt.utils.symbols.git.replace-git-symbols.no-changes-found-between-branches',
-              { branch_name }
+              { 'branch name': branch_name }
             )
           )
           if (params.symbols_cache) {
@@ -350,12 +348,10 @@ export const replace_changes_symbol = async (params: {
           continue
         }
 
-        const replacement_text = build_changes_markdown(
+        const replacement_text = build_changes_markdown({
           diff,
-          repository.rootUri.fsPath,
-          diff_base,
           branch_name
-        )
+        })
         const link_hash = `diff-with-${branch_name
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, '-')
@@ -391,14 +387,15 @@ export const replace_changes_symbol = async (params: {
   return { instruction: result_instruction, changes_definitions }
 }
 
-export const build_commit_changes_markdown = (
-  diff: string,
-  cwd: string,
-  commit_hash: string,
-  path_prefix?: string,
+export const build_commit_changes_markdown = (params: {
+  diff: string
+  commit_hash: string
+  path_prefix?: string
   commit_message?: string
-): string => {
-  const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
+}): string => {
+  const file_diffs = params.diff
+    .split(/^diff --git /m)
+    .filter((d) => d.trim() != '')
 
   if (file_diffs.length == 0) {
     return ''
@@ -428,16 +425,16 @@ export const build_commit_changes_markdown = (
     }
 
     if (file_path) {
-      const display_path = path_prefix
-        ? `${path_prefix}/${file_path}`
+      const display_path = params.path_prefix
+        ? `${params.path_prefix}/${file_path}`
         : file_path
 
       changes_content += `### File: \`${display_path}\`\n\n`
 
-      if (path_prefix) {
+      if (params.path_prefix) {
         full_file_diff = patch_diff_paths(
           full_file_diff,
-          path_prefix,
+          params.path_prefix,
           file_path,
           old_path,
           new_path
@@ -451,11 +448,11 @@ export const build_commit_changes_markdown = (
   }
 
   if (changes_content) {
-    const short_hash = commit_hash.substring(0, 7)
+    const short_hash = params.commit_hash.substring(0, 7)
     const title_text = `Commit ${short_hash}`
     let msg_text = ''
-    if (commit_message) {
-      const trimmed = commit_message.trim()
+    if (params.commit_message) {
+      const trimmed = params.commit_message.trim()
       if (trimmed) {
         const lines = trimmed.split('\n')
         const first_line = `**${lines[0].trim()}**`
@@ -570,13 +567,12 @@ export const replace_commit_symbol = async (params: {
           continue
         }
 
-        replacement_text = build_commit_changes_markdown(
+        replacement_text = build_commit_changes_markdown({
           diff,
-          target_folder.uri.fsPath,
           commit_hash,
-          workspace_folders.length > 1 ? folder_name : undefined,
-          commit_message_body
-        )
+          path_prefix: workspace_folders.length > 1 ? folder_name : undefined,
+          commit_message: commit_message_body
+        })
       } else {
         if (commit_message_body) {
           replacement_text = `---\n\n${commit_message_body}\n\n---\n\n`

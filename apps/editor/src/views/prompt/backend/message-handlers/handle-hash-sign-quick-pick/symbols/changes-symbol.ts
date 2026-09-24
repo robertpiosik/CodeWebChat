@@ -172,17 +172,17 @@ export const handle_changes_item = async (
             for (let i = 0; i < branch_items.length; i++) {
               if (!is_active) break
 
-              const branch = branch_items[i].label
+              const branch_name = branch_items[i].label
               try {
                 let diff_base: string
-                if (current_branch === branch) {
+                if (current_branch === branch_name) {
                   const { stdout } = await execAsync(
-                    `git merge-base HEAD ${branch}`,
+                    `git merge-base HEAD ${branch_name}`,
                     { cwd }
                   )
                   diff_base = stdout.trim()
                 } else {
-                  diff_base = branch
+                  diff_base = branch_name
                 }
 
                 const { stdout: diff } = await execAsync(
@@ -196,13 +196,11 @@ export const handle_changes_item = async (
                 if (!diff || diff.trim().length === 0) {
                   branch_items[i].description = 'No changes'
                 } else {
-                  const replacement_text = build_changes_markdown(
+                  const replacement_text = build_changes_markdown({
                     diff,
-                    cwd,
-                    diff_base,
-                    branch,
-                    is_multi_root ? folder_name : undefined
-                  )
+                    branch_name,
+                    path_prefix: is_multi_root ? folder_name : undefined
+                  })
                   const token_count = Math.ceil(replacement_text.length / 4)
                   branch_items[i].description = display_token_count(token_count)
                 }
