@@ -76,7 +76,7 @@ export const connect_websocket = async (): Promise<void> => {
       storage['browser-profile-name'] as string | undefined
     )?.trim()
 
-    let ws_url = `ws://localhost:${DEFAULT_PORT}?token=${SECURITY_TOKENS.BROWSERS}&version=${version}&user_agent=${encodeURIComponent(user_agent)}`
+    let ws_url = `ws://localhost:${DEFAULT_PORT}?token=${SECURITY_TOKENS.BROWSER}&version=${version}&user_agent=${encodeURIComponent(user_agent)}`
     if (profile_name) {
       ws_url += `&profile_name=${encodeURIComponent(profile_name)}`
     }

@@ -3,7 +3,7 @@ import * as process from 'process'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const WebSocket = require('ws')
 
-import { DEFAULT_PORT, SECURITY_TOKENS } from '../constants/websocket'
+import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
 
 interface BrowserClient {
   ws: WebSocket

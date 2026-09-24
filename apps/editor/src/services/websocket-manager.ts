@@ -11,7 +11,7 @@ import {
   WebSocketMessage
 } from '@shared/types/websocket-message'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { DEFAULT_PORT, SECURITY_TOKENS } from '@/constants/websocket'
+import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
 import { Logger } from '@shared/utils/logger'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
