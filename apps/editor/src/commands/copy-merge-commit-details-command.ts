@@ -4,6 +4,7 @@ import { get_git_repository } from '@/utils/git-repository-utils'
 import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
 import { AsciiTree } from '@/utils/ascii-tree'
+import { get_error_message } from '@/utils/get-error-message'
 
 export const copy_merge_commit_details_command = (): vscode.Disposable => {
   return vscode.commands.registerCommand(
@@ -167,9 +168,7 @@ export const copy_merge_commit_details_command = (): vscode.Disposable => {
         )
       } catch (error) {
         vscode.window.showErrorMessage(
-          `Failed to copy merge commit details: ${
-            error instanceof Error ? error.message : String(error)
-          }`
+          `Failed to copy merge commit details: ${get_error_message(error)}`
         )
         Logger.error({
           function_name: 'copy_merge_commit_details_command',

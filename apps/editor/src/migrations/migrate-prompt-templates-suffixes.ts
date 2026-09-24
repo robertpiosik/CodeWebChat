@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
+import { get_error_message } from '@/utils/get-error-message'
 
 const MIGRATION_ID = 'prompt-templates-suffixes-migration-20260702'
 
@@ -54,7 +55,7 @@ export async function migrate_prompt_templates_suffixes(
     Logger.error({
       function_name: 'migrate_prompt_templates_suffixes',
       message: 'Error migrating prompt templates suffixes',
-      data: error instanceof Error ? error.message : String(error)
+      data: get_error_message(error)
     })
   }
 }

@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 import { t } from '../i18n'
+import { get_error_message } from '@/utils/get-error-message'
 
 export const select_definition_file_command = (
   workspace_provider: WorkspaceProvider
@@ -94,7 +95,7 @@ export const select_definition_file_command = (
       } catch (error) {
         vscode.window.showErrorMessage(
           t('command.select-definition-file-command.failed', {
-            error: error instanceof Error ? error.message : String(error)
+            error: get_error_message(error)
           })
         )
         Logger.error({

@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 import { SECRET_STORAGE_PROVIDERS_KEY } from '@/constants/secret-storage-keys'
+import { get_error_message } from '@/utils/get-error-message'
 
 const MIGRATION_ID = 'model-providers-to-providers-migration-20260920'
 
@@ -47,7 +48,7 @@ export async function migrate_model_providers_to_providers(
     Logger.error({
       function_name: 'migrate_model_providers_to_providers',
       message: 'Error migrating model providers to providers',
-      data: error instanceof Error ? error.message : String(error)
+      data: get_error_message(error)
     })
   }
 }

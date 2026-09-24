@@ -25,6 +25,7 @@ import { ongoing_preview_cleanup_promise } from '@/commands/apply-response-comma
 import { get_git_info } from '@/features/checkpoints/utils/git-utils'
 import { CommitMessageDetails } from '@/utils/commit-message-details'
 import { t } from '@/i18n'
+import { get_error_message } from '@/utils/get-error-message'
 export const restore_checkpoint = async (params: {
   checkpoint: Checkpoint
   workspace_provider: WorkspaceProvider
@@ -145,7 +146,7 @@ export const restore_checkpoint = async (params: {
       } catch (err) {
         vscode.window.showErrorMessage(
           t('command.history-command.error.create-temp-failed', {
-            error: err instanceof Error ? err.message : String(err)
+            error: get_error_message(err)
           })
         )
         await params.extension_context.workspaceState.update(
@@ -525,7 +526,7 @@ export const restore_checkpoint = async (params: {
         )
         vscode.window.showErrorMessage(
           t('command.history-command.error.restore-failed', {
-            error: err instanceof Error ? err.message : String(err)
+            error: get_error_message(err)
           })
         )
         if (temp_checkpoint) {

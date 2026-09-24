@@ -15,6 +15,7 @@ import {
   handle_deleted_file_item,
   get_rename_source_info
 } from '../../utils/file-operations'
+import { get_error_message } from '@/utils/get-error-message'
 import { apply_search_replace_to_content } from '../../../../utils/changes-integration/search-replace-processor/apply-search-replace-to-content'
 import { parse_search_replace_segments } from '../../../../utils/changes-integration/search-replace-processor/parse-search-replace-segments'
 
@@ -263,7 +264,7 @@ export const handle_search_replace = async (params: {
     })
     vscode.window.showErrorMessage(
       t('command.apply-response-command.error.applying-changes', {
-        msg: error instanceof Error ? error.message : String(error)
+        msg: get_error_message(error)
       })
     )
     return { success: false }

@@ -7,6 +7,7 @@ import {
 import { Logger } from '@shared/utils/logger'
 import { verify_model } from './verify-model'
 import { t } from '@/i18n'
+import { get_error_message } from '@/utils/get-error-message'
 
 export const initial_select_model = async (
   model_fetcher: ModelFetcher,
@@ -146,7 +147,7 @@ export const initial_select_model = async (
     } else {
       vscode.window.showErrorMessage(
         t('views.shared.actions.api.common.error.failed-to-fetch-models', {
-          message: error instanceof Error ? error.message : String(error)
+          message: get_error_message(error)
         })
       )
     }

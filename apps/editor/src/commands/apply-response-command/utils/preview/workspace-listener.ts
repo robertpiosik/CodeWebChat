@@ -26,7 +26,11 @@ export let discard_user_changes_in_preview:
   | undefined
 
 export let set_file_applied_with_patch_repair:
-  | ((file: { file_path: string; workspace_name?: string }) => void)
+  | ((file: {
+      file_path: string
+      workspace_name?: string
+      new_content?: string
+    }) => void)
   | undefined
 
 const recalculate_history_item_totals = (item: ResponseHistoryItem) => {
@@ -1024,7 +1028,11 @@ export const setup_workspace_listeners = (params: {
     }
   }
 
-  set_file_applied_with_patch_repair = ({ file_path, workspace_name }) => {
+  set_file_applied_with_patch_repair = ({
+    file_path,
+    workspace_name,
+    new_content
+  }) => {
     const file = params.prepared_files.find(
       (f) =>
         f.previewable_file.file_path == file_path &&
@@ -1032,10 +1040,27 @@ export const setup_workspace_listeners = (params: {
     )
     if (file) {
       file.previewable_file.applied_with_patch_repair = true
+      
+      if (new_content !== undefined) {
+        file.previewable_file.content = new_content
+        file.previewable_file.proposed_content = new_content
+        const diff_stats = get_diff_stats({
+          original_content: file.original_content,
+          new_content
+        })
+        file.previewable_file.lines_added = diff_stats.lines_added
+        file.previewable_file.lines_removed = diff_stats.lines_removed
+      }
+
       update_response_history({
         prompt_view_provider: params.prompt_view_provider,
         created_at: params.created_at,
         updated_file: file.previewable_file
+      })
+
+      params.prompt_view_provider.send_message({
+        command: 'UPDATE_FILE_IN_PREVIEW',
+        file: file.previewable_file
       })
     }
   }

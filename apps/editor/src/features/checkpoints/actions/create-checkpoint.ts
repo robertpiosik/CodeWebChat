@@ -22,6 +22,7 @@ import { Logger } from '@shared/utils/logger'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 import { t } from '@/i18n'
+import { get_error_message } from '@/utils/get-error-message'
 
 export const create_checkpoint = async (params: {
   workspace_provider: WorkspaceProvider
@@ -245,7 +246,7 @@ export const create_checkpoint = async (params: {
   } catch (err) {
     vscode.window.showErrorMessage(
       t('feature.checkpoints.error.create-failed', {
-        error: err instanceof Error ? err.message : String(err)
+        error: get_error_message(err)
       })
     )
     await params.extension_context.workspaceState.update(

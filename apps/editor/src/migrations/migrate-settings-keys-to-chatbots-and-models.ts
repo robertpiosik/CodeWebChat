@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
+import { get_error_message } from '@/utils/get-error-message'
 
 const MIGRATION_ID = 'settings-keys-to-chatbots-and-models-migration-20261026'
 
@@ -52,7 +53,7 @@ export async function migrate_settings_keys_to_chatbots_and_models(
     Logger.error({
       function_name: 'migrate_settings_keys_to_chatbots_and_models',
       message: 'Error migrating settings keys to chatbots and models',
-      data: error instanceof Error ? error.message : String(error)
+      data: get_error_message(error)
     })
   }
 }

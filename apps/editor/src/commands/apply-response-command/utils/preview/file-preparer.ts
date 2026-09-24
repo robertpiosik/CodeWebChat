@@ -74,7 +74,7 @@ export const prepare_files_from_original_states = async (params: {
     })
     const is_deleted =
       state.file_state == 'deleted' ||
-      (state.file_state != 'new' && !file_exists && state.content != '')
+      (state.file_state != 'new' && !state.file_path_to_restore && !file_exists && state.content != '')
 
     const previewable_file: PreviewableFile = {
       type: 'file',

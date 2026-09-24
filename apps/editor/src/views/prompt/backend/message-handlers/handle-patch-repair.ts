@@ -15,6 +15,7 @@ import {
 } from './utils/patch-repair-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
+import { get_error_message } from '@/utils/get-error-message'
 import { set_file_applied_with_patch_repair } from '@/commands/apply-response-command/utils/preview'
 import { t } from '@/i18n'
 import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
@@ -456,8 +457,26 @@ export const handle_patch_repair = async (params: {
             if (set_file_applied_with_patch_repair) {
               set_file_applied_with_patch_repair({
                 file_path,
-                workspace_name
+                workspace_name,
+                new_content: final_content
               })
+            }
+
+            if (file_state.file_path_to_restore) {
+              let old_workspace_root = default_workspace_path!
+              const old_workspace_name = file_state.restore_workspace_name ?? workspace_name
+              if (old_workspace_name) {
+                const folder = vscode.workspace.workspaceFolders?.find(
+                  (f) => f.name == old_workspace_name
+                )
+                if (folder) old_workspace_root = folder.uri.fsPath
+              }
+              const old_safe_path = create_safe_path(old_workspace_root, file_state.file_path_to_restore)
+              if (old_safe_path) {
+                try {
+                  await vscode.workspace.fs.delete(vscode.Uri.file(old_safe_path))
+                } catch (e) {}
+              }
             }
 
             await vscode.workspace.fs.writeFile(
@@ -470,8 +489,7 @@ export const handle_patch_repair = async (params: {
             )
           }
         } catch (error) {
-          const error_msg =
-            error instanceof Error ? error.message : String(error)
+          const error_msg = get_error_message(error)
           if (
             !axios.isCancel(error) &&
             error_msg != 'User cancelled the operation' &&
@@ -526,7 +544,7 @@ export const handle_patch_repair = async (params: {
       })
     )
   } catch (error) {
-    const error_msg = error instanceof Error ? error.message : String(error)
+    const error_msg = get_error_message(error)
     if (
       error_msg == 'Preview finished.' ||
       error_msg == 'User cancelled the operation'

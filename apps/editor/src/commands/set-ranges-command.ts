@@ -11,6 +11,7 @@ import {
 } from '../constants/state-keys'
 import { t } from '../i18n'
 import { normalize_path } from '../utils/normalize-path'
+import { get_error_message } from '@/utils/get-error-message'
 
 export const set_ranges_command = (
   workspace_provider: WorkspaceProvider,
@@ -182,7 +183,7 @@ export const set_ranges_command = (
           } catch (error) {
             vscode.window.showErrorMessage(
               t('command.set-ranges-command.error.update-file', {
-                error: error instanceof Error ? error.message : String(error)
+                error: get_error_message(error)
               })
             )
           }
@@ -273,7 +274,7 @@ export const set_ranges_command = (
           } catch (error) {
             vscode.window.showErrorMessage(
               t('command.set-ranges-command.error.save-file', {
-                error: error instanceof Error ? error.message : String(error)
+                error: get_error_message(error)
               })
             )
           }
@@ -303,7 +304,7 @@ export const set_ranges_command = (
             } catch (error) {
               vscode.window.showErrorMessage(
                 t('command.set-ranges-command.error.cleanup-file', {
-                  error: error instanceof Error ? error.message : String(error)
+                  error: get_error_message(error)
                 })
               )
             }

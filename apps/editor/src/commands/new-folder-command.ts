@@ -4,6 +4,7 @@ import * as vscode from 'vscode'
 import { create_safe_path } from '../utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
 import { t } from '../i18n'
+import { get_error_message } from '@/utils/get-error-message'
 
 export const new_folder_command = () => {
   return vscode.commands.registerCommand(
@@ -161,13 +162,13 @@ export const new_folder_command = () => {
         if (is_file_like) {
           vscode.window.showInformationMessage(
             t('common.info.failed-to-create-file', {
-              message: error instanceof Error ? error.message : String(error)
+            message: get_error_message(error)
             })
           )
         } else {
           vscode.window.showInformationMessage(
             t('common.info.failed-to-create-folder', {
-              message: error instanceof Error ? error.message : String(error)
+            message: get_error_message(error)
             })
           )
         }

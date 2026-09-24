@@ -4,6 +4,7 @@ import { ProvidersManager } from '@/services/providers-manager'
 import { edit_reasoning_effort_for_api_config } from '@/views/shared/actions/api/update/interactions'
 import { verify_reasoning_effort } from '@/views/shared/actions/api/create/interactions'
 import { t } from '@/i18n'
+import { get_error_message } from '@/utils/get-error-message'
 
 export const handle_pick_api_reasoning_effort = async (
   provider: SettingsViewProvider,
@@ -43,7 +44,7 @@ export const handle_pick_api_reasoning_effort = async (
         )
       } catch (error) {
         is_valid = false
-        const error_msg = error instanceof Error ? error.message : String(error)
+        const error_msg = get_error_message(error)
         if (error_msg != 'Cancelled') {
           vscode.window.showWarningMessage(
             t('views.common.handlers.common.reasoning-effort-not-supported')

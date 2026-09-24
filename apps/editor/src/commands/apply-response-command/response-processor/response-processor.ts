@@ -544,12 +544,17 @@ const create_failed_file_state = (params: {
   default_workspace: string
   workspace_map: Map<string, string>
 }): OriginalFileState => {
+  const read_workspace_name = params.file.renamed_from
+    ? (params.file.renamed_from_workspace ?? params.file.workspace_name)
+    : params.file.workspace_name
+  const read_file_path = params.file.renamed_from ?? params.file.file_path
+
   const workspace_root = resolve_workspace_root({
-    workspace_name: params.file.workspace_name,
+    workspace_name: read_workspace_name,
     workspace_map: params.workspace_map,
     default_workspace: params.default_workspace
   })
-  const safe_path = create_safe_path(workspace_root, params.file.file_path)
+  const safe_path = create_safe_path(workspace_root, read_file_path)
   let content = ''
 
   if (safe_path && fs.existsSync(safe_path)) {
@@ -558,11 +563,20 @@ const create_failed_file_state = (params: {
     } catch (e) {}
   }
 
-  return {
+  const result: OriginalFileState = {
     file_path: params.file.file_path,
     workspace_name: params.file.workspace_name,
     content,
     apply_failed: true,
     ai_content: params.file.content
   }
+
+  if (params.file.renamed_from) {
+    result.file_path_to_restore = params.file.renamed_from
+    if (params.file.renamed_from_workspace) {
+      result.restore_workspace_name = params.file.renamed_from_workspace
+    }
+  }
+
+  return result
 }

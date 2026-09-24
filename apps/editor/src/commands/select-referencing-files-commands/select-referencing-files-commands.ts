@@ -6,6 +6,7 @@ import { get_referencing_files_for_position } from './utils/get-referencing-file
 import { get_referencing_files_for_uris } from './utils/get-referencing-files-for-uris'
 import { prompt_for_referencing_files } from './utils/prompt-for-referencing-files'
 import { WebSocketManager } from '@/services/websocket-manager'
+import { get_error_message } from '@/utils/get-error-message'
 
 const handle_reference_selection = async (params: {
   matched_files: { file_path: string; range: vscode.Range }[]
@@ -219,7 +220,7 @@ export const select_referencing_files_commands = (
       } catch (error) {
         vscode.window.showErrorMessage(
           t('command.select-referencing-files-command.failed', {
-            error: error instanceof Error ? error.message : String(error)
+            error: get_error_message(error)
           })
         )
         Logger.error({
@@ -285,7 +286,7 @@ export const select_referencing_files_commands = (
         } catch (error) {
           vscode.window.showErrorMessage(
             t('command.select-referencing-files-command.failed', {
-              error: error instanceof Error ? error.message : String(error)
+            error: get_error_message(error)
             })
           )
           Logger.error({

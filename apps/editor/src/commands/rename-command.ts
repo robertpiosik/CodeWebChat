@@ -3,6 +3,7 @@ import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 import { create_safe_path } from '../utils/path-sanitizer'
 import { t } from '../i18n'
+import { get_error_message } from '@/utils/get-error-message'
 
 export const rename_command = () => {
   return vscode.commands.registerCommand(
@@ -57,7 +58,7 @@ export const rename_command = () => {
       } catch (error) {
         Logger.error({
           function_name: 'rename_command',
-          message: `Failed to rename: ${error instanceof Error ? error.message : String(error)}`
+          message: `Failed to rename: ${get_error_message(error)}`
         })
       }
     }

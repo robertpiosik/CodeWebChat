@@ -8,6 +8,7 @@ import { create_safe_path } from '@/utils/path-sanitizer'
 import { apply_diff } from '../../../../utils/changes-integration/diff-processor'
 import { remove_directory_if_empty } from '../../utils/file-operations'
 import { DiffItem } from '../../utils/response-parser'
+import { get_error_message } from '@/utils/get-error-message'
 
 export const sanitize_patch_content = (
   patch_content: string,
@@ -376,7 +377,7 @@ const handle_new_file_patch = async (
       function_name: 'handle_new_file_patch',
       message: 'Failed to create new file from patch.',
       data: {
-        error: error instanceof Error ? error.message : String(error),
+        error: get_error_message(error),
         file_path
       }
     })
@@ -457,7 +458,7 @@ const handle_deleted_file_patch = async (
       function_name: 'handle_deleted_file_patch',
       message: 'Failed to delete file from patch.',
       data: {
-        error: error instanceof Error ? error.message : String(error),
+        error: get_error_message(error),
         file_path
       }
     })
@@ -679,10 +680,7 @@ export const apply_git_patch = async (
     // This outer catch handles setup errors and final application failures
     await reopen_closed_files(closed_files)
 
-    const has_rejects =
-      error instanceof Error
-        ? error.message.includes('.rej')
-        : String(error).includes('.rej')
+    const has_rejects = get_error_message(error).includes('.rej')
     if (has_rejects) {
       const file_paths = extract_file_paths_from_patch(patch_content)
       await process_modified_files(file_paths, workspace_path)

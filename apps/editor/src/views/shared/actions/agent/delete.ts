@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { ConfigAgentConfigurationFormat } from '@/utils/agent-configuration-format-converters'
 import { t } from '@/i18n'
+import { get_error_message } from '@/utils/get-error-message'
 
 export const remove = async (params: { name: string }): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -72,7 +73,7 @@ export const remove = async (params: { name: string }): Promise<void> => {
     vscode.window.showErrorMessage(
       t('common.error.failed-to-delete-item', {
         item_type: 'agent',
-        error: error instanceof Error ? error.message : String(error)
+        error: get_error_message(error)
       })
     )
   }

@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
+import { get_error_message } from '@/utils/get-error-message'
 
 const MIGRATION_ID =
   'edit-context-to-edit-files-system-instructions-migration-20260701'
@@ -39,7 +40,7 @@ export async function migrate_edit_context_to_edit_files_system_instructions(
       function_name: 'migrate_edit_context_to_edit_files_system_instructions',
       message:
         'Error migrating editContextSystemInstructions to editFilesSystemInstructions',
-      data: error instanceof Error ? error.message : String(error)
+      data: get_error_message(error)
     })
   }
 }

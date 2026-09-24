@@ -11,6 +11,7 @@ import { perform_keywords_search_mode } from './search-modes/perform-keywords-se
 import { perform_intelligent_search_mode } from './search-modes/perform-intelligent-search-mode'
 import { Logger } from '@shared/utils/logger'
 import { WebSocketManager } from '@/services/websocket-manager'
+import { get_error_message } from '@/utils/get-error-message'
 
 export const search_files = async (params: {
   get_files: () => Promise<string[]>
@@ -121,7 +122,7 @@ export const search_files = async (params: {
     } catch (error) {
       vscode.window.showErrorMessage(
         t('feature.search-files.failed', {
-          error: error instanceof Error ? error.message : String(error)
+          error: get_error_message(error)
         })
       )
       Logger.error({

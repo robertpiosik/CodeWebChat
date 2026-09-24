@@ -10,6 +10,7 @@ import {
   get_workspace_map_and_default,
   resolve_workspace_root
 } from '../../utils/workspace'
+import { get_error_message } from '@/utils/get-error-message'
 import { process_truncations } from '../../../../utils/changes-integration/truncations-processor'
 import {
   cleanup_rename_source,
@@ -141,7 +142,7 @@ export const handle_truncated_edit = async (params: {
           function_name: 'handle_truncated_edit',
           message: 'Failed to process truncated file for rename',
           data: {
-            error: error instanceof Error ? error.message : String(error),
+            error: get_error_message(error),
             file_path: safe_path
           }
         })
@@ -174,7 +175,7 @@ export const handle_truncated_edit = async (params: {
           function_name: 'handle_truncated_edit',
           message: 'Failed to create new file',
           data: {
-            error: error instanceof Error ? error.message : String(error),
+            error: get_error_message(error),
             file_path: safe_path
           }
         })
@@ -216,7 +217,7 @@ export const handle_truncated_edit = async (params: {
         function_name: 'handle_truncated_edit',
         message: 'Failed to process truncated file',
         data: {
-          error: error instanceof Error ? error.message : String(error),
+          error: get_error_message(error),
           file_path: safe_path
         }
       })

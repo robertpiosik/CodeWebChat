@@ -9,6 +9,7 @@ import { Logger } from '@shared/utils/logger'
 import { extract_paths_from_text } from '@/utils/extract-paths-from-text'
 import { search_files } from '@/features/search-files'
 import { WebSocketManager } from '@/services/websocket-manager'
+import { get_error_message } from '@/utils/get-error-message'
 
 export const select_clipboard_paths_command = (
   workspace_provider: WorkspaceProvider,
@@ -416,9 +417,7 @@ export const select_clipboard_paths_command = (
         }
       } catch (error) {
         vscode.window.showErrorMessage(
-          `Failed to select clipboard paths: ${
-            error instanceof Error ? error.message : String(error)
-          }`
+          `Failed to select clipboard paths: ${get_error_message(error)}`
         )
         Logger.error({
           function_name: 'select_clipboard_paths_command',

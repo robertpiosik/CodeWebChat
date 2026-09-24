@@ -4,6 +4,7 @@ import type { Checkpoint } from '@/features/checkpoints/types'
 import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { t } from '@/i18n'
+import { get_error_message } from '@/utils/get-error-message'
 
 export type ActiveDeleteOperation = {
   finalize: () => Promise<void>
@@ -49,7 +50,7 @@ export const delete_checkpoint_with_undo = async (params: {
     } catch (error) {
       vscode.window.showWarningMessage(
         t('command.history-command.warning.could-not-delete', {
-          error: error instanceof Error ? error.message : String(error)
+          error: get_error_message(error)
         })
       )
     }

@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
+import { get_error_message } from '@/utils/get-error-message'
 
 const MIGRATION_ID = 'prompt-templates-to-templates-migration-20260816'
 
@@ -62,7 +63,7 @@ export async function migrate_prompt_templates_to_templates(
     Logger.error({
       function_name: 'migrate_prompt_templates_to_templates',
       message: 'Error migrating prompt templates to templates',
-      data: error instanceof Error ? error.message : String(error)
+      data: get_error_message(error)
     })
   }
 }

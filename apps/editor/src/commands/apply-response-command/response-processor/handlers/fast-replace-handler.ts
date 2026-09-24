@@ -10,6 +10,7 @@ import {
   get_workspace_map_and_default,
   resolve_workspace_root
 } from '../../utils/workspace'
+import { get_error_message } from '@/utils/get-error-message'
 import {
   cleanup_rename_source,
   handle_deleted_file_item,
@@ -175,7 +176,7 @@ export const handle_fast_replace = async (params: {
           vscode.window.showErrorMessage(
             t('command.apply-response-command.error.processing-file', {
               path: file.file_path,
-              msg: error instanceof Error ? error.message : String(error)
+              msg: get_error_message(error)
             })
           )
           continue
@@ -288,7 +289,7 @@ export const handle_fast_replace = async (params: {
         vscode.window.showErrorMessage(
           t('command.apply-response-command.error.processing-file', {
             path: file.file_path,
-            msg: error instanceof Error ? error.message : String(error)
+              msg: get_error_message(error)
           })
         )
         continue
@@ -310,7 +311,7 @@ export const handle_fast_replace = async (params: {
     console.error('Error during direct file replacement:', error)
     vscode.window.showErrorMessage(
       t('command.apply-response-command.error.replacing-files', {
-        msg: error instanceof Error ? error.message : String(error)
+        msg: get_error_message(error)
       })
     )
     return { success: false }

@@ -7,6 +7,7 @@ import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { get_checkpoints } from '@/features/checkpoints/actions'
 import { Logger } from '@shared/utils/logger'
 import type { Checkpoint } from '@/features/checkpoints/types'
+import { get_error_message } from '@/utils/get-error-message'
 
 const MIGRATION_ID = 'clear-all-checkpoints-migration-20260910'
 
@@ -68,7 +69,7 @@ export async function migrate_clear_all_checkpoints(
     Logger.error({
       function_name: 'migrate_clear_all_checkpoints',
       message: 'Error migrating and clearing all checkpoints',
-      data: error instanceof Error ? error.message : String(error)
+      data: get_error_message(error)
     })
   }
 }

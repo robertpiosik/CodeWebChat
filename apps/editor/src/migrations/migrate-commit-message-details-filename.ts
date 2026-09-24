@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
+import { get_error_message } from '@/utils/get-error-message'
 
 const MIGRATION_ID = 'commit-message-details-filename-migration-20260805'
 
@@ -36,7 +37,7 @@ export async function migrate_commit_message_details_filename(
     Logger.error({
       function_name: 'migrate_commit_message_details_filename',
       message: 'Error migrating commit message details filename',
-      data: error instanceof Error ? error.message : String(error)
+      data: get_error_message(error)
     })
   }
 }

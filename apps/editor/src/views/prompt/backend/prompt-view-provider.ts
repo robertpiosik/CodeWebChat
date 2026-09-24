@@ -127,6 +127,7 @@ import {
   CliPromptType
 } from '@shared/types/prompt-types'
 import { Logger } from '@shared/utils/logger'
+import { get_error_message } from '@/utils/get-error-message'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { ProvidersManager } from '@/services/providers-manager'
 import { SharedContextState } from '@/context/shared-context-state'
@@ -909,7 +910,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           })
           vscode.window.showErrorMessage(
             t('common.error.error-handling-message', {
-              message: error instanceof Error ? error.message : String(error)
+              message: get_error_message(error)
             })
           )
         }

@@ -15,6 +15,7 @@ import { LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY } from '@/constants/state-key
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { t } from '@/i18n'
 import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
+import { get_error_message } from '@/utils/get-error-message'
 
 const MIN_RECORDING_DURATION = 1000
 
@@ -238,7 +239,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
       })
       vscode.window.showErrorMessage(
         t('views.prompt.handlers.handle-voice-input.error.process-failed', {
-          error: error instanceof Error ? error.message : String(error)
+          error: get_error_message(error)
         })
       )
     } finally {

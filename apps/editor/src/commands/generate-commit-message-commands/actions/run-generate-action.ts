@@ -25,6 +25,7 @@ import { get_response_preview_promise_resolve } from '@/commands/apply-response-
 import { normalize_path } from '@/utils/normalize-path'
 import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
+import { get_error_message } from '@/utils/get-error-message'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
@@ -491,8 +492,7 @@ export const run_generate_action = async (params: {
             })
             action_completed = true
           } catch (error) {
-            const error_msg =
-              error instanceof Error ? error.message : String(error)
+            const error_msg = get_error_message(error)
             if (
               axios.isCancel(error) ||
               error_msg == 'Operation cancelled by user'

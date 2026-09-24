@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as vscode from 'vscode'
 import { SavedContext } from '@/types/context'
+import { get_error_message } from '@/utils/get-error-message'
 
 export const get_contexts_file_path = (workspace_root: string): string => {
   return path.join(workspace_root, '.vscode', 'contexts.json')
@@ -110,7 +111,7 @@ export const save_contexts_to_file = async (params: {
     }
   } catch (error) {
     throw new Error(
-      `Failed to save contexts to file: ${error instanceof Error ? error.message : String(error)}`
+      `Failed to save contexts to file: ${get_error_message(error)}`
     )
   }
 }

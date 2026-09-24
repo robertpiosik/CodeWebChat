@@ -10,6 +10,7 @@ import {
 import { Logger } from '@shared/utils/logger'
 import { verify_model } from '../../create/interactions/verify-model'
 import { t } from '@/i18n'
+import { get_error_message } from '@/utils/get-error-message'
 
 export const edit_model_for_api_configuration = async (params: {
   api_configuration: ApiConfiguration
@@ -175,7 +176,7 @@ export const edit_model_for_api_configuration = async (params: {
     } else {
       vscode.window.showErrorMessage(
         t('views.shared.actions.api.common.error.failed-to-fetch-models', {
-          message: error instanceof Error ? error.message : String(error)
+          message: get_error_message(error)
         })
       )
     }

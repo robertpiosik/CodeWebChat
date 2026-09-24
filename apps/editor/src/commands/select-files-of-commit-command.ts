@@ -12,6 +12,7 @@ import { search_files } from '@/features/search-files'
 import { AsciiTree } from '@/utils/ascii-tree'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { show_parent_folder_quick_pick } from '@/utils/show-parent-folder-quick-pick'
+import { get_error_message } from '@/utils/get-error-message'
 
 export const select_files_of_commit_command = (
   workspace_provider: WorkspaceProvider,
@@ -636,9 +637,7 @@ export const select_files_of_commit_command = (
         }
       } catch (error) {
         vscode.window.showErrorMessage(
-          `Failed to load commit files: ${
-            error instanceof Error ? error.message : String(error)
-          }`
+          `Failed to load commit files: ${get_error_message(error)}`
         )
         Logger.error({
           function_name: 'select_files_of_commit_command',

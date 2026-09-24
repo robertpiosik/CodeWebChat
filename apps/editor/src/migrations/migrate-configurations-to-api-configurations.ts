@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
+import { get_error_message } from '@/utils/get-error-message'
 
 const MIGRATION_ID = 'configurations-to-api-configurations-migration-20260626'
 
@@ -36,7 +37,7 @@ export async function migrate_configurations_to_api_configurations(
     Logger.error({
       function_name: 'migrate_configurations_to_api_configurations',
       message: 'Error migrating configurations to api configurations',
-      data: error instanceof Error ? error.message : String(error)
+      data: get_error_message(error)
     })
   }
 }
