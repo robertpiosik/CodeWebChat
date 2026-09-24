@@ -35,7 +35,7 @@ export const update = async (params: {
       vscode.window.showErrorMessage(
         t('common.error.could-not-update-item-not-found', {
           item_type: 'chatbot',
-          name: params.updating_web_configuration.name!
+          name: params.updating_web_configuration.name
         })
       )
       return { success: false, has_changes: false }

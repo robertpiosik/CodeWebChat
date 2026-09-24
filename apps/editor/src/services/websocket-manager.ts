@@ -438,7 +438,7 @@ export class WebSocketManager {
           url = chatbot.url
           vscode.window.showWarningMessage(
             t('service.websocket-manager.url-override-different-domain', {
-              preset_name: web_configuration.name!
+              preset_name: web_configuration.name
             })
           )
         }
@@ -544,7 +544,7 @@ export class WebSocketManager {
           url = chatbot.url
           vscode.window.showWarningMessage(
             t('service.websocket-manager.url-override-different-domain', {
-              preset_name: params.web_configuration.name!
+              preset_name: params.web_configuration.name
             })
           )
         }

@@ -258,7 +258,7 @@ export const Settings = () => {
         on_add_web_configuration={settings_hook.handle_add_web_configuration}
         on_edit_web_configuration={(id) => {
           const config = settings_hook.web_configurations?.find(
-            (c, index) => (c.name ?? `unnamed-${index}`) === id
+            (c) => c.name == id
           )
           if (config) {
             set_updating_web_configuration(config)

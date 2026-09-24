@@ -1,8 +1,8 @@
 import { CHATBOTS } from "@shared/constants/chatbots"
 
 export type WebConfiguration = {
-  name?: string
-  chatbot?: keyof typeof CHATBOTS
+  name: string
+  chatbot: keyof typeof CHATBOTS
   model?: string
   reasoning_effort?: string
   system_instructions?: string

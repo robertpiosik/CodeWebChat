@@ -2,8 +2,8 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { WebConfiguration } from '@/types/web-configuration'
 
 export type ConfigWebConfigurationFormat = {
-  name?: string
-  chatbot?: keyof typeof CHATBOTS
+  name: string
+  chatbot: keyof typeof CHATBOTS
   model?: string
   reasoningEffort?: string
   systemInstructions?: string
@@ -18,7 +18,7 @@ export const config_web_configuration_to_ui_format = (
 ): WebConfiguration => {
   return {
     name: config_web_configuration.name,
-    chatbot: config_web_configuration.chatbot,
+    chatbot: config_web_configuration.chatbot as keyof typeof CHATBOTS,
     model: config_web_configuration.model,
     reasoning_effort: config_web_configuration.reasoningEffort,
     system_instructions: config_web_configuration.systemInstructions,
@@ -33,7 +33,7 @@ export const ui_web_configuration_to_config_format = (
   web_configuration: WebConfiguration
 ): ConfigWebConfigurationFormat => {
   return {
-    name: web_configuration.name || undefined,
+    name: web_configuration.name,
     chatbot: web_configuration.chatbot,
     model: web_configuration.model,
     reasoningEffort: web_configuration.reasoning_effort,

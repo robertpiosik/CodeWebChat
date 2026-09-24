@@ -41,11 +41,11 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
     props.web_configuration.options || []
   )
 
-  const chatbot_config = chatbot ? CHATBOTS[chatbot] : undefined
-  const models = useMemo(() => chatbot_config?.models || {}, [chatbot_config])
+  const chatbot_config = CHATBOTS[chatbot]
+  const models = useMemo(() => chatbot_config.models || {}, [chatbot_config])
   const model_info = useMemo(
     () =>
-      model && chatbot_config?.models
+      model && chatbot_config.models
         ? chatbot_config.models[model]
         : undefined,
     [model, chatbot_config]
@@ -59,7 +59,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
   }, [model_info])
 
   useEffect(() => {
-    if (!chatbot) return
     const chatbot_config = CHATBOTS[chatbot]
 
     if (new_url && chatbot_config.url_override_disabled_options) {
@@ -72,33 +71,27 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
   }, [chatbot, new_url])
 
   const supports_reasoning_effort =
-    chatbot_config?.supports_reasoning_effort ||
+    chatbot_config.supports_reasoning_effort ||
     !!model_info?.supported_reasoning_efforts
   const supports_system_instructions =
-    chatbot_config?.supports_system_instructions
-  const supports_port = chatbot_config?.supports_user_provided_port
-  const supports_url_override = chatbot_config?.supports_url_override
+    chatbot_config.supports_system_instructions
+  const supports_port = chatbot_config.supports_user_provided_port
+  const supports_url_override = chatbot_config.supports_url_override
   const supports_user_provided_model =
-    chatbot_config?.supports_user_provided_model
+    chatbot_config.supports_user_provided_model
 
   useEffect(() => {
-    if (chatbot) {
-      props.on_update({
-        name,
-        chatbot,
-        ...(reasoning_effort ? { reasoning_effort } : {}),
-        ...(model ? { model } : {}),
-        ...(system_instructions ? { system_instructions } : {}),
-        ...(port !== undefined ? { port } : {}),
-        ...(new_url ? { new_url } : {}),
-        ...(options.length ? { options } : {}),
-        is_pinned: props.web_configuration.is_pinned
-      })
-    } else {
-      props.on_update({
-        name
-      })
-    }
+    props.on_update({
+      name,
+      chatbot,
+      ...(reasoning_effort ? { reasoning_effort } : {}),
+      ...(model ? { model } : {}),
+      ...(system_instructions ? { system_instructions } : {}),
+      ...(port !== undefined ? { port } : {}),
+      ...(new_url ? { new_url } : {}),
+      ...(options.length ? { options } : {}),
+      is_pinned: props.web_configuration.is_pinned
+    })
   }, [
     name,
     reasoning_effort,
@@ -149,7 +142,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
 
   const supported_reasoning_efforts = useMemo(() => {
     return (
-      chatbot_config?.supported_reasoning_efforts ||
+      chatbot_config.supported_reasoning_efforts ||
       model_info?.supported_reasoning_efforts ||
       []
     )
@@ -167,20 +160,18 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
     <UiScrollable top_shadow>
       <div className={styles.form}>
         <UiFieldset>
-          {chatbot && (
-            <UiField
-              label={t('edit-web-configuration-form.chatbot')}
-              html_for="chatbot"
-            >
-              <UiQuickPickButton
-                label={chatbot}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  props.pick_chatbot(chatbot)
-                }}
-              />
-            </UiField>
-          )}
+          <UiField
+            label={t('edit-web-configuration-form.chatbot')}
+            html_for="chatbot"
+          >
+            <UiQuickPickButton
+              label={chatbot}
+              onClick={(e) => {
+                e.stopPropagation()
+                props.pick_chatbot(chatbot)
+              }}
+            />
+          </UiField>
 
           {(Object.keys(models).length > 0 || chatbot == 'OpenRouter') && (
             <UiField
@@ -272,7 +263,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
             <UiInput
               id="name"
               type="text"
-              value={name && /^\(\d+\)$/.test(name) ? '' : name!}
+              value={name && /^\(\d+\)$/.test(name) ? '' : name}
               on_change={set_name}
               placeholder={
                 chatbot ||
@@ -312,7 +303,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
           {supports_url_override && (
             <UiField
               label={
-                chatbot_config?.url_override_label ||
+                chatbot_config.url_override_label ||
                 t('edit-web-configuration-form.url-override')
               }
               html_for="new-url"
@@ -346,49 +337,48 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
           )}
         </UiFieldset>
 
-        {chatbot &&
-          Object.keys(chatbot_config?.supported_options || {}).length > 0 && (
-            <UiFieldset label={t('edit-web-configuration-form.options')}>
-              <div className={styles.options}>
-                {Object.entries(chatbot_config!.supported_options!).map(
-                  ([key, label]) => {
-                    const is_disabled_by_url_override =
-                      !!new_url &&
-                      chatbot_config!.url_override_disabled_options?.includes(
-                        key
-                      )
-
-                    if (model_info?.disabled_options?.includes(key)) {
-                      return null
-                    }
-
-                    return (
-                      <UiPresetOption
-                        key={key}
-                        label={label as string}
-                        checked={options.includes(key)}
-                        on_change={() => handle_option_toggle(key)}
-                        disabled={is_disabled_by_url_override}
-                        disabled_reason={
-                          is_disabled_by_url_override
-                            ? t(
-                                'edit-web-configuration-form.options.disabled-reason'
-                              ).replace(
-                                '{label}',
-                                chatbot_config!.url_override_label ||
-                                  t(
-                                    'edit-web-configuration-form.options.custom-url'
-                                  )
-                              )
-                            : undefined
-                        }
-                      />
+        {Object.keys(chatbot_config.supported_options || {}).length > 0 && (
+          <UiFieldset label={t('edit-web-configuration-form.options')}>
+            <div className={styles.options}>
+              {Object.entries(chatbot_config.supported_options!).map(
+                ([key, label]) => {
+                  const is_disabled_by_url_override =
+                    !!new_url &&
+                    chatbot_config.url_override_disabled_options?.includes(
+                      key
                     )
+
+                  if (model_info?.disabled_options?.includes(key)) {
+                    return null
                   }
-                )}
-              </div>
-            </UiFieldset>
-          )}
+
+                  return (
+                    <UiPresetOption
+                      key={key}
+                      label={label as string}
+                      checked={options.includes(key)}
+                      on_change={() => handle_option_toggle(key)}
+                      disabled={is_disabled_by_url_override}
+                      disabled_reason={
+                        is_disabled_by_url_override
+                          ? t(
+                              'edit-web-configuration-form.options.disabled-reason'
+                            ).replace(
+                              '{label}',
+                              chatbot_config.url_override_label ||
+                                t(
+                                  'edit-web-configuration-form.options.custom-url'
+                                )
+                            )
+                          : undefined
+                      }
+                    />
+                  )
+                }
+              )}
+            </div>
+          </UiFieldset>
+        )}
       </div>
     </UiScrollable>
   )
