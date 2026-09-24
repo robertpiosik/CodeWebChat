@@ -71,24 +71,6 @@ export const translations = {
     hu: 'Jelzők',
     bg: 'Флагове'
   },
-  'edit-agent-configuration-form.flags.placeholder': {
-    en: 'e.g. --effort high',
-    pl: 'np. --effort high',
-    'zh-cn': '例如 --effort high',
-    ja: '例：--effort high',
-    'zh-tw': '例如 --effort high',
-    de: 'z. B. --effort high',
-    es: 'p. ej. --effort high',
-    fr: 'par ex. --effort high',
-    'pt-br': 'ex. --effort high',
-    ru: 'напр. --effort high',
-    ko: '예: --effort high',
-    it: 'es. --effort high',
-    tr: 'örn. --effort high',
-    cs: 'např. --effort high',
-    hu: 'pl. --effort high',
-    bg: 'напр. --effort high'
-  },
   'edit-agent-configuration-form.flags.info.learn-more': {
     en: 'Learn more',
     pl: 'Dowiedz się więcej',

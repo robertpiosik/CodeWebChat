@@ -104,7 +104,6 @@ export const EditCliConfigurationForm: React.FC<Props> = (props) => {
               type="text"
               value={flags || ''}
               on_change={set_flags}
-              placeholder={t('edit-agent-configuration-form.flags.placeholder')}
             />
           </UiField>
         </UiFieldset>
