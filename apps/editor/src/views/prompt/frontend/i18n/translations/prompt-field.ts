@@ -359,24 +359,6 @@ export const prompt_field = {
     hu: 'Kiválasztott fájlok csatolása',
     bg: 'Прикачване на избраните файлове'
   },
-  'prompt-field.target': {
-    en: 'Target',
-    pl: 'Cel',
-    'zh-cn': '目标',
-    ja: 'ターゲット',
-    'zh-tw': '目標',
-    de: 'Ziel',
-    es: 'Objetivo',
-    fr: 'Cible',
-    'pt-br': 'Alvo',
-    ru: 'Цель',
-    ko: '대상',
-    it: 'Destinazione',
-    tr: 'Hedef',
-    cs: 'Cíl',
-    hu: 'Cél',
-    bg: 'Цел'
-  },
   'prompt-field.more': {
     en: 'More',
     pl: 'Więcej',

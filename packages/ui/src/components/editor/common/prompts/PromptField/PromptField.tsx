@@ -112,7 +112,6 @@ export type PromptFieldProps = {
     preview_prompt: string
     send: string
     attach_selected_files: string
-    target: string
     more: string
   }
 }
@@ -128,8 +127,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [is_recording_hovered, set_is_recording_hovered] = useState(false)
   const [is_edit_format_hovered, set_is_edit_format_hovered] = useState(false)
   const [is_more_hovered, set_is_more_hovered] = useState(false)
-  const [is_target_switch_hovered, set_is_target_switch_hovered] =
-    useState(false)
   const [is_target_dropdown_open, set_is_target_dropdown_open] = useState(false)
   const [hovered_left_action, set_hovered_left_action] = useState<
     'at' | 'hash' | 'slash' | null
@@ -327,14 +324,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       }
     }
   }, [props.is_recording])
-
-  useEffect(() => {
-    if (is_target_dropdown_open) {
-      const handle_click = () => set_is_target_dropdown_open(false)
-      window.addEventListener('click', handle_click)
-      return () => window.removeEventListener('click', handle_click)
-    }
-  }, [is_target_dropdown_open])
 
   const render_footer = () => {
     const primary_dropdown_items =
@@ -679,10 +668,11 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
           <div className={styles['footer__right__submit']} ref={dropdown_ref}>
             {props.target && props.on_target_change && (
-              <div className={styles['footer__right__target-switch']}>
-                {is_target_switch_hovered && !is_target_dropdown_open && (
-                  <Tooltip message={props.translations.target} align="center" />
-                )}
+              <div
+                className={styles['footer__right__target-switch']}
+                onMouseEnter={() => set_is_target_dropdown_open(true)}
+                onMouseLeave={() => set_is_target_dropdown_open(false)}
+              >
                 {is_target_dropdown_open && (
                   <div
                     className={
@@ -703,7 +693,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                             e.stopPropagation()
                             props.on_target_change!(t)
                             set_is_target_dropdown_open(false)
-                            set_is_target_switch_hovered(false)
                           }}
                           disabled={t == props.target}
                         >
@@ -719,13 +708,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       styles['footer__right__submit__button'],
                       styles['footer__right__target-switch__button']
                     )}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      set_is_target_dropdown_open(!is_target_dropdown_open)
-                      close_dropdown()
-                    }}
-                    onMouseEnter={() => set_is_target_switch_hovered(true)}
-                    onMouseLeave={() => set_is_target_switch_hovered(false)}
                   >
                     <span
                       className={styles['footer__right__target-switch__label']}
@@ -787,7 +769,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       )}
                       onClick={(e) => {
                         handle_submit(e as any)
-                        set_is_target_dropdown_open(false)
                       }}
                       onMouseEnter={() => set_show_submit_tooltip(true)}
                       onMouseLeave={() => set_show_submit_tooltip(false)}
@@ -799,10 +780,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       <button
                         ref={chevron_button_ref}
                         className={styles['footer__right__submit__button']}
-                        onClick={() => {
-                          toggle_dropdown()
-                          set_is_target_dropdown_open(false)
-                        }}
+                      onClick={() => {
+                        toggle_dropdown()
+                      }}
                         onMouseEnter={() => set_is_more_hovered(true)}
                         onMouseLeave={() => set_is_more_hovered(false)}
                       >
@@ -875,7 +855,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       onClick={(e) => {
                         e.stopPropagation()
                         props.on_copy()
-                        set_is_target_dropdown_open(false)
                       }}
                       title={props.translations.copy_prompt}
                       disabled={props.is_action_disabled}
@@ -887,7 +866,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                           className={styles['footer__right__submit__button']}
                           onClick={() => {
                             toggle_dropdown()
-                            set_is_target_dropdown_open(false)
                           }}
                           onMouseEnter={() => set_is_more_hovered(true)}
                           onMouseLeave={() => set_is_more_hovered(false)}
