@@ -91,6 +91,7 @@ export const agentic_search = async (params: {
       last_selected_workspace_state_key:
         LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY,
       show_back_button: true,
+      use_quick_pick: true,
       build_prompt: async () => {
         const { instructions: processed_query, skill_definitions } =
           await replace_symbols({
