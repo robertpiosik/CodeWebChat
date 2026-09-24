@@ -706,7 +706,11 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   <button
                     className={cn(
                       styles['footer__right__submit__button'],
-                      styles['footer__right__target-switch__button']
+                      styles['footer__right__target-switch__button'],
+                      {
+                        [styles['footer__right__submit__button--hovered']]:
+                          is_target_dropdown_open
+                      }
                     )}
                   >
                     <span
