@@ -139,7 +139,7 @@
       text-overflow: ellipsis;
 
       > span:last-child {
-        opacity: 0.7;
+        var(--dimmed-opacity);
         margin-left: 0.5em;
         font-size: 0.9em;
       }

@@ -109,8 +109,10 @@ export const update = async (params: {
       )
     }
   } else if (cli_configuration_index != -1) {
-    updated_cli_configurations[cli_configuration_index] =
-      ui_cli_configuration_to_config_format(updated_ui_cli_configuration)
+    updated_cli_configurations[cli_configuration_index] = {
+      ...updated_cli_configurations[cli_configuration_index],
+      ...ui_cli_configuration_to_config_format(updated_ui_cli_configuration)
+    }
   }
 
   await config.update(

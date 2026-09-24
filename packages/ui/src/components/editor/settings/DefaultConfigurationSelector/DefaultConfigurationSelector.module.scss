@@ -12,7 +12,7 @@
 }
 
 .description {
-  opacity: 0.5;
+  var(--dimmed-opacity);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

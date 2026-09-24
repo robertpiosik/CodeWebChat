@@ -7,7 +7,7 @@ export namespace DefaultConfigurationSelector {
   export type Configuration = {
     id: string
     model: string
-    description: string
+    description?: string
   }
 
   export type Translations = {
@@ -49,9 +49,11 @@ export const DefaultConfigurationSelector: React.FC<
       description={
         <div className={styles.info}>
           <span className={styles.model}>{selected_config.model}</span>
-          <span className={styles.description}>
-            {selected_config.description}
-          </span>
+          {selected_config.description && (
+            <span className={styles.description}>
+              {selected_config.description}
+            </span>
+          )}
         </div>
       }
       slot_right={

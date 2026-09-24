@@ -63,9 +63,7 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                 : config.name.replace(/ \(\d+\)$/, '')
 
               const details: string[] = []
-              if (is_unnamed) {
-                // ...
-              } else {
+              if (!is_unnamed) {
                 details.push(config.agent)
               }
 
@@ -154,10 +152,19 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                 ? config.agent
                 : config.name.replace(/ \(\d+\)$/, '')
 
+              const details: string[] = []
+              if (!is_unnamed) {
+                details.push(config.agent)
+              }
+
+              if (config.flags) {
+                details.push(config.flags)
+              }
+
               return {
                 id: config.name,
                 model: display_name,
-                description: config.agent
+                description: details.join(' · ')
               }
             })}
             on_unset={() =>

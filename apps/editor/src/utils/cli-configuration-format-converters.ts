@@ -6,6 +6,7 @@ export type ConfigAgentConfigurationFormat = {
   agent: keyof typeof AGENTS
   flags?: string
   isPinned?: boolean
+  isDefaultForAgenticSearch?: boolean
 }
 
 export const config_cli_configuration_to_ui_format = (
