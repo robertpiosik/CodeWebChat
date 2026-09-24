@@ -1,5 +1,6 @@
 import { ApiFeature } from '@/views/shared/types/api-features'
 import { WebConfiguration } from '@shared/types/web-configuration'
+import { AgentConfiguration } from '@shared/types/agent-configuration'
 
 export type Provider = {
   name: string
@@ -195,6 +196,35 @@ export interface UpdateWebConfigurationMessage {
   insertion_index?: number
 }
 
+export interface GetAgentConfigurationsMessage {
+  command: 'GET_AGENT_CONFIGURATIONS'
+}
+export interface ReorderAgentConfigurationsMessage {
+  command: 'REORDER_AGENT_CONFIGURATIONS'
+  agent_configurations: AgentConfiguration[]
+}
+export interface DeleteAgentConfigurationMessage {
+  command: 'DELETE_AGENT_CONFIGURATION'
+  name: string
+}
+export interface CreateAgentConfigurationMessage {
+  command: 'CREATE_AGENT_CONFIGURATION'
+  insertion_index?: number
+  exact_insertion?: boolean
+}
+export interface UpdateAgentConfigurationMessage {
+  command: 'UPDATE_AGENT_CONFIGURATION'
+  updating_agent_configuration: AgentConfiguration
+  updated_agent_configuration: AgentConfiguration
+  origin?: 'cancel' | 'save'
+  is_new?: boolean
+  insertion_index?: number
+}
+export interface PickAgentMessage {
+  command: 'PICK_AGENT'
+  agent_id?: string
+}
+
 export interface CreateApiConfigurationMessage {
   command: 'CREATE_API_CONFIGURATION'
   api_feature?: ApiFeature
@@ -339,6 +369,12 @@ export type FrontendMessage =
   | UpdateTemplatesMessage
   | CreateTemplateMessage
   | DeleteTemplateMessage
+  | GetAgentConfigurationsMessage
+  | ReorderAgentConfigurationsMessage
+  | DeleteAgentConfigurationMessage
+  | CreateAgentConfigurationMessage
+  | UpdateAgentConfigurationMessage
+  | PickAgentMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ProvidersMessage {
@@ -417,6 +453,23 @@ export interface NewlyPickedChatbotMessage {
 export interface NewlyPickedReasoningEffortMessage {
   command: 'NEWLY_PICKED_REASONING_EFFORT'
   effort: string
+}
+
+export interface AgentConfigurationsMessage {
+  command: 'AGENT_CONFIGURATIONS'
+  agent_configurations: AgentConfiguration[]
+}
+export interface AgentConfigurationUpdatedMessage {
+  command: 'AGENT_CONFIGURATION_UPDATED'
+}
+export interface StartAgentConfigurationCreationMessage {
+  command: 'START_AGENT_CONFIGURATION_CREATION'
+  agent_configuration: AgentConfiguration
+  insertion_index?: number
+}
+export interface NewlyPickedAgentMessage {
+  command: 'NEWLY_PICKED_AGENT'
+  agent_id: string
 }
 
 export interface WebConfigurationUpdatedMessage {
@@ -510,3 +563,7 @@ export type BackendMessage =
   | IsModernUiMessage
   | TemplatesMessage
   | StartTemplateCreationMessage
+  | AgentConfigurationsMessage
+  | AgentConfigurationUpdatedMessage
+  | StartAgentConfigurationCreationMessage
+  | NewlyPickedAgentMessage

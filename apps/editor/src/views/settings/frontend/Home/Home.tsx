@@ -11,10 +11,12 @@ import {
   Template
 } from '@/views/settings/types/messages'
 import { WebConfiguration } from '@shared/types/web-configuration'
+import { AgentConfiguration } from '@shared/types/agent-configuration'
 import { GeneralSection } from './sections/GeneralSection'
 import { ApiFeature } from '@/views/shared/types/api-features'
 import { use_translation, TranslationKey } from '../i18n/use-translation'
 import { WebSection } from './sections/WebSection'
+import { CliSection } from './sections/CliSection'
 export type NavItem =
   | 'section:general'
   | 'section:general:group:open-links'
@@ -27,6 +29,8 @@ export type NavItem =
   | 'section:api:group:models'
   | 'section:api:group:api-defaults'
   | 'section:api:group:system-instructions'
+  | 'section:cli'
+  | 'section:cli:group:agents'
 
 export type NavConfigItem = { id: NavItem; label: TranslationKey }
 
@@ -74,6 +78,14 @@ export const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     id: 'section:api:group:system-instructions',
     label: 'api.system-instructions.title'
+  },
+  {
+    id: 'section:cli',
+    label: 'cli.title'
+  },
+  {
+    id: 'section:cli:group:agents',
+    label: 'agents.configurations.title'
   }
 ]
 
@@ -81,6 +93,7 @@ type Props = {
   providers: Provider[]
   api_configurations: ApiConfiguration[]
   web_configurations: WebConfiguration[]
+  agent_configurations: AgentConfiguration[]
   defaults: Record<ApiFeature, string | null>
   edit_files_system_instructions: string
   default_edit_files_system_instructions: string
@@ -103,6 +116,15 @@ type Props = {
   set_providers: (providers: Provider[]) => void
   set_api_configurations: (configurations: ApiConfiguration[]) => void
   set_web_configurations: (configurations: WebConfiguration[]) => void
+  set_agent_configurations: (configurations: AgentConfiguration[]) => void
+  on_reorder_agent_configurations: (reordered: AgentConfiguration[]) => void
+  on_add_agent_configuration: (params?: {
+    insertion_index?: number
+    exact_insertion?: boolean
+  }) => void
+  on_edit_agent_configuration: (id: string) => void
+  on_delete_agent_configuration: (name: string) => void
+  on_toggle_pinned_agent_configuration: (config: AgentConfiguration) => void
   on_commit_instructions_change: (instructions: string) => void
   on_attach_ascii_tree_of_context_change: (
     value: 'ask' | 'always' | 'never'
@@ -381,6 +403,20 @@ export const Home: React.FC<Props> = (props) => {
               props.default_edit_files_system_instructions
             )
           }}
+        />
+
+        <CliSection
+          ref={(el) => set_section_ref('section:cli', el)}
+          set_section_ref={set_section_ref}
+          agent_configurations={props.agent_configurations}
+          set_agent_configurations={props.set_agent_configurations}
+          on_reorder_agent_configurations={props.on_reorder_agent_configurations}
+          on_add_agent_configuration={props.on_add_agent_configuration}
+          on_edit_agent_configuration={props.on_edit_agent_configuration}
+          on_delete_agent_configuration={props.on_delete_agent_configuration}
+          on_toggle_pinned_agent_configuration={
+            props.on_toggle_pinned_agent_configuration
+          }
         />
       </UiLayout>
     </div>

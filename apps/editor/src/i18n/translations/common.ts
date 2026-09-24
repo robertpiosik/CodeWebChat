@@ -611,6 +611,24 @@ export const translations = {
     hu: 'Chatbotok',
     bg: 'Чатботове'
   },
+  'common.title.agents': {
+    en: 'Agents',
+    pl: 'Agenci',
+    'zh-cn': '智能体',
+    ja: 'エージェント',
+    'zh-tw': '智能體',
+    de: 'Agenten',
+    es: 'Agentes',
+    fr: 'Agents',
+    'pt-br': 'Agentes',
+    ru: 'Агенты',
+    ko: '에이전트',
+    it: 'Agenti',
+    tr: 'Aracılar',
+    cs: 'Agenti',
+    hu: 'Ügynökök',
+    bg: 'Агенти'
+  },
   'common.select-parent-folder': {
     en: 'Select Parent Folder...',
     pl: 'Wybierz folder nadrzędny...',

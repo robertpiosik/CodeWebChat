@@ -8,6 +8,7 @@ import {
 import { ApiFeature } from '@/views/shared/types/api-features'
 import { post_message } from '../utils/post-message'
 import { WebConfiguration } from '@shared/types/web-configuration'
+import { AgentConfiguration } from '@shared/types/agent-configuration'
 
 export const use_settings = (vscode: any) => {
   const [providers, set_providers] = useState<Provider[] | undefined>(undefined)
@@ -16,6 +17,9 @@ export const use_settings = (vscode: any) => {
   >(undefined)
   const [web_configurations, set_web_configurations] = useState<
     WebConfiguration[] | undefined
+  >(undefined)
+  const [agent_configurations, set_agent_configurations] = useState<
+    AgentConfiguration[] | undefined
   >(undefined)
   const [defaults, set_defaults] = useState<
     Record<ApiFeature, string | null> | undefined
@@ -62,6 +66,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_PROVIDERS' })
     post_message(vscode, { command: 'GET_API_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_WEB_CONFIGURATIONS' })
+    post_message(vscode, { command: 'GET_AGENT_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, {
@@ -90,6 +95,8 @@ export const use_settings = (vscode: any) => {
         set_defaults(message.defaults)
       } else if (message.command == 'WEB_CONFIGURATIONS') {
         set_web_configurations(message.web_configurations)
+      } else if (message.command == 'AGENT_CONFIGURATIONS') {
+        set_agent_configurations(message.agent_configurations)
       } else if (message.command == 'EDIT_FILES_SYSTEM_INSTRUCTIONS') {
         set_edit_files_system_instructions(message.instructions)
         set_default_edit_files_system_instructions(message.default_instructions)
@@ -152,6 +159,17 @@ export const use_settings = (vscode: any) => {
     })
   }
 
+  const handle_add_agent_configuration = (params?: {
+    insertion_index?: number
+    exact_insertion?: boolean
+  }) => {
+    post_message(vscode, {
+      command: 'CREATE_AGENT_CONFIGURATION',
+      insertion_index: params?.insertion_index,
+      exact_insertion: params?.exact_insertion
+    })
+  }
+
   const handle_set_default_api_configuration = (
     api_feature: ApiFeature,
     api_configuration_id: string | null
@@ -199,6 +217,14 @@ export const use_settings = (vscode: any) => {
     })
   }
 
+  const handle_reorder_agent_configurations = (reordered: AgentConfiguration[]) => {
+    set_agent_configurations(reordered)
+    post_message(vscode, {
+      command: 'REORDER_AGENT_CONFIGURATIONS',
+      agent_configurations: reordered
+    })
+  }
+
   const handle_reorder_web_configurations = (reordered: WebConfiguration[]) => {
     post_message(vscode, {
       command: 'REORDER_WEB_CONFIGURATIONS',
@@ -214,6 +240,13 @@ export const use_settings = (vscode: any) => {
       command: 'CREATE_WEB_CONFIGURATION',
       insertion_index: params?.insertion_index,
       exact_insertion: params?.exact_insertion
+    })
+  }
+
+  const handle_delete_agent_configuration = (name: string) => {
+    post_message(vscode, {
+      command: 'DELETE_AGENT_CONFIGURATION',
+      name
     })
   }
 
@@ -359,6 +392,15 @@ export const use_settings = (vscode: any) => {
     })
   }
 
+  const handle_toggle_pinned_agent_configuration = (config: AgentConfiguration) => {
+    post_message(vscode, {
+      command: 'UPDATE_AGENT_CONFIGURATION',
+      updating_agent_configuration: config,
+      updated_agent_configuration: { ...config, is_pinned: !config.is_pinned },
+      origin: 'save'
+    })
+  }
+
   const handle_toggle_pinned_web_configuration = (config: WebConfiguration) => {
     post_message(vscode, {
       command: 'UPDATE_WEB_CONFIGURATION',
@@ -375,6 +417,8 @@ export const use_settings = (vscode: any) => {
     set_api_configurations,
     web_configurations,
     set_web_configurations,
+    agent_configurations,
+    set_agent_configurations,
     defaults,
     commit_message_instructions,
     default_commit_message_instructions,
@@ -395,9 +439,13 @@ export const use_settings = (vscode: any) => {
     handle_reorder_api_configurations,
     handle_add_api_configuration,
     handle_delete_api_configuration,
+    handle_reorder_agent_configurations,
+    handle_add_agent_configuration,
+    handle_delete_agent_configuration,
     handle_reorder_web_configurations,
     handle_add_web_configuration,
     handle_delete_web_configuration,
+    handle_toggle_pinned_agent_configuration,
     handle_toggle_pinned_api_configuration,
     handle_toggle_pinned_web_configuration,
     handle_commit_instructions_change,

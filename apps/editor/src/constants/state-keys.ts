@@ -62,6 +62,9 @@ export const LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY =
 export const get_last_used_web_configuration_key = (web_prompt_type: string) =>
   `last-used-web-configuration-${web_prompt_type}`
 
+export const get_last_used_agent_configuration_key = (prompt_type: string) =>
+  `last-used-agent-configuration-${prompt_type}`
+
 export const get_last_used_template_key = (prompt_type: string) =>
   `last-used-template-${prompt_type}`
 

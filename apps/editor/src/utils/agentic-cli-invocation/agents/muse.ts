@@ -1,18 +1,20 @@
 import { CodingAgent } from '../types'
 import { check_command_exists } from '../utils/check-command-exists'
 import { get_progress_dots } from '../utils/get-progress-dots'
+import { AGENTS } from '../../../constants/agents'
 
 let accumulated_output = ''
 let last_action_name = ''
 let action_count = 0
 
+const agent_name = 'Muse Code'
+
 export const muse_agent: CodingAgent = {
   id: 'muse',
-  label: 'Muse Code',
+  label: agent_name,
   cmd: 'muse',
   is_installed: () => check_command_exists('muse'),
-  get_documentation_url: () =>
-    'https://dev.meta.ai/docs/muse-code/extending#headless',
+  get_documentation_url: () => AGENTS[agent_name].docs_url!,
   get_edit_args: (prompt: string) => {
     accumulated_output = ''
     return ['exec', '--json', '--yolo', prompt]

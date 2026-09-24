@@ -335,10 +335,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             ...(!props.value
               ? [
                   {
-                    label:
-                      props.target != 'CLI'
-                        ? props.translations.send
-                        : props.translations.send_with_ellipsis,
+                    label: props.translations.send,
                     shortcut: is_mac ? '↩' : 'Enter',
                     on_click: () => {
                       handle_submit({
@@ -350,16 +347,12 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   }
                 ]
               : []),
-            ...(props.target != 'CLI'
-              ? [
-                  {
-                    label: props.translations.send_with_ellipsis,
-                    shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
-                    on_click: handle_select_click,
-                    is_disabled: props.is_action_disabled
-                  }
-                ]
-              : []),
+            {
+              label: props.translations.send_with_ellipsis,
+              shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
+              on_click: handle_select_click,
+              is_disabled: props.is_action_disabled
+            },
             ...(props.target == 'WEB' || props.target == 'CLI'
               ? [
                   {

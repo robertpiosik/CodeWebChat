@@ -5,6 +5,7 @@ import { PromptField as UiPromptField } from '@ui/components/editor/common/promp
 import { PromptAttachments } from './components/PromptAttachments'
 import { Spacer as UiSpacer } from '@ui/components/editor/prompt/Spacer'
 import { WebConfiguration } from '@shared/types/web-configuration'
+import { AgentConfiguration } from '@shared/types/agent-configuration'
 import { Responses as UiResponses } from '@ui/components/editor/prompt/Responses'
 import { StatusBar as UiStatusBar } from '@ui/components/editor/prompt/StatusBar'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
@@ -58,6 +59,18 @@ type Props = {
     insertion_index?: number
     exact_insertion?: boolean
   }) => void
+  agent_configurations: AgentConfiguration[]
+  on_agent_configuration_click: (name: string) => void
+  on_agent_configurations_reorder: (
+    reordered_configurations: AgentConfiguration[]
+  ) => void
+  on_toggle_pinned_agent_configuration: (name: string) => void
+  on_edit_agent_configuration: (name: string) => void
+  on_delete_agent_configuration: (name: string) => void
+  on_create_agent_configuration: (params?: {
+    insertion_index?: number
+    exact_insertion?: boolean
+  }) => void
   on_manage_models: () => void
   on_manage_providers: () => void
   currently_open_file_path?: string
@@ -82,13 +95,14 @@ type Props = {
   on_toggle_web_configuration_pinned: (name: string) => void
   selected_web_configuration_name?: string
   selected_api_configuration_id?: string
+  selected_agent_configuration_name?: string
   instructions: string
   set_instructions: (value: string) => void
   on_caret_position_change: (caret_position: number) => void
   target: Target
   on_target_change: (value: Target) => void
   on_make_api_call: (use_quick_pick: boolean) => void
-  on_invoke_agentic_cli: () => void
+  on_invoke_agentic_cli: (use_quick_pick: boolean) => void
   caret_position_to_set?: number
   on_caret_position_set?: () => void
   chat_input_focus_and_select_key: number
@@ -182,7 +196,7 @@ export const MainView: React.FC<Props> = (props) => {
     } else if (props.target == 'API') {
       props.on_make_api_call(false)
     } else if (props.target == 'CLI') {
-      props.on_invoke_agentic_cli()
+      props.on_invoke_agentic_cli(false)
     }
   }
 
@@ -194,7 +208,7 @@ export const MainView: React.FC<Props> = (props) => {
     } else if (props.target == 'API') {
       props.on_make_api_call(true)
     } else if (props.target == 'CLI') {
-      props.on_invoke_agentic_cli()
+      props.on_invoke_agentic_cli(true)
     }
   }
 
@@ -203,7 +217,9 @@ export const MainView: React.FC<Props> = (props) => {
     selected_web_configuration_name: props.selected_web_configuration_name,
     web_configurations: props.web_configurations,
     selected_api_configuration_id: props.selected_api_configuration_id,
-    api_configurations: props.api_configurations
+    api_configurations: props.api_configurations,
+    selected_agent_configuration_name: props.selected_agent_configuration_name,
+    agent_configurations: props.agent_configurations
   })
 
   const { is_alt_pressed } = use_keyboard_shortcuts({
@@ -258,6 +274,29 @@ export const MainView: React.FC<Props> = (props) => {
         icon: web_configuration.chatbot
           ? chatbot_to_icon[web_configuration.chatbot]
           : undefined
+      }
+    })
+
+  const agent_configurations_ui: UiConfigurations.Configuration[] =
+    props.agent_configurations.map((c, index) => {
+      const is_unnamed = !c.name || /^\(\d+\)$/.test(c.name.trim())
+      const display_name = is_unnamed
+        ? c.agent!
+        : c.name!.replace(/ \(\d+\)$/, '')
+
+      const details: string[] = []
+      if (is_unnamed) {
+        if (c.flags) details.push(c.flags)
+      } else if (c.agent) {
+        details.push(c.agent)
+        if (c.flags) details.push(c.flags)
+      }
+
+      return {
+        id: c.name ?? `unnamed-${index}`,
+        title: display_name,
+        details,
+        is_pinned: c.is_pinned
       }
     })
 
@@ -700,7 +739,43 @@ export const MainView: React.FC<Props> = (props) => {
         />
       )}
 
-      {props.target == 'CLI' && <></>}
+      {props.target == 'CLI' && (
+        <UiConfigurations
+          configurations={agent_configurations_ui}
+          empty_landscape_placeholder_above={configurations_placeholder_above}
+          on_create={(params) => {
+            props.on_create_agent_configuration(params)
+          }}
+          on_configuration_click={(id) => {
+            props.on_agent_configuration_click(id)
+          }}
+          on_edit={(id) => props.on_edit_agent_configuration(id)}
+          on_reorder={(reordered) => {
+            const new_agent_configurations = reordered.map((c) => {
+              return props.agent_configurations.find(
+                (p, i) => (p.name ?? `unnamed-${i}`) == c.id
+              )!
+            })
+            props.on_agent_configurations_reorder(new_agent_configurations)
+          }}
+          on_delete={(id) => {
+            props.on_delete_agent_configuration(id)
+          }}
+          on_toggle_pinned={(id) => {
+            props.on_toggle_pinned_agent_configuration(id)
+          }}
+          selected_configuration_id={props.selected_agent_configuration_name}
+          translations={{
+            empty: t('agents.empty'),
+            add_new: t('action.add-new'),
+            pin: t('action.pin'),
+            unpin: t('action.unpin'),
+            insert: t('action.insert'),
+            edit: t('action.edit'),
+            delete: t('action.delete')
+          }}
+        />
+      )}
     </>
   )
 

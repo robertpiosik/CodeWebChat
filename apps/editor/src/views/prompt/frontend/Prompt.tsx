@@ -28,6 +28,8 @@ import { use_editor_sync } from './hooks/use-editor-sync'
 import { use_web_configuration_editing } from './hooks/use-web-configuration-editing'
 import { use_api_configuration_editing } from './hooks/use-api-configuration-editing'
 import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurationForm'
+import { use_agent_configuration_editing } from './hooks/use-agent-configuration-editing'
+import { EditAgentConfigurationForm } from '@/views/shared/forms/EditAgentConfigurationForm'
 import { use_translation } from './i18n/use-translation'
 
 const vscode = acquireVsCodeApi()
@@ -130,6 +132,16 @@ export const Prompt = () => {
     set_is_new_api_configuration,
     set_api_configuration_insertion_index
   } = use_api_configuration_editing(vscode)
+
+  const {
+    updating_agent_configuration,
+    set_updating_agent_configuration,
+    set_updated_agent_configuration,
+    edit_agent_configuration_back_click_handler,
+    edit_agent_configuration_save_handler,
+    set_is_new_agent_configuration,
+    set_agent_configuration_insertion_index
+  } = use_agent_configuration_editing(vscode)
 
   const {
     progress_state,
@@ -256,12 +268,14 @@ export const Prompt = () => {
   const are_keyboard_shortcuts_disabled =
     !!updating_web_configuration ||
     !!updating_api_configuration ||
+    !!updating_agent_configuration ||
     !!items_in_preview ||
     active_view != 'main'
 
   const is_main_slot_hidden =
     !!updating_web_configuration ||
     !!updating_api_configuration ||
+    !!updating_agent_configuration ||
     viewing_donations ||
     !!items_in_preview
 
@@ -302,6 +316,12 @@ export const Prompt = () => {
                   set_updated_api_configuration(api_configuration)
                   set_is_new_api_configuration(false)
                   set_api_configuration_insertion_index(undefined)
+                }}
+                on_agent_configuration_edit={(agent_configuration) => {
+                  set_updating_agent_configuration(agent_configuration)
+                  set_updated_agent_configuration(agent_configuration)
+                  set_is_new_agent_configuration(false)
+                  set_agent_configuration_insertion_index(undefined)
                 }}
                 is_connected={is_connected}
                 on_show_home={() => {
@@ -505,6 +525,30 @@ export const Prompt = () => {
                     model,
                     current_effort: current
                   })
+                }}
+              />
+            </UiPage>
+          </div>
+        )}
+
+        {updating_agent_configuration && (
+          <div className={styles.slot}>
+            <UiPage
+              on_back_click={edit_agent_configuration_back_click_handler}
+              footer_slot={
+                <div className={styles['edit-web-configuration-footer']}>
+                  <UiButton on_click={edit_agent_configuration_save_handler}>
+                    Save
+                  </UiButton>
+                </div>
+              }
+              title="Edit Agent"
+            >
+              <EditAgentConfigurationForm
+                agent_configuration={updating_agent_configuration}
+                on_update={set_updated_agent_configuration}
+                pick_agent={(agent_id) => {
+                  post_message(vscode, { command: 'PICK_AGENT', agent_id })
                 }}
               />
             </UiPage>

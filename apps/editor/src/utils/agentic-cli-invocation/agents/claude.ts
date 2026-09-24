@@ -1,6 +1,7 @@
 import { CodingAgent } from '../types'
 import { check_command_exists } from '../utils/check-command-exists'
 import { get_progress_dots } from '../utils/get-progress-dots'
+import { AGENTS } from '../../../constants/agents'
 
 let last_action_name = ''
 let action_count = 0
@@ -21,12 +22,14 @@ const report_tool_progress = (
   report_progress(`${action_name}${get_progress_dots(action_count)}`)
 }
 
+const agent_name = 'Claude Code'
+
 export const claude_agent: CodingAgent = {
   id: 'claude',
-  label: 'Claude Code',
+  label: agent_name,
   cmd: 'claude',
   is_installed: () => check_command_exists('claude'),
-  get_documentation_url: () => 'https://code.claude.com/docs/en/headless',
+  get_documentation_url: () => AGENTS[agent_name].docs_url!,
   get_edit_args: (prompt: string) => [
     '-p',
     prompt,

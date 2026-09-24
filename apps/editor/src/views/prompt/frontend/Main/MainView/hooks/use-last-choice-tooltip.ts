@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Target } from '@shared/types/target'
 import { ApiConfiguration } from '@/views/prompt/types/messages'
+import { AgentConfiguration } from '@shared/types/agent-configuration'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { WebConfiguration } from '@shared/types/web-configuration'
 
@@ -10,6 +11,8 @@ export const use_last_choice_tooltip = (params: {
   web_configurations: WebConfiguration[]
   selected_api_configuration_id?: string
   api_configurations: ApiConfiguration[]
+  selected_agent_configuration_name?: string
+  agent_configurations?: AgentConfiguration[]
 }): { name: string; details?: string } | undefined => {
   return useMemo(() => {
     if (params.target == 'WEB') {
@@ -81,6 +84,34 @@ export const use_last_choice_tooltip = (params: {
           return { name: configuration.model, details: description }
         }
       }
+    } else if (params.target == 'CLI') {
+      if (
+        params.selected_agent_configuration_name &&
+        params.agent_configurations
+      ) {
+        const configuration = params.agent_configurations.find(
+          (c) => c.name == params.selected_agent_configuration_name
+        )
+        if (configuration) {
+          const is_unnamed =
+            !configuration.name ||
+            /^\(\d+\)$/.test(configuration.name.trim())
+          const display_name = is_unnamed
+            ? configuration.agent!
+            : configuration.name!.replace(/ \(\d+\)$/, '')
+          const details: string[] = []
+          if (!is_unnamed && configuration.agent) {
+            details.push(configuration.agent)
+          }
+          if (configuration.flags) {
+            details.push(configuration.flags)
+          }
+          return {
+            name: display_name,
+            details: details.join(' · ') || undefined
+          }
+        }
+      }
     }
     return undefined
   }, [
@@ -88,6 +119,8 @@ export const use_last_choice_tooltip = (params: {
     params.selected_web_configuration_name,
     params.web_configurations,
     params.selected_api_configuration_id,
-    params.api_configurations
+    params.api_configurations,
+    params.selected_agent_configuration_name,
+    params.agent_configurations
   ])
 }

@@ -4,6 +4,7 @@ import { translations as general } from './general'
 import { translations as sections } from './sections'
 import { translations as api } from './api'
 import { translations as web } from './web'
+import { translations as agent } from './agent'
 import { translations as edit_provider_form } from './edit-provider-form'
 import { translations as edit_template_form } from './edit-template-form'
 
@@ -14,6 +15,7 @@ export const translations = {
   ...general,
   ...api,
   ...web,
+  ...agent,
   ...edit_provider_form,
   ...edit_template_form
 }

@@ -1,14 +1,17 @@
 import { CodingAgent } from '../types'
 import { check_command_exists } from '../utils/check-command-exists'
+import { AGENTS } from '../../../constants/agents'
 
 let accumulated_output = ''
 
+const agent_name = 'Grok Build'
+
 export const grok_agent: CodingAgent = {
   id: 'grok',
-  label: 'Grok Build',
+  label: agent_name,
   cmd: 'grok',
   is_installed: () => check_command_exists('grok'),
-  get_documentation_url: () => 'https://docs.x.ai/build/cli/headless-scripting',
+  get_documentation_url: () => AGENTS[agent_name].docs_url!,
   get_edit_args: (prompt: string) => {
     accumulated_output = ''
     return [

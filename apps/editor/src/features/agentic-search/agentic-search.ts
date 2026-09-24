@@ -62,6 +62,14 @@ export const agentic_search = async (params: {
       }
     )
 
+    const last_used_agent_config_name =
+      params.extension_context.workspaceState.get<string>(
+        LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY
+      ) ??
+      params.extension_context.globalState.get<string>(
+        LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY
+      )
+
     const result = await invoke_agentic_cli({
       workspace_provider: params.workspace_provider,
       extension_context: params.extension_context,
@@ -69,7 +77,17 @@ export const agentic_search = async (params: {
       waiting_message: t(
         'utils.agentic-cli-invocation.agent.waiting-for-agent'
       ),
-      last_used_agent_state_key: LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY,
+      last_used_agent_config_name,
+      on_agent_selected: (name: string) => {
+        params.extension_context.workspaceState.update(
+          LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY,
+          name
+        )
+        params.extension_context.globalState.update(
+          LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY,
+          name
+        )
+      },
       last_selected_workspace_state_key:
         LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY,
       show_back_button: true,

@@ -1007,59 +1007,41 @@
           "scope": "resource",
           "default": "In the project, find the complete set of primary and structural files relevant to the query."
         },
-        "codeWebChat.cliFlagsAntigravity": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "string"
-          }
-        },
-        "codeWebChat.cliFlagsClaude": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "string"
-          }
-        },
-        "codeWebChat.cliFlagsCodex": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "string"
-          }
-        },
-        "codeWebChat.cliFlagsCursor": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "string"
-          }
-        },
-        "codeWebChat.cliFlagsGrok": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "string"
-          }
-        },
-        "codeWebChat.cliFlagsMuse": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "string"
-          }
-        },
-        "codeWebChat.cliFlagsOpencode": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "string"
-          }
-        },
         "codeWebChat.editFilesSystemInstructions": {
           "type": "string",
           "scope": "resource",
           "default": "You're a helpful coding assistant."
+        },
+        "codeWebChat.agents": {
+          "type": "array",
+          "scope": "resource",
+          "default": [
+            {
+              "name": "(1)",
+              "agent": "Codex"
+            },
+            {
+              "name": "(2)",
+              "agent": "Claude Code"
+            }
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "agent": {
+                "type": "string"
+              },
+              "flags": {
+                "type": "string"
+              },
+              "isPinned": {
+                "type": "boolean"
+              }
+            }
+          }
         },
         "codeWebChat.chatbots": {
           "type": "array",

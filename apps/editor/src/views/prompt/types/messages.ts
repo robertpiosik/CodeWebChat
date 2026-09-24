@@ -5,6 +5,7 @@ import {
   RecentApiConfiguration
 } from '@shared/types/response-history-item'
 import { WebConfiguration } from '@shared/types/web-configuration'
+import { AgentConfiguration } from '@shared/types/agent-configuration'
 import { Task } from '@shared/types/task'
 import {
   ApiPromptType,
@@ -163,6 +164,45 @@ export interface DeleteWebConfigurationMessage extends BaseMessage {
   name: string
 }
 
+export interface GetAgentConfigurationsMessage extends BaseMessage {
+  command: 'GET_AGENT_CONFIGURATIONS'
+}
+
+export interface ReorderAgentConfigurationsMessage extends BaseMessage {
+  command: 'REORDER_AGENT_CONFIGURATIONS'
+  agent_configurations: AgentConfiguration[]
+}
+
+export interface TogglePinnedAgentConfigurationMessage extends BaseMessage {
+  command: 'TOGGLE_PINNED_AGENT_CONFIGURATION'
+  agent_configuration_name: string
+}
+
+export interface CreateAgentConfigurationMessage extends BaseMessage {
+  command: 'CREATE_AGENT_CONFIGURATION'
+  reference_index?: number
+  exact_insertion?: boolean
+}
+
+export interface UpdateAgentConfigurationMessage extends BaseMessage {
+  command: 'UPDATE_AGENT_CONFIGURATION'
+  updating_agent_configuration: AgentConfiguration
+  updated_agent_configuration: AgentConfiguration
+  origin?: 'cancel' | 'save'
+  is_new?: boolean
+  insertion_index?: number
+}
+
+export interface DeleteAgentConfigurationMessage extends BaseMessage {
+  command: 'DELETE_AGENT_CONFIGURATION'
+  name: string
+}
+
+export interface PickAgentMessage extends BaseMessage {
+  command: 'PICK_AGENT'
+  agent_id?: string
+}
+
 export interface ExecuteCommandMessage extends BaseMessage {
   command: 'EXECUTE_COMMAND'
   command_id: string
@@ -237,6 +277,8 @@ export interface SaveCliPromptTypeMessage extends BaseMessage {
 
 export interface InvokeAgenticCliMessage extends BaseMessage {
   command: 'INVOKE_AGENTIC_CLI'
+  use_quick_pick?: boolean
+  agent_configuration_name?: string
 }
 
 export interface GetWebPromptTypeMessage extends BaseMessage {
@@ -665,6 +707,13 @@ export type FrontendMessage =
   | PreviewCommitSymbolMessage
   | PreviewSkillSymbolMessage
   | AgenticSearchMessage
+  | GetAgentConfigurationsMessage
+  | ReorderAgentConfigurationsMessage
+  | TogglePinnedAgentConfigurationMessage
+  | CreateAgentConfigurationMessage
+  | UpdateAgentConfigurationMessage
+  | DeleteAgentConfigurationMessage
+  | PickAgentMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -701,6 +750,30 @@ export interface WebConfigurationsMessage extends BaseMessage {
 export interface ApiConfigurationsMessage extends BaseMessage {
   command: 'API_CONFIGURATIONS'
   configurations: ApiConfiguration[]
+}
+
+export interface AgentConfigurationsMessage extends BaseMessage {
+  command: 'AGENT_CONFIGURATIONS'
+  agent_configurations: AgentConfiguration[]
+  selected_agent_configuration_name_by_mode?: { [T in CliPromptType]?: string }
+}
+export interface AgentConfigurationUpdatedMessage extends BaseMessage {
+  command: 'AGENT_CONFIGURATION_UPDATED'
+}
+export interface StartAgentConfigurationCreationMessage extends BaseMessage {
+  command: 'START_AGENT_CONFIGURATION_CREATION'
+  agent_configuration: AgentConfiguration
+  insertion_index?: number
+}
+export interface NewlyPickedAgentMessage extends BaseMessage {
+  command: 'NEWLY_PICKED_AGENT'
+  agent_id: string
+}
+
+export interface SelectedAgentConfigurationChangedMessage extends BaseMessage {
+  command: 'SELECTED_AGENT_CONFIGURATION_CHANGED'
+  prompt_type: CliPromptType
+  name: string
 }
 
 export interface EditorStateChangedMessage extends BaseMessage {
@@ -966,3 +1039,8 @@ export type BackendMessage =
   | StartApiConfigurationCreationMessage
   | TasksWorkspacePickedMessage
   | IsModernUiMessage
+  | AgentConfigurationsMessage
+  | AgentConfigurationUpdatedMessage
+  | StartAgentConfigurationCreationMessage
+  | NewlyPickedAgentMessage
+  | SelectedAgentConfigurationChangedMessage

@@ -49,11 +49,18 @@ import {
   handle_get_templates,
   handle_update_templates,
   handle_create_template,
-  handle_delete_template
+  handle_delete_template,
+  handle_create_agent_configuration,
+  handle_delete_agent_configuration,
+  handle_update_agent_configuration,
+  handle_reorder_agent_configurations,
+  handle_pick_agent
 } from './message-handlers'
 import { config_web_configuration_to_ui_format } from '@/utils/web-configuration-format-converters'
 import { webview_html } from '@/views/shared/utils/webview-html'
 import { CHATBOTS } from '@shared/constants/chatbots'
+import { config_agent_configuration_to_ui_format } from '@/utils/agent-configuration-format-converters'
+import { AGENTS } from '@/constants/agents'
 
 export class SettingsViewProvider {
   private _webview_panel: vscode.WebviewPanel | undefined
@@ -93,6 +100,22 @@ export class SettingsViewProvider {
             }
           }
           return config_web_configuration_to_ui_format({ ...config, model })
+        })
+    })
+  }
+
+  private _send_agent_configurations() {
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const agent_configurations_config = config.get<any[]>('agents', []) || []
+
+    this.postMessage({
+      command: 'AGENT_CONFIGURATIONS',
+      agent_configurations: agent_configurations_config
+        .filter(
+          (c: any) => c.agent && AGENTS[c.agent as keyof typeof AGENTS]
+        )
+        .map((config: any) => {
+          return config_agent_configuration_to_ui_format(config)
         })
     })
   }
@@ -238,6 +261,18 @@ export class SettingsViewProvider {
           await handle_open_keybindings(message)
         } else if (message.command == 'OPEN_EXTERNAL_URL') {
           await handle_open_external_url(message)
+        } else if (message.command == 'GET_AGENT_CONFIGURATIONS') {
+          this._send_agent_configurations()
+        } else if (message.command == 'CREATE_AGENT_CONFIGURATION') {
+          await handle_create_agent_configuration(this, message)
+        } else if (message.command == 'DELETE_AGENT_CONFIGURATION') {
+          await handle_delete_agent_configuration(message.name)
+        } else if (message.command == 'UPDATE_AGENT_CONFIGURATION') {
+          await handle_update_agent_configuration(this, message)
+        } else if (message.command == 'REORDER_AGENT_CONFIGURATIONS') {
+          await handle_reorder_agent_configurations(message)
+        } else if (message.command == 'PICK_AGENT') {
+          await handle_pick_agent(this, message)
         } else if (message.command == 'GET_WEB_CONFIGURATIONS') {
           this._send_web_configurations()
         } else if (message.command == 'REORDER_WEB_CONFIGURATIONS') {
@@ -291,6 +326,7 @@ export class SettingsViewProvider {
           void handle_get_send_with_shift_enter(this)
           void handle_get_templates(this)
           this._send_web_configurations()
+          this._send_agent_configurations()
         }
         if (e.affectsConfiguration('workbench.experimental.modernUI')) {
           this._send_is_modern_ui()

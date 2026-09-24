@@ -1,16 +1,19 @@
 import { CodingAgent } from '../types'
 import { check_command_exists } from '../utils/check-command-exists'
 import { get_progress_dots } from '../utils/get-progress-dots'
+import { AGENTS } from '../../../constants/agents'
 
 let last_action_name = ''
 let action_count = 0
 
+const agent_name = 'Antigravity'
+
 export const antigravity_agent: CodingAgent = {
   id: 'antigravity',
-  label: 'Antigravity',
+  label: agent_name,
   cmd: 'agy',
   is_installed: () => check_command_exists('agy'),
-  get_documentation_url: () => 'https://antigravity.google/docs/cli/headless/',
+  get_documentation_url: () => AGENTS[agent_name].docs_url!,
   get_edit_args: (prompt: string) => [
     '-p',
     prompt,

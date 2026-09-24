@@ -1,16 +1,19 @@
 import { CodingAgent } from '../types'
 import { check_command_exists } from '../utils/check-command-exists'
 import { get_progress_dots } from '../utils/get-progress-dots'
+import { AGENTS } from '../../../constants/agents'
 
 let last_action_name = ''
 let action_count = 0
 
+const agent_name = 'OpenCode'
+
 export const opencode_agent: CodingAgent = {
   id: 'opencode',
-  label: 'OpenCode',
+  label: agent_name,
   cmd: 'opencode',
   is_installed: () => check_command_exists('opencode'),
-  get_documentation_url: () => 'https://opencode.ai/docs/cli/',
+  get_documentation_url: () => AGENTS[agent_name].docs_url!,
   get_edit_args: (prompt: string) => [
     'run',
     prompt,

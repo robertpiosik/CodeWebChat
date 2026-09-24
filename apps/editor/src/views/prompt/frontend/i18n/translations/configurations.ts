@@ -52,5 +52,23 @@ export const configurations = {
     cs: 'Zatím nebyli nakonfigurováni žádní chatboti',
     hu: 'Még nincsenek chatbotok konfigurálva',
     bg: 'Все още няма конфигурирани чатботове'
+  },
+  'agents.empty': {
+    en: 'No agents configured yet',
+    pl: 'Nie skonfigurowano jeszcze żadnych agentów',
+    'zh-cn': '尚未配置任何代理',
+    ja: 'エージェントがまだ設定されていません',
+    'zh-tw': '尚未設定任何代理',
+    de: 'Noch keine Agenten konfiguriert',
+    es: 'Aún no se han configurado agentes',
+    fr: "Pas encore d'agents configurés pour le moment",
+    'pt-br': 'Não há agentes configurados ainda',
+    ru: 'Агенты еще не настроены',
+    ko: '아직 구성된 에이전트가 없습니다',
+    it: 'Non ci sono ancora agenti configurati',
+    tr: 'Henüz hiçbir temsilci yapılandırılmadı',
+    cs: 'Zatím nebyli nakonfigurováni žádní agenti',
+    hu: 'Még nincsenek ügynökök konfigurálva',
+    bg: 'Все още няма конфигурирани агенти'
   }
 } as const

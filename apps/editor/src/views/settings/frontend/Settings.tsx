@@ -4,10 +4,12 @@ import { post_message } from './utils/post-message'
 import { BackendMessage, Template } from '../types/messages'
 import { Home, NavItem } from './Home/Home'
 import { use_web_configuration_editing } from './hooks/use-web-configuration-editing'
+import { use_agent_configuration_editing } from './hooks/use-agent-configuration-editing'
 import { use_api_configuration_editing } from './hooks/use-api-configuration-editing'
 import { use_provider_editing } from './hooks/use-provider-editing'
 import { Modal as UiModal } from '@ui/components/editor/settings/Modal'
 import { EditWebConfigurationForm } from '@/views/shared/forms/EditWebConfigurationForm'
+import { EditAgentConfigurationForm } from '@/views/shared/forms/EditAgentConfigurationForm'
 import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurationForm'
 import { EditProviderForm } from './forms/EditProviderForm'
 import { EditTemplateForm } from './forms/EditTemplateForm'
@@ -25,6 +27,16 @@ export const Settings = () => {
     set_is_new_web_configuration,
     set_web_configuration_insertion_index
   } = use_web_configuration_editing(vscode)
+
+  const {
+    updating_agent_configuration,
+    set_updating_agent_configuration,
+    set_updated_agent_configuration,
+    edit_agent_configuration_cancel_handler,
+    edit_agent_configuration_save_handler,
+    set_is_new_agent_configuration,
+    set_agent_configuration_insertion_index
+  } = use_agent_configuration_editing(vscode)
 
   const {
     updating_api_configuration,
@@ -85,6 +97,7 @@ export const Settings = () => {
       settings_hook.providers !== undefined &&
       settings_hook.api_configurations !== undefined &&
       settings_hook.web_configurations !== undefined &&
+      settings_hook.agent_configurations !== undefined &&
       settings_hook.defaults !== undefined &&
       settings_hook.edit_files_system_instructions !== undefined &&
       settings_hook.default_edit_files_system_instructions !== undefined &&
@@ -253,6 +266,28 @@ export const Settings = () => {
         on_toggle_pinned_web_configuration={
           settings_hook.handle_toggle_pinned_web_configuration
         }
+        agent_configurations={settings_hook.agent_configurations!}
+        set_agent_configurations={settings_hook.set_agent_configurations}
+        on_reorder_agent_configurations={
+          settings_hook.handle_reorder_agent_configurations
+        }
+        on_add_agent_configuration={settings_hook.handle_add_agent_configuration}
+        on_edit_agent_configuration={(id) => {
+          const config = settings_hook.agent_configurations?.find(
+            (c, index) => (c.name ?? `unnamed-${index}`) === id
+          )
+          if (config) {
+            set_updating_agent_configuration(config)
+            set_is_new_agent_configuration(false)
+            set_agent_configuration_insertion_index(undefined)
+          }
+        }}
+        on_delete_agent_configuration={
+          settings_hook.handle_delete_agent_configuration
+        }
+        on_toggle_pinned_agent_configuration={
+          settings_hook.handle_toggle_pinned_agent_configuration
+        }
         on_open_external_url={settings_hook.handle_open_external_url}
         scroll_to_section_on_load={scroll_to_section_on_load}
       />
@@ -282,6 +317,23 @@ export const Settings = () => {
                   supported_efforts,
                   current_effort
                 })
+              }}
+            />
+          </UiModal.Form>
+        </UiModal>
+      )}
+      {updating_agent_configuration && (
+        <UiModal on_close={edit_agent_configuration_cancel_handler}>
+          <UiModal.Form
+            title="Edit Agent"
+            on_save={edit_agent_configuration_save_handler}
+            on_cancel={edit_agent_configuration_cancel_handler}
+          >
+            <EditAgentConfigurationForm
+              agent_configuration={updating_agent_configuration}
+              on_update={set_updated_agent_configuration}
+              pick_agent={(agent_id) => {
+                post_message(vscode, { command: 'PICK_AGENT', agent_id })
               }}
             />
           </UiModal.Form>
