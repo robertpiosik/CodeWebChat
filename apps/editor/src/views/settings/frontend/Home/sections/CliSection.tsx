@@ -1,6 +1,7 @@
 import { forwardRef } from 'react'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
+import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
 import { SortableList } from '@ui/components/editor/settings/SortableList'
 import { IconButton } from '@ui/components/editor/common/IconButton'
 import { DefaultConfigurationSelector } from '@ui/components/editor/settings/DefaultConfigurationSelector'
@@ -12,7 +13,10 @@ type Props = {
   cli_configurations: CliConfiguration[]
   set_cli_configurations: (configurations: CliConfiguration[]) => void
   agent_defaults: Record<string, string | null>
-  on_set_default_cli_configuration: (cli_feature: string, name: string | null) => void
+  on_set_default_cli_configuration: (
+    cli_feature: string,
+    name: string | null
+  ) => void
   on_select_default_cli_configuration: (cli_feature: string) => void
   on_reorder_cli_configurations: (reordered: CliConfiguration[]) => void
   on_add_cli_configuration: (params?: {
@@ -30,9 +34,8 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   return (
     <UiSection ref={ref} title={t('cli.title')} subtitle={t('cli.subtitle')}>
-      <div
-        ref={(el) => props.set_section_ref('section:cli:group:agents', el)}
-      >
+      <UiNotice type="info">{t('cli.notice')}</UiNotice>
+      <div ref={(el) => props.set_section_ref('section:cli:group:agents', el)}>
         <UiGroup title={t('agents.configurations.title')}>
           <SortableList
             items={props.cli_configurations.map((c) => ({
@@ -134,7 +137,9 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
         </UiGroup>
       </div>
       <div
-        ref={(el) => props.set_section_ref('section:cli:group:agent-defaults', el)}
+        ref={(el) =>
+          props.set_section_ref('section:cli:group:agent-defaults', el)
+        }
       >
         <UiGroup
           title={t('cli.default-configurations.title')}
