@@ -27,12 +27,19 @@ export const AsciiArtEffect = ({ density = 1 }: Props) => {
       el.style.setProperty('--mouse-y', `${y}px`)
     }
 
+    const handle_mouse_enter = () => {
+      el.style.setProperty('--mask-offset-x', `${Math.floor(Math.random() * 100)}px`)
+      el.style.setProperty('--mask-offset-y', `${Math.floor(Math.random() * 100)}px`)
+    }
+
     parent.addEventListener('mousemove', handle_mouse_move)
     parent.addEventListener('mouseleave', handle_mouse_leave)
+    parent.addEventListener('mouseenter', handle_mouse_enter)
 
     return () => {
       parent.removeEventListener('mousemove', handle_mouse_move)
       parent.removeEventListener('mouseleave', handle_mouse_leave)
+      parent.removeEventListener('mouseenter', handle_mouse_enter)
     }
   }, [])
 

@@ -27,4 +27,6 @@
   -webkit-mask-repeat: repeat;
   mask-size: var(--mask-size, 88px 88px);
   -webkit-mask-size: var(--mask-size, 88px 88px);
+  mask-position: var(--mask-offset-x, 0px) var(--mask-offset-y, 0px);
+  -webkit-mask-position: var(--mask-offset-x, 0px) var(--mask-offset-y, 0px);
 }
