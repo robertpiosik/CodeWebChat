@@ -93,14 +93,12 @@ export const use_last_choice_tooltip = (params: {
           (c) => c.name == params.selected_agent_configuration_name
         )
         if (configuration) {
-          const is_unnamed =
-            !configuration.name ||
-            /^\(\d+\)$/.test(configuration.name.trim())
+          const is_unnamed = /^\(\d+\)$/.test(configuration.name.trim())
           const display_name = is_unnamed
-            ? configuration.agent!
-            : configuration.name!.replace(/ \(\d+\)$/, '')
+            ? configuration.agent
+            : configuration.name.replace(/ \(\d+\)$/, '')
           const details: string[] = []
-          if (!is_unnamed && configuration.agent) {
+          if (!is_unnamed) {
             details.push(configuration.agent)
           }
           if (configuration.flags) {

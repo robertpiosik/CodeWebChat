@@ -3,6 +3,7 @@ import { Section as UiSection } from '@ui/components/editor/settings/Section'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { SortableList } from '@ui/components/editor/settings/SortableList'
 import { IconButton } from '@ui/components/editor/common/IconButton'
+import { DefaultConfigurationSelector } from '@ui/components/editor/settings/DefaultConfigurationSelector'
 import { CliConfiguration } from '@/types/cli-configuration'
 import { use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
@@ -10,6 +11,9 @@ import { NavItem } from '../Home'
 type Props = {
   agent_configurations: CliConfiguration[]
   set_agent_configurations: (configurations: CliConfiguration[]) => void
+  agent_defaults: Record<string, string | null>
+  on_set_default_agent_configuration: (cli_feature: string, name: string | null) => void
+  on_select_default_agent_configuration: (cli_feature: string) => void
   on_reorder_agent_configurations: (reordered: CliConfiguration[]) => void
   on_add_agent_configuration: (params?: {
     insertion_index?: number
@@ -31,9 +35,9 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
       >
         <UiGroup title={t('agents.configurations.title')}>
           <SortableList
-            items={props.agent_configurations.map((c, index) => ({
+            items={props.agent_configurations.map((c) => ({
               ...c,
-              id: c.name ?? `unnamed-${index}`
+              id: c.name
             }))}
             on_reorder={(reordered) => {
               const restored = reordered.map(
@@ -50,18 +54,15 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               items_text_many: t('agents.configurations.items-many')
             }}
             render_content={(config) => {
-              const is_unnamed =
-                !config.name ||
-                config.name.startsWith('unnamed-') ||
-                /^\(\d+\)$/.test(config.name.trim())
+              const is_unnamed = /^\(\d+\)$/.test(config.name.trim())
               const display_name = is_unnamed
-                ? config.agent!
-                : config.name!.replace(/ \(\d+\)$/, '')
+                ? config.agent
+                : config.name.replace(/ \(\d+\)$/, '')
 
               const details: string[] = []
               if (is_unnamed) {
                 // ...
-              } else if (config.agent) {
+              } else {
                 details.push(config.agent)
               }
 
@@ -129,6 +130,41 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                 />
               </>
             )}
+          />
+        </UiGroup>
+      </div>
+      <div
+        ref={(el) => props.set_section_ref('section:cli:group:agent-defaults', el)}
+      >
+        <UiGroup
+          title={t('cli.default-configurations.title')}
+          is_disabled={props.agent_configurations.length === 0}
+        >
+          <DefaultConfigurationSelector
+            title={t('cli.default-configurations.tool.agentic-search')}
+            value={props.agent_defaults['agentic-search'] || null}
+            configurations={props.agent_configurations.map((config) => {
+              const is_unnamed = /^\(\d+\)$/.test(config.name.trim())
+              const display_name = is_unnamed
+                ? config.agent
+                : config.name.replace(/ \(\d+\)$/, '')
+
+              return {
+                id: config.name,
+                model: display_name,
+                description: config.agent
+              }
+            })}
+            on_unset={() =>
+              props.on_set_default_agent_configuration('agentic-search', null)
+            }
+            on_select={() =>
+              props.on_select_default_agent_configuration('agentic-search')
+            }
+            translations={{
+              select: t('agents.configurations.action.select-default'),
+              unset: t('agents.configurations.action.unset-default')
+            }}
           />
         </UiGroup>
       </div>

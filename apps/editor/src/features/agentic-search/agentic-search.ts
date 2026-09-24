@@ -62,6 +62,13 @@ export const agentic_search = async (params: {
       }
     )
 
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const agent_configs = config.get<any[]>('agents', []) || []
+    const default_agent = agent_configs.find(c => c.isDefaultForAgenticSearch)
+    
+    const use_quick_pick = !default_agent
+    const agent_configuration_name = default_agent ? default_agent.name : undefined
+
     const last_used_agent_config_name =
       params.extension_context.workspaceState.get<string>(
         LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY
@@ -78,6 +85,7 @@ export const agentic_search = async (params: {
         'utils.agentic-cli-invocation.agent.waiting-for-agent'
       ),
       last_used_agent_config_name,
+      agent_configuration_name,
       on_agent_selected: (name: string) => {
         params.extension_context.workspaceState.update(
           LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY,
@@ -91,7 +99,7 @@ export const agentic_search = async (params: {
       last_selected_workspace_state_key:
         LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY,
       show_back_button: true,
-      use_quick_pick: true,
+      use_quick_pick,
       build_prompt: async () => {
         const { instructions: processed_query, skill_definitions } =
           await replace_symbols({

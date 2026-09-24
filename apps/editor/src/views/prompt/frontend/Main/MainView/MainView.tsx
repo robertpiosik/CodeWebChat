@@ -278,22 +278,22 @@ export const MainView: React.FC<Props> = (props) => {
     })
 
   const agent_configurations_ui: UiConfigurations.Configuration[] =
-    props.agent_configurations.map((c, index) => {
-      const is_unnamed = !c.name || /^\(\d+\)$/.test(c.name.trim())
+    props.agent_configurations.map((c) => {
+      const is_unnamed = /^\(\d+\)$/.test(c.name.trim())
       const display_name = is_unnamed
-        ? c.agent!
-        : c.name!.replace(/ \(\d+\)$/, '')
+        ? c.agent
+        : c.name.replace(/ \(\d+\)$/, '')
 
       const details: string[] = []
       if (is_unnamed) {
         if (c.flags) details.push(c.flags)
-      } else if (c.agent) {
+      } else {
         details.push(c.agent)
         if (c.flags) details.push(c.flags)
       }
 
       return {
-        id: c.name ?? `unnamed-${index}`,
+        id: c.name,
         title: display_name,
         details,
         is_pinned: c.is_pinned
@@ -753,7 +753,7 @@ export const MainView: React.FC<Props> = (props) => {
           on_reorder={(reordered) => {
             const new_agent_configurations = reordered.map((c) => {
               return props.agent_configurations.find(
-                (p, i) => (p.name ?? `unnamed-${i}`) == c.id
+                (p) => p.name == c.id
               )!
             })
             props.on_agent_configurations_reorder(new_agent_configurations)

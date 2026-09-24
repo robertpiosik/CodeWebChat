@@ -31,6 +31,7 @@ export type NavItem =
   | 'section:api:group:system-instructions'
   | 'section:cli'
   | 'section:cli:group:agents'
+  | 'section:cli:group:agent-defaults'
 
 export type NavConfigItem = { id: NavItem; label: TranslationKey }
 
@@ -86,6 +87,10 @@ export const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     id: 'section:cli:group:agents',
     label: 'agents.configurations.title'
+  },
+  {
+    id: 'section:cli:group:agent-defaults',
+    label: 'cli.default-configurations.title'
   }
 ]
 
@@ -125,6 +130,9 @@ type Props = {
   on_edit_agent_configuration: (id: string) => void
   on_delete_agent_configuration: (name: string) => void
   on_toggle_pinned_agent_configuration: (config: CliConfiguration) => void
+  agent_defaults: Record<string, string | null>
+  on_set_default_agent_configuration: (cli_feature: string, name: string | null) => void
+  on_select_default_agent_configuration: (cli_feature: string) => void
   on_commit_instructions_change: (instructions: string) => void
   on_attach_ascii_tree_of_context_change: (
     value: 'ask' | 'always' | 'never'
@@ -417,6 +425,9 @@ export const Home: React.FC<Props> = (props) => {
           on_toggle_pinned_agent_configuration={
             props.on_toggle_pinned_agent_configuration
           }
+          agent_defaults={props.agent_defaults}
+          on_set_default_agent_configuration={props.on_set_default_agent_configuration}
+          on_select_default_agent_configuration={props.on_select_default_agent_configuration}
         />
       </UiLayout>
     </div>

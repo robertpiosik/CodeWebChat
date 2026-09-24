@@ -9,7 +9,7 @@ export const remove = async (params: { name: string }): Promise<void> => {
     config.get<ConfigAgentConfigurationFormat[]>('agents', []) || []
 
   const index = current_agent_configurations.findIndex(
-    (c, i) => (c.name ?? `unnamed-${i}`) == params.name
+    (c) => c.name == params.name
   )
 
   if (index < 0 || index >= current_agent_configurations.length) {
@@ -18,10 +18,10 @@ export const remove = async (params: { name: string }): Promise<void> => {
 
   const item_to_delete = current_agent_configurations[index]
   const item_name = item_to_delete.name
-  const is_unnamed = !item_name || /^\(\d+\)$/.test(item_name?.trim() ?? '')
+  const is_unnamed = /^\(\d+\)$/.test(item_name.trim())
   const display_item_name = is_unnamed
     ? t('views.shared.actions.agent.delete.unnamed')
-    : item_name!
+    : item_name
 
   const delete_button = t('common.delete')
   const result = await vscode.window.showWarningMessage(

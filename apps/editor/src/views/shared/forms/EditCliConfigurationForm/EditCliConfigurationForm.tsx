@@ -32,7 +32,8 @@ export const EditCliConfigurationForm: React.FC<Props> = (props) => {
       })
     } else {
       props.on_update({
-        name
+        name,
+        agent
       })
     }
   }, [name, agent, flags])
@@ -72,7 +73,7 @@ export const EditCliConfigurationForm: React.FC<Props> = (props) => {
             <UiInput
               id="name"
               type="text"
-              value={name && /^\(\d+\)$/.test(name) ? '' : name!}
+              value={/^\(\d+\)$/.test(name) ? '' : name}
               on_change={set_name}
               placeholder={
                 agent ||
@@ -87,9 +88,7 @@ export const EditCliConfigurationForm: React.FC<Props> = (props) => {
             info={
               agent && AGENTS[agent as keyof typeof AGENTS]?.docs_url ? (
                 <>
-                  <a
-                    href={AGENTS[agent as keyof typeof AGENTS].docs_url}
-                  >
+                  <a href={AGENTS[agent as keyof typeof AGENTS].docs_url}>
                     {t('edit-agent-configuration-form.flags.info.learn-more')}
                   </a>
                   {t('edit-agent-configuration-form.flags.info.about').replace(

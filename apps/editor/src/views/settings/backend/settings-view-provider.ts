@@ -116,7 +116,10 @@ export class SettingsViewProvider {
         )
         .map((config: any) => {
           return config_agent_configuration_to_ui_format(config)
-        })
+        }),
+      defaults: {
+        'agentic-search': agent_configurations_config.find((c: any) => c.isDefaultForAgenticSearch)?.name || null
+      }
     })
   }
 
@@ -303,6 +306,78 @@ export class SettingsViewProvider {
           await handle_pick_api_model(this, message)
         } else if (message.command == 'PICK_API_REASONING_EFFORT') {
           await handle_pick_api_reasoning_effort(this, message)
+        } else if (message.command == 'SET_DEFAULT_AGENT_CONFIGURATION') {
+          const config = vscode.workspace.getConfiguration('codeWebChat')
+          const agent_configs = config.get<any[]>('agents', []) || []
+          const updated = agent_configs.map((c) => {
+            const new_c = { ...c }
+            if (message.cli_feature === 'agentic-search') {
+              if (c.name === message.agent_configuration_name) {
+                new_c.isDefaultForAgenticSearch = true
+              } else {
+                delete new_c.isDefaultForAgenticSearch
+              }
+            }
+            return new_c
+          })
+          await config.update('agents', updated, vscode.ConfigurationTarget.Global)
+        } else if (message.command == 'SELECT_DEFAULT_AGENT_CONFIGURATION') {
+          const config = vscode.workspace.getConfiguration('codeWebChat')
+          const agent_configs = config.get<any[]>('agents', []) || []
+          if (agent_configs.length === 0) return
+
+          const items = agent_configs.map((c) => {
+            const is_unnamed = /^\(\d+\)$/.test(c.name.trim())
+            const display_name = is_unnamed ? c.agent : c.name.replace(/ \(\d+\)$/, '')
+
+            return {
+              label: display_name,
+              description: c.agent === display_name ? undefined : c.agent,
+              agent_configuration_name: c.name
+            }
+          })
+
+          const quick_pick = vscode.window.createQuickPick<
+            vscode.QuickPickItem & { agent_configuration_name: string }
+          >()
+          quick_pick.items = items
+          quick_pick.title = 'Select default agent'
+          quick_pick.placeholder = 'Select agent'
+
+          const close_button: vscode.QuickInputButton = {
+            iconPath: new vscode.ThemeIcon('close'),
+            tooltip: 'Close'
+          }
+          quick_pick.buttons = [close_button]
+
+          quick_pick.onDidTriggerButton((button) => {
+            if (button === close_button) {
+              quick_pick.hide()
+            }
+          })
+
+          quick_pick.onDidAccept(async () => {
+            const selected = quick_pick.selectedItems[0]
+            quick_pick.hide()
+
+            if (selected) {
+              const updated = agent_configs.map((c) => {
+                const new_c = { ...c }
+                if (message.cli_feature === 'agentic-search') {
+                  if (c.name === selected.agent_configuration_name) {
+                    new_c.isDefaultForAgenticSearch = true
+                  } else {
+                    delete new_c.isDefaultForAgenticSearch
+                  }
+                }
+                return new_c
+              })
+              await config.update('agents', updated, vscode.ConfigurationTarget.Global)
+            }
+          })
+
+          quick_pick.onDidHide(() => quick_pick.dispose())
+          quick_pick.show()
         } else if (message.command == 'GET_IS_MODERN_UI') {
           this._send_is_modern_ui()
         }

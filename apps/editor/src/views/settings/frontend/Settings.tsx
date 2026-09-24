@@ -58,6 +58,8 @@ export const Settings = () => {
   const [scroll_to_section_on_load, set_scroll_to_section_on_load] =
     useState<NavItem>()
 
+  const [agent_defaults, set_agent_defaults] = useState<Record<string, string | null>>({ 'agentic-search': null })
+
   const [updating_template, set_updating_template] = useState<{
     key: string
     index?: number
@@ -128,6 +130,10 @@ export const Settings = () => {
           template: event.data.template
         })
         set_updated_template(event.data.template)
+      } else if (event.data.command == 'AGENT_CONFIGURATIONS') {
+        if ((event.data as any).defaults) {
+          set_agent_defaults((event.data as any).defaults)
+        }
       }
     }
     window.addEventListener('message', handle_message)
@@ -274,7 +280,7 @@ export const Settings = () => {
         on_add_agent_configuration={settings_hook.handle_add_agent_configuration}
         on_edit_agent_configuration={(id) => {
           const config = settings_hook.agent_configurations?.find(
-            (c, index) => (c.name ?? `unnamed-${index}`) === id
+            (c) => c.name === id
           )
           if (config) {
             set_updating_agent_configuration(config)
@@ -288,6 +294,20 @@ export const Settings = () => {
         on_toggle_pinned_agent_configuration={
           settings_hook.handle_toggle_pinned_agent_configuration
         }
+        agent_defaults={agent_defaults}
+        on_set_default_agent_configuration={(cli_feature, name) => {
+          post_message(vscode, {
+            command: 'SET_DEFAULT_AGENT_CONFIGURATION',
+            cli_feature,
+            agent_configuration_name: name
+          })
+        }}
+        on_select_default_agent_configuration={(cli_feature) => {
+          post_message(vscode, {
+            command: 'SELECT_DEFAULT_AGENT_CONFIGURATION',
+            cli_feature
+          })
+        }}
         on_open_external_url={settings_hook.handle_open_external_url}
         scroll_to_section_on_load={scroll_to_section_on_load}
       />

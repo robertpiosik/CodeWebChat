@@ -375,6 +375,8 @@ export type FrontendMessage =
   | CreateAgentConfigurationMessage
   | UpdateAgentConfigurationMessage
   | PickAgentMessage
+  | SetDefaultAgentConfigurationMessage
+  | SelectDefaultAgentConfigurationMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ProvidersMessage {
@@ -455,9 +457,22 @@ export interface NewlyPickedReasoningEffortMessage {
   effort: string
 }
 
+
+export interface SetDefaultAgentConfigurationMessage {
+  command: 'SET_DEFAULT_AGENT_CONFIGURATION'
+  cli_feature: string
+  agent_configuration_name: string | null
+}
+
+export interface SelectDefaultAgentConfigurationMessage {
+  command: 'SELECT_DEFAULT_AGENT_CONFIGURATION'
+  cli_feature: string
+}
+
 export interface AgentConfigurationsMessage {
   command: 'AGENT_CONFIGURATIONS'
   agent_configurations: CliConfiguration[]
+  defaults?: Record<string, string | null>
 }
 export interface AgentConfigurationUpdatedMessage {
   command: 'AGENT_CONFIGURATION_UPDATED'

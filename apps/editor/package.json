@@ -1039,8 +1039,15 @@
               },
               "isPinned": {
                 "type": "boolean"
+              },
+              "isDefaultForAgenticSearch": {
+                "type": "boolean"
               }
-            }
+            },
+            "required": [
+              "name",
+              "agent"
+            ]
           }
         },
         "codeWebChat.chatbots": {
