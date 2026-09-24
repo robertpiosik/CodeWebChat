@@ -13,7 +13,7 @@ import {
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
 import { Logger } from '@shared/utils/logger'
-import { WebConfiguration } from '@shared/types/web-configuration'
+import { WebConfiguration } from '@/types/web-configuration'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { LAST_SELECTED_BROWSER_ID_STATE_KEY } from '@/constants/state-keys'
 import { ApplyResponseCommandArgs } from '@/commands/apply-response-command/response-processor'

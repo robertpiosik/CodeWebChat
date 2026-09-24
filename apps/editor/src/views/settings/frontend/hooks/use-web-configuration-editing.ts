@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { WebConfiguration } from '@shared/types/web-configuration'
+import { WebConfiguration } from '@/types/web-configuration'
 import { BackendMessage } from '../../types/messages'
 import { post_message } from '../utils/post-message'
 

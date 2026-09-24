@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { WebConfiguration } from '@shared/types/web-configuration'
+import { WebConfiguration } from '@/types/web-configuration'
 import { ui_web_configuration_to_config_format } from '@/utils/web-configuration-format-converters'
 
 export const reorder = async (params: {

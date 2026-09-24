@@ -4,12 +4,12 @@ import { post_message } from './utils/post-message'
 import { BackendMessage, Template } from '../types/messages'
 import { Home, NavItem } from './Home/Home'
 import { use_web_configuration_editing } from './hooks/use-web-configuration-editing'
-import { use_agent_configuration_editing } from './hooks/use-agent-configuration-editing'
+import { use_agent_configuration_editing } from './hooks/use-cli-configuration-editing'
+import { EditCliConfigurationForm } from '@/views/shared/forms/EditCliConfigurationForm/EditCliConfigurationForm'
 import { use_api_configuration_editing } from './hooks/use-api-configuration-editing'
 import { use_provider_editing } from './hooks/use-provider-editing'
 import { Modal as UiModal } from '@ui/components/editor/settings/Modal'
 import { EditWebConfigurationForm } from '@/views/shared/forms/EditWebConfigurationForm'
-import { EditAgentConfigurationForm } from '@/views/shared/forms/EditAgentConfigurationForm'
 import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurationForm'
 import { EditProviderForm } from './forms/EditProviderForm'
 import { EditTemplateForm } from './forms/EditTemplateForm'
@@ -329,7 +329,7 @@ export const Settings = () => {
             on_save={edit_agent_configuration_save_handler}
             on_cancel={edit_agent_configuration_cancel_handler}
           >
-            <EditAgentConfigurationForm
+            <EditCliConfigurationForm
               agent_configuration={updating_agent_configuration}
               on_update={set_updated_agent_configuration}
               pick_agent={(agent_id) => {

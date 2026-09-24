@@ -1,5 +1,5 @@
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { WebConfiguration } from '@shared/types/web-configuration'
+import { WebConfiguration } from '@/types/web-configuration'
 
 export type ConfigWebConfigurationFormat = {
   name?: string

@@ -10,8 +10,8 @@ import {
   Provider,
   Template
 } from '@/views/settings/types/messages'
-import { WebConfiguration } from '@shared/types/web-configuration'
-import { AgentConfiguration } from '@shared/types/agent-configuration'
+import { WebConfiguration } from '@/types/web-configuration'
+import { CliConfiguration } from '@/types/cli-configuration'
 import { GeneralSection } from './sections/GeneralSection'
 import { ApiFeature } from '@/views/shared/types/api-features'
 import { use_translation, TranslationKey } from '../i18n/use-translation'
@@ -93,7 +93,7 @@ type Props = {
   providers: Provider[]
   api_configurations: ApiConfiguration[]
   web_configurations: WebConfiguration[]
-  agent_configurations: AgentConfiguration[]
+  agent_configurations: CliConfiguration[]
   defaults: Record<ApiFeature, string | null>
   edit_files_system_instructions: string
   default_edit_files_system_instructions: string
@@ -116,15 +116,15 @@ type Props = {
   set_providers: (providers: Provider[]) => void
   set_api_configurations: (configurations: ApiConfiguration[]) => void
   set_web_configurations: (configurations: WebConfiguration[]) => void
-  set_agent_configurations: (configurations: AgentConfiguration[]) => void
-  on_reorder_agent_configurations: (reordered: AgentConfiguration[]) => void
+  set_agent_configurations: (configurations: CliConfiguration[]) => void
+  on_reorder_agent_configurations: (reordered: CliConfiguration[]) => void
   on_add_agent_configuration: (params?: {
     insertion_index?: number
     exact_insertion?: boolean
   }) => void
   on_edit_agent_configuration: (id: string) => void
   on_delete_agent_configuration: (name: string) => void
-  on_toggle_pinned_agent_configuration: (config: AgentConfiguration) => void
+  on_toggle_pinned_agent_configuration: (config: CliConfiguration) => void
   on_commit_instructions_change: (instructions: string) => void
   on_attach_ascii_tree_of_context_change: (
     value: 'ask' | 'always' | 'never'

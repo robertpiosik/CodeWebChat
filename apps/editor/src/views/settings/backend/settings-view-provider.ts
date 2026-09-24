@@ -59,7 +59,7 @@ import {
 import { config_web_configuration_to_ui_format } from '@/utils/web-configuration-format-converters'
 import { webview_html } from '@/views/shared/utils/webview-html'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { config_agent_configuration_to_ui_format } from '@/utils/agent-configuration-format-converters'
+import { config_agent_configuration_to_ui_format } from '@/utils/cli-configuration-format-converters'
 import { AGENTS } from '@/constants/agents'
 
 export class SettingsViewProvider {

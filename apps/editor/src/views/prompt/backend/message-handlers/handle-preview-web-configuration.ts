@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { PreviewWebConfigurationMessage } from '@/views/prompt/types/messages'
 import { build_prompt_payload } from './utils/build-prompt-payload'
-import { WebConfiguration } from '@shared/types/web-configuration'
+import { WebConfiguration } from '@/types/web-configuration'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,

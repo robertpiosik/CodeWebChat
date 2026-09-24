@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { AGENTS } from '@/constants/agents'
-import { ConfigAgentConfigurationFormat } from '@/utils/agent-configuration-format-converters'
+import { ConfigAgentConfigurationFormat } from '@/utils/cli-configuration-format-converters'
 import { generate_unique_name } from '@/views/shared/utils/generate-unique-name'
 import { t } from '@/i18n'
 

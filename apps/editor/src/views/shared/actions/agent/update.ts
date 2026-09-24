@@ -1,15 +1,15 @@
 import * as vscode from 'vscode'
-import { AgentConfiguration } from '@shared/types/agent-configuration'
+import { CliConfiguration } from '@/types/cli-configuration'
 import {
   ConfigAgentConfigurationFormat,
   ui_agent_configuration_to_config_format
-} from '@/utils/agent-configuration-format-converters'
+} from '@/utils/cli-configuration-format-converters'
 import { generate_unique_name } from '@/views/shared/utils/generate-unique-name'
 import { t } from '@/i18n'
 
 export const update = async (params: {
-  updating_agent_configuration: AgentConfiguration
-  updated_agent_configuration: AgentConfiguration
+  updating_agent_configuration: CliConfiguration
+  updated_agent_configuration: CliConfiguration
   origin?: 'cancel' | 'save'
   is_new?: boolean
   insertion_index?: number

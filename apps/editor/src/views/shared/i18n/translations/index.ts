@@ -1,11 +1,11 @@
 import { translations as common } from './common'
 import { translations as edit_api_configuration_form } from './edit-api-configuration-form'
 import { translations as edit_web_configuration_form } from './edit-web-configuration-form'
-import { translations as edit_agent_configuration_form } from './edit-agent-configuration-form'
+import { translations as edit_cli_configuration_form } from './edit-cli-configuration-form'
 
 export const translations = {
   ...common,
   ...edit_api_configuration_form,
   ...edit_web_configuration_form,
-  ...edit_agent_configuration_form
+  ...edit_cli_configuration_form
 }

@@ -1,5 +1,5 @@
 import { AGENTS } from '@/constants/agents'
-import { AgentConfiguration } from '@shared/types/agent-configuration'
+import { CliConfiguration } from '@/types/cli-configuration'
 
 export type ConfigAgentConfigurationFormat = {
   name?: string
@@ -10,7 +10,7 @@ export type ConfigAgentConfigurationFormat = {
 
 export const config_agent_configuration_to_ui_format = (
   config_agent_configuration: ConfigAgentConfigurationFormat
-): AgentConfiguration => {
+): CliConfiguration => {
   return {
     name: config_agent_configuration.name,
     agent: config_agent_configuration.agent,
@@ -20,7 +20,7 @@ export const config_agent_configuration_to_ui_format = (
 }
 
 export const ui_agent_configuration_to_config_format = (
-  agent_configuration: AgentConfiguration
+  agent_configuration: CliConfiguration
 ): ConfigAgentConfigurationFormat => {
   return {
     name: agent_configuration.name || undefined,

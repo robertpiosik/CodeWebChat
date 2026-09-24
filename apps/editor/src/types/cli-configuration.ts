@@ -1,4 +1,4 @@
-export type AgentConfiguration = {
+export type CliConfiguration = {
   name?: string
   agent?: string
   flags?: string

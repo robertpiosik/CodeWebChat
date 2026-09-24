@@ -28,8 +28,8 @@ import { use_editor_sync } from './hooks/use-editor-sync'
 import { use_web_configuration_editing } from './hooks/use-web-configuration-editing'
 import { use_api_configuration_editing } from './hooks/use-api-configuration-editing'
 import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurationForm'
-import { use_agent_configuration_editing } from './hooks/use-agent-configuration-editing'
-import { EditAgentConfigurationForm } from '@/views/shared/forms/EditAgentConfigurationForm'
+import { use_agent_configuration_editing } from './hooks/use-cli-configuration-editing'
+import { EditCliConfigurationForm } from '@/views/shared/forms/EditCliConfigurationForm/EditCliConfigurationForm'
 import { use_translation } from './i18n/use-translation'
 
 const vscode = acquireVsCodeApi()
@@ -544,13 +544,13 @@ export const Prompt = () => {
               }
               title="Edit Agent"
             >
-              <EditAgentConfigurationForm
-                agent_configuration={updating_agent_configuration}
-                on_update={set_updated_agent_configuration}
-                pick_agent={(agent_id) => {
-                  post_message(vscode, { command: 'PICK_AGENT', agent_id })
-                }}
-              />
+            <EditCliConfigurationForm
+              agent_configuration={updating_agent_configuration}
+              on_update={set_updated_agent_configuration}
+              pick_agent={(agent_id) => {
+                post_message(vscode, { command: 'PICK_AGENT', agent_id })
+              }}
+            />
             </UiPage>
           </div>
         )}

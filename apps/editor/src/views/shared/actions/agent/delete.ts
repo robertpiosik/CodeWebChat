@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { ConfigAgentConfigurationFormat } from '@/utils/agent-configuration-format-converters'
+import { ConfigAgentConfigurationFormat } from '@/utils/cli-configuration-format-converters'
 import { t } from '@/i18n'
 import { get_error_message } from '@/utils/get-error-message'
 

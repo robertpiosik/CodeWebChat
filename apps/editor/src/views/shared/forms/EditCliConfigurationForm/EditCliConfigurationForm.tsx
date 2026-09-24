@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import styles from './EditAgentConfigurationForm.module.scss'
-import { AgentConfiguration } from '@shared/types/agent-configuration'
+import styles from './EditCliConfigurationForm.module.scss'
+import { CliConfiguration } from '@/types/cli-configuration'
 import { Field as UiField } from '@ui/components/editor/common/Field'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { BackendMessage } from '@/views/prompt/types/messages'
@@ -11,12 +11,12 @@ import { use_translation } from '../../i18n/use-translation'
 import { AGENTS } from '@/constants/agents'
 
 type Props = {
-  agent_configuration: AgentConfiguration
-  on_update: (updated_agent_configuration: AgentConfiguration) => void
+  agent_configuration: CliConfiguration
+  on_update: (updated_agent_configuration: CliConfiguration) => void
   pick_agent: (agent_id?: string) => void
 }
 
-export const EditAgentConfigurationForm: React.FC<Props> = (props) => {
+export const EditCliConfigurationForm: React.FC<Props> = (props) => {
   const { t } = use_translation()
   const [agent, set_agent] = useState(props.agent_configuration.agent)
   const [name, set_name] = useState(props.agent_configuration.name)

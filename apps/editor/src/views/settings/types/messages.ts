@@ -1,6 +1,6 @@
 import { ApiFeature } from '@/views/shared/types/api-features'
-import { WebConfiguration } from '@shared/types/web-configuration'
-import { AgentConfiguration } from '@shared/types/agent-configuration'
+import { WebConfiguration } from '@/types/web-configuration'
+import { CliConfiguration } from '@/types/cli-configuration'
 
 export type Provider = {
   name: string
@@ -201,7 +201,7 @@ export interface GetAgentConfigurationsMessage {
 }
 export interface ReorderAgentConfigurationsMessage {
   command: 'REORDER_AGENT_CONFIGURATIONS'
-  agent_configurations: AgentConfiguration[]
+  agent_configurations: CliConfiguration[]
 }
 export interface DeleteAgentConfigurationMessage {
   command: 'DELETE_AGENT_CONFIGURATION'
@@ -214,8 +214,8 @@ export interface CreateAgentConfigurationMessage {
 }
 export interface UpdateAgentConfigurationMessage {
   command: 'UPDATE_AGENT_CONFIGURATION'
-  updating_agent_configuration: AgentConfiguration
-  updated_agent_configuration: AgentConfiguration
+  updating_agent_configuration: CliConfiguration
+  updated_agent_configuration: CliConfiguration
   origin?: 'cancel' | 'save'
   is_new?: boolean
   insertion_index?: number
@@ -457,14 +457,14 @@ export interface NewlyPickedReasoningEffortMessage {
 
 export interface AgentConfigurationsMessage {
   command: 'AGENT_CONFIGURATIONS'
-  agent_configurations: AgentConfiguration[]
+  agent_configurations: CliConfiguration[]
 }
 export interface AgentConfigurationUpdatedMessage {
   command: 'AGENT_CONFIGURATION_UPDATED'
 }
 export interface StartAgentConfigurationCreationMessage {
   command: 'START_AGENT_CONFIGURATION_CREATION'
-  agent_configuration: AgentConfiguration
+  agent_configuration: CliConfiguration
   insertion_index?: number
 }
 export interface NewlyPickedAgentMessage {

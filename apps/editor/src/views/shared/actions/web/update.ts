@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { WebConfiguration } from '@shared/types/web-configuration'
+import { WebConfiguration } from '@/types/web-configuration'
 import {
   ConfigWebConfigurationFormat,
   ui_web_configuration_to_config_format

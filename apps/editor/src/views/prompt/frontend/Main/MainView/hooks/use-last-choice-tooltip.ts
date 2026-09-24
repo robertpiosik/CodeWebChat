@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { Target } from '@shared/types/target'
 import { ApiConfiguration } from '@/views/prompt/types/messages'
-import { AgentConfiguration } from '@shared/types/agent-configuration'
+import { CliConfiguration } from '@/types/cli-configuration'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { WebConfiguration } from '@shared/types/web-configuration'
+import { WebConfiguration } from '@/types/web-configuration'
 
 export const use_last_choice_tooltip = (params: {
   target: Target
@@ -12,7 +12,7 @@ export const use_last_choice_tooltip = (params: {
   selected_api_configuration_id?: string
   api_configurations: ApiConfiguration[]
   selected_agent_configuration_name?: string
-  agent_configurations?: AgentConfiguration[]
+  agent_configurations?: CliConfiguration[]
 }): { name: string; details?: string } | undefined => {
   return useMemo(() => {
     if (params.target == 'WEB') {

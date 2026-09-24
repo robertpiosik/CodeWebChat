@@ -7,8 +7,8 @@ import {
 } from '@/views/settings/types/messages'
 import { ApiFeature } from '@/views/shared/types/api-features'
 import { post_message } from '../utils/post-message'
-import { WebConfiguration } from '@shared/types/web-configuration'
-import { AgentConfiguration } from '@shared/types/agent-configuration'
+import { WebConfiguration } from '@/types/web-configuration'
+import { CliConfiguration } from '@/types/cli-configuration'
 
 export const use_settings = (vscode: any) => {
   const [providers, set_providers] = useState<Provider[] | undefined>(undefined)
@@ -19,7 +19,7 @@ export const use_settings = (vscode: any) => {
     WebConfiguration[] | undefined
   >(undefined)
   const [agent_configurations, set_agent_configurations] = useState<
-    AgentConfiguration[] | undefined
+    CliConfiguration[] | undefined
   >(undefined)
   const [defaults, set_defaults] = useState<
     Record<ApiFeature, string | null> | undefined
@@ -217,7 +217,7 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_reorder_agent_configurations = (reordered: AgentConfiguration[]) => {
+  const handle_reorder_agent_configurations = (reordered: CliConfiguration[]) => {
     set_agent_configurations(reordered)
     post_message(vscode, {
       command: 'REORDER_AGENT_CONFIGURATIONS',
@@ -392,7 +392,7 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_toggle_pinned_agent_configuration = (config: AgentConfiguration) => {
+  const handle_toggle_pinned_agent_configuration = (config: CliConfiguration) => {
     post_message(vscode, {
       command: 'UPDATE_AGENT_CONFIGURATION',
       updating_agent_configuration: config,

@@ -4,8 +4,8 @@ import { Configurations as UiConfigurations } from '@ui/components/editor/prompt
 import { PromptField as UiPromptField } from '@ui/components/editor/common/prompts/PromptField'
 import { PromptAttachments } from './components/PromptAttachments'
 import { Spacer as UiSpacer } from '@ui/components/editor/prompt/Spacer'
-import { WebConfiguration } from '@shared/types/web-configuration'
-import { AgentConfiguration } from '@shared/types/agent-configuration'
+import { WebConfiguration } from '@/types/web-configuration'
+import { CliConfiguration } from '@/types/cli-configuration'
 import { Responses as UiResponses } from '@ui/components/editor/prompt/Responses'
 import { StatusBar as UiStatusBar } from '@ui/components/editor/prompt/StatusBar'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
@@ -59,10 +59,10 @@ type Props = {
     insertion_index?: number
     exact_insertion?: boolean
   }) => void
-  agent_configurations: AgentConfiguration[]
+  agent_configurations: CliConfiguration[]
   on_agent_configuration_click: (name: string) => void
   on_agent_configurations_reorder: (
-    reordered_configurations: AgentConfiguration[]
+    reordered_configurations: CliConfiguration[]
   ) => void
   on_toggle_pinned_agent_configuration: (name: string) => void
   on_edit_agent_configuration: (name: string) => void

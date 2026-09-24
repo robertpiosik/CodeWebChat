@@ -5,7 +5,7 @@ import { t } from '@/i18n'
 import { spawn } from 'child_process'
 import { CLI_AGENTS } from './agents'
 import { Logger } from '@shared/utils/logger'
-import { ConfigAgentConfigurationFormat } from '@/utils/agent-configuration-format-converters'
+import { ConfigAgentConfigurationFormat } from '@/utils/cli-configuration-format-converters'
 import { AGENTS } from '@/constants/agents'
 
 let _output_channel: vscode.OutputChannel | undefined

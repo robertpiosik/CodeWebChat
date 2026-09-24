@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import styles from './EditWebConfigurationForm.module.scss'
-import { WebConfiguration } from '@shared/types/web-configuration'
+import { WebConfiguration } from '@/types/web-configuration'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Field as UiField } from '@ui/components/editor/common/Field'
 import { Input as UiInput } from '@ui/components/editor/common/Input'

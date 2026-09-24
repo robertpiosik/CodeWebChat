@@ -91,11 +91,11 @@ import { handle_agentic_search } from './message-handlers/handle-agentic-search/
 import { handle_update_api_configuration } from './message-handlers/handle-update-api-configuration'
 import { handle_pick_provider } from './message-handlers/handle-pick-provider'
 import { handle_pick_api_model } from './message-handlers/handle-pick-api-model'
-import { handle_create_agent_configuration } from './message-handlers/handle-create-agent-configuration'
-import { handle_delete_agent_configuration } from './message-handlers/handle-delete-agent-configuration'
-import { handle_reorder_agent_configurations } from './message-handlers/handle-reorder-agent-configurations'
-import { handle_toggle_pinned_agent_configuration } from './message-handlers/handle-toggle-pinned-agent-configuration'
-import { handle_update_agent_configuration } from './message-handlers/handle-update-agent-configuration'
+import { handle_create_agent_configuration } from './message-handlers/handle-create-cli-configuration'
+import { handle_delete_agent_configuration } from './message-handlers/handle-delete-cli-configuration'
+import { handle_reorder_agent_configurations } from './message-handlers/handle-reorder-cli-configurations'
+import { handle_toggle_pinned_agent_configuration } from './message-handlers/handle-toggle-pinned-cli-configuration'
+import { handle_update_agent_configuration } from './message-handlers/handle-update-cli-configuration'
 import { handle_pick_api_reasoning_effort } from './message-handlers/handle-pick-api-reasoning-effort'
 import { handle_select_edit_format_instructions } from './message-handlers/handle-select-edit-format-instructions'
 import { SelectionState } from '../types/messages'
@@ -118,7 +118,7 @@ import {
 import {
   config_agent_configuration_to_ui_format,
   ConfigAgentConfigurationFormat
-} from '@/utils/agent-configuration-format-converters'
+} from '@/utils/cli-configuration-format-converters'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Target } from '@shared/types/target'
 import {

@@ -1,4 +1,4 @@
-import { CHATBOTS } from '../constants/chatbots'
+import { CHATBOTS } from "@shared/constants/chatbots"
 
 export type WebConfiguration = {
   name?: string

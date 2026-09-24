@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { MainView } from './MainView'
-import { WebConfiguration } from '@shared/types/web-configuration'
+import { WebConfiguration } from '@/types/web-configuration'
 import { EditFormat } from '@shared/types/edit-format'
-import { AgentConfiguration } from '@shared/types/agent-configuration'
+import { CliConfiguration } from '@/types/cli-configuration'
 import { Target } from '@shared/types/target'
 import {
   ApiPromptType,
@@ -34,7 +34,7 @@ type Props = {
   vscode: any
   on_web_configuration_edit: (web_configuration: WebConfiguration) => void
   on_api_configuration_edit: (api_configuration: ApiConfiguration) => void
-  on_agent_configuration_edit?: (agent_configuration: AgentConfiguration) => void
+  on_agent_configuration_edit?: (agent_configuration: CliConfiguration) => void
   on_show_home: () => void
   is_connected: boolean
   ask_instructions: string
@@ -107,7 +107,7 @@ export const Main: React.FC<Props> = (props) => {
     set_selected_api_configuration_id_by_prompt_type
   ] = useState<{ [T in ApiPromptType]?: string }>()
   const [agent_configurations, set_agent_configurations] =
-    useState<AgentConfiguration[]>()
+    useState<CliConfiguration[]>()
   const [
     selected_agent_configuration_name_by_mode,
     set_selected_agent_configuration_name_by_mode
@@ -407,7 +407,7 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_agent_configurations_reorder = (
-    reordered_agent_configurations: AgentConfiguration[]
+    reordered_agent_configurations: CliConfiguration[]
   ) => {
     if (agent_configurations) {
       set_agent_configurations(reordered_agent_configurations)

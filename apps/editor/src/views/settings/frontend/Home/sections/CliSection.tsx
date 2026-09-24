@@ -3,21 +3,21 @@ import { Section as UiSection } from '@ui/components/editor/settings/Section'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { SortableList } from '@ui/components/editor/settings/SortableList'
 import { IconButton } from '@ui/components/editor/common/IconButton'
-import { AgentConfiguration } from '@shared/types/agent-configuration'
+import { CliConfiguration } from '@/types/cli-configuration'
 import { use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
 
 type Props = {
-  agent_configurations: AgentConfiguration[]
-  set_agent_configurations: (configurations: AgentConfiguration[]) => void
-  on_reorder_agent_configurations: (reordered: AgentConfiguration[]) => void
+  agent_configurations: CliConfiguration[]
+  set_agent_configurations: (configurations: CliConfiguration[]) => void
+  on_reorder_agent_configurations: (reordered: CliConfiguration[]) => void
   on_add_agent_configuration: (params?: {
     insertion_index?: number
     exact_insertion?: boolean
   }) => void
   on_edit_agent_configuration: (id: string) => void
   on_delete_agent_configuration: (name: string) => void
-  on_toggle_pinned_agent_configuration: (config: AgentConfiguration) => void
+  on_toggle_pinned_agent_configuration: (config: CliConfiguration) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
 }
 
@@ -37,7 +37,7 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }))}
             on_reorder={(reordered) => {
               const restored = reordered.map(
-                ({ id: _id, ...rest }) => rest as AgentConfiguration
+                ({ id: _id, ...rest }) => rest as CliConfiguration
               )
               props.set_agent_configurations(restored)
               props.on_reorder_agent_configurations(restored)

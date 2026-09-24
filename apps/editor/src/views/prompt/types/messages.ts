@@ -4,8 +4,8 @@ import {
   ResponseHistoryItem,
   RecentApiConfiguration
 } from '@shared/types/response-history-item'
-import { WebConfiguration } from '@shared/types/web-configuration'
-import { AgentConfiguration } from '@shared/types/agent-configuration'
+import { WebConfiguration } from '@/types/web-configuration'
+import { CliConfiguration } from '@/types/cli-configuration'
 import { Task } from '@shared/types/task'
 import {
   ApiPromptType,
@@ -170,7 +170,7 @@ export interface GetAgentConfigurationsMessage extends BaseMessage {
 
 export interface ReorderAgentConfigurationsMessage extends BaseMessage {
   command: 'REORDER_AGENT_CONFIGURATIONS'
-  agent_configurations: AgentConfiguration[]
+  agent_configurations: CliConfiguration[]
 }
 
 export interface TogglePinnedAgentConfigurationMessage extends BaseMessage {
@@ -186,8 +186,8 @@ export interface CreateAgentConfigurationMessage extends BaseMessage {
 
 export interface UpdateAgentConfigurationMessage extends BaseMessage {
   command: 'UPDATE_AGENT_CONFIGURATION'
-  updating_agent_configuration: AgentConfiguration
-  updated_agent_configuration: AgentConfiguration
+  updating_agent_configuration: CliConfiguration
+  updated_agent_configuration: CliConfiguration
   origin?: 'cancel' | 'save'
   is_new?: boolean
   insertion_index?: number
@@ -754,7 +754,7 @@ export interface ApiConfigurationsMessage extends BaseMessage {
 
 export interface AgentConfigurationsMessage extends BaseMessage {
   command: 'AGENT_CONFIGURATIONS'
-  agent_configurations: AgentConfiguration[]
+  agent_configurations: CliConfiguration[]
   selected_agent_configuration_name_by_mode?: { [T in CliPromptType]?: string }
 }
 export interface AgentConfigurationUpdatedMessage extends BaseMessage {
@@ -762,7 +762,7 @@ export interface AgentConfigurationUpdatedMessage extends BaseMessage {
 }
 export interface StartAgentConfigurationCreationMessage extends BaseMessage {
   command: 'START_AGENT_CONFIGURATION_CREATION'
-  agent_configuration: AgentConfiguration
+  agent_configuration: CliConfiguration
   insertion_index?: number
 }
 export interface NewlyPickedAgentMessage extends BaseMessage {

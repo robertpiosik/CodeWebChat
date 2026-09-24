@@ -1,9 +1,9 @@
 import * as vscode from 'vscode'
-import { AgentConfiguration } from '@shared/types/agent-configuration'
-import { ui_agent_configuration_to_config_format } from '@/utils/agent-configuration-format-converters'
+import { CliConfiguration } from '@/types/cli-configuration'
+import { ui_agent_configuration_to_config_format } from '@/utils/cli-configuration-format-converters'
 
 export const reorder = async (params: {
-  reordered_agent_configurations: AgentConfiguration[]
+  reordered_agent_configurations: CliConfiguration[]
 }): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const config_formatted_agent_configurations =
