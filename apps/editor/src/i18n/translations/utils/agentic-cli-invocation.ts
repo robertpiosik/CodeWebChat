@@ -197,6 +197,24 @@ export const translations = {
     hu: 'várakozás az ügynökre...',
     bg: 'изчакване на агент...'
   },
+  'utils.agentic-cli-invocation.error.not-installed': {
+    en: 'The {agent} CLI is not installed on this computer.',
+    pl: 'CLI {agent} nie jest zainstalowane na tym komputerze.',
+    'zh-cn': '{agent} CLI 未安装在此计算机上。',
+    ja: '{agent} CLI はこのコンピューターにインストールされていません。',
+    'zh-tw': '{agent} CLI 未安裝在此電腦上。',
+    de: 'Die {agent} CLI ist auf diesem Computer nicht installiert.',
+    es: 'La CLI de {agent} no está instalada en esta computadora.',
+    fr: "L'interface CLI {agent} n'est pas installée sur cet ordinateur.",
+    'pt-br': 'O CLI {agent} não está instalado neste computador.',
+    ru: 'CLI {agent} не установлен на этом компьютере.',
+    ko: '{agent} CLI가 이 컴퓨터에 설치되어 있지 않습니다.',
+    it: 'La CLI di {agent} non è installata su questo computer.',
+    tr: '{agent} CLI bu bilgisayarda yüklü değil.',
+    cs: 'CLI {agent} není na tomto počítači nainstalováno.',
+    hu: 'A {agent} CLI nincs telepítve ezen a számítógépen.',
+    bg: 'CLI {agent} не е инсталиран на този компютър.'
+  },
   'utils.agentic-cli-invocation.error.failed': {
     en: 'Agent execution failed: {error}',
     pl: 'Wykonywanie agenta nie powiodło się: {error}',
@@ -214,6 +232,24 @@ export const translations = {
     cs: 'Provádění agenta selhalo: {error}',
     hu: 'Az ügynök futtatása sikertelen: {error}',
     bg: 'Изпълнението на агента се провали: {error}'
+  },
+  'utils.agentic-cli-invocation.error.installation-instructions': {
+    en: 'Installation instructions',
+    pl: 'Instrukcje instalacji',
+    'zh-cn': '安装说明',
+    ja: 'インストール手順',
+    'zh-tw': '安裝說明',
+    de: 'Installationsanweisungen',
+    es: 'Instrucciones de instalación',
+    fr: "Instructions d'installation",
+    'pt-br': 'Instruções de instalação',
+    ru: 'Инструкции по установке',
+    ko: '설치 지침',
+    it: "Istruzioni per l'installazione",
+    tr: 'Kurulum talimatları',
+    cs: 'Pokyny k instalaci',
+    hu: 'Telepítési útmutató',
+    bg: 'Инструкции за инсталиране'
   },
   'utils.agentic-cli-invocation.agent.finished': {
     en: 'Agent finished in {duration}.',

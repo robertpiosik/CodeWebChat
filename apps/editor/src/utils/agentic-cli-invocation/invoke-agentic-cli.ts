@@ -6,6 +6,7 @@ import { spawn } from 'child_process'
 import { CLI_AGENTS } from './agents'
 import { Logger } from '@shared/utils/logger'
 import { ConfigAgentConfigurationFormat } from '@/utils/agent-configuration-format-converters'
+import { AGENTS } from '@/constants/agents'
 
 let _output_channel: vscode.OutputChannel | undefined
 
@@ -45,9 +46,11 @@ export const invoke_agentic_cli = async (params: {
   let show_quick_pick = params.use_quick_pick
 
   while (true) {
-    const available_agents = CLI_AGENTS.filter((a) => a.is_installed())
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const agents_config =
+      config.get<ConfigAgentConfigurationFormat[]>('agents', []) || []
 
-    if (available_agents.length == 0) {
+    if (agents_config.length === 0) {
       vscode.window.showInformationMessage(
         t('utils.agentic-cli-invocation.info.no-agents')
       )
@@ -59,10 +62,6 @@ export const invoke_agentic_cli = async (params: {
       tooltip: t('common.close')
     }
 
-    const config = vscode.workspace.getConfiguration('codeWebChat')
-    const agents_config =
-      config.get<ConfigAgentConfigurationFormat[]>('agents', []) || []
-
     let selected_agent_cmd: string | undefined
     let flags_string: string | undefined
     let selected_config_name: string | undefined
@@ -72,7 +71,7 @@ export const invoke_agentic_cli = async (params: {
         (c) => c.name === current_agent_config_name
       )
       if (config_item) {
-        const agent_info = available_agents.find(
+        const agent_info = CLI_AGENTS.find(
           (a) => a.label === config_item.agent
         )
         if (agent_info) {
@@ -86,7 +85,7 @@ export const invoke_agentic_cli = async (params: {
       if (last_used) {
         const config_item = agents_config.find((c) => c.name === last_used)
         if (config_item) {
-          const agent_info = available_agents.find(
+          const agent_info = CLI_AGENTS.find(
             (a) => a.label === config_item.agent
           )
           if (agent_info) {
@@ -99,7 +98,7 @@ export const invoke_agentic_cli = async (params: {
 
       if (!selected_agent_cmd && agents_config.length === 1) {
         const config_item = agents_config[0]
-        const agent_info = available_agents.find(
+        const agent_info = CLI_AGENTS.find(
           (a) => a.label === config_item.agent
         )
         if (agent_info) {
@@ -126,7 +125,7 @@ export const invoke_agentic_cli = async (params: {
             .get<ConfigAgentConfigurationFormat[]>('agents', []) || []
 
         for (const agent_config of current_agents_config) {
-          const agent_info = available_agents.find(
+          const agent_info = CLI_AGENTS.find(
             (a) => a.label == agent_config.agent
           )
           if (!agent_info) continue
@@ -263,6 +262,34 @@ export const invoke_agentic_cli = async (params: {
       selected_config_name = agent_selection_result.config_name
     }
 
+    const selected_agent_info = CLI_AGENTS.find(
+      (a) => a.cmd === selected_agent_cmd
+    )
+
+    if (selected_agent_info && !selected_agent_info.is_installed()) {
+      const response = await vscode.window.showWarningMessage(
+        t('utils.agentic-cli-invocation.error.not-installed', {
+          agent: selected_agent_info.label
+        }),
+        t('utils.agentic-cli-invocation.error.installation-instructions')
+      )
+
+      if (
+        response ==
+        t('utils.agentic-cli-invocation.error.installation-instructions')
+      ) {
+        const agent_label = selected_agent_info.label as keyof typeof AGENTS
+        const url = AGENTS[agent_label]?.homepage_url
+        if (url) {
+          vscode.env.openExternal(vscode.Uri.parse(url))
+        }
+      }
+
+      show_quick_pick = true
+      current_agent_config_name = undefined
+      continue
+    }
+
     if (selected_config_name && params.on_agent_selected) {
       params.on_agent_selected(selected_config_name)
     }
@@ -358,7 +385,7 @@ export const invoke_agentic_cli = async (params: {
         )
       }
 
-      const agent_info = available_agents.find(
+      const agent_info = CLI_AGENTS.find(
         (a) => a.cmd == selected_agent_cmd
       )
       if (!agent_info) break
