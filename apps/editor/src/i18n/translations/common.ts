@@ -629,6 +629,24 @@ export const translations = {
     hu: 'Ügynökök',
     bg: 'Агенти'
   },
+  'common.placeholder.select-agent': {
+    en: 'Select agent',
+    pl: 'Wybierz agenta',
+    'zh-cn': '选择智能体',
+    ja: 'エージェントを選択',
+    'zh-tw': '選擇智能體',
+    de: 'Agenten auswählen',
+    es: 'Seleccionar agente',
+    fr: 'Sélectionner un agent',
+    'pt-br': 'Selecionar agente',
+    ru: 'Выберите агента',
+    ko: '에이전트 선택',
+    it: 'Seleziona agente',
+    tr: 'Aracı seç',
+    cs: 'Vybrat agenta',
+    hu: 'Ügynök kiválasztása',
+    bg: 'Изберете агент'
+  },
   'common.select-parent-folder': {
     en: 'Select Parent Folder...',
     pl: 'Wybierz folder nadrzędny...',

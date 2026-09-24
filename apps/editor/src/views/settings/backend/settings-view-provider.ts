@@ -61,6 +61,7 @@ import { webview_html } from '@/views/shared/utils/webview-html'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { config_cli_configuration_to_ui_format } from '@/utils/cli-configuration-format-converters'
 import { AGENTS } from '@/constants/agents'
+import { t } from '@/i18n'
 
 export class SettingsViewProvider {
   private _webview_panel: vscode.WebviewPanel | undefined
@@ -341,12 +342,12 @@ export class SettingsViewProvider {
             vscode.QuickPickItem & { cli_configuration_name: string }
           >()
           quick_pick.items = items
-          quick_pick.title = 'Select default agent'
-          quick_pick.placeholder = 'Select agent'
+          quick_pick.title = t('common.title.agents')
+          quick_pick.placeholder = t('common.placeholder.select-agent')
 
           const close_button: vscode.QuickInputButton = {
             iconPath: new vscode.ThemeIcon('close'),
-            tooltip: 'Close'
+            tooltip: t('common.close')
           }
           quick_pick.buttons = [close_button]
 
@@ -363,8 +364,8 @@ export class SettingsViewProvider {
             if (selected) {
               const updated = agent_configs.map((c) => {
                 const new_c = { ...c }
-                if (message.cli_feature === 'agentic-search') {
-                  if (c.name === selected.cli_configuration_name) {
+                if (message.cli_feature == 'agentic-search') {
+                  if (c.name == selected.cli_configuration_name) {
                     new_c.isDefaultForAgenticSearch = true
                   } else {
                     delete new_c.isDefaultForAgenticSearch

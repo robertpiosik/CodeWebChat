@@ -107,24 +107,6 @@ export const translations = {
     hu: 'Törlés',
     bg: 'Изчистване'
   },
-  'edit-provider-form.api-key.placeholder.cleared': {
-    en: 'API Key cleared',
-    pl: 'Klucz API wyczyszczony',
-    'zh-cn': 'API 密钥已清除',
-    ja: 'API キーがクリアされました',
-    'zh-tw': 'API 金鑰已清除',
-    de: 'API-Schlüssel gelöscht',
-    es: 'Clave API borrada',
-    fr: 'Clé API effacée',
-    'pt-br': 'Chave API apagada',
-    ru: 'API-ключ очищен',
-    ko: 'API 키 지워짐',
-    it: 'Chiave API cancellata',
-    tr: 'API Anahtarı temizlendi',
-    cs: 'Klíč API vymazán',
-    hu: 'API Kulcs törölve',
-    bg: 'API ключът е изчистен'
-  },
   'edit-provider-form.api-key.placeholder.default': {
     en: 'Enter API Key',
     pl: 'Wprowadź klucz API',
