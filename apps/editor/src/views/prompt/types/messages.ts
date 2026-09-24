@@ -165,36 +165,36 @@ export interface DeleteWebConfigurationMessage extends BaseMessage {
 }
 
 export interface GetAgentConfigurationsMessage extends BaseMessage {
-  command: 'GET_AGENT_CONFIGURATIONS'
+  command: 'GET_CLI_CONFIGURATIONS'
 }
 
 export interface ReorderAgentConfigurationsMessage extends BaseMessage {
-  command: 'REORDER_AGENT_CONFIGURATIONS'
-  agent_configurations: CliConfiguration[]
+  command: 'REORDER_CLI_CONFIGURATIONS'
+  cli_configurations: CliConfiguration[]
 }
 
 export interface TogglePinnedAgentConfigurationMessage extends BaseMessage {
-  command: 'TOGGLE_PINNED_AGENT_CONFIGURATION'
-  agent_configuration_name: string
+  command: 'TOGGLE_PINNED_CLI_CONFIGURATION'
+  cli_configuration_name: string
 }
 
 export interface CreateAgentConfigurationMessage extends BaseMessage {
-  command: 'CREATE_AGENT_CONFIGURATION'
+  command: 'CREATE_CLI_CONFIGURATION'
   reference_index?: number
   exact_insertion?: boolean
 }
 
 export interface UpdateAgentConfigurationMessage extends BaseMessage {
-  command: 'UPDATE_AGENT_CONFIGURATION'
-  updating_agent_configuration: CliConfiguration
-  updated_agent_configuration: CliConfiguration
+  command: 'UPDATE_CLI_CONFIGURATION'
+  updating_cli_configuration: CliConfiguration
+  updated_cli_configuration: CliConfiguration
   origin?: 'cancel' | 'save'
   is_new?: boolean
   insertion_index?: number
 }
 
 export interface DeleteAgentConfigurationMessage extends BaseMessage {
-  command: 'DELETE_AGENT_CONFIGURATION'
+  command: 'DELETE_CLI_CONFIGURATION'
   name: string
 }
 
@@ -278,7 +278,7 @@ export interface SaveCliPromptTypeMessage extends BaseMessage {
 export interface InvokeAgenticCliMessage extends BaseMessage {
   command: 'INVOKE_AGENTIC_CLI'
   use_quick_pick?: boolean
-  agent_configuration_name?: string
+  cli_configuration_name?: string
 }
 
 export interface GetWebPromptTypeMessage extends BaseMessage {
@@ -753,16 +753,16 @@ export interface ApiConfigurationsMessage extends BaseMessage {
 }
 
 export interface AgentConfigurationsMessage extends BaseMessage {
-  command: 'AGENT_CONFIGURATIONS'
-  agent_configurations: CliConfiguration[]
-  selected_agent_configuration_name_by_mode?: { [T in CliPromptType]?: string }
+  command: 'CLI_CONFIGURATIONS'
+  cli_configurations: CliConfiguration[]
+  selected_cli_configuration_name_by_mode?: { [T in CliPromptType]?: string }
 }
 export interface AgentConfigurationUpdatedMessage extends BaseMessage {
-  command: 'AGENT_CONFIGURATION_UPDATED'
+  command: 'CLI_CONFIGURATION_UPDATED'
 }
 export interface StartAgentConfigurationCreationMessage extends BaseMessage {
-  command: 'START_AGENT_CONFIGURATION_CREATION'
-  agent_configuration: CliConfiguration
+  command: 'START_CLI_CONFIGURATION_CREATION'
+  cli_configuration: CliConfiguration
   insertion_index?: number
 }
 export interface NewlyPickedAgentMessage extends BaseMessage {
@@ -771,7 +771,7 @@ export interface NewlyPickedAgentMessage extends BaseMessage {
 }
 
 export interface SelectedAgentConfigurationChangedMessage extends BaseMessage {
-  command: 'SELECTED_AGENT_CONFIGURATION_CHANGED'
+  command: 'SELECTED_CLI_CONFIGURATION_CHANGED'
   prompt_type: CliPromptType
   name: string
 }

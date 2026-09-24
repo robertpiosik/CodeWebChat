@@ -91,11 +91,11 @@ import { handle_agentic_search } from './message-handlers/handle-agentic-search/
 import { handle_update_api_configuration } from './message-handlers/handle-update-api-configuration'
 import { handle_pick_provider } from './message-handlers/handle-pick-provider'
 import { handle_pick_api_model } from './message-handlers/handle-pick-api-model'
-import { handle_create_agent_configuration } from './message-handlers/handle-create-cli-configuration'
-import { handle_delete_agent_configuration } from './message-handlers/handle-delete-cli-configuration'
-import { handle_reorder_agent_configurations } from './message-handlers/handle-reorder-cli-configurations'
-import { handle_toggle_pinned_agent_configuration } from './message-handlers/handle-toggle-pinned-cli-configuration'
-import { handle_update_agent_configuration } from './message-handlers/handle-update-cli-configuration'
+import { handle_create_cli_configuration } from './message-handlers/handle-create-cli-configuration'
+import { handle_delete_cli_configuration } from './message-handlers/handle-delete-cli-configuration'
+import { handle_reorder_cli_configurations } from './message-handlers/handle-reorder-cli-configurations'
+import { handle_toggle_pinned_cli_configuration } from './message-handlers/handle-toggle-pinned-cli-configuration'
+import { handle_update_cli_configuration } from './message-handlers/handle-update-cli-configuration'
 import { handle_pick_api_reasoning_effort } from './message-handlers/handle-pick-api-reasoning-effort'
 import { handle_select_edit_format_instructions } from './message-handlers/handle-select-edit-format-instructions'
 import { SelectionState } from '../types/messages'
@@ -109,14 +109,14 @@ import {
   CLI_TARGET_STATE_KEY,
   LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
   get_last_used_web_configuration_key,
-  get_last_used_agent_configuration_key
+  get_last_used_cli_configuration_key
 } from '@/constants/state-keys'
 import {
   config_web_configuration_to_ui_format,
   ConfigWebConfigurationFormat
 } from '@/utils/web-configuration-format-converters'
 import {
-  config_agent_configuration_to_ui_format,
+  config_cli_configuration_to_ui_format,
   ConfigAgentConfigurationFormat
 } from '@/utils/cli-configuration-format-converters'
 import { CHATBOTS } from '@shared/constants/chatbots'
@@ -408,7 +408,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
 
         if (event.affectsConfiguration('codeWebChat.agents')) {
           if (this.webview_view) {
-            this.send_agent_configurations_to_webview(this.webview_view.webview)
+            this.send_cli_configurations_to_webview(this.webview_view.webview)
           }
         }
       }
@@ -889,18 +889,18 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_preview_skill_symbol(message)
           } else if (message.command == 'AGENTIC_SEARCH') {
             await handle_agentic_search(this)
-          } else if (message.command == 'GET_AGENT_CONFIGURATIONS') {
-            this.send_agent_configurations_to_webview(webview_view.webview)
-          } else if (message.command == 'CREATE_AGENT_CONFIGURATION') {
-            await handle_create_agent_configuration(this, message)
-          } else if (message.command == 'UPDATE_AGENT_CONFIGURATION') {
-            await handle_update_agent_configuration(this, message)
-          } else if (message.command == 'DELETE_AGENT_CONFIGURATION') {
-            await handle_delete_agent_configuration(message)
-          } else if (message.command == 'REORDER_AGENT_CONFIGURATIONS') {
-            await handle_reorder_agent_configurations(message)
-          } else if (message.command == 'TOGGLE_PINNED_AGENT_CONFIGURATION') {
-            await handle_toggle_pinned_agent_configuration(message)
+          } else if (message.command == 'GET_CLI_CONFIGURATIONS') {
+            this.send_cli_configurations_to_webview(webview_view.webview)
+          } else if (message.command == 'CREATE_CLI_CONFIGURATION') {
+            await handle_create_cli_configuration(this, message)
+          } else if (message.command == 'UPDATE_CLI_CONFIGURATION') {
+            await handle_update_cli_configuration(this, message)
+          } else if (message.command == 'DELETE_CLI_CONFIGURATION') {
+            await handle_delete_cli_configuration(message)
+          } else if (message.command == 'REORDER_CLI_CONFIGURATIONS') {
+            await handle_reorder_cli_configurations(message)
+          } else if (message.command == 'TOGGLE_PINNED_CLI_CONFIGURATION') {
+            await handle_toggle_pinned_cli_configuration(message)
           }
         } catch (error) {
           Logger.error({
@@ -918,30 +918,30 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     )
   }
 
-  public send_agent_configurations_to_webview(_: vscode.Webview) {
+  public send_cli_configurations_to_webview(_: vscode.Webview) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
 
-    const agent_configurations_config =
+    const cli_configurations_config =
       config.get<ConfigAgentConfigurationFormat[]>('agents', []) || []
-    const agent_configurations_ui = agent_configurations_config.map(
-      config_agent_configuration_to_ui_format
+    const cli_configurations_ui = cli_configurations_config.map(
+      config_cli_configuration_to_ui_format
     )
 
     const cli_prompt_types: CliPromptType[] = ['ask-about-files', 'edit-files']
 
     this.send_message({
-      command: 'AGENT_CONFIGURATIONS',
-      agent_configurations: agent_configurations_ui,
-      selected_agent_configuration_name_by_mode: Object.fromEntries(
+      command: 'CLI_CONFIGURATIONS',
+      cli_configurations: cli_configurations_ui,
+      selected_cli_configuration_name_by_mode: Object.fromEntries(
         cli_prompt_types.map((prompt_type) => {
           let selected_name: string | undefined = undefined
-          const key = get_last_used_agent_configuration_key(prompt_type)
+          const key = get_last_used_cli_configuration_key(prompt_type)
           const last_selected =
             this.extension_context.workspaceState.get<string>(key) ??
             this.extension_context.globalState.get<string>(key)
           if (last_selected) {
             if (
-              agent_configurations_ui.some((p) => p.name == last_selected)
+              cli_configurations_ui.some((p) => p.name == last_selected)
             ) {
               selected_name = last_selected
             }

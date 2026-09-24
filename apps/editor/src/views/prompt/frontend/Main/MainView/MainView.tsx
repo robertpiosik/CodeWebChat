@@ -59,15 +59,15 @@ type Props = {
     insertion_index?: number
     exact_insertion?: boolean
   }) => void
-  agent_configurations: CliConfiguration[]
-  on_agent_configuration_click: (name: string) => void
-  on_agent_configurations_reorder: (
+  cli_configurations: CliConfiguration[]
+  on_cli_configuration_click: (name: string) => void
+  on_cli_configurations_reorder: (
     reordered_configurations: CliConfiguration[]
   ) => void
-  on_toggle_pinned_agent_configuration: (name: string) => void
-  on_edit_agent_configuration: (name: string) => void
-  on_delete_agent_configuration: (name: string) => void
-  on_create_agent_configuration: (params?: {
+  on_toggle_pinned_cli_configuration: (name: string) => void
+  on_edit_cli_configuration: (name: string) => void
+  on_delete_cli_configuration: (name: string) => void
+  on_create_cli_configuration: (params?: {
     insertion_index?: number
     exact_insertion?: boolean
   }) => void
@@ -95,7 +95,7 @@ type Props = {
   on_toggle_web_configuration_pinned: (name: string) => void
   selected_web_configuration_name?: string
   selected_api_configuration_id?: string
-  selected_agent_configuration_name?: string
+  selected_cli_configuration_name?: string
   instructions: string
   set_instructions: (value: string) => void
   on_caret_position_change: (caret_position: number) => void
@@ -218,8 +218,8 @@ export const MainView: React.FC<Props> = (props) => {
     web_configurations: props.web_configurations,
     selected_api_configuration_id: props.selected_api_configuration_id,
     api_configurations: props.api_configurations,
-    selected_agent_configuration_name: props.selected_agent_configuration_name,
-    agent_configurations: props.agent_configurations
+    selected_cli_configuration_name: props.selected_cli_configuration_name,
+    cli_configurations: props.cli_configurations
   })
 
   const { is_alt_pressed } = use_keyboard_shortcuts({
@@ -277,8 +277,8 @@ export const MainView: React.FC<Props> = (props) => {
       }
     })
 
-  const agent_configurations_ui: UiConfigurations.Configuration[] =
-    props.agent_configurations.map((c) => {
+  const cli_configurations_ui: UiConfigurations.Configuration[] =
+    props.cli_configurations.map((c) => {
       const is_unnamed = /^\(\d+\)$/.test(c.name.trim())
       const display_name = is_unnamed
         ? c.agent
@@ -741,30 +741,30 @@ export const MainView: React.FC<Props> = (props) => {
 
       {props.target == 'CLI' && (
         <UiConfigurations
-          configurations={agent_configurations_ui}
+          configurations={cli_configurations_ui}
           empty_landscape_placeholder_above={configurations_placeholder_above}
           on_create={(params) => {
-            props.on_create_agent_configuration(params)
+            props.on_create_cli_configuration(params)
           }}
           on_configuration_click={(id) => {
-            props.on_agent_configuration_click(id)
+            props.on_cli_configuration_click(id)
           }}
-          on_edit={(id) => props.on_edit_agent_configuration(id)}
+          on_edit={(id) => props.on_edit_cli_configuration(id)}
           on_reorder={(reordered) => {
-            const new_agent_configurations = reordered.map((c) => {
-              return props.agent_configurations.find(
+            const new_cli_configurations = reordered.map((c) => {
+              return props.cli_configurations.find(
                 (p) => p.name == c.id
               )!
             })
-            props.on_agent_configurations_reorder(new_agent_configurations)
+            props.on_cli_configurations_reorder(new_cli_configurations)
           }}
           on_delete={(id) => {
-            props.on_delete_agent_configuration(id)
+            props.on_delete_cli_configuration(id)
           }}
           on_toggle_pinned={(id) => {
-            props.on_toggle_pinned_agent_configuration(id)
+            props.on_toggle_pinned_cli_configuration(id)
           }}
-          selected_configuration_id={props.selected_agent_configuration_name}
+          selected_configuration_id={props.selected_cli_configuration_name}
           translations={{
             empty: t('agents.empty'),
             add_new: t('action.add-new'),

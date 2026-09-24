@@ -11,8 +11,8 @@ export const use_last_choice_tooltip = (params: {
   web_configurations: WebConfiguration[]
   selected_api_configuration_id?: string
   api_configurations: ApiConfiguration[]
-  selected_agent_configuration_name?: string
-  agent_configurations?: CliConfiguration[]
+  selected_cli_configuration_name?: string
+  cli_configurations?: CliConfiguration[]
 }): { name: string; details?: string } | undefined => {
   return useMemo(() => {
     if (params.target == 'WEB') {
@@ -86,11 +86,11 @@ export const use_last_choice_tooltip = (params: {
       }
     } else if (params.target == 'CLI') {
       if (
-        params.selected_agent_configuration_name &&
-        params.agent_configurations
+        params.selected_cli_configuration_name &&
+        params.cli_configurations
       ) {
-        const configuration = params.agent_configurations.find(
-          (c) => c.name == params.selected_agent_configuration_name
+        const configuration = params.cli_configurations.find(
+          (c) => c.name == params.selected_cli_configuration_name
         )
         if (configuration) {
           const is_unnamed = /^\(\d+\)$/.test(configuration.name.trim())
@@ -118,7 +118,7 @@ export const use_last_choice_tooltip = (params: {
     params.web_configurations,
     params.selected_api_configuration_id,
     params.api_configurations,
-    params.selected_agent_configuration_name,
-    params.agent_configurations
+    params.selected_cli_configuration_name,
+    params.cli_configurations
   ])
 }

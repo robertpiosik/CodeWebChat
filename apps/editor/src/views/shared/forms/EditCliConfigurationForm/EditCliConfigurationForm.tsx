@@ -11,16 +11,16 @@ import { use_translation } from '../../i18n/use-translation'
 import { AGENTS } from '@/constants/agents'
 
 type Props = {
-  agent_configuration: CliConfiguration
-  on_update: (updated_agent_configuration: CliConfiguration) => void
+  cli_configuration: CliConfiguration
+  on_update: (updated_cli_configuration: CliConfiguration) => void
   pick_agent: (agent_id?: string) => void
 }
 
 export const EditCliConfigurationForm: React.FC<Props> = (props) => {
   const { t } = use_translation()
-  const [agent, set_agent] = useState(props.agent_configuration.agent)
-  const [name, set_name] = useState(props.agent_configuration.name)
-  const [flags, set_flags] = useState(props.agent_configuration.flags)
+  const [agent, set_agent] = useState(props.cli_configuration.agent)
+  const [name, set_name] = useState(props.cli_configuration.name)
+  const [flags, set_flags] = useState(props.cli_configuration.flags)
 
   useEffect(() => {
     if (agent) {
@@ -28,7 +28,7 @@ export const EditCliConfigurationForm: React.FC<Props> = (props) => {
         name,
         agent,
         ...(flags ? { flags } : {}),
-        is_pinned: props.agent_configuration.is_pinned
+        is_pinned: props.cli_configuration.is_pinned
       })
     } else {
       props.on_update({

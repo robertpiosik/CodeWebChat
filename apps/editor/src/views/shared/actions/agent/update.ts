@@ -2,14 +2,14 @@ import * as vscode from 'vscode'
 import { CliConfiguration } from '@/types/cli-configuration'
 import {
   ConfigAgentConfigurationFormat,
-  ui_agent_configuration_to_config_format
+  ui_cli_configuration_to_config_format
 } from '@/utils/cli-configuration-format-converters'
 import { generate_unique_name } from '@/views/shared/utils/generate-unique-name'
 import { t } from '@/i18n'
 
 export const update = async (params: {
-  updating_agent_configuration: CliConfiguration
-  updated_agent_configuration: CliConfiguration
+  updating_cli_configuration: CliConfiguration
+  updated_cli_configuration: CliConfiguration
   origin?: 'cancel' | 'save'
   is_new?: boolean
   insertion_index?: number
@@ -19,35 +19,35 @@ export const update = async (params: {
   }
 
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const current_agent_configurations =
+  const current_cli_configurations =
     config.get<ConfigAgentConfigurationFormat[]>('agents', []) || []
 
-  let agent_configuration_index = -1
+  let cli_configuration_index = -1
   if (!params.is_new) {
-    agent_configuration_index = current_agent_configurations.findIndex(
-      (p) => p.name == params.updating_agent_configuration.name
+    cli_configuration_index = current_cli_configurations.findIndex(
+      (p) => p.name == params.updating_cli_configuration.name
     )
 
-    if (agent_configuration_index == -1 && params.origin != 'cancel') {
+    if (cli_configuration_index == -1 && params.origin != 'cancel') {
       console.error(
-        `agent with original name "${params.updating_agent_configuration.name}" not found.`
+        `agent with original name "${params.updating_cli_configuration.name}" not found.`
       )
       vscode.window.showErrorMessage(
         t('common.error.could-not-update-item-not-found', {
           item_type: 'agent',
-          name: params.updating_agent_configuration.name
+          name: params.updating_cli_configuration.name
         })
       )
       return { success: false, has_changes: false }
     }
   }
 
-  const final_updated_agent_configuration = {
-    ...params.updated_agent_configuration
+  const final_updated_cli_configuration = {
+    ...params.updated_cli_configuration
   }
 
-  const a = params.updating_agent_configuration
-  const b = final_updated_agent_configuration
+  const a = params.updating_cli_configuration
+  const b = final_updated_cli_configuration
   const has_changes = !(
     a.name == b.name &&
     a.agent == b.agent &&
@@ -81,47 +81,47 @@ export const update = async (params: {
     return { success: true, has_changes: false }
   }
 
-  const updated_ui_agent_configuration = { ...final_updated_agent_configuration }
+  const updated_ui_cli_configuration = { ...final_updated_cli_configuration }
 
-  let other_names = current_agent_configurations.map((c) => c.name)
-  if (!params.is_new && agent_configuration_index !== -1) {
-    other_names = current_agent_configurations
-      .filter((_, index) => index != agent_configuration_index)
+  let other_names = current_cli_configurations.map((c) => c.name)
+  if (!params.is_new && cli_configuration_index !== -1) {
+    other_names = current_cli_configurations
+      .filter((_, index) => index != cli_configuration_index)
       .map((c) => c.name)
   }
 
-  updated_ui_agent_configuration.name = generate_unique_name(
-    updated_ui_agent_configuration.name,
+  updated_ui_cli_configuration.name = generate_unique_name(
+    updated_ui_cli_configuration.name,
     other_names
   )
 
-  const updated_agent_configurations = [...current_agent_configurations]
+  const updated_cli_configurations = [...current_cli_configurations]
   if (params.is_new) {
     if (params.insertion_index !== undefined) {
-      updated_agent_configurations.splice(
+      updated_cli_configurations.splice(
         params.insertion_index,
         0,
-        ui_agent_configuration_to_config_format(updated_ui_agent_configuration)
+        ui_cli_configuration_to_config_format(updated_ui_cli_configuration)
       )
     } else {
-      updated_agent_configurations.push(
-        ui_agent_configuration_to_config_format(updated_ui_agent_configuration)
+      updated_cli_configurations.push(
+        ui_cli_configuration_to_config_format(updated_ui_cli_configuration)
       )
     }
-  } else if (agent_configuration_index != -1) {
-    updated_agent_configurations[agent_configuration_index] =
-      ui_agent_configuration_to_config_format(updated_ui_agent_configuration)
+  } else if (cli_configuration_index != -1) {
+    updated_cli_configurations[cli_configuration_index] =
+      ui_cli_configuration_to_config_format(updated_ui_cli_configuration)
   }
 
   await config.update(
     'agents',
-    updated_agent_configurations,
+    updated_cli_configurations,
     vscode.ConfigurationTarget.Global
   )
 
   return {
     success: true,
     has_changes: true,
-    new_name: updated_ui_agent_configuration.name
+    new_name: updated_ui_cli_configuration.name
   }
 }

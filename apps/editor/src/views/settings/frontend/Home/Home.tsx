@@ -98,7 +98,7 @@ type Props = {
   providers: Provider[]
   api_configurations: ApiConfiguration[]
   web_configurations: WebConfiguration[]
-  agent_configurations: CliConfiguration[]
+  cli_configurations: CliConfiguration[]
   defaults: Record<ApiFeature, string | null>
   edit_files_system_instructions: string
   default_edit_files_system_instructions: string
@@ -121,18 +121,18 @@ type Props = {
   set_providers: (providers: Provider[]) => void
   set_api_configurations: (configurations: ApiConfiguration[]) => void
   set_web_configurations: (configurations: WebConfiguration[]) => void
-  set_agent_configurations: (configurations: CliConfiguration[]) => void
-  on_reorder_agent_configurations: (reordered: CliConfiguration[]) => void
-  on_add_agent_configuration: (params?: {
+  set_cli_configurations: (configurations: CliConfiguration[]) => void
+  on_reorder_cli_configurations: (reordered: CliConfiguration[]) => void
+  on_add_cli_configuration: (params?: {
     insertion_index?: number
     exact_insertion?: boolean
   }) => void
-  on_edit_agent_configuration: (id: string) => void
-  on_delete_agent_configuration: (name: string) => void
-  on_toggle_pinned_agent_configuration: (config: CliConfiguration) => void
+  on_edit_cli_configuration: (id: string) => void
+  on_delete_cli_configuration: (name: string) => void
+  on_toggle_pinned_cli_configuration: (config: CliConfiguration) => void
   agent_defaults: Record<string, string | null>
-  on_set_default_agent_configuration: (cli_feature: string, name: string | null) => void
-  on_select_default_agent_configuration: (cli_feature: string) => void
+  on_set_default_cli_configuration: (cli_feature: string, name: string | null) => void
+  on_select_default_cli_configuration: (cli_feature: string) => void
   on_commit_instructions_change: (instructions: string) => void
   on_attach_ascii_tree_of_context_change: (
     value: 'ask' | 'always' | 'never'
@@ -416,18 +416,18 @@ export const Home: React.FC<Props> = (props) => {
         <CliSection
           ref={(el) => set_section_ref('section:cli', el)}
           set_section_ref={set_section_ref}
-          agent_configurations={props.agent_configurations}
-          set_agent_configurations={props.set_agent_configurations}
-          on_reorder_agent_configurations={props.on_reorder_agent_configurations}
-          on_add_agent_configuration={props.on_add_agent_configuration}
-          on_edit_agent_configuration={props.on_edit_agent_configuration}
-          on_delete_agent_configuration={props.on_delete_agent_configuration}
-          on_toggle_pinned_agent_configuration={
-            props.on_toggle_pinned_agent_configuration
+          cli_configurations={props.cli_configurations}
+          set_cli_configurations={props.set_cli_configurations}
+          on_reorder_cli_configurations={props.on_reorder_cli_configurations}
+          on_add_cli_configuration={props.on_add_cli_configuration}
+          on_edit_cli_configuration={props.on_edit_cli_configuration}
+          on_delete_cli_configuration={props.on_delete_cli_configuration}
+          on_toggle_pinned_cli_configuration={
+            props.on_toggle_pinned_cli_configuration
           }
           agent_defaults={props.agent_defaults}
-          on_set_default_agent_configuration={props.on_set_default_agent_configuration}
-          on_select_default_agent_configuration={props.on_select_default_agent_configuration}
+          on_set_default_cli_configuration={props.on_set_default_cli_configuration}
+          on_select_default_cli_configuration={props.on_select_default_cli_configuration}
         />
       </UiLayout>
     </div>

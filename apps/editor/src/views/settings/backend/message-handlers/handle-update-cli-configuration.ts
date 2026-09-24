@@ -4,7 +4,7 @@ import { UpdateAgentConfigurationMessage } from '@/views/settings/types/messages
 import { update } from '@/views/shared/actions/agent/update'
 import { t } from '@/i18n'
 
-export const handle_update_agent_configuration = async (
+export const handle_update_cli_configuration = async (
   settings_provider: SettingsViewProvider,
   message: UpdateAgentConfigurationMessage
 ): Promise<void> => {
@@ -29,8 +29,8 @@ export const handle_update_agent_configuration = async (
   }
 
   const result = await update({
-    updating_agent_configuration: message.updating_agent_configuration,
-    updated_agent_configuration: message.updated_agent_configuration,
+    updating_cli_configuration: message.updating_cli_configuration,
+    updated_cli_configuration: message.updated_cli_configuration,
     origin: message.origin,
     is_new: message.is_new,
     insertion_index: message.insertion_index
@@ -38,7 +38,7 @@ export const handle_update_agent_configuration = async (
 
   if (result.success) {
     settings_provider.postMessage({
-      command: 'AGENT_CONFIGURATION_UPDATED'
+      command: 'CLI_CONFIGURATION_UPDATED'
     })
   }
 }

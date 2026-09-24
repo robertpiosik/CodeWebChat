@@ -3,7 +3,7 @@ import { PromptViewProvider } from '../prompt-view-provider'
 import { update } from '@/views/shared/actions/agent/update'
 import { t } from '@/i18n'
 
-export const handle_update_agent_configuration = async (
+export const handle_update_cli_configuration = async (
   provider: PromptViewProvider,
   message: any
 ): Promise<void> => {
@@ -28,14 +28,14 @@ export const handle_update_agent_configuration = async (
   }
 
   const result = await update({
-    updating_agent_configuration: message.updating_agent_configuration,
-    updated_agent_configuration: message.updated_agent_configuration,
+    updating_cli_configuration: message.updating_cli_configuration,
+    updated_cli_configuration: message.updated_cli_configuration,
     origin: message.origin,
     is_new: message.is_new,
     insertion_index: message.insertion_index
   })
 
   if (result.success) {
-    provider.send_message({ command: 'AGENT_CONFIGURATION_UPDATED' })
+    provider.send_message({ command: 'CLI_CONFIGURATION_UPDATED' })
   }
 }

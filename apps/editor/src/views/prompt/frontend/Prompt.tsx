@@ -28,7 +28,7 @@ import { use_editor_sync } from './hooks/use-editor-sync'
 import { use_web_configuration_editing } from './hooks/use-web-configuration-editing'
 import { use_api_configuration_editing } from './hooks/use-api-configuration-editing'
 import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurationForm'
-import { use_agent_configuration_editing } from './hooks/use-cli-configuration-editing'
+import { use_cli_configuration_editing } from './hooks/use-cli-configuration-editing'
 import { EditCliConfigurationForm } from '@/views/shared/forms/EditCliConfigurationForm/EditCliConfigurationForm'
 import { use_translation } from './i18n/use-translation'
 
@@ -134,14 +134,14 @@ export const Prompt = () => {
   } = use_api_configuration_editing(vscode)
 
   const {
-    updating_agent_configuration,
-    set_updating_agent_configuration,
-    set_updated_agent_configuration,
-    edit_agent_configuration_back_click_handler,
-    edit_agent_configuration_save_handler,
-    set_is_new_agent_configuration,
-    set_agent_configuration_insertion_index
-  } = use_agent_configuration_editing(vscode)
+    updating_cli_configuration,
+    set_updating_cli_configuration,
+    set_updated_cli_configuration,
+    edit_cli_configuration_back_click_handler,
+    edit_cli_configuration_save_handler,
+    set_is_new_cli_configuration,
+    set_cli_configuration_insertion_index
+  } = use_cli_configuration_editing(vscode)
 
   const {
     progress_state,
@@ -268,14 +268,14 @@ export const Prompt = () => {
   const are_keyboard_shortcuts_disabled =
     !!updating_web_configuration ||
     !!updating_api_configuration ||
-    !!updating_agent_configuration ||
+    !!updating_cli_configuration ||
     !!items_in_preview ||
     active_view != 'main'
 
   const is_main_slot_hidden =
     !!updating_web_configuration ||
     !!updating_api_configuration ||
-    !!updating_agent_configuration ||
+    !!updating_cli_configuration ||
     viewing_donations ||
     !!items_in_preview
 
@@ -317,11 +317,11 @@ export const Prompt = () => {
                   set_is_new_api_configuration(false)
                   set_api_configuration_insertion_index(undefined)
                 }}
-                on_agent_configuration_edit={(agent_configuration) => {
-                  set_updating_agent_configuration(agent_configuration)
-                  set_updated_agent_configuration(agent_configuration)
-                  set_is_new_agent_configuration(false)
-                  set_agent_configuration_insertion_index(undefined)
+                on_cli_configuration_edit={(cli_configuration) => {
+                  set_updating_cli_configuration(cli_configuration)
+                  set_updated_cli_configuration(cli_configuration)
+                  set_is_new_cli_configuration(false)
+                  set_cli_configuration_insertion_index(undefined)
                 }}
                 is_connected={is_connected}
                 on_show_home={() => {
@@ -531,13 +531,13 @@ export const Prompt = () => {
           </div>
         )}
 
-        {updating_agent_configuration && (
+        {updating_cli_configuration && (
           <div className={styles.slot}>
             <UiPage
-              on_back_click={edit_agent_configuration_back_click_handler}
+              on_back_click={edit_cli_configuration_back_click_handler}
               footer_slot={
                 <div className={styles['edit-web-configuration-footer']}>
-                  <UiButton on_click={edit_agent_configuration_save_handler}>
+                  <UiButton on_click={edit_cli_configuration_save_handler}>
                     Save
                   </UiButton>
                 </div>
@@ -545,8 +545,8 @@ export const Prompt = () => {
               title="Edit Agent"
             >
             <EditCliConfigurationForm
-              agent_configuration={updating_agent_configuration}
-              on_update={set_updated_agent_configuration}
+              cli_configuration={updating_cli_configuration}
+              on_update={set_updated_cli_configuration}
               pick_agent={(agent_id) => {
                 post_message(vscode, { command: 'PICK_AGENT', agent_id })
               }}

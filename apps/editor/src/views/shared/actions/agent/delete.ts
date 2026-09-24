@@ -5,18 +5,18 @@ import { get_error_message } from '@/utils/get-error-message'
 
 export const remove = async (params: { name: string }): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const current_agent_configurations =
+  const current_cli_configurations =
     config.get<ConfigAgentConfigurationFormat[]>('agents', []) || []
 
-  const index = current_agent_configurations.findIndex(
+  const index = current_cli_configurations.findIndex(
     (c) => c.name == params.name
   )
 
-  if (index < 0 || index >= current_agent_configurations.length) {
+  if (index < 0 || index >= current_cli_configurations.length) {
     return
   }
 
-  const item_to_delete = current_agent_configurations[index]
+  const item_to_delete = current_cli_configurations[index]
   const item_name = item_to_delete.name
   const is_unnamed = /^\(\d+\)$/.test(item_name.trim())
   const display_item_name = is_unnamed
@@ -42,13 +42,13 @@ export const remove = async (params: { name: string }): Promise<void> => {
     return
   }
 
-  const updated_agent_configurations = [...current_agent_configurations]
-  updated_agent_configurations.splice(index, 1)
+  const updated_cli_configurations = [...current_cli_configurations]
+  updated_cli_configurations.splice(index, 1)
 
   try {
     await config.update(
       'agents',
-      updated_agent_configurations,
+      updated_cli_configurations,
       vscode.ConfigurationTarget.Global
     )
 

@@ -27,7 +27,7 @@ export const invoke_agentic_cli = async (params: {
   last_selected_workspace_state_key: string
   show_back_button?: boolean
   cli_prompt_type?: 'edit-files' | 'ask-about-files'
-  agent_configuration_name?: string
+  cli_configuration_name?: string
   use_quick_pick?: boolean
   on_agent_selected?: (name: string) => void
 }): Promise<
@@ -42,7 +42,7 @@ export const invoke_agentic_cli = async (params: {
   const output_channel = get_output_channel()
   let go_back_to_caller = false
 
-  let current_agent_config_name = params.agent_configuration_name
+  let current_agent_config_name = params.cli_configuration_name
   let show_quick_pick = params.use_quick_pick
 
   while (true) {

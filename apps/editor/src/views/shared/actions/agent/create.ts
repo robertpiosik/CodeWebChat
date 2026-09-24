@@ -11,7 +11,7 @@ export const create = async (params: {
   { config: ConfigAgentConfigurationFormat; insertion_index?: number } | undefined
 > => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const current_agent_configurations =
+  const current_cli_configurations =
     config.get<ConfigAgentConfigurationFormat[]>('agents', []) || []
 
   let insertion_index: number | undefined = params.reference_index
@@ -112,13 +112,13 @@ export const create = async (params: {
 
   const new_name = generate_unique_name(
     undefined,
-    current_agent_configurations.map((c) => c.name)
+    current_cli_configurations.map((c) => c.name)
   )
 
-  const new_agent_configuration: ConfigAgentConfigurationFormat = {
+  const new_cli_configuration: ConfigAgentConfigurationFormat = {
     name: new_name,
     agent: selected_agent
   }
 
-  return { config: new_agent_configuration, insertion_index }
+  return { config: new_cli_configuration, insertion_index }
 }

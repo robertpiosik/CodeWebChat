@@ -3,45 +3,45 @@ import { CliConfiguration } from '@/types/cli-configuration'
 import { BackendMessage } from '../../types/messages'
 import { post_message } from '../utils/post-message'
 
-export const use_agent_configuration_editing = (vscode: any) => {
-  const [updating_agent_configuration, set_updating_agent_configuration] =
+export const use_cli_configuration_editing = (vscode: any) => {
+  const [updating_cli_configuration, set_updating_cli_configuration] =
     useState<CliConfiguration>()
-  const [updated_agent_configuration, set_updated_agent_configuration] =
+  const [updated_cli_configuration, set_updated_cli_configuration] =
     useState<CliConfiguration>()
-  const [is_new_agent_configuration, set_is_new_agent_configuration] =
+  const [is_new_cli_configuration, set_is_new_cli_configuration] =
     useState(false)
   const [
-    agent_configuration_insertion_index,
-    set_agent_configuration_insertion_index
+    cli_configuration_insertion_index,
+    set_cli_configuration_insertion_index
   ] = useState<number>()
 
   useEffect(() => {
-    set_updated_agent_configuration(updating_agent_configuration)
-  }, [updating_agent_configuration])
+    set_updated_cli_configuration(updating_cli_configuration)
+  }, [updating_cli_configuration])
 
-  const edit_agent_configuration_cancel_handler = () => {
-    if (updated_agent_configuration) {
+  const edit_cli_configuration_cancel_handler = () => {
+    if (updated_cli_configuration) {
       post_message(vscode, {
-        command: 'UPDATE_AGENT_CONFIGURATION',
-        updating_agent_configuration: updating_agent_configuration!,
-        updated_agent_configuration: updated_agent_configuration,
+        command: 'UPDATE_CLI_CONFIGURATION',
+        updating_cli_configuration: updating_cli_configuration!,
+        updated_cli_configuration: updated_cli_configuration,
         origin: 'cancel',
-        is_new: is_new_agent_configuration
+        is_new: is_new_cli_configuration
       })
     } else {
-      set_updating_agent_configuration(undefined)
+      set_updating_cli_configuration(undefined)
     }
   }
 
-  const edit_agent_configuration_save_handler = () => {
-    if (updated_agent_configuration) {
+  const edit_cli_configuration_save_handler = () => {
+    if (updated_cli_configuration) {
       post_message(vscode, {
-        command: 'UPDATE_AGENT_CONFIGURATION',
-        updating_agent_configuration: updating_agent_configuration!,
-        updated_agent_configuration: updated_agent_configuration,
+        command: 'UPDATE_CLI_CONFIGURATION',
+        updating_cli_configuration: updating_cli_configuration!,
+        updated_cli_configuration: updated_cli_configuration,
         origin: 'save',
-        is_new: is_new_agent_configuration,
-        insertion_index: agent_configuration_insertion_index
+        is_new: is_new_cli_configuration,
+        insertion_index: cli_configuration_insertion_index
       })
     }
   }
@@ -49,17 +49,17 @@ export const use_agent_configuration_editing = (vscode: any) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
-      if (message.command == 'AGENT_CONFIGURATION_UPDATED') {
-        set_updating_agent_configuration(undefined)
-        set_updated_agent_configuration(undefined)
-        set_is_new_agent_configuration(false)
-        set_agent_configuration_insertion_index(undefined)
-      } else if (message.command == 'START_AGENT_CONFIGURATION_CREATION') {
+      if (message.command == 'CLI_CONFIGURATION_UPDATED') {
+        set_updating_cli_configuration(undefined)
+        set_updated_cli_configuration(undefined)
+        set_is_new_cli_configuration(false)
+        set_cli_configuration_insertion_index(undefined)
+      } else if (message.command == 'START_CLI_CONFIGURATION_CREATION') {
         const msg = message as any
-        set_updating_agent_configuration(msg.agent_configuration)
-        set_updated_agent_configuration(msg.agent_configuration)
-        set_is_new_agent_configuration(true)
-        set_agent_configuration_insertion_index(msg.insertion_index)
+        set_updating_cli_configuration(msg.cli_configuration)
+        set_updated_cli_configuration(msg.cli_configuration)
+        set_is_new_cli_configuration(true)
+        set_cli_configuration_insertion_index(msg.insertion_index)
       }
     }
 
@@ -68,12 +68,12 @@ export const use_agent_configuration_editing = (vscode: any) => {
   }, [])
 
   return {
-    updating_agent_configuration,
-    set_updating_agent_configuration,
-    set_updated_agent_configuration,
-    edit_agent_configuration_cancel_handler,
-    edit_agent_configuration_save_handler,
-    set_is_new_agent_configuration,
-    set_agent_configuration_insertion_index
+    updating_cli_configuration,
+    set_updating_cli_configuration,
+    set_updated_cli_configuration,
+    edit_cli_configuration_cancel_handler,
+    edit_cli_configuration_save_handler,
+    set_is_new_cli_configuration,
+    set_cli_configuration_insertion_index
   }
 }

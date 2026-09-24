@@ -18,7 +18,7 @@ export const use_settings = (vscode: any) => {
   const [web_configurations, set_web_configurations] = useState<
     WebConfiguration[] | undefined
   >(undefined)
-  const [agent_configurations, set_agent_configurations] = useState<
+  const [cli_configurations, set_cli_configurations] = useState<
     CliConfiguration[] | undefined
   >(undefined)
   const [defaults, set_defaults] = useState<
@@ -66,7 +66,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_PROVIDERS' })
     post_message(vscode, { command: 'GET_API_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_WEB_CONFIGURATIONS' })
-    post_message(vscode, { command: 'GET_AGENT_CONFIGURATIONS' })
+    post_message(vscode, { command: 'GET_CLI_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, {
@@ -95,8 +95,8 @@ export const use_settings = (vscode: any) => {
         set_defaults(message.defaults)
       } else if (message.command == 'WEB_CONFIGURATIONS') {
         set_web_configurations(message.web_configurations)
-      } else if (message.command == 'AGENT_CONFIGURATIONS') {
-        set_agent_configurations(message.agent_configurations)
+      } else if (message.command == 'CLI_CONFIGURATIONS') {
+        set_cli_configurations(message.cli_configurations)
       } else if (message.command == 'EDIT_FILES_SYSTEM_INSTRUCTIONS') {
         set_edit_files_system_instructions(message.instructions)
         set_default_edit_files_system_instructions(message.default_instructions)
@@ -159,12 +159,12 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_add_agent_configuration = (params?: {
+  const handle_add_cli_configuration = (params?: {
     insertion_index?: number
     exact_insertion?: boolean
   }) => {
     post_message(vscode, {
-      command: 'CREATE_AGENT_CONFIGURATION',
+      command: 'CREATE_CLI_CONFIGURATION',
       insertion_index: params?.insertion_index,
       exact_insertion: params?.exact_insertion
     })
@@ -217,11 +217,11 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_reorder_agent_configurations = (reordered: CliConfiguration[]) => {
-    set_agent_configurations(reordered)
+  const handle_reorder_cli_configurations = (reordered: CliConfiguration[]) => {
+    set_cli_configurations(reordered)
     post_message(vscode, {
-      command: 'REORDER_AGENT_CONFIGURATIONS',
-      agent_configurations: reordered
+      command: 'REORDER_CLI_CONFIGURATIONS',
+      cli_configurations: reordered
     })
   }
 
@@ -243,9 +243,9 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_delete_agent_configuration = (name: string) => {
+  const handle_delete_cli_configuration = (name: string) => {
     post_message(vscode, {
-      command: 'DELETE_AGENT_CONFIGURATION',
+      command: 'DELETE_CLI_CONFIGURATION',
       name
     })
   }
@@ -392,11 +392,11 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_toggle_pinned_agent_configuration = (config: CliConfiguration) => {
+  const handle_toggle_pinned_cli_configuration = (config: CliConfiguration) => {
     post_message(vscode, {
-      command: 'UPDATE_AGENT_CONFIGURATION',
-      updating_agent_configuration: config,
-      updated_agent_configuration: { ...config, is_pinned: !config.is_pinned },
+      command: 'UPDATE_CLI_CONFIGURATION',
+      updating_cli_configuration: config,
+      updated_cli_configuration: { ...config, is_pinned: !config.is_pinned },
       origin: 'save'
     })
   }
@@ -417,8 +417,8 @@ export const use_settings = (vscode: any) => {
     set_api_configurations,
     web_configurations,
     set_web_configurations,
-    agent_configurations,
-    set_agent_configurations,
+    cli_configurations,
+    set_cli_configurations,
     defaults,
     commit_message_instructions,
     default_commit_message_instructions,
@@ -439,13 +439,13 @@ export const use_settings = (vscode: any) => {
     handle_reorder_api_configurations,
     handle_add_api_configuration,
     handle_delete_api_configuration,
-    handle_reorder_agent_configurations,
-    handle_add_agent_configuration,
-    handle_delete_agent_configuration,
+    handle_reorder_cli_configurations,
+    handle_add_cli_configuration,
+    handle_delete_cli_configuration,
     handle_reorder_web_configurations,
     handle_add_web_configuration,
     handle_delete_web_configuration,
-    handle_toggle_pinned_agent_configuration,
+    handle_toggle_pinned_cli_configuration,
     handle_toggle_pinned_api_configuration,
     handle_toggle_pinned_web_configuration,
     handle_commit_instructions_change,

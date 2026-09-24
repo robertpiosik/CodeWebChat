@@ -4,7 +4,7 @@ import { post_message } from './utils/post-message'
 import { BackendMessage, Template } from '../types/messages'
 import { Home, NavItem } from './Home/Home'
 import { use_web_configuration_editing } from './hooks/use-web-configuration-editing'
-import { use_agent_configuration_editing } from './hooks/use-cli-configuration-editing'
+import { use_cli_configuration_editing } from './hooks/use-cli-configuration-editing'
 import { EditCliConfigurationForm } from '@/views/shared/forms/EditCliConfigurationForm/EditCliConfigurationForm'
 import { use_api_configuration_editing } from './hooks/use-api-configuration-editing'
 import { use_provider_editing } from './hooks/use-provider-editing'
@@ -29,14 +29,14 @@ export const Settings = () => {
   } = use_web_configuration_editing(vscode)
 
   const {
-    updating_agent_configuration,
-    set_updating_agent_configuration,
-    set_updated_agent_configuration,
-    edit_agent_configuration_cancel_handler,
-    edit_agent_configuration_save_handler,
-    set_is_new_agent_configuration,
-    set_agent_configuration_insertion_index
-  } = use_agent_configuration_editing(vscode)
+    updating_cli_configuration,
+    set_updating_cli_configuration,
+    set_updated_cli_configuration,
+    edit_cli_configuration_cancel_handler,
+    edit_cli_configuration_save_handler,
+    set_is_new_cli_configuration,
+    set_cli_configuration_insertion_index
+  } = use_cli_configuration_editing(vscode)
 
   const {
     updating_api_configuration,
@@ -99,7 +99,7 @@ export const Settings = () => {
       settings_hook.providers !== undefined &&
       settings_hook.api_configurations !== undefined &&
       settings_hook.web_configurations !== undefined &&
-      settings_hook.agent_configurations !== undefined &&
+      settings_hook.cli_configurations !== undefined &&
       settings_hook.defaults !== undefined &&
       settings_hook.edit_files_system_instructions !== undefined &&
       settings_hook.default_edit_files_system_instructions !== undefined &&
@@ -130,7 +130,7 @@ export const Settings = () => {
           template: event.data.template
         })
         set_updated_template(event.data.template)
-      } else if (event.data.command == 'AGENT_CONFIGURATIONS') {
+      } else if (event.data.command == 'CLI_CONFIGURATIONS') {
         if ((event.data as any).defaults) {
           set_agent_defaults((event.data as any).defaults)
         }
@@ -272,39 +272,39 @@ export const Settings = () => {
         on_toggle_pinned_web_configuration={
           settings_hook.handle_toggle_pinned_web_configuration
         }
-        agent_configurations={settings_hook.agent_configurations!}
-        set_agent_configurations={settings_hook.set_agent_configurations}
-        on_reorder_agent_configurations={
-          settings_hook.handle_reorder_agent_configurations
+        cli_configurations={settings_hook.cli_configurations!}
+        set_cli_configurations={settings_hook.set_cli_configurations}
+        on_reorder_cli_configurations={
+          settings_hook.handle_reorder_cli_configurations
         }
-        on_add_agent_configuration={settings_hook.handle_add_agent_configuration}
-        on_edit_agent_configuration={(id) => {
-          const config = settings_hook.agent_configurations?.find(
+        on_add_cli_configuration={settings_hook.handle_add_cli_configuration}
+        on_edit_cli_configuration={(id) => {
+          const config = settings_hook.cli_configurations?.find(
             (c) => c.name === id
           )
           if (config) {
-            set_updating_agent_configuration(config)
-            set_is_new_agent_configuration(false)
-            set_agent_configuration_insertion_index(undefined)
+            set_updating_cli_configuration(config)
+            set_is_new_cli_configuration(false)
+            set_cli_configuration_insertion_index(undefined)
           }
         }}
-        on_delete_agent_configuration={
-          settings_hook.handle_delete_agent_configuration
+        on_delete_cli_configuration={
+          settings_hook.handle_delete_cli_configuration
         }
-        on_toggle_pinned_agent_configuration={
-          settings_hook.handle_toggle_pinned_agent_configuration
+        on_toggle_pinned_cli_configuration={
+          settings_hook.handle_toggle_pinned_cli_configuration
         }
         agent_defaults={agent_defaults}
-        on_set_default_agent_configuration={(cli_feature, name) => {
+        on_set_default_cli_configuration={(cli_feature, name) => {
           post_message(vscode, {
-            command: 'SET_DEFAULT_AGENT_CONFIGURATION',
+            command: 'SET_DEFAULT_CLI_CONFIGURATION',
             cli_feature,
-            agent_configuration_name: name
+            cli_configuration_name: name
           })
         }}
-        on_select_default_agent_configuration={(cli_feature) => {
+        on_select_default_cli_configuration={(cli_feature) => {
           post_message(vscode, {
-            command: 'SELECT_DEFAULT_AGENT_CONFIGURATION',
+            command: 'SELECT_DEFAULT_CLI_CONFIGURATION',
             cli_feature
           })
         }}
@@ -342,16 +342,16 @@ export const Settings = () => {
           </UiModal.Form>
         </UiModal>
       )}
-      {updating_agent_configuration && (
-        <UiModal on_close={edit_agent_configuration_cancel_handler}>
+      {updating_cli_configuration && (
+        <UiModal on_close={edit_cli_configuration_cancel_handler}>
           <UiModal.Form
             title="Edit Agent"
-            on_save={edit_agent_configuration_save_handler}
-            on_cancel={edit_agent_configuration_cancel_handler}
+            on_save={edit_cli_configuration_save_handler}
+            on_cancel={edit_cli_configuration_cancel_handler}
           >
             <EditCliConfigurationForm
-              agent_configuration={updating_agent_configuration}
-              on_update={set_updated_agent_configuration}
+              cli_configuration={updating_cli_configuration}
+              on_update={set_updated_cli_configuration}
               pick_agent={(agent_id) => {
                 post_message(vscode, { command: 'PICK_AGENT', agent_id })
               }}

@@ -34,7 +34,7 @@ type Props = {
   vscode: any
   on_web_configuration_edit: (web_configuration: WebConfiguration) => void
   on_api_configuration_edit: (api_configuration: ApiConfiguration) => void
-  on_agent_configuration_edit?: (agent_configuration: CliConfiguration) => void
+  on_cli_configuration_edit?: (cli_configuration: CliConfiguration) => void
   on_show_home: () => void
   is_connected: boolean
   ask_instructions: string
@@ -106,11 +106,11 @@ export const Main: React.FC<Props> = (props) => {
     selected_api_configuration_id_by_prompt_type,
     set_selected_api_configuration_id_by_prompt_type
   ] = useState<{ [T in ApiPromptType]?: string }>()
-  const [agent_configurations, set_agent_configurations] =
+  const [cli_configurations, set_cli_configurations] =
     useState<CliConfiguration[]>()
   const [
-    selected_agent_configuration_name_by_mode,
-    set_selected_agent_configuration_name_by_mode
+    selected_cli_configuration_name_by_mode,
+    set_selected_cli_configuration_name_by_mode
   ] = useState<{ [T in CliPromptType]?: string }>()
   const [ask_about_files_history, set_ask_about_files_history] =
     useState<string[]>()
@@ -137,13 +137,13 @@ export const Main: React.FC<Props> = (props) => {
               .selected_api_configuration_id_by_prompt_type
           )
           break
-        case 'AGENT_CONFIGURATIONS':
-          set_agent_configurations(
-            (message as AgentConfigurationsMessage).agent_configurations
+        case 'CLI_CONFIGURATIONS':
+          set_cli_configurations(
+            (message as AgentConfigurationsMessage).cli_configurations
           )
-          set_selected_agent_configuration_name_by_mode(
+          set_selected_cli_configuration_name_by_mode(
             (message as AgentConfigurationsMessage)
-              .selected_agent_configuration_name_by_mode
+              .selected_cli_configuration_name_by_mode
           )
           break
         case 'CHAT_HISTORY':
@@ -172,8 +172,8 @@ export const Main: React.FC<Props> = (props) => {
             [message.prompt_type]: message.id
           }))
           break
-        case 'SELECTED_AGENT_CONFIGURATION_CHANGED':
-          set_selected_agent_configuration_name_by_mode((prev) => ({
+        case 'SELECTED_CLI_CONFIGURATION_CHANGED':
+          set_selected_cli_configuration_name_by_mode((prev) => ({
             ...prev,
             [(message as any).prompt_type]: (message as any).name
           }))
@@ -185,7 +185,7 @@ export const Main: React.FC<Props> = (props) => {
 
     const initial_messages: FrontendMessage[] = [
       { command: 'GET_WEB_CONFIGURATIONS' },
-      { command: 'GET_AGENT_CONFIGURATIONS' },
+      { command: 'GET_CLI_CONFIGURATIONS' },
       { command: 'GET_HISTORY' },
       { command: 'GET_INSTRUCTIONS' },
       { command: 'GET_EDIT_FORMAT' }
@@ -395,65 +395,65 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_create_agent_configuration = (params?: {
+  const handle_create_cli_configuration = (params?: {
     insertion_index?: number
     exact_insertion?: boolean
   }) => {
     post_message(props.vscode, {
-      command: 'CREATE_AGENT_CONFIGURATION',
+      command: 'CREATE_CLI_CONFIGURATION',
       reference_index: params?.insertion_index,
       exact_insertion: params?.exact_insertion
     })
   }
 
-  const handle_agent_configurations_reorder = (
-    reordered_agent_configurations: CliConfiguration[]
+  const handle_cli_configurations_reorder = (
+    reordered_cli_configurations: CliConfiguration[]
   ) => {
-    if (agent_configurations) {
-      set_agent_configurations(reordered_agent_configurations)
+    if (cli_configurations) {
+      set_cli_configurations(reordered_cli_configurations)
     }
 
     post_message(props.vscode, {
-      command: 'REORDER_AGENT_CONFIGURATIONS',
-      agent_configurations: reordered_agent_configurations
+      command: 'REORDER_CLI_CONFIGURATIONS',
+      cli_configurations: reordered_cli_configurations
     })
   }
 
-  const handle_edit_agent_configuration = (name: string) => {
-    const config = agent_configurations?.find((c) => c.name == name)
-    if (config && props.on_agent_configuration_edit) {
-      props.on_agent_configuration_edit(config)
+  const handle_edit_cli_configuration = (name: string) => {
+    const config = cli_configurations?.find((c) => c.name == name)
+    if (config && props.on_cli_configuration_edit) {
+      props.on_cli_configuration_edit(config)
     }
   }
 
-  const handle_delete_agent_configuration = (name: string) => {
+  const handle_delete_cli_configuration = (name: string) => {
     post_message(props.vscode, {
-      command: 'DELETE_AGENT_CONFIGURATION',
+      command: 'DELETE_CLI_CONFIGURATION',
       name
     })
   }
 
-  const handle_toggle_pinned_agent_configuration = (name: string) => {
-    if (agent_configurations) {
-      const updated_agent_configurations = agent_configurations.map((p) =>
+  const handle_toggle_pinned_cli_configuration = (name: string) => {
+    if (cli_configurations) {
+      const updated_cli_configurations = cli_configurations.map((p) =>
         p.name == name ? { ...p, is_pinned: !p.is_pinned } : p
       )
 
-      set_agent_configurations(updated_agent_configurations)
+      set_cli_configurations(updated_cli_configurations)
 
       post_message(props.vscode, {
-        command: 'TOGGLE_PINNED_AGENT_CONFIGURATION',
-        agent_configuration_name: name
+        command: 'TOGGLE_PINNED_CLI_CONFIGURATION',
+        cli_configuration_name: name
       })
     }
   }
 
-  const handle_agent_configuration_click = (name: string) => {
+  const handle_cli_configuration_click = (name: string) => {
     const instruction = get_current_instructions()
     post_message(props.vscode, {
       command: 'INVOKE_AGENTIC_CLI',
       use_quick_pick: false,
-      agent_configuration_name: name
+      cli_configuration_name: name
     })
     if (instruction.trim()) {
       update_chat_history(instruction)
@@ -580,13 +580,13 @@ export const Main: React.FC<Props> = (props) => {
     current_history = edit_files_history
   }
 
-  const selected_agent_configuration_name =
-    selected_agent_configuration_name_by_mode?.[props.cli_prompt_type]
+  const selected_cli_configuration_name =
+    selected_cli_configuration_name_by_mode?.[props.cli_prompt_type]
 
   if (
     web_configurations === undefined ||
     props.api_configurations === undefined ||
-    agent_configurations === undefined ||
+    cli_configurations === undefined ||
     ask_about_files_history === undefined ||
     edit_files_history === undefined ||
     instructions === undefined ||
@@ -621,15 +621,15 @@ export const Main: React.FC<Props> = (props) => {
       is_connected={props.is_connected}
       web_configurations={web_configurations || []}
       on_create_web_configuration={handle_create_web_configuration}
-      agent_configurations={agent_configurations || []}
-      on_create_agent_configuration={handle_create_agent_configuration}
-      on_agent_configuration_click={handle_agent_configuration_click}
-      on_agent_configurations_reorder={handle_agent_configurations_reorder}
-      on_toggle_pinned_agent_configuration={
-        handle_toggle_pinned_agent_configuration
+      cli_configurations={cli_configurations || []}
+      on_create_cli_configuration={handle_create_cli_configuration}
+      on_cli_configuration_click={handle_cli_configuration_click}
+      on_cli_configurations_reorder={handle_cli_configurations_reorder}
+      on_toggle_pinned_cli_configuration={
+        handle_toggle_pinned_cli_configuration
       }
-      on_edit_agent_configuration={handle_edit_agent_configuration}
-      on_delete_agent_configuration={handle_delete_agent_configuration}
+      on_edit_cli_configuration={handle_edit_cli_configuration}
+      on_delete_cli_configuration={handle_delete_cli_configuration}
       currently_open_file_path={props.currently_open_file_path}
       on_quick_action_click={handle_quick_action_click}
       current_selection={props.current_selection}
@@ -655,7 +655,7 @@ export const Main: React.FC<Props> = (props) => {
       selected_api_configuration_id={
         selected_api_configuration_id_by_prompt_type?.[props.api_prompt_type]
       }
-      selected_agent_configuration_name={selected_agent_configuration_name}
+      selected_cli_configuration_name={selected_cli_configuration_name}
       instructions={instructions}
       set_instructions={set_instructions}
       on_caret_position_change={handle_caret_position_change}

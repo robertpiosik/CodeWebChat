@@ -197,25 +197,25 @@ export interface UpdateWebConfigurationMessage {
 }
 
 export interface GetAgentConfigurationsMessage {
-  command: 'GET_AGENT_CONFIGURATIONS'
+  command: 'GET_CLI_CONFIGURATIONS'
 }
 export interface ReorderAgentConfigurationsMessage {
-  command: 'REORDER_AGENT_CONFIGURATIONS'
-  agent_configurations: CliConfiguration[]
+  command: 'REORDER_CLI_CONFIGURATIONS'
+  cli_configurations: CliConfiguration[]
 }
 export interface DeleteAgentConfigurationMessage {
-  command: 'DELETE_AGENT_CONFIGURATION'
+  command: 'DELETE_CLI_CONFIGURATION'
   name: string
 }
 export interface CreateAgentConfigurationMessage {
-  command: 'CREATE_AGENT_CONFIGURATION'
+  command: 'CREATE_CLI_CONFIGURATION'
   insertion_index?: number
   exact_insertion?: boolean
 }
 export interface UpdateAgentConfigurationMessage {
-  command: 'UPDATE_AGENT_CONFIGURATION'
-  updating_agent_configuration: CliConfiguration
-  updated_agent_configuration: CliConfiguration
+  command: 'UPDATE_CLI_CONFIGURATION'
+  updating_cli_configuration: CliConfiguration
+  updated_cli_configuration: CliConfiguration
   origin?: 'cancel' | 'save'
   is_new?: boolean
   insertion_index?: number
@@ -459,27 +459,27 @@ export interface NewlyPickedReasoningEffortMessage {
 
 
 export interface SetDefaultAgentConfigurationMessage {
-  command: 'SET_DEFAULT_AGENT_CONFIGURATION'
+  command: 'SET_DEFAULT_CLI_CONFIGURATION'
   cli_feature: string
-  agent_configuration_name: string | null
+  cli_configuration_name: string | null
 }
 
 export interface SelectDefaultAgentConfigurationMessage {
-  command: 'SELECT_DEFAULT_AGENT_CONFIGURATION'
+  command: 'SELECT_DEFAULT_CLI_CONFIGURATION'
   cli_feature: string
 }
 
 export interface AgentConfigurationsMessage {
-  command: 'AGENT_CONFIGURATIONS'
-  agent_configurations: CliConfiguration[]
+  command: 'CLI_CONFIGURATIONS'
+  cli_configurations: CliConfiguration[]
   defaults?: Record<string, string | null>
 }
 export interface AgentConfigurationUpdatedMessage {
-  command: 'AGENT_CONFIGURATION_UPDATED'
+  command: 'CLI_CONFIGURATION_UPDATED'
 }
 export interface StartAgentConfigurationCreationMessage {
-  command: 'START_AGENT_CONFIGURATION_CREATION'
-  agent_configuration: CliConfiguration
+  command: 'START_CLI_CONFIGURATION_CREATION'
+  cli_configuration: CliConfiguration
   insertion_index?: number
 }
 export interface NewlyPickedAgentMessage {
