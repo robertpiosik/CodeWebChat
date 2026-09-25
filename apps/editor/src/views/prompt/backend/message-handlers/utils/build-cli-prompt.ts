@@ -2,8 +2,8 @@ import * as path from 'path'
 import * as fs from 'fs/promises'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
+import { cli_requirements } from '@/constants/instructions'
 import {
-
   EDIT_FORMAT_INSTRUCTIONS_DIFF,
   EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
@@ -60,8 +60,12 @@ export const build_cli_prompt = async (params: {
   }
 
   let files_section = ''
+  let are_all_files_preloaded = false
+  let are_any_files_preloaded = false
 
   if (total_content_length <= 20000) {
+    are_all_files_preloaded = true
+    are_any_files_preloaded = files_data.length > 0
     const file_blocks = files_data.map((data) =>
       data.content !== undefined
         ? `### File: \`${data.relative_path}\`\n\n\`\`\`\n${data.content}\n\`\`\``
@@ -83,11 +87,13 @@ export const build_cli_prompt = async (params: {
           file_blocks.push(
             `### File: \`${data.relative_path}\`\n\n\`\`\`\n${data.content}\n\`\`\``
           )
+          are_any_files_preloaded = true
         } else {
           file_blocks.push(`### Large file: \`${data.relative_path}\``)
         }
       } else {
         file_blocks.push(`### File: \`${data.relative_path}\`\n\n\`\`\`\n\n\`\`\``)
+        are_any_files_preloaded = true
       }
     }
 
@@ -108,12 +114,20 @@ export const build_cli_prompt = async (params: {
     }
   }
 
+  const requirement = are_all_files_preloaded
+    ? cli_requirements.preloaded_files
+    : are_any_files_preloaded
+    ? cli_requirements.referenced_files_with_some_preloaded
+    : cli_requirements.referenced_files_only
+
+  const requirements_section = `# Requirements\n\n${requirement}`
   const task_section = `# Task\n\n${processed_query}`
 
   const parts = [
     files_section,
     skill_definitions,
     output_formatting_section,
+    requirements_section,
     task_section
   ].filter((p) => p.trim() != '')
 
