@@ -39,17 +39,19 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
         !e.ctrlKey &&
         !e.metaKey
       ) {
-        if (e.code == 'Escape') {
+        if (e.code == 'Digit1') {
           e.preventDefault()
-          if (props.on_target_change) {
-            props.on_target_change(
-              props.target == 'WEB'
-                ? 'API'
-                : props.target == 'API'
-                  ? 'CLI'
-                  : 'WEB'
-            )
-          }
+          props.on_target_change?.('WEB')
+          return
+        }
+        if (e.code == 'Digit2') {
+          e.preventDefault()
+          props.on_target_change?.('API')
+          return
+        }
+        if (e.code == 'Digit3') {
+          e.preventDefault()
+          props.on_target_change?.('CLI')
           return
         }
 

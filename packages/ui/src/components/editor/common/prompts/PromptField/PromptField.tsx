@@ -673,7 +673,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 onMouseEnter={() => set_is_target_dropdown_open(true)}
                 onMouseLeave={() => set_is_target_dropdown_open(false)}
               >
-                {is_target_dropdown_open && (
+                {(is_target_dropdown_open || is_alt_pressed) && (
                   <div
                     className={
                       styles['footer__right__target-switch__dropdown-wrapper']
@@ -683,7 +683,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       className={styles['footer__right__target-switch__dropdown']}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      {(['WEB', 'API', 'CLI'] as Target[]).map((t) => (
+                      {(['WEB', 'API', 'CLI'] as Target[]).map((t, idx) => (
                         <button
                           key={t}
                           className={
@@ -696,34 +696,38 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                           }}
                           disabled={t == props.target}
                         >
-                          {t}
+                          {is_alt_pressed && t != props.target ? (
+                            <KeycapWrapper char={(idx + 1).toString()}>
+                              <span style={{ padding: '0 2px' }}>{t}</span>
+                            </KeycapWrapper>
+                          ) : (
+                            t
+                          )}
                         </button>
                       ))}
                     </div>
                   </div>
                 )}
-                <KeycapWrapper char={is_alt_pressed ? 'Esc' : undefined}>
-                  <button
-                    className={cn(
-                      styles['footer__right__submit__button'],
-                      styles['footer__right__target-switch__button'],
-                      {
-                        [styles['footer__right__submit__button--hovered']]:
-                          is_target_dropdown_open
-                      }
-                    )}
+                <button
+                  className={cn(
+                    styles['footer__right__submit__button'],
+                    styles['footer__right__target-switch__button'],
+                    {
+                      [styles['footer__right__submit__button--hovered']]:
+                        is_target_dropdown_open || is_alt_pressed
+                    }
+                  )}
+                >
+                  <span
+                    className={styles['footer__right__target-switch__label']}
                   >
-                    <span
-                      className={styles['footer__right__target-switch__label']}
-                    >
-                      {props.target == 'WEB'
-                        ? 'WEB'
-                        : props.target == 'API'
-                          ? 'API'
-                          : 'CLI'}
-                    </span>
-                  </button>
-                </KeycapWrapper>
+                    {props.target == 'WEB'
+                      ? 'WEB'
+                      : props.target == 'API'
+                        ? 'API'
+                        : 'CLI'}
+                  </span>
+                </button>
               </div>
             )}
             {!props.is_copy_only &&
