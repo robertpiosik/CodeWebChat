@@ -180,8 +180,7 @@ export const MainView: React.FC<Props> = (props) => {
 
   const show_edit_format_selector =
     (props.target == 'WEB' && props.web_prompt_type == 'edit-files') ||
-    (props.target == 'API' && props.api_prompt_type == 'edit-files') ||
-    (props.target == 'CLI' && props.cli_prompt_type == 'edit-files')
+    (props.target == 'API' && props.api_prompt_type == 'edit-files')
 
   const is_context_empty =
     show_edit_format_selector && props.selected_files.length == 0
