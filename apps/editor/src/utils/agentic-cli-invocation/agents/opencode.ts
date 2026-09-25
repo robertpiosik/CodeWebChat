@@ -21,7 +21,12 @@ export const opencode_agent: CodingAgent = {
     'json',
     '--auto'
   ],
-  get_ask_args: (prompt: string) => ['run', prompt],
+  get_ask_args: (prompt: string) => [
+    'run',
+    prompt,
+    '--mode',
+    'plan'
+  ],
   parse_stream_line: (parsed, report_progress) => {
     let action_name = ''
     if (parsed.type == 'tool_use' && parsed.part?.tool) {

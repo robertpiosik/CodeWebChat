@@ -21,7 +21,12 @@ export const antigravity_agent: CodingAgent = {
     'stream-json',
     '--dangerously-skip-permissions'
   ],
-  get_ask_args: (prompt: string) => ['-i', prompt],
+  get_ask_args: (prompt: string) => [
+    '-i',
+    prompt,
+    '--mode',
+    'plan'
+  ],
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.event == 'step_update' && parsed.step_update) {
       const step = parsed.step_update

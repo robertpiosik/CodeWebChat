@@ -20,10 +20,17 @@ export const grok_agent: CodingAgent = {
       '--output-format',
       'streaming-json',
       '--always-approve',
-      '--no-auto-update'
     ]
   },
-  get_ask_args: (prompt: string) => ['-p', prompt],
+  get_ask_args: (prompt: string) => {
+    accumulated_output = ''
+    return [
+      '-p',
+      prompt,
+      '--sandbox',
+      'read-only',
+    ]
+  },
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type === 'tool_call' && parsed.tool) {
       report_progress(parsed.tool)

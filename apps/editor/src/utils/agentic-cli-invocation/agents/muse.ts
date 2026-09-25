@@ -19,7 +19,10 @@ export const muse_agent: CodingAgent = {
     accumulated_output = ''
     return ['exec', '--json', '--yolo', prompt]
   },
-  get_ask_args: (prompt: string) => [prompt],
+  get_ask_args: (prompt: string) => {
+    accumulated_output = ''
+    return ['--disable-write', prompt]
+  },
   parse_stream_line: (parsed, report_progress) => {
     const payload = parsed.payload || parsed
     let action_name = ''

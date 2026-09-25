@@ -14,8 +14,20 @@ export const codex_agent: CodingAgent = {
   cmd: 'codex',
   is_installed: () => check_command_exists('codex'),
   get_documentation_url: () => AGENTS[agent_name].docs_url!,
-  get_edit_args: (prompt: string) => ['exec', prompt, '--json'],
-  get_ask_args: (prompt: string) => [prompt],
+  get_edit_args: (prompt: string) => [
+    'exec',
+    prompt,
+    '--json',
+    '--ephemeral',
+    '--sandbox',
+    'workspace-write'
+  ],
+  get_ask_args: (prompt: string) => [
+    prompt,
+    '--ephemeral',
+    '--sandbox',
+    'read-only'
+  ],
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type == 'item.started' && parsed.item) {
       const item = parsed.item
