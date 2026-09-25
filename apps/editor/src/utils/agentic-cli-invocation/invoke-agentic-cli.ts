@@ -1,5 +1,7 @@
 import * as vscode from 'vscode'
 import * as os from 'os'
+import * as fs from 'fs'
+import * as path from 'path'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { t } from '@/i18n'
 import { spawn } from 'child_process'
@@ -26,7 +28,7 @@ export const invoke_agentic_cli = async (params: {
   last_used_agent_config_name?: string
   last_selected_workspace_state_key: string
   show_back_button?: boolean
-  cli_prompt_type?: 'edit-files' | 'ask-about-files'
+  panel_prompt_type?: 'edit-files' | 'ask-about-files'
   cli_configuration_name?: string
   use_quick_pick?: boolean
   on_agent_selected?: (name: string) => void
@@ -299,90 +301,108 @@ export const invoke_agentic_cli = async (params: {
     while (true) {
       let selected_root: string | undefined
 
-      if (roots.length == 1) {
-        selected_root = roots[0]
+      if (params.panel_prompt_type) {
+        const temp_dir_path = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'cwc-cli-'))
+        const checked_files = params.workspace_provider.get_checked_files()
+        
+        for (const file_path of checked_files) {
+          const root = params.workspace_provider.get_workspace_root_for_file(file_path)
+          if (!root) continue
+          const rel = path.relative(root, file_path)
+          const dest_rel = roots.length > 1 ? path.join(params.workspace_provider.get_workspace_name(root), rel) : rel
+          const dest_path = path.join(temp_dir_path, dest_rel)
+          
+          await fs.promises.mkdir(path.dirname(dest_path), { recursive: true })
+          await fs.promises.copyFile(file_path, dest_path)
+        }
+        
+        selected_root = temp_dir_path
       } else {
-        const picks = roots.map((root) => ({
-          label: params.workspace_provider.get_workspace_name(root),
-          description: root,
-          root
-        }))
+        if (roots.length == 1) {
+          selected_root = roots[0]
+        } else {
+          const picks = roots.map((root) => ({
+            label: params.workspace_provider.get_workspace_name(root),
+            description: root,
+            root
+          }))
 
-        const last_selected_root =
-          params.extension_context.workspaceState.get<string>(
-            params.last_selected_workspace_state_key
-          )
-        const active_item =
-          picks.find((p) => p.root == last_selected_root) || picks[0]
+          const last_selected_root =
+            params.extension_context.workspaceState.get<string>(
+              params.last_selected_workspace_state_key
+            )
+          const active_item =
+            picks.find((p) => p.root == last_selected_root) || picks[0]
 
-        const quick_pick = vscode.window.createQuickPick<
-          vscode.QuickPickItem & { root: string }
-        >()
-        quick_pick.items = picks
-        if (active_item) {
-          quick_pick.activeItems = [active_item]
-        }
-        quick_pick.title = t(
-          'utils.agentic-cli-invocation.agent.select-workspace'
-        )
-        quick_pick.placeholder = t(
-          'utils.agentic-cli-invocation.agent.select-workspace-placeholder'
-        )
-        quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
-        quick_pick.ignoreFocusOut = true
-
-        const res = await new Promise<string | undefined | 'back'>(
-          (resolve) => {
-            let is_resolved = false
-
-            quick_pick.onDidTriggerButton((button) => {
-              if (button === vscode.QuickInputButtons.Back) {
-                is_resolved = true
-                resolve('back')
-                quick_pick.hide()
-              } else if (button === close_button) {
-                is_resolved = true
-                resolve(undefined)
-                quick_pick.hide()
-              }
-            })
-
-            quick_pick.onDidAccept(() => {
-              const selected = quick_pick.selectedItems[0]
-              if (selected) {
-                is_resolved = true
-                resolve(selected.root)
-                quick_pick.hide()
-              }
-            })
-
-            quick_pick.onDidHide(() => {
-              if (!is_resolved) {
-                resolve('back')
-              }
-              quick_pick.dispose()
-            })
-
-            quick_pick.show()
+          const quick_pick = vscode.window.createQuickPick<
+            vscode.QuickPickItem & { root: string }
+          >()
+          quick_pick.items = picks
+          if (active_item) {
+            quick_pick.activeItems = [active_item]
           }
-        )
+          quick_pick.title = t(
+            'utils.agentic-cli-invocation.agent.select-workspace'
+          )
+          quick_pick.placeholder = t(
+            'utils.agentic-cli-invocation.agent.select-workspace-placeholder'
+          )
+          quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
+          quick_pick.ignoreFocusOut = true
 
-        if (res == 'back') {
-          go_back_to_agent = true
-          show_quick_pick = true
-          current_agent_config_name = undefined
-          break
+          const res = await new Promise<string | undefined | 'back'>(
+            (resolve) => {
+              let is_resolved = false
+
+              quick_pick.onDidTriggerButton((button) => {
+                if (button === vscode.QuickInputButtons.Back) {
+                  is_resolved = true
+                  resolve('back')
+                  quick_pick.hide()
+                } else if (button === close_button) {
+                  is_resolved = true
+                  resolve(undefined)
+                  quick_pick.hide()
+                }
+              })
+
+              quick_pick.onDidAccept(() => {
+                const selected = quick_pick.selectedItems[0]
+                if (selected) {
+                  is_resolved = true
+                  resolve(selected.root)
+                  quick_pick.hide()
+                }
+              })
+
+              quick_pick.onDidHide(() => {
+                if (!is_resolved) {
+                  resolve('back')
+                }
+                quick_pick.dispose()
+              })
+
+              quick_pick.show()
+            }
+          )
+
+          if (res == 'back') {
+            go_back_to_agent = true
+            show_quick_pick = true
+            current_agent_config_name = undefined
+            break
+          }
+
+          if (!res) {
+            return undefined
+          }
+
+          selected_root = res
+          await params.extension_context.workspaceState.update(
+            params.last_selected_workspace_state_key,
+            selected_root
+          )
         }
-
-        if (!res) {
-          return undefined
-        }
-
-        selected_root = res
-        await params.extension_context.workspaceState.update(
-          params.last_selected_workspace_state_key,
-          selected_root
-        )
       }
 
       const agent_info = CLI_AGENTS.find(
@@ -418,7 +438,7 @@ export const invoke_agentic_cli = async (params: {
         }
       }
 
-      if (params.cli_prompt_type === 'ask-about-files') {
+      if (params.panel_prompt_type === 'ask-about-files') {
         const final_prompt = await params.build_prompt(selected_root!)
         const base_args = agent_info.get_ask_args
           ? agent_info.get_ask_args(final_prompt)

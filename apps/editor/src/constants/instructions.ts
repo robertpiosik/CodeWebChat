@@ -71,9 +71,9 @@ export const voice_input_instructions =
 
 export const cli_requirements = {
   preloaded_files:
-    'Tool calling is disabled with exception to media and web access in [task](#task).',
+    'Tool calling is disabled with exception to media/web access in [task](#task).',
   referenced_files_with_some_preloaded:
-    'Tool calling is disabled with exception to reading large files provided as project-relative paths in [files](#files) and media and web access in [task](#task). Begin by reading large files from [files](#files) in full.',
+    'Tool calling is disabled with exception to reading large files provided as project-relative paths in [files](#files) and media/web access in [task](#task). You must begin by reading large files from [files](#files) in full.',
   referenced_files_only:
-    'Tool calling is disabled with exception to reading files provided as project-relative paths in [files](#files) and media and web access in [task](#task). Begin by reading files from [files](#files) in full.',
+    'Tool calling is disabled with exception to reading files provided as project-relative paths in [files](#files) and media/web access in [task](#task). You must begin by reading files from [files](#files) in full.',
 }

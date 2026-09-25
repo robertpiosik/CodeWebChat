@@ -28,8 +28,9 @@ export const build_cli_prompt = async (params: {
       image_as_paths: true
     })
 
+  const roots = prompt_view_provider.workspace_provider.get_workspace_roots()
+
   if (!selected_root) {
-    const roots = prompt_view_provider.workspace_provider.get_workspace_roots()
     const last_selected_root =
       prompt_view_provider.extension_context.workspaceState.get<string>(
         LAST_SELECTED_WORKSPACE_IN_AGENTIC_CLI_STATE_KEY
@@ -47,8 +48,17 @@ export const build_cli_prompt = async (params: {
   let total_content_length = 0
 
   for (const f of checked_files) {
-    const rel = selected_root ? path.relative(selected_root, f) : f
-    const relative_path = (rel.startsWith('..') ? f : rel).replace(/\\/g, '/')
+    const root = prompt_view_provider.workspace_provider.get_workspace_root_for_file(f)
+    let relative_path = f
+
+    if (root) {
+      const rel = path.relative(root, f)
+      const temp_rel = roots.length > 1 ? path.join(prompt_view_provider.workspace_provider.get_workspace_name(root), rel) : rel
+      relative_path = temp_rel.replace(/\\/g, '/')
+    } else {
+      const rel = selected_root ? path.relative(selected_root, f) : f
+      relative_path = (rel.startsWith('..') ? f : rel).replace(/\\/g, '/')
+    }
 
     try {
       const content = await fs.readFile(f, 'utf8')

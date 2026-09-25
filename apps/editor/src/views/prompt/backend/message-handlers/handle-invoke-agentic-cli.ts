@@ -40,7 +40,7 @@ export const handle_invoke_agentic_cli = async (
     last_used_agent_config_name,
     last_selected_workspace_state_key:
       LAST_SELECTED_WORKSPACE_IN_AGENTIC_CLI_STATE_KEY,
-    cli_prompt_type: prompt_type,
+    panel_prompt_type: prompt_type,
     cli_configuration_name: message.cli_configuration_name,
     use_quick_pick: message.use_quick_pick,
     on_agent_selected: (name: string) => {
