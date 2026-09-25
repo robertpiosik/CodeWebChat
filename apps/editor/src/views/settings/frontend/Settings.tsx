@@ -58,8 +58,6 @@ export const Settings = () => {
   const [scroll_to_section_on_load, set_scroll_to_section_on_load] =
     useState<NavItem>()
 
-  const [agent_defaults, set_agent_defaults] = useState<Record<string, string | null>>({ 'agentic-search': null })
-
   const [updating_template, set_updating_template] = useState<{
     key: string
     index?: number
@@ -100,6 +98,7 @@ export const Settings = () => {
       settings_hook.api_configurations !== undefined &&
       settings_hook.web_configurations !== undefined &&
       settings_hook.cli_configurations !== undefined &&
+      settings_hook.agent_defaults !== undefined &&
       settings_hook.defaults !== undefined &&
       settings_hook.edit_files_system_instructions !== undefined &&
       settings_hook.default_edit_files_system_instructions !== undefined &&
@@ -130,10 +129,6 @@ export const Settings = () => {
           template: event.data.template
         })
         set_updated_template(event.data.template)
-      } else if (event.data.command == 'CLI_CONFIGURATIONS') {
-        if ((event.data as any).defaults) {
-          set_agent_defaults((event.data as any).defaults)
-        }
       }
     }
     window.addEventListener('message', handle_message)
@@ -294,7 +289,7 @@ export const Settings = () => {
         on_toggle_pinned_cli_configuration={
           settings_hook.handle_toggle_pinned_cli_configuration
         }
-        agent_defaults={agent_defaults}
+        agent_defaults={settings_hook.agent_defaults!}
         on_set_default_cli_configuration={(cli_feature, name) => {
           post_message(vscode, {
             command: 'SET_DEFAULT_CLI_CONFIGURATION',

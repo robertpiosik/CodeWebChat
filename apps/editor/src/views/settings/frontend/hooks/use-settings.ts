@@ -21,6 +21,9 @@ export const use_settings = (vscode: any) => {
   const [cli_configurations, set_cli_configurations] = useState<
     CliConfiguration[] | undefined
   >(undefined)
+  const [agent_defaults, set_agent_defaults] = useState<
+    Record<string, string | null> | undefined
+  >(undefined)
   const [defaults, set_defaults] = useState<
     Record<ApiFeature, string | null> | undefined
   >(undefined)
@@ -97,6 +100,7 @@ export const use_settings = (vscode: any) => {
         set_web_configurations(message.web_configurations)
       } else if (message.command == 'CLI_CONFIGURATIONS') {
         set_cli_configurations(message.cli_configurations)
+        set_agent_defaults(message.defaults || {})
       } else if (message.command == 'EDIT_FILES_SYSTEM_INSTRUCTIONS') {
         set_edit_files_system_instructions(message.instructions)
         set_default_edit_files_system_instructions(message.default_instructions)
@@ -419,6 +423,7 @@ export const use_settings = (vscode: any) => {
     set_web_configurations,
     cli_configurations,
     set_cli_configurations,
+    agent_defaults,
     defaults,
     commit_message_instructions,
     default_commit_message_instructions,
