@@ -13,7 +13,7 @@ export const opencode_agent: CodingAgent = {
   label: agent_name,
   cmd: 'opencode',
   is_installed: () => check_command_exists('opencode'),
-  get_documentation_url: () => AGENTS[agent_name].docs_url!,
+  get_documentation_url: () => AGENTS[agent_name].docs_url,
   get_edit_args: (prompt: string) => [
     'run',
     prompt,

@@ -58,10 +58,21 @@ export const generate_diff_markdown = async (
             const stdout: string = err.stdout
             const diff_lines = stdout.split('\n')
             const at_at_index = diff_lines.findIndex((l) =>
-              l.startsWith('@@ ')
+              l.startsWith('@@')
             )
             if (at_at_index !== -1) {
-              const diff_body = diff_lines.slice(at_at_index).join('\n')
+              const diff_body = diff_lines
+                .slice(at_at_index)
+                .map((line) => {
+                  if (line.startsWith('@@')) {
+                    const match = line.match(/^(@@ .+? @@)/)
+                    if (match) {
+                      return match[1]
+                    }
+                  }
+                  return line
+                })
+                .join('\n')
               diff_markdown +=
                 '\n### Updated file: `' +
                 unix_rel_path +

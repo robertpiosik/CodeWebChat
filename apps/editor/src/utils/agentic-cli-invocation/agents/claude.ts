@@ -29,7 +29,7 @@ export const claude_agent: CodingAgent = {
   label: agent_name,
   cmd: 'claude',
   is_installed: () => check_command_exists('claude'),
-  get_documentation_url: () => AGENTS[agent_name].docs_url!,
+  get_documentation_url: () => AGENTS[agent_name].docs_url,
   get_edit_args: (prompt: string) => [
     '-p',
     prompt,

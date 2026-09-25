@@ -9,7 +9,7 @@ export const cursor_agent: CodingAgent = {
   label: agent_name,
   cmd: 'agent',
   is_installed: () => check_command_exists('agent'),
-  get_documentation_url: () => AGENTS[agent_name].docs_url!,
+  get_documentation_url: () => AGENTS[agent_name].docs_url,
   get_edit_args: (prompt: string) => [
     '-p',
     prompt,

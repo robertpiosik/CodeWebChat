@@ -13,7 +13,7 @@ export const antigravity_agent: CodingAgent = {
   label: agent_name,
   cmd: 'agy',
   is_installed: () => check_command_exists('agy'),
-  get_documentation_url: () => AGENTS[agent_name].docs_url!,
+  get_documentation_url: () => AGENTS[agent_name].docs_url,
   get_edit_args: (prompt: string) => [
     '-p',
     prompt,

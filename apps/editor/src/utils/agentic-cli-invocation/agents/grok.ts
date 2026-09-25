@@ -11,7 +11,7 @@ export const grok_agent: CodingAgent = {
   label: agent_name,
   cmd: 'grok',
   is_installed: () => check_command_exists('grok'),
-  get_documentation_url: () => AGENTS[agent_name].docs_url!,
+  get_documentation_url: () => AGENTS[agent_name].docs_url,
   get_edit_args: (prompt: string) => {
     accumulated_output = ''
     return [

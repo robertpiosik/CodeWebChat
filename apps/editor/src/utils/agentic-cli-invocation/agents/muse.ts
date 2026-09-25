@@ -14,7 +14,7 @@ export const muse_agent: CodingAgent = {
   label: agent_name,
   cmd: 'muse',
   is_installed: () => check_command_exists('muse'),
-  get_documentation_url: () => AGENTS[agent_name].docs_url!,
+  get_documentation_url: () => AGENTS[agent_name].docs_url,
   get_edit_args: (prompt: string) => {
     accumulated_output = ''
     return ['exec', '--json', '--yolo', prompt]

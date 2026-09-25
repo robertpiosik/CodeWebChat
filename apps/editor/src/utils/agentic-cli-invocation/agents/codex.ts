@@ -13,21 +13,16 @@ export const codex_agent: CodingAgent = {
   label: agent_name,
   cmd: 'codex',
   is_installed: () => check_command_exists('codex'),
-  get_documentation_url: () => AGENTS[agent_name].docs_url!,
+  get_documentation_url: () => AGENTS[agent_name].docs_url,
   get_edit_args: (prompt: string) => [
     'exec',
     prompt,
     '--json',
-    '--ephemeral',
     '--sandbox',
-    'workspace-write'
+    'workspace-write',
+    '--skip-git-repo-check'
   ],
-  get_ask_args: (prompt: string) => [
-    prompt,
-    '--ephemeral',
-    '--sandbox',
-    'read-only'
-  ],
+  get_ask_args: (prompt: string) => [prompt, '--sandbox', 'read-only'],
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type == 'item.started' && parsed.item) {
       const item = parsed.item
