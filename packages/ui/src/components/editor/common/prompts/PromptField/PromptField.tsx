@@ -698,7 +698,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         >
                           {is_alt_pressed && t != props.target ? (
                             <KeycapWrapper char={(idx + 1).toString()}>
-                              <span style={{ padding: '0 2px' }}>{t}</span>
+                              <span >{t}</span>
                             </KeycapWrapper>
                           ) : (
                             t
