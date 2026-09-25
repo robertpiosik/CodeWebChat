@@ -265,12 +265,6 @@ export const Prompt = () => {
   }
 
   const current_state = get_current_instructions_state()
-  const are_keyboard_shortcuts_disabled =
-    !!updating_web_configuration ||
-    !!updating_api_configuration ||
-    !!updating_cli_configuration ||
-    !!items_in_preview ||
-    active_view != 'main'
 
   const is_main_slot_hidden =
     !!updating_web_configuration ||
@@ -298,7 +292,11 @@ export const Prompt = () => {
                 set_api_configurations={set_api_configurations}
                 scroll_reset_key={main_view_scroll_reset_key}
                 are_keyboard_shortcuts_disabled={
-                  are_keyboard_shortcuts_disabled
+                  !!updating_web_configuration ||
+                  !!updating_api_configuration ||
+                  !!updating_cli_configuration ||
+                  !!items_in_preview ||
+                  active_view == 'home'
                 }
                 vscode={vscode}
                 on_web_configuration_edit={(web_configuration) => {
@@ -412,7 +410,6 @@ export const Prompt = () => {
                 web_prompt_type={web_prompt_type}
                 api_prompt_type={api_prompt_type}
                 cli_prompt_type={cli_prompt_type}
-                on_go_forward={() => set_active_view('main')}
                 on_chatbots_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
@@ -544,13 +541,13 @@ export const Prompt = () => {
               }
               title="Edit Agent"
             >
-            <EditCliConfigurationForm
-              cli_configuration={updating_cli_configuration}
-              on_update={set_updated_cli_configuration}
-              pick_agent={(agent_id) => {
-                post_message(vscode, { command: 'PICK_AGENT', agent_id })
-              }}
-            />
+              <EditCliConfigurationForm
+                cli_configuration={updating_cli_configuration}
+                on_update={set_updated_cli_configuration}
+                pick_agent={(agent_id) => {
+                  post_message(vscode, { command: 'PICK_AGENT', agent_id })
+                }}
+              />
             </UiPage>
           </div>
         )}

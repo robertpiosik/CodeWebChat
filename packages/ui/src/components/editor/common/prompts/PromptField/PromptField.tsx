@@ -91,6 +91,7 @@ export type PromptFieldProps = {
   target: Target
   on_target_change: (target: Target) => void
   active_border_color?: 'blue' | 'purple' | 'yellow'
+  are_keyboard_shortcuts_disabled?: boolean
   translations: {
     voice_input: string
     stop_recording: string
@@ -114,6 +115,7 @@ export type PromptFieldProps = {
     attach_selected_files: string
     more: string
   }
+  
 }
 
 export const PromptField: React.FC<PromptFieldProps> = (props) => {

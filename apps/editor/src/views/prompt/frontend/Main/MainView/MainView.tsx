@@ -513,6 +513,9 @@ export const MainView: React.FC<Props> = (props) => {
           on_tabs_reorder={props.on_tabs_reorder}
           voice_input_push_to_talk={props.voice_input_push_to_talk}
           currently_open_file_path={props.currently_open_file_path}
+          are_keyboard_shortcuts_disabled={
+            props.are_keyboard_shortcuts_disabled
+          }
           translations={{
             voice_input: t('prompt-field.voice-input'),
             stop_recording: t('prompt-field.stop-recording'),
@@ -540,6 +543,7 @@ export const MainView: React.FC<Props> = (props) => {
             attach_selected_files: t('prompt-field.attach-selected-files'),
             more: t('prompt-field.more')
           }}
+          
         />
       </div>
 

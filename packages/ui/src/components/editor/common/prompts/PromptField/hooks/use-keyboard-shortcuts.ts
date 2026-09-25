@@ -27,6 +27,7 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
 
   useEffect(() => {
     const handle_key_down = (e: KeyboardEvent) => {
+      if (props.are_keyboard_shortcuts_disabled) return
       if (e.code == 'AltLeft') {
         left_alt_pressed_ref.current = true
       }
@@ -130,12 +131,14 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
   }, [
     props.show_edit_format_selector,
     props.on_edit_format_change,
-    props.edit_format
+    props.edit_format,
+    props.are_keyboard_shortcuts_disabled
   ])
 
   const handle_container_key_down = (
     e: React.KeyboardEvent<HTMLDivElement>
   ) => {
+    if (props.are_keyboard_shortcuts_disabled) return
     if (e.key == 'Escape' && !e.ctrlKey && !e.metaKey && !e.altKey) {
       if (props.is_recording) {
         props.on_recording_finished()
