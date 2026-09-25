@@ -168,14 +168,13 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 ```
 # Files
 
-- `[SELECTED FILE PATH 1]`
-- `[SELECTED FILE PATH 2]`
+[SELECTED FILES]
 
 # Output formatting
 
 [EDIT FORMAT INSTRUCTIONS]
 
-# Rules
+# Requirements
 
 * This is a read-only session.
 * Read all the listed files provided as project-relative paths in full, and nothing else.
@@ -213,13 +212,11 @@ _Multi-purpose: explanations, code reviews, you name it._
 ```
 # Files
 
-- `[SELECTED FILE PATH 1]`
-- `[SELECTED FILE PATH 2]`
+[SELECTED FILES]
 
-# Rules
+# Requirements
 
-- This is a read-only session.
-- Read all the listed files provided as project-relative paths in full, and nothing else.
+Tool calling is disabled with exception to reading files provided as project-relative paths...
 
 # Task
 
