@@ -69,9 +69,11 @@ These files contain the core greeting logic and module exports.`
 export const voice_input_instructions =
   'Respond with a transcription of the following audio recording or text "INAUDIBLE", and nothing else.'
 
-export const cli_edit_requirements = `- This is a read-only session.
-- Read all the listed files provided as project-relative paths in full, and nothing else.
-- Formulate response adhering to the output formatting, in plain text.`
-
-export const cli_ask_requirements = `- This is a read-only session.
-- Read all the listed files provided as project-relative paths in full, and nothing else.`
+export const cli_requirements = {
+  preloaded_files:
+    'Tool calling is disabled with exception to media and web access in [task](#task).',
+  referenced_files_with_some_preloaded:
+    'Tool calling is disabled with exception to reading large files provided as project-relative paths in [files](#files) and media and web access in [task](#task). Begin by reading large files from [files](#files) in full.',
+  referenced_files_only:
+    'Tool calling is disabled with exception to reading files provided as project-relative paths in [files](#files) and media and web access in [task](#task). Begin by reading files from [files](#files) in full.',
+}

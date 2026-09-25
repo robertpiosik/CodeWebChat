@@ -1,11 +1,9 @@
 import * as path from 'path'
+import * as fs from 'fs/promises'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
 import {
-  cli_edit_requirements,
-  cli_ask_requirements
-} from '@/constants/instructions'
-import {
+
   EDIT_FORMAT_INSTRUCTIONS_DIFF,
   EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
@@ -45,14 +43,55 @@ export const build_cli_prompt = async (params: {
   const checked_files =
     prompt_view_provider.workspace_provider.get_checked_files()
 
-  let files_section = ''
-  if (checked_files.length > 0) {
-    const relative_paths = checked_files.map((f) => {
-      const rel = selected_root ? path.relative(selected_root, f) : f
-      return rel.startsWith('..') ? f : rel
-    })
+  const files_data: { relative_path: string; content?: string }[] = []
+  let total_content_length = 0
 
-    files_section = `# Files\n\n${relative_paths.map((p) => `- \`${p.replace(/\\/g, '/')}\``).join('\n')}`
+  for (const f of checked_files) {
+    const rel = selected_root ? path.relative(selected_root, f) : f
+    const relative_path = (rel.startsWith('..') ? f : rel).replace(/\\/g, '/')
+
+    try {
+      const content = await fs.readFile(f, 'utf8')
+      files_data.push({ relative_path, content })
+      total_content_length += content.length
+    } catch (err) {
+      files_data.push({ relative_path, content: undefined })
+    }
+  }
+
+  let files_section = ''
+
+  if (total_content_length <= 20000) {
+    const file_blocks = files_data.map((data) =>
+      data.content !== undefined
+        ? `### File: \`${data.relative_path}\`\n\n\`\`\`\n${data.content}\n\`\`\``
+        : `### File: \`${data.relative_path}\`\n\n\`\`\`\n\n\`\`\``
+    )
+
+    files_section = `# Files\n\n${file_blocks.join('\n\n')}`
+  } else {
+    const file_blocks: string[] = []
+    let total_inlined_characters = 0
+
+    for (const data of files_data) {
+      if (data.content !== undefined) {
+        if (
+          data.content.length <= 1000 &&
+          total_inlined_characters + data.content.length <= 20000
+        ) {
+          total_inlined_characters += data.content.length
+          file_blocks.push(
+            `### File: \`${data.relative_path}\`\n\n\`\`\`\n${data.content}\n\`\`\``
+          )
+        } else {
+          file_blocks.push(`### Large file: \`${data.relative_path}\``)
+        }
+      } else {
+        file_blocks.push(`### File: \`${data.relative_path}\`\n\n\`\`\`\n\n\`\`\``)
+      }
+    }
+
+    files_section = `# Files\n\n${file_blocks.join('\n\n')}`
   }
 
   let output_formatting_section = ''
@@ -69,18 +108,12 @@ export const build_cli_prompt = async (params: {
     }
   }
 
-  const requirements_section = `# Rules\n\n${
-    prompt_view_provider.cli_prompt_type == 'ask-about-files'
-      ? cli_ask_requirements
-      : cli_edit_requirements
-  }`
   const task_section = `# Task\n\n${processed_query}`
 
   const parts = [
     files_section,
     skill_definitions,
     output_formatting_section,
-    requirements_section,
     task_section
   ].filter((p) => p.trim() != '')
 
