@@ -170,15 +170,9 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 [SELECTED FILES]
 
-# Output formatting
-
-[EDIT FORMAT INSTRUCTIONS]
-
 # Requirements
 
-* This is a read-only session.
-* Read all the listed files provided as project-relative paths in full, and nothing else.
-* Formulate response adhering to the output formatting, in plain text.
+Before you proceed with [the task](#task), you must read all files provided as project-relative paths in [files](#files), and nothing else.
 
 # Task
 
@@ -216,7 +210,7 @@ _Multi-purpose: explanations, code reviews, you name it._
 
 # Requirements
 
-Tool calling is disabled with exception to reading files provided as project-relative paths...
+Before you proceed with [the task](#task), you must read all files provided as project-relative paths in [files](#files), and nothing else.
 
 # Task
 

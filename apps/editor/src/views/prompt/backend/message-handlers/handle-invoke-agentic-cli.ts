@@ -77,7 +77,6 @@ export const handle_invoke_agentic_cli = async (
     vscode.commands.executeCommand('codeWebChat.applyResponse', {
       response: agent_output,
       raw_instructions: current_instructions,
-      edit_format: prompt_view_provider.edit_format
     })
   }
 }

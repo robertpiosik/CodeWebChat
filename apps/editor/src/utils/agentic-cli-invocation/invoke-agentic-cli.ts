@@ -7,6 +7,7 @@ import { t } from '@/i18n'
 import { spawn } from 'child_process'
 import { CLI_AGENTS } from './agents'
 import { Logger } from '@shared/utils/logger'
+import { generate_diff_markdown } from './utils/generate-diff-markdown'
 import { ConfigAgentConfigurationFormat } from '@/utils/cli-configuration-format-converters'
 import { AGENTS } from '@/constants/agents'
 
@@ -300,9 +301,11 @@ export const invoke_agentic_cli = async (params: {
 
     while (true) {
       let selected_root: string | undefined
+      let temp_dir_path: string | undefined
+      const file_mappings = new Map<string, { original: string; dest_rel: string }>()
 
       if (params.panel_prompt_type) {
-        const temp_dir_path = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'cwc-cli-'))
+        temp_dir_path = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'cwc-cli-'))
         const checked_files = params.workspace_provider.get_checked_files()
         
         for (const file_path of checked_files) {
@@ -314,6 +317,8 @@ export const invoke_agentic_cli = async (params: {
           
           await fs.promises.mkdir(path.dirname(dest_path), { recursive: true })
           await fs.promises.copyFile(file_path, dest_path)
+          
+          file_mappings.set(dest_path, { original: file_path, dest_rel: dest_rel.replace(/\\/g, '/') })
         }
         
         selected_root = temp_dir_path
@@ -539,7 +544,7 @@ export const invoke_agentic_cli = async (params: {
                 resolve()
               })
 
-              child.on('close', () => {
+              child.on('close', async () => {
                 if (agent_info.parse_final_output && raw_stream_output.trim()) {
                   try {
                     const parsed = JSON.parse(raw_stream_output.trim())
@@ -550,6 +555,35 @@ export const invoke_agentic_cli = async (params: {
                     // Ignore
                   }
                 }
+
+                if (params.panel_prompt_type == 'edit-files' && temp_dir_path) {
+                  try {
+                    const diff_markdown = await generate_diff_markdown(
+                      temp_dir_path,
+                      file_mappings
+                    )
+                    
+                    const trimmed_output = agent_output
+                      .trim()
+                      .replace(/\[([^\]]+)\]\([^)]+\)/g, '`$1`')
+                      .replace(/```[\s\S]*?```/g, '')
+                      .trim()
+                    const trimmed_diff = diff_markdown.trim()
+                    
+                    if (trimmed_output && trimmed_diff) {
+                      agent_output = trimmed_output + '\n\n' + trimmed_diff
+                    } else {
+                      agent_output = trimmed_diff || trimmed_output
+                    }
+                  } catch (e) {
+                    Logger.error({
+                      function_name: 'invoke_agentic_cli',
+                      message: 'Failed to generate diff',
+                      data: e
+                    })
+                  }
+                }
+
                 Logger.info({
                   function_name: 'invoke_agentic_cli',
                   message: "Agent's response",

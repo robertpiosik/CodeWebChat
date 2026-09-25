@@ -2,13 +2,7 @@ import * as path from 'path'
 import * as fs from 'fs/promises'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
-import { cli_requirements } from '@/constants/instructions'
-import {
-  EDIT_FORMAT_INSTRUCTIONS_DIFF,
-  EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
-  EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-  EDIT_FORMAT_INSTRUCTIONS_WHOLE
-} from '@/constants/edit-format-instructions'
+import { cli_edit_ask_requirements } from '@/constants/instructions'
 import { LAST_SELECTED_WORKSPACE_IN_AGENTIC_CLI_STATE_KEY } from '@/constants/state-keys'
 
 export const build_cli_prompt = async (params: {
@@ -110,25 +104,13 @@ export const build_cli_prompt = async (params: {
     files_section = `# Files\n\n${file_blocks.join('\n\n')}`
   }
 
-  let output_formatting_section = ''
-  if (prompt_view_provider.cli_prompt_type == 'edit-files') {
-    const edit_format_instructions = {
-      whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
-      truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-      'search-replace': EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
-      diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
-    }[prompt_view_provider.edit_format]
-
-    if (edit_format_instructions) {
-      output_formatting_section = `# Output formatting\n\n${edit_format_instructions}`
-    }
-  }
+  const output_formatting_section = ''
 
   const requirement = are_all_files_preloaded
-    ? cli_requirements.preloaded_files
+    ? cli_edit_ask_requirements.preloaded_files
     : are_any_files_preloaded
-    ? cli_requirements.referenced_files_with_some_preloaded
-    : cli_requirements.referenced_files_only
+    ? cli_edit_ask_requirements.referenced_files_with_some_preloaded
+    : cli_edit_ask_requirements.referenced_files_only
 
   const requirements_section = `# Requirements\n\n${requirement}`
   const task_section = `# Task\n\n${processed_query}`
