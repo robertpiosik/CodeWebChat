@@ -1,7 +1,7 @@
 import { forwardRef } from 'react'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
-import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
+import { Notices as UiNotices } from '@ui/components/editor/settings/Notices'
 import { SortableList } from '@ui/components/editor/settings/SortableList'
 import { IconButton } from '@ui/components/editor/common/IconButton'
 import { DefaultConfigurationSelector } from '@ui/components/editor/settings/DefaultConfigurationSelector'
@@ -34,7 +34,14 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   return (
     <UiSection ref={ref} title={t('cli.title')} subtitle={t('cli.subtitle')}>
-      <UiNotice type="info">{t('cli.notice')}</UiNotice>
+      <UiNotices
+        notices={[
+          {
+            type: 'info',
+            message: t('cli.notice')
+          }
+        ]}
+      />
       <div ref={(el) => props.set_section_ref('section:cli:group:agents', el)}>
         <UiGroup title={t('agents.configurations.title')}>
           <SortableList

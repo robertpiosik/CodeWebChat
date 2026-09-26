@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useState } from 'react'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
-import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
+import { Notices as UiNotices } from '@ui/components/editor/settings/Notices'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
 import { SortableList } from '@ui/components/editor/settings/SortableList'
@@ -9,7 +9,7 @@ import { IconButton } from '@ui/components/editor/common/IconButton'
 import { WebConfiguration } from '@/types/web-configuration'
 import { Icon } from '@ui/components/editor/common/Icon'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { use_translation } from '../../i18n/use-translation'
+import { use_translation, Translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
 
 type Props = {
@@ -100,9 +100,29 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   return (
     <UiSection ref={ref} title={t('web.title')} subtitle={t('web.subtitle')}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <UiNotice type="info">{t('web.notice')}</UiNotice>
-      </div>
+      <UiNotices
+        notices={[
+          {
+            type: 'info',
+            message: t('web.notice-websockets')
+          },
+          {
+            type: 'info',
+            message: (
+              <Translation
+                id="web.notice-forwarding"
+                components={{
+                  forwarding: (
+                    <a href="https://code.visualstudio.com/docs/debugtest/port-forwarding">
+                      {t('web.forwarding')}
+                    </a>
+                  )
+                }}
+              />
+            )
+          }
+        ]}
+      />
       <div
         ref={(el) => props.set_section_ref('section:web:group:chatbots', el)}
       >

@@ -1,7 +1,7 @@
 import { forwardRef } from 'react'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
-import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
+import { Notices as UiNotices } from '@ui/components/editor/settings/Notices'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
 import { Button } from '@ui/components/editor/common/Button'
 import { DefaultConfigurationSelector } from '@ui/components/editor/settings/DefaultConfigurationSelector'
@@ -66,26 +66,33 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   return (
     <UiSection ref={ref} title={t('api.title')} subtitle={t('api.subtitle')}>
-      <UiNotice type="info">
-        <Translation
-          id="api.notice.credentials"
-          components={{
-            link: (
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault()
-                  props.on_open_external_url(
-                    'https://code.visualstudio.com/api/references/vscode-api#SecretStorage'
+      <UiNotices
+        notices={[
+          {
+            type: 'info',
+            message: (
+              <Translation
+                id="api.notice.credentials"
+                components={{
+                  link: (
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        props.on_open_external_url(
+                          'https://code.visualstudio.com/api/references/vscode-api#SecretStorage'
+                        )
+                      }}
+                    >
+                      SecretStorage
+                    </a>
                   )
                 }}
-              >
-                SecretStorage
-              </a>
+              />
             )
-          }}
-        />
-      </UiNotice>
+          }
+        ]}
+      />
       <div
         ref={(el) => props.set_section_ref('section:api:group:providers', el)}
       >
@@ -93,16 +100,19 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
           title={t('api.providers.title')}
           notice_slot={
             !props.providers.length ? (
-              <UiNotice
-                type="warning"
-                slot_right={
-                  <Button on_click={() => props.on_add_provider()}>
-                    {t('action.add-new')}
-                  </Button>
-                }
-              >
-                {t('api.providers.missing-provider')}
-              </UiNotice>
+              <UiNotices
+                notices={[
+                  {
+                    type: 'warning',
+                    slot_right: (
+                      <Button on_click={() => props.on_add_provider()}>
+                        {t('action.add-new')}
+                      </Button>
+                    ),
+                    message: t('api.providers.missing-provider')
+                  }
+                ]}
+              />
             ) : null
           }
         >
@@ -198,16 +208,19 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
           is_disabled={props.providers.length === 0}
           notice_slot={
             !props.api_configurations.length ? (
-              <UiNotice
-                type="warning"
-                slot_right={
-                  <Button on_click={() => props.on_add_api_configuration()}>
-                    {t('action.add-new')}
-                  </Button>
-                }
-              >
-                {t('api.configurations.missing-model')}
-              </UiNotice>
+              <UiNotices
+                notices={[
+                  {
+                    type: 'warning',
+                    slot_right: (
+                      <Button on_click={() => props.on_add_api_configuration()}>
+                        {t('action.add-new')}
+                      </Button>
+                    ),
+                    message: t('api.configurations.missing-model')
+                  }
+                ]}
+              />
             ) : null
           }
         >

@@ -21,7 +21,7 @@ export const translations = {
     hu: 'Promptek automatikus kitöltése a böngészőbővítményen keresztül.',
     bg: 'Автоматично попълване на промптове чрез разширението за браузър.'
   },
-  'web.notice': {
+  'web.notice-websockets': {
     en: 'Communication with the browser uses local WebSockets.',
     pl: 'Komunikacja z przeglądarką odbywa się przez lokalne WebSockety.',
     'zh-cn': '与浏览器的通信使用本地 WebSocket.',
@@ -38,6 +38,42 @@ export const translations = {
     cs: 'Komunikace s prohlížečem využívá lokální WebSocket.',
     hu: 'A böngészővel való kommunikáció helyi WebSocketeket használ.',
     bg: 'Комуникацията с браузъра използва локални WebSocket.'
+  },
+  'web.notice-forwarding': {
+    en: 'Use {forwarding} of port 55155 when using remote machine via SSH.',
+    pl: 'Użyj {forwarding} portu 55155 podczas korzystania ze zdalnej maszyny przez SSH.',
+    'zh-cn': '通过 SSH 使用远程机器时，使用端口 55155 的 {forwarding}。',
+    ja: 'SSH 経由でリモートマシンを使用する場合は、ポート 55155 の {forwarding} を使用してください。',
+    'zh-tw': '透過 SSH 使用遠端機器時，使用連接埠 55155 的 {forwarding}。',
+    de: 'Verwenden Sie die {forwarding} für Port 55155, wenn Sie eine Remotemaschine über SSH nutzen.',
+    es: 'Utiliza el {forwarding} del puerto 55155 cuando uses una máquina remota a través de SSH.',
+    fr: 'Utilisez la {forwarding} du port 55155 lors de l\'utilisation d\'une machine distante via SSH.',
+    'pt-br': 'Use o {forwarding} da porta 55155 ao usar uma máquina remota via SSH.',
+    ru: 'Используйте {forwarding} порта 55155 при использовании удаленной машины через SSH.',
+    ko: 'SSH를 통해 원격 머신을 사용할 때는 포트 55155의 {forwarding}을 사용하세요.',
+    it: 'Usa il {forwarding} della porta 55155 quando usi una macchina remota tramite SSH.',
+    tr: 'SSH üzerinden uzak makine kullanırken 55155 numaralı bağlantı noktasının {forwarding} özelliğini kullanın.',
+    cs: 'Při použití vzdáleného počítače přes SSH použijte {forwarding} portu 55155.',
+    hu: 'Használja az 55155-ös port {forwarding} funkcióját, ha SSH-n keresztül távoli gépet használ.',
+    bg: 'Използвайте {forwarding} на порт 55155, когато използвате отдалечена машина чрез SSH.'
+  },
+  'web.forwarding': {
+    en: 'forwarding',
+    pl: 'przekierowania',
+    'zh-cn': '端口转发',
+    ja: 'ポートフォワーディング',
+    'zh-tw': '通訊埠轉發',
+    de: 'Portweiterleitung',
+    es: 'reenvío de puertos',
+    fr: 'redirection de port',
+    'pt-br': 'encaminhamento de porta',
+    ru: 'переадресации',
+    ko: '포트 포워딩',
+    it: 'port forwarding',
+    tr: 'yönlendirme',
+    cs: 'přesměrování',
+    hu: 'porttovábbítás',
+    bg: 'пренасочване'
   },
   'chatbots.configurations.title': {
     en: 'Chatbots',
