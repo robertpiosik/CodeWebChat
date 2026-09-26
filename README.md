@@ -23,7 +23,7 @@
 
 ## Introduction
 
-This independently built toolkit is designed to replace long multi-turn sessions with _fast_ single-turn prompts.
+This independently built toolkit replaces long multi-turn sessions with _fast_ single-turn prompts.
 
 Works with VS Code and its derivatives like Cursor or Antigravity.
 
