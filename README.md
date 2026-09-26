@@ -23,21 +23,12 @@
 
 ## Introduction
 
-This independently built toolkit replaces long multi-turn sessions with _fast_ single-turn prompts.
-
-Works with VS Code and its derivatives like Cursor or Antigravity.
-
-#### The workflow
-
-1. Type instructions
-2. Run [Agentic Search](#-agentic-search) for task-relevant file selection
-3. Select examples for model guidance
-4. Send [CWC-constructed prompt](#prompts) with a chatbot, an API call or an agentic CLI invocation
+This independently built toolkit helps replace slow multi-turn sessions with _fast_ single-turn prompts.
 
 #### Efficiency and speed
 
 - Outside of **long multi-turn sessions**, SOTA models offer diminishing returns over cheaper mid-tiers.
-- **Single-turn prompts** make intent easier to unpack—model's reasoning gets shorter or even optional.
+- **Single-turn prompts** make intent easier to unpack—model's reasoning is shorter or even optional.
 
 ## Supported targets
 
