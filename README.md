@@ -27,9 +27,9 @@ This independently built toolkit helps construct _fast_, single-turn prompts in 
 
 #### The workflow
 
-1. Select task-relevant files with the help of [Agentic Search](#-agentic-search).
-2. Select examples for model guidance.
-3. Send prompts with chatbots, coding agents or api calls.
+1. select task-relevant files with the help of [Agentic Search](#-agentic-search)
+2. select examples for model guidance
+3. send prompts with chatbots, coding agents or api calls
 
 #### Efficiency and speed
 
