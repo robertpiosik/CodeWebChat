@@ -25,9 +25,11 @@
 
 This independently built toolkit helps replace multi-turn sessions with _fast_ single-turn prompts.
 
-- Select task-relevant files with the help of [Agentic Search](#-agentic-search).
-- Select examples for model guidance.
-- Send prompt with chatbots, api calls or coding agents.
+#### The workflow
+
+1. Select task-relevant files with the help of [Agentic Search](#-agentic-search).
+2. Select examples for model guidance.
+3. Send prompt with chatbots, api calls or coding agents.
 
 #### Efficiency and speed
 
