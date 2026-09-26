@@ -23,7 +23,7 @@
 
 ## Introduction
 
-**CWC** proposes a sessionless workflow that is 10X faster at 1/10th the cost of coding with agents alone.
+This independently built toolkit is designed for a sessionless workflow that addresses pain points coding with agents alone: **walls of text**, **context pollution**, **latency** and **cost**.
 
 #### The workflow
 
@@ -35,8 +35,8 @@
 
 #### Efficiency and speed
 
-- Outside of long, agentic sessions, SOTA models offer diminishing returns over cheap mid-tiers.
-- Context-packed prompts make intent easy to unpack. Model's reasoning is short, even on higher efforts.
+- Outside of long multi-turn sessions, SOTA models offer diminishing returns over cheap mid-tiers.
+- Context-first prompts make intent easy to unpack. Model's reasoning is short, even on higher efforts.
 
 ## Supported targets
 
