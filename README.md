@@ -32,8 +32,7 @@ Works with VS Code and its derivatives like Cursor or Antigravity.
 1. Type instructions
 2. Run [Agentic Search](#-agentic-search) for task-relevant file selection
 3. Select examples for model guidance
-4. Send [a static context prompt](#-editing) with a chatbot, an API call or an agentic CLI invocation
-5. Apply response
+4. Send [CWC-constructed prompt](#prompts) with a chatbot, an API call or an agentic CLI invocation
 
 #### Efficiency and speed
 
