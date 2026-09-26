@@ -23,7 +23,7 @@
 
 ## Introduction
 
-This independently built toolkit proposes a simple, sessionless workflow that replaces long multi-turn sessions with fast single-turn prompts.
+This independently built toolkit proposes a simple, sessionless workflow that **replaces long multi-turn sessions with fast single-turn prompts**.
 
 #### The workflow
 
@@ -35,8 +35,8 @@ This independently built toolkit proposes a simple, sessionless workflow that re
 
 #### Efficiency and speed
 
-- Outside of long multi-turn sessions, SOTA models offer diminishing returns over cheaper mid-tiers.
-- Single-turn prompts make intent easy to unpack—model's reasoning is short, even on higher efforts.
+- Outside of **long multi-turn sessions**, SOTA models offer diminishing returns over cheaper mid-tiers.
+- **Single-turn prompts** make intent easy to unpack—model's reasoning is short, even on higher efforts.
 
 ## Supported targets
 
