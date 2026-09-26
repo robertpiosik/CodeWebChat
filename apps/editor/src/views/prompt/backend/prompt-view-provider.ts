@@ -67,7 +67,6 @@ import {
   handle_delete_task,
   handle_cancel_patch_repair_file_in_preview as handle_cancel_patch_repair_file_in_preview,
   handle_open_file_and_select,
-  handle_open_external_url,
   handle_hash_sign_quick_pick,
   handle_save_prompt_image,
   handle_open_prompt_image,
@@ -825,8 +824,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_preview_generated_code(message)
           } else if (message.command == 'UPDATE_FILE_PROGRESS') {
             // Handle the message internally instead of invoking a command
-          } else if (message.command == 'OPEN_EXTERNAL_URL') {
-            await handle_open_external_url(message)
           } else if (message.command == 'CREATE_API_CONFIGURATION') {
             await handle_create_api_configuration(this, message)
           } else if (message.command == 'UPDATE_API_CONFIGURATION') {

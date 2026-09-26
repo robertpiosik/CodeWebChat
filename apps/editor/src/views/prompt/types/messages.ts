@@ -461,11 +461,6 @@ export interface UpdateFileProgressMessage extends BaseMessage {
   apply_tokens_per_second?: number
 }
 
-export interface OpenExternalUrlMessage extends BaseMessage {
-  command: 'OPEN_EXTERNAL_URL'
-  url: string
-}
-
 export interface OpenWebsiteMessage extends BaseMessage {
   command: 'OPEN_WEBSITE'
   url: string
@@ -680,7 +675,6 @@ export type FrontendMessage =
   | DeleteTaskMessage
   | PreviewGeneratedCodeMessage
   | UpdateFileProgressMessage
-  | OpenExternalUrlMessage
   | CreateApiConfigurationMessage
   | DeleteApiConfigurationMessage
   | SavePromptImageMessage

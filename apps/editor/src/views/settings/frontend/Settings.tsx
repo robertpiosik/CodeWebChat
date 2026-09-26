@@ -303,7 +303,6 @@ export const Settings = () => {
             cli_feature
           })
         }}
-        on_open_external_url={settings_hook.handle_open_external_url}
         scroll_to_section_on_load={scroll_to_section_on_load}
       />
       {updating_web_configuration && (
@@ -399,7 +398,6 @@ export const Settings = () => {
             <EditProviderForm
               provider={updating_provider.provider}
               on_update={set_updated_provider}
-              on_open_external_url={settings_hook.handle_open_external_url}
             />
           </UiModal.Form>
         </UiModal>

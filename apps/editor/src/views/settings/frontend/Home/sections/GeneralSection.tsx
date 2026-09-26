@@ -36,7 +36,6 @@ type Props = {
   on_commit_instructions_blur: () => void
   default_commit_instructions: string
   on_restore_commit_instructions: () => void
-  on_open_external_url: (url: string) => void
   templates: Record<string, Template[]>
   on_update_templates: (key: string, templates: Template[]) => void
   on_edit_template: (key: string, index: number) => void

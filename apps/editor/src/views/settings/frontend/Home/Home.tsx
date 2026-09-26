@@ -179,7 +179,6 @@ type Props = {
   on_edit_web_configuration: (id: string) => void
   on_delete_web_configuration: (name: string) => void
   on_toggle_pinned_web_configuration: (config: WebConfiguration) => void
-  on_open_external_url: (url: string) => void
   scroll_to_section_on_load?: NavItem
 }
 
@@ -332,7 +331,6 @@ export const Home: React.FC<Props> = (props) => {
               props.default_commit_message_instructions
             )
           }}
-          on_open_external_url={props.on_open_external_url}
           templates={props.templates}
           on_update_templates={props.on_update_templates}
           on_edit_template={props.on_edit_template}
@@ -367,7 +365,6 @@ export const Home: React.FC<Props> = (props) => {
           on_delete_provider={props.on_delete_provider}
           on_edit_provider={props.on_edit_provider}
           on_reorder_providers={props.on_reorder_providers}
-          on_open_external_url={props.on_open_external_url}
           api_configurations={props.api_configurations}
           defaults={props.defaults}
           set_api_configurations={props.set_api_configurations}

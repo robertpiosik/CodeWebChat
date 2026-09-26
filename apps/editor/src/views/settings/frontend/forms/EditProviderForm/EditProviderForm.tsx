@@ -19,7 +19,6 @@ export type ProviderDraft = {
 type Props = {
   provider: Provider
   on_update: (draft: ProviderDraft) => void
-  on_open_external_url: (url: string) => void
 }
 
 export const EditProviderForm: React.FC<Props> = (props) => {
@@ -109,15 +108,7 @@ export const EditProviderForm: React.FC<Props> = (props) => {
               info={
                 <>
                   {t('edit-provider-form.extended-cache.anthropic.description')}{' '}
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      props.on_open_external_url(
-                        'https://platform.claude.com/docs/en/build-with-claude/prompt-caching#ttl-support'
-                      )
-                    }}
-                  >
+                  <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching#ttl-support">
                     {t(
                       'edit-provider-form.extended-cache.anthropic.learn-more'
                     )}

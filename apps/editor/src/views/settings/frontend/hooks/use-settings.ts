@@ -339,12 +339,6 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_open_external_url = (url: string) => {
-    post_message(vscode, {
-      command: 'OPEN_EXTERNAL_URL',
-      url
-    })
-  }
 
   const handle_add_template = (
     key: string,
@@ -465,7 +459,6 @@ export const use_settings = (vscode: any) => {
     handle_ai_studio_user_id_change,
     handle_send_with_shift_enter_change,
     handle_open_keybindings,
-    handle_open_external_url,
     templates,
     handle_update_templates,
     handle_add_template,

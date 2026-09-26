@@ -40,7 +40,6 @@ type Props = {
   ) => void
   on_select_default_api_configuration: (api_feature: ApiFeature) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
-  on_open_external_url: (url: string) => void
   edit_files_instructions: string
   set_edit_files_instructions: (instructions: string) => void
   on_edit_files_instructions_blur: () => void
@@ -75,15 +74,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                 id="api.notice.credentials"
                 components={{
                   link: (
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        props.on_open_external_url(
-                          'https://code.visualstudio.com/api/references/vscode-api#SecretStorage'
-                        )
-                      }}
-                    >
+                    <a href="https://code.visualstudio.com/api/references/vscode-api#SecretStorage">
                       SecretStorage
                     </a>
                   )

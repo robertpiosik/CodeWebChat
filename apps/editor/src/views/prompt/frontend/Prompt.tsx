@@ -243,13 +243,6 @@ export const Prompt = () => {
     })
   }
 
-  const handle_open_url = (url: string) => {
-    post_message(vscode, {
-      command: 'OPEN_EXTERNAL_URL',
-      url
-    })
-  }
-
   const handle_open_website = (url: string) => {
     post_message(vscode, {
       command: 'OPEN_WEBSITE',
@@ -369,7 +362,6 @@ export const Prompt = () => {
                 send_with_shift_enter={send_with_shift_enter}
                 on_pasted_lines_click={handle_pasted_lines_click}
                 currently_open_file_text={currently_open_file_text}
-                on_open_url={handle_open_url}
                 on_open_website={handle_open_website}
                 on_paste_image={handle_paste_image}
                 on_open_image={handle_open_image}

@@ -146,10 +146,6 @@ export interface OpenKeybindingsMessage {
   search?: string
 }
 
-export interface OpenExternalUrlMessage {
-  command: 'OPEN_EXTERNAL_URL'
-  url: string
-}
 
 export interface GetWebConfigurationsMessage {
   command: 'GET_WEB_CONFIGURATIONS'
@@ -347,7 +343,6 @@ export type FrontendMessage =
   | OpenIgnorePatternsSettingsMessage
   | OpenAllowPatternsSettingsMessage
   | OpenKeybindingsMessage
-  | OpenExternalUrlMessage
   | GetWebConfigurationsMessage
   | ReorderWebConfigurationsMessage
   | DeleteWebConfigurationMessage

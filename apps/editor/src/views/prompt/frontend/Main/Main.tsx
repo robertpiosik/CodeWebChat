@@ -60,7 +60,6 @@ type Props = {
   currently_open_file_text?: string
   on_pasted_lines_click: (path: string, start?: string, end?: string) => void
   are_keyboard_shortcuts_disabled: boolean
-  on_open_url: (url: string) => void
   on_open_website: (url: string) => void
   on_paste_image: (base64_content: string) => void
   on_open_image: (hash: string) => void
@@ -678,7 +677,6 @@ export const Main: React.FC<Props> = (props) => {
       on_pasted_lines_click={props.on_pasted_lines_click}
       currently_open_file_text={props.currently_open_file_text}
       are_keyboard_shortcuts_disabled={props.are_keyboard_shortcuts_disabled}
-      on_open_url={props.on_open_url}
       on_open_website={props.on_open_website}
       on_paste_image={props.on_paste_image}
       on_open_image={props.on_open_image}

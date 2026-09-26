@@ -127,12 +127,7 @@ export const create_handle_input_click = ({
             ? 'CommitMessage'
             : 'Commit'
         if (repo_name && commit_hash) {
-          props.on_commit_click?.(
-            repo_name,
-            commit_hash,
-            type,
-            commit_message,
-          )
+          props.on_commit_click?.(repo_name, commit_hash, type, commit_message)
         }
       }
 

@@ -31,7 +31,6 @@ import {
   handle_open_ignore_patterns_settings,
   handle_open_allow_patterns_settings,
   handle_open_keybindings,
-  handle_open_external_url,
   handle_delete_web_configuration,
   handle_reorder_web_configurations,
   handle_create_web_configuration,
@@ -263,8 +262,6 @@ export class SettingsViewProvider {
           await handle_open_allow_patterns_settings()
         } else if (message.command == 'OPEN_KEYBINDINGS') {
           await handle_open_keybindings(message)
-        } else if (message.command == 'OPEN_EXTERNAL_URL') {
-          await handle_open_external_url(message)
         } else if (message.command == 'GET_CLI_CONFIGURATIONS') {
           this._send_cli_configurations()
         } else if (message.command == 'CREATE_CLI_CONFIGURATION') {

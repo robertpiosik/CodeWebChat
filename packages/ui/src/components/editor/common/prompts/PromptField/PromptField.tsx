@@ -60,9 +60,8 @@ export type PromptFieldProps = {
   currently_open_file_text?: string
   on_go_to_file: (file_path: string) => void
   on_pasted_lines_click: (path: string, start?: string, end?: string) => void
-  on_open_url: (url: string) => void
-  on_paste_image: (base64_content: string) => void
   on_open_website: (url: string) => void
+  on_paste_image: (base64_content: string) => void
   on_open_image: (hash: string) => void
   on_paste_long_text: (text: string) => void
   on_open_pasted_text: (hash: string) => void

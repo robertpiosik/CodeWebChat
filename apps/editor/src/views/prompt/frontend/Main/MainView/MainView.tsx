@@ -117,7 +117,6 @@ type Props = {
   currently_open_file_text?: string
   on_go_to_file: (file_path: string) => void
   on_pasted_lines_click: (path: string, start?: string, end?: string) => void
-  on_open_url: (url: string) => void
   on_open_website: (url: string) => void
   are_keyboard_shortcuts_disabled: boolean
   on_paste_image: (base64_content: string) => void
@@ -473,7 +472,6 @@ export const MainView: React.FC<Props> = (props) => {
           selected_files={props.selected_files}
           on_go_to_file={props.on_go_to_file}
           on_pasted_lines_click={props.on_pasted_lines_click}
-          on_open_url={props.on_open_url}
           on_open_website={props.on_open_website}
           target={props.target}
           on_target_change={(target) => props.on_target_change(target)}
