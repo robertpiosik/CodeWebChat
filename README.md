@@ -42,9 +42,6 @@ This independently built toolkit helps construct prompts with files and instruct
 
 Copy & paste into chatbots. Enable prompt autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser).
 
-> [!TIP]
-> Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
-
 <details>
 <summary>SUPPORTED CHATBOTS</summary>
 
