@@ -336,7 +336,7 @@ Apply the attached changes to the file without explanations or any other text.
 
 ## Prompt caching
 
-**CWC** orders context files by modification and selection recency. This, combined with instructions placement at the message's very end effecively utilizes prompt caching, across related tasks.
+**CWC** orders context files by modification and selection recency. This, combined with instructions placement at the message's very end effecively utilizes prompt caching. Even across related tasks.
 
 ## Commands
 
