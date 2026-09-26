@@ -101,6 +101,10 @@ export const create_handle_key_down = (
   }
 
   const handle_copy_key = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (props.target != 'WEB') {
+      return false
+    }
+
     const selection = window.getSelection()
     if (!selection || selection.rangeCount == 0 || selection.isCollapsed) {
       e.preventDefault()
