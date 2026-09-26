@@ -38,7 +38,7 @@ Works with VS Code and its derivatives like Cursor or Antigravity.
 #### Efficiency and speed
 
 - Outside of **long multi-turn sessions**, SOTA models offer diminishing returns over cheaper mid-tiers.
-- **Single-turn prompts** make intent easy to unpack—model's reasoning is short, even on higher efforts.
+- **Single-turn prompts** make intent easier to unpack—model's reasoning gets shorter or even optional.
 
 ## Supported targets
 
