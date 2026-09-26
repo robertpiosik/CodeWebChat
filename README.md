@@ -34,7 +34,7 @@ This independently built toolkit helps construct zero-overhead prompts in an eff
 #### Efficiency and speed
 
 - For the powerful [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
-- Static context feeding lightweight prompts, make intent claer, thus 'thinking' short or even optional.
+- Static context feeding simple prompts, make intent claer, thus 'thinking' short or even optional.
 
 ## Targets
 
