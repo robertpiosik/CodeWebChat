@@ -34,7 +34,7 @@ This independently built toolkit helps construct zero-overhead prompts in an eff
 #### Efficiency and speed
 
 - For the powerful [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
-- Single-turn prompts make intent easier to unpack—model's reasoning is shorter or even optional.
+- Static context feeding lightweight prompts, makes intent easy to unpack, thus reasoning short or even optional.
 
 ## Targets
 
