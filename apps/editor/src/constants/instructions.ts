@@ -71,9 +71,9 @@ export const voice_input_instructions =
 
 export const cli_edit_ask_requirements = {
   preloaded_files:
-    'All project files necessary for the task were preloaded and are attached in [files](#files). You cannot make any codebase discovery tool calls.',
+    'All project files necessary for the task were preloaded and are attached in [files](#files). Read potential images from [task][#task], and nothing else. You cannot make any other tool calls in this session except creating, deleting or updating listed in [files][#files] paths to complete the [task](#task).',
   referenced_files_with_some_preloaded:
-    "You must start by reading all 'large files' listed as project-relative paths in [files](#files). You cannot make any further codebase discovery tool calls.",
+    "Begin by looking at [files](#files) section for unread files (### Unread file: `[PROJECT-RELATIVE PATH]`) and read them. Then, read potential images from the [task][#task]. You cannot make any other tool calls in this session except creating, deleting or updating listed in [files][#files] paths to complete the [task](#task).",
   referenced_files_only:
-    'You must read all files listed as project-relative paths in [files](#files). You cannot make any further codebase discovery tool calls.'
+    'Begin by looking at [files](#files) section for referenced files (### File: `[PROJECT-RELATIVE PATH]`) and read them. Then, read potential images from the [task][#task]. You cannot make any other tool calls in this session except creating, deleting or updating listed in [files][#files] paths to complete the [task](#task).'
 }

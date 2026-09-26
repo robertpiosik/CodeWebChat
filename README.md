@@ -174,7 +174,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 # Requirements
 
-All project files necessary for the task were preloaded and are attached in [files](#files). You cannot make any codebase discovery tool calls.
+Begin by looking at [files](#files) section for referenced files (### File: `[PROJECT-RELATIVE PATH]`) and read them. Then, read potential images from the [task][#task]. You cannot make any other tool calls in this session except creating, deleting or updating listed in [files][#files] paths to complete the [task](#task).
 
 # Task
 
@@ -212,7 +212,7 @@ _Multi-purpose: explanations, code reviews, you name it._
 
 # Requirements
 
-All project files necessary for the task were preloaded and are attached in [files](#files). You cannot make any codebase discovery tool calls.
+Begin by looking at [files](#files) section for referenced files (### File: `[PROJECT-RELATIVE PATH]`) and read them. Then, read potential images from the [task][#task]. You cannot make any other tool calls in this session except creating, deleting or updating listed in [files][#files] paths to complete the [task](#task).
 
 # Task
 

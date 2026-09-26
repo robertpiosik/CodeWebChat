@@ -105,7 +105,7 @@ export const build_cli_prompt = async (params: {
           )
           are_any_files_preloaded = true
         } else {
-          file_blocks.push(`### Large file: \`${data.relative_path}\``)
+          file_blocks.push(`### Unread file: \`${data.relative_path}\``)
         }
       } else {
         file_blocks.push(
