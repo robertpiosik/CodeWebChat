@@ -23,11 +23,11 @@
 
 ## Introduction
 
-This independently built toolkit helps replace slow multi-turn sessions with _fast_ single-turn prompts.
+This independently built toolkit helps replace multi-turn sessions with _fast_ single-turn prompts.
 
 #### Efficiency and speed
 
-- Outside of **long multi-turn sessions**, SOTA models offer diminishing returns over cheaper mid-tiers.
+- Outside traditional agentic sessions, SOTA models offer diminishing returns over cheaper mid-tiers.
 - **Single-turn prompts** make intent easier to unpack—model's reasoning is shorter or even optional.
 
 ## Supported targets
