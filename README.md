@@ -36,62 +36,19 @@ This independently built toolkit helps construct prompts with files and instruct
 - For the powerful [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
 - File editing in single-turns make intent easy to unpack, thus 'thinking' short or even optional.
 
-## Targets
+## Send prompts with...
 
-### 👉 WEB
+### 👉 Chatbots
 
-Copy & paste into chatbots. Enable prompt autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser).
+Copy & paste into chatbots or autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser).
 
-<details>
-<summary>SUPPORTED CHATBOTS</summary>
+### 👉 API requests
 
-```
-- AI Studio
-- Arena
-- ChatGPT
-- Claude
-- Copilot
-- DeepSeek
-- Doubao
-- Gemini
-- GitHub Copilot
-- Grok
-- HuggingChat
-- Kimi
-- Meta
-- Mistral
-- Open WebUI
-- OpenRouter
-- Qwen
-- Together
-- Yuanbao
-- Z
-```
+Call OpenAI-API-compatible model providers.
 
-</details>
-
-### 👉 API
-
-Send requests directly to OpenAI-API-compatible model providers.
-
-### 👉 CLI
+### 👉 Agents
 
 Run your favorite coding agent.
-
-<details>
-<summary>SUPPORTED AGENTS</summary>
-
-```
-- Antigravity
-- Claude Code
-- Codex
-- Cursor
-- Grok Build
-- Muse Code
-- OpenCode
-```
-
-</details>
 
 ## Prompts
 
