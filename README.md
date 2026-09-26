@@ -23,7 +23,7 @@
 
 ## Introduction
 
-**CWC** helps construct prompts with files and instructions in a simple workflow.
+**CWC** helps construct prompts with files and instructions right in your favorite code editor.
 
 #### The workflow
 
