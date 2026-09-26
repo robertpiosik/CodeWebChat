@@ -38,15 +38,7 @@
 - For [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
 - Given lean, bloat-free prompts, models 'think' less and stay at their baseline accuracy.
 
-## Prompts
-
-**CWC** helps construct prompts for common day-to-day coding tasks.
-
-### 📄 Agentic search
-
-_Task-relevant files from your favorite coding agent, utilizing its one-off prompt (headless) mode._
-
-#### Supported CLIs
+## Supported CLIs
 
 - Antigravity
 - Claude Code
@@ -55,6 +47,14 @@ _Task-relevant files from your favorite coding agent, utilizing its one-off prom
 - Grok Build
 - Muse Code
 - OpenCode
+
+## Prompts
+
+**CWC** helps construct prompts for common day-to-day coding tasks.
+
+### 📄 Agentic search
+
+_Find task-relevant files through automated codebase discovery._
 
 <details>
 <summary>AGENT</summary>
