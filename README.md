@@ -19,7 +19,7 @@
 
 ## Introduction
 
-**CWC** helps construct prompts with files and instructions in an effective workflow.
+**CWC** helps construct prompts with files and instructions in a simple workflow.
 
 #### The workflow
 
