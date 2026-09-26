@@ -23,7 +23,7 @@
 
 ## Introduction
 
-This independently built toolkit is designed for a sessionless workflow that addresses pain points of coding with agents alone: [**cognitive surrender**](https://addyosmani.com/blog/cognitive-surrender/), **wall of text**, **security**, **context pollution**, **speed** and **cost**.
+This independently built toolkit proposes a simple, sessionless workflow that replaces long multi-turn sessions with fast single-turn prompts.
 
 #### The workflow
 
