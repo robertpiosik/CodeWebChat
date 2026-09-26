@@ -69,7 +69,7 @@ These files contain the core greeting logic and module exports.`
 export const voice_input_instructions =
   'Respond with a transcription of the following audio recording or text "INAUDIBLE", and nothing else.'
 
-export const cli_edit_ask_requirements = {
+export const cli_edit_ask_task_scope = {
   preloaded_files:
     'All files necessary for [the task](#task) are listed in [files](#files).',
   referenced_files_with_some_preloaded:

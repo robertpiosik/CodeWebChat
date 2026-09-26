@@ -170,7 +170,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 [SELECTED FILES]
 
-# Requirements
+# Task scope
 
 Before you proceed with [the task](#task), you must read all files provided as project-relative paths in [files](#files), and nothing else.
 
@@ -208,7 +208,7 @@ _Multi-purpose: explanations, code reviews, you name it._
 
 [SELECTED FILES]
 
-# Requirements
+# Task scope
 
 Before you proceed with [the task](#task), you must read all files provided as project-relative paths in [files](#files), and nothing else.
 

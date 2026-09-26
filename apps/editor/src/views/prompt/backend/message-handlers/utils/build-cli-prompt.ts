@@ -2,7 +2,7 @@ import * as path from 'path'
 import * as fs from 'fs/promises'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
-import { cli_edit_ask_requirements } from '@/constants/instructions'
+import { cli_edit_ask_task_scope } from '@/constants/instructions'
 import { LAST_SELECTED_WORKSPACE_IN_AGENTIC_CLI_STATE_KEY } from '@/constants/state-keys'
 
 export const build_cli_prompt = async (params: {
@@ -106,20 +106,20 @@ export const build_cli_prompt = async (params: {
 
   const output_formatting_section = ''
 
-  const requirement = are_all_files_preloaded
-    ? cli_edit_ask_requirements.preloaded_files
+  const task_scope = are_all_files_preloaded
+    ? cli_edit_ask_task_scope.preloaded_files
     : are_any_files_preloaded
-    ? cli_edit_ask_requirements.referenced_files_with_some_preloaded
-    : cli_edit_ask_requirements.referenced_files_only
+    ? cli_edit_ask_task_scope.referenced_files_with_some_preloaded
+    : cli_edit_ask_task_scope.referenced_files_only
 
-  const requirements_section = `# Requirements\n\n${requirement}`
+  const task_scope_section = `# Task scope\n\n${task_scope}`
   const task_section = `# Task\n\n${processed_query}`
 
   const parts = [
     files_section,
     skill_definitions,
     output_formatting_section,
-    requirements_section,
+    task_scope_section,
     task_section
   ].filter((p) => p.trim() != '')
 
