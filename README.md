@@ -23,7 +23,7 @@
 
 ## Introduction
 
-This independently built toolkit **replaces long multi-turn sessions with fast single-turn prompts**.
+This independently built VS Code toolkit is designed to replace long multi-turn sessions with _fast_ single-turn prompts.
 
 #### The workflow
 
