@@ -30,13 +30,13 @@
 1. Type instructions
 2. Run [Agentic Search](#-agentic-search) for task-relevant file selection
 3. Select examples for model guidance
-4. Send [prompt](#-editing) with a chatbot, an API call or an agentic CLI invocation
+4. Send [a static context prompt](#-editing) with a chatbot, an API call or an agentic CLI invocation
 5. Apply response
 
 #### Efficiency and speed
 
-- For [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
-- Given lean, bloat-free prompts, models 'think' less and stay at their baseline accuracy.
+- For the [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
+- Single-turn prompting make intent easy to 'unpack', so models 'think' less and stay at their baseline accuracy.
 
 ## Supported targets
 
@@ -60,7 +60,7 @@ Any OpenAI-API-compatible model provider with your own key (BYOK).
 
 ## Prompts
 
-**CWC** helps construct prompts for common day-to-day coding tasks.
+Review the structure of CWC-constructed prompts.
 
 ### 📄 Agentic search
 
