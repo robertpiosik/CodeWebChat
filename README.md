@@ -23,7 +23,7 @@
 
 ## Introduction
 
-This independently built toolkit proposes a simple, sessionless workflow that **replaces long multi-turn sessions with fast single-turn prompts**.
+This independently built toolkit **replaces long multi-turn sessions with fast single-turn prompts**.
 
 #### The workflow
 
