@@ -35,8 +35,8 @@
 
 #### Efficiency and speed
 
-- For the [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
-- Single-turn prompting make intent easy to 'unpack', so models 'think' less and stay at their baseline accuracy.
+- Outside of long, agentic sessions, SOTA models offer diminishing returns over cheap mid-tiers.
+- Context-packed prompts make intent easy to 'unpack'. Models 'think' less and stay accurate.
 
 ## Supported targets
 
