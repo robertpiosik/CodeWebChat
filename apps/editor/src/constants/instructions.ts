@@ -71,9 +71,9 @@ export const voice_input_instructions =
 
 export const cli_edit_ask_task_scope = {
   preloaded_files:
-    'All files necessary for [the task](#task) are listed in [files](#files).',
+    'All files necessary for [the task](#task) were preloaded and attached in [files](#files).',
   referenced_files_with_some_preloaded:
-    'Before you proceed with [the task](#task), you must read all \'large files\' listed as project-relative paths in [files](#files), and nothing else.',
+    "Before you proceed with [the task](#task), you must read all 'large files' listed as project-relative paths in [files](#files), and nothing else.",
   referenced_files_only:
     'Before you proceed with [the task](#task), you must read all files provided as project-relative paths in [files](#files), and nothing else.'
 }

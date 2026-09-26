@@ -40,18 +40,57 @@ This independently built toolkit helps construct, send, and apply _fast_ single-
 
 ### 👉 WEB
 
-Copy & paste into chatbots. Autofill prompts with [the official browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) in: AI Studio, Arena, ChatGPT, Claude, Copilot, DeepSeek, Doubao, Gemini, GitHub Copilot, Grok, HuggingChat, Kimi, Meta, Mistral, Open WebUI, OpenRouter, Qwen, Together, Yuanbao, Z.
+Copy & paste into chatbots. Autofill prompts with [the official browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser).
+
+<details>
+<summary>SUPPORTED CHATBOTS</summary>
+
+- AI Studio
+- Arena
+- ChatGPT
+- Claude
+- Copilot
+- DeepSeek
+- Doubao
+- Gemini
+- GitHub Copilot
+- Grok
+- HuggingChat
+- Kimi
+- Meta
+- Mistral
+- Open WebUI
+- OpenRouter
+- Qwen
+- Together
+- Yuanbao
+- Z
+
+</details>
 
 > [!TIP]
 > Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
 
 ### 👉 API
 
-Send requests directly to OpenAI-API-compatible model providers, authenticated with your own keys (BYOK).
+Send requests directly to OpenAI-API-compatible model providers.
 
 ### 👉 CLI
 
-Run supported agents: Antigravity, Claude Code, Codex, Cursor, Grok Build, Muse Code, OpenCode.
+Run your favorite coding agent.
+
+<details>
+<summary>SUPPORTED AGENTS</summary>
+
+- Antigravity
+- Claude Code
+- Codex
+- Cursor
+- Grok Build
+- Muse Code
+- OpenCode
+
+</details>
 
 ## Prompts
 
