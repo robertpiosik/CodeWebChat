@@ -23,35 +23,35 @@
 
 ## Introduction
 
-This independently built toolkit helps replace multi-turn sessions with _fast_ single-turn prompts.
+This independently built toolkit helps construct, send, and apply _fast_ single-turn prompts.
 
 #### The workflow
 
 1. Select task-relevant files with the help of [Agentic Search](#-agentic-search).
 2. Select examples for model guidance.
-3. Send prompts with chatbots, api calls or coding agents.
+3. Send prompts with chatbots, coding agents or api calls.
 
 #### Efficiency and speed
 
 - For the powerful [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
 - Single-turn prompts make intent easier to unpack—model's reasoning is shorter or even optional.
 
-## Supported targets
+## Targets
 
-### 👉 Agents
+### 👉 WEB
 
-Antigravity, Claude Code, Codex, Cursor, Grok Build, Muse Code, OpenCode.
-
-### 👉 Chatbots
-
-Copy & paste into any chatbot, [autofill](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) prompts in: AI Studio, Arena, ChatGPT, Claude, Copilot, DeepSeek, Doubao, Gemini, GitHub Copilot, Grok, HuggingChat, Kimi, Meta, Mistral, Open WebUI, OpenRouter, Qwen, Together, Yuanbao, Z.
+Copy & paste into chatbots. Autofill prompts with [the official browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) in: AI Studio, Arena, ChatGPT, Claude, Copilot, DeepSeek, Doubao, Gemini, GitHub Copilot, Grok, HuggingChat, Kimi, Meta, Mistral, Open WebUI, OpenRouter, Qwen, Together, Yuanbao, Z.
 
 > [!TIP]
 > Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
 
-### 👉 APIs
+### 👉 API
 
-Any OpenAI-API-compatible model provider with your own key (BYOK).
+Send requests directly to OpenAI-API-compatible model providers, authenticated with your own keys (BYOK).
+
+### 👉 CLI
+
+Run supported agents: Antigravity, Claude Code, Codex, Cursor, Grok Build, Muse Code, OpenCode.
 
 ## Prompts
 
