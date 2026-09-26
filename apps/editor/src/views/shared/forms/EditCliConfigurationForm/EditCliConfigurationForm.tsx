@@ -104,6 +104,11 @@ export const EditCliConfigurationForm: React.FC<Props> = (props) => {
               type="text"
               value={flags || ''}
               on_change={set_flags}
+              placeholder={
+                agent && AGENTS[agent as keyof typeof AGENTS]?.flags_placeholder
+                  ? `e.g. ${AGENTS[agent as keyof typeof AGENTS]?.flags_placeholder}`
+                  : undefined
+              }
             />
           </UiField>
         </UiFieldset>
