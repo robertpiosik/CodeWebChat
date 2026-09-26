@@ -382,7 +382,7 @@ export const process_response = async (params: {
     )
 
     if (files.length == 0) {
-      vscode.window.showErrorMessage(
+      vscode.window.showWarningMessage(
         t('command.apply-response-command.error.no-valid-response')
       )
       return null
