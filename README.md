@@ -17,6 +17,10 @@
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
+## Privacy
+
+**CWC** operates 100% on your machine—no code, prompts or usage data are collected.
+
 ## Introduction
 
 **CWC** helps construct prompts with files and instructions in a simple workflow.
@@ -31,10 +35,6 @@
 
 - For the powerful [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
 - File editing in single-turns make intent easy to unpack, thus 'thinking' short or even optional.
-
-#### Privacy
-
-The toolkit operates 100% on your machine—no code, prompts or usage data are collected.
 
 ## Send prompts with...
 
