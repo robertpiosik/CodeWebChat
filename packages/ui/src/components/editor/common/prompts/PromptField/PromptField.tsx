@@ -366,7 +366,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               on_click: handle_select_click,
               is_disabled: props.is_action_disabled
             },
-            ...(props.target == 'WEB' || props.target == 'CLI'
+            ...(props.target == 'WEB'
               ? [
                   {
                     label: props.translations.copy_prompt,
