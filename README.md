@@ -23,7 +23,7 @@
 
 ## Introduction
 
-This independently built toolkit helps construct zero-overhead prompts in an effective workflow.
+This independently built toolkit helps construct _fast_ prompts in an effective workflow.
 
 #### The workflow
 
