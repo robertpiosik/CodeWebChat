@@ -69,11 +69,11 @@ These files contain the core greeting logic and module exports.`
 export const voice_input_instructions =
   'Respond with a transcription of the following audio recording or text "INAUDIBLE", and nothing else.'
 
-export const cli_edit_ask_task_scope = {
+export const cli_edit_ask_requirements = {
   preloaded_files:
-    'All files necessary for [the task](#task) were preloaded and are attached in [files](#files).',
+    'All files necessary for [the task](#task) were preloaded and are attached in [files](#files). You cannot make any codebase discovery tool calls.',
   referenced_files_with_some_preloaded:
-    "Before you proceed with [the task](#task), you must read all 'large files' listed as project-relative paths in [files](#files), and nothing else.",
+    "Before you proceed with [the task](#task), you must read 'large files' listed as project-relative paths in [files](#files) one by one. You cannot make any further codebase discovery tool calls.",
   referenced_files_only:
-    'Before you proceed with [the task](#task), you must read all files provided as project-relative paths in [files](#files), and nothing else.'
+    'Before you proceed with [the task](#task), you must read files provided as project-relative paths in [files](#files) one by one. You cannot make any further codebase discovery tool calls.'
 }
