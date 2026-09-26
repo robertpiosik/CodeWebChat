@@ -11,7 +11,7 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> 
 </p>
 
-<p align="center"><strong>Blazing fast AI coding for everyone</strong></p>
+<p align="center"><strong>Blazing fast AI coding for VS Code</strong></p>
 
 <p align="center"><i>chatbots, APIs, CLIs</br>free and privacy-first</i></p>
 
