@@ -17,10 +17,6 @@
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
-## Privacy
-
-**CWC** operates 100% on your machine—no code, prompts or usage data are collected.
-
 ## Introduction
 
 This independently built toolkit helps construct prompts with files and instructions in an effective workflow.
@@ -35,6 +31,10 @@ This independently built toolkit helps construct prompts with files and instruct
 
 - For the powerful [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
 - File editing in single-turns make intent easy to unpack, thus 'thinking' short or even optional.
+
+## Privacy
+
+**CWC** operates 100% on your machine—no code, prompts or usage data are collected.
 
 ## Send prompts with...
 
@@ -325,10 +325,6 @@ Apply the attached changes to the file without explanations or any other text.
 ```
 
 </details>
-
-## Prompt caching
-
-**CWC** orders context files by modification and selection recency. This, combined with instructions placement at the message's very end effecively utilizes prompt caching. Even across related tasks.
 
 ## Commands
 
