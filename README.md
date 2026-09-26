@@ -23,7 +23,7 @@
 
 ## Introduction
 
-This independently built toolkit is designed for a sessionless workflow that addresses pain points of coding with agents alone: **walls of text**, **context pollution**, **latency** and **cost**.
+This independently built AI coding toolkit is designed for a sessionless workflow that addresses pain points of working with agents alone: [**cognitive surrender**](https://addyosmani.com/blog/cognitive-surrender/), **wall of text**, **context pollution**, **latency** and **cost**.
 
 #### The workflow
 
