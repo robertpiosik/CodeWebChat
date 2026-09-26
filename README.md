@@ -165,7 +165,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 </details>
 
 <details>
-<summary>CLI</summary>
+<summary>AGENT</summary>
 
 ```
 # Files
@@ -203,7 +203,7 @@ _Multi-purpose: explanations, code reviews, you name it._
 </details>
 
 <details>
-<summary>CLI</summary>
+<summary>AGENT</summary>
 
 ```
 # Files
