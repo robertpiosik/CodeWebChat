@@ -48,6 +48,7 @@ Copy & paste into chatbots. Autofill prompts with [the official browser extensio
 <details>
 <summary>SUPPORTED CHATBOTS</summary>
 
+```
 - AI Studio
 - Arena
 - ChatGPT
@@ -68,6 +69,7 @@ Copy & paste into chatbots. Autofill prompts with [the official browser extensio
 - Together
 - Yuanbao
 - Z
+```
 
 </details>
 
@@ -82,6 +84,7 @@ Run your favorite coding agent.
 <details>
 <summary>SUPPORTED AGENTS</summary>
 
+```
 - Antigravity
 - Claude Code
 - Codex
@@ -89,6 +92,7 @@ Run your favorite coding agent.
 - Grok Build
 - Muse Code
 - OpenCode
+```
 
 </details>
 
