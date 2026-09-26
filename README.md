@@ -36,7 +36,7 @@
 #### Efficiency and speed
 
 - Outside of long, agentic sessions, SOTA models offer diminishing returns over cheap mid-tiers.
-- Context-packed prompts make intent easy to 'unpack'. Models 'think' less and stay accurate.
+- Context-packed prompts make intent easy to unpack. Model's reasoning is short, even on higher efforts.
 
 ## Supported targets
 
