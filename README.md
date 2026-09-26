@@ -51,16 +51,13 @@ Copy & paste into any chatbot, [autofill](https://github.com/robertpiosik/CodeWe
 > [!TIP]
 > Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
 
-> [!NOTE]
-> Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
-
 ### 👉 APIs
 
 Any OpenAI-API-compatible model provider with your own key (BYOK).
 
 ## Prompts
 
-Review the structure of CWC-constructed prompts.
+Overview of CWC-constructed prompts.
 
 ### 📄 Agentic search
 

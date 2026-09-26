@@ -1,11 +1,10 @@
 # Autofill for Code Web Chat
 
-The browser extension communicates with the editor via a locally run WebSockets server.
+This browser extension communicates with the editor via a locally run WebSockets server.
 
 Serves two purposes:
 
 1. Autofilling the constructed prompt text
-
 2. Placing _Apply Response_ button under responses
 
 > [!NOTE]
