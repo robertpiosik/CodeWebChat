@@ -460,7 +460,7 @@ export const invoke_agentic_cli = async (params: {
 
         const command = [executable, ...args.map(quote_arg)].join(' ')
         const terminal = vscode.window.createTerminal({
-          name: `${agent_info.label} (Ask)`,
+          name: agent_info.label,
           cwd: selected_root
         })
         terminal.show()
