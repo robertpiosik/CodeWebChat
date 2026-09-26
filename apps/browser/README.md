@@ -13,6 +13,11 @@ Serves two purposes:
 > [!IMPORTANT]
 > Prompt text is never submitted or response accepted automatically.
 
+## Stores
+
+- [Chrome Web Store](https://chromewebstore.google.com/detail/autofill-for-code-web-chat/ljookipcanaglfaocjbgdicfbdhhjffp)
+- [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/autofill-for-code-web-chat/)
+
 ## Permissions
 
 The extension functions with minimal permissions.
