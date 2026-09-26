@@ -172,9 +172,9 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 [SELECTED FILES]
 
-# Task scope
+# Requirements
 
-Before you proceed with [the task](#task), you must read all files provided as project-relative paths in [files](#files), and nothing else.
+All project files necessary for the task were preloaded and are attached in [files](#files). You cannot make any codebase discovery tool calls.
 
 # Task
 
@@ -210,9 +210,9 @@ _Multi-purpose: explanations, code reviews, you name it._
 
 [SELECTED FILES]
 
-# Task scope
+# Requirements
 
-Before you proceed with [the task](#task), you must read all files provided as project-relative paths in [files](#files), and nothing else.
+All project files necessary for the task were preloaded and are attached in [files](#files). You cannot make any codebase discovery tool calls.
 
 # Task
 

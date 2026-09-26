@@ -75,5 +75,5 @@ export const cli_edit_ask_requirements = {
   referenced_files_with_some_preloaded:
     "You must start by reading 'large files' listed as project-relative paths in [files](#files), one by one. You cannot make any further codebase discovery tool calls.",
   referenced_files_only:
-    'You must read files provided as project-relative paths in [files](#files), one by one. You cannot make any further codebase discovery tool calls.'
+    'You must read files listed as project-relative paths in [files](#files), one by one. You cannot make any further codebase discovery tool calls.'
 }
