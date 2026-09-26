@@ -327,6 +327,19 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     }
   }, [props.is_recording])
 
+  useEffect(() => {
+    if (is_target_dropdown_open) {
+      const handle_click = () => {
+        set_is_target_dropdown_open(false)
+      }
+
+      document.addEventListener('click', handle_click)
+      return () => {
+        document.removeEventListener('click', handle_click)
+      }
+    }
+  }, [is_target_dropdown_open])
+
   const render_footer = () => {
     const primary_dropdown_items =
       (props.target == 'API' || props.target == 'CLI') && !props.value
@@ -672,8 +685,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             {props.target && props.on_target_change && (
               <div
                 className={styles['footer__right__target-switch']}
-                onMouseEnter={() => set_is_target_dropdown_open(true)}
-                onMouseLeave={() => set_is_target_dropdown_open(false)}
               >
                 {(is_target_dropdown_open || is_alt_pressed) && (
                   <div
@@ -719,6 +730,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         is_target_dropdown_open || is_alt_pressed
                     }
                   )}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    set_is_target_dropdown_open(!is_target_dropdown_open)
+                  }}
                 >
                   <span
                     className={styles['footer__right__target-switch__label']}
