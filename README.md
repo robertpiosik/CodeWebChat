@@ -19,7 +19,7 @@
 
 ## Introduction
 
-This independently built toolkit helps construct prompts with files and instructions in an effective workflow.
+**CWC** helps construct prompts with files and instructions in an effective workflow.
 
 #### The workflow
 
