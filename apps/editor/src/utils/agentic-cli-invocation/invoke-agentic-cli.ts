@@ -8,6 +8,7 @@ import { spawn } from 'child_process'
 import { CLI_AGENTS } from './agents'
 import { Logger } from '@shared/utils/logger'
 import { generate_diff_markdown } from './utils/generate-diff-markdown'
+import { format_duration } from './utils/format-duration'
 import { ConfigAgentConfigurationFormat } from '@/utils/cli-configuration-format-converters'
 import { AGENTS } from '@/constants/agents'
 
@@ -474,6 +475,7 @@ export const invoke_agentic_cli = async (params: {
       let is_cancelled = false
 
       output_channel.clear()
+      const start_time = Date.now()
 
       try {
         await vscode.window.withProgress(
@@ -617,6 +619,12 @@ export const invoke_agentic_cli = async (params: {
         go_back_to_caller = true
         break
       }
+
+      vscode.window.showInformationMessage(
+        t('utils.agentic-cli-invocation.agent.finished', {
+          duration: format_duration(Date.now() - start_time)
+        })
+      )
 
       return { agent_output, selected_root: selected_root! }
     }
