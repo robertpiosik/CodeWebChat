@@ -73,7 +73,7 @@ export const cli_edit_ask_requirements = {
   preloaded_files:
     'All project files necessary for the task were preloaded and are attached in [files](#files). You cannot make any codebase discovery tool calls.',
   referenced_files_with_some_preloaded:
-    "You must start by reading 'large files' listed as project-relative paths in [files](#files), one by one. You cannot make any further codebase discovery tool calls.",
+    "You must start by reading all 'large files' listed as project-relative paths in [files](#files). You cannot make any further codebase discovery tool calls.",
   referenced_files_only:
-    'You must read files listed as project-relative paths in [files](#files), one by one. You cannot make any further codebase discovery tool calls.'
+    'You must read all files listed as project-relative paths in [files](#files). You cannot make any further codebase discovery tool calls.'
 }
