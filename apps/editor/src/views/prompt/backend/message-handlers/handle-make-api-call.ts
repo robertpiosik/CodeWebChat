@@ -2,12 +2,7 @@ import * as vscode from 'vscode'
 import { t } from '@/i18n'
 import { build_prompt_payload } from './utils/build-prompt-payload'
 import { Logger } from '@shared/utils/logger'
-import {
-  ProvidersManager,
-  get_api_configuration_id,
-  Provider,
-  ApiConfiguration
-} from '@/services/providers-manager'
+import { ProvidersManager } from '@/services/providers-manager'
 import axios from 'axios'
 import { LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
@@ -15,7 +10,6 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { MakeApiCallMessage } from '@/views/prompt/types/messages'
 import { build_user_content } from '@/utils/build-user-content'
-import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { ApiPromptType } from '@shared/types/prompt-types'
 import {
@@ -25,123 +19,9 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE
 } from '@/constants/edit-format-instructions'
 import { PROVIDERS } from '@/constants/providers'
-import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
+import { get_api_configuration } from '@/utils/get-api-configuration'
 
-const get_last_used_config_id_key = () => {
-  return LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
-}
 
-const get_api_configuration = async (params: {
-  providers_manager: ProvidersManager
-  show_quick_pick?: boolean
-  extension_context: vscode.ExtensionContext
-  prompt_view_provider: PromptViewProvider
-  api_configuration_id?: string
-  prompt_type: ApiPromptType
-}): Promise<
-  { provider: Provider; api_configuration: ApiConfiguration } | undefined
-> => {
-  const api_configurations =
-    await params.providers_manager.get_api_configurations()
-
-  if (api_configurations.length == 0) {
-    show_incomplete_setup_warning('api')
-    return
-  }
-
-  const last_used_key = get_last_used_config_id_key()
-  let selected_api_configuration: ApiConfiguration | null = null
-
-  if (params.api_configuration_id !== undefined) {
-    selected_api_configuration =
-      api_configurations.find(
-        (c) => get_api_configuration_id(c) == params.api_configuration_id
-      ) || null
-    if (selected_api_configuration) {
-      params.extension_context.workspaceState.update(
-        last_used_key,
-        params.api_configuration_id
-      )
-
-      if (params.prompt_view_provider) {
-        params.prompt_view_provider.send_message({
-          command: 'SELECTED_API_CONFIGURATION_CHANGED',
-          prompt_type: params.prompt_type,
-          id: params.api_configuration_id
-        })
-      }
-    }
-  } else if (!params.show_quick_pick) {
-    const last_selected_id =
-      params.extension_context.workspaceState.get<string>(last_used_key)
-
-    if (last_selected_id) {
-      selected_api_configuration =
-        api_configurations.find(
-          (c) => get_api_configuration_id(c) == last_selected_id
-        ) || null
-    }
-
-    if (!selected_api_configuration && api_configurations.length == 1) {
-      selected_api_configuration = api_configurations[0]
-    }
-  }
-
-  if (!selected_api_configuration || params.show_quick_pick) {
-    const last_selected_id =
-      params.extension_context.workspaceState.get<string>(last_used_key)
-
-    const result = await show_configurations_quick_pick({
-      items: api_configurations,
-      type: 'api',
-      last_selected_id
-    })
-
-    if (params.prompt_view_provider) {
-      params.prompt_view_provider.send_message({
-        command: 'FOCUS_PROMPT_FIELD'
-      })
-    }
-
-    if (!result || result == 'back') {
-      return undefined
-    }
-
-    const { item: api_configuration, id } = result
-    params.extension_context.workspaceState.update(last_used_key, id)
-
-    if (params.prompt_view_provider) {
-      params.prompt_view_provider.send_message({
-        command: 'SELECTED_API_CONFIGURATION_CHANGED',
-        prompt_type: params.prompt_type,
-        id: id
-      })
-    }
-    selected_api_configuration = api_configuration
-  }
-
-  const provider = await params.providers_manager.get_provider(
-    selected_api_configuration.provider_name
-  )
-
-  if (!provider) {
-    vscode.window.showErrorMessage(
-      t('common.error.provider-not-found', {
-        name: selected_api_configuration.provider_name
-      })
-    )
-    Logger.warn({
-      function_name: 'get_api_configuration',
-      message: `API provider not found for ${params.prompt_type} tool.`
-    })
-    return
-  }
-
-  return {
-    provider,
-    api_configuration: selected_api_configuration
-  }
-}
 
 export const handle_make_api_call = async (
   prompt_view_provider: PromptViewProvider,
@@ -190,10 +70,12 @@ export const handle_make_api_call = async (
       extension_context: prompt_view_provider.extension_context,
       prompt_view_provider,
       api_configuration_id: current_api_configuration_id,
-      prompt_type
+      prompt_type,
+      last_used_state_key: LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
+      caller_name: 'handle_make_api_call'
     })
 
-    if (!api_configuration_result) {
+    if (!api_configuration_result || api_configuration_result === 'back') {
       return
     }
 

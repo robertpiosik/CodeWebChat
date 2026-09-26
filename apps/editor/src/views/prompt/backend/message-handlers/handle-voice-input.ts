@@ -2,18 +2,15 @@ import { PromptViewProvider } from '../prompt-view-provider'
 import { SetRecordingStateMessage } from '../../types/messages'
 import { spawn } from 'child_process'
 import { Logger } from '@shared/utils/logger'
-import {
-  ProvidersManager,
-  ApiConfiguration
-} from '@/services/providers-manager'
+import { ProvidersManager } from '@/services/providers-manager'
 import * as vscode from 'vscode'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import axios from 'axios'
 import { send_llm_message } from '@/utils/send-llm-message'
 import { voice_input_instructions } from '@/constants/instructions'
 import { LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
-import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { t } from '@/i18n'
+import { get_api_configuration } from '@/utils/get-api-configuration'
 import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 import { get_error_message } from '@/utils/get-error-message'
 
@@ -121,41 +118,21 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
       const providers_manager = new ProvidersManager(
         prompt_view_provider.extension_context
       )
-      const api_configurations =
-        await providers_manager.get_api_configurations()
 
-      if (api_configurations.length == 0) return
+      const api_configuration_result = await get_api_configuration({
+        providers_manager,
+        extension_context: prompt_view_provider.extension_context,
+        last_used_state_key: LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY,
+        default_api_configuration:
+          await providers_manager.get_default_voice_input_api_configuration(),
+        caller_name: 'stop_recording'
+      })
 
-      let api_configuration: ApiConfiguration | undefined =
-        await providers_manager.get_default_voice_input_api_configuration()
-
-      if (!api_configuration) {
-        if (api_configurations.length == 1) {
-          api_configuration = api_configurations[0]
-        } else {
-          const recent_id =
-            prompt_view_provider.extension_context.workspaceState.get<string>(
-              LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY
-            )
-
-          const result = await show_configurations_quick_pick({
-            items: api_configurations,
-            type: 'api',
-            last_selected_id: recent_id
-          })
-
-          if (!result || result === 'back') {
-            return
-          }
-
-          api_configuration = result.item
-
-          prompt_view_provider.extension_context.workspaceState.update(
-            LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY,
-            result.id
-          )
-        }
+      if (!api_configuration_result || api_configuration_result === 'back') {
+        return
       }
+
+      const { provider, api_configuration } = api_configuration_result
 
       prompt_view_provider.send_message({
         command: 'SHOW_PROGRESS',
@@ -164,19 +141,6 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
         ),
         cancellable: true
       })
-
-      const provider = await providers_manager.get_provider(
-        api_configuration!.provider_name
-      )
-
-      if (!provider) {
-        vscode.window.showErrorMessage(
-          t('common.error.provider-not-found', {
-            name: api_configuration!.provider_name
-          })
-        )
-        return
-      }
 
       const body: { [key: string]: any } = {
         model: api_configuration.model,

@@ -1,14 +1,7 @@
 import * as vscode from 'vscode'
-import {
-  ProvidersManager,
-  get_api_configuration_id,
-  ApiConfiguration
-} from '../../../services/providers-manager'
-import { Logger } from '@shared/utils/logger'
+import { ProvidersManager } from '../../../services/providers-manager'
 import { LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
-import { t } from '@/i18n'
-import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
-import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
+import { get_api_configuration } from '@/utils/get-api-configuration'
 
 export const get_code_at_cursor_api_configuration = async (params: {
   providers_manager: ProvidersManager
@@ -16,76 +9,23 @@ export const get_code_at_cursor_api_configuration = async (params: {
   extension_context: vscode.ExtensionContext
   api_configuration_id?: string
 }): Promise<{ provider: any; api_configuration: any } | undefined> => {
-  const code_at_cursor_api_configurations =
-    await params.providers_manager.get_api_configurations()
+  const result = await get_api_configuration({
+    providers_manager: params.providers_manager,
+    show_quick_pick: params.show_quick_pick,
+    extension_context: params.extension_context,
+    api_configuration_id: params.api_configuration_id,
+    last_used_state_key: LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
+    default_api_configuration:
+      await params.providers_manager.get_default_code_at_cursor_api_configuration(),
+    caller_name: 'get_code_at_cursor_api_configuration'
+  })
 
-  if (code_at_cursor_api_configurations.length == 0) {
-    show_incomplete_setup_warning('api')
-    return
-  }
-
-  let selected_api_configuration: ApiConfiguration | null = null
-
-  if (params.api_configuration_id !== undefined) {
-    selected_api_configuration =
-      code_at_cursor_api_configurations.find(
-        (c) => get_api_configuration_id(c) === params.api_configuration_id
-      ) || null
-  } else if (!params.show_quick_pick) {
-    const default_api_configuration =
-      await params.providers_manager.get_default_code_at_cursor_api_configuration()
-    if (default_api_configuration) {
-      selected_api_configuration = default_api_configuration
-    } else if (code_at_cursor_api_configurations.length == 1) {
-      selected_api_configuration = code_at_cursor_api_configurations[0]
-    }
-  }
-
-  if (!selected_api_configuration || params.show_quick_pick) {
-    const last_selected_id =
-      params.extension_context.workspaceState.get<string>(
-        LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
-      )
-
-    const result = await show_configurations_quick_pick({
-      items: code_at_cursor_api_configurations,
-      type: 'api',
-      last_selected_id
-    })
-
-    if (!result || result === 'back') {
-      return undefined
-    }
-
-    const { item: api_configuration, id } = result
-
-    params.extension_context.workspaceState.update(
-      LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
-      id
-    )
-
-    selected_api_configuration = api_configuration
-  }
-
-  const provider = await params.providers_manager.get_provider(
-    selected_api_configuration.provider_name
-  )
-
-  if (!provider) {
-    vscode.window.showErrorMessage(
-      t('common.error.provider-not-found', {
-        name: selected_api_configuration.provider_name
-      })
-    )
-    Logger.warn({
-      function_name: 'get_code_at_cursor_api_configuration',
-      message: 'API provider not found for Code at Cursor tool.'
-    })
-    return
+  if (!result || result === 'back') {
+    return undefined
   }
 
   return {
-    provider,
-    api_configuration: selected_api_configuration
+    provider: result.provider,
+    api_configuration: result.api_configuration
   }
 }

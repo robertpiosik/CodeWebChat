@@ -1,10 +1,7 @@
 import * as vscode from 'vscode'
 import { ProvidersManager } from '@/services/providers-manager'
-import { Logger } from '@shared/utils/logger'
 import { LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
-import { t } from '@/i18n'
-import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
-import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
+import { get_api_configuration } from '@/utils/get-api-configuration'
 
 export interface CommitMessageApiConfiguration {
   provider_name: string
@@ -29,76 +26,28 @@ export const get_commit_message_api_configuration = async (params: {
   const show_quick_pick = params.show_quick_pick ?? false
   const show_back_button = params.show_back_button ?? true
 
-  let commit_message_api_configuration:
-    | CommitMessageApiConfiguration
-    | null
-    | undefined
-    | 'back' = undefined
+  const result = await get_api_configuration({
+    providers_manager,
+    extension_context: params.extension_context,
+    show_quick_pick,
+    last_used_state_key: LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY,
+    show_back_button,
+    ignore_focus_out: true,
+    caller_name: 'get_commit_message_api_configuration',
+    auto_select_last_used: false
+  })
 
-  if (!commit_message_api_configuration) {
-    const api_configurations = await providers_manager.get_api_configurations()
-
-    if (api_configurations.length == 0) {
-      show_incomplete_setup_warning('api')
-      return null
-    }
-
-    if (api_configurations.length == 1 && !show_quick_pick) {
-      commit_message_api_configuration = api_configurations[0]
-    } else if (api_configurations.length >= 1) {
-      const last_selected_id =
-        params.extension_context.workspaceState.get<string>(
-          LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY
-        )
-
-      const result = await show_configurations_quick_pick({
-        items: api_configurations,
-        type: 'api',
-        last_selected_id,
-        show_back_button,
-        ignore_focus_out: true
-      })
-
-      if (result == 'back' || !result) {
-        commit_message_api_configuration = 'back'
-      } else {
-        params.extension_context.workspaceState.update(
-          LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY,
-          result.id
-        )
-        commit_message_api_configuration = result.item
-      }
-    }
-  }
-
-  if (commit_message_api_configuration == 'back') {
+  if (result === 'back') {
     return 'back'
   }
 
-  if (!commit_message_api_configuration) {
-    return null
-  }
-
-  const provider = await providers_manager.get_provider(
-    commit_message_api_configuration.provider_name
-  )
-
-  if (!provider) {
-    vscode.window.showErrorMessage(
-      t('common.error.provider-not-found', {
-        name: commit_message_api_configuration.provider_name
-      })
-    )
-    Logger.warn({
-      function_name: 'get_commit_message_api_configuration',
-      message: 'API provider not found for Commit Messages tool.'
-    })
+  if (!result) {
     return null
   }
 
   return {
-    api_configuration: commit_message_api_configuration,
-    provider,
-    base_url: provider.base_url
+    api_configuration: result.api_configuration,
+    provider: result.provider,
+    base_url: result.provider.base_url
   }
 }
