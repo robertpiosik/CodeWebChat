@@ -4,6 +4,10 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
 import { cli_edit_ask_task_scope } from '@/constants/instructions'
 import { LAST_SELECTED_WORKSPACE_IN_AGENTIC_CLI_STATE_KEY } from '@/constants/state-keys'
+import {
+  MAX_CLI_PROMPT_TOTAL_INLINED_CHARS,
+  MAX_CLI_PROMPT_FILE_INLINED_CHARS
+} from '@/constants/values'
 
 export const build_cli_prompt = async (params: {
   prompt_view_provider: PromptViewProvider
@@ -67,7 +71,7 @@ export const build_cli_prompt = async (params: {
   let are_all_files_preloaded = false
   let are_any_files_preloaded = false
 
-  if (total_content_length <= 20000) {
+  if (total_content_length <= MAX_CLI_PROMPT_TOTAL_INLINED_CHARS) {
     are_all_files_preloaded = true
     are_any_files_preloaded = files_data.length > 0
     const file_blocks = files_data.map((data) =>
@@ -84,8 +88,8 @@ export const build_cli_prompt = async (params: {
     for (const data of files_data) {
       if (data.content !== undefined) {
         if (
-          data.content.length <= 1000 &&
-          total_inlined_characters + data.content.length <= 20000
+          data.content.length <= MAX_CLI_PROMPT_FILE_INLINED_CHARS &&
+          total_inlined_characters + data.content.length <= MAX_CLI_PROMPT_TOTAL_INLINED_CHARS
         ) {
           total_inlined_characters += data.content.length
           file_blocks.push(
