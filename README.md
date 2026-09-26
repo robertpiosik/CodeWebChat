@@ -23,7 +23,7 @@
 
 ## Introduction
 
-This independently built toolkit is designed for a sessionless workflow that addresses pain points coding with agents alone: **walls of text**, **context pollution**, **latency** and **cost**.
+This independently built toolkit is designed for a sessionless workflow that addresses pain points of coding with agents alone: **walls of text**, **context pollution**, **latency** and **cost**.
 
 #### The workflow
 
