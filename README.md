@@ -23,7 +23,7 @@
 
 ## Introduction
 
-This independently built toolkit helps construct, send, and apply _fast_ single-turn prompts.
+This independently built toolkit helps construct _fast_, single-turn prompts in an effective workflow.
 
 #### The workflow
 
