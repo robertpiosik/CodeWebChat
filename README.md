@@ -34,7 +34,7 @@ This independently built toolkit helps replace multi-turn sessions with _fast_ s
 #### Efficiency and speed
 
 - For the powerful [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
-- **Single-turn prompts** make intent easier to unpack—model's reasoning is shorter or even optional.
+- Single-turn prompts make intent easier to unpack—model's reasoning is shorter or even optional.
 
 ## Supported targets
 
