@@ -30,7 +30,7 @@
 1. Type instructions
 2. Run [Agentic Search](#-agentic-search) for task-relevant file selection
 3. Select examples for model guidance
-4. Send prompt with a chatbot, an API call or an agentic CLI invocation
+4. Send [prompt](#-editing) with a chatbot, an API call or an agentic CLI invocation
 5. Apply response
 
 #### Efficiency and speed
@@ -40,11 +40,11 @@
 
 ## Supported targets
 
-#### Agents
+### 👉 Agents
 
 Antigravity, Claude Code, Codex, Cursor, Grok Build, Muse Code, OpenCode.
 
-#### Chatbots
+### 👉 Chatbots
 
 Copy & paste into any chatbot, [autofill](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) prompts in: AI Studio, Arena, ChatGPT, Claude, Copilot, DeepSeek, Doubao, Gemini, GitHub Copilot, Grok, HuggingChat, Kimi, Meta, Mistral, Open WebUI, OpenRouter, Qwen, Together, Yuanbao, Z.
 
@@ -54,7 +54,7 @@ Copy & paste into any chatbot, [autofill](https://github.com/robertpiosik/CodeWe
 > [!NOTE]
 > Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
 
-#### APIs
+### 👉 APIs
 
 Any OpenAI-API-compatible model provider with your own key (BYOK).
 
