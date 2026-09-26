@@ -38,15 +38,25 @@
 - For [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
 - Given lean, bloat-free prompts, models 'think' less and stay at their baseline accuracy.
 
-## Supported CLIs
+## Supported targets
 
-- Antigravity
-- Claude Code
-- Codex
-- Cursor
-- Grok Build
-- Muse Code
-- OpenCode
+#### Agents
+
+Antigravity, Claude Code, Codex, Cursor, Grok Build, Muse Code, OpenCode.
+
+#### Chatbots
+
+Copy & paste into any chatbot, [autofill](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) prompts in: AI Studio, Arena, ChatGPT, Claude, Copilot, DeepSeek, Doubao, Gemini, GitHub Copilot, Grok, HuggingChat, Kimi, Meta, Mistral, Open WebUI, OpenRouter, Qwen, Together, Yuanbao, Z.
+
+> [!TIP]
+> Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
+
+> [!NOTE]
+> Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
+
+#### APIs
+
+Any OpenAI-API-compatible model provider with your own key (BYOK).
 
 ## Prompts
 
@@ -323,45 +333,6 @@ Apply the attached changes to the file without explanations or any other text.
 ```
 
 </details>
-
-## Enabling autofill
-
-Automatically place prompts in your favorite chatbot via the official browser extension ([source code](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser)).
-
-- [Chrome Web Store](https://chromewebstore.google.com/detail/autofill-for-code-web-chat/ljookipcanaglfaocjbgdicfbdhhjffp)
-- [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/autofill-for-code-web-chat/)
-
-> [!TIP]
-> Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
-
-#### Supported chatbots
-
-- AI Studio
-- Arena
-- ChatGPT
-- Claude
-- Copilot
-- DeepSeek
-- Doubao
-- Gemini
-- GitHub Copilot
-- Grok
-- HuggingChat
-- Kimi
-- Meta
-- Mistral
-- Open WebUI
-- OpenRouter
-- Qwen
-- Together
-- Yuanbao
-- Z
-
-> [!IMPORTANT]
-> The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. Review the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/apps/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) to learn about implementation details.
-
-> [!NOTE]
-> Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
 
 ## Prompt caching
 
