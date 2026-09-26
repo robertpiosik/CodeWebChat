@@ -71,9 +71,9 @@ export const voice_input_instructions =
 
 export const cli_edit_ask_requirements = {
   preloaded_files:
-    'All files necessary for [the task](#task) were preloaded and are attached in [files](#files). You cannot make any codebase discovery tool calls.',
+    'All project files necessary for the task were preloaded and are attached in [files](#files). You cannot make any codebase discovery tool calls.',
   referenced_files_with_some_preloaded:
-    "Before you proceed with [the task](#task), you must read 'large files' listed as project-relative paths in [files](#files) one by one. You cannot make any further codebase discovery tool calls.",
+    "You must start by reading 'large files' listed as project-relative paths in [files](#files), one by one. You cannot make any further codebase discovery tool calls.",
   referenced_files_only:
-    'Before you proceed with [the task](#task), you must read files provided as project-relative paths in [files](#files) one by one. You cannot make any further codebase discovery tool calls.'
+    'You must read files provided as project-relative paths in [files](#files), one by one. You cannot make any further codebase discovery tool calls.'
 }
