@@ -36,7 +36,7 @@ This independently built toolkit proposes a simple, sessionless workflow that re
 #### Efficiency and speed
 
 - Outside of long multi-turn sessions, SOTA models offer diminishing returns over cheaper mid-tiers.
-- Single-turn prompts make intent easy to unpack. Model's reasoning is short, even on higher efforts.
+- Single-turn prompts make intent easy to unpack—model's reasoning is short, even on higher efforts.
 
 ## Supported targets
 
