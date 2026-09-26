@@ -34,7 +34,7 @@ This independently built toolkit helps construct prompts with files and instruct
 #### Efficiency and speed
 
 - For the powerful [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
-- Static context feeding simple prompts make intent clear, thus 'thinking' short or even optional.
+- File editing in single-turns make intent easy to unpack, thus 'thinking' short or even optional.
 
 ## Targets
 
