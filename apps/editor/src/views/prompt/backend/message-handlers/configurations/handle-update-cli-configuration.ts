@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { PromptViewProvider } from '../prompt-view-provider'
+import { PromptViewProvider } from '../../prompt-view-provider'
 import { update } from '@/views/shared/actions/agent/update'
 import { t } from '@/i18n'
 

@@ -65,7 +65,7 @@ import {
   handle_get_tasks,
   handle_save_tasks,
   handle_delete_task,
-  handle_cancel_patch_repair_file_in_preview as handle_cancel_patch_repair_file_in_preview,
+  handle_cancel_patch_repair_file_in_preview,
   handle_open_file_and_select,
   handle_hash_sign_quick_pick,
   handle_save_prompt_image,
@@ -77,26 +77,26 @@ import {
   handle_open_website,
   handle_create_api_configuration,
   handle_delete_api_configuration,
-  handle_update_last_used_web_configuration,
   handle_request_return_home,
   handle_pick_tasks_workspace,
   handle_preview_prompt,
   handle_install_browser_extension,
   handle_preview_changes_symbol,
   handle_preview_commit_symbol,
-  handle_preview_skill_symbol
+  handle_preview_skill_symbol,
+  handle_update_api_configuration,
+  handle_pick_provider,
+  handle_pick_api_model,
+  handle_create_cli_configuration,
+  handle_delete_cli_configuration,
+  handle_reorder_cli_configurations,
+  handle_toggle_pinned_cli_configuration,
+  handle_update_cli_configuration,
+  handle_pick_api_reasoning_effort,
+  handle_select_edit_format_instructions,
+  handle_update_last_used_web_configuration
 } from './message-handlers'
-import { handle_agentic_search } from './message-handlers/handle-agentic-search/handle-agentic-search'
-import { handle_update_api_configuration } from './message-handlers/handle-update-api-configuration'
-import { handle_pick_provider } from './message-handlers/handle-pick-provider'
-import { handle_pick_api_model } from './message-handlers/handle-pick-api-model'
-import { handle_create_cli_configuration } from './message-handlers/handle-create-cli-configuration'
-import { handle_delete_cli_configuration } from './message-handlers/handle-delete-cli-configuration'
-import { handle_reorder_cli_configurations } from './message-handlers/handle-reorder-cli-configurations'
-import { handle_toggle_pinned_cli_configuration } from './message-handlers/handle-toggle-pinned-cli-configuration'
-import { handle_update_cli_configuration } from './message-handlers/handle-update-cli-configuration'
-import { handle_pick_api_reasoning_effort } from './message-handlers/handle-pick-api-reasoning-effort'
-import { handle_select_edit_format_instructions } from './message-handlers/handle-select-edit-format-instructions'
+import { handle_agentic_search } from './message-handlers/handle-agentic-search'
 import { SelectionState } from '../types/messages'
 import {
   EDIT_FORMAT_STATE_KEY,

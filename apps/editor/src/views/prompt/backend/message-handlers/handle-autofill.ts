@@ -10,12 +10,12 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
-import { handle_update_last_used_web_configuration } from './handle-update-last-used-web-configuration'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { t } from '@/i18n'
 import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 import { CHATBOTS } from '@shared/constants/chatbots'
+import { update_last_used_web_configuration } from './utils/update-last-used-web-configuration'
 
 export const handle_autofill = async (params: {
   prompt_view_provider: PromptViewProvider
@@ -44,7 +44,7 @@ export const handle_autofill = async (params: {
   const resolved_web_configuration_name = resolution.web_configuration_name
 
   if (params.web_configuration_name !== undefined) {
-    handle_update_last_used_web_configuration({
+    update_last_used_web_configuration({
       prompt_view_provider: params.prompt_view_provider,
       web_configuration_name: params.web_configuration_name
     })
@@ -166,7 +166,7 @@ const show_web_configuration_quick_pick = async (params: {
   const web_configuration = result.item
 
   if (web_configuration.name) {
-    handle_update_last_used_web_configuration({
+    update_last_used_web_configuration({
       prompt_view_provider,
       web_configuration_name: web_configuration.name
     })

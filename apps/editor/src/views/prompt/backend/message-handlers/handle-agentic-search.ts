@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { PromptViewProvider } from '../../prompt-view-provider'
+import { PromptViewProvider } from '../prompt-view-provider'
 import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
 import { agentic_search } from '@/features/agentic-search'

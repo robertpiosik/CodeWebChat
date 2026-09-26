@@ -1,4 +1,4 @@
-import { PromptViewProvider } from '../prompt-view-provider'
+import { PromptViewProvider } from '../../prompt-view-provider'
 import { remove } from '@/views/shared/actions/api/delete'
 
 export const handle_delete_api_configuration = async (

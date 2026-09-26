@@ -2,7 +2,7 @@ import * as path from 'path'
 import * as fs from 'fs/promises'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
-import { cli_edit_ask_task_scope } from '@/constants/instructions'
+import { cli_edit_ask_requirements } from '@/constants/instructions'
 import { LAST_SELECTED_WORKSPACE_IN_AGENTIC_CLI_STATE_KEY } from '@/constants/state-keys'
 import {
   MAX_CLI_PROMPT_TOTAL_INLINED_CHARS,
@@ -46,12 +46,19 @@ export const build_cli_prompt = async (params: {
   let total_content_length = 0
 
   for (const f of checked_files) {
-    const root = prompt_view_provider.workspace_provider.get_workspace_root_for_file(f)
+    const root =
+      prompt_view_provider.workspace_provider.get_workspace_root_for_file(f)
     let relative_path = f
 
     if (root) {
       const rel = path.relative(root, f)
-      const temp_rel = roots.length > 1 ? path.join(prompt_view_provider.workspace_provider.get_workspace_name(root), rel) : rel
+      const temp_rel =
+        roots.length > 1
+          ? path.join(
+              prompt_view_provider.workspace_provider.get_workspace_name(root),
+              rel
+            )
+          : rel
       relative_path = temp_rel.replace(/\\/g, '/')
     } else {
       const rel = selected_root ? path.relative(selected_root, f) : f
@@ -89,7 +96,8 @@ export const build_cli_prompt = async (params: {
       if (data.content !== undefined) {
         if (
           data.content.length <= MAX_CLI_PROMPT_FILE_INLINED_CHARS &&
-          total_inlined_characters + data.content.length <= MAX_CLI_PROMPT_TOTAL_INLINED_CHARS
+          total_inlined_characters + data.content.length <=
+            MAX_CLI_PROMPT_TOTAL_INLINED_CHARS
         ) {
           total_inlined_characters += data.content.length
           file_blocks.push(
@@ -100,7 +108,9 @@ export const build_cli_prompt = async (params: {
           file_blocks.push(`### Large file: \`${data.relative_path}\``)
         }
       } else {
-        file_blocks.push(`### File: \`${data.relative_path}\`\n\n\`\`\`\n\n\`\`\``)
+        file_blocks.push(
+          `### File: \`${data.relative_path}\`\n\n\`\`\`\n\n\`\`\``
+        )
         are_any_files_preloaded = true
       }
     }
@@ -110,13 +120,13 @@ export const build_cli_prompt = async (params: {
 
   const output_formatting_section = ''
 
-  const task_scope = are_all_files_preloaded
-    ? cli_edit_ask_task_scope.preloaded_files
+  const requirements = are_all_files_preloaded
+    ? cli_edit_ask_requirements.preloaded_files
     : are_any_files_preloaded
-    ? cli_edit_ask_task_scope.referenced_files_with_some_preloaded
-    : cli_edit_ask_task_scope.referenced_files_only
+      ? cli_edit_ask_requirements.referenced_files_with_some_preloaded
+      : cli_edit_ask_requirements.referenced_files_only
 
-  const task_scope_section = `# Task scope\n\n${task_scope}`
+  const task_scope_section = `# Requirements\n\n${requirements}`
   const task_section = `# Task\n\n${processed_query}`
 
   const parts = [

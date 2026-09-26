@@ -1,5 +1,5 @@
 import { config_cli_configuration_to_ui_format } from '@/utils/cli-configuration-format-converters'
-import { PromptViewProvider } from '../prompt-view-provider'
+import { PromptViewProvider } from '../../prompt-view-provider'
 import { create } from '@/views/shared/actions/agent/create'
 
 export const handle_create_cli_configuration = async (
