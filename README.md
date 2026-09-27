@@ -177,7 +177,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 - Begin by looking at [files](#files) section for referenced files (### File: `[PROJECT-RELATIVE PATH]`) and read them one-by-one.
 - If [task](#task) section includes *.png image paths, read them.
-- Further tool calling (e.g. running commands like ls, git, etc.) is forbidden, with exceptions: explicit file CREATION, DELETION or UPDATES to complete the [task](#task).
+- Any further tool calling (including commands like grep, ls, git, etc.) is FORBIDDEN, with exceptions: explicit file CREATIONS, DELETIONS or UPDATES to complete the [task](#task).
 
 # Task
 
@@ -217,7 +217,7 @@ _Multi-purpose: explanations, code reviews, you name it._
 
 - Begin by looking at [files](#files) section for referenced files (### File: `[PROJECT-RELATIVE PATH]`) and read them one-by-one.
 - If [task](#task) section includes *.png image paths, read them.
-- Further tool calling (e.g. running commands like ls, git, etc.) is forbidden, with exceptions: explicit file CREATION, DELETION or UPDATES to complete the [task](#task).
+- Any further tool calling (including commands like grep, ls, git, etc.) is FORBIDDEN, with exceptions: explicit file CREATIONS, DELETIONS or UPDATES to complete the [task](#task).
 
 # Task
 
