@@ -35,7 +35,7 @@
 
 - Without sessions, there is no context accumulation;
   - token spend never skyrocket,
-  - models 'think' less.
+  - models *think* less.
 
 ## Send prompts with...
 
