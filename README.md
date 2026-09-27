@@ -23,7 +23,7 @@
 
 ## Introduction
 
-**CWC** helps construct prompts with files and instructions for a sessionless workflow.
+**CWC** constructs markdown-formatted prompts with files and instructions for a fast, sessionless workflow.
 
 #### The workflow
 
