@@ -188,26 +188,26 @@
     }
   }
 
-  &--warning {
+  &--error {
     background-color: color-mix(
       in srgb,
-      var(--vscode-charts-yellow) 30%,
+      var(--vscode-charts-red) 30%,
       transparent
     );
   }
 
-  &--warning &__icon:hover {
+  &--error &__icon:hover {
     background-color: color-mix(
       in srgb,
-      var(--vscode-charts-yellow) 40%,
+      var(--vscode-charts-red) 40%,
       transparent
     );
   }
 
-  &--warning &__text:hover {
+  &--error &__text:hover {
     background-color: color-mix(
       in srgb,
-      var(--vscode-charts-yellow) 40%,
+      var(--vscode-charts-red) 40%,
       transparent
     );
   }

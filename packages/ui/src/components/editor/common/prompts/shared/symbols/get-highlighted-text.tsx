@@ -97,7 +97,7 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(
           styles['symbol'],
           styles['symbol--pasted-lines'],
-          { [styles['symbol--warning']]: is_warning }
+          { [styles['symbol--error']]: is_warning }
         )}" data-type="pasted-lines-symbol"${
           is_warning ? ' title="File with selection is not selected"' : ''
         } data-path="${escape_html(path)}" data-start-line="${start_line}" data-start-col="${start_col}" data-end-line="${end_line}" data-end-col="${end_col}"><span class="${
@@ -193,7 +193,7 @@ export const get_highlighted_text = (params: {
         const hash = image_match[1]
         const is_warning = params.is_web_target
         return `<span class="${cn(styles['symbol'], styles['symbol--image'], {
-          [styles['symbol--warning']]: is_warning
+          [styles['symbol--error']]: is_warning
         })}" data-type="image-symbol" data-hash="${hash}"${
           is_warning
             ? ' title="The prompt autofill feature can\'t handle images.\nUpload in chatbot or use API with a multimodal model."'
