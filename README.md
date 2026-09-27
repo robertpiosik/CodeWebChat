@@ -36,7 +36,6 @@
 - Without sessions, there is no context accumulation;
   - token spend never skyrocket,
   - models 'think' less.
-- For the powerful [Agentic Search](#-agentic-search), SOTA models offer diminishing returns over cheap mid-tiers.
 
 ## Send prompts with...
 
