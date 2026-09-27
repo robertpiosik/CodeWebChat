@@ -77,5 +77,7 @@ export const cli_edit_ask_requirements = {
     'Begin by looking at [files](#files) section for referenced files (### File: `[PROJECT-RELATIVE PATH]`) and read them one-by-one.',
   read_images: 'If [task](#task) section includes *.png image paths, read them.',
   restrict_tool_calls:
-    'Further tool calling (e.g. running commands like ls, git, etc.) is forbidden, with exceptions: explicit file CREATION, DELETION or UPDATES to complete the [task](#task).'
+    'Further tool calling (e.g. running commands like ls, git, etc.) is forbidden.',
+  restrict_tool_calls_with_exceptions:
+    'Further tool calling (e.g. running commands like ls, git, etc.) is forbidden, with exceptions: explicit file CREATIONS, DELETIONS or UPDATES to complete the [task](#task).'
 }

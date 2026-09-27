@@ -127,7 +127,9 @@ export const build_cli_prompt = async (params: {
         ? cli_edit_ask_requirements.referenced_files_with_some_preloaded
         : cli_edit_ask_requirements.referenced_files_only,
     cli_edit_ask_requirements.read_images,
-    cli_edit_ask_requirements.restrict_tool_calls
+    prompt_view_provider.cli_prompt_type == 'edit-files'
+      ? cli_edit_ask_requirements.restrict_tool_calls_with_exceptions
+      : cli_edit_ask_requirements.restrict_tool_calls
   ]
 
   const requirements = requirements_list.map((r) => `- ${r}`).join('\n')
