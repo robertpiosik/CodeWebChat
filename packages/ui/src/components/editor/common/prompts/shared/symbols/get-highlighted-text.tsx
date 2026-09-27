@@ -92,14 +92,14 @@ export const get_highlighted_text = (params: {
         const line_count = Math.max(1, end_line - start_line + 1)
         const lines_text = line_count == 1 ? 'line' : 'lines'
 
-        const is_error = !params.context_file_paths.includes(path)
+        const is_warning = !params.context_file_paths.includes(path)
 
         return `<span class="${cn(
           styles['symbol'],
           styles['symbol--pasted-lines'],
-          { [styles['symbol--error']]: is_error }
+          { [styles['symbol--warning']]: is_warning }
         )}" data-type="pasted-lines-symbol"${
-          is_error ? ' title="File with selection is not selected"' : ''
+          is_warning ? ' title="File with selection is not selected"' : ''
         } data-path="${escape_html(path)}" data-start-line="${start_line}" data-start-col="${start_col}" data-end-line="${end_line}" data-end-col="${end_col}"><span class="${
           styles['symbol__icon']
         }" data-role="symbol-icon"></span><span class="${
@@ -191,11 +191,11 @@ export const get_highlighted_text = (params: {
       const image_match = part.match(/^#Image\(([a-fA-F0-9]+)\)$/)
       if (part && image_match) {
         const hash = image_match[1]
-        const is_error = params.is_web_target
+        const is_warning = params.is_web_target
         return `<span class="${cn(styles['symbol'], styles['symbol--image'], {
-          [styles['symbol--error']]: is_error
+          [styles['symbol--warning']]: is_warning
         })}" data-type="image-symbol" data-hash="${hash}"${
-          is_error
+          is_warning
             ? ' title="The prompt autofill feature can\'t handle images.\nUpload in chatbot or use API with a multimodal model."'
             : ''
         }><span class="${

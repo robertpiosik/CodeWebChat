@@ -181,8 +181,11 @@ export const MainView: React.FC<Props> = (props) => {
     (props.target == 'WEB' && props.web_prompt_type == 'edit-files') ||
     (props.target == 'API' && props.api_prompt_type == 'edit-files')
 
-  const is_context_empty =
-    show_edit_format_selector && props.selected_files.length == 0
+  const is_required_context_empty =
+    ((props.target == 'WEB' && props.web_prompt_type == 'edit-files') ||
+      (props.target == 'API' && props.api_prompt_type == 'edit-files') ||
+      (props.target == 'CLI' && props.cli_prompt_type == 'edit-files')) &&
+    props.selected_files.length == 0
 
   const handle_input_change = (value: string) => {
     props.set_instructions(value)
@@ -436,7 +439,7 @@ export const MainView: React.FC<Props> = (props) => {
             props.target == 'WEB' &&
             (!props.is_connected || !props.web_configurations.length)
           }
-          is_action_disabled={is_context_empty}
+          is_action_disabled={is_required_context_empty}
           value={props.instructions}
           chat_history={props.chat_history}
           on_change={handle_input_change}
@@ -476,7 +479,7 @@ export const MainView: React.FC<Props> = (props) => {
           target={props.target}
           on_target_change={(target) => props.on_target_change(target)}
           active_border_color={
-            is_context_empty
+            is_required_context_empty
               ? 'yellow'
               : props.target == 'WEB'
                 ? props.web_prompt_type == 'edit-files'
@@ -540,11 +543,10 @@ export const MainView: React.FC<Props> = (props) => {
             attach_selected_files: t('prompt-field.attach-selected-files'),
             more: t('prompt-field.more')
           }}
-          
         />
       </div>
 
-      {is_context_empty ? (
+      {is_required_context_empty ? (
         <UiStatusBar
           placement="bottom"
           theme="warning"
@@ -752,9 +754,7 @@ export const MainView: React.FC<Props> = (props) => {
           on_edit={(id) => props.on_edit_cli_configuration(id)}
           on_reorder={(reordered) => {
             const new_cli_configurations = reordered.map((c) => {
-              return props.cli_configurations.find(
-                (p) => p.name == c.id
-              )!
+              return props.cli_configurations.find((p) => p.name == c.id)!
             })
             props.on_cli_configurations_reorder(new_cli_configurations)
           }}

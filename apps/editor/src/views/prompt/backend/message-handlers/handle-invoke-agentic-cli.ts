@@ -22,6 +22,16 @@ export const handle_invoke_agentic_cli = async (
     return
   }
 
+  if (
+    prompt_view_provider.cli_prompt_type == 'edit-files' &&
+    !prompt_view_provider.workspace_provider.get_checked_files().length
+  ) {
+    vscode.window.showInformationMessage(
+      t('views.common.handlers.common.context-cannot-be-empty')
+    )
+    return
+  }
+
   const prompt_type = prompt_view_provider.cli_prompt_type
   const last_used_key = get_last_used_cli_configuration_key(prompt_type)
   const last_used_agent_config_name =
@@ -76,7 +86,7 @@ export const handle_invoke_agentic_cli = async (
   if (agent_output && prompt_view_provider.cli_prompt_type == 'edit-files') {
     vscode.commands.executeCommand('codeWebChat.applyResponse', {
       response: agent_output,
-      raw_instructions: current_instructions,
+      raw_instructions: current_instructions
     })
   }
 }
