@@ -78,7 +78,7 @@ export const cli_edit_ask_requirements = {
   read_images:
     'If [task](#task) section includes *.png image paths, read them.',
   restrict_tool_calls:
-    'Any further tool calling (including commands like grep, ls, git, etc.) is FORBIDDEN.',
+    'Any further tool calling (including grep, ls, git, etc. command executions) is FORBIDDEN.',
   restrict_tool_calls_with_exceptions:
-    'Any further tool calling (including commands like grep, ls, git, etc.) is FORBIDDEN, with exceptions: explicit file CREATIONS, DELETIONS or UPDATES to complete the [task](#task).'
+    'Any further tool calling (including grep, ls, git, etc. command executions) is FORBIDDEN, with exceptions: strictly file creations, deletions or updates to complete the [task](#task).'
 }
