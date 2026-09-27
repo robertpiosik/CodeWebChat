@@ -18,12 +18,16 @@ async function get_all_files(dir: string): Promise<string[]> {
 
 export const generate_diff_markdown = async (
   temp_dir_path: string,
-  file_mappings: Map<string, { original: string; dest_rel: string }>
+  file_mappings: Map<string, { original: string; dest_rel: string; initial_content?: string }>
 ): Promise<string> => {
   let diff_markdown = ''
   const temp_files = await get_all_files(temp_dir_path)
 
   for (const temp_file of temp_files) {
+    if (path.basename(temp_file).startsWith('._orig_')) {
+      continue
+    }
+
     const rel_path = path.relative(temp_dir_path, temp_file)
     const unix_rel_path = rel_path.replace(/\\/g, '/')
 
@@ -39,18 +43,20 @@ export const generate_diff_markdown = async (
     }
 
     if (mapping) {
-      const original_content = await fs.promises.readFile(
-        mapping.original,
-        'utf-8'
-      )
+      const original_content = mapping.initial_content !== undefined
+        ? mapping.initial_content
+        : await fs.promises.readFile(mapping.original, 'utf-8').catch(() => '')
       const new_content = await fs.promises.readFile(temp_file, 'utf-8')
 
       if (original_content !== new_content) {
+        const temp_original = path.join(path.dirname(temp_file), `._orig_${path.basename(temp_file)}`)
+        await fs.promises.writeFile(temp_original, original_content, 'utf-8')
+
         try {
           await execFileAsync('git', [
             'diff',
             '--no-index',
-            mapping.original,
+            temp_original,
             temp_file
           ])
         } catch (err: any) {
@@ -102,6 +108,8 @@ export const generate_diff_markdown = async (
               (new_content.endsWith('\n') ? '' : '\n') +
               '```\n'
           }
+        } finally {
+          await fs.promises.unlink(temp_original).catch(() => {})
         }
       }
     } else {

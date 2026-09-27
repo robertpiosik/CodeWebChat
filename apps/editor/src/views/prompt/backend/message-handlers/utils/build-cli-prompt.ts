@@ -76,11 +76,9 @@ export const build_cli_prompt = async (params: {
 
   let files_section = ''
   let are_all_files_preloaded = false
-  let are_any_files_preloaded = false
 
   if (total_content_length <= MAX_CLI_PROMPT_TOTAL_INLINED_CHARS) {
     are_all_files_preloaded = true
-    are_any_files_preloaded = files_data.length > 0
     const file_blocks = files_data.map((data) =>
       data.content !== undefined
         ? `### File: \`${data.relative_path}\`\n\n\`\`\`\n${data.content}\n\`\`\``
@@ -103,7 +101,6 @@ export const build_cli_prompt = async (params: {
           file_blocks.push(
             `### File: \`${data.relative_path}\`\n\n\`\`\`\n${data.content}\n\`\`\``
           )
-          are_any_files_preloaded = true
         } else {
           file_blocks.push(`### Unread file: \`${data.relative_path}\``)
         }
@@ -111,7 +108,6 @@ export const build_cli_prompt = async (params: {
         file_blocks.push(
           `### File: \`${data.relative_path}\`\n\n\`\`\`\n\n\`\`\``
         )
-        are_any_files_preloaded = true
       }
     }
 
@@ -123,9 +119,7 @@ export const build_cli_prompt = async (params: {
   const requirements_list = [
     are_all_files_preloaded
       ? cli_edit_ask_requirements.preloaded_files
-      : are_any_files_preloaded
-        ? cli_edit_ask_requirements.referenced_files_with_some_preloaded
-        : cli_edit_ask_requirements.referenced_files_only,
+      : cli_edit_ask_requirements.read_files,
     cli_edit_ask_requirements.read_images,
     prompt_view_provider.cli_prompt_type == 'edit-files'
       ? cli_edit_ask_requirements.restrict_tool_calls_with_exceptions

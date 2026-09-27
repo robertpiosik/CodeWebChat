@@ -303,7 +303,7 @@ export const invoke_agentic_cli = async (params: {
     while (true) {
       let selected_root: string | undefined
       let temp_dir_path: string | undefined
-      const file_mappings = new Map<string, { original: string; dest_rel: string }>()
+      const file_mappings = new Map<string, { original: string; dest_rel: string; initial_content?: string }>()
 
       if (params.panel_prompt_type) {
         temp_dir_path = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'cwc-cli-'))
@@ -319,7 +319,9 @@ export const invoke_agentic_cli = async (params: {
           await fs.promises.mkdir(path.dirname(dest_path), { recursive: true })
           await fs.promises.copyFile(file_path, dest_path)
           
-          file_mappings.set(dest_path, { original: file_path, dest_rel: dest_rel.replace(/\\/g, '/') })
+          const initial_content = await fs.promises.readFile(file_path, 'utf-8').catch(() => undefined)
+
+          file_mappings.set(dest_path, { original: file_path, dest_rel: dest_rel.replace(/\\/g, '/'), initial_content })
         }
         
         selected_root = temp_dir_path

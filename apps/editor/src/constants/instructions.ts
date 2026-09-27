@@ -71,10 +71,8 @@ export const voice_input_instructions =
 
 export const cli_edit_ask_requirements = {
   preloaded_files: 'All project files are shown in [files](#files) section.',
-  referenced_files_with_some_preloaded:
-    'Begin by looking at [files](#files) section for unread files (### Unread file: `[PROJECT-RELATIVE PATH]`) and read them one-by-one.',
-  referenced_files_only:
-    'Begin by looking at [files](#files) section for referenced files (### File: `[PROJECT-RELATIVE PATH]`) and read them one-by-one.',
+  read_files:
+    'You must start by looking at [files](#files) section for unread files (### Unread file: `[PROJECT-RELATIVE PATH]`) and read them one-by-one.',
   read_images:
     'If [task](#task) section includes *.png image paths, read them.',
   restrict_tool_calls:
