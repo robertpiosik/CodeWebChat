@@ -23,20 +23,19 @@
 
 ## Introduction
 
-This independent toolkit helps construct [markdown-formatted prompts](#prompts) in a sessionless workflow.
+This independent toolkit helps construct [markdown-formatted prompts](#prompts) for a sessionless workflow.
 
-#### Sessionless workflow
+#### The workflow
 
-- Agent selects task-relevant files on a file tree.
-- Only a final set of files make it to the context window.
-- No more tool calling when prompting for edits/questions.
-- There is no context accumulation.
-- Iterations without context bloat.
+1. Select task-relevant files with the help of [Agentic Search](#-agentic-search).
+2. Select examples for model guidance.
+3. Send prompts with chatbots, api calls or coding agents.
 
 #### Efficiency and speed
 
 - Without sessions, there is no context accumulation;
   - token spend never skyrocket,
+  - zero drop in accuracy,
   - models _think_ less.
 
 ## Send prompts with...
