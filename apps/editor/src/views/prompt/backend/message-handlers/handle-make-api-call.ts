@@ -37,7 +37,7 @@ export const handle_make_api_call = async (
   const current_instructions = prompt_view_provider.current_instructions.trim()
 
   if (!current_instructions) {
-    vscode.window.showInformationMessage(
+    vscode.window.showWarningMessage(
       t('views.common.handlers.common.instructions-cannot-be-empty')
     )
     return

@@ -19,7 +19,7 @@ export const handle_preview_prompt = async (params: {
     params.prompt_view_provider.current_instructions.trim()
 
   if (!current_instructions) {
-    vscode.window.showInformationMessage(
+    vscode.window.showWarningMessage(
       t('views.common.handlers.common.instructions-cannot-be-empty')
     )
     return
