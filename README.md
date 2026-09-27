@@ -23,7 +23,7 @@
 
 ## Introduction
 
-**CWC** constructs [markdown-formatted prompts](#prompts) in a fast, sessionless workflow.
+This independent toolkit helps construct [markdown-formatted prompts](#prompts) in a sessionless workflow.
 
 #### The workflow
 
