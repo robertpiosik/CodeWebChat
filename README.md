@@ -25,7 +25,7 @@
 
 This independent toolkit helps construct [markdown-formatted prompts](#prompts) for a sessionless workflow.
 
-#### The workflow
+#### Sessionless workflow
 
 1. Select task-relevant files with the help of [Agentic Search](#-agentic-search).
 2. Select examples for model guidance.
@@ -34,6 +34,7 @@ This independent toolkit helps construct [markdown-formatted prompts](#prompts) 
 #### Efficiency and speed
 
 - Without sessions, there is no context accumulation;
+  - iterations without _context bloat_,
   - token spend never skyrocket,
   - zero drop in accuracy,
   - models _think_ less.
