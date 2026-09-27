@@ -120,11 +120,17 @@ export const build_cli_prompt = async (params: {
 
   const output_formatting_section = ''
 
-  const requirements = are_all_files_preloaded
-    ? cli_edit_ask_requirements.preloaded_files
-    : are_any_files_preloaded
-      ? cli_edit_ask_requirements.referenced_files_with_some_preloaded
-      : cli_edit_ask_requirements.referenced_files_only
+  const requirements_list = [
+    are_all_files_preloaded
+      ? cli_edit_ask_requirements.preloaded_files
+      : are_any_files_preloaded
+        ? cli_edit_ask_requirements.referenced_files_with_some_preloaded
+        : cli_edit_ask_requirements.referenced_files_only,
+    cli_edit_ask_requirements.read_images,
+    cli_edit_ask_requirements.restrict_tool_calls
+  ]
+
+  const requirements = requirements_list.map((r) => `- ${r}`).join('\n')
 
   const task_scope_section = `# Requirements\n\n${requirements}`
   const task_section = `# Task\n\n${processed_query}`

@@ -70,10 +70,12 @@ export const voice_input_instructions =
   'Respond with a transcription of the following audio recording or text "INAUDIBLE", and nothing else.'
 
 export const cli_edit_ask_requirements = {
-  preloaded_files:
-    'All project files necessary for the task were preloaded and are attached in [files](#files). Read potential images from [task][#task], and nothing else. You cannot make any other tool calls in this session except creating, deleting or updating listed in [files][#files] paths to complete the [task](#task).',
+  preloaded_files: 'All project files are shown in [files](#files) section.',
   referenced_files_with_some_preloaded:
-    "Begin by looking at [files](#files) section for unread files (### Unread file: `[PROJECT-RELATIVE PATH]`) and read them. Then, read potential images from the [task][#task]. You cannot make any other tool calls in this session except creating, deleting or updating listed in [files][#files] paths to complete the [task](#task).",
+    'Begin by looking at [files](#files) section for unread files (### Unread file: `[PROJECT-RELATIVE PATH]`) and read them one-by-one.',
   referenced_files_only:
-    'Begin by looking at [files](#files) section for referenced files (### File: `[PROJECT-RELATIVE PATH]`) and read them. Then, read potential images from the [task][#task]. You cannot make any other tool calls in this session except creating, deleting or updating listed in [files][#files] paths to complete the [task](#task).'
+    'Begin by looking at [files](#files) section for referenced files (### File: `[PROJECT-RELATIVE PATH]`) and read them one-by-one.',
+  read_images: 'If [task](#task) section includes *.png image paths, read them.',
+  restrict_tool_calls:
+    'Further tool calling (e.g. running commands like ls, git, etc.) is forbidden, with exceptions: explicit file CREATION, DELETION or UPDATES to complete the [task](#task).'
 }

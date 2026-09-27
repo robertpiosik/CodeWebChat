@@ -35,7 +35,7 @@
 
 - Without sessions, there is no context accumulation;
   - token spend never skyrocket,
-  - models *think* less.
+  - models _think_ less.
 
 ## Send prompts with...
 
@@ -175,7 +175,9 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 # Requirements
 
-Begin by looking at [files](#files) section for referenced files (### File: `[PROJECT-RELATIVE PATH]`) and read them. Then, read potential images from the [task][#task]. You cannot make any other tool calls in this session except creating, deleting or updating listed in [files][#files] paths to complete the [task](#task).
+- Begin by looking at [files](#files) section for referenced files (### File: `[PROJECT-RELATIVE PATH]`) and read them one-by-one.
+- If [task](#task) section includes *.png image paths, read them.
+- Further tool calling (e.g. running commands like ls, git, etc.) is forbidden, with exceptions: explicit file CREATION, DELETION or UPDATES to complete the [task](#task).
 
 # Task
 
@@ -213,7 +215,9 @@ _Multi-purpose: explanations, code reviews, you name it._
 
 # Requirements
 
-Begin by looking at [files](#files) section for referenced files (### File: `[PROJECT-RELATIVE PATH]`) and read them. Then, read potential images from the [task][#task]. You cannot make any other tool calls in this session except creating, deleting or updating listed in [files][#files] paths to complete the [task](#task).
+- Begin by looking at [files](#files) section for referenced files (### File: `[PROJECT-RELATIVE PATH]`) and read them one-by-one.
+- If [task](#task) section includes *.png image paths, read them.
+- Further tool calling (e.g. running commands like ls, git, etc.) is forbidden, with exceptions: explicit file CREATION, DELETION or UPDATES to complete the [task](#task).
 
 # Task
 
