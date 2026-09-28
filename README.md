@@ -25,7 +25,7 @@
 
 This independent toolkit lets you code in a fast, sessionless workflow.
 
-#### A sessionless workflow
+#### ✌️ A sessionless workflow
 
 1. Select task-relevant files with the help of a powerful [Agentic Search](#-agentic-search).
 2. Select examples for model guidance.
