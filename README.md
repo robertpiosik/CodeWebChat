@@ -31,11 +31,7 @@ This independent toolkit lets you code in a fast, sessionless workflow.
 2. Select examples for model guidance.
 3. [Make edits](#-editing) with chatbots, api calls or coding agents.
 
-#### Efficiency and speed
-
-- Without sessions, there is no context accumulation;
-  - zero drop in accuracy,
-  - shorter _thinking_.
+Without sessions, there is no context accumulation—ejoy shorter _thinking_ and no drop in accuracy.
 
 ## Send prompts with...
 
