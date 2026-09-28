@@ -940,9 +940,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             this.extension_context.workspaceState.get<string>(key) ??
             this.extension_context.globalState.get<string>(key)
           if (last_selected) {
-            if (
-              cli_configurations_ui.some((p) => p.name == last_selected)
-            ) {
+            if (cli_configurations_ui.some((p) => p.name == last_selected)) {
               selected_name = last_selected
             }
           }

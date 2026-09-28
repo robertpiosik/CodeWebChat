@@ -286,7 +286,7 @@ export const select_referencing_files_commands = (
         } catch (error) {
           vscode.window.showErrorMessage(
             t('command.select-referencing-files-command.failed', {
-            error: get_error_message(error)
+              error: get_error_message(error)
             })
           )
           Logger.error({

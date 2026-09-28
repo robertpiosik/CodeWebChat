@@ -97,7 +97,7 @@ export const handle_autofill = async (params: {
     files_context_part2: recent_files,
     skill_definitions,
     system_instructions: formatted_system_instructions,
-    user_instructions,
+    user_instructions
   })
 
   const prompt_type = params.prompt_view_provider.web_prompt_type

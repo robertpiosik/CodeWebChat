@@ -85,10 +85,7 @@ export const use_last_choice_tooltip = (params: {
         }
       }
     } else if (params.target == 'CLI') {
-      if (
-        params.selected_cli_configuration_name &&
-        params.cli_configurations
-      ) {
+      if (params.selected_cli_configuration_name && params.cli_configurations) {
         const configuration = params.cli_configurations.find(
           (c) => c.name == params.selected_cli_configuration_name
         )

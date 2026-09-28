@@ -111,14 +111,15 @@ export class SettingsViewProvider {
     this.postMessage({
       command: 'CLI_CONFIGURATIONS',
       cli_configurations: cli_configurations_config
-        .filter(
-          (c: any) => c.agent && AGENTS[c.agent as keyof typeof AGENTS]
-        )
+        .filter((c: any) => c.agent && AGENTS[c.agent as keyof typeof AGENTS])
         .map((config: any) => {
           return config_cli_configuration_to_ui_format(config)
         }),
       defaults: {
-        'agentic-search': cli_configurations_config.find((c: any) => c.isDefaultForAgenticSearch)?.name || null
+        'agentic-search':
+          cli_configurations_config.find(
+            (c: any) => c.isDefaultForAgenticSearch
+          )?.name || null
       }
     })
   }
@@ -318,7 +319,11 @@ export class SettingsViewProvider {
             }
             return new_c
           })
-          await config.update('agents', updated, vscode.ConfigurationTarget.Global)
+          await config.update(
+            'agents',
+            updated,
+            vscode.ConfigurationTarget.Global
+          )
         } else if (message.command == 'SELECT_DEFAULT_CLI_CONFIGURATION') {
           const config = vscode.workspace.getConfiguration('codeWebChat')
           const agent_configs = config.get<any[]>('agents', []) || []
@@ -326,7 +331,9 @@ export class SettingsViewProvider {
 
           const items = agent_configs.map((c) => {
             const is_unnamed = /^\(\d+\)$/.test(c.name.trim())
-            const display_name = is_unnamed ? c.agent : c.name.replace(/ \(\d+\)$/, '')
+            const display_name = is_unnamed
+              ? c.agent
+              : c.name.replace(/ \(\d+\)$/, '')
 
             return {
               label: display_name,
@@ -370,7 +377,11 @@ export class SettingsViewProvider {
                 }
                 return new_c
               })
-              await config.update('agents', updated, vscode.ConfigurationTarget.Global)
+              await config.update(
+                'agents',
+                updated,
+                vscode.ConfigurationTarget.Global
+              )
             }
           })
 

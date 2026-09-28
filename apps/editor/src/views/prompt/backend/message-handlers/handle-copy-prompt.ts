@@ -15,7 +15,6 @@ export const handle_copy_prompt = async (params: {
 }): Promise<void> => {
   let text = ''
 
-
   const {
     other_files,
     recent_files,
@@ -47,7 +46,7 @@ export const handle_copy_prompt = async (params: {
     files_context_part2: recent_files,
     skill_definitions,
     system_instructions: formatted_system_instructions,
-    user_instructions,
+    user_instructions
   })
   text = build_result.full_prompt
 

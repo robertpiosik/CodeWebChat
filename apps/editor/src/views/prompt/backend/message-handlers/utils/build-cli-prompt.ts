@@ -89,7 +89,7 @@ export const build_cli_prompt = async (params: {
     files_context,
     skill_definitions,
     system_instructions: task_scope_section,
-    user_instructions: processed_query,
+    user_instructions: processed_query
   })
 
   return build_result.full_prompt

@@ -64,10 +64,12 @@ export const agentic_search = async (params: {
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const agent_configs = config.get<any[]>('agents', []) || []
-    const default_agent = agent_configs.find(c => c.isDefaultForAgenticSearch)
-    
+    const default_agent = agent_configs.find((c) => c.isDefaultForAgenticSearch)
+
     const use_quick_pick = !default_agent
-    const cli_configuration_name = default_agent ? default_agent.name : undefined
+    const cli_configuration_name = default_agent
+      ? default_agent.name
+      : undefined
 
     const last_used_agent_config_name =
       params.extension_context.workspaceState.get<string>(

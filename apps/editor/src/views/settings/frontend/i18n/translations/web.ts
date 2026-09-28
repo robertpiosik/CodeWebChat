@@ -47,8 +47,9 @@ export const translations = {
     'zh-tw': '透過 SSH 使用遠端機器時，使用連接埠 55155 的 {forwarding}。',
     de: 'Verwenden Sie die {forwarding} für Port 55155, wenn Sie eine Remotemaschine über SSH nutzen.',
     es: 'Utiliza el {forwarding} del puerto 55155 cuando uses una máquina remota a través de SSH.',
-    fr: 'Utilisez la {forwarding} du port 55155 lors de l\'utilisation d\'une machine distante via SSH.',
-    'pt-br': 'Use o {forwarding} da porta 55155 ao usar uma máquina remota via SSH.',
+    fr: "Utilisez la {forwarding} du port 55155 lors de l'utilisation d'une machine distante via SSH.",
+    'pt-br':
+      'Use o {forwarding} da porta 55155 ao usar uma máquina remota via SSH.',
     ru: 'Используйте {forwarding} порта 55155 при использовании удаленной машины через SSH.',
     ko: 'SSH를 통해 원격 머신을 사용할 때는 포트 55155의 {forwarding}을 사용하세요.',
     it: 'Usa il {forwarding} della porta 55155 quando usi una macchina remota tramite SSH.',

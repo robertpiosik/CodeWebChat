@@ -131,7 +131,10 @@ type Props = {
   on_delete_cli_configuration: (name: string) => void
   on_toggle_pinned_cli_configuration: (config: CliConfiguration) => void
   agent_defaults: Record<string, string | null>
-  on_set_default_cli_configuration: (cli_feature: string, name: string | null) => void
+  on_set_default_cli_configuration: (
+    cli_feature: string,
+    name: string | null
+  ) => void
   on_select_default_cli_configuration: (cli_feature: string) => void
   on_commit_instructions_change: (instructions: string) => void
   on_attach_ascii_tree_of_context_change: (
@@ -423,8 +426,12 @@ export const Home: React.FC<Props> = (props) => {
             props.on_toggle_pinned_cli_configuration
           }
           agent_defaults={props.agent_defaults}
-          on_set_default_cli_configuration={props.on_set_default_cli_configuration}
-          on_select_default_cli_configuration={props.on_select_default_cli_configuration}
+          on_set_default_cli_configuration={
+            props.on_set_default_cli_configuration
+          }
+          on_select_default_cli_configuration={
+            props.on_select_default_cli_configuration
+          }
         />
       </UiLayout>
     </div>

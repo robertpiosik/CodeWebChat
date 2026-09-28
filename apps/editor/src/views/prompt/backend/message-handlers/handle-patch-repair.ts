@@ -464,17 +464,23 @@ export const handle_patch_repair = async (params: {
 
             if (file_state.file_path_to_restore) {
               let old_workspace_root = default_workspace_path!
-              const old_workspace_name = file_state.restore_workspace_name ?? workspace_name
+              const old_workspace_name =
+                file_state.restore_workspace_name ?? workspace_name
               if (old_workspace_name) {
                 const folder = vscode.workspace.workspaceFolders?.find(
                   (f) => f.name == old_workspace_name
                 )
                 if (folder) old_workspace_root = folder.uri.fsPath
               }
-              const old_safe_path = create_safe_path(old_workspace_root, file_state.file_path_to_restore)
+              const old_safe_path = create_safe_path(
+                old_workspace_root,
+                file_state.file_path_to_restore
+              )
               if (old_safe_path) {
                 try {
-                  await vscode.workspace.fs.delete(vscode.Uri.file(old_safe_path))
+                  await vscode.workspace.fs.delete(
+                    vscode.Uri.file(old_safe_path)
+                  )
                 } catch (e) {}
               }
             }

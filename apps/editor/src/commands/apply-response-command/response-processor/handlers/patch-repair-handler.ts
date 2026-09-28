@@ -19,7 +19,10 @@ export const handle_patch_repair = async (params: {
 }): Promise<void> => {
   const { workspace_map, default_workspace } = get_workspace_map_and_default()
 
-  const original_states = params.prompt_view_provider.extension_context.workspaceState.get<OriginalFileState[]>(LAST_APPLIED_CHANGES_STATE_KEY)
+  const original_states =
+    params.prompt_view_provider.extension_context.workspaceState.get<
+      OriginalFileState[]
+    >(LAST_APPLIED_CHANGES_STATE_KEY)
 
   params.workspace_provider.pause_file_watcher()
   try {

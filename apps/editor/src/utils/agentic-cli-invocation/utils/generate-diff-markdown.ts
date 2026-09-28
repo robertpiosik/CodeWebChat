@@ -18,7 +18,10 @@ async function get_all_files(dir: string): Promise<string[]> {
 
 export const generate_diff_markdown = async (
   temp_dir_path: string,
-  file_mappings: Map<string, { original: string; dest_rel: string; initial_content?: string }>
+  file_mappings: Map<
+    string,
+    { original: string; dest_rel: string; initial_content?: string }
+  >
 ): Promise<string> => {
   let diff_markdown = ''
   const temp_files = await get_all_files(temp_dir_path)
@@ -43,13 +46,19 @@ export const generate_diff_markdown = async (
     }
 
     if (mapping) {
-      const original_content = mapping.initial_content !== undefined
-        ? mapping.initial_content
-        : await fs.promises.readFile(mapping.original, 'utf-8').catch(() => '')
+      const original_content =
+        mapping.initial_content !== undefined
+          ? mapping.initial_content
+          : await fs.promises
+              .readFile(mapping.original, 'utf-8')
+              .catch(() => '')
       const new_content = await fs.promises.readFile(temp_file, 'utf-8')
 
       if (original_content !== new_content) {
-        const temp_original = path.join(path.dirname(temp_file), `._orig_${path.basename(temp_file)}`)
+        const temp_original = path.join(
+          path.dirname(temp_file),
+          `._orig_${path.basename(temp_file)}`
+        )
         await fs.promises.writeFile(temp_original, original_content, 'utf-8')
 
         try {
@@ -63,9 +72,7 @@ export const generate_diff_markdown = async (
           if (err.code === 1 && err.stdout) {
             const stdout: string = err.stdout
             const diff_lines = stdout.split('\n')
-            const at_at_index = diff_lines.findIndex((l) =>
-              l.startsWith('@@')
-            )
+            const at_at_index = diff_lines.findIndex((l) => l.startsWith('@@'))
             if (at_at_index !== -1) {
               const diff_body = diff_lines
                 .slice(at_at_index)
@@ -126,9 +133,7 @@ export const generate_diff_markdown = async (
 
   for (const [dest_path, mapping] of file_mappings.entries()) {
     const normalized_dest = path.resolve(dest_path)
-    const is_kept = temp_files.some(
-      (t) => path.resolve(t) === normalized_dest
-    )
+    const is_kept = temp_files.some((t) => path.resolve(t) === normalized_dest)
     if (!is_kept) {
       diff_markdown += '\n### Deleted file: `' + mapping.dest_rel + '`\n'
     }

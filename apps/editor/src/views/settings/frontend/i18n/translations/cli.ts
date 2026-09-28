@@ -116,7 +116,8 @@ export const translations = {
     de: 'Die Ausführungsumgebung des Agenten ist vom Arbeitsbereich isoliert.',
     es: 'El entorno de ejecución del agente está aislado del espacio de trabajo.',
     fr: "L'environnement d'exécution de l'agent est isolé de l'espace de travail.",
-    'pt-br': 'O ambiente de execução do agente é isolado do espaço de trabalho.',
+    'pt-br':
+      'O ambiente de execução do agente é isolado do espaço de trabalho.',
     ru: 'Среда выполнения агента изолирована от рабочей области.',
     ko: '에이전트의 실행 환경은 작업 공간과 격리되어 있습니다.',
     it: "L'ambiente di esecuzione dell'agente è isolato dallo spazio di lavoro.",

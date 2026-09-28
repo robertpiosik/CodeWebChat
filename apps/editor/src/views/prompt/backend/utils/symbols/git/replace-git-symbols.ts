@@ -229,7 +229,7 @@ export const replace_changes_symbol = async (params: {
           vscode.window.showInformationMessage(
             t(
               'views.prompt.utils.symbols.git.replace-git-symbols.no-changes-found-between-branches-in-folder',
-              {  branch_name, folder_name }
+              { branch_name, folder_name }
             )
           )
           if (params.symbols_cache) {

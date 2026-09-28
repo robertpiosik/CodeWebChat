@@ -66,7 +66,8 @@ export const translations = {
     de: 'API-Schlüssel werden sicher im {link} auf Ihrem Computer gespeichert.',
     es: 'Las claves API se almacenan de forma segura en el {link} de su máquina.',
     fr: 'Les clés API sont stockées en toute sécurité dans le {link} sur votre machine.',
-    'pt-br': 'As chaves de API são armazenadas com segurança no {link} em sua máquina.',
+    'pt-br':
+      'As chaves de API são armazenadas com segurança no {link} em sua máquina.',
     ru: 'Ключи API безопасно хранятся в {link} на вашем компьютере.',
     ko: 'API 키는 기기의 {link}에 안전하게 저장됩니다.',
     it: 'Le chiavi API sono archiviate in modo sicuro nel {link} sul tuo computer.',
@@ -472,7 +473,7 @@ export const translations = {
     bg: 'Редактиране на файлове'
   },
   'api.system-instructions.edit-files.description': {
-    en: "Tone and style instructions for the model.",
+    en: 'Tone and style instructions for the model.',
     pl: 'Instrukcje dotyczące tonu i stylu dla modelu.',
     'zh-cn': '模型的语气和风格指令。',
     ja: 'モデルのトーンとスタイルの指示。',

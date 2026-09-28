@@ -289,7 +289,7 @@ export const handle_fast_replace = async (params: {
         vscode.window.showErrorMessage(
           t('command.apply-response-command.error.processing-file', {
             path: file.file_path,
-              msg: get_error_message(error)
+            msg: get_error_message(error)
           })
         )
         continue

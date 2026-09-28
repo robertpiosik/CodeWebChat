@@ -49,7 +49,7 @@ export const handle_preview_web_configuration = async (
     files_context_part2: recent_files,
     skill_definitions,
     system_instructions: formatted_system_instructions,
-    user_instructions,
+    user_instructions
   })
   const text_to_send = built_prompt
 

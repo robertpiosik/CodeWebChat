@@ -146,7 +146,6 @@ export interface OpenKeybindingsMessage {
   search?: string
 }
 
-
 export interface GetWebConfigurationsMessage {
   command: 'GET_WEB_CONFIGURATIONS'
 }
@@ -451,7 +450,6 @@ export interface NewlyPickedReasoningEffortMessage {
   command: 'NEWLY_PICKED_REASONING_EFFORT'
   effort: string
 }
-
 
 export interface SetDefaultAgentConfigurationMessage {
   command: 'SET_DEFAULT_CLI_CONFIGURATION'

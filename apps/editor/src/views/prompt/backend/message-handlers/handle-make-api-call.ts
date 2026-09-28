@@ -21,8 +21,6 @@ import {
 import { PROVIDERS } from '@/constants/providers'
 import { get_api_configuration } from '@/utils/get-api-configuration'
 
-
-
 export const handle_make_api_call = async (
   prompt_view_provider: PromptViewProvider,
   message: MakeApiCallMessage
@@ -108,11 +106,11 @@ export const handle_make_api_call = async (
         ''
 
       const { part1, part2 } = PromptBuilder.build_prompt({
-      files_context_part1: other_files,
-      files_context_part2: recent_files,
+        files_context_part1: other_files,
+        files_context_part2: recent_files,
         skill_definitions,
         system_instructions: formatted_system_instructions,
-        user_instructions: processed_instructions,
+        user_instructions: processed_instructions
       })
       user_content = build_user_content({
         provider,

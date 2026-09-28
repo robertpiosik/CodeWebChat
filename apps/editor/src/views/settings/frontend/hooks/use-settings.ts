@@ -339,7 +339,6 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-
   const handle_add_template = (
     key: string,
     params?: { insertion_index?: number; exact_insertion?: boolean }

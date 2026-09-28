@@ -8,7 +8,8 @@ export const create = async (params: {
   reference_index?: number
   exact_insertion?: boolean
 }): Promise<
-  { config: ConfigAgentConfigurationFormat; insertion_index?: number } | undefined
+  | { config: ConfigAgentConfigurationFormat; insertion_index?: number }
+  | undefined
 > => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const current_cli_configurations =
@@ -93,7 +94,8 @@ export const create = async (params: {
         }),
         quick_pick.onDidAccept(() => {
           accepted = true
-          const agent = quick_pick.selectedItems[0]?.label as keyof typeof AGENTS
+          const agent = quick_pick.selectedItems[0]
+            ?.label as keyof typeof AGENTS
           quick_pick.hide()
           resolve(agent)
         }),

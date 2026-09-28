@@ -26,7 +26,9 @@ export const get_api_configuration = async (params: {
   caller_name?: string
   auto_select_last_used?: boolean
 }): Promise<
-  { provider: Provider; api_configuration: ApiConfiguration } | 'back' | undefined
+  | { provider: Provider; api_configuration: ApiConfiguration }
+  | 'back'
+  | undefined
 > => {
   const api_configurations =
     await params.providers_manager.get_api_configurations()

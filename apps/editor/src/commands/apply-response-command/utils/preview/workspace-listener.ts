@@ -1040,7 +1040,7 @@ export const setup_workspace_listeners = (params: {
     )
     if (file) {
       file.previewable_file.applied_with_patch_repair = true
-      
+
       if (new_content !== undefined) {
         file.previewable_file.content = new_content
         file.previewable_file.proposed_content = new_content

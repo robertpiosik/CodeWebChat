@@ -162,13 +162,13 @@ export const new_folder_command = () => {
         if (is_file_like) {
           vscode.window.showInformationMessage(
             t('common.info.failed-to-create-file', {
-            message: get_error_message(error)
+              message: get_error_message(error)
             })
           )
         } else {
           vscode.window.showInformationMessage(
             t('common.info.failed-to-create-folder', {
-            message: get_error_message(error)
+              message: get_error_message(error)
             })
           )
         }

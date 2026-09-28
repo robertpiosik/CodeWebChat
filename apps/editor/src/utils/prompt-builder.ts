@@ -117,9 +117,7 @@ export namespace PromptBuilder {
       }
     }
 
-    if (
-      part1.length > 0 || part2.length > 0 || full_prompt.length > 0
-    ) {
+    if (part1.length > 0 || part2.length > 0 || full_prompt.length > 0) {
       part2 = part2.trimEnd() + '\n\n# Task\n\n'
       full_prompt = full_prompt.trimEnd() + '\n\n# Task\n\n'
     }

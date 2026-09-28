@@ -14,7 +14,14 @@ export const opencode_agent: CodingAgent = {
   cmd: 'opencode',
   is_installed: () => check_command_exists('opencode'),
   get_documentation_url: () => AGENTS[agent_name].docs_url,
-  get_edit_args: (params) => ['run', '--format', 'json', '--auto', '--dir', params.cwd],
+  get_edit_args: (params) => [
+    'run',
+    '--format',
+    'json',
+    '--auto',
+    '--dir',
+    params.cwd
+  ],
   get_ask_args: (params) => ['run', '--dir', params.cwd],
   get_post_ask_args: () => ['--continue'],
   parse_stream_line: (parsed, report_progress) => {

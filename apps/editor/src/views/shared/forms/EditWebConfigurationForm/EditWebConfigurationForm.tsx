@@ -45,9 +45,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
   const models = useMemo(() => chatbot_config.models || {}, [chatbot_config])
   const model_info = useMemo(
     () =>
-      model && chatbot_config.models
-        ? chatbot_config.models[model]
-        : undefined,
+      model && chatbot_config.models ? chatbot_config.models[model] : undefined,
     [model, chatbot_config]
   )
 
@@ -344,9 +342,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
                 ([key, label]) => {
                   const is_disabled_by_url_override =
                     !!new_url &&
-                    chatbot_config.url_override_disabled_options?.includes(
-                      key
-                    )
+                    chatbot_config.url_override_disabled_options?.includes(key)
 
                   if (model_info?.disabled_options?.includes(key)) {
                     return null

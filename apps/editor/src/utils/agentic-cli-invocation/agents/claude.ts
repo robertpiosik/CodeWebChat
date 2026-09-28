@@ -38,10 +38,7 @@ export const claude_agent: CodingAgent = {
     '--include-partial-messages',
     '--dangerously-skip-permissions'
   ],
-  get_ask_args: () => [
-    '--permission-mode',
-    'plan'
-  ],
+  get_ask_args: () => ['--permission-mode', 'plan'],
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type == 'stream_event' && parsed.event) {
       if (

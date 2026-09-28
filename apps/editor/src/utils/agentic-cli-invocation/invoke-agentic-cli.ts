@@ -75,9 +75,7 @@ export const invoke_agentic_cli = async (params: {
         (c) => c.name === current_agent_config_name
       )
       if (config_item) {
-        const agent_info = CLI_AGENTS.find(
-          (a) => a.label === config_item.agent
-        )
+        const agent_info = CLI_AGENTS.find((a) => a.label === config_item.agent)
         if (agent_info) {
           selected_agent_cmd = agent_info.cmd
           flags_string = config_item.flags || ''
@@ -102,9 +100,7 @@ export const invoke_agentic_cli = async (params: {
 
       if (!selected_agent_cmd && agents_config.length === 1) {
         const config_item = agents_config[0]
-        const agent_info = CLI_AGENTS.find(
-          (a) => a.label === config_item.agent
-        )
+        const agent_info = CLI_AGENTS.find((a) => a.label === config_item.agent)
         if (agent_info) {
           selected_agent_cmd = agent_info.cmd
           flags_string = config_item.flags || ''
@@ -303,27 +299,45 @@ export const invoke_agentic_cli = async (params: {
     while (true) {
       let selected_root: string | undefined
       let temp_dir_path: string | undefined
-      const file_mappings = new Map<string, { original: string; dest_rel: string; initial_content?: string }>()
+      const file_mappings = new Map<
+        string,
+        { original: string; dest_rel: string; initial_content?: string }
+      >()
 
       if (params.panel_prompt_type) {
-        temp_dir_path = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'cwc-cli-'))
+        temp_dir_path = await fs.promises.mkdtemp(
+          path.join(os.tmpdir(), 'cwc-cli-')
+        )
         const checked_files = params.workspace_provider.get_checked_files()
-        
+
         for (const file_path of checked_files) {
-          const root = params.workspace_provider.get_workspace_root_for_file(file_path)
+          const root =
+            params.workspace_provider.get_workspace_root_for_file(file_path)
           if (!root) continue
           const rel = path.relative(root, file_path)
-          const dest_rel = roots.length > 1 ? path.join(params.workspace_provider.get_workspace_name(root), rel) : rel
+          const dest_rel =
+            roots.length > 1
+              ? path.join(
+                  params.workspace_provider.get_workspace_name(root),
+                  rel
+                )
+              : rel
           const dest_path = path.join(temp_dir_path, dest_rel)
-          
+
           await fs.promises.mkdir(path.dirname(dest_path), { recursive: true })
           await fs.promises.copyFile(file_path, dest_path)
-          
-          const initial_content = await fs.promises.readFile(file_path, 'utf-8').catch(() => undefined)
 
-          file_mappings.set(dest_path, { original: file_path, dest_rel: dest_rel.replace(/\\/g, '/'), initial_content })
+          const initial_content = await fs.promises
+            .readFile(file_path, 'utf-8')
+            .catch(() => undefined)
+
+          file_mappings.set(dest_path, {
+            original: file_path,
+            dest_rel: dest_rel.replace(/\\/g, '/'),
+            initial_content
+          })
         }
-        
+
         selected_root = temp_dir_path
       } else {
         if (roots.length == 1) {
@@ -413,9 +427,7 @@ export const invoke_agentic_cli = async (params: {
         }
       }
 
-      const agent_info = CLI_AGENTS.find(
-        (a) => a.cmd == selected_agent_cmd
-      )
+      const agent_info = CLI_AGENTS.find((a) => a.cmd == selected_agent_cmd)
       if (!agent_info) break
 
       const executable = agent_info.cmd
@@ -491,7 +503,10 @@ export const invoke_agentic_cli = async (params: {
 
         if (agent_info.get_post_ask_args) {
           const post_args = agent_info.get_post_ask_args()
-          const post_command_args = [executable, ...post_args.map(quote_arg)].join(' ')
+          const post_command_args = [
+            executable,
+            ...post_args.map(quote_arg)
+          ].join(' ')
           terminal.sendText(post_command_args)
         }
 
@@ -524,7 +539,10 @@ export const invoke_agentic_cli = async (params: {
             let args = [...base_args, ...custom_args]
 
             if (agent_info.get_prompt_file_args) {
-              args = [...args, ...agent_info.get_prompt_file_args(temp_prompt_path)]
+              args = [
+                ...args,
+                ...agent_info.get_prompt_file_args(temp_prompt_path)
+              ]
             }
 
             return new Promise<void>((resolve, reject) => {
@@ -609,14 +627,14 @@ export const invoke_agentic_cli = async (params: {
                       temp_dir_path,
                       file_mappings
                     )
-                    
+
                     const trimmed_output = agent_output
                       .trim()
                       .replace(/\[([^\]]+)\]\([^)]+\)/g, '`$1`')
                       .replace(/```[\s\S]*?```/g, '')
                       .trim()
                     const trimmed_diff = diff_markdown.trim()
-                    
+
                     if (trimmed_output && trimmed_diff) {
                       agent_output = trimmed_output + '\n\n' + trimmed_diff
                     } else {
