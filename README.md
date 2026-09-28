@@ -29,7 +29,7 @@ This independent toolkit lets you code in a fast, sessionless workflow.
 
 1. Select task-relevant files with the help of a powerful [Agentic Search](#-agentic-search).
 2. Select examples for model guidance.
-3. Send [prompts](#prompts) with chatbots, api calls or coding agents.
+3. [Make edits](#-editing) with chatbots, api calls or coding agents.
 
 #### Efficiency and speed
 
