@@ -245,7 +245,7 @@ Your response must begin with a markdown heading identifying the file and the cu
 
 [EXAMPLE]
 
----
+# Task
 
 Find correct replacement text for the <missing_text> symbol.
 ```
