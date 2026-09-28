@@ -23,18 +23,18 @@
 
 ## Introduction
 
-This independent toolkit lets you code in a fast, sessionless workflow.
+This independently-built toolkit lets you code in a fast, sessionless workflow.
 
 #### ✌️ A sessionless workflow
 
 1. Type instructions.
 2. Select task-relevant files with the help of a powerful [Agentic Search](#-agentic-search).
 3. Select examples for model guidance.
-4. Send and iterate on instructions until you have it right!
+4. Iterate on instructions until you nail it!
 
-Without context accumulation and prompt complexity growing well past your problem, _thinking_ is brief and accurate responses arrive in seconds!
+Without context accumulation and prompt complexity growing well past the task at hand, _thinking_ is brief and accurate responses arrive in seconds...
 
-...and your quotas go further!
+...also your quotas go further!
 
 ## Send prompts with...
 
