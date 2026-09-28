@@ -31,7 +31,7 @@ This independent toolkit lets you code in a fast, sessionless workflow.
 2. Select examples for model guidance.
 3. Send markdown-formatted prompt with the selected files and task instructions.
 
-Without context accumulation and complexity growing past your problem, _thinking_ is brief and accurate responses arrive in seconds!
+Without context accumulation and prompt complexity growing well past your problem, _thinking_ is brief and accurate responses arrive in seconds!
 
 ## Send prompts with...
 
