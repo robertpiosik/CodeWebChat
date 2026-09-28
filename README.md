@@ -31,13 +31,21 @@ This independent toolkit lets you code in a fast, sessionless workflow.
 2. Select examples for model guidance.
 3. Send [prompts](#prompts) with chatbots, api calls or coding agents.
 
+> [!NOTE]
+> Without sessions, there is no context accumulation. It means:
+>
+> - zero context bloat,
+> - zero accuracy drop,
+> - zero compactions,
+> - minimal thinking.
+
 #### Efficiency and speed
 
-- Without sessions, there is no context accumulation;
-  - iterations without _context bloat_,
-  - token usage never skyrocket,
-  - no accuracy drop,
-  - less 'thinking'.
+- Without sessions, there is no context accumulation. It means:
+  - zero context bloat,
+  - zero accuracy drop,
+  - zero compactions,
+  - minimal thinking.
 
 ## Send prompts with...
 
