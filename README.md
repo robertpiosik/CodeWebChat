@@ -41,11 +41,11 @@ Copy & paste into chatbots or autofill via [browser extension](https://github.co
 
 ### 👉 API requests
 
-Call OpenAI-API-compatible model providers.
+Call OpenAI-API-compatible model providers directly from your editor.
 
 ### 👉 Agents
 
-Run your favorite coding agent.
+Invoke your favorite coding agent headlessly or in the integrated terminal.
 
 ## Prompts
 
