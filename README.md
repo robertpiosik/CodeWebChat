@@ -37,7 +37,7 @@ This independent toolkit lets you code in a fast, sessionless workflow.
   - iterations without _context bloat_,
   - token usage never skyrocket,
   - no accuracy drop,
-  - shorter reasoning.
+  - less 'thinking'.
 
 ## Send prompts with...
 
