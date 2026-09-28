@@ -166,7 +166,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
           >
             <UiQuickPickButton
               label={chatbot}
-              onClick={(e) => {
+              on_click={(e) => {
                 e.stopPropagation()
                 props.pick_chatbot(chatbot)
               }}
@@ -187,7 +187,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
             >
               <UiQuickPickButton
                 label={model_info?.label || model || '—'}
-                onClick={(e) => {
+                on_click={(e) => {
                   e.stopPropagation()
                   if (chatbot) {
                     props.pick_model(chatbot, model)
@@ -245,7 +245,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
                       reasoning_effort.slice(1)
                     : '—'
                 }
-                onClick={(e) => {
+                on_click={(e) => {
                   e.stopPropagation()
                   props.pick_reasoning_effort(
                     supported_reasoning_efforts,

@@ -59,7 +59,7 @@ export const EditCliConfigurationForm: React.FC<Props> = (props) => {
           >
             <UiQuickPickButton
               label={agent || '—'}
-              onClick={(e) => {
+              on_click={(e) => {
                 e.stopPropagation()
                 props.pick_agent(agent)
               }}

@@ -94,7 +94,8 @@ import {
   handle_update_cli_configuration,
   handle_pick_api_reasoning_effort,
   handle_select_edit_format_instructions,
-  handle_update_last_used_web_configuration
+  handle_update_last_used_web_configuration,
+  handle_pick_agent
 } from './message-handlers'
 import { handle_agentic_search } from './message-handlers/handle-agentic-search'
 import { SelectionState } from '../types/messages'
@@ -898,6 +899,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_reorder_cli_configurations(message)
           } else if (message.command == 'TOGGLE_PINNED_CLI_CONFIGURATION') {
             await handle_toggle_pinned_cli_configuration(message)
+          } else if (message.command == 'PICK_AGENT') {
+            await handle_pick_agent(this, message)
           }
         } catch (error) {
           Logger.error({

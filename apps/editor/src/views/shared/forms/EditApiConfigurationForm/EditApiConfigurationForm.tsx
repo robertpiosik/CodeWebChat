@@ -66,7 +66,7 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
           >
             <UiQuickPickButton
               label={provider_name || '—'}
-              onClick={(e) => {
+              on_click={(e) => {
                 e.stopPropagation()
                 props.pick_provider(provider_name)
               }}
@@ -79,7 +79,7 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
           >
             <UiQuickPickButton
               label={model || '—'}
-              onClick={(e) => {
+              on_click={(e) => {
                 e.stopPropagation()
                 if (provider_name) {
                   props.pick_model(provider_name, model)
@@ -107,7 +107,7 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
                     reasoning_effort.slice(1)
                   : '—'
               }
-              onClick={(e) => {
+              on_click={(e) => {
                 e.stopPropagation()
                 if (provider_name && model) {
                   props.pick_reasoning_effort(
