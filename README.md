@@ -33,11 +33,11 @@ This independent toolkit lets you work in a fast, sessionless workflow.
 
 #### Efficiency and speed
 
-- Without sessions, there is no context accumulation;
+- Without sessions, there is **no context accumulation**;
   - iterations without _context bloat_,
-  - token spend never skyrocket,
-  - zero drop in accuracy,
-  - models _think_ less.
+  - token usage never skyrocket,
+  - no accuracy drop,
+  - shorter reasoning.
 
 ## Send prompts with...
 
