@@ -14,15 +14,20 @@ export const codex_agent: CodingAgent = {
   cmd: 'codex',
   is_installed: () => check_command_exists('codex'),
   get_documentation_url: () => AGENTS[agent_name].docs_url,
-  get_edit_args: (prompt: string) => [
+  get_edit_args: () => [
     'exec',
-    prompt,
     '--json',
     '--sandbox',
     'workspace-write',
     '--skip-git-repo-check'
   ],
-  get_ask_args: (prompt: string) => [prompt, '--sandbox', 'read-only'],
+  get_ask_args: () => [
+    'exec',
+    '--skip-git-repo-check',
+    '--sandbox',
+    'read-only'
+  ],
+  // get_post_ask_args: () => ['continue'], // Broken on their end
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type == 'item.started' && parsed.item) {
       const item = parsed.item

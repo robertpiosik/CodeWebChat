@@ -4,10 +4,6 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
 import { cli_edit_ask_requirements } from '@/constants/instructions'
 import { LAST_SELECTED_WORKSPACE_IN_AGENTIC_CLI_STATE_KEY } from '@/constants/state-keys'
-import {
-  MAX_CLI_PROMPT_TOTAL_INLINED_CHARS,
-  MAX_CLI_PROMPT_FILE_INLINED_CHARS
-} from '@/constants/values'
 
 export const build_cli_prompt = async (params: {
   prompt_view_provider: PromptViewProvider
@@ -43,7 +39,6 @@ export const build_cli_prompt = async (params: {
     prompt_view_provider.workspace_provider.get_checked_files()
 
   const files_data: { relative_path: string; content?: string }[] = []
-  let total_content_length = 0
 
   for (const f of checked_files) {
     const root =
@@ -68,59 +63,23 @@ export const build_cli_prompt = async (params: {
     try {
       const content = await fs.readFile(f, 'utf8')
       files_data.push({ relative_path, content })
-      total_content_length += content.length
     } catch (err) {
       files_data.push({ relative_path, content: undefined })
     }
   }
 
-  let files_section = ''
-  let are_all_files_preloaded = false
+  const file_blocks = files_data.map((data) =>
+    data.content !== undefined
+      ? `### File: \`${data.relative_path}\`\n\n\`\`\`\n${data.content}\n\`\`\``
+      : `### File: \`${data.relative_path}\`\n\n\`\`\`\n\n\`\`\``
+  )
 
-  if (total_content_length <= MAX_CLI_PROMPT_TOTAL_INLINED_CHARS) {
-    are_all_files_preloaded = true
-    const file_blocks = files_data.map((data) =>
-      data.content !== undefined
-        ? `### File: \`${data.relative_path}\`\n\n\`\`\`\n${data.content}\n\`\`\``
-        : `### File: \`${data.relative_path}\`\n\n\`\`\`\n\n\`\`\``
-    )
-
-    files_section = `# Files\n\n${file_blocks.join('\n\n')}`
-  } else {
-    const file_blocks: string[] = []
-    let total_inlined_characters = 0
-
-    for (const data of files_data) {
-      if (data.content !== undefined) {
-        if (
-          data.content.length <= MAX_CLI_PROMPT_FILE_INLINED_CHARS &&
-          total_inlined_characters + data.content.length <=
-            MAX_CLI_PROMPT_TOTAL_INLINED_CHARS
-        ) {
-          total_inlined_characters += data.content.length
-          file_blocks.push(
-            `### File: \`${data.relative_path}\`\n\n\`\`\`\n${data.content}\n\`\`\``
-          )
-        } else {
-          file_blocks.push(`### Unread file: \`${data.relative_path}\``)
-        }
-      } else {
-        file_blocks.push(
-          `### File: \`${data.relative_path}\`\n\n\`\`\`\n\n\`\`\``
-        )
-      }
-    }
-
-    files_section = `# Files\n\n${file_blocks.join('\n\n')}`
-  }
+  const files_section = `# Files\n\n${file_blocks.join('\n\n')}`
 
   const output_formatting_section = ''
 
   const requirements_list = [
-    are_all_files_preloaded
-      ? cli_edit_ask_requirements.preloaded_files
-      : cli_edit_ask_requirements.read_files,
-    cli_edit_ask_requirements.read_images,
+    cli_edit_ask_requirements.preloaded_context,
     prompt_view_provider.cli_prompt_type == 'edit-files'
       ? cli_edit_ask_requirements.restrict_tool_calls_with_exceptions
       : cli_edit_ask_requirements.restrict_tool_calls

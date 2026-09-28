@@ -12,25 +12,12 @@ export const grok_agent: CodingAgent = {
   cmd: 'grok',
   is_installed: () => check_command_exists('grok'),
   get_documentation_url: () => AGENTS[agent_name].docs_url,
-  get_edit_args: (prompt: string) => {
-    accumulated_output = ''
-    return [
-      '-p',
-      prompt,
-      '--output-format',
-      'streaming-json',
-      '--always-approve',
-    ]
-  },
-  get_ask_args: (prompt: string) => {
-    accumulated_output = ''
-    return [
-      '-p',
-      prompt,
-      '--sandbox',
-      'read-only',
-    ]
-  },
+  get_prompt_file_args: (temp_prompt_path) => [
+    '--prompt-file',
+    temp_prompt_path
+  ],
+  get_edit_args: () => ['--yolo', '--output-format', 'streaming-json'],
+  // get_post_ask_args: () => ['continue'], // Broken on their end
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type === 'tool_call' && parsed.tool) {
       report_progress(parsed.tool)

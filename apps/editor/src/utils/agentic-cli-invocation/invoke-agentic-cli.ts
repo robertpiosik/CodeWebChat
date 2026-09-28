@@ -446,28 +446,54 @@ export const invoke_agentic_cli = async (params: {
         }
       }
 
-      if (params.panel_prompt_type === 'ask-about-files') {
-        const final_prompt = await params.build_prompt(selected_root!)
+      const final_prompt = await params.build_prompt(selected_root!)
+
+      const temp_prompt_path = path.join(
+        os.tmpdir(),
+        `cwc-prompt-${Date.now()}-${Math.floor(Math.random() * 1000)}.md`
+      )
+      await fs.promises.writeFile(temp_prompt_path, final_prompt, 'utf-8')
+
+      if (params.panel_prompt_type == 'ask-about-files') {
         const base_args = agent_info.get_ask_args
-          ? agent_info.get_ask_args(final_prompt)
-          : [final_prompt]
-        const args = [...base_args, ...custom_args]
+          ? agent_info.get_ask_args({ cwd: selected_root })
+          : []
+        let args = [...base_args, ...custom_args]
 
         const quote_arg = (arg: string) => {
-          if (os.platform() === 'win32') {
+          if (os.platform() == 'win32') {
             return `"${arg.replace(/"/g, '""')}"`
           } else {
             return `'${arg.replace(/'/g, "'\\''")}'`
           }
         }
 
-        const command = [executable, ...args.map(quote_arg)].join(' ')
+        let command: string
+        if (agent_info.get_prompt_file_args) {
+          args = [...args, ...agent_info.get_prompt_file_args(temp_prompt_path)]
+          const command_args = [executable, ...args.map(quote_arg)].join(' ')
+          command = command_args
+        } else {
+          const command_args = [executable, ...args.map(quote_arg)].join(' ')
+          if (os.platform() == 'win32') {
+            command = `type "${temp_prompt_path}" | ${command_args}`
+          } else {
+            command = `cat '${temp_prompt_path}' | ${command_args}`
+          }
+        }
+
         const terminal = vscode.window.createTerminal({
           name: agent_info.label,
           cwd: selected_root
         })
         terminal.show()
         terminal.sendText(command)
+
+        if (agent_info.get_post_ask_args) {
+          const post_args = agent_info.get_post_ask_args()
+          const post_command_args = [executable, ...post_args.map(quote_arg)].join(' ')
+          terminal.sendText(post_command_args)
+        }
 
         return { agent_output: '', selected_root: selected_root! }
       }
@@ -489,24 +515,41 @@ export const invoke_agentic_cli = async (params: {
           async (progress, token) => {
             progress.report({ message: params.waiting_message })
 
-            const final_prompt = await params.build_prompt(selected_root!)
-
             if (token.isCancellationRequested) {
               is_cancelled = true
               return
             }
 
-            const base_args = agent_info.get_edit_args(final_prompt)
-            const args = [...base_args, ...custom_args]
+            const base_args = agent_info.get_edit_args({ cwd: selected_root })
+            let args = [...base_args, ...custom_args]
+
+            if (agent_info.get_prompt_file_args) {
+              args = [...args, ...agent_info.get_prompt_file_args(temp_prompt_path)]
+            }
 
             return new Promise<void>((resolve, reject) => {
               const child = spawn(executable, args, {
                 cwd: selected_root,
                 shell: false,
-                stdio: ['ignore', 'pipe', 'pipe']
+                stdio: agent_info.get_prompt_file_args
+                  ? ['ignore', 'pipe', 'pipe']
+                  : ['pipe', 'pipe', 'pipe']
               })
 
-              child.stdout.on('data', (data) => {
+              if (!agent_info.get_prompt_file_args && child.stdin) {
+                const read_stream = fs.createReadStream(temp_prompt_path)
+                read_stream.pipe(child.stdin)
+
+                read_stream.on('error', (err) => {
+                  Logger.error({
+                    function_name: 'invoke_agentic_cli',
+                    message: 'Failed to read temp prompt file',
+                    data: err
+                  })
+                })
+              }
+
+              child.stdout?.on('data', (data) => {
                 const chunk = data.toString()
                 output_channel.append(chunk)
                 if (agent_info.parse_stream_line) {
@@ -537,7 +580,7 @@ export const invoke_agentic_cli = async (params: {
                 }
               })
 
-              child.stderr.on('data', (data) => {
+              child.stderr?.on('data', (data) => {
                 const chunk = data.toString()
                 output_channel.append(chunk)
               })

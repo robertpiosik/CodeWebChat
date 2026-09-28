@@ -1,6 +1,10 @@
 import { CodingAgent } from '../types'
 import { check_command_exists } from '../utils/check-command-exists'
+import { get_progress_dots } from '../utils/get-progress-dots'
 import { AGENTS } from '../../../constants/agents'
+
+let last_action_name = ''
+let action_count = 0
 
 const agent_name = 'Cursor'
 
@@ -10,69 +14,38 @@ export const cursor_agent: CodingAgent = {
   cmd: 'agent',
   is_installed: () => check_command_exists('agent'),
   get_documentation_url: () => AGENTS[agent_name].docs_url,
-  get_edit_args: (prompt: string) => [
-    '-p',
-    prompt,
-    '--output-format',
-    'stream-json',
-    '--force'
-  ],
-  get_ask_args: (prompt: string) => [
-    prompt,
-    '--mode',
-    'ask'
-  ],
+  get_edit_args: () => ['--force', '--output-format', 'stream-json'],
+  get_ask_args: () => ['--force'],
+  get_post_ask_args: () => ['--continue', '--trust'],
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type == 'tool_call') {
       if (parsed.subtype == 'started' || !parsed.subtype) {
         const tool_call = parsed.tool_call
         if (tool_call) {
-          let msg = ''
-          if (tool_call.readToolCall?.args?.path) {
-            msg = tool_call.readToolCall.args.path
-          } else if (tool_call.writeToolCall?.args?.path) {
-            msg = tool_call.writeToolCall.args.path
-          } else {
-            const key = Object.keys(tool_call)[0]
-            if (key) {
-              const call = tool_call[key]
-              const args = call?.args
-              const raw_name = key.replace(/ToolCall$/, '')
-              const formatted_name = raw_name
-                .replace(/([A-Z])/g, '_$1')
-                .toLowerCase()
-                .replace(/^_/, '')
-
-              if (
-                (formatted_name.includes('run') ||
-                  formatted_name.includes('command') ||
-                  formatted_name.includes('bash')) &&
-                (args?.command || args?.cmd || args?.CommandLine)
-              ) {
-                msg = args.command || args.cmd || args.CommandLine
-              } else if (
-                (formatted_name.includes('search') ||
-                  formatted_name.includes('grep') ||
-                  formatted_name.includes('find')) &&
-                (args?.query || args?.pattern)
-              ) {
-                msg = args.query || args.pattern
-              } else if (formatted_name.includes('list') && args?.path) {
-                msg = args.path
-              } else if (args?.path) {
-                msg = args.path
-              } else {
-                msg = key
-              }
-            }
+          let action_name = ''
+          const key = Object.keys(tool_call)[0]
+          if (key) {
+            const raw_name = key.replace(/ToolCall$/, '')
+            action_name = raw_name
+              .replace(/([A-Z])/g, ' $1')
+              .toLowerCase()
+              .trim()
           }
 
-          if (msg) {
-            report_progress(msg)
+          if (action_name) {
+            if (action_name === last_action_name) {
+              action_count++
+            } else {
+              last_action_name = action_name
+              action_count = 1
+            }
+            report_progress(`${action_name}${get_progress_dots(action_count)}`)
           }
         }
       }
     } else if (parsed.type == 'result' && parsed.result) {
+      last_action_name = ''
+      action_count = 0
       return {
         output:
           typeof parsed.result == 'string'
@@ -80,6 +53,8 @@ export const cursor_agent: CodingAgent = {
             : parsed.result.text || parsed.result.response || ''
       }
     } else if (parsed.result) {
+      last_action_name = ''
+      action_count = 0
       return {
         output:
           typeof parsed.result == 'string'
@@ -89,6 +64,8 @@ export const cursor_agent: CodingAgent = {
     } else if (parsed.type == 'assistant' && parsed.message) {
       const is_delta = parsed.timestamp_ms && !parsed.model_call_id
       if (!is_delta) {
+        last_action_name = ''
+        action_count = 0
         if (Array.isArray(parsed.message.content)) {
           const text = parsed.message.content
             .map((item: any) =>
@@ -107,6 +84,8 @@ export const cursor_agent: CodingAgent = {
     }
   },
   parse_final_output: (parsed, current_output) => {
+    last_action_name = ''
+    action_count = 0
     if (parsed.type == 'result' && parsed.result) {
       return typeof parsed.result == 'string'
         ? parsed.result

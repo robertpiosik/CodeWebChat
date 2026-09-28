@@ -23,18 +23,13 @@ export const AGENTS = {
     flags_placeholder: ''
   },
   Cursor: {
-    docs_url: 'https://cursor.com/docs/cli/headless',
+    docs_url: 'https://cursor.com/docs/cli/reference/parameters',
     homepage_url: 'https://cursor.com/cli',
     flags_placeholder: ''
   },
   'Grok Build': {
     docs_url: 'https://docs.x.ai/build/cli/headless-scripting',
     homepage_url: 'https://x.ai/build',
-    flags_placeholder: ''
-  },
-  'Muse Code': {
-    docs_url: 'https://dev.meta.ai/docs/muse-code/extending#headless',
-    homepage_url: 'https://dev.meta.ai/docs/muse-code',
     flags_placeholder: ''
   },
   OpenCode: {

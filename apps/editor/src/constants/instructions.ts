@@ -70,13 +70,9 @@ export const voice_input_instructions =
   'Respond with a transcription of the following audio recording or text "INAUDIBLE", and nothing else.'
 
 export const cli_edit_ask_requirements = {
-  preloaded_files: 'All project files are shown in [files](#files) section.',
-  read_files:
-    'You must start by looking at [files](#files) section for unread files (### Unread file: `[PROJECT-RELATIVE PATH]`) and read them one-by-one.',
-  read_images:
-    'If [task](#task) section includes *.png image paths, read them.',
-  restrict_tool_calls:
-    'Any further tool calling (including grep, ls, git, etc. command executions) is FORBIDDEN.',
+  preloaded_context:
+    "All project's files were preloaded to [files](#files) section. If [task](#task) section includes *.png image paths, read them. Looking for other files is FORBIDDEN.",
+  restrict_tool_calls: 'Running furher tools or shell commands is FORBIDDEN.',
   restrict_tool_calls_with_exceptions:
-    'Any further tool calling (including grep, ls, git, etc. command executions) is FORBIDDEN, with exceptions: strictly file creations, deletions or updates to complete the [task](#task).'
+    'You may only perform file operations (create, update, delete) required to complete the [task](#task); running any other tools or shell commands is FORBIDDEN.'
 }

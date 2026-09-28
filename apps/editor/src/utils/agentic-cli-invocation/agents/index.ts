@@ -4,7 +4,6 @@ import { codex_agent } from './codex'
 import { cursor_agent } from './cursor'
 import { opencode_agent } from './opencode'
 import { grok_agent } from './grok'
-import { muse_agent } from './muse'
 
 export const CLI_AGENTS = [
   antigravity_agent,
@@ -12,6 +11,5 @@ export const CLI_AGENTS = [
   claude_agent,
   cursor_agent,
   grok_agent,
-  muse_agent,
   opencode_agent
 ]

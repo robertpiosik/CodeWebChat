@@ -30,18 +30,15 @@ export const claude_agent: CodingAgent = {
   cmd: 'claude',
   is_installed: () => check_command_exists('claude'),
   get_documentation_url: () => AGENTS[agent_name].docs_url,
-  get_edit_args: (prompt: string) => [
-    '-p',
-    prompt,
+  get_edit_args: () => [
+    '--print',
     '--output-format',
     'stream-json',
     '--verbose',
     '--include-partial-messages',
-    '--permission-mode',
-    'auto'
+    '--dangerously-skip-permissions'
   ],
-  get_ask_args: (prompt: string) => [
-    prompt,
+  get_ask_args: () => [
     '--permission-mode',
     'plan'
   ],
