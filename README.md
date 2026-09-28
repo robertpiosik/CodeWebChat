@@ -27,9 +27,10 @@ This independent toolkit lets you code in a fast, sessionless workflow.
 
 #### ✌️ A sessionless workflow
 
-1. Select task-relevant files with the help of a powerful [Agentic Search](#-agentic-search).
-2. Select examples for model guidance.
-3. Send markdown-formatted prompt with the selected files and task instructions.
+1. Type instructions.
+2. Select task-relevant files with the help of a powerful [Agentic Search](#-agentic-search).
+3. Select examples for model guidance.
+4. Send and iterate on instructions until you have it right!
 
 Without context accumulation and prompt complexity growing well past your problem, _thinking_ is brief and accurate responses arrive in seconds!
 
