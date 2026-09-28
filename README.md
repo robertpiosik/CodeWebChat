@@ -23,13 +23,13 @@
 
 ## Introduction
 
-This independent toolkit helps construct [markdown-formatted prompts](#prompts) for a sessionless workflow.
+This independent toolkit lets you work in a fast, sessionless workflow.
 
 #### Sessionless workflow
 
 1. Select task-relevant files with the help of [Agentic Search](#-agentic-search).
 2. Select examples for model guidance.
-3. Send prompts with chatbots, api calls or coding agents.
+3. Send context-preloaded prompts with chatbots, api calls or coding agents.
 
 #### Efficiency and speed
 
