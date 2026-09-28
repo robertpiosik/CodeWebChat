@@ -19,7 +19,7 @@
 
 ## Privacy
 
-**CWC** operates 100% on your machine—no code, prompts or usage data are collected.
+**CWC** operates 100% on your machine. No code, prompts or usage data are collected.
 
 ## Introduction
 
@@ -29,9 +29,9 @@ This independent toolkit lets you code in a fast, sessionless workflow.
 
 1. Select task-relevant files with the help of a powerful [Agentic Search](#-agentic-search).
 2. Select examples for model guidance.
-3. [Make edits](#-editing) with chatbots, api calls or coding agents.
+3. Send markdown-formatted prompt with the selected files and task instructions.
 
-Without sessions, there is no context accumulation—ejoy shorter _thinking_ and no drop in accuracy.
+Without context accumulation and complexity growing past your problem, _thinking_ is brief and accurate responses arrive in seconds!
 
 ## Send prompts with...
 
