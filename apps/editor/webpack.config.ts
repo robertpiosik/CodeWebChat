@@ -132,6 +132,9 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
               }
             }
           ]
+        }),
+        new webpack.optimize.LimitChunkCountPlugin({
+          maxChunks: 1
         })
       ],
       stats: 'errors-only'
@@ -256,7 +259,10 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
         build_status_plugin,
         new MiniCssExtractPlugin({
           filename: '[name].css'
-        }) as unknown as webpack.WebpackPluginInstance
+        }) as unknown as webpack.WebpackPluginInstance,
+        new webpack.optimize.LimitChunkCountPlugin({
+          maxChunks: 1
+        }) as webpack.WebpackPluginInstance
       ] as webpack.WebpackPluginInstance[],
       stats: 'errors-only'
     }
