@@ -17,10 +17,6 @@
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
-## Privacy
-
-**CWC** operates 100% on your machine. No code, prompts or usage data are collected.
-
 ## Introduction
 
 This free, independently-built toolkit lets you code in a fast, sessionless workflow.
@@ -35,6 +31,10 @@ This free, independently-built toolkit lets you code in a fast, sessionless work
 Without context accumulation and prompt complexity growing well past the task at hand, _thinking_ is brief and accurate responses arrive in seconds...
 
 ...also your quotas go further!
+
+## Privacy-first
+
+**CWC** operates 100% on your machine. No code, prompts or usage data are collected.
 
 ## Send prompts with...
 
