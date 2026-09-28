@@ -23,7 +23,7 @@
 
 ## Introduction
 
-This independently-built toolkit lets you code in a fast, sessionless workflow.
+This free, independently-built toolkit lets you code in a fast, sessionless workflow.
 
 #### ✌️ A sessionless workflow
 
