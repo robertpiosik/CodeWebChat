@@ -108,12 +108,11 @@ export const handle_make_api_call = async (
         ''
 
       const { part1, part2 } = PromptBuilder.build_prompt({
-        other_files,
-        recent_files,
+      files_context_part1: other_files,
+      files_context_part2: recent_files,
         skill_definitions,
         system_instructions: formatted_system_instructions,
         user_instructions: processed_instructions,
-        separator: true
       })
       user_content = build_user_content({
         provider,

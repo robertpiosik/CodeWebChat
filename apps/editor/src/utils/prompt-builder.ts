@@ -60,14 +60,13 @@ export namespace PromptBuilder {
   }
 
   export const build_prompt = (params: {
-    other_files?: string
-    recent_files?: string
-    context_text?: string
+    files_context_part1?: string
+    files_context_part2?: string
+    files_context?: string
     active_file?: { filepath: string; content: string }
     skill_definitions?: string
     system_instructions?: string
     user_instructions?: string
-    separator?: boolean
   }): { part1: string; part2: string; full_prompt: string } => {
     let part1 = ''
     let part2 = ''
@@ -78,11 +77,11 @@ export namespace PromptBuilder {
       active_file_context = build_file_context(params.active_file)
     }
 
-    if (params.context_text !== undefined) {
-      if (params.context_text || active_file_context) {
+    if (params.files_context !== undefined) {
+      if (params.files_context || active_file_context) {
         full_prompt += `# Files\n\n`
-        if (params.context_text) {
-          full_prompt += params.context_text
+        if (params.files_context) {
+          full_prompt += params.files_context
         }
         if (active_file_context) {
           full_prompt += active_file_context
@@ -90,13 +89,17 @@ export namespace PromptBuilder {
       }
     } else {
       const has_files = !!(
-        params.other_files ||
-        params.recent_files ||
+        params.files_context_part1 ||
+        params.files_context_part2 ||
         active_file_context
       )
       if (has_files) {
-        part1 = `# Files\n\n${params.other_files || ''}`
-        part2 += `${params.recent_files || ''}${active_file_context}`
+        if (params.files_context_part1) {
+          part1 = `# Files\n\n${params.files_context_part1}`
+          part2 += `${params.files_context_part2 || ''}${active_file_context}`
+        } else {
+          part2 += `# Files\n\n${params.files_context_part2 || ''}${active_file_context}`
+        }
         full_prompt = part1 + part2
       }
     }
@@ -115,8 +118,7 @@ export namespace PromptBuilder {
     }
 
     if (
-      params.separator &&
-      (part1.length > 0 || part2.length > 0 || full_prompt.length > 0)
+      part1.length > 0 || part2.length > 0 || full_prompt.length > 0
     ) {
       part2 = part2.trimEnd() + '\n\n# Task\n\n'
       full_prompt = full_prompt.trimEnd() + '\n\n# Task\n\n'

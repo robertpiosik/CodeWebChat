@@ -1,11 +1,14 @@
-export const code_at_cursor_instructions =
-  'Find correct replacement for the <missing_text> symbol. Respond with replacement text within "replacement" XML tags, without explanations or any other text.\nExample:\n<replacement>!== undefined</replacement>'
+export const code_at_cursor_system_instructions =
+  '# Output formatting\n\nRespond with replacement text within "replacement" XML tags, without explanations or any other text.\nExample:\n<replacement>!== undefined</replacement>'
+
+export const code_at_cursor_user_instructions =
+  'Find correct replacement text for the <missing_text> symbol.'
 
 export const code_at_cursor_instructions_for_chatbots = (params: {
   file_path: string
   row: number
   column: number
-}) => `Your response must begin with a markdown heading identifying the file and the cursor position, followed by a markdown code block containing the replacement text, followed by a brief explanation. The heading must be: "### Code at cursor: \`${
+}) => `# Output formatting\n\nYour response must begin with a markdown heading identifying the file and the cursor position, followed by a markdown code block containing the replacement text, followed by a brief explanation. The heading must be: "### Code at cursor: \`${
   params.file_path
 }\` (${params.row + 1}:${
   params.column + 1
@@ -17,11 +20,7 @@ export const code_at_cursor_instructions_for_chatbots = (params: {
 !== undefined
 \`\`\`
 
-The variable is possibly not defined.
-
----
-
-Find correct replacement text for the <missing_text> symbol.`
+The variable is possibly not defined.`
 
 export const patch_repair_task_instructions =
   'Apply the attached changes to the file without explanations or any other text.'

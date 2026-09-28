@@ -4,6 +4,7 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
 import { cli_edit_ask_requirements } from '@/constants/instructions'
 import { LAST_SELECTED_WORKSPACE_IN_AGENTIC_CLI_STATE_KEY } from '@/constants/state-keys'
+import { PromptBuilder } from '@/utils/prompt-builder'
 
 export const build_cli_prompt = async (params: {
   prompt_view_provider: PromptViewProvider
@@ -38,7 +39,7 @@ export const build_cli_prompt = async (params: {
   const checked_files =
     prompt_view_provider.workspace_provider.get_checked_files()
 
-  const files_data: { relative_path: string; content?: string }[] = []
+  let files_context = ''
 
   for (const f of checked_files) {
     const root =
@@ -62,21 +63,16 @@ export const build_cli_prompt = async (params: {
 
     try {
       const content = await fs.readFile(f, 'utf8')
-      files_data.push({ relative_path, content })
+      files_context += PromptBuilder.build_file_context({
+        filepath: relative_path,
+        content
+      })
     } catch (err) {
-      files_data.push({ relative_path, content: undefined })
+      files_context += PromptBuilder.build_file_context({
+        filepath: relative_path
+      })
     }
   }
-
-  const file_blocks = files_data.map((data) =>
-    data.content !== undefined
-      ? `### File: \`${data.relative_path}\`\n\n\`\`\`\n${data.content}\n\`\`\``
-      : `### File: \`${data.relative_path}\`\n\n\`\`\`\n\n\`\`\``
-  )
-
-  const files_section = `# Files\n\n${file_blocks.join('\n\n')}`
-
-  const output_formatting_section = ''
 
   const requirements_list = [
     cli_edit_ask_requirements.preloaded_context,
@@ -88,15 +84,13 @@ export const build_cli_prompt = async (params: {
   const requirements = requirements_list.map((r) => `- ${r}`).join('\n')
 
   const task_scope_section = `# Requirements\n\n${requirements}`
-  const task_section = `# Task\n\n${processed_query}`
 
-  const parts = [
-    files_section,
+  const build_result = PromptBuilder.build_prompt({
+    files_context,
     skill_definitions,
-    output_formatting_section,
-    task_scope_section,
-    task_section
-  ].filter((p) => p.trim() != '')
+    system_instructions: task_scope_section,
+    user_instructions: processed_query,
+  })
 
-  return parts.join('\n\n')
+  return build_result.full_prompt
 }

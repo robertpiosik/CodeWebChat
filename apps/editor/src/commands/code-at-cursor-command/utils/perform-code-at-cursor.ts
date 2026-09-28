@@ -4,7 +4,8 @@ import axios from 'axios'
 import he from 'he'
 import { send_llm_message } from '../../../utils/send-llm-message'
 import {
-  code_at_cursor_instructions,
+  code_at_cursor_system_instructions,
+  code_at_cursor_user_instructions,
   code_at_cursor_instructions_for_chatbots
 } from '../../../constants/instructions'
 import { FilesCollector } from '../../../utils/files-collector'
@@ -225,12 +226,14 @@ export const perform_code_at_cursor = async (params: {
   )
 
   const active_file_path = vscode.workspace.asRelativePath(document.uri)
+  const active_file_path_fs = document.uri.fsPath
   const row = position.line
   const column = position.character
 
   const collected = await FilesCollector.collect_files({
     workspace_provider: params.workspace_provider,
-    open_editors_provider: params.open_editors_provider
+    open_editors_provider: params.open_editors_provider,
+    exclude_paths: [active_file_path_fs]
   })
 
   if (action == 'copy' || action == 'autofill') {
@@ -240,9 +243,9 @@ export const perform_code_at_cursor = async (params: {
       column
     })
 
-    const { part1, part2 } = PromptBuilder.build_prompt({
-      other_files: collected.other_files,
-      recent_files: collected.recent_files,
+    const { full_prompt: chatbot_prompt } = PromptBuilder.build_prompt({
+      files_context_part1: collected.other_files,
+      files_context_part2: collected.recent_files,
       active_file: {
         filepath: active_file_path,
         content: `${text_before_cursor}${
@@ -251,10 +254,9 @@ export const perform_code_at_cursor = async (params: {
             : '<missing_text>'
         }${text_after_cursor}`
       },
-      system_instructions: chatbot_instructions
+      system_instructions: chatbot_instructions,
+      user_instructions: code_at_cursor_user_instructions
     })
-
-    const chatbot_prompt = `${part1}\n\n${part2}`
 
     if (action === 'copy') {
       await vscode.env.clipboard.writeText(chatbot_prompt)
@@ -379,8 +381,8 @@ export const perform_code_at_cursor = async (params: {
     const abort_controller = new AbortController()
 
     const { part1, part2 } = PromptBuilder.build_prompt({
-      other_files: collected.other_files,
-      recent_files: collected.recent_files,
+      files_context_part1: collected.other_files,
+      files_context_part2: collected.recent_files,
       active_file: {
         filepath: active_file_path,
         content: `${text_before_cursor}${
@@ -389,7 +391,8 @@ export const perform_code_at_cursor = async (params: {
             : '<missing_text>'
         }${text_after_cursor}`
       },
-      system_instructions: code_at_cursor_instructions
+      system_instructions: code_at_cursor_system_instructions,
+      user_instructions: code_at_cursor_user_instructions
     })
 
     const user_content = build_user_content({
@@ -496,7 +499,6 @@ export const perform_code_at_cursor = async (params: {
 
           decoded_completion = decoded_completion.trim()
 
-          const active_file_path_fs = document.uri.fsPath
           const workspace_root =
             params.workspace_provider.get_workspace_root_for_file(
               active_file_path_fs

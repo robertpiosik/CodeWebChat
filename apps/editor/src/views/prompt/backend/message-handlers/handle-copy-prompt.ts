@@ -43,12 +43,11 @@ export const handle_copy_prompt = async (params: {
   }
 
   const build_result = PromptBuilder.build_prompt({
-    other_files,
-    recent_files,
+    files_context_part1: other_files,
+    files_context_part2: recent_files,
     skill_definitions,
     system_instructions: formatted_system_instructions,
     user_instructions,
-    separator: true
   })
   text = build_result.full_prompt
 

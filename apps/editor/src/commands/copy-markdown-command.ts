@@ -41,9 +41,8 @@ export const copy_markdown_commands = (
 
       const context_text =
         PromptBuilder.build_prompt({
-          other_files,
-          recent_files,
-          separator: true
+          files_context_part1: other_files,
+          files_context_part2: recent_files,
         }).full_prompt + '\n'
       await vscode.env.clipboard.writeText(context_text)
       vscode.window.showInformationMessage(
@@ -125,8 +124,7 @@ export const copy_markdown_commands = (
 
         context_text =
           PromptBuilder.build_prompt({
-            other_files: context_text,
-            separator: true
+            files_context: context_text,
           }).full_prompt + '\n'
         await vscode.env.clipboard.writeText(context_text)
         vscode.window.showInformationMessage(

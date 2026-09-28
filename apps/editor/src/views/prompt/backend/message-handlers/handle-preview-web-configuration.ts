@@ -45,12 +45,11 @@ export const handle_preview_web_configuration = async (
   }
 
   const { full_prompt: built_prompt } = PromptBuilder.build_prompt({
-    other_files,
-    recent_files,
+    files_context_part1: other_files,
+    files_context_part2: recent_files,
     skill_definitions,
     system_instructions: formatted_system_instructions,
     user_instructions,
-    separator: true
   })
   const text_to_send = built_prompt
 

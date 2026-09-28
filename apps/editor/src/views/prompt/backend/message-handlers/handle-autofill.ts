@@ -93,12 +93,11 @@ export const handle_autofill = async (params: {
   }
 
   const { full_prompt: text } = PromptBuilder.build_prompt({
-    other_files,
-    recent_files,
+    files_context_part1: other_files,
+    files_context_part2: recent_files,
     skill_definitions,
     system_instructions: formatted_system_instructions,
     user_instructions,
-    separator: true
   })
 
   const prompt_type = params.prompt_view_provider.web_prompt_type

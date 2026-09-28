@@ -12,6 +12,7 @@ export namespace FilesCollector {
     workspace_provider: WorkspaceProvider
     open_editors_provider?: OpenEditorsProvider
     additional_paths?: string[]
+    exclude_paths?: string[]
     shrink?: boolean
   }): Promise<{ other_files: string; recent_files: string }> => {
     const workspace_roots = params.workspace_provider.get_workspace_roots()
@@ -33,7 +34,9 @@ export namespace FilesCollector {
       ...additional_paths
     )
 
-    const context_files = [...new Set(context_files_list)]
+    const context_files = [...new Set(context_files_list)].filter(
+      (p) => !(params.exclude_paths ?? []).includes(p)
+    )
 
     // Sort context files based on modification time and selection timestamp
     const { other_files: other_paths, recent_files: recent_paths } =
