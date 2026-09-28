@@ -27,13 +27,13 @@ This independent toolkit lets you code in a fast, sessionless workflow.
 
 #### A sessionless workflow
 
-1. Select task-relevant files with the help of [Agentic Search](#-agentic-search).
+1. Select task-relevant files with the help of a powerful [Agentic Search](#-agentic-search).
 2. Select examples for model guidance.
-3. Send context-preloaded prompts with chatbots, api calls or coding agents.
+3. Send [prompts](#prompts) with chatbots, api calls or coding agents.
 
 #### Efficiency and speed
 
-- Without sessions, there is **no context accumulation**;
+- Without sessions, there is no context accumulation;
   - iterations without _context bloat_,
   - token usage never skyrocket,
   - no accuracy drop,
