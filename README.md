@@ -34,6 +34,8 @@ This independent toolkit lets you code in a fast, sessionless workflow.
 
 Without context accumulation and prompt complexity growing well past your problem, _thinking_ is brief and accurate responses arrive in seconds!
 
+...and your quotas go further!
+
 ## Send prompts with...
 
 ### 👉 Chatbots
