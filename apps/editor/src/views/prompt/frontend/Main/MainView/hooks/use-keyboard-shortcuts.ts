@@ -13,6 +13,7 @@ export const use_keyboard_shortcuts = (params: {
   on_cli_prompt_type_change: (prompt_type: CliPromptType) => void
   on_show_home: () => void
   on_agentic_search?: () => void
+  on_close_browser_connection?: () => void
   is_disabled: boolean
 }) => {
   const [is_alt_pressed, set_is_alt_pressed] = useState(false)
@@ -150,6 +151,14 @@ export const use_keyboard_shortcuts = (params: {
       if (event.code == 'KeyF') {
         event.preventDefault()
         params.on_agentic_search?.()
+        return
+      }
+
+      if (event.code == 'KeyX') {
+        if (params.target == 'WEB') {
+          event.preventDefault()
+          params.on_close_browser_connection?.()
+        }
         return
       }
     }

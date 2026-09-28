@@ -14,6 +14,7 @@ type Props = {
   }
   on_install: () => void
   on_close: () => void
+  is_alt_pressed?: boolean
 }
 
 export const BrowserConnectionStatus: React.FC<Props> = (props) => {
@@ -36,6 +37,7 @@ export const BrowserConnectionStatus: React.FC<Props> = (props) => {
       icon: 'codicon-close-small',
       label: props.translations.hide,
       title: props.translations.hide,
+      keycap: props.is_alt_pressed ? 'X' : undefined,
       on_click: props.on_close
     })
   }
