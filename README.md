@@ -23,7 +23,7 @@
 
 ## Sessionless design
 
-**CWC** eliminates context accumulation in long sessions by separating agentic context discovery (tool calling) and code editing. Without [prompt](#prompts) complexity growing well past the task at hand, models spend less time _thinking_, cutting latency and reducing quota usage.
+Unlike coding agents that accumulate tool outputs and chat history over long sessions, **CWC** separates agentic context discovery (tool calling) from code editing. Without [prompt](#prompts) complexity growing well past the task at hand, models spend less time _thinking_, cutting latency and reducing quota usage.
 
 ## Send prompts with...
 
