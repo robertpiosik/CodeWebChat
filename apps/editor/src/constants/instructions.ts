@@ -70,9 +70,9 @@ export const voice_input_instructions =
 
 export const cli_edit_ask_requirements = {
   preloaded_context:
-    "All project's files were preloaded to [files](#files). If [task](#task) includes *.png image paths, read them.",
+    "All project's files were preloaded to [files](#files). If [task](#task) includes *.png image paths, read them using the appropriate tool.",
   restrict_tool_calls:
-    'Running any other tools or shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.',
+    'You may only use tools to read images from [task](#task). Modifying the file system or running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.',
   restrict_tool_calls_with_exceptions:
-    'You may only perform file operations (create, update, delete) required to complete the [task](#task); running any other tools or shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.'
+    'You may only perform file operations (create, update, delete) required to complete the [task](#task); running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.'
 }

@@ -174,8 +174,8 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 # Requirements
 
-- All project's files were preloaded to [files](#files). If [task](#task) includes *.png image paths, read them. Looking for other files is FORBIDDEN.
-- You may only perform file operations (create, update, delete) required to complete the [task](#task); running any other tools or shell commands is FORBIDDEN.
+- All project's files were preloaded to [files](#files). If [task](#task) includes *.png image paths, read them using the appropriate tool.
+- You may only perform file operations (create, update, delete) required to complete the [task](#task); running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.
 
 # Task
 
@@ -213,8 +213,8 @@ _Multi-purpose: explanations, code reviews, you name it._
 
 # Requirements
 
-- All project's files were preloaded to [files](#files). If [task](#task) includes *.png image paths, read them. Looking for other files is FORBIDDEN.
-- Running any additional tools or shell commands is FORBIDDEN.
+- All project's files were preloaded to [files](#files). If [task](#task) includes *.png image paths, read them using the appropriate tool.
+- You may only use tools to read images from [task](#task). Modifying the file system or running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.
 
 # Task
 
