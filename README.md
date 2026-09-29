@@ -26,11 +26,11 @@ This free, independently-built toolkit lets you code in a sessionless workflow.
 1. Type instructions.
 2. Select task-relevant files with the help of a powerful [Agentic Search](#-agentic-search).
 3. Select examples for model guidance.
-4. Iterate on instructions until you nail it!
+4. Iterate on instructions until you nail the task!
 
 Without context accumulation and prompt complexity growing well past the task at hand, _thinking_ is brief and accurate responses arrive in seconds...
 
-...also your quotas go further!
+...and your quotas feel like they last forever!
 
 ## Privacy-first
 
