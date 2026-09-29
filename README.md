@@ -19,7 +19,7 @@
 
 ## Introduction
 
-**CWC** eliminates context accumulation by separating agentic context discovery and code editing. Because prompt complexity never grows well past the task at hand, models spend less time _thinking_ and accurate responses arrive in seconds.
+**CWC** eliminates context accumulation in long sessions by separating agentic context discovery and code editing. Because [prompt](#prompts) complexity never grows well past the task at hand, models spend less time _thinking_ and accurate responses arrive in seconds.
 
 ## Privacy-first
 
