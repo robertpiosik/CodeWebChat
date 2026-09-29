@@ -410,7 +410,7 @@ export const perform_intelligent_search_mode = async (params: {
             workspace_provider: params.workspace_provider,
             extension_context: params.extension_context,
             build_prompt: async () => cli_prompt,
-            notification_title: t('feature.search-files.progress.finding'),
+            notification_title: t('common.title.intelligent-search'),
             last_selected_workspace_state_key:
               LAST_SELECTED_WORKSPACE_FOR_INTELLIGENT_SEARCH_STATE_KEY,
             last_used_agent_config_name:
