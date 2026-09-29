@@ -1,9 +1,7 @@
 import * as fs from 'fs'
-import * as path from 'path'
 import * as vscode from 'vscode'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { show_ghost_text } from './utils/show-ghost-text'
-import { normalize_path } from '@/utils/normalize-path'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import { CommitMessageDetails } from '@/utils/commit-message-details'
@@ -81,35 +79,12 @@ export const code_at_cursor_commands = (params: {
 
         const decoded_completion = args.content
 
-        const selected_files: string[] = []
-        const checked_files = params.workspace_provider.get_checked_files()
-        for (const file of checked_files) {
-          const file_workspace_root =
-            params.workspace_provider.get_workspace_root_for_file(file)
-          if (file_workspace_root === workspace_root) {
-            const relative_path = normalize_path(
-              path.relative(workspace_root, file)
-            )
-            selected_files.push(relative_path)
-          }
-        }
-
         await show_ghost_text({
           editor,
           position,
-          ghost_text: decoded_completion,
-          command: {
-            title: 'Code at Cursor Accepted',
-            command: 'codeWebChat.internal.codeAtCursorAccepted',
-            arguments: [
-              {
-                workspace_root,
-                prompt: '',
-                file_path: safe_path,
-                selected_files
-              }
-            ]
-          }
+          decoded_completion,
+          workspace_provider: params.workspace_provider,
+          active_file_path_fs: safe_path
         })
       }
     ),

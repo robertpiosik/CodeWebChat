@@ -1511,6 +1511,24 @@ export const translations = {
     hu: 'Kérés küldése',
     bg: 'Изпращане на заявка'
   },
+  'common.action.invoke-agent': {
+    en: 'Invoke Agent',
+    pl: 'Wywołaj agenta',
+    'zh-cn': '调用智能体',
+    ja: 'エージェントを呼び出す',
+    'zh-tw': '調用智能體',
+    de: 'Agenten aufrufen',
+    es: 'Invocar agente',
+    fr: "Invoquer l'agent",
+    'pt-br': 'Invocar agente',
+    ru: 'Вызвать агента',
+    ko: '에이전트 호출',
+    it: 'Invoca agente',
+    tr: 'Aracıyı çağır',
+    cs: 'Vyvolat agenta',
+    hu: 'Ügynök meghívása',
+    bg: 'Извикване на агент'
+  },
   'common.action.enter-manually': {
     en: 'Enter manually',
     pl: 'Wpisz ręcznie',

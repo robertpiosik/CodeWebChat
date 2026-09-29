@@ -1,13 +1,14 @@
-import * as path from 'path'
 import * as vscode from 'vscode'
 import axios from 'axios'
 import he from 'he'
 import { send_llm_message } from '../../../utils/send-llm-message'
 import {
-  code_at_cursor_system_instructions,
+  code_at_cursor_output_formatting,
   code_at_cursor_user_instructions,
-  code_at_cursor_instructions_for_chatbots
+  code_at_cursor_output_formatting_for_chatbots,
+  cli_edit_ask_requirements
 } from '../../../constants/instructions'
+import { invoke_agentic_cli } from '../../../utils/agentic-cli-invocation'
 import { FilesCollector } from '../../../utils/files-collector'
 import { ProvidersManager } from '../../../services/providers-manager'
 import { Logger } from '@shared/utils/logger'
@@ -19,10 +20,15 @@ import { show_ghost_text } from './show-ghost-text'
 import { PromptBuilder } from '../../../utils/prompt-builder'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
-import { normalize_path } from '@/utils/normalize-path'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
-import { get_last_used_web_configuration_key } from '@/constants/state-keys'
+import {
+  get_last_used_web_configuration_key,
+  LAST_COMPLETION_INSTRUCTIONS_STATE_KEY,
+  LAST_USED_CODE_AT_CURSOR_ACTION_STATE_KEY,
+  LAST_SELECTED_WORKSPACE_FOR_CODE_AT_CURSOR_STATE_KEY,
+  LAST_USED_AGENT_FOR_CODE_AT_CURSOR_STATE_KEY
+} from '@/constants/state-keys'
 import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 
@@ -35,7 +41,7 @@ export const perform_code_at_cursor = async (params: {
   show_quick_pick?: boolean
   completion_instructions?: string
   api_configuration_id?: string
-}) => {
+}): Promise<void> => {
   const providers_manager = new ProvidersManager(params.extension_context)
 
   const editor = vscode.window.activeTextEditor
@@ -61,7 +67,7 @@ export const perform_code_at_cursor = async (params: {
     ) {
       const last_value =
         params.extension_context.workspaceState.get<string>(
-          'last-completion-instructions'
+          LAST_COMPLETION_INSTRUCTIONS_STATE_KEY
         ) || ''
 
       completion_instructions = await new Promise<string | undefined>(
@@ -111,7 +117,7 @@ export const perform_code_at_cursor = async (params: {
       if (completion_instructions === undefined) return
 
       await params.extension_context.workspaceState.update(
-        'last-completion-instructions',
+        LAST_COMPLETION_INSTRUCTIONS_STATE_KEY,
         completion_instructions || ''
       )
     }
@@ -125,6 +131,10 @@ export const perform_code_at_cursor = async (params: {
           {
             label: t('common.action.send-request'),
             id: 'make-api'
+          },
+          {
+            label: t('common.action.invoke-agent'),
+            id: 'invoke-agent'
           },
           ...(params.websocket_manager.is_connected_with_browser()
             ? [
@@ -142,7 +152,7 @@ export const perform_code_at_cursor = async (params: {
 
         const last_action_id =
           params.extension_context.workspaceState.get<string>(
-            'last_used_code_at_cursor_action'
+            LAST_USED_CODE_AT_CURSOR_ACTION_STATE_KEY
           )
 
         const active_item = last_action_id
@@ -207,7 +217,7 @@ export const perform_code_at_cursor = async (params: {
       if (!action) return
 
       params.extension_context.workspaceState.update(
-        'last_used_code_at_cursor_action',
+        LAST_USED_CODE_AT_CURSOR_ACTION_STATE_KEY,
         action
       )
     }
@@ -237,7 +247,7 @@ export const perform_code_at_cursor = async (params: {
   })
 
   if (action == 'copy' || action == 'autofill') {
-    const chatbot_instructions = code_at_cursor_instructions_for_chatbots({
+    const chatbot_instructions = code_at_cursor_output_formatting_for_chatbots({
       file_path: active_file_path,
       row,
       column
@@ -254,7 +264,7 @@ export const perform_code_at_cursor = async (params: {
             : '<missing_text>'
         }${text_after_cursor}`
       },
-      system_instructions: chatbot_instructions,
+      output_formatting: chatbot_instructions,
       user_instructions: code_at_cursor_user_instructions
     })
 
@@ -333,6 +343,121 @@ export const perform_code_at_cursor = async (params: {
     }
   }
 
+  if (action == 'invoke-agent') {
+    const { full_prompt: cli_prompt } = PromptBuilder.build_prompt({
+      files_context_part1: collected.other_files,
+      files_context_part2: collected.recent_files,
+      active_file: {
+        filepath: active_file_path,
+        content: `${text_before_cursor}${
+          completion_instructions
+            ? `<missing_text>${completion_instructions}</missing_text>`
+            : '<missing_text>'
+        }${text_after_cursor}`
+      },
+      output_formatting: code_at_cursor_output_formatting,
+      requirements: cli_edit_ask_requirements.restrict_shell_commands,
+      user_instructions: code_at_cursor_user_instructions
+    })
+
+    const invoke_cli_result = await invoke_agentic_cli({
+      workspace_provider: params.workspace_provider,
+      extension_context: params.extension_context,
+      build_prompt: async () => cli_prompt,
+      notification_title: t('command.code-at-cursor-command.progress.title'),
+      last_selected_workspace_state_key:
+        LAST_SELECTED_WORKSPACE_FOR_CODE_AT_CURSOR_STATE_KEY,
+      last_used_agent_config_name:
+        params.extension_context.workspaceState.get<string>(
+          LAST_USED_AGENT_FOR_CODE_AT_CURSOR_STATE_KEY
+        ),
+      on_agent_selected: (name) => {
+        params.extension_context.workspaceState.update(
+          LAST_USED_AGENT_FOR_CODE_AT_CURSOR_STATE_KEY,
+          name
+        )
+      },
+      show_back_button: true,
+      isolate_in_temp_dir: true,
+      agent_args_type: 'isolated-dir'
+    })
+
+    if (invoke_cli_result === 'back') {
+      return perform_code_at_cursor({
+        workspace_provider: params.workspace_provider,
+        open_editors_provider: params.open_editors_provider,
+        extension_context: params.extension_context,
+        websocket_manager: params.websocket_manager,
+        with_completion_instructions: params.with_completion_instructions,
+        show_quick_pick: true,
+        completion_instructions: completion_instructions
+      })
+    }
+
+    if (!invoke_cli_result) {
+      return
+    }
+
+    const response_text = invoke_cli_result.agent_output
+    const start_match = response_text.match(/<replacement>/i)
+
+    let extracted_content = ''
+    if (start_match) {
+      const content_start = start_match.index! + start_match[0].length
+      const remaining_text = response_text.substring(content_start)
+      const end_match = remaining_text.match(/<\/replacement>/i)
+
+      if (end_match) {
+        extracted_content = remaining_text.substring(0, end_match.index)
+      } else {
+        extracted_content = remaining_text
+      }
+    } else {
+      const code_block_match = response_text.match(/```[^\n]*\n([\s\S]*?)```/)
+      if (code_block_match) {
+        extracted_content = code_block_match[1]
+      } else {
+        extracted_content = response_text
+      }
+    }
+
+    let decoded_completion = he.decode(extracted_content.trim())
+
+    if (decoded_completion.startsWith('```')) {
+      const first_newline = decoded_completion.indexOf('\n')
+      if (first_newline !== -1) {
+        decoded_completion = decoded_completion.substring(first_newline + 1)
+      }
+    }
+    if (decoded_completion.endsWith('```')) {
+      const last_newline = decoded_completion.lastIndexOf('\n')
+      if (
+        last_newline !== -1 &&
+        last_newline > decoded_completion.indexOf('\n')
+      ) {
+        decoded_completion = decoded_completion.substring(0, last_newline)
+      } else {
+        decoded_completion = decoded_completion.substring(
+          0,
+          decoded_completion.length - 3
+        )
+      }
+    }
+
+    decoded_completion = decoded_completion.trim()
+
+    await show_ghost_text({
+      editor,
+      position,
+      decoded_completion,
+      workspace_provider: params.workspace_provider,
+      active_file_path_fs,
+      completion_instructions
+    })
+
+    return
+  }
+
   let show_quick_pick = params.show_quick_pick || false
   let current_api_configuration_id = params.api_configuration_id
 
@@ -391,7 +516,7 @@ export const perform_code_at_cursor = async (params: {
             : '<missing_text>'
         }${text_after_cursor}`
       },
-      system_instructions: code_at_cursor_system_instructions,
+      output_formatting: code_at_cursor_output_formatting,
       user_instructions: code_at_cursor_user_instructions
     })
 
@@ -499,44 +624,13 @@ export const perform_code_at_cursor = async (params: {
 
           decoded_completion = decoded_completion.trim()
 
-          const workspace_root =
-            params.workspace_provider.get_workspace_root_for_file(
-              active_file_path_fs
-            )
-          const selected_files: string[] = []
-
-          if (workspace_root) {
-            const checked_files = params.workspace_provider.get_checked_files()
-            for (const file of checked_files) {
-              const file_workspace_root =
-                params.workspace_provider.get_workspace_root_for_file(file)
-              if (file_workspace_root === workspace_root) {
-                const relative_path = normalize_path(
-                  path.relative(workspace_root, file)
-                )
-                selected_files.push(relative_path)
-              }
-            }
-          }
-
           await show_ghost_text({
             editor,
             position,
-            ghost_text: decoded_completion,
-            command: workspace_root
-              ? {
-                  title: 'Code at Cursor Accepted',
-                  command: 'codeWebChat.internal.codeAtCursorAccepted',
-                  arguments: [
-                    {
-                      workspace_root,
-                      prompt: completion_instructions,
-                      file_path: active_file_path_fs,
-                      selected_files
-                    }
-                  ]
-                }
-              : undefined
+            decoded_completion,
+            workspace_provider: params.workspace_provider,
+            active_file_path_fs,
+            completion_instructions
           })
         }
         break

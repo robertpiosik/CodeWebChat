@@ -6,7 +6,9 @@ import {
   LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY,
   LAST_INTELLIGENT_FILE_SEARCH_SHRINK_STATE_KEY,
   LAST_USED_INTELLIGENT_SEARCH_ACTION_STATE_KEY,
-  get_last_used_web_configuration_key
+  get_last_used_web_configuration_key,
+  LAST_SELECTED_WORKSPACE_FOR_INTELLIGENT_SEARCH_STATE_KEY,
+  LAST_USED_AGENT_FOR_INTELLIGENT_SEARCH_STATE_KEY
 } from '@/constants/state-keys'
 import { prompt_for_search_term } from '../utils/prompt-for-search-term'
 import { analyze_files } from '../utils/analyze-files'
@@ -18,9 +20,15 @@ import { ProvidersManager } from '@/services/providers-manager'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { display_token_count } from '@shared/utils/display-token-count'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
-import { intelligent_file_search_format_for_prompt_view } from '@/constants/instructions'
+import {
+  intelligent_file_search_format_for_prompt_view,
+  ai_file_search_format_instructions,
+  cli_edit_ask_requirements
+} from '@/constants/instructions'
 import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
+import { invoke_agentic_cli } from '@/utils/agentic-cli-invocation'
+import { extract_paths_from_bullet_list } from '@/utils/extract-paths-from-bullet-list'
 
 export const perform_intelligent_search_mode = async (params: {
   files: string[]
@@ -138,6 +146,10 @@ export const perform_intelligent_search_mode = async (params: {
               {
                 label: t('common.action.send-request'),
                 id: 'make-api'
+              },
+              {
+                label: t('common.action.invoke-agent'),
+                id: 'invoke-agent'
               },
               ...(params.websocket_manager.is_connected_with_browser()
                 ? [
@@ -368,6 +380,72 @@ export const perform_intelligent_search_mode = async (params: {
           }
         }
 
+        let api_result:
+          | string[]
+          | 'cancel'
+          | 'error_no_files'
+          | 'error'
+          | undefined = undefined
+
+        if (action == 'invoke-agent') {
+          let md_files = ''
+          for (const file of analysis.files_data) {
+            const content_to_use = shrink_result
+              ? file.shrunk_content
+              : file.content
+            const backticks = content_to_use.includes('```') ? '````' : '```'
+            md_files += `### File: \`${file.display_path}\`\n\n${backticks}\n${content_to_use}\n${backticks}\n\n`
+          }
+
+          const config = vscode.workspace.getConfiguration('codeWebChat')
+          const base_instructions =
+            config.get<string>('intelligentSearchInstructions') ||
+            config.inspect<string>('intelligentSearchInstructions')
+              ?.defaultValue ||
+            ''
+
+          const cli_prompt = `# Files\n\n${md_files}# Task\n\n${base_instructions}\n\n# Output formatting\n\n${ai_file_search_format_instructions}\n\n# Requirements\n\n- ${cli_edit_ask_requirements.restrict_shell_commands}\n\n# Query\n\n${search_term}`
+
+          const invoke_cli_result = await invoke_agentic_cli({
+            workspace_provider: params.workspace_provider,
+            extension_context: params.extension_context,
+            build_prompt: async () => cli_prompt,
+            notification_title: t('feature.search-files.progress.finding'),
+            last_selected_workspace_state_key:
+              LAST_SELECTED_WORKSPACE_FOR_INTELLIGENT_SEARCH_STATE_KEY,
+            last_used_agent_config_name:
+              params.extension_context.workspaceState.get<string>(
+                LAST_USED_AGENT_FOR_INTELLIGENT_SEARCH_STATE_KEY
+              ),
+            on_agent_selected: (name) => {
+              params.extension_context.workspaceState.update(
+                LAST_USED_AGENT_FOR_INTELLIGENT_SEARCH_STATE_KEY,
+                name
+              )
+            },
+            show_back_button: true,
+            isolate_in_temp_dir: true,
+            agent_args_type: 'isolated-dir'
+          })
+
+          if (invoke_cli_result === 'back') {
+            go_back_to_action = true
+            continue
+          }
+
+          if (!invoke_cli_result) {
+            return undefined
+          }
+
+          const extracted_files = extract_paths_from_bullet_list({
+            text: invoke_cli_result.agent_output,
+            workspace_files: analysis.files_data.map((f) => f.display_path)
+          })
+
+          api_result =
+            extracted_files.length == 0 ? 'error_no_files' : extracted_files
+        }
+
         if (action == 'make-api') {
           if (!has_api_configurations) {
             show_incomplete_setup_warning('api')
@@ -376,14 +454,6 @@ export const perform_intelligent_search_mode = async (params: {
           }
 
           let show_quick_pick = false
-          let break_outer = false
-          let final_result:
-            | {
-                selected_paths: string[]
-                matched_paths: string[]
-                title: string
-              }
-            | undefined = undefined
 
           while (true) {
             const tokens_to_process = shrink_result
@@ -410,7 +480,7 @@ export const perform_intelligent_search_mode = async (params: {
             const { api_configuration: selected_api_configuration, provider } =
               api_configuration_result
 
-            const api_result = await search_files_by_intelligent(
+            api_result = await search_files_by_intelligent(
               analysis.files_data,
               shrink_result as boolean,
               search_term,
@@ -418,68 +488,70 @@ export const perform_intelligent_search_mode = async (params: {
               selected_api_configuration
             )
 
-            if (api_result == 'cancel') return undefined
             if (api_result == 'error') {
               show_quick_pick = true
               continue
             }
-            if (api_result == 'error_no_files') {
-              vscode.window.showWarningMessage(t('common.info.no-files-found'))
-              go_back_to_term = true
-              break
-            }
-
-            let go_back_to_term_from_results = false
-            let restored_selected_paths: string[] | undefined = undefined
-            let restored_unmatched_paths: string[] | undefined = undefined
-
-            while (true) {
-              const apply_result = await prompt_for_intelligent_search_results({
-                files: params.files,
-                extracted_files: api_result,
-                analysis,
-                workspace_provider: params.workspace_provider,
-                restored_selected_paths,
-                restored_unmatched_paths,
-                is_search_in_selected: params.is_search_in_selected,
-                is_sub_search: params.is_sub_search
-              })
-
-              if (apply_result == 'back') {
-                go_back_to_term_from_results = true
-                break
-              }
-              if (apply_result == 'cancel') {
-                return undefined
-              }
-
-              if ('action' in apply_result) {
-                const sub_result = await params.search_in_results(
-                  apply_result.matched_paths
-                )
-                if (sub_result === 'back') {
-                  restored_selected_paths = apply_result.selected_paths
-                  restored_unmatched_paths = apply_result.unmatched_paths
-                  continue
-                }
-                return sub_result
-              }
-
-              final_result = apply_result
-              break_outer = true
-              break
-            }
-
-            if (break_outer) return final_result
-            if (go_back_to_term_from_results) {
-              go_back_to_term = true
-              break
-            }
+            break
           }
         }
 
-        if (go_back_to_term) break
-        if (go_back_to_action) continue
+        if (go_back_to_action) {
+          continue
+        }
+
+        if (api_result == 'cancel') return undefined
+        if (api_result == 'error_no_files') {
+          vscode.window.showWarningMessage(t('common.info.no-files-found'))
+          go_back_to_term = true
+          break
+        }
+
+        if (api_result && api_result !== 'error') {
+          let go_back_to_term_from_results = false
+          let restored_selected_paths: string[] | undefined = undefined
+          let restored_unmatched_paths: string[] | undefined = undefined
+
+          while (true) {
+            const apply_result = await prompt_for_intelligent_search_results({
+              files: params.files,
+              extracted_files: api_result,
+              analysis,
+              workspace_provider: params.workspace_provider,
+              restored_selected_paths,
+              restored_unmatched_paths,
+              is_search_in_selected: params.is_search_in_selected,
+              is_sub_search: params.is_sub_search
+            })
+
+            if (apply_result == 'back') {
+              go_back_to_term_from_results = true
+              break
+            }
+            if (apply_result == 'cancel') {
+              return undefined
+            }
+
+            if ('action' in apply_result) {
+              const sub_result = await params.search_in_results(
+                apply_result.matched_paths
+              )
+              if (sub_result === 'back') {
+                restored_selected_paths = apply_result.selected_paths
+                restored_unmatched_paths = apply_result.unmatched_paths
+                continue
+              }
+              return sub_result
+            }
+
+            return apply_result
+          }
+
+          if (go_back_to_term_from_results) {
+            go_back_to_term = true
+            break
+          }
+        }
       }
 
       if (go_back_to_term) break

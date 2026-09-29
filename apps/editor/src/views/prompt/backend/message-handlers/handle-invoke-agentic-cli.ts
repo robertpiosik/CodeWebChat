@@ -45,12 +45,17 @@ export const handle_invoke_agentic_cli = async (
   const result = await invoke_agentic_cli({
     workspace_provider: prompt_view_provider.workspace_provider,
     extension_context: prompt_view_provider.extension_context,
-    title: t('views.prompt.handlers.handle-invoke-agentic-cli.title'),
-    waiting_message: t('utils.agentic-cli-invocation.agent.waiting-for-agent'),
+    notification_title: t(
+      'views.prompt.handlers.handle-invoke-agentic-cli.title'
+    ),
     last_used_agent_config_name,
     last_selected_workspace_state_key:
       LAST_SELECTED_WORKSPACE_IN_AGENTIC_CLI_STATE_KEY,
-    panel_prompt_type: prompt_type,
+    isolate_in_temp_dir: true,
+    run_in_terminal: prompt_type == 'ask-about-files',
+    generate_diff_for_temp_dir: prompt_type == 'edit-files',
+    agent_args_type:
+      prompt_type == 'edit-files' ? 'isolated-dir' : 'integrated-terminal',
     cli_configuration_name: message.cli_configuration_name,
     use_quick_pick: message.use_quick_pick,
     on_agent_selected: (name: string) => {

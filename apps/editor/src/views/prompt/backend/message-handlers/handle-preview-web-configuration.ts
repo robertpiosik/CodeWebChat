@@ -30,25 +30,22 @@ export const handle_preview_web_configuration = async (
     remove_images: true
   })
 
-  let formatted_system_instructions = ''
+  let output_formatting: string | undefined = undefined
   const user_instructions = processed_instructions
   if (prompt_view_provider.web_prompt_type == 'edit-files') {
-    const edit_format_instructions = {
+    output_formatting = {
       whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
       truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
       'search-replace': EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
       diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
     }[prompt_view_provider.edit_format]
-    if (edit_format_instructions) {
-      formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
-    }
   }
 
   const { full_prompt: built_prompt } = PromptBuilder.build_prompt({
     files_context_part1: other_files,
     files_context_part2: recent_files,
     skill_definitions,
-    system_instructions: formatted_system_instructions,
+    output_formatting,
     user_instructions
   })
   const text_to_send = built_prompt

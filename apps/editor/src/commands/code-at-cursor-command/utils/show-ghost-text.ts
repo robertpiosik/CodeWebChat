@@ -1,11 +1,50 @@
 import * as vscode from 'vscode'
+import * as path from 'path'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
+import { normalize_path } from '@/utils/normalize-path'
 
 export const show_ghost_text = async (params: {
   editor: vscode.TextEditor
   position: vscode.Position
-  ghost_text: string
-  command?: vscode.Command
+  decoded_completion: string
+  workspace_provider: WorkspaceProvider
+  active_file_path_fs: string
+  completion_instructions?: string
 }) => {
+  const workspace_root = params.workspace_provider.get_workspace_root_for_file(
+    params.active_file_path_fs
+  )
+  const selected_files: string[] = []
+
+  if (workspace_root) {
+    const checked_files = params.workspace_provider.get_checked_files()
+    for (const file of checked_files) {
+      const file_workspace_root =
+        params.workspace_provider.get_workspace_root_for_file(file)
+      if (file_workspace_root === workspace_root) {
+        const relative_path = normalize_path(
+          path.relative(workspace_root, file)
+        )
+        selected_files.push(relative_path)
+      }
+    }
+  }
+
+  const command = workspace_root
+    ? {
+        title: 'Code at Cursor Accepted',
+        command: 'codeWebChat.internal.codeAtCursorAccepted',
+        arguments: [
+          {
+            workspace_root,
+            prompt: params.completion_instructions || '',
+            file_path: params.active_file_path_fs,
+            selected_files
+          }
+        ]
+      }
+    : undefined
+
   const document = params.editor.document
   const controller = vscode.languages.registerInlineCompletionItemProvider(
     { pattern: '**' },
@@ -18,9 +57,9 @@ export const show_ghost_text = async (params: {
         ) {
           return [
             new vscode.InlineCompletionItem(
-              params.ghost_text,
+              params.decoded_completion,
               new vscode.Range(params.position, params.position),
-              params.command
+              command
             )
           ]
         }

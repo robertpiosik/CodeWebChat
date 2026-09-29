@@ -65,7 +65,8 @@ export namespace PromptBuilder {
     files_context?: string
     active_file?: { filepath: string; content: string }
     skill_definitions?: string
-    system_instructions?: string
+    output_formatting?: string
+    requirements?: string
     user_instructions?: string
   }): { part1: string; part2: string; full_prompt: string } => {
     let part1 = ''
@@ -109,12 +110,18 @@ export namespace PromptBuilder {
       full_prompt += params.skill_definitions
     }
 
-    if (params.system_instructions) {
-      const sys = params.system_instructions.trimEnd()
-      if (sys) {
-        part2 += `${sys}\n\n`
-        full_prompt += `${sys}\n\n`
-      }
+    let sys = ''
+    if (params.output_formatting) {
+      sys += `# Output formatting\n\n${params.output_formatting.trimEnd()}\n\n`
+    }
+    if (params.requirements) {
+      sys += `# Requirements\n\n${params.requirements.trimEnd()}\n\n`
+    }
+    sys = sys.trimEnd()
+
+    if (sys) {
+      part2 += `${sys}\n\n`
+      full_prompt += `${sys}\n\n`
     }
 
     if (part1.length > 0 || part2.length > 0 || full_prompt.length > 0) {

@@ -15,7 +15,9 @@ import {
   LAST_ATTACH_ASCII_TREE_STATE_KEY,
   get_last_used_web_configuration_key,
   LAST_USED_COMMIT_MESSAGE_ACTION_STATE_KEY,
-  LAST_USE_CONTEXT_FILES_STATE_KEY
+  LAST_USE_CONTEXT_FILES_STATE_KEY,
+  LAST_USED_AGENT_FOR_COMMIT_MESSAGE_STATE_KEY,
+  LAST_SELECTED_WORKSPACE_FOR_COMMIT_MESSAGE_STATE_KEY
 } from '@/constants/state-keys'
 import { get_prompt_data } from './get-prompt-data'
 import { display_token_count } from '@shared/utils/display-token-count'
@@ -26,6 +28,8 @@ import { normalize_path } from '@/utils/normalize-path'
 import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { get_error_message } from '@/utils/get-error-message'
+import { strip_wrapping_quotes } from '../utils/strip-wrapping-quotes'
+import { invoke_agentic_cli } from '@/utils/agentic-cli-invocation'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
@@ -105,6 +109,7 @@ export const run_generate_action = async (params: {
         was_empty_stage && !is_single_change_flow && !params.source_control
 
       const action_make_api = t('common.action.send-request')
+      const action_invoke_agent = t('common.action.invoke-agent')
       const action_autofill_chatbot = t('common.action.autofill-chatbot')
       const action_enter_manually = t('common.action.enter-manually')
       const action_copy_prompt = t('common.action.copy-prompt')
@@ -113,11 +118,13 @@ export const run_generate_action = async (params: {
       let action_completed = false
       let final_api_prompt: string | undefined = undefined
       let final_chatbot_prompt: string | undefined = undefined
+      let final_cli_prompt: string | undefined = undefined
 
       while (!action_completed) {
         if (!current_action) {
           final_api_prompt = undefined
           final_chatbot_prompt = undefined
+          final_cli_prompt = undefined
 
           current_action = await new Promise<string | undefined | 'back'>(
             (resolve) => {
@@ -126,6 +133,7 @@ export const run_generate_action = async (params: {
               >()
               quick_pick.items = [
                 { label: action_make_api, id: 'make-api' },
+                { label: action_invoke_agent, id: 'invoke-agent' },
                 ...(params.websocket_manager.is_connected_with_browser()
                   ? [{ label: action_autofill_chatbot, id: 'autofill' }]
                   : []),
@@ -236,11 +244,13 @@ export const run_generate_action = async (params: {
         if (action !== 'manual' && !final_api_prompt) {
           final_api_prompt = prompt_without_context.api_prompt
           final_chatbot_prompt = prompt_without_context.chatbot_prompt
+          final_cli_prompt = prompt_without_context.cli_prompt
 
           if (prompt_with_context) {
             if (setting === 'always') {
               final_api_prompt = prompt_with_context.api_prompt
               final_chatbot_prompt = prompt_with_context.chatbot_prompt
+              final_cli_prompt = prompt_with_context.cli_prompt
             } else if (setting === 'ask') {
               const skip_tokens = Math.ceil(
                 prompt_without_context.api_prompt.length / 4
@@ -351,6 +361,7 @@ export const run_generate_action = async (params: {
                 if (answer === 'attach') {
                   final_api_prompt = prompt_with_context.api_prompt
                   final_chatbot_prompt = prompt_with_context.chatbot_prompt
+                  final_cli_prompt = prompt_with_context.cli_prompt
                 }
               }
             }
@@ -458,7 +469,64 @@ export const run_generate_action = async (params: {
           return
         }
 
-        if (action == 'manual') {
+        if (action == 'invoke-agent') {
+          const invoke_cli_result = await invoke_agentic_cli({
+            workspace_provider: params.workspace_provider,
+            extension_context: params.extension_context,
+            build_prompt: async () => final_cli_prompt!,
+            notification_title: t(
+              'command.generate-commit-message-command.progress.title'
+            ),
+            last_selected_workspace_state_key:
+              LAST_SELECTED_WORKSPACE_FOR_COMMIT_MESSAGE_STATE_KEY,
+            last_used_agent_config_name:
+              params.extension_context.workspaceState.get<string>(
+                LAST_USED_AGENT_FOR_COMMIT_MESSAGE_STATE_KEY
+              ),
+            on_agent_selected: (name) => {
+              params.extension_context.workspaceState.update(
+                LAST_USED_AGENT_FOR_COMMIT_MESSAGE_STATE_KEY,
+                name
+              )
+            },
+            show_back_button: true,
+            isolate_in_temp_dir: true,
+            agent_args_type: 'isolated-dir'
+          })
+
+          if (invoke_cli_result === 'back') {
+            current_action = undefined
+            continue
+          }
+
+          if (!invoke_cli_result) {
+            if (was_empty_stage) {
+              await vscode.commands.executeCommand('git.unstageAll', repository)
+            }
+            return
+          }
+
+          let response_text = invoke_cli_result.agent_output
+          const match = response_text.match(
+            /\*\*Commit message:\*\*\s*([\s\S]*)/i
+          )
+          if (match) {
+            response_text = match[1].trim()
+          }
+          response_text = strip_wrapping_quotes(response_text)
+          response_text = response_text.replace(/[<>`$()]/g, '')
+
+          if (!response_text.trim()) {
+            vscode.window.showErrorMessage(
+              t('command.generate-commit-message-command.error.empty-response')
+            )
+            current_action = undefined
+            continue
+          }
+
+          commit_message = response_text
+          action_completed = true
+        } else if (action == 'manual') {
           commit_message = await vscode.env.clipboard.readText()
           action_completed = true
         } else {

@@ -42,6 +42,10 @@ export const HISTORY_EDIT_FILES_STATE_KEY = 'history-edit-files'
 
 export const LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY =
   'last-used-code-at-cursor-config-id'
+export const LAST_USED_CODE_AT_CURSOR_ACTION_STATE_KEY =
+  'last-used-code-at-cursor-action'
+export const LAST_COMPLETION_INSTRUCTIONS_STATE_KEY =
+  'last-completion-instructions'
 export const LAST_USED_INTELLIGENT_FILE_SEARCH_CONFIG_ID_STATE_KEY =
   'last-used-intelligent-file-search-config-id'
 export const LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY =
@@ -52,6 +56,10 @@ export const LAST_USED_COMMIT_MESSAGE_ACTION_STATE_KEY =
   'last-used-commit-message-action'
 export const LAST_USED_INTELLIGENT_SEARCH_ACTION_STATE_KEY =
   'last-used-intelligent-search-action'
+export const LAST_SELECTED_WORKSPACE_FOR_INTELLIGENT_SEARCH_STATE_KEY =
+  'last-selected-workspace-for-intelligent-search'
+export const LAST_USED_AGENT_FOR_INTELLIGENT_SEARCH_STATE_KEY =
+  'last-used-agent-for-intelligent-search'
 export const LAST_USED_PATCH_REPAIR_CONFIG_ID_STATE_KEY =
   'last-used-patch-repair-config-id'
 export const LAST_USED_PATCH_REPAIR_ACTION_STATE_KEY =
@@ -93,8 +101,16 @@ export const LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY =
   'last-selected-workspace-in-agentic-search'
 export const LAST_SELECTED_WORKSPACE_IN_AGENTIC_CLI_STATE_KEY =
   'last-selected-workspace-in-agentic-cli'
+export const LAST_SELECTED_WORKSPACE_FOR_CODE_AT_CURSOR_STATE_KEY =
+  'last-selected-workspace-for-code-at-cursor'
 export const LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY =
   'last-used-agentic-search-agent'
+export const LAST_USED_AGENT_FOR_CODE_AT_CURSOR_STATE_KEY =
+  'last-used-agent-for-code-at-cursor'
+export const LAST_SELECTED_WORKSPACE_FOR_COMMIT_MESSAGE_STATE_KEY =
+  'last-selected-workspace-for-commit-message'
+export const LAST_USED_AGENT_FOR_COMMIT_MESSAGE_STATE_KEY =
+  'last-used-agent-for-commit-message'
 
 export const LAST_INTELLIGENT_FILE_SEARCH_SHRINK_STATE_KEY =
   'last-intelligent-file-search-shrink'

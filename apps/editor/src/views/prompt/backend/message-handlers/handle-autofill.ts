@@ -78,25 +78,22 @@ export const handle_autofill = async (params: {
     return
   }
 
-  let formatted_system_instructions = ''
+  let output_formatting: string | undefined = undefined
   const user_instructions = processed_instructions
   if (params.prompt_view_provider.web_prompt_type == 'edit-files') {
-    const edit_format_instructions = {
+    output_formatting = {
       whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
       truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
       'search-replace': EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
       diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
     }[params.prompt_view_provider.edit_format]
-    if (edit_format_instructions) {
-      formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
-    }
   }
 
   const { full_prompt: text } = PromptBuilder.build_prompt({
     files_context_part1: other_files,
     files_context_part2: recent_files,
     skill_definitions,
-    system_instructions: formatted_system_instructions,
+    output_formatting,
     user_instructions
   })
 

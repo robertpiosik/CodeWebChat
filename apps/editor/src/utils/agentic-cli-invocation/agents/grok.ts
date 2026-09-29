@@ -16,8 +16,8 @@ export const grok_agent: CodingAgent = {
     '--prompt-file',
     temp_prompt_path
   ],
-  get_edit_args: () => ['--yolo', '--output-format', 'streaming-json'],
-  // get_post_ask_args: () => ['continue'], // Broken on their end
+  get_isolated_dir_args: () => ['--yolo', '--output-format', 'streaming-json'],
+  // get_post_integrated_terminal_args: () => ['continue'], // Broken on their end
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type === 'tool_call' && parsed.tool) {
       report_progress(parsed.tool)

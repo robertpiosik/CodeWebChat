@@ -467,24 +467,6 @@ export const translations = {
     hu: 'Döntse el, hogy a fájlokat le kell-e kicsinyíteni',
     bg: 'Решете дали файловете трябва да бъдат намалени'
   },
-  'feature.search-files.progress.finding': {
-    en: 'Intelligent file search',
-    pl: 'Inteligentne wyszukiwanie plików',
-    'zh-cn': '智能文件搜索',
-    ja: 'インテリジェントファイル検索',
-    'zh-tw': '智能檔案搜尋',
-    de: 'Intelligente Dateisuche',
-    es: 'Búsqueda inteligente de archivos',
-    fr: 'Recherche intelligente de fichiers',
-    'pt-br': 'Pesquisa inteligente de arquivos',
-    ru: 'Умный поиск файлов',
-    ko: '지능형 파일 검색',
-    it: 'Ricerca file intelligente',
-    tr: 'Akıllı dosya arama',
-    cs: 'Inteligentní vyhledávání souborů',
-    hu: 'Intelligens fájlkeresés',
-    bg: 'Интелигентно търсене на файлове'
-  },
   'feature.search-files.error.finding': {
     en: 'Error finding relevant files. Check console.',
     pl: 'Błąd podczas znajdowania powiązanych plików. Sprawdź konsolę.',

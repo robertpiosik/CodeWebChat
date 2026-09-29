@@ -127,7 +127,7 @@ export const get_prompt_data = async (params: {
   )
 
   let prompt_with_context:
-    | { api_prompt: string; chatbot_prompt: string }
+    | { api_prompt: string; chatbot_prompt: string; cli_prompt: string }
     | undefined = undefined
   const setting = vscode.workspace
     .getConfiguration('codeWebChat')

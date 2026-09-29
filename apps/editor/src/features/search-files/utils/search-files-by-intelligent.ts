@@ -56,7 +56,7 @@ export const search_files_by_intelligent = async (
     const completion_result = await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: t('feature.search-files.progress.finding'),
+        title: t('common.title.intelligent-search'),
         cancellable: true
       },
       async (progress, token) => {

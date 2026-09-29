@@ -1,5 +1,8 @@
 import * as vscode from 'vscode'
-import { commit_message_format } from '@/constants/instructions'
+import {
+  commit_message_format,
+  cli_edit_ask_requirements
+} from '@/constants/instructions'
 import type { GitRepository } from '@/utils/git-repository-utils'
 import {
   MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE,
@@ -13,7 +16,11 @@ export const build_commit_message_prompt = async (
   repository: GitRepository,
   context_files: string[] = [],
   workspace_provider?: WorkspaceProvider
-): Promise<{ api_prompt: string; chatbot_prompt: string }> => {
+): Promise<{
+  api_prompt: string
+  chatbot_prompt: string
+  cli_prompt: string
+}> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const commit_message_prompt =
     config.get<string>('commitMessageInstructions') ||
@@ -213,6 +220,7 @@ export const build_commit_message_prompt = async (
 
   const api_prompt = `${prompt_sections}\n\n# Task\n\n${commit_message_prompt}`
   const chatbot_prompt = `${prompt_sections}\n\n# Output formatting\n\n${commit_message_format}\n\n# Task\n\n${commit_message_prompt}`
+  const cli_prompt = `${prompt_sections}\n\n# Output formatting\n\n${commit_message_format}\n\n# Requirements\n\n- ${cli_edit_ask_requirements.restrict_shell_commands}\n\n# Task\n\n${commit_message_prompt}`
 
-  return { api_prompt, chatbot_prompt }
+  return { api_prompt, chatbot_prompt, cli_prompt }
 }

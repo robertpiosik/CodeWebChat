@@ -4,9 +4,9 @@ export type CodingAgent = {
   cmd: string
   is_installed: () => boolean
   get_documentation_url: () => string
-  get_edit_args: (params: { cwd: string }) => string[]
-  get_ask_args?: (params: { cwd: string }) => string[]
-  get_post_ask_args?: () => string[]
+  get_isolated_dir_args: (params: { cwd: string }) => string[]
+  get_integrated_terminal_args?: (params: { cwd: string }) => string[]
+  get_post_integrated_terminal_args?: () => string[]
   get_prompt_file_args?: (temp_prompt_path: string) => string[]
   parse_stream_line?: (
     parsed: any,

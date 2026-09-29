@@ -82,10 +82,7 @@ export const agentic_search = async (params: {
     const result = await invoke_agentic_cli({
       workspace_provider: params.workspace_provider,
       extension_context: params.extension_context,
-      title: t('common.title.agentic-search'),
-      waiting_message: t(
-        'utils.agentic-cli-invocation.agent.waiting-for-agent'
-      ),
+      notification_title: t('common.title.agentic-search'),
       last_used_agent_config_name,
       cli_configuration_name,
       on_agent_selected: (name: string) => {

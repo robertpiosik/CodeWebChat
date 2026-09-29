@@ -25,15 +25,17 @@ export const invoke_agentic_cli = async (params: {
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
   build_prompt: (selected_root: string) => Promise<string>
-  title: string
-  waiting_message: string
-  last_used_agent_config_name?: string
+  notification_title: string
   last_selected_workspace_state_key: string
+  on_agent_selected: (name: string) => void
+  last_used_agent_config_name?: string
   show_back_button?: boolean
-  panel_prompt_type?: 'edit-files' | 'ask-about-files'
+  isolate_in_temp_dir?: boolean
+  run_in_terminal?: boolean
+  generate_diff_for_temp_dir?: boolean
+  agent_args_type?: 'isolated-dir' | 'integrated-terminal'
   cli_configuration_name?: string
   use_quick_pick?: boolean
-  on_agent_selected?: (name: string) => void
 }): Promise<
   { agent_output: string; selected_root: string } | undefined | 'back'
 > => {
@@ -290,7 +292,7 @@ export const invoke_agentic_cli = async (params: {
       continue
     }
 
-    if (selected_config_name && params.on_agent_selected) {
+    if (selected_config_name) {
       params.on_agent_selected(selected_config_name)
     }
 
@@ -304,7 +306,7 @@ export const invoke_agentic_cli = async (params: {
         { original: string; dest_rel: string; initial_content?: string }
       >()
 
-      if (params.panel_prompt_type) {
+      if (params.isolate_in_temp_dir) {
         temp_dir_path = await fs.promises.mkdtemp(
           path.join(os.tmpdir(), 'cwc-cli-')
         )
@@ -466,10 +468,14 @@ export const invoke_agentic_cli = async (params: {
       )
       await fs.promises.writeFile(temp_prompt_path, final_prompt, 'utf-8')
 
-      if (params.panel_prompt_type == 'ask-about-files') {
-        const base_args = agent_info.get_ask_args
-          ? agent_info.get_ask_args({ cwd: selected_root })
-          : []
+      if (params.run_in_terminal) {
+        const base_args =
+          params.agent_args_type === 'integrated-terminal'
+            ? agent_info.get_integrated_terminal_args
+              ? agent_info.get_integrated_terminal_args({ cwd: selected_root })
+              : []
+            : agent_info.get_isolated_dir_args({ cwd: selected_root })
+
         let args = [...base_args, ...custom_args]
 
         const quote_arg = (arg: string) => {
@@ -501,8 +507,11 @@ export const invoke_agentic_cli = async (params: {
         terminal.show()
         terminal.sendText(command)
 
-        if (agent_info.get_post_ask_args) {
-          const post_args = agent_info.get_post_ask_args()
+        if (
+          params.agent_args_type === 'integrated-terminal' &&
+          agent_info.get_post_integrated_terminal_args
+        ) {
+          const post_args = agent_info.get_post_integrated_terminal_args()
           const post_command_args = [
             executable,
             ...post_args.map(quote_arg)
@@ -524,18 +533,28 @@ export const invoke_agentic_cli = async (params: {
         await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Notification,
-            title: params.title,
+            title: params.notification_title,
             cancellable: true
           },
           async (progress, token) => {
-            progress.report({ message: params.waiting_message })
+            progress.report({
+              message: t('utils.agentic-cli-invocation.agent.waiting-for-agent')
+            })
 
             if (token.isCancellationRequested) {
               is_cancelled = true
               return
             }
 
-            const base_args = agent_info.get_edit_args({ cwd: selected_root })
+            const base_args =
+              params.agent_args_type === 'integrated-terminal'
+                ? agent_info.get_integrated_terminal_args
+                  ? agent_info.get_integrated_terminal_args({
+                      cwd: selected_root
+                    })
+                  : []
+                : agent_info.get_isolated_dir_args({ cwd: selected_root })
+
             let args = [...base_args, ...custom_args]
 
             if (agent_info.get_prompt_file_args) {
@@ -621,7 +640,7 @@ export const invoke_agentic_cli = async (params: {
                   }
                 }
 
-                if (params.panel_prompt_type == 'edit-files' && temp_dir_path) {
+                if (params.generate_diff_for_temp_dir && temp_dir_path) {
                   try {
                     const diff_markdown = await generate_diff_markdown(
                       temp_dir_path,

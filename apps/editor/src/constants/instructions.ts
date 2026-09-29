@@ -1,14 +1,14 @@
-export const code_at_cursor_system_instructions =
-  '# Output formatting\n\nRespond with replacement text within "replacement" XML tags, without explanations or any other text.\nExample:\n<replacement>!== undefined</replacement>'
+export const code_at_cursor_output_formatting =
+  'Respond with replacement text within "replacement" XML tags, without explanations or any other text.\nExample:\n<replacement>!== undefined</replacement>'
 
 export const code_at_cursor_user_instructions =
   'Find correct replacement text for the <missing_text> symbol.'
 
-export const code_at_cursor_instructions_for_chatbots = (params: {
+export const code_at_cursor_output_formatting_for_chatbots = (params: {
   file_path: string
   row: number
   column: number
-}) => `# Output formatting\n\nYour response must begin with a markdown heading identifying the file and the cursor position, followed by a markdown code block containing the replacement text, followed by a brief explanation. The heading must be: "### Code at cursor: \`${
+}) => `Your response must begin with a markdown heading identifying the file and the cursor position, followed by a markdown code block containing the replacement text, followed by a brief explanation. The heading must be: "### Code at cursor: \`${
   params.file_path
 }\` (${params.row + 1}:${
   params.column + 1
@@ -71,8 +71,9 @@ export const voice_input_instructions =
 export const cli_edit_ask_requirements = {
   preloaded_context:
     "All project's files were preloaded to [files](#files). If [task](#task) includes *.png image paths, read them using the appropriate tool.",
-  restrict_tool_calls:
-    'You may only use tools to read images from [task](#task). Modifying the file system or running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.',
+  read_images: 'You may only use tools to read images from [task](#task).',
+  restrict_shell_commands:
+    'Modifying the file system or running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.',
   restrict_tool_calls_with_exceptions:
     'You may only perform file operations (create, update, delete) required to complete the [task](#task); running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.'
 }

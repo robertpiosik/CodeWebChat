@@ -87,17 +87,12 @@ export const handle_make_api_call = async (
 
     if (prompt_type == 'edit-files') {
       edit_format = prompt_view_provider.edit_format
-      const edit_format_instructions = {
+      const output_formatting = {
         whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
         truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
         diff: EDIT_FORMAT_INSTRUCTIONS_DIFF,
         'search-replace': EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
       }[edit_format]
-
-      let formatted_system_instructions = ''
-      if (edit_format_instructions) {
-        formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
-      }
 
       const config = vscode.workspace.getConfiguration('codeWebChat')
       system_instructions =
@@ -109,7 +104,7 @@ export const handle_make_api_call = async (
         files_context_part1: other_files,
         files_context_part2: recent_files,
         skill_definitions,
-        system_instructions: formatted_system_instructions,
+        output_formatting,
         user_instructions: processed_instructions
       })
       user_content = build_user_content({
