@@ -374,7 +374,7 @@ Apply the attached changes to the file without explanations or any other text.
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v20.x recommended)
+- [Node.js](https://nodejs.org/) (22.x recommended)
 - [pnpm](https://pnpm.io/)
 
 ### Steps
