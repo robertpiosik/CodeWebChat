@@ -17,13 +17,13 @@
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
-## Introduction
-
-**CWC** eliminates context accumulation in long sessions by separating agentic context discovery and code editing. Because [prompt](#prompts) complexity never grows well past the task at hand, models spend less time _thinking_ and accurate responses arrive in seconds.
-
 ## Privacy-first
 
 **CWC** operates 100% on your machine. No code, prompts or usage data are collected.
+
+## Sessionless design
+
+**CWC** eliminates context accumulation in long sessions by separating agentic context discovery and code editing. Because [prompt](#prompts) complexity never grows well past the task at hand, models spend less time _thinking_, cutting latency and keeping iterations fast.
 
 ## Send prompts with...
 
