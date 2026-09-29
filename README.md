@@ -32,6 +32,10 @@ Without context accumulation and prompt complexity growing well past the task at
 
 ...and your quotas feel like they last forever!
 
+> [!TIP]
+>
+> For the Agentic Search, SOTA models offer diminishing returns over cheap mid-tiers.
+
 ## Privacy-first
 
 **CWC** operates 100% on your machine. No code, prompts or usage data are collected.
