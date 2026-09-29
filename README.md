@@ -45,7 +45,7 @@ Overview of CWC-constructed prompts.
 
 ### 📄 Agentic search
 
-_Find task-relevant files through automated codebase discovery._
+_Task-relevant files via tool calling._
 
 <details>
 <summary>AGENT</summary>
@@ -68,7 +68,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 ### 📄 Intelligent search
 
-_Task-relevant files from a single message._
+_Narrow-down broader selection._
 
 <details>
 <summary>WEB</summary>
@@ -130,7 +130,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 ### 📄 Editing
 
-_Implementing new features, fixing bugs or doing refactors._
+_New features, bug fixes, and refactors._
 
 <details>
 <summary>WEB/API</summary>
@@ -175,7 +175,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 ### 📄 Asking
 
-_Multi-purpose: explanations, code reviews, you name it._
+_Explanations, planning, and analysis._
 
 <details>
 <summary>WEB/API</summary>
@@ -272,7 +272,7 @@ Find correct replacement text for the <missing_text> symbol.
 
 ### 📄 Commit messages
 
-_Generate commit messages based on staged changes and context files._
+_Summaries based on staged changes and context files._
 
 <details>
 <summary>WEB/API</summary>
