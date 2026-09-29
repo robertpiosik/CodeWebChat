@@ -230,14 +230,16 @@ _TAB completions from SOTA reasoning models._
 <details>
 <summary>WEB</summary>
 
-```
+````
 # Files
 
 [SELECTED FILES]
 
-### File `[ACTIVE FILE PATH]`
+### File: `[ACTIVE FILE PATH]`
 
+```
 [PREFIX]<missing_text>[INSTRUCTIONS]</missing_text>[SUFFIX]
+```
 
 # Output formatting
 
@@ -248,28 +250,34 @@ Your response must begin with a markdown heading identifying the file and the cu
 # Task
 
 Find correct replacement text for the <missing_text> symbol.
-```
+````
 
 </details>
 
 <details>
 <summary>API</summary>
 
-```
+````
 # Files
 
 [SELECTED FILES]
 
-### File `[ACTIVE FILE PATH]`
+### File: `[ACTIVE FILE PATH]`
 
+```
 [PREFIX]<missing_text>[INSTRUCTIONS]</missing_text>[SUFFIX]
+```
 
 # Output formatting
 
-Find correct replacement for the <missing_text> symbol. Respond with replacement text within "replacement" XML tags, without explanations or any other text.
+Respond with replacement text within "replacement" XML tags, without explanations or any other text.
 Example:
-<replacement>!== undefined</replacement>'
-```
+<replacement>!== undefined</replacement>
+
+# Task
+
+Find correct replacement text for the <missing_text> symbol.
+````
 
 </details>
 

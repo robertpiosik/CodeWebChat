@@ -19,7 +19,7 @@ export const antigravity_agent: CodingAgent = {
     'stream-json',
     '--dangerously-skip-permissions'
   ],
-  get_ask_args: () => ['--mode', 'plan'],
+  get_ask_args: () => [],
   get_post_ask_args: () => ['--continue'],
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.event == 'step_update' && parsed.step_update) {
