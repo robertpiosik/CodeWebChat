@@ -31,6 +31,7 @@ export const invoke_agentic_cli = async (params: {
   last_used_agent_config_name?: string
   show_back_button?: boolean
   isolate_in_temp_dir?: boolean
+  copy_selected_files?: boolean
   run_in_terminal?: boolean
   generate_diff_for_temp_dir?: boolean
   agent_args_type?: 'isolated-dir' | 'integrated-terminal'
@@ -310,34 +311,39 @@ export const invoke_agentic_cli = async (params: {
         temp_dir_path = await fs.promises.mkdtemp(
           path.join(os.tmpdir(), 'cwc-cli-')
         )
-        const checked_files = params.workspace_provider.get_checked_files()
 
-        for (const file_path of checked_files) {
-          const root =
-            params.workspace_provider.get_workspace_root_for_file(file_path)
-          if (!root) continue
-          const rel = path.relative(root, file_path)
-          const dest_rel =
-            roots.length > 1
-              ? path.join(
-                  params.workspace_provider.get_workspace_name(root),
-                  rel
-                )
-              : rel
-          const dest_path = path.join(temp_dir_path, dest_rel)
+        if (params.copy_selected_files) {
+          const checked_files = params.workspace_provider.get_checked_files()
 
-          await fs.promises.mkdir(path.dirname(dest_path), { recursive: true })
-          await fs.promises.copyFile(file_path, dest_path)
+          for (const file_path of checked_files) {
+            const root =
+              params.workspace_provider.get_workspace_root_for_file(file_path)
+            if (!root) continue
+            const rel = path.relative(root, file_path)
+            const dest_rel =
+              roots.length > 1
+                ? path.join(
+                    params.workspace_provider.get_workspace_name(root),
+                    rel
+                  )
+                : rel
+            const dest_path = path.join(temp_dir_path, dest_rel)
 
-          const initial_content = await fs.promises
-            .readFile(file_path, 'utf-8')
-            .catch(() => undefined)
+            await fs.promises.mkdir(path.dirname(dest_path), {
+              recursive: true
+            })
+            await fs.promises.copyFile(file_path, dest_path)
 
-          file_mappings.set(dest_path, {
-            original: file_path,
-            dest_rel: dest_rel.replace(/\\/g, '/'),
-            initial_content
-          })
+            const initial_content = await fs.promises
+              .readFile(file_path, 'utf-8')
+              .catch(() => undefined)
+
+            file_mappings.set(dest_path, {
+              original: file_path,
+              dest_rel: dest_rel.replace(/\\/g, '/'),
+              initial_content
+            })
+          }
         }
 
         selected_root = temp_dir_path
