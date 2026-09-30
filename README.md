@@ -150,7 +150,8 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 # Requirements
 
-- Modifying the file system or running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.
+- All project's files were preloaded to [files](#files). You cannot look for other files.
+- Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
 
 # Query
 
@@ -194,8 +195,10 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 # Requirements
 
-- All project's files were preloaded to [files](#files). If [task](#task) includes *.png image paths, read them using the appropriate tool.
-- You may only perform file operations (create, update, delete) required to complete the [task](#task); running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.
+- All project's files were preloaded to [files](#files). You cannot look for other files.
+- Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
+- Exception: If [task](#task) includes *.png image paths, read them using the appropriate tool.
+- Exception: Perform file system operations (create, update, delete) required to complete the [task](#task).
 
 # Task
 
@@ -233,8 +236,9 @@ _Explanations, planning, and analysis._
 
 # Requirements
 
-- All project's files were preloaded to [files](#files). If [task](#task) includes *.png image paths, read them using the appropriate tool.
-- You may only use tools to read images from [task](#task). Modifying the file system or running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.
+- All project's files were preloaded to [files](#files). You cannot look for other files.
+- Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
+- Exception: If [task](#task) includes *.png image paths, read them using the appropriate tool.
 
 # Task
 
@@ -323,7 +327,8 @@ Example:
 
 # Requirements
 
-- Modifying the file system or running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.
+- All project's files were preloaded to [files](#files). You cannot look for other files.
+- Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
 
 # Task
 
@@ -382,7 +387,8 @@ Your response must begin with "**Commit message:**", then proceed with the messa
 
 # Requirements
 
-- Modifying the file system or running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.
+- All project's files were preloaded to [files](#files). You cannot look for other files.
+- Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
 
 # Task
 

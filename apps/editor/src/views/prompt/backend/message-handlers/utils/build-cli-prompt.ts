@@ -75,6 +75,7 @@ export const build_cli_prompt = async (params: {
   }
 
   const requirements_list = [cli_edit_ask_requirements.preloaded_context]
+  requirements_list.push(cli_edit_ask_requirements.restrict_shell_commands)
 
   if (prompt_view_provider.cli_prompt_type == 'edit-files') {
     requirements_list.push(cli_edit_ask_requirements.exception_read_images)
@@ -82,7 +83,6 @@ export const build_cli_prompt = async (params: {
       cli_edit_ask_requirements.exception_allow_file_system_operations
     )
   } else {
-    requirements_list.push(cli_edit_ask_requirements.restrict_shell_commands)
     requirements_list.push(cli_edit_ask_requirements.exception_read_images)
   }
 

@@ -220,7 +220,7 @@ export const build_commit_message_prompt = async (
 
   const api_prompt = `${prompt_sections}\n\n# Task\n\n${commit_message_prompt}`
   const chatbot_prompt = `${prompt_sections}\n\n# Output formatting\n\n${commit_message_format}\n\n# Task\n\n${commit_message_prompt}`
-  const cli_prompt = `${prompt_sections}\n\n# Output formatting\n\n${commit_message_format}\n\n# Requirements\n\n- ${cli_edit_ask_requirements.restrict_shell_commands}\n\n# Task\n\n${commit_message_prompt}`
+  const cli_prompt = `${prompt_sections}\n\n# Output formatting\n\n${commit_message_format}\n\n# Requirements\n\n- ${cli_edit_ask_requirements.preloaded_context}\n- ${cli_edit_ask_requirements.restrict_shell_commands}\n\n# Task\n\n${commit_message_prompt}`
 
   return { api_prompt, chatbot_prompt, cli_prompt }
 }

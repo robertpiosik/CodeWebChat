@@ -356,7 +356,10 @@ export const perform_code_at_cursor = async (params: {
         }${text_after_cursor}`
       },
       output_formatting: code_at_cursor_output_formatting,
-      requirements: [cli_edit_ask_requirements.restrict_shell_commands],
+      requirements: [
+        cli_edit_ask_requirements.preloaded_context,
+        cli_edit_ask_requirements.restrict_shell_commands
+      ],
       user_instructions: code_at_cursor_user_instructions
     })
 
