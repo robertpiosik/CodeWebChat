@@ -26,6 +26,8 @@ export const handle_get_api_configurations = async (
     await providers_manager.get_default_patch_repair_api_configuration()
   const def_vi =
     await providers_manager.get_default_voice_input_api_configuration()
+  const def_is =
+    await providers_manager.get_default_intelligent_search_api_configuration()
 
   provider.postMessage({
     command: 'API_CONFIGURATIONS',
@@ -33,7 +35,8 @@ export const handle_get_api_configurations = async (
     defaults: {
       'code-at-cursor': def_cac ? get_api_configuration_id(def_cac) : null,
       'patch-repair': def_pr ? get_api_configuration_id(def_pr) : null,
-      'voice-input': def_vi ? get_api_configuration_id(def_vi) : null
+      'voice-input': def_vi ? get_api_configuration_id(def_vi) : null,
+      'intelligent-search': def_is ? get_api_configuration_id(def_is) : null
     }
   })
 }

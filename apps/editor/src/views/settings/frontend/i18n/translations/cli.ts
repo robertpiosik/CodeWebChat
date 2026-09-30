@@ -53,6 +53,24 @@ export const translations = {
     hu: 'Kód a kurzornál',
     bg: 'Код при курсора'
   },
+  'cli.default-configurations.tool.intelligent-search': {
+    en: 'Intelligent Search',
+    pl: 'Wyszukiwanie inteligentne',
+    'zh-cn': '智能搜索',
+    ja: 'インテリジェント検索',
+    'zh-tw': '智能搜尋',
+    de: 'Intelligente Suche',
+    es: 'Búsqueda inteligente',
+    fr: 'Recherche intelligente',
+    'pt-br': 'Busca Inteligente',
+    ru: 'Умный поиск',
+    ko: '지능형 검색',
+    it: 'Ricerca intelligente',
+    tr: 'Akıllı Arama',
+    cs: 'Inteligentní vyhledávání',
+    hu: 'Intelligens keresés',
+    bg: 'Интелигентно търсене'
+  },
   'agents.configurations.action.select-default': {
     en: 'Select default agent',
     pl: 'Wybierz domyślnego agenta',

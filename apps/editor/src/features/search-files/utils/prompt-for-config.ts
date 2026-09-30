@@ -29,7 +29,19 @@ export const prompt_for_api_configuration = async (params: {
   let skipped = false
 
   if (!params.show_quick_pick) {
-    if (params.api_configurations.length == 1) {
+    const default_config =
+      await params.providers_manager.get_default_intelligent_search_api_configuration()
+    if (default_config) {
+      const default_id = get_api_configuration_id(default_config)
+      selected_api_configuration = params.api_configurations.find(
+        (c) => get_api_configuration_id(c) == default_id
+      )
+      if (selected_api_configuration) {
+        skipped = true
+      }
+    }
+
+    if (!selected_api_configuration && params.api_configurations.length == 1) {
       selected_api_configuration = params.api_configurations[0]
       skipped = true
     }

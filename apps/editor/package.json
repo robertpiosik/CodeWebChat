@@ -1045,6 +1045,9 @@
               },
               "isDefaultForCodeAtCursor": {
                 "type": "boolean"
+              },
+              "isDefaultForIntelligentSearch": {
+                "type": "boolean"
               }
             },
             "required": [
@@ -1202,6 +1205,9 @@
                 "type": "boolean"
               },
               "isDefaultForVoiceInput": {
+                "type": "boolean"
+              },
+              "isDefaultForIntelligentSearch": {
                 "type": "boolean"
               }
             },

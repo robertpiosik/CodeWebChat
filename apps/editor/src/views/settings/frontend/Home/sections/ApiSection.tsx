@@ -355,6 +355,22 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               unset: t('api.configurations.action.unset-default')
             }}
           />
+
+          <DefaultConfigurationSelector
+            title={t('api.default-configurations.tool.intelligent-search')}
+            value={props.defaults['intelligent-search'] || null}
+            configurations={selector_configurations}
+            on_unset={() =>
+              props.on_set_default_api_configuration('intelligent-search', null)
+            }
+            on_select={() =>
+              props.on_select_default_api_configuration('intelligent-search')
+            }
+            translations={{
+              select: t('api.configurations.action.select-default'),
+              unset: t('api.configurations.action.unset-default')
+            }}
+          />
         </UiGroup>
       </div>
 

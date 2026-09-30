@@ -20,6 +20,12 @@ export const handle_set_default_cli_configuration = async (
       } else {
         delete new_c.isDefaultForCodeAtCursor
       }
+    } else if (message.cli_feature == 'intelligent-search') {
+      if (c.name == message.cli_configuration_name) {
+        new_c.isDefaultForIntelligentSearch = true
+      } else {
+        delete new_c.isDefaultForIntelligentSearch
+      }
     }
     return new_c
   })

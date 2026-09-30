@@ -404,6 +404,19 @@ export const perform_intelligent_search_mode = async (params: {
               ?.defaultValue ||
             ''
 
+          const config_codeWebChat =
+            vscode.workspace.getConfiguration('codeWebChat')
+          const agent_configs =
+            config_codeWebChat.get<any[]>('agents', []) || []
+          const default_agent = agent_configs.find(
+            (c) => c.isDefaultForIntelligentSearch
+          )
+
+          const use_quick_pick = !default_agent
+          const cli_configuration_name = default_agent
+            ? default_agent.name
+            : undefined
+
           const cli_prompt = `# Files\n\n${md_files}# Task\n\n${base_instructions}\n\n# Output formatting\n\n${ai_file_search_format_instructions}\n\n# Requirements\n\n- ${cli_edit_ask_requirements.preloaded_context}\n- ${cli_edit_ask_requirements.restrict_shell_commands}\n\n# Query\n\n${search_term}`
 
           const invoke_cli_result = await invoke_agentic_cli({
@@ -417,6 +430,8 @@ export const perform_intelligent_search_mode = async (params: {
               params.extension_context.workspaceState.get<string>(
                 LAST_USED_AGENT_FOR_INTELLIGENT_SEARCH_STATE_KEY
               ),
+            cli_configuration_name,
+            use_quick_pick,
             on_agent_selected: (name) => {
               params.extension_context.workspaceState.update(
                 LAST_USED_AGENT_FOR_INTELLIGENT_SEARCH_STATE_KEY,

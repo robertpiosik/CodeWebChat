@@ -22,7 +22,11 @@ export const handle_get_cli_configurations = async (
           ?.name || null,
       'code-at-cursor':
         cli_configurations_config.find((c: any) => c.isDefaultForCodeAtCursor)
-          ?.name || null
+          ?.name || null,
+      'intelligent-search':
+        cli_configurations_config.find(
+          (c: any) => c.isDefaultForIntelligentSearch
+        )?.name || null
     }
   })
 }
