@@ -449,6 +449,47 @@ Apply the attached changes to the file without explanations or any other text.
 
 </details>
 
+### 📄 Voice input
+
+_Speech-to-text transcriptions._
+
+<details>
+<summary>API</summary>
+
+```
+# Task
+
+Transcribe using clean verbatim. Remove filler words (such as 'um,' 'uh,' 'like'), false starts, and stutters. Preserve the speaker's exact words, slang, and sentence structure, but use natural punctuation and sentence breaks to ensure readability.
+
+# Output formatting
+
+Respond with the audio transcription or the word INAUDIBLE, without explanations or any other text.
+```
+
+</details>
+
+<details>
+<summary>AGENT</summary>
+
+```
+# Task
+
+Transcribe using clean verbatim. Remove filler words (such as 'um,' 'uh,' 'like'), false starts, and stutters. Preserve the speaker's exact words, slang, and sentence structure, but use natural punctuation and sentence breaks to ensure readability.
+
+Audio file: `[AUDIO_FILE_PATH]`
+
+# Output formatting
+
+Respond with the audio transcription or the word INAUDIBLE, without explanations or any other text.
+
+# Requirements
+
+- Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
+- Exception: If [task](#task) includes *.wav audio file paths, read them using the appropriate tool.
+```
+
+</details>
+
 ## Commands
 
 ### Code at Cursor
