@@ -13,6 +13,7 @@ export type ConfigWebConfigurationFormat = {
   isPinned?: boolean
   isDefaultForCodeAtCursor?: boolean
   isDefaultForIntelligentSearch?: boolean
+  isDefaultForPatchRepair?: boolean
 }
 
 export const config_web_configuration_to_ui_format = (

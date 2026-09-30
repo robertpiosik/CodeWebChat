@@ -315,6 +315,24 @@ export const translations = {
     hu: 'Kód a kurzornál',
     bg: 'Код при курсора'
   },
+  'web.default-configurations.tool.patch-repair': {
+    en: 'Patch Repair',
+    pl: 'Naprawa patchy',
+    'zh-cn': '智能更新',
+    ja: 'インテリジェントアップデート',
+    'zh-tw': '智慧更新',
+    de: 'Intelligentes Update',
+    es: 'Actualización inteligente',
+    fr: 'Mise à jour intelligente',
+    'pt-br': 'Atualização Inteligente',
+    ru: 'Умное обновление',
+    ko: '지능형 업데이트',
+    it: 'Aggiornamento intelligente',
+    tr: 'Akıllı Güncelleme',
+    cs: 'Inteligentní aktualizace',
+    hu: 'Intelligens Frissítés',
+    bg: 'Интелигентно актуализиране'
+  },
   'web.default-configurations.tool.intelligent-search': {
     en: 'Intelligent Search',
     pl: 'Wyszukiwanie inteligentne',

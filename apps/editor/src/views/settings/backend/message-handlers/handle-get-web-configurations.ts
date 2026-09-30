@@ -37,6 +37,9 @@ export const handle_get_web_configurations = async (
       'code-at-cursor':
         web_configurations_config.find((c: any) => c.isDefaultForCodeAtCursor)
           ?.name || null,
+      'patch-repair':
+        web_configurations_config.find((c: any) => c.isDefaultForPatchRepair)
+          ?.name || null,
       'intelligent-search':
         web_configurations_config.find(
           (c: any) => c.isDefaultForIntelligentSearch

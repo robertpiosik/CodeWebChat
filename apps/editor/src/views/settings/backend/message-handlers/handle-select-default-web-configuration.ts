@@ -85,6 +85,12 @@ export const handle_select_default_web_configuration = async (
           } else {
             delete new_c.isDefaultForCodeAtCursor
           }
+        } else if (message.web_feature == 'patch-repair') {
+          if (c.name == selected.web_configuration_name) {
+            new_c.isDefaultForPatchRepair = true
+          } else {
+            delete new_c.isDefaultForPatchRepair
+          }
         } else if (message.web_feature == 'intelligent-search') {
           if (c.name == selected.web_configuration_name) {
             new_c.isDefaultForIntelligentSearch = true

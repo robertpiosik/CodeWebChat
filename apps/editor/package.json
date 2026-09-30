@@ -1121,6 +1121,9 @@
               },
               "isDefaultForIntelligentSearch": {
                 "type": "boolean"
+              },
+              "isDefaultForPatchRepair": {
+                "type": "boolean"
               }
             }
           }

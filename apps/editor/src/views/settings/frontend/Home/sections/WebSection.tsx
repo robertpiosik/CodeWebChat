@@ -362,6 +362,21 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }}
           />
           <DefaultConfigurationSelector
+            title={t('web.default-configurations.tool.patch-repair')}
+            value={props.web_defaults['patch-repair'] || null}
+            configurations={selector_configurations}
+            on_unset={() =>
+              props.on_set_default_web_configuration('patch-repair', null)
+            }
+            on_select={() =>
+              props.on_select_default_web_configuration('patch-repair')
+            }
+            translations={{
+              select: t('chatbots.configurations.action.select-default'),
+              unset: t('chatbots.configurations.action.unset-default')
+            }}
+          />
+          <DefaultConfigurationSelector
             title={t('web.default-configurations.tool.intelligent-search')}
             value={props.web_defaults['intelligent-search'] || null}
             configurations={selector_configurations}
