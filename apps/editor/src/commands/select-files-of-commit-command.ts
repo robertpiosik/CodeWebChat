@@ -600,11 +600,19 @@ export const select_files_of_commit_command = (
                   )
 
                 if (is_identical) {
-                  vscode.window.showInformationMessage(
-                    t('common.info.context-already-set')
+                  const action = await vscode.window.showInformationMessage(
+                    t('common.info.context-already-set'),
+                    t('command.select-files-of-commit-command.select-another')
                   )
-                  file_action = 'finished'
-                  break
+                  if (
+                    action ===
+                    t('command.select-files-of-commit-command.select-another')
+                  ) {
+                    file_action = 'finished'
+                    break
+                  } else {
+                    return
+                  }
                 }
               }
 
@@ -614,12 +622,19 @@ export const select_files_of_commit_command = (
 
               await workspace_provider.set_selected_files(paths_to_apply)
 
-              vscode.window.showInformationMessage(
-                t('common.success.context-updated')
+              const action = await vscode.window.showInformationMessage(
+                t('common.success.context-updated'),
+                t('command.select-files-of-commit-command.select-another')
               )
-
-              file_action = 'finished'
-              break
+              if (
+                action ===
+                t('command.select-files-of-commit-command.select-another')
+              ) {
+                file_action = 'finished'
+                break
+              } else {
+                return
+              }
             }
 
             if (file_action === 'back') {

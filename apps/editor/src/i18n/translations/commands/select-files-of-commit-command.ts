@@ -178,5 +178,23 @@ export const translations = {
     cs: 'kontextové soubory',
     hu: 'kontextus fájlok',
     bg: 'контекстни файлове'
+  },
+  'command.select-files-of-commit-command.select-another': {
+    en: 'Select another',
+    pl: 'Wybierz inny',
+    'zh-cn': '选择另一个',
+    ja: '別のものを選択',
+    'zh-tw': '選擇另一個',
+    de: 'Einen anderen auswählen',
+    es: 'Seleccionar otro',
+    fr: 'Sélectionner un autre',
+    'pt-br': 'Selecionar outro',
+    ru: 'Выбрать другой',
+    ko: '다른 항목 선택',
+    it: 'Seleziona un altro',
+    tr: 'Başka birini seç',
+    cs: 'Vybrat další',
+    hu: 'Másik kiválasztása',
+    bg: 'Изберете друг'
   }
 } as const
