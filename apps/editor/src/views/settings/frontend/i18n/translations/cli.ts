@@ -35,6 +35,24 @@ export const translations = {
     hu: 'Ügynöki keresés',
     bg: 'Агентно търсене'
   },
+  'cli.default-configurations.tool.code-at-cursor': {
+    en: 'Code at Cursor',
+    pl: 'Kod w miejscu kursora',
+    'zh-cn': '光标处代码',
+    ja: 'カーソル位置のコード',
+    'zh-tw': '游標處程式碼',
+    de: 'Code an Cursorposition',
+    es: 'Código en el cursor',
+    fr: 'Code au curseur',
+    'pt-br': 'Código no Cursor',
+    ru: 'Код под курсором',
+    ko: '커서 위치의 코드',
+    it: 'Codice al cursore',
+    tr: 'İmleçteki Kod',
+    cs: 'Kód na pozici kurzoru',
+    hu: 'Kód a kurzornál',
+    bg: 'Код при курсора'
+  },
   'agents.configurations.action.select-default': {
     en: 'Select default agent',
     pl: 'Wybierz domyślnego agenta',

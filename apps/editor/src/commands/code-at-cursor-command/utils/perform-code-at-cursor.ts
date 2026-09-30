@@ -360,6 +360,15 @@ export const perform_code_at_cursor = async (params: {
       user_instructions: code_at_cursor_user_instructions
     })
 
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const agent_configs = config.get<any[]>('agents', []) || []
+    const default_agent = agent_configs.find((c) => c.isDefaultForCodeAtCursor)
+
+    const use_quick_pick = !default_agent
+    const cli_configuration_name = default_agent
+      ? default_agent.name
+      : undefined
+
     const invoke_cli_result = await invoke_agentic_cli({
       workspace_provider: params.workspace_provider,
       extension_context: params.extension_context,
@@ -371,6 +380,8 @@ export const perform_code_at_cursor = async (params: {
         params.extension_context.workspaceState.get<string>(
           LAST_USED_AGENT_FOR_CODE_AT_CURSOR_STATE_KEY
         ),
+      cli_configuration_name,
+      use_quick_pick,
       on_agent_selected: (name) => {
         params.extension_context.workspaceState.update(
           LAST_USED_AGENT_FOR_CODE_AT_CURSOR_STATE_KEY,

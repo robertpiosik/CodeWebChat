@@ -7,6 +7,7 @@ export type ConfigAgentConfigurationFormat = {
   flags?: string
   isPinned?: boolean
   isDefaultForAgenticSearch?: boolean
+  isDefaultForCodeAtCursor?: boolean
 }
 
 export const config_cli_configuration_to_ui_format = (

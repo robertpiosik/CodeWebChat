@@ -16,6 +16,7 @@ export const prompt_for_search_term = async (
   input_box.placeholder = t('common.action.search')
   input_box.value = initial_search_term
   input_box.buttons = [close_button]
+  input_box.ignoreFocusOut = true
 
   return new Promise<{ value: string | undefined; back?: boolean }>(
     (resolve) => {

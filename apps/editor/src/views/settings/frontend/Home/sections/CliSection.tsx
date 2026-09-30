@@ -185,6 +185,41 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               unset: t('agents.configurations.action.unset-default')
             }}
           />
+          <DefaultConfigurationSelector
+            title={t('cli.default-configurations.tool.code-at-cursor')}
+            value={props.agent_defaults['code-at-cursor'] || null}
+            configurations={props.cli_configurations.map((config) => {
+              const is_unnamed = /^\(\d+\)$/.test(config.name.trim())
+              const display_name = is_unnamed
+                ? config.agent
+                : config.name.replace(/ \(\d+\)$/, '')
+
+              const details: string[] = []
+              if (!is_unnamed) {
+                details.push(config.agent)
+              }
+
+              if (config.flags) {
+                details.push(config.flags)
+              }
+
+              return {
+                id: config.name,
+                model: display_name,
+                description: details.join(' · ')
+              }
+            })}
+            on_unset={() =>
+              props.on_set_default_cli_configuration('code-at-cursor', null)
+            }
+            on_select={() =>
+              props.on_select_default_cli_configuration('code-at-cursor')
+            }
+            translations={{
+              select: t('agents.configurations.action.select-default'),
+              unset: t('agents.configurations.action.unset-default')
+            }}
+          />
         </UiGroup>
       </div>
     </UiSection>
