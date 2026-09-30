@@ -70,7 +70,7 @@ export const voice_input_instructions =
 
 export const cli_edit_ask_requirements = {
   preloaded_context:
-    'All available files were preloaded to [files](#files). You must work strictly within the provided context.',
+    'All available files for the [task](#task) were shown in [files](#files). Reading any other files is FORBIDDEN.',
   disable_tool_calling:
     'Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.',
   exception_read_images:
