@@ -33,7 +33,8 @@ export const agentic_search_command = (params: {
 
         if (!result || result === 'back') return
 
-        const currently_checked = params.workspace_provider.get_checked_files()
+        const currently_selected =
+          params.workspace_provider.get_selected_files()
 
         const unchecked_paths = result.matched_paths.filter(
           (file_path) => !result.selected_paths.includes(file_path)
@@ -41,12 +42,12 @@ export const agentic_search_command = (params: {
 
         const paths_to_apply = [
           ...new Set([
-            ...currently_checked.filter((p) => !unchecked_paths.includes(p)),
+            ...currently_selected.filter((p) => !unchecked_paths.includes(p)),
             ...result.selected_paths
           ])
         ]
 
-        await params.workspace_provider.set_checked_files(paths_to_apply)
+        await params.workspace_provider.set_selected_files(paths_to_apply)
 
         Logger.info({
           message: `Selected ${result.selected_paths.length} files from agentic search.`,

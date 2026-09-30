@@ -143,8 +143,8 @@ export const prompt_for_imported_files = async (params: {
           await workspace_provider.calculate_file_tokens(file_path)
         const formatted_token_count = display_token_count(token_count.total)
 
-        const current_checked = workspace_provider.get_checked_files()
-        const is_picked = current_checked.includes(file_path)
+        const selected_files = workspace_provider.get_selected_files()
+        const is_picked = selected_files.includes(file_path)
 
         const buttons: vscode.QuickInputButton[] = []
         if (has_parent_folder) {
@@ -338,19 +338,19 @@ export const prompt_for_imported_files = async (params: {
           is_showing_folder_quick_pick = false
 
           if (
-            result === 'added' ||
-            result === 'back' ||
-            result === 'no_folders' ||
-            result === 'no_workspace_root'
+            result == 'added' ||
+            result == 'back' ||
+            result == 'no_folders' ||
+            result == 'no_workspace_root'
           ) {
             const current_items = quick_pick.items
             let current_selected = quick_pick.selectedItems
 
-            if (result === 'added') {
-              const updated_checked = workspace_provider.get_checked_files()
+            if (result == 'added') {
+              const selectred_files = workspace_provider.get_selected_files()
               current_selected = current_items.filter(
                 (item) =>
-                  (item.uri && updated_checked.includes(item.uri.fsPath)) ||
+                  (item.uri && selectred_files.includes(item.uri.fsPath)) ||
                   current_selected.includes(item)
               )
             }

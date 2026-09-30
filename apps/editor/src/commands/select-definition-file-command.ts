@@ -64,12 +64,12 @@ export const select_definition_file_command = (
           return
         }
 
-        const current_checked = workspace_provider.get_checked_files()
+        const current_selected = workspace_provider.get_selected_files()
 
         let added = false
-        if (!current_checked.includes(file_path)) {
-          await workspace_provider.set_checked_files([
-            ...current_checked,
+        if (!current_selected.includes(file_path)) {
+          await workspace_provider.set_selected_files([
+            ...current_selected,
             file_path
           ])
           added = true

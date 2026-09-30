@@ -329,8 +329,8 @@ export const select_files_of_commit_command = (
 
             // Inner loop for file selection
             while (true) {
-              const currently_checked = workspace_provider.get_checked_files()
-              const currently_checked_set = new Set(currently_checked)
+              const currently_selected = workspace_provider.get_selected_files()
+              const currently_selected_set = new Set(currently_selected)
 
               const create_items = async (files: typeof valid_normal_files) => {
                 return await Promise.all(
@@ -365,7 +365,7 @@ export const select_files_of_commit_command = (
                       description: display_dir
                         ? `${formatted_token_count} · ${display_dir}`
                         : formatted_token_count,
-                      picked: currently_checked_set.has(f.absolute_path),
+                      picked: currently_selected_set.has(f.absolute_path),
                       file_path: f.absolute_path,
                       token_count: token_count.total,
                       buttons
@@ -501,21 +501,21 @@ export const select_files_of_commit_command = (
                       is_showing_folder_quick_pick = false
 
                       if (
-                        result === 'added' ||
-                        result === 'back' ||
-                        result === 'no_folders' ||
-                        result === 'no_workspace_root'
+                        result == 'added' ||
+                        result == 'back' ||
+                        result == 'no_folders' ||
+                        result == 'no_workspace_root'
                       ) {
                         const current_items = quick_pick_files.items
                         let current_selected = quick_pick_files.selectedItems
 
-                        if (result === 'added') {
-                          const updated_checked =
-                            workspace_provider.get_checked_files()
+                        if (result == 'added') {
+                          const selected_files =
+                            workspace_provider.get_selected_files()
                           current_selected = current_items.filter(
                             (item: any) =>
                               (item.file_path &&
-                                updated_checked.includes(item.file_path)) ||
+                                selected_files.includes(item.file_path)) ||
                               current_selected.includes(item)
                           )
                         }
@@ -591,11 +591,11 @@ export const select_files_of_commit_command = (
                 break
               }
 
-              if (currently_checked.length > 0) {
+              if (currently_selected.length > 0) {
                 const selected_paths_set = new Set(selected_paths)
                 const is_identical =
-                  currently_checked.length === selected_paths_set.size &&
-                  currently_checked.every((file) =>
+                  currently_selected.length === selected_paths_set.size &&
+                  currently_selected.every((file) =>
                     selected_paths_set.has(file)
                   )
 
@@ -609,10 +609,10 @@ export const select_files_of_commit_command = (
               }
 
               const paths_to_apply = [
-                ...new Set([...currently_checked, ...selected_paths])
+                ...new Set([...currently_selected, ...selected_paths])
               ]
 
-              await workspace_provider.set_checked_files(paths_to_apply)
+              await workspace_provider.set_selected_files(paths_to_apply)
 
               vscode.window.showInformationMessage(
                 t('common.success.context-updated')

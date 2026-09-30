@@ -40,8 +40,8 @@ export const duplicate_workspace_command = (
           RANGES_STATE_KEY
         )
       const context_to_save: DuplicateWorkspaceContext = {
-        checked_files: export_state.checked_files,
-        checked_files_timestamps: export_state.checked_timestamps,
+        selected_files: export_state.selected_files,
+        selected_files_timestamps: export_state.selected_timestamps,
         workspace_root_folders,
         timestamp: Date.now(),
         open_editors,

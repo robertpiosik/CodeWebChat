@@ -101,7 +101,7 @@ export const show_parent_folder_quick_pick = async (params: {
           undefined
         )
 
-        await params.workspace_provider.update_check_state(
+        await params.workspace_provider.update_checkbox_state(
           file_item,
           vscode.TreeItemCheckboxState.Checked
         )

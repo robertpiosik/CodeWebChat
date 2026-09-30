@@ -313,9 +313,9 @@ export const invoke_agentic_cli = async (params: {
         )
 
         if (params.copy_selected_files) {
-          const checked_files = params.workspace_provider.get_checked_files()
+          const selected_files = params.workspace_provider.get_selected_files()
 
-          for (const file_path of checked_files) {
+          for (const file_path of selected_files) {
             const root =
               params.workspace_provider.get_workspace_root_for_file(file_path)
             if (!root) continue

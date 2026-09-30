@@ -26,20 +26,20 @@ export const search_files_commands = (
     is_search_in_selected?: boolean
     is_provided_files?: boolean
   }): Promise<undefined | void> => {
-    const unchecked_paths = params.result.matched_paths.filter(
+    const not_selected_paths = params.result.matched_paths.filter(
       (file_path) => !params.result.selected_paths.includes(file_path)
     )
 
-    const currently_checked = workspace_provider.get_checked_files()
-    const currently_checked_in_folder = currently_checked.filter((f) =>
+    const currently_selected = workspace_provider.get_selected_files()
+    const currently_selected_in_folder = currently_selected.filter((f) =>
       params.resolved_all_files.includes(f)
     )
 
-    if (currently_checked_in_folder.length > 0 && !params.is_provided_files) {
+    if (currently_selected_in_folder.length > 0 && !params.is_provided_files) {
       const selected_paths_set = new Set(params.result.selected_paths)
       const is_identical =
-        currently_checked_in_folder.length == selected_paths_set.size &&
-        currently_checked_in_folder.every((file) =>
+        currently_selected_in_folder.length == selected_paths_set.size &&
+        currently_selected_in_folder.every((file) =>
           selected_paths_set.has(file)
         )
 
@@ -53,7 +53,7 @@ export const search_files_commands = (
 
     let paths_to_apply: string[]
     const all_listed_were_selected = params.result.matched_paths.every((file) =>
-      currently_checked.includes(file)
+      currently_selected.includes(file)
     )
 
     if (params.is_search_in_selected) {
@@ -63,20 +63,20 @@ export const search_files_commands = (
 
       paths_to_apply = [
         ...new Set([
-          ...currently_checked.filter(
+          ...currently_selected.filter(
             (p) => !searched_but_not_selected.includes(p)
           ),
           ...params.result.selected_paths
         ])
       ]
     } else if (params.is_provided_files) {
-      if (currently_checked.length > 0) {
+      if (currently_selected.length > 0) {
         const action = all_listed_were_selected ? 'replace' : 'merge'
 
         if (action === 'merge') {
           paths_to_apply = [
             ...new Set([
-              ...currently_checked.filter(
+              ...currently_selected.filter(
                 (p) => !params.result.matched_paths.includes(p)
               ),
               ...params.result.selected_paths
@@ -91,13 +91,13 @@ export const search_files_commands = (
     } else {
       paths_to_apply = [
         ...new Set([
-          ...currently_checked.filter((p) => !unchecked_paths.includes(p)),
+          ...currently_selected.filter((p) => !not_selected_paths.includes(p)),
           ...params.result.selected_paths
         ])
       ]
     }
 
-    await workspace_provider.set_checked_files(paths_to_apply)
+    await workspace_provider.set_selected_files(paths_to_apply)
 
     Logger.info({
       message: `Selected ${params.result.selected_paths.length} files from search.`,
@@ -126,14 +126,14 @@ export const search_files_commands = (
         let resolved_all_files: string[] = []
 
         if (options.is_search_in_selected) {
-          const currently_checked = workspace_provider.get_checked_files()
+          const currently_selected = workspace_provider.get_selected_files()
           if (options.folder_path) {
-            resolved_all_files = currently_checked.filter((f) => {
+            resolved_all_files = currently_selected.filter((f) => {
               const relative = path.relative(options.folder_path!, f)
               return !relative.startsWith('..') && !path.isAbsolute(relative)
             })
           } else {
-            resolved_all_files = currently_checked
+            resolved_all_files = currently_selected
           }
         } else {
           if (options.folder_path) {
@@ -263,8 +263,8 @@ export const search_files_commands = (
     }
     search_in_progress = true
     try {
-      const currently_checked = workspace_provider.get_checked_files()
-      if (currently_checked.length === 0) {
+      const currently_selected = workspace_provider.get_selected_files()
+      if (currently_selected.length === 0) {
         vscode.window.showInformationMessage(
           t('common.warning.no-files-selected')
         )
@@ -273,9 +273,9 @@ export const search_files_commands = (
 
       const folder_path = await get_target_folder_path(item)
 
-      let files_to_search = currently_checked
+      let files_to_search = currently_selected
       if (folder_path) {
-        files_to_search = currently_checked.filter((f) => {
+        files_to_search = currently_selected.filter((f) => {
           const relative = path.relative(folder_path, f)
           return !relative.startsWith('..') && !path.isAbsolute(relative)
         })

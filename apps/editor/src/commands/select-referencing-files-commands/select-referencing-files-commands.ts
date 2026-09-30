@@ -40,12 +40,12 @@ const handle_reference_selection = async (params: {
       .map((m) => m.file_path)
       .filter((file_path) => !selected_paths_set.has(file_path))
   )
-  const latest_checked = workspace_provider.get_checked_files()
-  const latest_checked_filtered = latest_checked.filter(
+  const selected_files = workspace_provider.get_selected_files()
+  const filtered_selected_files = selected_files.filter(
     (file) => !unselected_files_set.has(file)
   )
   const paths_to_apply = [
-    ...new Set([...latest_checked_filtered, ...selected_paths])
+    ...new Set([...filtered_selected_files, ...selected_paths])
   ]
 
   Logger.info({
@@ -53,7 +53,7 @@ const handle_reference_selection = async (params: {
     data: { paths: selected_paths }
   })
 
-  await workspace_provider.set_checked_files(paths_to_apply)
+  await workspace_provider.set_selected_files(paths_to_apply)
 }
 
 export const select_referencing_files_commands = (
@@ -237,9 +237,9 @@ export const select_referencing_files_commands = (
       'codeWebChat.selectReferencingFilesForSelected',
       async () => {
         try {
-          const checked_files = workspace_provider.get_checked_files()
+          const selected_files = workspace_provider.get_selected_files()
 
-          if (checked_files.length == 0) {
+          if (selected_files.length == 0) {
             vscode.window.showInformationMessage(
               t('common.info.no-items-found', { items: 'references' })
             )
@@ -247,7 +247,7 @@ export const select_referencing_files_commands = (
           }
 
           let is_cancelled = false
-          const uris = checked_files.map((file_path) =>
+          const uris = selected_files.map((file_path) =>
             vscode.Uri.file(file_path)
           )
 
@@ -266,7 +266,7 @@ export const select_referencing_files_commands = (
               return await get_referencing_files_for_uris({
                 uris,
                 workspace_provider,
-                ignore_paths: checked_files,
+                ignore_paths: selected_files,
                 progress,
                 token
               })

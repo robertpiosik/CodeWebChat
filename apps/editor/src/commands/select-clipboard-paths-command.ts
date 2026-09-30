@@ -99,7 +99,7 @@ export const select_clipboard_paths_command = (
 
         let absolute_paths: string[] = []
         const final_selected_paths: string[] = []
-        let accumulated_checked = workspace_provider.get_checked_files()
+        let accumulated_selected_files = workspace_provider.get_selected_files()
         let has_updates = false
 
         while (current_step !== 'finish') {
@@ -171,8 +171,8 @@ export const select_clipboard_paths_command = (
               absolute_paths = workspaces_with_paths[0].absolute_paths
             }
 
-            const currently_checked = accumulated_checked
-            const currently_checked_set = new Set(currently_checked)
+            const currently_selected = accumulated_selected_files
+            const currently_selected_set = new Set(currently_selected)
 
             const quick_pick_items: (vscode.QuickPickItem & {
               file_path: string
@@ -219,7 +219,7 @@ export const select_clipboard_paths_command = (
             )
 
             let current_selected_items = quick_pick_items.filter((item) =>
-              currently_checked_set.has(item.file_path)
+              currently_selected_set.has(item.file_path)
             )
 
             let should_go_back_to_workspace = false
@@ -370,11 +370,11 @@ export const select_clipboard_paths_command = (
 
               final_selected_paths.push(...selected_paths)
 
-              if (currently_checked.length > 0) {
+              if (currently_selected.length > 0) {
                 const selected_paths_set = new Set(selected_paths)
                 const is_identical =
-                  currently_checked.length === selected_paths_set.size &&
-                  currently_checked.every((file) =>
+                  currently_selected.length === selected_paths_set.size &&
+                  currently_selected.every((file) =>
                     selected_paths_set.has(file)
                   )
 
@@ -386,8 +386,8 @@ export const select_clipboard_paths_command = (
                 }
               }
 
-              accumulated_checked = [
-                ...new Set([...currently_checked, ...selected_paths])
+              accumulated_selected_files = [
+                ...new Set([...currently_selected, ...selected_paths])
               ]
               has_updates = true
 
@@ -409,7 +409,9 @@ export const select_clipboard_paths_command = (
         }
 
         if (has_updates) {
-          await workspace_provider.set_checked_files(accumulated_checked)
+          await workspace_provider.set_selected_files(
+            accumulated_selected_files
+          )
 
           vscode.window.showInformationMessage(
             t('common.success.context-updated')

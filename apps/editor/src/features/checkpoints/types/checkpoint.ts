@@ -30,6 +30,6 @@ export interface Checkpoint {
   uses_git?: boolean
   response_history?: ResponseHistoryItem[]
   response_preview_item_created_at?: number
-  checked_files?: string[]
+  selected_files?: string[]
   active_tabs?: CheckpointTab[]
 }

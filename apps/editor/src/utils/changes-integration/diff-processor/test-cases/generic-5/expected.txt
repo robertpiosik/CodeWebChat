@@ -24,7 +24,7 @@ export interface IWorkspaceProvider {
   is_ignored_by_patterns(file_path: string): boolean
   get_check_state(path: string): vscode.TreeItemCheckboxState
   is_partially_checked(path: string): boolean
-  get_checked_files(): string[]
+  get_selected_files(): string[]
   get_selection_timestamp(path: string): number | undefined
 }
 
@@ -55,8 +55,8 @@ export class WorkspaceProvider
   private _token_calculator: TokenCalculator
 
   private _config_change_handler: vscode.Disposable
-  private _on_did_change_checked_files = new vscode.EventEmitter<void>()
-  readonly onDidChangeCheckedFiles = this._on_did_change_checked_files.event
+  private _on_did_change_selected_files = new vscode.EventEmitter<void>()
+  readonly onDidChangeCheckedFiles = this._on_did_change_selected_files.event
   private _refresh_timeout: NodeJS.Timeout | null = null
   // Track which files were opened from workspace view to prevent auto-checking
   private _opened_from_workspace_view: Set<string> = new Set()
@@ -102,7 +102,7 @@ export class WorkspaceProvider
     this._workspace_names = params.workspace_folders.map(
       (folder) => folder.name
     )
-    this.onDidChangeCheckedFiles(() => this._save_checked_files_state())
+    this.onDidChangeCheckedFiles(() => this._save_selected_files_state())
     this._token_calculator = new TokenCalculator(this, this._context)
     this._load_ignore_patterns()
 
@@ -147,5 +147,5 @@ export class WorkspaceProvider
 
     this.ranges_initialization = this.load_all_ranges()
 
-    this.load_checked_files_state()
+    this.load_selected_files_state()
   }

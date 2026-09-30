@@ -8,8 +8,9 @@ export const LAST_APPLIED_RAW_INSTRUCTIONS_STATE_KEY =
 export const RANGES_STATE_KEY = 'ranges'
 export const LAST_RANGES_SAVE_LOCATION_STATE_KEY = 'last-ranges-save-location'
 export const LAST_APPLY_CONTEXT_OPTION_STATE_KEY = 'last-apply-context-option'
-export const CONTEXT_CHECKED_PATHS_STATE_KEY = 'context-checked-paths'
-export const CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY = 'context-checked-timestamps'
+export const CONTEXT_SELECTED_PATHS_STATE_KEY = 'context-selected-paths'
+export const CONTEXT_SELECTED_TIMESTAMPS_STATE_KEY =
+  'context-selected-timestamps'
 export const LAST_SELECTED_SYMBOL_STATE_KEY = 'last-selected-symbol'
 export const LAST_SELECTED_CONTEXT_SOURCE_IN_SYMBOLS_QUICK_PICK_STATE_KEY =
   'last-selected-context-source-in-symbols-quick-pick'
@@ -130,8 +131,8 @@ export const LAST_USE_CONTEXT_FILES_STATE_KEY = 'last-use-context-files'
 export const LAST_COPY_PATHS_FORMAT_STATE_KEY = 'last-copy-paths-format'
 
 export type DuplicateWorkspaceContext = {
-  checked_files: string[]
-  checked_files_timestamps: Record<string, number>
+  selected_files: string[]
+  selected_files_timestamps: Record<string, number>
   timestamp: number
   workspace_root_folders: string[]
   open_editors?: { path: string; view_column?: number }[]

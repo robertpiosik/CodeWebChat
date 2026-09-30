@@ -702,14 +702,14 @@ export class TokenCalculator implements vscode.Disposable {
           continue
         }
 
-        const checkbox_state = this._provider.get_check_state(full_path)
+        const checkbox_state = this._provider.get_checkbox_state(full_path)
 
         if (entry.isDirectory()) {
           if (checkbox_state === vscode.TreeItemCheckboxState.Checked) {
             const counts = await this.calculate_directory_tokens(full_path)
             selected_tokens += counts.total
             selected_shrink_tokens += counts.shrink
-          } else if (this._provider.is_partially_checked(full_path)) {
+          } else if (this._provider.is_partially_selected(full_path)) {
             const counts =
               await this.calculate_directory_selected_tokens(full_path)
             selected_tokens += counts.total
@@ -739,13 +739,13 @@ export class TokenCalculator implements vscode.Disposable {
     return { total: selected_tokens, shrink: selected_shrink_tokens }
   }
 
-  public async get_checked_files_token_count(options?: {
+  public async get_selected_files_token_count(options?: {
     exclude_file_path?: string
   }): Promise<{ total: number; shrink: number }> {
-    const checked_files = this._provider.get_checked_files()
+    const selected_files = this._provider.get_selected_files()
 
     const result = { total: 0, shrink: 0 }
-    for (const file_path of checked_files) {
+    for (const file_path of selected_files) {
       try {
         if (
           options?.exclude_file_path &&
@@ -769,7 +769,7 @@ export class TokenCalculator implements vscode.Disposable {
         }
       } catch (error) {
         Logger.error({
-          function_name: 'get_checked_files_token_count',
+          function_name: 'get_selected_files_token_count',
           message: `Error accessing file ${file_path} for token count`,
           data: error
         })

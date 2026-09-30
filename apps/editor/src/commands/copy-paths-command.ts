@@ -127,9 +127,9 @@ export const copy_paths_commands = (
 ) => {
   return [
     vscode.commands.registerCommand('codeWebChat.copyPaths', async () => {
-      const checked_files = workspace_provider.get_checked_files()
+      const selected_files = workspace_provider.get_selected_files()
 
-      if (checked_files.length == 0) {
+      if (selected_files.length == 0) {
         vscode.window.showWarningMessage(t('common.warning.no-files-selected'))
         return
       }
@@ -137,7 +137,7 @@ export const copy_paths_commands = (
       const format = await resolve_format(extension_context)
       if (!format) return
 
-      const paths_text = format_paths(checked_files, format)
+      const paths_text = format_paths(selected_files, format)
       await vscode.env.clipboard.writeText(paths_text)
       vscode.window.showInformationMessage(
         t('common.info.copied-to-clipboard', { item: 'Paths' })
@@ -148,9 +148,9 @@ export const copy_paths_commands = (
       'codeWebChat.copyPathsOpenEditors',
       async () => {
         if (!open_editors_provider) return
-        const checked_files = open_editors_provider.get_checked_files()
+        const selected_files = open_editors_provider.get_selected_files()
 
-        if (checked_files.length == 0) {
+        if (selected_files.length == 0) {
           vscode.window.showWarningMessage(
             t('common.warning.no-files-selected')
           )
@@ -160,7 +160,7 @@ export const copy_paths_commands = (
         const format = await resolve_format(extension_context)
         if (!format) return
 
-        const paths_text = format_paths(checked_files, format)
+        const paths_text = format_paths(selected_files, format)
         await vscode.env.clipboard.writeText(paths_text)
         vscode.window.showInformationMessage(
           t('common.info.copied-to-clipboard', { item: 'Paths' })

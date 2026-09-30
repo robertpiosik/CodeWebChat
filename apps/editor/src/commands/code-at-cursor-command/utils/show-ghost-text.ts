@@ -17,8 +17,8 @@ export const show_ghost_text = async (params: {
   const selected_files: string[] = []
 
   if (workspace_root) {
-    const checked_files = params.workspace_provider.get_checked_files()
-    for (const file of checked_files) {
+    const selected_files = params.workspace_provider.get_selected_files()
+    for (const file of selected_files) {
       const file_workspace_root =
         params.workspace_provider.get_workspace_root_for_file(file)
       if (file_workspace_root === workspace_root) {

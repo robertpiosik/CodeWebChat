@@ -218,8 +218,8 @@ export const save_to_workspace_state = async (params: {
       continue
     }
 
-    const checked_files = params.workspace_provider.get_checked_files()
-    const files_by_workspace = group_files_by_workspace(checked_files)
+    const selected_files = params.workspace_provider.get_selected_files()
+    const files_by_workspace = group_files_by_workspace(selected_files)
 
     if (selection.label === LABEL_SAVE_NEW_CONTEXT) {
       const name = await ask_for_new_context_name(true)

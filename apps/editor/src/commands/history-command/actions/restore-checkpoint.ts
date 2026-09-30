@@ -5,7 +5,7 @@ import * as vscode from 'vscode'
 import {
   TEMPORARY_CHECKPOINT_STATE_KEY,
   CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
-  CONTEXT_CHECKED_PATHS_STATE_KEY
+  CONTEXT_SELECTED_PATHS_STATE_KEY
 } from '@/constants/state-keys'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import type { Checkpoint } from '@/features/checkpoints/types'
@@ -486,12 +486,12 @@ export const restore_checkpoint = async (params: {
           } catch {}
         }
 
-        if (params.checkpoint.checked_files) {
+        if (params.checkpoint.selected_files) {
           await params.extension_context.workspaceState.update(
-            CONTEXT_CHECKED_PATHS_STATE_KEY,
-            params.checkpoint.checked_files
+            CONTEXT_SELECTED_PATHS_STATE_KEY,
+            params.checkpoint.selected_files
           )
-          params.workspace_provider.load_checked_files_state()
+          params.workspace_provider.load_selected_files_state()
         }
 
         await params.extension_context.workspaceState.update(

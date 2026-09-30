@@ -126,7 +126,7 @@ export const process_response = async (params: {
     const shared_context_state =
       params.prompt_view_provider.shared_context_state
 
-    const current_checked_files = shared_context_state.get_checked_files()
+    const current_selected_files = shared_context_state.get_selected_files()
 
     const workspace_roots = params.workspace_provider.get_workspace_roots()
 
@@ -176,7 +176,7 @@ export const process_response = async (params: {
           }
 
           if (absolute_path && matched_workspace_root) {
-            const is_checked = current_checked_files.includes(absolute_path)
+            const is_checked = current_selected_files.includes(absolute_path)
 
             local_files.push({
               file_path: rel_path,

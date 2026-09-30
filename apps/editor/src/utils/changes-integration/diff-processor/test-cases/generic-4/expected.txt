@@ -204,22 +204,22 @@ export const search_files_for_context_command = (
           const selected_paths = (
             selected_items as (vscode.QuickPickItem & { file_path: string })[]
           ).map((item) => item.file_path)
-          const currently_checked = workspace_provider.get_checked_files()
+          const currently_selected = workspace_provider.get_selected_files()
 
           let files_outside_search_folder: string[] = []
           let files_inside_search_folder: string[] = []
 
           if (folder_path) {
-            files_outside_search_folder = currently_checked.filter((file) => {
+            files_outside_search_folder = currently_selected.filter((file) => {
               const relative = path.relative(folder_path, file)
               return relative.startsWith('..') || path.isAbsolute(relative)
             })
-            files_inside_search_folder = currently_checked.filter((file) => {
+            files_inside_search_folder = currently_selected.filter((file) => {
               const relative = path.relative(folder_path, file)
               return !relative.startsWith('..') && !path.isAbsolute(relative)
             })
           } else {
-            files_inside_search_folder = currently_checked
+            files_inside_search_folder = currently_selected
           }
 
           let paths_to_apply = [
@@ -290,7 +290,7 @@ export const search_files_for_context_command = (
 
               if (choice.label == 'Merge') {
                 paths_to_apply = [
-                  ...new Set([...currently_checked, ...selected_paths])
+                  ...new Set([...currently_selected, ...selected_paths])
                 ]
               }
             }
@@ -301,7 +301,7 @@ export const search_files_for_context_command = (
             data: { paths: selected_paths, folder: folder_path }
           })
 
-          await workspace_provider.set_checked_files(paths_to_apply)
+          await workspace_provider.set_selected_files(paths_to_apply)
           vscode.window.showInformationMessage(
             dictionary.information_message.SELECTED_FILES(
               paths_to_apply.length - files_outside_search_folder.length

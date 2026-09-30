@@ -48,14 +48,14 @@ export const prompt_for_intelligent_search_results = async (params: {
 
   const unique_paths = [...new Set(absolute_paths)]
 
-  const currently_checked = params.workspace_provider.get_checked_files()
+  const currently_selected = params.workspace_provider.get_selected_files()
 
-  const unmatched_checked_files =
+  const unmatched_selected_files =
     params.restored_unmatched_paths ??
     (params.is_search_in_selected || params.is_sub_search
       ? params.files.filter(
           (f) =>
-            (params.is_sub_search || currently_checked.includes(f)) &&
+            (params.is_sub_search || currently_selected.includes(f)) &&
             !unique_paths.includes(f)
         )
       : [])
@@ -64,7 +64,7 @@ export const prompt_for_intelligent_search_results = async (params: {
 
   return (await show_search_results_quick_pick({
     matched_items: unique_paths.map((path) => ({ path })),
-    unmatched_checked_paths: unmatched_checked_files,
+    unmatched_selected_paths: unmatched_selected_files,
     workspace_provider: params.workspace_provider,
     title: base_title,
     show_back_button: true,

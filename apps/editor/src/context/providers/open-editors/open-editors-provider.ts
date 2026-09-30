@@ -24,8 +24,8 @@ export class OpenEditorsProvider
   private _opened_from_workspace_view: Set<string> = new Set()
   private _non_preview_files: Set<string> = new Set()
   private _preview_tabs: Map<string, boolean> = new Map()
-  private _on_did_change_checked_files = new vscode.EventEmitter<void>()
-  readonly onDidChangeCheckedFiles = this._on_did_change_checked_files.event
+  private _on_did_change_selected_files = new vscode.EventEmitter<void>()
+  readonly onDidChangeSelectedFiles = this._on_did_change_selected_files.event
   private _shared_context_state: SharedContextState
   private _config_change_handler: vscode.Disposable
   private _workspace_provider: WorkspaceProvider
@@ -58,7 +58,7 @@ export class OpenEditorsProvider
           event.affectsConfiguration('codeWebChat.ignorePatterns') ||
           event.affectsConfiguration('codeWebChat.allowPatterns')
         ) {
-          this._uncheck_ignored_files()
+          this._unselect_ignored_files()
           this.refresh()
         }
       }
@@ -80,7 +80,7 @@ export class OpenEditorsProvider
   }
 
   private _dispatch_change_events() {
-    this._on_did_change_checked_files.fire()
+    this._on_did_change_selected_files.fire()
     this.refresh()
   }
 
@@ -107,10 +107,10 @@ export class OpenEditorsProvider
     return false
   }
 
-  private _uncheck_ignored_files() {
-    const checked_files = this.get_checked_files()
+  private _unselect_ignored_files() {
+    const selected_files = this.get_selected_files()
 
-    const files_to_uncheck = checked_files.filter((file_path) =>
+    const files_to_uncheck = selected_files.filter((file_path) =>
       this._workspace_provider.is_ignored_by_patterns(file_path)
     )
 
@@ -167,7 +167,7 @@ export class OpenEditorsProvider
     this._workspace_change_handler.dispose()
     this._tab_change_handler.dispose()
     this._config_change_handler.dispose()
-    this._on_did_change_checked_files.dispose()
+    this._on_did_change_selected_files.dispose()
   }
 
   refresh() {
@@ -175,10 +175,10 @@ export class OpenEditorsProvider
     this._on_did_change_tree_data.fire()
   }
 
-  private _is_file_checked_in_workspace(file_path: string): boolean {
-    const workspace_checked_files =
-      this._shared_context_state.get_checked_files()
-    return workspace_checked_files.includes(file_path)
+  private _is_file_selected_in_workspace(file_path: string): boolean {
+    const workspace_selected_files =
+      this._shared_context_state.get_selected_files()
+    return workspace_selected_files.includes(file_path)
   }
 
   private _clean_up_closed_files() {
@@ -282,10 +282,10 @@ export class OpenEditorsProvider
       let checkbox_state = this._checked_items.get(file_path)
 
       if (checkbox_state === undefined) {
-        const is_checked_in_workspace =
-          this._is_file_checked_in_workspace(file_path)
+        const is_selected_in_workspace =
+          this._is_file_selected_in_workspace(file_path)
 
-        if (is_checked_in_workspace && !is_ignored) {
+        if (is_selected_in_workspace && !is_ignored) {
           checkbox_state = vscode.TreeItemCheckboxState.Checked
         } else {
           checkbox_state = vscode.TreeItemCheckboxState.Unchecked
@@ -356,7 +356,7 @@ export class OpenEditorsProvider
     }
   }
 
-  async update_check_state(
+  async update_checkbox_state(
     item: FileItem,
     state: vscode.TreeItemCheckboxState
   ): Promise<void> {
@@ -373,7 +373,7 @@ export class OpenEditorsProvider
     this._dispatch_change_events()
   }
 
-  clear_checks() {
+  clear_selected_files() {
     const open_files = this._get_open_editors()
 
     for (const uri of open_files) {
@@ -387,7 +387,7 @@ export class OpenEditorsProvider
     this._dispatch_change_events()
   }
 
-  async check_all(): Promise<void> {
+  async select_all(): Promise<void> {
     const open_files = this._get_open_editors()
 
     for (const uri of open_files) {
@@ -406,7 +406,7 @@ export class OpenEditorsProvider
     this._dispatch_change_events()
   }
 
-  get_checked_files(): string[] {
+  get_selected_files(): string[] {
     return Array.from(this._checked_items.entries())
       .filter(
         ([file_path, state]) =>
@@ -417,7 +417,7 @@ export class OpenEditorsProvider
       .map(([path, _]) => path)
   }
 
-  async set_checked_files(file_paths: string[]): Promise<void> {
+  async set_selected_files(file_paths: string[]): Promise<void> {
     this._checked_items.clear()
 
     for (const file_path of file_paths) {

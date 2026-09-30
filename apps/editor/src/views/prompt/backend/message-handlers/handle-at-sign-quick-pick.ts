@@ -81,9 +81,9 @@ const add_to_context_if_needed = async (
   workspace_provider: WorkspaceProvider,
   file_path: string
 ) => {
-  const current_checked = workspace_provider.get_checked_files()
+  const current_checked = workspace_provider.get_selected_files()
   if (!current_checked.includes(file_path)) {
-    await workspace_provider.set_checked_files([...current_checked, file_path])
+    await workspace_provider.set_selected_files([...current_checked, file_path])
   }
 }
 
@@ -204,9 +204,9 @@ const at_sign_quick_pick = async (params: {
     return normalize_path(relative_path)
   }
 
-  const checked_paths = params.workspace_provider.get_all_checked_paths()
+  const selected_paths = params.workspace_provider.get_all_selected_paths()
 
-  if (checked_paths.length == 0) {
+  if (selected_paths.length == 0) {
     const browsed_item = await browse_all_files(
       params.workspace_provider,
       workspace_roots,
@@ -228,7 +228,7 @@ const at_sign_quick_pick = async (params: {
   let selected_path_item: QuickPickItem | undefined
 
   while (true) {
-    const all_quick_pick_items: QuickPickItem[] = checked_paths
+    const all_quick_pick_items: QuickPickItem[] = selected_paths
       .filter((p) => {
         try {
           return fs.existsSync(p) && fs.statSync(p).isFile()

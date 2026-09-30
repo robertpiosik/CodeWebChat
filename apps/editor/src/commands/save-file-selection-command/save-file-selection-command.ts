@@ -12,8 +12,8 @@ export const save_file_selection_command = (params: {
   return vscode.commands.registerCommand(
     'codeWebChat.saveFileSelection',
     async () => {
-      const checked_files = params.workspace_provider.get_checked_files()
-      if (checked_files.length == 0) {
+      const selected_files = params.workspace_provider.get_selected_files()
+      if (selected_files.length == 0) {
         vscode.window.showInformationMessage(
           t('command.save-file-selection-command.nothing-in-context-to-save')
         )

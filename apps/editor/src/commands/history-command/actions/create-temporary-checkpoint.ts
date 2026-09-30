@@ -127,7 +127,7 @@ export const create_temporary_checkpoint = async (
     trigger: 'temporary',
     uses_git,
     git_data: Object.keys(git_data).length > 0 ? git_data : undefined,
-    checked_files: workspace_provider.get_all_checked_paths(),
+    selected_files: workspace_provider.get_all_selected_paths(),
     active_tabs
   }
   return new_checkpoint

@@ -36,12 +36,12 @@ export const build_cli_prompt = async (params: {
         : roots[0]
   }
 
-  const checked_files =
-    prompt_view_provider.workspace_provider.get_checked_files()
+  const selected_files =
+    prompt_view_provider.workspace_provider.get_selected_files()
 
   let files_context = ''
 
-  for (const f of checked_files) {
+  for (const f of selected_files) {
     const root =
       prompt_view_provider.workspace_provider.get_workspace_root_for_file(f)
     let relative_path = f

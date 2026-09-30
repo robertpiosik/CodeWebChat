@@ -26,7 +26,7 @@ export const prompt_for_referencing_files = async (params: {
     tooltip: t('common.select-parent-folder')
   }
 
-  const currently_checked = params.workspace_provider.get_checked_files()
+  const currently_selected = params.workspace_provider.get_selected_files()
 
   const quick_pick_items: (vscode.QuickPickItem & {
     file_path: string
@@ -67,7 +67,7 @@ export const prompt_for_referencing_files = async (params: {
   )
 
   let current_selected_items = quick_pick_items.filter((item) =>
-    currently_checked.includes(item.file_path)
+    currently_selected.includes(item.file_path)
   )
 
   while (true) {
@@ -194,11 +194,11 @@ export const prompt_for_referencing_files = async (params: {
             let current_selected = quick_pick.selectedItems
 
             if (result === 'added') {
-              const updated_checked =
-                params.workspace_provider.get_checked_files()
+              const updated_selected =
+                params.workspace_provider.get_selected_files()
               current_selected = current_items.filter(
                 (item) =>
-                  updated_checked.includes(item.file_path) ||
+                  updated_selected.includes(item.file_path) ||
                   current_selected.includes(item)
               )
             }

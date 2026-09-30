@@ -31,9 +31,9 @@ export const select_context_paths = async (params: {
       paths: string[]
       selected_paths_override?: Set<string>
     }) => {
-      const currently_checked = params.workspace_provider.get_checked_files()
-      const currently_checked_set =
-        local_params.selected_paths_override || new Set(currently_checked)
+      const currently_selected = params.workspace_provider.get_selected_files()
+      const currently_selected_set =
+        local_params.selected_paths_override || new Set(currently_selected)
 
       return Promise.all(
         local_params.paths.map(async (file_path) => {
@@ -64,7 +64,7 @@ export const select_context_paths = async (params: {
             description: display_dir
               ? `${formatted_token_count} · ${display_dir}`
               : formatted_token_count,
-            picked: currently_checked_set.has(file_path),
+            picked: currently_selected_set.has(file_path),
             file_path,
             buttons,
             token_count: token_count.total
@@ -205,15 +205,15 @@ export const select_context_paths = async (params: {
     if (list_selection === 'back') return 'back'
 
     if (Array.isArray(list_selection)) {
-      const new_checked = list_selection.map((i) => i.file_path)
+      const new_selected = list_selection.map((i) => i.file_path)
       const select_paths_set = new Set(resolved_paths)
-      const current_checked_files =
-        params.workspace_provider.get_checked_files()
-      const final_checked = current_checked_files
+      const current_selected_files =
+        params.workspace_provider.get_selected_files()
+      const final_selected = current_selected_files
         .filter((p) => !select_paths_set.has(p))
-        .concat(new_checked)
-      await params.workspace_provider.set_checked_files([
-        ...new Set(final_checked)
+        .concat(new_selected)
+      await params.workspace_provider.set_selected_files([
+        ...new Set(final_selected)
       ])
       return undefined
     }

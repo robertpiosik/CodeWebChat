@@ -4,7 +4,7 @@ import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 
 export const group_files_by_workspace = (
-  checked_files: string[]
+  selected_files: string[]
 ): Map<string, string[]> => {
   const workspace_folders = vscode.workspace.workspaceFolders || []
   const files_by_workspace = new Map<string, string[]>()
@@ -13,7 +13,7 @@ export const group_files_by_workspace = (
     files_by_workspace.set(folder.uri.fsPath, [])
   })
 
-  for (const file of checked_files) {
+  for (const file of selected_files) {
     const workspace = workspace_folders.find((folder) =>
       file.startsWith(folder.uri.fsPath)
     )

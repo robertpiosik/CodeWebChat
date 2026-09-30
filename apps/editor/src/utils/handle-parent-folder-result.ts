@@ -24,10 +24,10 @@ export const handle_parent_folder_result = (params: {
     let current_selected = params.quick_pick.selectedItems
 
     if (params.result === 'added') {
-      const currently_checked = params.workspace_provider.get_checked_files()
+      const currently_selected = params.workspace_provider.get_selected_files()
       current_selected = current_items.filter(
         (i) =>
-          (i.file_path && currently_checked.includes(i.file_path)) ||
+          (i.file_path && currently_selected.includes(i.file_path)) ||
           current_selected.includes(i)
       )
     }

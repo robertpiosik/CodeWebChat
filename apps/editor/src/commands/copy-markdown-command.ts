@@ -54,9 +54,9 @@ export const copy_markdown_commands = (
       'codeWebChat.copyMarkdownOpenEditors',
       async () => {
         if (!open_editors_provider) return
-        const checked_files = open_editors_provider.get_checked_files()
+        const selected_files = open_editors_provider.get_selected_files()
 
-        if (checked_files.length == 0) {
+        if (selected_files.length == 0) {
           vscode.window.showWarningMessage(
             t('command.copy-markdown-command.warning.no-open-editors')
           )
@@ -68,7 +68,7 @@ export const copy_markdown_commands = (
         const is_multi_root =
           !!workspace_folders && workspace_folders.length > 1
 
-        for (const file_path of checked_files) {
+        for (const file_path of selected_files) {
           try {
             const file_uri = vscode.Uri.file(file_path)
             const content_uint8_array =

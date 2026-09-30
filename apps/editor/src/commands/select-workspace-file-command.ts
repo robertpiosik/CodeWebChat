@@ -235,10 +235,10 @@ export const select_workspace_file_command = (
         const selected = quick_pick.selectedItems[0]
         if (selected) {
           last_interacted_path = selected.full_path
-          const current_checked = workspace_provider.get_checked_files()
-          if (!current_checked.includes(selected.full_path)) {
-            await workspace_provider.set_checked_files([
-              ...current_checked,
+          const selected_files = workspace_provider.get_selected_files()
+          if (!selected_files.includes(selected.full_path)) {
+            await workspace_provider.set_selected_files([
+              ...selected_files,
               selected.full_path
             ])
           }

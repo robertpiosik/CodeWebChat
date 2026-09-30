@@ -12,15 +12,15 @@ type ContextState = {
 }
 
 export class SharedContextState {
-  private _on_did_change_checked_files = new vscode.EventEmitter<void>()
-  readonly onDidChangeCheckedFiles = this._on_did_change_checked_files.event
+  private _on_did_change_selected_files = new vscode.EventEmitter<void>()
+  readonly onDidChangeSelectedFiles = this._on_did_change_selected_files.event
 
   private _workspace_provider?: WorkspaceProvider
   private _open_editors_provider?: OpenEditorsProvider
 
-  private _checked_files = new Set<string>()
-  private _unchecked_in_open_editors = new Set<string>()
-  private _unchecked_in_workspace = new Set<string>()
+  private _selected_files = new Set<string>()
+  private _unselected_in_open_editors = new Set<string>()
+  private _unselected_in_workspace = new Set<string>()
   private _undo_stack: ContextState[] = []
   private _redo_stack: ContextState[] = []
 
@@ -36,7 +36,7 @@ export class SharedContextState {
     this._workspace_provider = workspace_provider
     this._open_editors_provider = open_editors_provider
 
-    workspace_provider.onDidChangeCheckedFiles(() => {
+    workspace_provider.onDidChangeSelectedFiles(() => {
       if (!this._is_synchronizing && !this._is_undoing_redoing) {
         this._synchronizing_provider = 'workspace'
         this.synchronize_state()
@@ -44,7 +44,7 @@ export class SharedContextState {
       }
     })
 
-    open_editors_provider.onDidChangeCheckedFiles(() => {
+    open_editors_provider.onDidChangeSelectedFiles(() => {
       if (!this._is_synchronizing && !this._is_undoing_redoing) {
         this._synchronizing_provider = 'openEditors'
         this.synchronize_state()
@@ -71,7 +71,7 @@ export class SharedContextState {
     if (this._undo_stack.length == 0) return
 
     const current_state = {
-      files: Array.from(this._checked_files).sort()
+      files: Array.from(this._selected_files).sort()
     }
     this._redo_stack.push(current_state)
 
@@ -87,7 +87,7 @@ export class SharedContextState {
     if (this._redo_stack.length == 0) return
 
     const current_state = {
-      files: Array.from(this._checked_files).sort()
+      files: Array.from(this._selected_files).sort()
     }
     this._undo_stack.push(current_state)
 
@@ -101,53 +101,53 @@ export class SharedContextState {
 
   async apply_state(state: ContextState) {
     if (this._workspace_provider) {
-      await this._workspace_provider.set_checked_files(state.files)
+      await this._workspace_provider.set_selected_files(state.files)
     }
     if (this._open_editors_provider) {
-      await this._open_editors_provider.set_checked_files(state.files)
+      await this._open_editors_provider.set_selected_files(state.files)
     }
 
-    this.update_checked_files_set()
+    this.update_selected_files_set()
 
-    this._on_did_change_checked_files.fire()
+    this._on_did_change_selected_files.fire()
   }
 
   async synchronize_state() {
     if (!this._workspace_provider || !this._open_editors_provider) return
     if (this._is_synchronizing) return
 
-    const prev_files = Array.from(this._checked_files).sort()
+    const prev_files = Array.from(this._selected_files).sort()
 
     this._is_synchronizing = true
 
     try {
-      const workspace_checked_files =
-        this._workspace_provider.get_checked_files()
-      const open_editors_checked_files =
-        this._open_editors_provider.get_checked_files()
+      const workspace_selected_files =
+        this._workspace_provider.get_selected_files()
+      const open_editors_selected_files =
+        this._open_editors_provider.get_selected_files()
 
       const open_editor_uris = this.get_open_editor_uris()
       const open_editor_paths = open_editor_uris.map((uri) => uri.fsPath)
 
       if (this._synchronizing_provider == 'workspace') {
         for (const file of open_editor_paths) {
-          const is_checked_in_workspace =
-            this.is_file_checked_in_workspace(file)
-          const is_checked_in_open_editors =
-            open_editors_checked_files.includes(file)
+          const is_selected_in_workspace =
+            this.is_file_selected_in_workspace(file)
+          const is_selected_in_open_editors =
+            open_editors_selected_files.includes(file)
 
-          if (is_checked_in_workspace !== is_checked_in_open_editors) {
+          if (is_selected_in_workspace !== is_selected_in_open_editors) {
             await this.update_file_in_open_editors(
               file,
-              is_checked_in_workspace
+              is_selected_in_workspace
             )
 
-            if (is_checked_in_workspace) {
-              this._unchecked_in_open_editors.delete(file)
+            if (is_selected_in_workspace) {
+              this._unselected_in_open_editors.delete(file)
             } else {
-              // Only track as explicitly unchecked if it was checked before
-              if (open_editors_checked_files.includes(file)) {
-                this._unchecked_in_open_editors.add(file)
+              // Only track as explicitly unselected if it was selected before
+              if (open_editors_selected_files.includes(file)) {
+                this._unselected_in_open_editors.add(file)
               }
             }
           }
@@ -155,46 +155,46 @@ export class SharedContextState {
       } else if (this._synchronizing_provider == 'openEditors') {
         const open_editor_paths_set = new Set(open_editor_paths)
 
-        const preserved_workspace_checked_files =
-          workspace_checked_files.filter(
+        const preserved_workspace_selected_files =
+          workspace_selected_files.filter(
             (file) => !open_editor_paths_set.has(file)
           )
 
-        const new_workspace_checked_files = [
-          ...preserved_workspace_checked_files,
-          ...open_editors_checked_files
+        const new_workspace_selected_files = [
+          ...preserved_workspace_selected_files,
+          ...open_editors_selected_files
         ]
 
-        await this._workspace_provider.set_checked_files(
-          new_workspace_checked_files
+        await this._workspace_provider.set_selected_files(
+          new_workspace_selected_files
         )
       } else {
         for (const file of open_editor_paths) {
-          const is_checked_in_workspace =
-            this.is_file_checked_in_workspace(file)
-          const is_checked_in_open_editors =
-            open_editors_checked_files.includes(file)
+          const is_selected_in_workspace =
+            this.is_file_selected_in_workspace(file)
+          const is_selected_in_open_editors =
+            open_editors_selected_files.includes(file)
 
-          if (is_checked_in_workspace !== is_checked_in_open_editors) {
+          if (is_selected_in_workspace !== is_selected_in_open_editors) {
             await this.update_file_in_open_editors(
               file,
-              is_checked_in_workspace
+              is_selected_in_workspace
             )
           }
         }
 
-        for (const file of open_editors_checked_files) {
-          if (!workspace_checked_files.includes(file)) {
-            await this.update_file_check_state_in_workspace(file, true)
+        for (const file of open_editors_selected_files) {
+          if (!workspace_selected_files.includes(file)) {
+            await this.update_file_checkbox_state_in_workspace(file, true)
           }
         }
       }
 
-      this.update_checked_files_set()
+      this.update_selected_files_set()
 
-      this._on_did_change_checked_files.fire()
+      this._on_did_change_selected_files.fire()
 
-      const curr_files = Array.from(this._checked_files).sort()
+      const curr_files = Array.from(this._selected_files).sort()
 
       if (!this._is_undoing_redoing && this._is_initialized) {
         if (JSON.stringify(prev_files) !== JSON.stringify(curr_files)) {
@@ -206,12 +206,13 @@ export class SharedContextState {
     }
   }
 
-  private is_file_checked_in_workspace(file_path: string): boolean {
+  private is_file_selected_in_workspace(file_path: string): boolean {
     if (!this._workspace_provider) return false
 
-    const workspace_checked_files = this._workspace_provider.get_checked_files()
+    const workspace_selected_files =
+      this._workspace_provider.get_selected_files()
 
-    if (workspace_checked_files.includes(file_path)) {
+    if (workspace_selected_files.includes(file_path)) {
       return true
     }
 
@@ -223,7 +224,7 @@ export class SharedContextState {
 
     let current_dir = path.dirname(file_path)
     while (current_dir.startsWith(workspace_root)) {
-      if (workspace_checked_files.includes(current_dir)) {
+      if (workspace_selected_files.includes(current_dir)) {
         return true
       }
       current_dir = path.dirname(current_dir)
@@ -272,10 +273,10 @@ export class SharedContextState {
       isWorkspaceRoot: false
     }
 
-    await this._open_editors_provider.update_check_state(fake_item, state)
+    await this._open_editors_provider.update_checkbox_state(fake_item, state)
   }
 
-  private async update_file_check_state_in_workspace(
+  private async update_file_checkbox_state_in_workspace(
     file_path: string,
     checked: boolean
   ): Promise<void> {
@@ -303,39 +304,40 @@ export class SharedContextState {
       contextValue: 'file'
     }
 
-    await this._workspace_provider.update_check_state(fake_item, state)
+    await this._workspace_provider.update_checkbox_state(fake_item, state)
   }
 
-  private update_checked_files_set() {
+  private update_selected_files_set() {
     if (!this._workspace_provider || !this._open_editors_provider) return
 
-    const workspace_checked_files = this._workspace_provider.get_checked_files()
-    const open_editors_checked_files =
-      this._open_editors_provider.get_checked_files()
+    const workspace_selected_files =
+      this._workspace_provider.get_selected_files()
+    const open_editors_selected_files =
+      this._open_editors_provider.get_selected_files()
 
-    this._checked_files = new Set([
-      ...workspace_checked_files,
-      ...open_editors_checked_files
+    this._selected_files = new Set([
+      ...workspace_selected_files,
+      ...open_editors_selected_files
     ])
   }
 
-  get_checked_files(): string[] {
-    return Array.from(this._checked_files)
+  get_selected_files(): string[] {
+    return Array.from(this._selected_files)
   }
 
   async update_checked_file(file_path: string, is_checked: boolean) {
     if (is_checked) {
-      this._checked_files.add(file_path)
-      this._unchecked_in_open_editors.delete(file_path)
-      this._unchecked_in_workspace.delete(file_path)
+      this._selected_files.add(file_path)
+      this._unselected_in_open_editors.delete(file_path)
+      this._unselected_in_workspace.delete(file_path)
     } else {
-      this._checked_files.delete(file_path)
+      this._selected_files.delete(file_path)
     }
 
     await this.synchronize_state()
   }
 
   dispose() {
-    this._on_did_change_checked_files.dispose()
+    this._on_did_change_selected_files.dispose()
   }
 }

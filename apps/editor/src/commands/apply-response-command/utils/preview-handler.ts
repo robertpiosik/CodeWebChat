@@ -150,8 +150,8 @@ export const preview_handler = async (params: {
       }
 
       const selected_files_by_workspace = new Map<string, string[]>()
-      const checked_files = params.workspace_provider.get_checked_files()
-      for (const file of checked_files) {
+      const selected_files = params.workspace_provider.get_selected_files()
+      for (const file of selected_files) {
         const workspace_root =
           params.workspace_provider.get_workspace_root_for_file(file)
         if (workspace_root) {

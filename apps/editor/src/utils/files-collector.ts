@@ -25,9 +25,9 @@ export namespace FilesCollector {
 
     const context_files_list: string[] = []
 
-    const workspace_files = params.workspace_provider.get_checked_files()
+    const workspace_files = params.workspace_provider.get_selected_files()
     const open_editor_files =
-      params.open_editors_provider?.get_checked_files() || []
+      params.open_editors_provider?.get_selected_files() || []
     context_files_list.push(
       ...workspace_files,
       ...open_editor_files,

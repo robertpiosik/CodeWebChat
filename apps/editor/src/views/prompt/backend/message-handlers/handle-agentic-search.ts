@@ -42,8 +42,8 @@ export const handle_agentic_search = async (
 
     if (!result || result === 'back') return
 
-    const currently_checked =
-      prompt_view_provider.workspace_provider.get_checked_files()
+    const currently_selected =
+      prompt_view_provider.workspace_provider.get_selected_files()
 
     const unchecked_paths = result.matched_paths.filter(
       (file_path) => !result.selected_paths.includes(file_path)
@@ -51,12 +51,12 @@ export const handle_agentic_search = async (
 
     const paths_to_apply = [
       ...new Set([
-        ...currently_checked.filter((p) => !unchecked_paths.includes(p)),
+        ...currently_selected.filter((p) => !unchecked_paths.includes(p)),
         ...result.selected_paths
       ])
     ]
 
-    await prompt_view_provider.workspace_provider.set_checked_files(
+    await prompt_view_provider.workspace_provider.set_selected_files(
       paths_to_apply
     )
 

@@ -7,7 +7,7 @@ export const get_selected_files = (params: {
   workspace_provider: WorkspaceProvider
   shared_context_state: SharedContextState
 }): string[] => {
-  const selected_files = params.shared_context_state.get_checked_files()
+  const selected_files = params.shared_context_state.get_selected_files()
   const is_multi_root =
     params.workspace_provider.get_workspace_roots().length > 1
   const file_paths: string[] = []

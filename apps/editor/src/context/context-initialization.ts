@@ -7,8 +7,8 @@ import { OpenEditorsProvider } from './providers/open-editors/open-editors-provi
 import { SharedContextState } from './shared-context-state'
 import { EventEmitter } from 'events'
 import {
-  CONTEXT_CHECKED_PATHS_STATE_KEY,
-  CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
+  CONTEXT_SELECTED_PATHS_STATE_KEY,
+  CONTEXT_SELECTED_TIMESTAMPS_STATE_KEY,
   DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY,
   RANGES_STATE_KEY,
   type DuplicateWorkspaceContext
@@ -53,13 +53,13 @@ const restore_duplicated_workspace_context = async (
         )
       if (are_workspaces_the_same) {
         await extension_context.workspaceState.update(
-          CONTEXT_CHECKED_PATHS_STATE_KEY,
-          duplicated_context.checked_files
+          CONTEXT_SELECTED_PATHS_STATE_KEY,
+          duplicated_context.selected_files
         )
 
         await extension_context.workspaceState.update(
-          CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
-          duplicated_context.checked_files_timestamps
+          CONTEXT_SELECTED_TIMESTAMPS_STATE_KEY,
+          duplicated_context.selected_files_timestamps
         )
 
         if (duplicated_context.ranges) {
@@ -127,7 +127,7 @@ export const context_initialization = async (
     let context_token_count = 0
     if (selected_files_provider && selected_files_view) {
       const token_counts =
-        await workspace_provider.get_checked_files_token_count()
+        await workspace_provider.get_selected_files_token_count()
       const files_count = token_counts.total
       context_token_count = files_count
 
@@ -153,7 +153,7 @@ export const context_initialization = async (
   ) => {
     view.onDidChangeCheckboxState(async (e) => {
       for (const [item, state] of e.items) {
-        await workspace_provider!.update_check_state(item, state)
+        await workspace_provider!.update_checkbox_state(item, state)
       }
     })
 
@@ -259,8 +259,8 @@ export const context_initialization = async (
       }
     ),
     vscode.commands.registerCommand('codeWebChat.clearChecks', async () => {
-      await workspace_provider!.clear_checks()
-      open_editors_provider!.clear_checks()
+      await workspace_provider!.clear_selected_files()
+      open_editors_provider!.clear_selected_files()
     }),
     vscode.commands.registerCommand('codeWebChat.selectAllFiles', async () => {
       const all_files: string[] = []
@@ -268,12 +268,12 @@ export const context_initialization = async (
         const files = await workspace_provider.find_all_files(root)
         all_files.push(...files)
       }
-      await workspace_provider.set_checked_files(all_files)
+      await workspace_provider.set_selected_files(all_files)
     }),
     vscode.commands.registerCommand(
       'codeWebChat.checkAllOpenEditors',
       async () => {
-        await open_editors_provider!.check_all()
+        await open_editors_provider!.select_all()
       }
     ),
     vscode.commands.registerCommand(
@@ -291,15 +291,15 @@ export const context_initialization = async (
 
   open_editors_view.onDidChangeCheckboxState(async (e) => {
     for (const [item, state] of e.items) {
-      await open_editors_provider!.update_check_state(item, state)
+      await open_editors_provider!.update_checkbox_state(item, state)
     }
   })
 
   extension_context.subscriptions.push(
-    workspace_provider.onDidChangeCheckedFiles(() => {
+    workspace_provider.onDidChangeSelectedFiles(() => {
       update_view_badges()
     }),
-    open_editors_provider.onDidChangeCheckedFiles(() => {
+    open_editors_provider.onDidChangeSelectedFiles(() => {
       update_view_badges()
     }),
     workspace_provider.onDidChangeTreeData(() => {

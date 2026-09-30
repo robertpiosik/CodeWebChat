@@ -177,7 +177,7 @@ export const agentic_search = async (params: {
     while (true) {
       const selected_items = await show_search_results_quick_pick({
         matched_items: absolute_paths.map((path) => ({ path })),
-        unmatched_checked_paths: [],
+        unmatched_selected_paths: [],
         workspace_provider: params.workspace_provider,
         title: t('views.prompt.handlers.handle-agentic-search.results'),
         show_back_button: true,

@@ -22,6 +22,6 @@
 +    this._workspace_names = params.workspace_folders.map(
 +      (folder) => folder.name
 +    )
-     this.onDidChangeCheckedFiles(() => this._save_checked_files_state())
+     this.onDidChangeCheckedFiles(() => this._save_selected_files_state())
      this._token_calculator = new TokenCalculator(this, this._context)
      this._load_ignore_patterns()

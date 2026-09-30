@@ -10,7 +10,7 @@ import { display_token_count } from '@shared/utils/display-token-count'
 
 export const show_search_results_quick_pick = async (params: {
   matched_items: { path: string; checked?: boolean }[]
-  unmatched_checked_paths: string[]
+  unmatched_selected_paths: string[]
   workspace_provider: WorkspaceProvider
   title: string
   show_back_button: boolean
@@ -49,7 +49,7 @@ export const show_search_results_quick_pick = async (params: {
     tooltip: t('common.search-in-selected-results')
   }
 
-  const currently_checked = params.workspace_provider.get_checked_files()
+  const currently_selected = params.workspace_provider.get_selected_files()
   const is_multi_root =
     params.workspace_provider.get_workspace_roots().length > 1
 
@@ -67,9 +67,9 @@ export const show_search_results_quick_pick = async (params: {
     workspace_provider: params.workspace_provider
   }) as (vscode.QuickPickItem & { file_path?: string; checked?: boolean })[]
 
-  if (params.unmatched_checked_paths.length > 0) {
+  if (params.unmatched_selected_paths.length > 0) {
     const mapped_unmatched_items = await map_files_to_quick_pick_items({
-      files: params.unmatched_checked_paths.map((path) => ({ path })),
+      files: params.unmatched_selected_paths.map((path) => ({ path })),
       is_multi_root,
       workspace_provider: params.workspace_provider,
       open_file_button,
@@ -95,13 +95,13 @@ export const show_search_results_quick_pick = async (params: {
     if (params.restored_selected_paths) {
       return params.restored_selected_paths.includes(item.file_path)
     }
-    if (params.unmatched_checked_paths.includes(item.file_path)) {
+    if (params.unmatched_selected_paths.includes(item.file_path)) {
       return false
     }
     if (item.checked !== undefined) {
       return item.checked
     }
-    return currently_checked.includes(item.file_path)
+    return currently_selected.includes(item.file_path)
   })
   quick_pick.canSelectMany = true
   quick_pick.matchOnDescription = true
@@ -163,7 +163,7 @@ export const show_search_results_quick_pick = async (params: {
           action: 'search-in-results',
           matched_paths: selected,
           selected_paths: selected,
-          unmatched_paths: params.unmatched_checked_paths
+          unmatched_paths: params.unmatched_selected_paths
         })
         quick_pick.hide()
       } else if (button === close_button) {
@@ -181,7 +181,7 @@ export const show_search_results_quick_pick = async (params: {
           .filter((p): p is string => p !== undefined),
         matched_paths: [
           ...params.matched_items.map((m) => m.path),
-          ...params.unmatched_checked_paths
+          ...params.unmatched_selected_paths
         ],
         title: params.title
       })

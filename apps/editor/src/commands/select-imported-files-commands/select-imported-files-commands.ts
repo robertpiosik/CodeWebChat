@@ -47,28 +47,28 @@ export const select_imported_files_commands = (
         })
 
         if (result) {
-          const final_checked = workspace_provider.get_checked_files()
+          const selected_files = workspace_provider.get_selected_files()
           const paths_to_apply = [
             ...new Set([
-              ...final_checked.filter((p) => !result.shown_paths.includes(p)),
+              ...selected_files.filter((p) => !result.shown_paths.includes(p)),
               ...result.selected_paths
             ])
           ]
-          await workspace_provider.set_checked_files(paths_to_apply)
+          await workspace_provider.set_selected_files(paths_to_apply)
         }
       }
     ),
     vscode.commands.registerCommand(
       'codeWebChat.selectImportedFilesForSelected',
       async () => {
-        const checked_files = workspace_provider.get_checked_files()
+        const selected_files = workspace_provider.get_selected_files()
 
-        if (checked_files.length == 0) {
+        if (selected_files.length == 0) {
           vscode.window.showInformationMessage(t('common.info.no-files-found'))
           return
         }
 
-        const starting_uris = checked_files.map((file_path) =>
+        const starting_uris = selected_files.map((file_path) =>
           vscode.Uri.file(file_path)
         )
 
@@ -80,14 +80,14 @@ export const select_imported_files_commands = (
         })
 
         if (result) {
-          const final_checked = workspace_provider.get_checked_files()
+          const selected_files = workspace_provider.get_selected_files()
           const paths_to_apply = [
             ...new Set([
-              ...final_checked.filter((p) => !result.shown_paths.includes(p)),
+              ...selected_files.filter((p) => !result.shown_paths.includes(p)),
               ...result.selected_paths
             ])
           ]
-          await workspace_provider.set_checked_files(paths_to_apply)
+          await workspace_provider.set_selected_files(paths_to_apply)
         }
       }
     )
