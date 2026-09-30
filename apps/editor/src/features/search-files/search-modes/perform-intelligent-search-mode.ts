@@ -423,7 +423,7 @@ export const perform_intelligent_search_mode = async (params: {
             ? default_agent.name
             : undefined
 
-          const cli_prompt = `# Files\n\n${md_files}# Task\n\n${base_instructions}\n\n# Output formatting\n\n${ai_file_search_format_instructions}\n\n# Requirements\n\n- ${cli_edit_ask_requirements.preloaded_context}\n- ${cli_edit_ask_requirements.restrict_shell_commands}\n\n# Query\n\n${search_term}`
+          const cli_prompt = `# Files\n\n${md_files}# Task\n\n${base_instructions}\n\n# Output formatting\n\n${ai_file_search_format_instructions}\n\n# Requirements\n\n- ${cli_edit_ask_requirements.preloaded_context}\n- ${cli_edit_ask_requirements.disable_tool_calling}\n\n# Query\n\n${search_term}`
 
           const invoke_cli_result = await invoke_agentic_cli({
             workspace_provider: params.workspace_provider,

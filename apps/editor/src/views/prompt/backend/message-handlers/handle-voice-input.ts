@@ -213,7 +213,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
         )
         await fs.promises.writeFile(temp_audio_path, audio_buffer)
 
-        const cli_prompt = `# Task\n\n${voice_input_instructions}\n\nAudio file: \`${temp_audio_path.replace(/\\/g, '/')}\`\n\n# Requirements\n\n- ${cli_edit_ask_requirements.restrict_shell_commands}\n- ${cli_edit_ask_requirements.exception_read_audio}`
+        const cli_prompt = `# Task\n\n${voice_input_instructions}\n\nAudio file: \`${temp_audio_path.replace(/\\/g, '/')}\`\n\n# Requirements\n\n- ${cli_edit_ask_requirements.disable_tool_calling}\n- ${cli_edit_ask_requirements.exception_read_audio}`
 
         const invoke_cli_result = await invoke_agentic_cli({
           workspace_provider: prompt_view_provider.workspace_provider,

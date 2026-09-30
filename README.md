@@ -150,7 +150,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 # Requirements
 
-- All project's files were preloaded to [files](#files). You cannot look for other files.
+- All project's files were preloaded to [files](#files). You must work strictly within the provided context.
 - Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
 
 # Query
@@ -195,7 +195,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 # Requirements
 
-- All project's files were preloaded to [files](#files). You cannot look for other files.
+- All project's files were preloaded to [files](#files). You must work strictly within the provided context.
 - Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
 - Exception: If [task](#task) includes *.png image paths, read them using the appropriate tool.
 - Exception: Perform file system operations (create, update, delete) required to complete the [task](#task).
@@ -236,7 +236,7 @@ _Explanations, planning, and analysis._
 
 # Requirements
 
-- All project's files were preloaded to [files](#files). You cannot look for other files.
+- All project's files were preloaded to [files](#files). You must work strictly within the provided context.
 - Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
 - Exception: If [task](#task) includes *.png image paths, read them using the appropriate tool.
 
@@ -327,7 +327,7 @@ Example:
 
 # Requirements
 
-- All project's files were preloaded to [files](#files). You cannot look for other files.
+- All project's files were preloaded to [files](#files). You must work strictly within the provided context.
 - Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
 
 # Task
@@ -387,7 +387,7 @@ Your response must begin with "**Commit message:**", then proceed with the messa
 
 # Requirements
 
-- All project's files were preloaded to [files](#files). You cannot look for other files.
+- All project's files were preloaded to [files](#files). You must work strictly within the provided context.
 - Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
 
 # Task

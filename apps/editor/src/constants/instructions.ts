@@ -70,13 +70,13 @@ export const voice_input_instructions =
 
 export const cli_edit_ask_requirements = {
   preloaded_context:
-    "All project's files were preloaded to [files](#files). You cannot look for other files.",
-  restrict_shell_commands:
+    'All available files were preloaded to [files](#files). You must work strictly within the provided context.',
+  disable_tool_calling:
     'Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.',
   exception_read_images:
     'Exception: If [task](#task) includes *.png image paths, read them using the appropriate tool.',
-  exception_allow_file_system_operations:
-    'Exception: Perform file system operations (create, update, delete) required to complete the [task](#task).',
   exception_read_audio:
-    'Exception: If [task](#task) includes *.wav audio file paths, read them using the appropriate tool.'
+    'Exception: If [task](#task) includes *.wav audio file paths, read them using the appropriate tool.',
+  exception_allow_file_system_operations:
+    'Exception: Perform file system operations (create, update, delete) required to complete the [task](#task).'
 }
