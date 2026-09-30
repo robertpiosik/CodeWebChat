@@ -310,21 +310,6 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
           is_disabled={props.api_configurations.length === 0}
         >
           <DefaultConfigurationSelector
-            title={t('api.default-configurations.tool.patch-repair')}
-            value={props.defaults['patch-repair'] || null}
-            configurations={selector_configurations}
-            on_unset={() =>
-              props.on_set_default_api_configuration('patch-repair', null)
-            }
-            on_select={() =>
-              props.on_select_default_api_configuration('patch-repair')
-            }
-            translations={{
-              select: t('api.configurations.action.select-default'),
-              unset: t('api.configurations.action.unset-default')
-            }}
-          />
-          <DefaultConfigurationSelector
             title={t('api.default-configurations.tool.code-at-cursor')}
             value={props.defaults['code-at-cursor'] || null}
             configurations={selector_configurations}
@@ -339,7 +324,6 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               unset: t('api.configurations.action.unset-default')
             }}
           />
-
           <DefaultConfigurationSelector
             title={t('api.default-configurations.tool.voice-input')}
             value={props.defaults['voice-input'] || null}
@@ -355,7 +339,6 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               unset: t('api.configurations.action.unset-default')
             }}
           />
-
           <DefaultConfigurationSelector
             title={t('api.default-configurations.tool.intelligent-search')}
             value={props.defaults['intelligent-search'] || null}
@@ -365,6 +348,21 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }
             on_select={() =>
               props.on_select_default_api_configuration('intelligent-search')
+            }
+            translations={{
+              select: t('api.configurations.action.select-default'),
+              unset: t('api.configurations.action.unset-default')
+            }}
+          />
+          <DefaultConfigurationSelector
+            title={t('api.default-configurations.tool.patch-repair')}
+            value={props.defaults['patch-repair'] || null}
+            configurations={selector_configurations}
+            on_unset={() =>
+              props.on_set_default_api_configuration('patch-repair', null)
+            }
+            on_select={() =>
+              props.on_select_default_api_configuration('patch-repair')
             }
             translations={{
               select: t('api.configurations.action.select-default'),

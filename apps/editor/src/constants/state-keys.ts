@@ -64,6 +64,10 @@ export const LAST_USED_PATCH_REPAIR_CONFIG_ID_STATE_KEY =
   'last-used-patch-repair-config-id'
 export const LAST_USED_PATCH_REPAIR_ACTION_STATE_KEY =
   'last-used-patch-repair-action'
+export const LAST_SELECTED_WORKSPACE_FOR_PATCH_REPAIR_STATE_KEY =
+  'last-selected-workspace-for-patch-repair'
+export const LAST_USED_AGENT_FOR_PATCH_REPAIR_STATE_KEY =
+  'last-used-agent-for-patch-repair'
 export const LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY =
   'last-used-voice-input-config-id'
 

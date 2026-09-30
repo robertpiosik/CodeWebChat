@@ -217,6 +217,21 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               unset: t('agents.configurations.action.unset-default')
             }}
           />
+          <DefaultConfigurationSelector
+            title={t('cli.default-configurations.tool.patch-repair')}
+            value={props.agent_defaults['patch-repair'] || null}
+            configurations={selector_configurations}
+            on_unset={() =>
+              props.on_set_default_cli_configuration('patch-repair', null)
+            }
+            on_select={() =>
+              props.on_select_default_cli_configuration('patch-repair')
+            }
+            translations={{
+              select: t('agents.configurations.action.select-default'),
+              unset: t('agents.configurations.action.unset-default')
+            }}
+          />
         </UiGroup>
       </div>
     </UiSection>

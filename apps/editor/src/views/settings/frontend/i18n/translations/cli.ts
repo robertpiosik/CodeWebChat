@@ -71,6 +71,24 @@ export const translations = {
     hu: 'Intelligens keresés',
     bg: 'Интелигентно търсене'
   },
+  'cli.default-configurations.tool.patch-repair': {
+    en: 'Patch Repair',
+    pl: 'Naprawa patchy',
+    'zh-cn': '补丁修复',
+    ja: 'パッチ修復',
+    'zh-tw': '修補程式修復',
+    de: 'Patch Repair',
+    es: 'Reparación de Parches',
+    fr: 'Réparation de correctifs',
+    'pt-br': 'Reparo de Patch',
+    ru: 'Исправление патчей',
+    ko: '패치 복구',
+    it: 'Riparazione Patch',
+    tr: 'Yama Onarımı',
+    cs: 'Oprava záplat',
+    hu: 'Javítás helyreállítása',
+    bg: 'Поправка на пачове'
+  },
   'agents.configurations.action.select-default': {
     en: 'Select default agent',
     pl: 'Wybierz domyślnego agenta',

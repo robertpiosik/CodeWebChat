@@ -75,6 +75,12 @@ export const handle_select_default_cli_configuration = async (
           } else {
             delete new_c.isDefaultForIntelligentSearch
           }
+        } else if (message.cli_feature == 'patch-repair') {
+          if (c.name == selected.cli_configuration_name) {
+            new_c.isDefaultForPatchRepair = true
+          } else {
+            delete new_c.isDefaultForPatchRepair
+          }
         }
         return new_c
       })

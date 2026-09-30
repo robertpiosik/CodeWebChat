@@ -4,7 +4,9 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import {
   LAST_APPLIED_CHANGES_STATE_KEY,
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
-  LAST_USED_PATCH_REPAIR_ACTION_STATE_KEY
+  LAST_USED_PATCH_REPAIR_ACTION_STATE_KEY,
+  LAST_SELECTED_WORKSPACE_FOR_PATCH_REPAIR_STATE_KEY,
+  LAST_USED_AGENT_FOR_PATCH_REPAIR_STATE_KEY
 } from '@/constants/state-keys'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import { parse_response } from '@/commands/apply-response-command/utils/response-parser'
@@ -23,9 +25,11 @@ import { show_configurations_quick_pick } from '@/utils/show-configurations-quic
 import { get_last_used_web_configuration_key } from '@/constants/state-keys'
 import {
   patch_repair_format_instructions,
-  patch_repair_task_instructions
+  patch_repair_task_instructions,
+  cli_edit_ask_requirements
 } from '@/constants/instructions'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
+import { invoke_agentic_cli } from '@/utils/agentic-cli-invocation'
 
 export const handle_patch_repair = async (params: {
   prompt_view_provider: PromptViewProvider
@@ -157,6 +161,10 @@ export const handle_patch_repair = async (params: {
           label: t('common.action.send-request'),
           id: 'make-api'
         },
+        {
+          label: t('common.action.invoke-agent'),
+          id: 'invoke-agent'
+        },
         ...(params.prompt_view_provider.websocket_server_instance.is_connected_with_browser()
           ? [
               {
@@ -232,6 +240,74 @@ export const handle_patch_repair = async (params: {
 
   if (action == 'apply-from-clipboard') {
     await vscode.commands.executeCommand('codeWebChat.applyResponse')
+    return
+  }
+
+  if (action == 'invoke-agent') {
+    let cli_prompt = ''
+    for (const item of files_to_process) {
+      const backticks = item.file_state.content.includes('```') ? '````' : '```'
+      const display_path =
+        !is_single_root_folder_workspace && item.file_state.workspace_name
+          ? `${item.file_state.workspace_name}/${item.file_state.file_path}`
+          : item.file_state.file_path
+      cli_prompt += `# File: \`${display_path}\`\n\n${backticks}\n${item.file_state.content}\n${backticks}\n\n${item.instructions}\n\n`
+    }
+    cli_prompt += `# Output formatting\n\n`
+    cli_prompt += `${patch_repair_format_instructions}\n\n`
+    cli_prompt += `# Requirements\n\n- ${cli_edit_ask_requirements.preloaded_context}\n- ${cli_edit_ask_requirements.restrict_shell_commands}\n\n`
+    cli_prompt += `# Task\n\n${patch_repair_task_instructions}`
+
+    const config_codeWebChat = vscode.workspace.getConfiguration('codeWebChat')
+    const agent_configs = config_codeWebChat.get<any[]>('agents', []) || []
+    const default_agent = agent_configs.find(
+      (c: any) => c.isDefaultForPatchRepair
+    )
+
+    const use_quick_pick = !default_agent
+    const cli_configuration_name = default_agent
+      ? default_agent.name
+      : undefined
+
+    const invoke_cli_result = await invoke_agentic_cli({
+      workspace_provider: params.prompt_view_provider.workspace_provider,
+      extension_context: params.prompt_view_provider.extension_context,
+      build_prompt: async () => cli_prompt,
+      notification_title: 'Patch Repair',
+      last_selected_workspace_state_key:
+        LAST_SELECTED_WORKSPACE_FOR_PATCH_REPAIR_STATE_KEY,
+      last_used_agent_config_name:
+        params.prompt_view_provider.extension_context.workspaceState.get<string>(
+          LAST_USED_AGENT_FOR_PATCH_REPAIR_STATE_KEY
+        ),
+      cli_configuration_name,
+      use_quick_pick,
+      on_agent_selected: (name) => {
+        params.prompt_view_provider.extension_context.workspaceState.update(
+          LAST_USED_AGENT_FOR_PATCH_REPAIR_STATE_KEY,
+          name
+        )
+        params.prompt_view_provider.extension_context.globalState.update(
+          LAST_USED_AGENT_FOR_PATCH_REPAIR_STATE_KEY,
+          name
+        )
+      },
+      show_back_button: true,
+      isolate_in_temp_dir: true,
+      agent_args_type: 'isolated-dir'
+    })
+
+    if (invoke_cli_result === 'back') {
+      return handle_patch_repair({ ...params, show_quick_pick: true })
+    }
+
+    if (!invoke_cli_result) {
+      return
+    }
+
+    await vscode.commands.executeCommand('codeWebChat.applyResponse', {
+      response: invoke_cli_result.agent_output
+    })
     return
   }
 

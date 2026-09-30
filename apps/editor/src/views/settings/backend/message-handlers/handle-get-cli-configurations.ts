@@ -26,7 +26,10 @@ export const handle_get_cli_configurations = async (
       'intelligent-search':
         cli_configurations_config.find(
           (c: any) => c.isDefaultForIntelligentSearch
-        )?.name || null
+        )?.name || null,
+      'patch-repair':
+        cli_configurations_config.find((c: any) => c.isDefaultForPatchRepair)
+          ?.name || null
     }
   })
 }
