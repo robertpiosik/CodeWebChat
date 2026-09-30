@@ -128,6 +128,37 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 </details>
 
+<details>
+<summary>AGENT</summary>
+
+```
+# Files
+
+[WORKSPACE FILES, A FOLDER OR SELECTED FILES]
+
+# Task
+
+Among the attached files, find the complete set of primary and structural files relevant to the query.
+
+# Output formatting
+
+Output strictly as a bulleted list of file paths without explanations or any other text. Example:
+
+- `src/index.ts`
+- `src/greetings/hello.ts`
+- `src/greetings/welcome.ts`
+
+# Requirements
+
+- Modifying the file system or running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.
+
+# Query
+
+[INSTRUCTIONS]
+```
+
+</details>
+
 ### 📄 Editing
 
 _New features, bug fixes, and refactors._
@@ -270,6 +301,37 @@ Find correct replacement text for the <missing_text> symbol.
 
 </details>
 
+<details>
+<summary>AGENT</summary>
+
+````
+# Files
+
+[SELECTED FILES]
+
+### File: `[ACTIVE FILE PATH]`
+
+```
+[PREFIX]<missing_text>[INSTRUCTIONS]</missing_text>[SUFFIX]
+```
+
+# Output formatting
+
+Respond with replacement text within "replacement" XML tags, without explanations or any other text.
+Example:
+<replacement>!== undefined</replacement>
+
+# Requirements
+
+- Modifying the file system or running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.
+
+# Task
+
+Find correct replacement text for the <missing_text> symbol.
+````
+
+</details>
+
 ### 📄 Commit messages
 
 _Summaries based on staged changes and context files._
@@ -292,6 +354,35 @@ _Summaries based on staged changes and context files._
 Your response must begin with "**Commit message:**", then proceed with the message. Example:
 
 **Commit message:** Bump version to 1.0.1
+
+# Task
+
+Write a brief and precise summary for the changes, limited to a single sentence. Because the summary will be used for a commit message, don't use any markdown formatting and don't include a trailing dot. Use an imperative tone to ensure clarity and focus on the primary change or purpose.
+```
+
+</details>
+
+<details>
+<summary>AGENT</summary>
+
+```
+# Files
+
+[SELECTED FILES WHEN EDITS WERE ACCEPTED]
+
+# Changes
+
+[STAGED CHANGES]
+
+# Output formatting
+
+Your response must begin with "**Commit message:**", then proceed with the message. Example:
+
+**Commit message:** Bump version to 1.0.1
+
+# Requirements
+
+- Modifying the file system or running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.
 
 # Task
 

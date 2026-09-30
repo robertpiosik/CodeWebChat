@@ -77,20 +77,19 @@ export const build_cli_prompt = async (params: {
   const requirements_list = [cli_edit_ask_requirements.preloaded_context]
 
   if (prompt_view_provider.cli_prompt_type == 'edit-files') {
+    requirements_list.push(cli_edit_ask_requirements.exception_read_images)
     requirements_list.push(
-      cli_edit_ask_requirements.restrict_tool_calls_with_exceptions
+      cli_edit_ask_requirements.exception_allow_file_system_operations
     )
   } else {
-    requirements_list.push(cli_edit_ask_requirements.read_images)
     requirements_list.push(cli_edit_ask_requirements.restrict_shell_commands)
+    requirements_list.push(cli_edit_ask_requirements.exception_read_images)
   }
-
-  const requirements = requirements_list.map((r) => `- ${r}`).join('\n')
 
   const build_result = PromptBuilder.build_prompt({
     files_context,
     skill_definitions,
-    requirements,
+    requirements: requirements_list,
     user_instructions: processed_query
   })
 

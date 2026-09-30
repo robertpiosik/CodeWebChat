@@ -69,11 +69,11 @@ export const voice_input_instructions =
   'Respond with a transcription of the following audio recording or text "INAUDIBLE", and nothing else.'
 
 export const cli_edit_ask_requirements = {
-  preloaded_context:
-    "All project's files were preloaded to [files](#files). If [task](#task) includes *.png image paths, read them using the appropriate tool.",
-  read_images: 'You may only use tools to read images from [task](#task).',
+  preloaded_context: "All project's files were preloaded to [files](#files).",
   restrict_shell_commands:
-    'Modifying the file system or running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.',
-  restrict_tool_calls_with_exceptions:
-    'You may only perform file operations (create, update, delete) required to complete the [task](#task); running any shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.'
+    'Calling tools, including shell commands (grep, glob, ls, git, etc.) is FORBIDDEN.',
+  exception_read_images:
+    'Exception: If [task](#task) includes *.png image paths, read them using the appropriate tool.',
+  exception_allow_file_system_operations:
+    'Exception: Perform file system operations (create, update, delete) required to complete the [task](#task).'
 }
