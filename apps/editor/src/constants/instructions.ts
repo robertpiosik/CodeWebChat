@@ -66,7 +66,7 @@ These files contain the core greeting logic and module exports.`
 }
 
 export const voice_input_instructions =
-  'Respond with a transcription of the following audio recording or text INAUDIBLE, and nothing else.'
+  'Respond with a transcription of the following audio recording or word INAUDIBLE, and nothing else.'
 
 export const cli_edit_ask_requirements = {
   preloaded_context:
