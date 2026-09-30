@@ -32,6 +32,9 @@ export const handle_get_cli_configurations = async (
           ?.name || null,
       'voice-input':
         cli_configurations_config.find((c: any) => c.isDefaultForVoiceInput)
+          ?.name || null,
+      'commit-message':
+        cli_configurations_config.find((c: any) => c.isDefaultForCommitMessage)
           ?.name || null
     }
   })

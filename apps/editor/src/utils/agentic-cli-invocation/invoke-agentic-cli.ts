@@ -27,16 +27,16 @@ export const invoke_agentic_cli = async (params: {
   build_prompt: (selected_root: string) => Promise<string>
   notification_title: string
   last_selected_workspace_state_key: string
-  on_agent_selected: (name: string) => void
-  last_used_agent_config_name?: string
+  agent_state_key?: string
+  on_agent_selected?: (name: string) => void
   show_back_button?: boolean
   isolate_in_temp_dir?: boolean
   copy_selected_files?: boolean
-  run_in_terminal?: boolean
   generate_diff_for_temp_dir?: boolean
   execution_mode?: 'headless' | 'interactive-terminal'
   cli_configuration_name?: string
   use_quick_pick?: boolean
+  default_agent_key?: keyof ConfigAgentConfigurationFormat
 }): Promise<
   { agent_output: string; selected_root: string } | undefined | 'back'
 > => {
@@ -51,6 +51,7 @@ export const invoke_agentic_cli = async (params: {
 
   let current_agent_config_name = params.cli_configuration_name
   let show_quick_pick = params.use_quick_pick
+  const execution_mode = params.execution_mode ?? 'headless'
 
   while (true) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -62,6 +63,22 @@ export const invoke_agentic_cli = async (params: {
         t('utils.agentic-cli-invocation.info.no-agents')
       )
       return undefined
+    }
+
+    if (
+      current_agent_config_name === undefined &&
+      show_quick_pick === undefined &&
+      params.default_agent_key
+    ) {
+      const default_agent = agents_config.find(
+        (c) => c[params.default_agent_key!]
+      )
+      if (default_agent) {
+        current_agent_config_name = default_agent.name
+        show_quick_pick = false
+      } else {
+        show_quick_pick = true
+      }
     }
 
     const close_button = {
@@ -86,7 +103,15 @@ export const invoke_agentic_cli = async (params: {
         }
       }
     } else if (!show_quick_pick) {
-      const last_used = params.last_used_agent_config_name
+      const last_used = params.agent_state_key
+        ? (params.extension_context.workspaceState.get<string>(
+            params.agent_state_key
+          ) ??
+          params.extension_context.globalState.get<string>(
+            params.agent_state_key
+          ))
+        : undefined
+
       if (last_used) {
         const config_item = agents_config.find((c) => c.name === last_used)
         if (config_item) {
@@ -163,7 +188,15 @@ export const invoke_agentic_cli = async (params: {
       const agent_quick_pick = vscode.window.createQuickPick<AgentPickItem>()
       agent_quick_pick.items = build_agent_picks()
 
-      const last_used = params.last_used_agent_config_name
+      const last_used = params.agent_state_key
+        ? (params.extension_context.workspaceState.get<string>(
+            params.agent_state_key
+          ) ??
+          params.extension_context.globalState.get<string>(
+            params.agent_state_key
+          ))
+        : undefined
+
       if (last_used) {
         const active_item = agent_quick_pick.items.find(
           (i) => i.config_name == last_used
@@ -294,7 +327,20 @@ export const invoke_agentic_cli = async (params: {
     }
 
     if (selected_config_name) {
-      params.on_agent_selected(selected_config_name)
+      if (params.agent_state_key) {
+        params.extension_context.workspaceState.update(
+          params.agent_state_key,
+          selected_config_name
+        )
+        params.extension_context.globalState.update(
+          params.agent_state_key,
+          selected_config_name
+        )
+      }
+
+      if (params.on_agent_selected) {
+        params.on_agent_selected(selected_config_name)
+      }
     }
 
     let go_back_to_agent = false
@@ -479,13 +525,10 @@ export const invoke_agentic_cli = async (params: {
       )
       await fs.promises.writeFile(temp_prompt_path, final_prompt, 'utf-8')
 
-      if (params.run_in_terminal) {
-        const base_args =
-          params.execution_mode === 'interactive-terminal'
-            ? agent_info.get_integrated_terminal_args
-              ? agent_info.get_integrated_terminal_args({ cwd: selected_root })
-              : []
-            : agent_info.get_isolated_dir_args({ cwd: selected_root })
+      if (execution_mode === 'interactive-terminal') {
+        const base_args = agent_info.get_integrated_terminal_args
+          ? agent_info.get_integrated_terminal_args({ cwd: selected_root })
+          : []
 
         let args = [...base_args, ...custom_args]
 
@@ -518,10 +561,7 @@ export const invoke_agentic_cli = async (params: {
         terminal.show()
         terminal.sendText(command)
 
-        if (
-          params.execution_mode === 'interactive-terminal' &&
-          agent_info.get_post_integrated_terminal_args
-        ) {
+        if (agent_info.get_post_integrated_terminal_args) {
           const post_args = agent_info.get_post_integrated_terminal_args()
           const post_command_args = [
             executable,
@@ -557,14 +597,9 @@ export const invoke_agentic_cli = async (params: {
               return
             }
 
-            const base_args =
-              params.execution_mode === 'interactive-terminal'
-                ? agent_info.get_integrated_terminal_args
-                  ? agent_info.get_integrated_terminal_args({
-                      cwd: selected_root
-                    })
-                  : []
-                : agent_info.get_isolated_dir_args({ cwd: selected_root })
+            const base_args = agent_info.get_isolated_dir_args({
+              cwd: selected_root
+            })
 
             let args = [...base_args, ...custom_args]
 

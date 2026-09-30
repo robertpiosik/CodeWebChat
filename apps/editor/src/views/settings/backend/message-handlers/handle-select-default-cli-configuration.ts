@@ -87,6 +87,12 @@ export const handle_select_default_cli_configuration = async (
           } else {
             delete new_c.isDefaultForVoiceInput
           }
+        } else if (message.cli_feature == 'commit-message') {
+          if (c.name == selected.cli_configuration_name) {
+            new_c.isDefaultForCommitMessage = true
+          } else {
+            delete new_c.isDefaultForCommitMessage
+          }
         }
         return new_c
       })

@@ -11,6 +11,7 @@ export type ConfigAgentConfigurationFormat = {
   isDefaultForIntelligentSearch?: boolean
   isDefaultForPatchRepair?: boolean
   isDefaultForVoiceInput?: boolean
+  isDefaultForCommitMessage?: boolean
 }
 
 export const config_cli_configuration_to_ui_format = (

@@ -258,17 +258,6 @@ export const handle_patch_repair = async (params: {
     cli_prompt += `# Requirements\n\n- ${cli_edit_ask_requirements.disable_tool_calling}\n\n`
     cli_prompt += `# Task\n\n${patch_repair_task_instructions}`
 
-    const config_codeWebChat = vscode.workspace.getConfiguration('codeWebChat')
-    const agent_configs = config_codeWebChat.get<any[]>('agents', []) || []
-    const default_agent = agent_configs.find(
-      (c: any) => c.isDefaultForPatchRepair
-    )
-
-    const use_quick_pick = !default_agent
-    const cli_configuration_name = default_agent
-      ? default_agent.name
-      : undefined
-
     const invoke_cli_result = await invoke_agentic_cli({
       workspace_provider: params.prompt_view_provider.workspace_provider,
       extension_context: params.prompt_view_provider.extension_context,
@@ -276,25 +265,10 @@ export const handle_patch_repair = async (params: {
       notification_title: 'Patch Repair',
       last_selected_workspace_state_key:
         LAST_SELECTED_WORKSPACE_FOR_PATCH_REPAIR_STATE_KEY,
-      last_used_agent_config_name:
-        params.prompt_view_provider.extension_context.workspaceState.get<string>(
-          LAST_USED_AGENT_FOR_PATCH_REPAIR_STATE_KEY
-        ),
-      cli_configuration_name,
-      use_quick_pick,
-      on_agent_selected: (name) => {
-        params.prompt_view_provider.extension_context.workspaceState.update(
-          LAST_USED_AGENT_FOR_PATCH_REPAIR_STATE_KEY,
-          name
-        )
-        params.prompt_view_provider.extension_context.globalState.update(
-          LAST_USED_AGENT_FOR_PATCH_REPAIR_STATE_KEY,
-          name
-        )
-      },
+      agent_state_key: LAST_USED_AGENT_FOR_PATCH_REPAIR_STATE_KEY,
+      default_agent_key: 'isDefaultForPatchRepair',
       show_back_button: true,
-      isolate_in_temp_dir: true,
-      execution_mode: 'headless'
+      isolate_in_temp_dir: true
     })
 
     if (invoke_cli_result === 'back') {

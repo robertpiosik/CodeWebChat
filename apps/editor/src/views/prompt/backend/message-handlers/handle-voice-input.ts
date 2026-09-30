@@ -212,15 +212,6 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
       show_action_quick_pick = false
 
       if (current_action == 'invoke-agent') {
-        const agent_configs = config.get<any[]>('agents', []) || []
-        const default_agent = agent_configs.find(
-          (c: any) => c.isDefaultForVoiceInput
-        )
-        const use_quick_pick = !default_agent
-        const cli_configuration_name = default_agent
-          ? default_agent.name
-          : undefined
-
         const temp_audio_path = path.join(
           os.tmpdir(),
           `cwc-voice-input-${Date.now()}.wav`
@@ -238,21 +229,10 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
           ),
           last_selected_workspace_state_key:
             LAST_SELECTED_WORKSPACE_FOR_VOICE_INPUT_STATE_KEY,
-          last_used_agent_config_name:
-            prompt_view_provider.extension_context.workspaceState.get<string>(
-              LAST_USED_AGENT_FOR_VOICE_INPUT_STATE_KEY
-            ),
-          cli_configuration_name,
-          use_quick_pick,
-          on_agent_selected: (name) => {
-            prompt_view_provider.extension_context.workspaceState.update(
-              LAST_USED_AGENT_FOR_VOICE_INPUT_STATE_KEY,
-              name
-            )
-          },
+          agent_state_key: LAST_USED_AGENT_FOR_VOICE_INPUT_STATE_KEY,
+          default_agent_key: 'isDefaultForVoiceInput',
           show_back_button: true,
-          isolate_in_temp_dir: true,
-          execution_mode: 'headless'
+          isolate_in_temp_dir: true
         })
 
         if (invoke_cli_result === 'back') {

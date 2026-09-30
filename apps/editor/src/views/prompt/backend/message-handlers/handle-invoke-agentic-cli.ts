@@ -34,13 +34,6 @@ export const handle_invoke_agentic_cli = async (
 
   const prompt_type = prompt_view_provider.cli_prompt_type
   const last_used_key = get_last_used_cli_configuration_key(prompt_type)
-  const last_used_agent_config_name =
-    prompt_view_provider.extension_context.workspaceState.get<string>(
-      last_used_key
-    ) ??
-    prompt_view_provider.extension_context.globalState.get<string>(
-      last_used_key
-    )
 
   const result = await invoke_agentic_cli({
     workspace_provider: prompt_view_provider.workspace_provider,
@@ -48,27 +41,17 @@ export const handle_invoke_agentic_cli = async (
     notification_title: t(
       'views.prompt.handlers.handle-invoke-agentic-cli.title'
     ),
-    last_used_agent_config_name,
+    agent_state_key: last_used_key,
     last_selected_workspace_state_key:
       LAST_SELECTED_WORKSPACE_IN_AGENTIC_CLI_STATE_KEY,
     isolate_in_temp_dir: true,
     copy_selected_files: prompt_type == 'edit-files',
-    run_in_terminal: prompt_type == 'ask-about-files',
     generate_diff_for_temp_dir: prompt_type == 'edit-files',
     execution_mode:
       prompt_type == 'edit-files' ? 'headless' : 'interactive-terminal',
     cli_configuration_name: message.cli_configuration_name,
     use_quick_pick: message.use_quick_pick,
     on_agent_selected: (name: string) => {
-      prompt_view_provider.extension_context.workspaceState.update(
-        last_used_key,
-        name
-      )
-      prompt_view_provider.extension_context.globalState.update(
-        last_used_key,
-        name
-      )
-
       prompt_view_provider.send_message({
         command: 'SELECTED_CLI_CONFIGURATION_CHANGED',
         prompt_type,

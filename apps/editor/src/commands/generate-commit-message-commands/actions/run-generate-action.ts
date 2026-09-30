@@ -479,19 +479,10 @@ export const run_generate_action = async (params: {
             ),
             last_selected_workspace_state_key:
               LAST_SELECTED_WORKSPACE_FOR_COMMIT_MESSAGE_STATE_KEY,
-            last_used_agent_config_name:
-              params.extension_context.workspaceState.get<string>(
-                LAST_USED_AGENT_FOR_COMMIT_MESSAGE_STATE_KEY
-              ),
-            on_agent_selected: (name) => {
-              params.extension_context.workspaceState.update(
-                LAST_USED_AGENT_FOR_COMMIT_MESSAGE_STATE_KEY,
-                name
-              )
-            },
+            agent_state_key: LAST_USED_AGENT_FOR_COMMIT_MESSAGE_STATE_KEY,
+            default_agent_key: 'isDefaultForCommitMessage',
             show_back_button: true,
-            isolate_in_temp_dir: true,
-            execution_mode: 'headless'
+            isolate_in_temp_dir: true
           })
 
           if (invoke_cli_result === 'back') {

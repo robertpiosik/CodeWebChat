@@ -107,6 +107,24 @@ export const translations = {
     hu: 'Hangbemenet',
     bg: 'Гласово въвеждане'
   },
+  'cli.default-configurations.tool.commit-message': {
+    en: 'Commit Message',
+    pl: 'Wiadomość commita',
+    'zh-cn': '提交信息',
+    ja: 'コミットメッセージ',
+    'zh-tw': '提交訊息',
+    de: 'Commit-Nachricht',
+    es: 'Mensaje de commit',
+    fr: 'Message de commit',
+    'pt-br': 'Mensagem de commit',
+    ru: 'Сообщение коммита',
+    ko: '커밋 메시지',
+    it: 'Messaggio di commit',
+    tr: 'Commit Mesajı',
+    cs: 'Zpráva commitu',
+    hu: 'Commit üzenet',
+    bg: 'Съобщение на къмит'
+  },
   'agents.configurations.action.select-default': {
     en: 'Select default agent',
     pl: 'Wybierz domyślnego agenta',
