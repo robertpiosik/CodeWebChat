@@ -422,6 +422,33 @@ Apply the attached changes to the file without explanations or any other text.
 
 </details>
 
+<details>
+<summary>AGENT</summary>
+
+```
+# File: `[FILE PATH]`
+
+[ORIGINAL FILE CONTENT]
+
+[MALFORMED EDITS]
+
+# Output formatting
+
+Your response must begin with a markdown heading identifying the file, followed by a markdown code block containing the updated file. The heading must be: "### Patch repair: `path/to/file.ext`". Example:
+
+[EXAMPLE]
+
+# Requirements
+
+- Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
+
+# Task
+
+Apply the attached changes to the file without explanations or any other text.
+```
+
+</details>
+
 ## Commands
 
 ### Code at Cursor

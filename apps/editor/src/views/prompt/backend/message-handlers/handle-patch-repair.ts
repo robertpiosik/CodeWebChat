@@ -255,7 +255,7 @@ export const handle_patch_repair = async (params: {
     }
     cli_prompt += `# Output formatting\n\n`
     cli_prompt += `${patch_repair_format_instructions}\n\n`
-    cli_prompt += `# Requirements\n\n- ${cli_edit_ask_requirements.preloaded_context}\n- ${cli_edit_ask_requirements.restrict_shell_commands}\n\n`
+    cli_prompt += `# Requirements\n\n- ${cli_edit_ask_requirements.restrict_shell_commands}\n\n`
     cli_prompt += `# Task\n\n${patch_repair_task_instructions}`
 
     const config_codeWebChat = vscode.workspace.getConfiguration('codeWebChat')
