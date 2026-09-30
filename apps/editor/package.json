@@ -1051,6 +1051,9 @@
               },
               "isDefaultForPatchRepair": {
                 "type": "boolean"
+              },
+              "isDefaultForVoiceInput": {
+                "type": "boolean"
               }
             },
             "required": [

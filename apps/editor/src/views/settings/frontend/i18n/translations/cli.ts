@@ -89,6 +89,24 @@ export const translations = {
     hu: 'Javítás helyreállítása',
     bg: 'Поправка на пачове'
   },
+  'cli.default-configurations.tool.voice-input': {
+    en: 'Voice Input',
+    pl: 'Wprowadzanie głosowe',
+    'zh-cn': '语音输入',
+    ja: '音声入力',
+    'zh-tw': '語音輸入',
+    de: 'Spracheingabe',
+    es: 'Entrada de voz',
+    fr: 'Saisie vocale',
+    'pt-br': 'Entrada de voz',
+    ru: 'Голосовой ввод',
+    ko: '음성 입력',
+    it: 'Inserimento vocale',
+    tr: 'Ses Girişi',
+    cs: 'Hlasový vstup',
+    hu: 'Hangbemenet',
+    bg: 'Гласово въвеждане'
+  },
   'agents.configurations.action.select-default': {
     en: 'Select default agent',
     pl: 'Wybierz domyślnego agenta',

@@ -10,6 +10,7 @@ export type ConfigAgentConfigurationFormat = {
   isDefaultForCodeAtCursor?: boolean
   isDefaultForIntelligentSearch?: boolean
   isDefaultForPatchRepair?: boolean
+  isDefaultForVoiceInput?: boolean
 }
 
 export const config_cli_configuration_to_ui_format = (

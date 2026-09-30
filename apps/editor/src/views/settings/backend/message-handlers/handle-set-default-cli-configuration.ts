@@ -32,6 +32,12 @@ export const handle_set_default_cli_configuration = async (
       } else {
         delete new_c.isDefaultForPatchRepair
       }
+    } else if (message.cli_feature == 'voice-input') {
+      if (c.name == message.cli_configuration_name) {
+        new_c.isDefaultForVoiceInput = true
+      } else {
+        delete new_c.isDefaultForVoiceInput
+      }
     }
     return new_c
   })
