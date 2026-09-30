@@ -491,7 +491,7 @@ export const run_generate_action = async (params: {
             },
             show_back_button: true,
             isolate_in_temp_dir: true,
-            agent_args_type: 'isolated-dir'
+            execution_mode: 'headless'
           })
 
           if (invoke_cli_result === 'back') {

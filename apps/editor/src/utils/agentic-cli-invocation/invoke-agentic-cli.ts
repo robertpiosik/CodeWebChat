@@ -34,7 +34,7 @@ export const invoke_agentic_cli = async (params: {
   copy_selected_files?: boolean
   run_in_terminal?: boolean
   generate_diff_for_temp_dir?: boolean
-  agent_args_type?: 'isolated-dir' | 'integrated-terminal'
+  execution_mode?: 'headless' | 'interactive-terminal'
   cli_configuration_name?: string
   use_quick_pick?: boolean
 }): Promise<
@@ -308,9 +308,14 @@ export const invoke_agentic_cli = async (params: {
       >()
 
       if (params.isolate_in_temp_dir) {
-        temp_dir_path = await fs.promises.mkdtemp(
-          path.join(os.tmpdir(), 'cwc-cli-')
-        )
+        if (params.copy_selected_files) {
+          temp_dir_path = await fs.promises.mkdtemp(
+            path.join(os.tmpdir(), 'cwc-cli-')
+          )
+        } else {
+          temp_dir_path = path.join(os.tmpdir(), 'cwc-cli')
+          await fs.promises.mkdir(temp_dir_path, { recursive: true })
+        }
 
         if (params.copy_selected_files) {
           const selected_files = params.workspace_provider.get_selected_files()
@@ -476,7 +481,7 @@ export const invoke_agentic_cli = async (params: {
 
       if (params.run_in_terminal) {
         const base_args =
-          params.agent_args_type === 'integrated-terminal'
+          params.execution_mode === 'interactive-terminal'
             ? agent_info.get_integrated_terminal_args
               ? agent_info.get_integrated_terminal_args({ cwd: selected_root })
               : []
@@ -514,7 +519,7 @@ export const invoke_agentic_cli = async (params: {
         terminal.sendText(command)
 
         if (
-          params.agent_args_type === 'integrated-terminal' &&
+          params.execution_mode === 'interactive-terminal' &&
           agent_info.get_post_integrated_terminal_args
         ) {
           const post_args = agent_info.get_post_integrated_terminal_args()
@@ -553,7 +558,7 @@ export const invoke_agentic_cli = async (params: {
             }
 
             const base_args =
-              params.agent_args_type === 'integrated-terminal'
+              params.execution_mode === 'interactive-terminal'
                 ? agent_info.get_integrated_terminal_args
                   ? agent_info.get_integrated_terminal_args({
                       cwd: selected_root

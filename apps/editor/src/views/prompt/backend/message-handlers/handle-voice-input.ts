@@ -252,7 +252,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
           },
           show_back_button: true,
           isolate_in_temp_dir: true,
-          agent_args_type: 'isolated-dir'
+          execution_mode: 'headless'
         })
 
         if (invoke_cli_result === 'back') {

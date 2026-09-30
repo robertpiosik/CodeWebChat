@@ -52,11 +52,11 @@ export const handle_invoke_agentic_cli = async (
     last_selected_workspace_state_key:
       LAST_SELECTED_WORKSPACE_IN_AGENTIC_CLI_STATE_KEY,
     isolate_in_temp_dir: true,
-    copy_selected_files: true,
+    copy_selected_files: prompt_type == 'edit-files',
     run_in_terminal: prompt_type == 'ask-about-files',
     generate_diff_for_temp_dir: prompt_type == 'edit-files',
-    agent_args_type:
-      prompt_type == 'edit-files' ? 'isolated-dir' : 'integrated-terminal',
+    execution_mode:
+      prompt_type == 'edit-files' ? 'headless' : 'interactive-terminal',
     cli_configuration_name: message.cli_configuration_name,
     use_quick_pick: message.use_quick_pick,
     on_agent_selected: (name: string) => {
