@@ -1,4 +1,22 @@
 export const translations = {
+  'views.prompt.handlers.handle-voice-input.title': {
+    en: 'Voice Input',
+    pl: 'Wprowadzanie głosowe',
+    'zh-cn': '语音输入',
+    ja: '音声入力',
+    'zh-tw': '語音輸入',
+    de: 'Spracheingabe',
+    es: 'Entrada de voz',
+    fr: 'Saisie vocale',
+    'pt-br': 'Entrada de voz',
+    ru: 'Голосовой ввод',
+    ko: '음성 입력',
+    it: 'Input vocale',
+    tr: 'Sesli giriş',
+    cs: 'Hlasový vstup',
+    hu: 'Hangbemenet',
+    bg: 'Гласово въвеждане'
+  },
   'views.prompt.handlers.handle-voice-input.error.sox-missing': {
     en: 'Please install SoX to record audio.',
     pl: 'Zainstaluj SoX, aby nagrywać dźwięk.',

@@ -1,3 +1,6 @@
+import * as fs from 'fs'
+import * as os from 'os'
+import * as path from 'path'
 import { PromptViewProvider } from '../prompt-view-provider'
 import { SetRecordingStateMessage } from '../../types/messages'
 import { spawn } from 'child_process'
@@ -7,12 +10,21 @@ import * as vscode from 'vscode'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import axios from 'axios'
 import { send_llm_message } from '@/utils/send-llm-message'
-import { voice_input_instructions } from '@/constants/instructions'
-import { LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
+import {
+  voice_input_instructions,
+  cli_edit_ask_requirements
+} from '@/constants/instructions'
+import {
+  LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY,
+  LAST_USED_VOICE_INPUT_ACTION_STATE_KEY,
+  LAST_SELECTED_WORKSPACE_FOR_VOICE_INPUT_STATE_KEY,
+  LAST_USED_AGENT_FOR_VOICE_INPUT_STATE_KEY
+} from '@/constants/state-keys'
 import { t } from '@/i18n'
 import { get_api_configuration } from '@/utils/get-api-configuration'
 import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 import { get_error_message } from '@/utils/get-error-message'
+import { invoke_agentic_cli } from '@/utils/agentic-cli-invocation'
 
 const MIN_RECORDING_DURATION = 1000
 
@@ -114,73 +126,132 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
 
     prompt_view_provider.audio_chunks = []
 
-    try {
-      const providers_manager = new ProvidersManager(
-        prompt_view_provider.extension_context
+    let current_action =
+      prompt_view_provider.extension_context.workspaceState.get<string>(
+        LAST_USED_VOICE_INPUT_ACTION_STATE_KEY
       )
+    let show_action_quick_pick = true
 
-      const api_configuration_result = await get_api_configuration({
-        providers_manager,
-        extension_context: prompt_view_provider.extension_context,
-        last_used_state_key: LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY,
-        default_api_configuration:
-          await providers_manager.get_default_voice_input_api_configuration(),
-        caller_name: 'stop_recording'
-      })
-
-      if (!api_configuration_result || api_configuration_result === 'back') {
-        return
-      }
-
-      const { provider, api_configuration } = api_configuration_result
-
-      prompt_view_provider.send_message({
-        command: 'SHOW_PROGRESS',
-        title: t(
-          'views.prompt.handlers.handle-voice-input.progress.transcribing'
-        ),
-        cancellable: true
-      })
-
-      const body: { [key: string]: any } = {
-        model: api_configuration.model,
-        messages: [
-          {
-            role: 'user',
-            content: [
-              {
-                type: 'text',
-                text: voice_input_instructions
-              },
-              {
-                type: 'input_audio',
-                input_audio: {
-                  data: base64_audio,
-                  format: 'wav'
-                }
-              }
+    while (true) {
+      if (show_action_quick_pick) {
+        current_action = await new Promise<string | undefined | 'back'>(
+          (resolve) => {
+            const quick_pick = vscode.window.createQuickPick<
+              vscode.QuickPickItem & { id: string }
+            >()
+            quick_pick.items = [
+              { label: t('common.action.send-request'), id: 'make-api' },
+              { label: t('common.action.invoke-agent'), id: 'invoke-agent' }
             ]
+            const active_item = current_action
+              ? quick_pick.items.find((i) => i.id === current_action)
+              : undefined
+            if (active_item) quick_pick.activeItems = [active_item]
+            else if (quick_pick.items.length > 0)
+              quick_pick.activeItems = [quick_pick.items[0]]
+
+            quick_pick.title = t(
+              'views.prompt.handlers.handle-voice-input.title'
+            )
+            quick_pick.placeholder = t(
+              'common.action-quick-pick.placeholder.no-tokens'
+            )
+            const close_button = {
+              iconPath: new vscode.ThemeIcon('close'),
+              tooltip: t('common.close')
+            }
+            quick_pick.buttons = [close_button]
+
+            let is_resolved = false
+            quick_pick.onDidTriggerButton((button) => {
+              if (button === close_button) {
+                is_resolved = true
+                resolve(undefined)
+                quick_pick.hide()
+              }
+            })
+            quick_pick.onDidAccept(() => {
+              is_resolved = true
+              resolve(quick_pick.selectedItems[0]?.id)
+              quick_pick.hide()
+            })
+            quick_pick.onDidHide(() => {
+              if (!is_resolved) {
+                resolve(undefined)
+              }
+              quick_pick.dispose()
+            })
+            quick_pick.show()
           }
-        ]
+        )
+
+        if (!current_action || current_action === 'back') return
+
+        await prompt_view_provider.extension_context.workspaceState.update(
+          LAST_USED_VOICE_INPUT_ACTION_STATE_KEY,
+          current_action
+        )
       }
 
-      apply_reasoning_effort({
-        body,
-        provider,
-        reasoning_effort: api_configuration.reasoning_effort
-      })
+      show_action_quick_pick = false
 
-      prompt_view_provider.api_call_abort_controller = new AbortController()
+      if (current_action == 'invoke-agent') {
+        const config_codeWebChat =
+          vscode.workspace.getConfiguration('codeWebChat')
+        const agent_configs = config_codeWebChat.get<any[]>('agents', []) || []
+        const default_agent = agent_configs.find(
+          (c: any) => c.isDefaultForVoiceInput
+        )
+        const use_quick_pick = !default_agent
+        const cli_configuration_name = default_agent
+          ? default_agent.name
+          : undefined
 
-      const result = await send_llm_message({
-        base_url: provider.base_url,
-        api_key: provider.api_key,
-        body,
-        abort_signal: prompt_view_provider.api_call_abort_controller.signal
-      })
+        const temp_audio_path = path.join(
+          os.tmpdir(),
+          `cwc-voice-input-${Date.now()}.wav`
+        )
+        await fs.promises.writeFile(temp_audio_path, audio_buffer)
 
-      if (result?.response) {
-        if (result.response.trim().toUpperCase() == 'INAUDIBLE') {
+        const cli_prompt = `# Task\n\n${voice_input_instructions}\n\nAudio file: \`${temp_audio_path.replace(/\\/g, '/')}\`\n\n# Requirements\n\n- ${cli_edit_ask_requirements.restrict_shell_commands}\n- ${cli_edit_ask_requirements.exception_read_audio}`
+
+        const invoke_cli_result = await invoke_agentic_cli({
+          workspace_provider: prompt_view_provider.workspace_provider,
+          extension_context: prompt_view_provider.extension_context,
+          build_prompt: async () => cli_prompt,
+          notification_title: t(
+            'views.prompt.handlers.handle-voice-input.title'
+          ),
+          last_selected_workspace_state_key:
+            LAST_SELECTED_WORKSPACE_FOR_VOICE_INPUT_STATE_KEY,
+          last_used_agent_config_name:
+            prompt_view_provider.extension_context.workspaceState.get<string>(
+              LAST_USED_AGENT_FOR_VOICE_INPUT_STATE_KEY
+            ),
+          cli_configuration_name,
+          use_quick_pick,
+          on_agent_selected: (name) => {
+            prompt_view_provider.extension_context.workspaceState.update(
+              LAST_USED_AGENT_FOR_VOICE_INPUT_STATE_KEY,
+              name
+            )
+          },
+          show_back_button: true,
+          isolate_in_temp_dir: true,
+          agent_args_type: 'isolated-dir'
+        })
+
+        if (invoke_cli_result === 'back') {
+          show_action_quick_pick = true
+          continue
+        }
+
+        if (!invoke_cli_result) {
+          return
+        }
+
+        const text = invoke_cli_result.agent_output
+        if (text.trim().toUpperCase() == 'INAUDIBLE') {
           prompt_view_provider.send_message({
             command: 'SHOW_AUTO_CLOSING_MODAL',
             title: t(
@@ -188,29 +259,122 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
             )
           })
         } else {
-          prompt_view_provider.add_text_at_cursor_position(result.response)
+          prompt_view_provider.add_text_at_cursor_position(text)
         }
-      }
-    } catch (error) {
-      if (axios.isCancel(error)) {
-        return
-      }
+        break
+      } else if (current_action == 'make-api') {
+        let show_quick_pick = false
 
-      Logger.error({
-        function_name: 'stop_recording',
-        message: 'Failed to process audio',
-        data: { error }
-      })
-      vscode.window.showErrorMessage(
-        t('views.prompt.handlers.handle-voice-input.error.process-failed', {
-          error: get_error_message(error)
-        })
-      )
-    } finally {
-      prompt_view_provider.api_call_abort_controller = null
-      prompt_view_provider.send_message({
-        command: 'HIDE_PROGRESS'
-      })
+        while (true) {
+          try {
+            const providers_manager = new ProvidersManager(
+              prompt_view_provider.extension_context
+            )
+
+            const api_configuration_result = await get_api_configuration({
+              providers_manager,
+              extension_context: prompt_view_provider.extension_context,
+              last_used_state_key: LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY,
+              default_api_configuration:
+                await providers_manager.get_default_voice_input_api_configuration(),
+              caller_name: 'stop_recording',
+              show_quick_pick: show_quick_pick
+            })
+
+            if (api_configuration_result === 'back') {
+              show_action_quick_pick = true
+              break
+            }
+
+            if (!api_configuration_result) {
+              return
+            }
+
+            const { provider, api_configuration } = api_configuration_result
+
+            prompt_view_provider.send_message({
+              command: 'SHOW_PROGRESS',
+              title: t(
+                'views.prompt.handlers.handle-voice-input.progress.transcribing'
+              ),
+              cancellable: true
+            })
+
+            const body: { [key: string]: any } = {
+              model: api_configuration.model,
+              messages: [
+                {
+                  role: 'user',
+                  content: [
+                    { type: 'text', text: voice_input_instructions },
+                    {
+                      type: 'input_audio',
+                      input_audio: { data: base64_audio, format: 'wav' }
+                    }
+                  ]
+                }
+              ]
+            }
+
+            apply_reasoning_effort({
+              body,
+              provider,
+              reasoning_effort: api_configuration.reasoning_effort
+            })
+
+            prompt_view_provider.api_call_abort_controller =
+              new AbortController()
+
+            const result = await send_llm_message({
+              base_url: provider.base_url,
+              api_key: provider.api_key,
+              body,
+              abort_signal:
+                prompt_view_provider.api_call_abort_controller.signal
+            })
+
+            if (result?.response) {
+              if (result.response.trim().toUpperCase() == 'INAUDIBLE') {
+                prompt_view_provider.send_message({
+                  command: 'SHOW_AUTO_CLOSING_MODAL',
+                  title: t(
+                    'views.prompt.handlers.handle-voice-input.warning.inaudible'
+                  )
+                })
+              } else {
+                prompt_view_provider.add_text_at_cursor_position(
+                  result.response
+                )
+              }
+            }
+            break // success
+          } catch (error) {
+            if (axios.isCancel(error)) {
+              return
+            }
+
+            Logger.error({
+              function_name: 'stop_recording',
+              message: 'Failed to process audio',
+              data: { error }
+            })
+            vscode.window.showErrorMessage(
+              t(
+                'views.prompt.handlers.handle-voice-input.error.process-failed',
+                {
+                  error: get_error_message(error)
+                }
+              )
+            )
+            show_quick_pick = true
+          } finally {
+            prompt_view_provider.api_call_abort_controller = null
+            prompt_view_provider.send_message({ command: 'HIDE_PROGRESS' })
+          }
+        }
+        if (show_action_quick_pick) continue
+        break
+      }
     }
   }
 }
@@ -229,7 +393,10 @@ export const handle_voice_input = async (
     )
     const api_configurations = await providers_manager.get_api_configurations()
 
-    if (api_configurations.length == 0) {
+    const config_codeWebChat = vscode.workspace.getConfiguration('codeWebChat')
+    const agent_configs = config_codeWebChat.get<any[]>('agents', []) || []
+
+    if (api_configurations.length == 0 && agent_configs.length == 0) {
       show_incomplete_setup_warning('api')
       prompt_view_provider.send_message({
         command: 'RECORDING_STATE',

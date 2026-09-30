@@ -76,5 +76,7 @@ export const cli_edit_ask_requirements = {
   exception_read_images:
     'Exception: If [task](#task) includes *.png image paths, read them using the appropriate tool.',
   exception_allow_file_system_operations:
-    'Exception: Perform file system operations (create, update, delete) required to complete the [task](#task).'
+    'Exception: Perform file system operations (create, update, delete) required to complete the [task](#task).',
+  exception_read_audio:
+    'Exception: If [task](#task) includes *.wav audio file paths, read them using the appropriate tool.'
 }

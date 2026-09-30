@@ -70,6 +70,12 @@ export const LAST_USED_AGENT_FOR_PATCH_REPAIR_STATE_KEY =
   'last-used-agent-for-patch-repair'
 export const LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY =
   'last-used-voice-input-config-id'
+export const LAST_USED_VOICE_INPUT_ACTION_STATE_KEY =
+  'last-used-voice-input-action'
+export const LAST_SELECTED_WORKSPACE_FOR_VOICE_INPUT_STATE_KEY =
+  'last-selected-workspace-for-voice-input'
+export const LAST_USED_AGENT_FOR_VOICE_INPUT_STATE_KEY =
+  'last-used-agent-for-voice-input'
 
 export const get_last_used_web_configuration_key = (web_prompt_type: string) =>
   `last-used-web-configuration-${web_prompt_type}`
