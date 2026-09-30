@@ -31,6 +31,15 @@ type Props = {
   on_select_all_prompts_in_commit_messages_by_default_change: (
     enabled: boolean
   ) => void
+  default_option_for_voice_input: 'ask' | 'send-request' | 'invoke-agent'
+  on_default_option_for_voice_input_change: (
+    value: 'ask' | 'send-request' | 'invoke-agent'
+  ) => void
+  voice_instructions: string
+  set_voice_instructions: (instructions: string) => void
+  on_voice_instructions_blur: () => void
+  default_voice_instructions: string
+  on_restore_voice_instructions: () => void
   commit_instructions: string
   set_commit_instructions: (instructions: string) => void
   on_commit_instructions_blur: () => void
@@ -178,7 +187,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         >
           <UiGroup title={t('general.commits.title')}>
             <UiItem
-              title={t('general.commits.commit-message-instructions.title')}
+              title={t('common.instructions')}
               description={t(
                 'general.commits.commit-message-instructions.description'
               )}
@@ -284,6 +293,66 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   on_toggle={
                     props.on_select_all_prompts_in_commit_messages_by_default_change
                   }
+                />
+              }
+            />
+          </UiGroup>
+        </div>
+
+        <div
+          ref={(el) =>
+            props.set_section_ref('section:general:group:voice-input', el)
+          }
+        >
+          <UiGroup title={t('general.voice-input.title')}>
+            <UiItem
+              title={t('common.instructions')}
+              description={t('general.voice-input.instructions.description')}
+              is_toggleable
+              translations={{
+                expand: t('common.expand'),
+                collapse: t('common.collapse')
+              }}
+            >
+              <UiTextarea
+                value={props.voice_instructions}
+                min_rows={3}
+                on_change={props.set_voice_instructions}
+                on_blur={props.on_voice_instructions_blur}
+                action_icon={
+                  props.voice_instructions != props.default_voice_instructions
+                    ? 'discard'
+                    : undefined
+                }
+                action_title={t('general.action.restore-default')}
+                on_action_click={props.on_restore_voice_instructions}
+              />
+            </UiItem>
+            <UiItem
+              title={t('general.voice-input.default-option.title')}
+              description={t('general.voice-input.default-action.description')}
+              slot_right={
+                <UiDropdown
+                  options={[
+                    {
+                      value: 'ask',
+                      label: t('general.voice-input.default-action.ask')
+                    },
+                    {
+                      value: 'send-request',
+                      label: t(
+                        'general.voice-input.default-action.send-request'
+                      )
+                    },
+                    {
+                      value: 'invoke-agent',
+                      label: t(
+                        'general.voice-input.default-action.invoke-agent'
+                      )
+                    }
+                  ]}
+                  value={props.default_option_for_voice_input}
+                  onChange={props.on_default_option_for_voice_input_change}
                 />
               }
             />

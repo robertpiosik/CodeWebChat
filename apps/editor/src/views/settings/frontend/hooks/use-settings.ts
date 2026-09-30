@@ -36,6 +36,13 @@ export const use_settings = (vscode: any) => {
     default_commit_message_instructions,
     set_default_commit_message_instructions
   ] = useState<string | undefined>(undefined)
+  const [voice_input_instructions, set_voice_input_instructions] = useState<
+    string | undefined
+  >(undefined)
+  const [
+    default_voice_input_instructions,
+    set_default_voice_input_instructions
+  ] = useState<string | undefined>(undefined)
   const [attach_ascii_tree_of_context, set_attach_ascii_tree_of_context] =
     useState<'ask' | 'always' | 'never' | undefined>(undefined)
   const [
@@ -75,6 +82,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_CLI_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
+    post_message(vscode, { command: 'GET_VOICE_INPUT_INSTRUCTIONS' })
     post_message(vscode, {
       command: 'GET_ATTACH_ASCII_TREE_OF_CONTEXT'
     })
@@ -111,6 +119,9 @@ export const use_settings = (vscode: any) => {
       } else if (message.command == 'COMMIT_MESSAGE_INSTRUCTIONS') {
         set_commit_message_instructions(message.instructions)
         set_default_commit_message_instructions(message.default_instructions)
+      } else if (message.command == 'VOICE_INPUT_INSTRUCTIONS') {
+        set_voice_input_instructions(message.instructions)
+        set_default_voice_input_instructions(message.default_instructions)
       } else if (message.command == 'ATTACH_ASCII_TREE_OF_CONTEXT') {
         set_attach_ascii_tree_of_context(message.value)
       } else if (
@@ -271,6 +282,12 @@ export const use_settings = (vscode: any) => {
       instructions
     })
 
+  const handle_voice_input_instructions_change = (instructions: string) =>
+    post_message(vscode, {
+      command: 'UPDATE_VOICE_INPUT_INSTRUCTIONS',
+      instructions
+    })
+
   const handle_attach_ascii_tree_of_context_change = (
     value: 'ask' | 'always' | 'never'
   ) => {
@@ -425,6 +442,8 @@ export const use_settings = (vscode: any) => {
     defaults,
     commit_message_instructions,
     default_commit_message_instructions,
+    voice_input_instructions,
+    default_voice_input_instructions,
     attach_ascii_tree_of_context,
     use_context_files_in_commit_message_prompt,
     select_all_prompts_in_commit_messages_by_default,
@@ -452,6 +471,7 @@ export const use_settings = (vscode: any) => {
     handle_toggle_pinned_api_configuration,
     handle_toggle_pinned_web_configuration,
     handle_commit_instructions_change,
+    handle_voice_input_instructions_change,
     handle_attach_ascii_tree_of_context_change,
     handle_use_context_files_in_commit_message_prompt_change,
     handle_select_all_prompts_in_commit_messages_by_default_change,

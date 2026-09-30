@@ -65,8 +65,8 @@ export const intelligent_file_search_format_for_prompt_view = (
 These files contain the core greeting logic and module exports.`
 }
 
-export const voice_input_instructions =
-  'Respond with a transcription of the following audio recording or the word INAUDIBLE, and nothing else.'
+export const voice_input_output_formatting =
+  'Respond with the audio transcription or the word INAUDIBLE, without explanations or any other text.'
 
 export const cli_edit_ask_requirements = {
   preloaded_context:

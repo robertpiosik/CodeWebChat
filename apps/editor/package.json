@@ -949,6 +949,11 @@
           "scope": "resource",
           "default": "Write a brief and precise summary for the changes, limited to a single sentence. Because the summary will be used for a commit message, don't use any markdown formatting and don't include a trailing dot. Use an imperative tone to ensure clarity and focus on the primary change or purpose."
         },
+        "codeWebChat.voiceInputInstructions": {
+          "type": "string",
+          "scope": "resource",
+          "default": "Transcribe using clean verbatim. Remove filler words (such as 'um,' 'uh,' 'like'), false starts, and stutters. Preserve the speaker's exact words, slang, and sentence structure, but use natural punctuation and sentence breaks to ensure readability."
+        },
         "codeWebChat.attachAsciiTreeOfContext": {
           "type": "string",
           "scope": "resource",
@@ -973,6 +978,16 @@
           "type": "boolean",
           "scope": "resource",
           "default": true
+        },
+        "codeWebChat.defaultOptionForVoiceInput": {
+          "type": "string",
+          "scope": "resource",
+          "enum": [
+            "ask",
+            "send-request",
+            "invoke-agent"
+          ],
+          "default": "ask"
         },
         "codeWebChat.voiceInputPushToTalk": {
           "type": "boolean",

@@ -11,7 +11,7 @@ import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import axios from 'axios'
 import { send_llm_message } from '@/utils/send-llm-message'
 import {
-  voice_input_instructions,
+  voice_input_output_formatting,
   cli_edit_ask_requirements
 } from '@/constants/instructions'
 import {
@@ -126,11 +126,27 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
 
     prompt_view_provider.audio_chunks = []
 
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const default_option = config.get<'ask' | 'send-request' | 'invoke-agent'>(
+      'defaultOptionForVoiceInput'
+    )
+    const voice_input_task_instructions = config.get<string>(
+      'voiceInputInstructions'
+    )
+
     let current_action =
       prompt_view_provider.extension_context.workspaceState.get<string>(
         LAST_USED_VOICE_INPUT_ACTION_STATE_KEY
       )
     let show_action_quick_pick = true
+
+    if (default_option == 'send-request') {
+      current_action = 'send-request'
+      show_action_quick_pick = false
+    } else if (default_option == 'invoke-agent') {
+      current_action = 'invoke-agent'
+      show_action_quick_pick = false
+    }
 
     while (true) {
       if (show_action_quick_pick) {
@@ -140,7 +156,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
               vscode.QuickPickItem & { id: string }
             >()
             quick_pick.items = [
-              { label: t('common.action.send-request'), id: 'make-api' },
+              { label: t('common.action.send-request'), id: 'send-request' },
               { label: t('common.action.invoke-agent'), id: 'invoke-agent' }
             ]
             const active_item = current_action
@@ -196,9 +212,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
       show_action_quick_pick = false
 
       if (current_action == 'invoke-agent') {
-        const config_codeWebChat =
-          vscode.workspace.getConfiguration('codeWebChat')
-        const agent_configs = config_codeWebChat.get<any[]>('agents', []) || []
+        const agent_configs = config.get<any[]>('agents', []) || []
         const default_agent = agent_configs.find(
           (c: any) => c.isDefaultForVoiceInput
         )
@@ -213,7 +227,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
         )
         await fs.promises.writeFile(temp_audio_path, audio_buffer)
 
-        const cli_prompt = `# Task\n\n${voice_input_instructions}\n\nAudio file: \`${temp_audio_path.replace(/\\/g, '/')}\`\n\n# Requirements\n\n- ${cli_edit_ask_requirements.disable_tool_calling}\n- ${cli_edit_ask_requirements.exception_read_audio}`
+        const cli_prompt = `# Task\n\n${voice_input_task_instructions}\n\nAudio file: \`${temp_audio_path.replace(/\\/g, '/')}\`\n\n# Output formatting\n\n${voice_input_output_formatting}\n\n# Requirements\n\n- ${cli_edit_ask_requirements.disable_tool_calling}\n- ${cli_edit_ask_requirements.exception_read_audio}`
 
         const invoke_cli_result = await invoke_agentic_cli({
           workspace_provider: prompt_view_provider.workspace_provider,
@@ -262,7 +276,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
           prompt_view_provider.add_text_at_cursor_position(text)
         }
         break
-      } else if (current_action == 'make-api') {
+      } else if (current_action == 'send-request') {
         let show_quick_pick = false
 
         while (true) {
@@ -306,7 +320,10 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
                 {
                   role: 'user',
                   content: [
-                    { type: 'text', text: voice_input_instructions },
+                    {
+                      type: 'text',
+                      text: `# Task\n\n${voice_input_task_instructions}\n\n# Output formatting\n\n${voice_input_output_formatting}`
+                    },
                     {
                       type: 'input_audio',
                       input_audio: { data: base64_audio, format: 'wav' }

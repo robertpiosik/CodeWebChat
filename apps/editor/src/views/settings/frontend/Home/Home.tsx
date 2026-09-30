@@ -22,6 +22,7 @@ export type NavItem =
   | 'section:general:group:open-links'
   | 'section:general:group:prompt'
   | 'section:general:group:commits'
+  | 'section:general:group:voice-input'
   | 'section:web'
   | 'section:web:group:chatbots'
   | 'section:web:group:web-defaults'
@@ -52,6 +53,10 @@ export const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     id: 'section:general:group:commits',
     label: 'general.commits.title'
+  },
+  {
+    id: 'section:general:group:voice-input',
+    label: 'general.voice-input.title'
   },
   {
     id: 'section:web',
@@ -112,6 +117,13 @@ type Props = {
   attach_ascii_tree_of_context: 'ask' | 'always' | 'never'
   use_context_files_in_commit_message_prompt: 'ask' | 'always' | 'never'
   select_all_prompts_in_commit_messages_by_default: boolean
+  default_option_for_voice_input: 'ask' | 'send-request' | 'invoke-agent'
+  on_default_option_for_voice_input_change: (
+    value: 'ask' | 'send-request' | 'invoke-agent'
+  ) => void
+  voice_input_instructions: string
+  default_voice_input_instructions: string
+  on_voice_input_instructions_change: (instructions: string) => void
   gemini_user_id: number | null
   ai_studio_user_id: number | null
   send_with_shift_enter: boolean
@@ -212,6 +224,7 @@ export const Home: React.FC<Props> = (props) => {
 
   const [commit_instructions, set_commit_instructions] = useState('')
   const [edit_files_instructions, set_edit_files_instructions] = useState('')
+  const [voice_instructions, set_voice_instructions] = useState('')
 
   const get_has_warning = (id: NavItem): boolean => {
     if (id == 'section:api:group:providers') {
@@ -230,6 +243,10 @@ export const Home: React.FC<Props> = (props) => {
   useEffect(() => {
     set_edit_files_instructions(props.edit_files_system_instructions || '')
   }, [props.edit_files_system_instructions])
+
+  useEffect(() => {
+    set_voice_instructions(props.voice_input_instructions || '')
+  }, [props.voice_input_instructions])
 
   return (
     <div style={{ height: '100vh' }}>
@@ -326,6 +343,29 @@ export const Home: React.FC<Props> = (props) => {
           on_select_all_prompts_in_commit_messages_by_default_change={
             props.on_select_all_prompts_in_commit_messages_by_default_change
           }
+          default_option_for_voice_input={props.default_option_for_voice_input}
+          on_default_option_for_voice_input_change={
+            props.on_default_option_for_voice_input_change
+          }
+          voice_instructions={voice_instructions}
+          set_voice_instructions={set_voice_instructions}
+          on_voice_instructions_blur={() => {
+            props.on_voice_input_instructions_change(voice_instructions)
+            if (
+              voice_instructions == '' &&
+              props.voice_input_instructions ==
+                props.default_voice_input_instructions
+            ) {
+              set_voice_instructions(props.default_voice_input_instructions)
+            }
+          }}
+          default_voice_instructions={props.default_voice_input_instructions}
+          on_restore_voice_instructions={() => {
+            set_voice_instructions(props.default_voice_input_instructions)
+            props.on_voice_input_instructions_change(
+              props.default_voice_input_instructions
+            )
+          }}
           commit_instructions={commit_instructions}
           set_commit_instructions={set_commit_instructions}
           on_commit_instructions_blur={() => {

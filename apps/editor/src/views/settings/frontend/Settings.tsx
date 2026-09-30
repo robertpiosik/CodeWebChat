@@ -68,6 +68,9 @@ export const Settings = () => {
     null
   )
 
+  const [default_option_for_voice_input, set_default_option_for_voice_input] =
+    useState<'ask' | 'send-request' | 'invoke-agent' | undefined>(undefined)
+
   const edit_template_cancel_handler = () => {
     set_updating_template(null)
     set_updated_template(null)
@@ -103,23 +106,33 @@ export const Settings = () => {
       settings_hook.defaults !== undefined &&
       settings_hook.edit_files_system_instructions !== undefined &&
       settings_hook.default_edit_files_system_instructions !== undefined &&
+      settings_hook.voice_input_instructions !== undefined &&
+      settings_hook.default_voice_input_instructions !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
       settings_hook.default_commit_message_instructions !== undefined &&
       settings_hook.attach_ascii_tree_of_context !== undefined &&
       settings_hook.use_context_files_in_commit_message_prompt !== undefined &&
       settings_hook.select_all_prompts_in_commit_messages_by_default !==
         undefined &&
+      default_option_for_voice_input !== undefined &&
       settings_hook.gemini_user_id !== undefined &&
       settings_hook.ai_studio_user_id !== undefined &&
       settings_hook.send_with_shift_enter !== undefined &&
       settings_hook.is_modern_ui !== undefined &&
       settings_hook.templates !== undefined
     )
-  }, [settings_hook])
+  }, [settings_hook, default_option_for_voice_input])
+
+  useEffect(() => {
+    post_message(vscode, { command: 'GET_DEFAULT_OPTION_FOR_VOICE_INPUT' })
+  }, [])
 
   useEffect(() => {
     if (!all_data_loaded) return
     post_message(vscode, { command: 'SETTINGS_UI_READY' })
+  }, [all_data_loaded])
+
+  useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       if (event.data.command == 'SHOW_SECTION') {
         set_scroll_to_section_on_load(event.data.section as NavItem)
@@ -130,11 +143,13 @@ export const Settings = () => {
           template: event.data.template
         })
         set_updated_template(event.data.template)
+      } else if (event.data.command === 'DEFAULT_OPTION_FOR_VOICE_INPUT') {
+        set_default_option_for_voice_input(event.data.value)
       }
     }
     window.addEventListener('message', handle_message)
     return () => window.removeEventListener('message', handle_message)
-  }, [all_data_loaded])
+  }, [])
 
   if (!all_data_loaded) return null
 
@@ -158,6 +173,21 @@ export const Settings = () => {
         }
         select_all_prompts_in_commit_messages_by_default={
           settings_hook.select_all_prompts_in_commit_messages_by_default!
+        }
+        default_option_for_voice_input={default_option_for_voice_input!}
+        on_default_option_for_voice_input_change={(value) => {
+          set_default_option_for_voice_input(value)
+          post_message(vscode, {
+            command: 'UPDATE_DEFAULT_OPTION_FOR_VOICE_INPUT',
+            value
+          })
+        }}
+        voice_input_instructions={settings_hook.voice_input_instructions!}
+        default_voice_input_instructions={
+          settings_hook.default_voice_input_instructions!
+        }
+        on_voice_input_instructions_change={
+          settings_hook.handle_voice_input_instructions_change
         }
         commit_message_instructions={settings_hook.commit_message_instructions!}
         default_commit_message_instructions={

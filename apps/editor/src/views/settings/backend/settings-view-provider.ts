@@ -12,6 +12,8 @@ import {
   handle_get_attach_ascii_tree_of_context,
   handle_get_use_context_files_in_commit_message_prompt,
   handle_get_include_prompts_in_commit_messages,
+  handle_get_default_option_for_voice_input,
+  handle_get_voice_input_instructions,
   handle_get_edit_files_system_instructions,
   handle_get_gemini_user_id,
   handle_get_ai_studio_user_id,
@@ -24,6 +26,8 @@ import {
   handle_update_attach_ascii_tree_of_context,
   handle_update_use_context_files_in_commit_message_prompt,
   handle_update_include_prompts_in_commit_messages,
+  handle_update_default_option_for_voice_input,
+  handle_update_voice_input_instructions,
   handle_update_edit_files_system_instructions,
   handle_update_gemini_user_id,
   handle_update_ai_studio_user_id,
@@ -185,6 +189,14 @@ export class SettingsViewProvider {
           'UPDATE_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
         ) {
           await handle_update_include_prompts_in_commit_messages(message)
+        } else if (message.command == 'GET_DEFAULT_OPTION_FOR_VOICE_INPUT') {
+          await handle_get_default_option_for_voice_input(this)
+        } else if (message.command == 'UPDATE_DEFAULT_OPTION_FOR_VOICE_INPUT') {
+          await handle_update_default_option_for_voice_input(message)
+        } else if (message.command == 'GET_VOICE_INPUT_INSTRUCTIONS') {
+          await handle_get_voice_input_instructions(this)
+        } else if (message.command == 'UPDATE_VOICE_INPUT_INSTRUCTIONS') {
+          await handle_update_voice_input_instructions(message)
         } else if (message.command == 'GET_GEMINI_USER_ID') {
           await handle_get_gemini_user_id(this)
         } else if (message.command == 'UPDATE_GEMINI_USER_ID') {
@@ -273,6 +285,8 @@ export class SettingsViewProvider {
           void handle_get_attach_ascii_tree_of_context(this)
           void handle_get_use_context_files_in_commit_message_prompt(this)
           void handle_get_include_prompts_in_commit_messages(this)
+          void handle_get_default_option_for_voice_input(this)
+          void handle_get_voice_input_instructions(this)
           void handle_get_gemini_user_id(this)
           void handle_get_ai_studio_user_id(this)
           void handle_get_send_with_shift_enter(this)

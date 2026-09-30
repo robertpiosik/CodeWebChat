@@ -89,6 +89,24 @@ export interface UpdateSelectAllPromptsInCommitMessagesByDefaultMessage {
   enabled: boolean
 }
 
+export interface GetDefaultOptionForVoiceInputMessage {
+  command: 'GET_DEFAULT_OPTION_FOR_VOICE_INPUT'
+}
+
+export interface UpdateDefaultOptionForVoiceInputMessage {
+  command: 'UPDATE_DEFAULT_OPTION_FOR_VOICE_INPUT'
+  value: 'ask' | 'send-request' | 'invoke-agent'
+}
+
+export interface GetVoiceInputInstructionsMessage {
+  command: 'GET_VOICE_INPUT_INSTRUCTIONS'
+}
+
+export interface UpdateVoiceInputInstructionsMessage {
+  command: 'UPDATE_VOICE_INPUT_INSTRUCTIONS'
+  instructions: string
+}
+
 export interface GetEditFilesSystemInstructionsMessage {
   command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS'
 }
@@ -340,6 +358,10 @@ export type FrontendMessage =
   | UpdateUseContextFilesInCommitMessagePromptMessage
   | GetSelectAllPromptsInCommitMessagesByDefaultMessage
   | UpdateSelectAllPromptsInCommitMessagesByDefaultMessage
+  | GetDefaultOptionForVoiceInputMessage
+  | UpdateDefaultOptionForVoiceInputMessage
+  | GetVoiceInputInstructionsMessage
+  | UpdateVoiceInputInstructionsMessage
   | GetEditFilesSystemInstructionsMessage
   | UpdateEditFilesSystemInstructionsMessage
   | SettingsUiReadyMessage
@@ -416,6 +438,17 @@ export interface UseContextFilesInCommitMessagePromptMessage {
 export interface SelectAllPromptsInCommitMessagesByDefaultMessage {
   command: 'SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
   enabled: boolean
+}
+
+export interface DefaultOptionForVoiceInputMessage {
+  command: 'DEFAULT_OPTION_FOR_VOICE_INPUT'
+  value: 'ask' | 'send-request' | 'invoke-agent'
+}
+
+export interface VoiceInputInstructionsMessage {
+  command: 'VOICE_INPUT_INSTRUCTIONS'
+  instructions: string
+  default_instructions: string
 }
 
 export interface EditFilesSystemInstructionsMessage {
@@ -564,6 +597,8 @@ export type BackendMessage =
   | AttachAsciiTreeOfContextMessage
   | UseContextFilesInCommitMessagePromptMessage
   | SelectAllPromptsInCommitMessagesByDefaultMessage
+  | DefaultOptionForVoiceInputMessage
+  | VoiceInputInstructionsMessage
   | EditFilesSystemInstructionsMessage
   | GeminiUserIdMessage
   | AiStudioUserIdMessage
