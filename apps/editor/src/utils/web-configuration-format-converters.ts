@@ -11,6 +11,8 @@ export type ConfigWebConfigurationFormat = {
   port?: number
   newUrl?: string
   isPinned?: boolean
+  isDefaultForCodeAtCursor?: boolean
+  isDefaultForIntelligentSearch?: boolean
 }
 
 export const config_web_configuration_to_ui_format = (

@@ -6,6 +6,7 @@ import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
 import { SortableList } from '@ui/components/editor/settings/SortableList'
 import { IconButton } from '@ui/components/editor/common/IconButton'
+import { DefaultConfigurationSelector } from '@ui/components/editor/settings/DefaultConfigurationSelector'
 import { WebConfiguration } from '@/types/web-configuration'
 import { Icon } from '@ui/components/editor/common/Icon'
 import { CHATBOTS } from '@shared/constants/chatbots'
@@ -23,6 +24,12 @@ type Props = {
   on_edit_web_configuration: (id: string) => void
   on_delete_web_configuration: (name: string) => void
   on_toggle_pinned_web_configuration: (config: WebConfiguration) => void
+  web_defaults: Record<string, string | null>
+  on_set_default_web_configuration: (
+    web_feature: string,
+    name: string | null
+  ) => void
+  on_select_default_web_configuration: (web_feature: string) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
   gemini_user_id: number | null
   ai_studio_user_id: number | null
@@ -97,6 +104,45 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
     const num_id = parseInt(ai_studio_user_id_str, 10)
     if (!isNaN(num_id) && num_id >= 0) props.on_ai_studio_user_id_change(num_id)
   }
+
+  const selector_configurations = props.web_configurations.map((config) => {
+    const is_unnamed =
+      !config.name ||
+      config.name.startsWith('unnamed-') ||
+      /^\(\d+\)$/.test(config.name.trim())
+    const display_name = is_unnamed
+      ? config.chatbot!
+      : config.name!.replace(/ \(\d+\)$/, '')
+
+    const get_details = (): string[] => {
+      const { chatbot, model, reasoning_effort } = config
+      const model_display_name =
+        model && chatbot && CHATBOTS[chatbot]
+          ? CHATBOTS[chatbot].models?.[model]?.label || model
+          : null
+
+      const details: string[] = []
+      if (is_unnamed) {
+        if (model_display_name) details.push(model_display_name)
+      } else if (model_display_name) {
+        details.push(chatbot!, model_display_name)
+      } else if (chatbot) {
+        details.push(chatbot)
+      }
+
+      if (reasoning_effort) {
+        details.push(reasoning_effort)
+      }
+
+      return details
+    }
+
+    return {
+      id: config.name ?? '',
+      model: display_name,
+      description: get_details().join(' · ')
+    }
+  })
 
   return (
     <UiSection ref={ref} title={t('web.title')} subtitle={t('web.subtitle')}>
@@ -289,6 +335,47 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               }
             />
           )}
+        </UiGroup>
+      </div>
+      <div
+        ref={(el) =>
+          props.set_section_ref('section:web:group:web-defaults', el)
+        }
+      >
+        <UiGroup
+          title={t('web.default-configurations.title')}
+          is_disabled={props.web_configurations.length === 0}
+        >
+          <DefaultConfigurationSelector
+            title={t('web.default-configurations.tool.code-at-cursor')}
+            value={props.web_defaults['code-at-cursor'] || null}
+            configurations={selector_configurations}
+            on_unset={() =>
+              props.on_set_default_web_configuration('code-at-cursor', null)
+            }
+            on_select={() =>
+              props.on_select_default_web_configuration('code-at-cursor')
+            }
+            translations={{
+              select: t('chatbots.configurations.action.select-default'),
+              unset: t('chatbots.configurations.action.unset-default')
+            }}
+          />
+          <DefaultConfigurationSelector
+            title={t('web.default-configurations.tool.intelligent-search')}
+            value={props.web_defaults['intelligent-search'] || null}
+            configurations={selector_configurations}
+            on_unset={() =>
+              props.on_set_default_web_configuration('intelligent-search', null)
+            }
+            on_select={() =>
+              props.on_select_default_web_configuration('intelligent-search')
+            }
+            translations={{
+              select: t('chatbots.configurations.action.select-default'),
+              unset: t('chatbots.configurations.action.unset-default')
+            }}
+          />
         </UiGroup>
       </div>
     </UiSection>

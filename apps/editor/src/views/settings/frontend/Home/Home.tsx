@@ -24,6 +24,7 @@ export type NavItem =
   | 'section:general:group:commits'
   | 'section:web'
   | 'section:web:group:chatbots'
+  | 'section:web:group:web-defaults'
   | 'section:api'
   | 'section:api:group:providers'
   | 'section:api:group:models'
@@ -59,6 +60,10 @@ export const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     id: 'section:web:group:chatbots',
     label: 'chatbots.configurations.title'
+  },
+  {
+    id: 'section:web:group:web-defaults',
+    label: 'web.default-configurations.title'
   },
   {
     id: 'section:api',
@@ -182,6 +187,12 @@ type Props = {
   on_edit_web_configuration: (id: string) => void
   on_delete_web_configuration: (name: string) => void
   on_toggle_pinned_web_configuration: (config: WebConfiguration) => void
+  web_defaults: Record<string, string | null>
+  on_set_default_web_configuration: (
+    web_feature: string,
+    name: string | null
+  ) => void
+  on_select_default_web_configuration: (web_feature: string) => void
   scroll_to_section_on_load?: NavItem
 }
 
@@ -262,7 +273,9 @@ export const Home: React.FC<Props> = (props) => {
                       'section:api:group:api-defaults',
                       'section:api:group:system-instructions'
                     ].includes(group.id) &&
-                      props.api_configurations.length === 0)
+                      props.api_configurations.length === 0) ||
+                    (group.id === 'section:web:group:web-defaults' &&
+                      props.web_configurations.length === 0)
 
                   return (
                     <UiNavigationItemGroup
@@ -352,6 +365,13 @@ export const Home: React.FC<Props> = (props) => {
           on_delete_web_configuration={props.on_delete_web_configuration}
           on_toggle_pinned_web_configuration={
             props.on_toggle_pinned_web_configuration
+          }
+          web_defaults={props.web_defaults}
+          on_set_default_web_configuration={
+            props.on_set_default_web_configuration
+          }
+          on_select_default_web_configuration={
+            props.on_select_default_web_configuration
           }
           gemini_user_id={props.gemini_user_id}
           ai_studio_user_id={props.ai_studio_user_id}

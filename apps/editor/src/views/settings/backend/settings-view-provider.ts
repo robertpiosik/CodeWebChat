@@ -38,6 +38,8 @@ import {
   handle_pick_model,
   handle_pick_reasoning_effort,
   handle_update_web_configuration,
+  handle_set_default_web_configuration,
+  handle_select_default_web_configuration,
   handle_create_api_configuration,
   handle_update_api_configuration,
   handle_delete_api_configuration,
@@ -231,6 +233,10 @@ export class SettingsViewProvider {
           await handle_pick_reasoning_effort(this, message)
         } else if (message.command == 'UPDATE_WEB_CONFIGURATION') {
           await handle_update_web_configuration(this, message)
+        } else if (message.command == 'SET_DEFAULT_WEB_CONFIGURATION') {
+          await handle_set_default_web_configuration(message)
+        } else if (message.command == 'SELECT_DEFAULT_WEB_CONFIGURATION') {
+          await handle_select_default_web_configuration(message)
         } else if (message.command == 'CREATE_API_CONFIGURATION') {
           await handle_create_api_configuration(this, message)
         } else if (message.command == 'UPDATE_API_CONFIGURATION') {

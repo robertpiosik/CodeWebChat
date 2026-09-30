@@ -99,6 +99,7 @@ export const Settings = () => {
       settings_hook.web_configurations !== undefined &&
       settings_hook.cli_configurations !== undefined &&
       settings_hook.agent_defaults !== undefined &&
+      settings_hook.web_defaults !== undefined &&
       settings_hook.defaults !== undefined &&
       settings_hook.edit_files_system_instructions !== undefined &&
       settings_hook.default_edit_files_system_instructions !== undefined &&
@@ -267,6 +268,20 @@ export const Settings = () => {
         on_toggle_pinned_web_configuration={
           settings_hook.handle_toggle_pinned_web_configuration
         }
+        web_defaults={settings_hook.web_defaults!}
+        on_set_default_web_configuration={(web_feature, name) => {
+          post_message(vscode, {
+            command: 'SET_DEFAULT_WEB_CONFIGURATION',
+            web_feature,
+            web_configuration_name: name
+          })
+        }}
+        on_select_default_web_configuration={(web_feature) => {
+          post_message(vscode, {
+            command: 'SELECT_DEFAULT_WEB_CONFIGURATION',
+            web_feature
+          })
+        }}
         cli_configurations={settings_hook.cli_configurations!}
         set_cli_configurations={settings_hook.set_cli_configurations}
         on_reorder_cli_configurations={

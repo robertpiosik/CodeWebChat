@@ -1115,6 +1115,12 @@
               },
               "isPinned": {
                 "type": "boolean"
+              },
+              "isDefaultForCodeAtCursor": {
+                "type": "boolean"
+              },
+              "isDefaultForIntelligentSearch": {
+                "type": "boolean"
               }
             }
           }

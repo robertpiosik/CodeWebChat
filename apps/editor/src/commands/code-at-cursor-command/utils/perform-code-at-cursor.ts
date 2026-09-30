@@ -293,7 +293,13 @@ export const perform_code_at_cursor = async (params: {
 
       let selected_web_configuration_name: string | undefined
 
-      if (valid_web_configurations.length == 1) {
+      const default_web_config = valid_web_configurations.find(
+        (c) => c.isDefaultForCodeAtCursor
+      )
+
+      if (default_web_config) {
+        selected_web_configuration_name = default_web_config.name
+      } else if (valid_web_configurations.length == 1) {
         selected_web_configuration_name = valid_web_configurations[0].name
       } else {
         const recents_key =

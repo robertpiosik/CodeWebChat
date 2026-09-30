@@ -32,6 +32,15 @@ export const handle_get_web_configurations = async (
           }
         }
         return config_web_configuration_to_ui_format({ ...config, model })
-      })
+      }),
+    defaults: {
+      'code-at-cursor':
+        web_configurations_config.find((c: any) => c.isDefaultForCodeAtCursor)
+          ?.name || null,
+      'intelligent-search':
+        web_configurations_config.find(
+          (c: any) => c.isDefaultForIntelligentSearch
+        )?.name || null
+    }
   })
 }

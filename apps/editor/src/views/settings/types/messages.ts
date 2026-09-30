@@ -158,6 +158,17 @@ export interface DeleteWebConfigurationMessage {
   name: string
 }
 
+export interface SetDefaultWebConfigurationMessage {
+  command: 'SET_DEFAULT_WEB_CONFIGURATION'
+  web_feature: string
+  web_configuration_name: string | null
+}
+
+export interface SelectDefaultWebConfigurationMessage {
+  command: 'SELECT_DEFAULT_WEB_CONFIGURATION'
+  web_feature: string
+}
+
 export interface CreateWebConfigurationMessage {
   command: 'CREATE_WEB_CONFIGURATION'
   web_configuration_id?: string
@@ -343,6 +354,8 @@ export type FrontendMessage =
   | OpenAllowPatternsSettingsMessage
   | OpenKeybindingsMessage
   | GetWebConfigurationsMessage
+  | SetDefaultWebConfigurationMessage
+  | SelectDefaultWebConfigurationMessage
   | ReorderWebConfigurationsMessage
   | DeleteWebConfigurationMessage
   | CreateWebConfigurationMessage
@@ -434,6 +447,7 @@ export interface ShowSectionMessage {
 export interface WebConfigurationsMessage {
   command: 'WEB_CONFIGURATIONS'
   web_configurations: WebConfiguration[]
+  defaults?: Record<string, string | null>
 }
 
 export interface NewlyPickedModelMessage {
