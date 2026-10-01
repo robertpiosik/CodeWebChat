@@ -187,10 +187,33 @@ export const chatgpt: Chatbot = {
             think_button.click()
           }
         } else {
-          report_initialization_error({
-            function_name: 'set_options',
-            log_message: 'Think button icon not found'
-          })
+          const plus_button = document.querySelector(
+            '[data-testid="composer-plus-btn"]'
+          ) as HTMLButtonElement
+          if (plus_button) {
+            plus_button.dispatchEvent(
+              new PointerEvent('pointerdown', {
+                bubbles: true
+              })
+            )
+            await new Promise((resolve) => requestAnimationFrame(resolve))
+            const thinking_menuitem = Array.from(
+              document.querySelectorAll('[role="menuitemradio"]')
+            ).find((el) => el.textContent?.includes('Thinking')) as HTMLElement
+            if (thinking_menuitem) {
+              thinking_menuitem.click()
+            } else {
+              report_initialization_error({
+                function_name: 'set_options',
+                log_message: 'Thinking menu item not found'
+              })
+            }
+          } else {
+            report_initialization_error({
+              function_name: 'set_options',
+              log_message: 'Think button icon not found'
+            })
+          }
         }
       }
     }
