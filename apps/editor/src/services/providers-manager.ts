@@ -24,6 +24,7 @@ export type ConfigApiConfigurationFormat = {
   isDefaultForPatchRepair?: boolean
   isDefaultForVoiceInput?: boolean
   isDefaultForIntelligentSearch?: boolean
+  isDefaultForCommitMessage?: boolean
 }
 
 export const get_api_configuration_id = (
@@ -191,6 +192,8 @@ export class ProvidersManager {
         new_config.isDefaultForVoiceInput = true
       if (old_config?.isDefaultForIntelligentSearch)
         new_config.isDefaultForIntelligentSearch = true
+      if (old_config?.isDefaultForCommitMessage)
+        new_config.isDefaultForCommitMessage = true
       if (c.reasoning_effort !== undefined)
         new_config.reasoningEffort = c.reasoning_effort
       if (c.is_pinned !== undefined) new_config.isPinned = c.is_pinned
@@ -341,6 +344,24 @@ export class ProvidersManager {
   ) {
     await this._set_default_api_configuration_in_settings(
       'isDefaultForIntelligentSearch',
+      api_configuration
+    )
+  }
+
+  public async get_default_commit_message_api_configuration(): Promise<
+    ApiConfiguration | undefined
+  > {
+    await this._load_promise
+    return this._get_default_api_configuration_from_settings(
+      'isDefaultForCommitMessage'
+    )
+  }
+
+  public async set_default_commit_message_api_configuration(
+    api_configuration: ApiConfiguration | null
+  ) {
+    await this._set_default_api_configuration_in_settings(
+      'isDefaultForCommitMessage',
       api_configuration
     )
   }

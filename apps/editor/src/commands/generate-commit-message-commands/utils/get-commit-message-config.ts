@@ -34,7 +34,9 @@ export const get_commit_message_api_configuration = async (params: {
     show_back_button,
     ignore_focus_out: true,
     caller_name: 'get_commit_message_api_configuration',
-    auto_select_last_used: false
+    auto_select_last_used: false,
+    default_api_configuration:
+      await providers_manager.get_default_commit_message_api_configuration()
   })
 
   if (result === 'back') {

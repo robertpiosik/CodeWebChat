@@ -3,3 +3,4 @@ export type ApiFeature =
   | 'patch-repair'
   | 'voice-input'
   | 'intelligent-search'
+  | 'commit-message'

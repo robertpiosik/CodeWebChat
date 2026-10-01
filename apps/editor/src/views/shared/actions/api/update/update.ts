@@ -126,6 +126,10 @@ export const update = async (params: {
       await providers_manager.set_default_voice_input_api_configuration(
         new_config as any
       )
+    } else if (params.api_feature == 'commit-message') {
+      await providers_manager.set_default_commit_message_api_configuration(
+        new_config as any
+      )
     }
   }
 

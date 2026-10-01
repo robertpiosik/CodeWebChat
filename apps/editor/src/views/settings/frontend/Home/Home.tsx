@@ -83,12 +83,12 @@ export const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'api.configurations.title'
   },
   {
-    id: 'section:api:group:api-defaults',
-    label: 'api.default-configurations.title'
-  },
-  {
     id: 'section:api:group:system-instructions',
     label: 'api.system-instructions.title'
+  },
+  {
+    id: 'section:api:group:api-defaults',
+    label: 'api.default-configurations.title'
   },
   {
     id: 'section:cli',

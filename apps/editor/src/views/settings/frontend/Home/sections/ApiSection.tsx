@@ -302,6 +302,42 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
       <div
         ref={(el) =>
+          props.set_section_ref('section:api:group:system-instructions', el)
+        }
+      >
+        <UiGroup
+          title={t('api.system-instructions.title')}
+          is_disabled={props.api_configurations.length === 0}
+        >
+          <UiItem
+            title={t('api.system-instructions.edit-files.title')}
+            description={t('api.system-instructions.edit-files.description')}
+            is_toggleable
+            translations={{
+              expand: t('common.expand'),
+              collapse: t('common.collapse')
+            }}
+          >
+            <UiTextarea
+              value={props.edit_files_instructions}
+              min_rows={3}
+              on_change={props.set_edit_files_instructions}
+              on_blur={props.on_edit_files_instructions_blur}
+              action_icon={
+                props.edit_files_instructions !==
+                props.default_edit_files_instructions
+                  ? 'discard'
+                  : undefined
+              }
+              action_title={t('general.action.restore-default')}
+              on_action_click={props.on_restore_edit_files_instructions}
+            />
+          </UiItem>
+        </UiGroup>
+      </div>
+
+      <div
+        ref={(el) =>
           props.set_section_ref('section:api:group:api-defaults', el)
         }
       >
@@ -369,42 +405,21 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               unset: t('api.configurations.action.unset-default')
             }}
           />
-        </UiGroup>
-      </div>
-
-      <div
-        ref={(el) =>
-          props.set_section_ref('section:api:group:system-instructions', el)
-        }
-      >
-        <UiGroup
-          title={t('api.system-instructions.title')}
-          is_disabled={props.api_configurations.length === 0}
-        >
-          <UiItem
-            title={t('api.system-instructions.edit-files.title')}
-            description={t('api.system-instructions.edit-files.description')}
-            is_toggleable
+          <DefaultConfigurationSelector
+            title={t('api.default-configurations.tool.commit-message')}
+            value={props.defaults['commit-message'] || null}
+            configurations={selector_configurations}
+            on_unset={() =>
+              props.on_set_default_api_configuration('commit-message', null)
+            }
+            on_select={() =>
+              props.on_select_default_api_configuration('commit-message')
+            }
             translations={{
-              expand: t('common.expand'),
-              collapse: t('common.collapse')
+              select: t('api.configurations.action.select-default'),
+              unset: t('api.configurations.action.unset-default')
             }}
-          >
-            <UiTextarea
-              value={props.edit_files_instructions}
-              min_rows={3}
-              on_change={props.set_edit_files_instructions}
-              on_blur={props.on_edit_files_instructions_blur}
-              action_icon={
-                props.edit_files_instructions !==
-                props.default_edit_files_instructions
-                  ? 'discard'
-                  : undefined
-              }
-              action_title={t('general.action.restore-default')}
-              on_action_click={props.on_restore_edit_files_instructions}
-            />
-          </UiItem>
+          />
         </UiGroup>
       </div>
     </UiSection>
