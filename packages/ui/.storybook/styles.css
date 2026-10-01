@@ -1,49 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+
 :root {
-  --cwc-text-color: var(--vscode-foreground);
-  --cwc-text-color-dimmed: color-mix(
-    in srgb,
-    var(--vscode-foreground) 75%,
-    transparent
-  );
-  --cwc-green-foreground: var(
-    --vscode-gitDecoration-untrackedResourceForeground
-  );
-  --cwc-yellow-foreground: var(
-    --vscode-gitDecoration-modifiedResourceForeground
-  );
-  --cwc-red-foreground: var(--vscode-gitDecoration-deletedResourceForeground);
-
-  --cwc-bg-primary: color-mix(
-    in srgb,
-    var(--vscode-foreground) 20%,
-    transparent
-  );
-  --cwc-bg-secondary: color-mix(
-    in srgb,
-    var(--vscode-foreground) 8%,
-    transparent
-  );
-  --cwc-bg-tertiary: color-mix(
-    in srgb,
-    var(--vscode-foreground) 4%,
-    transparent
-  );
-  --cwc-border-color: color-mix(
-    in srgb,
-    var(--vscode-foreground) 25%,
-    transparent
-  );
-  --cwc-border-color-hover: color-mix(
-    in srgb,
-    var(--vscode-foreground) 35%,
-    transparent
-  );
-  --cwc-border-color-dimmed: color-mix(
-    in srgb,
-    var(--vscode-foreground) 17%,
-    transparent
-  );
-
+  --vscode-cornerRadius-small: 4px;
   --vscode-font-weight: normal;
   --vscode-font-size: 13px;
   --vscode-editor-font-weight: normal;
@@ -600,4 +558,5 @@
 
 body {
   background-color: #181818;
+  font-family: sans-serif;
 }
