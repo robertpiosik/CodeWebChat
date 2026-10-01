@@ -10,10 +10,6 @@ export const create_handle_submit =
   ) => {
     e.stopPropagation()
 
-    if (props.is_action_disabled) {
-      return
-    }
-
     if (props.is_copy_only) {
       props.on_copy()
     } else {

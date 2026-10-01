@@ -152,7 +152,7 @@ export const use_keyboard_shortcuts = (props: PromptFieldProps) => {
       left_alt_pressed_ref.current &&
       (e.ctrlKey || e.metaKey)
     ) {
-      if (!props.is_action_disabled && props.on_copy && props.target == 'WEB') {
+      if (props.on_copy && props.target == 'WEB') {
         e.stopPropagation()
         e.preventDefault()
         props.on_copy()

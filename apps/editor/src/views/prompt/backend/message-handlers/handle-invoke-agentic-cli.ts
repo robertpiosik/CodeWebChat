@@ -26,7 +26,7 @@ export const handle_invoke_agentic_cli = async (
     prompt_view_provider.cli_prompt_type == 'edit-files' &&
     !prompt_view_provider.workspace_provider.get_selected_files().length
   ) {
-    vscode.window.showInformationMessage(
+    vscode.window.showWarningMessage(
       t('views.common.handlers.common.context-cannot-be-empty')
     )
     return

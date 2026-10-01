@@ -441,7 +441,6 @@ export const MainView: React.FC<Props> = (props) => {
             props.target == 'WEB' &&
             (!props.is_connected || !props.web_configurations.length)
           }
-          is_action_disabled={is_required_context_empty}
           value={props.instructions}
           chat_history={props.chat_history}
           on_change={handle_input_change}

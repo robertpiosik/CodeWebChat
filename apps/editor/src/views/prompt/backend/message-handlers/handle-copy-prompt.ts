@@ -13,17 +13,23 @@ import { t } from '@/i18n'
 export const handle_copy_prompt = async (params: {
   prompt_view_provider: PromptViewProvider
 }): Promise<void> => {
-  let text = ''
-
   const {
     other_files,
     recent_files,
+    collected_files,
     processed_instructions,
     skill_definitions
   } = await build_prompt_payload({
     prompt_view_provider: params.prompt_view_provider,
     remove_images: true
   })
+
+  if (!collected_files) {
+    vscode.window.showWarningMessage(
+      t('views.common.handlers.common.context-cannot-be-empty')
+    )
+    return
+  }
 
   let output_formatting: string | undefined = undefined
   const user_instructions = processed_instructions
@@ -45,7 +51,7 @@ export const handle_copy_prompt = async (params: {
     output_formatting,
     user_instructions
   })
-  text = build_result.full_prompt
+  const text = build_result.full_prompt
 
   vscode.env.clipboard.writeText(text.trim())
 

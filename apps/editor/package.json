@@ -1038,6 +1038,10 @@
             {
               "name": "(2)",
               "agent": "Claude Code"
+            },
+            {
+              "name": "(3)",
+              "agent": "OpenCode"
             }
           ],
           "items": {
@@ -1095,6 +1099,10 @@
             {
               "name": "(3)",
               "chatbot": "Claude"
+            },
+            {
+              "name": "(5)",
+              "chatbot": "Grok"
             },
             {
               "name": "(4)",

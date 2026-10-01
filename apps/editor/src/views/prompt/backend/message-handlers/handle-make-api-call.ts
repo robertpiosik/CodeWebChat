@@ -20,6 +20,7 @@ import {
 } from '@/constants/edit-format-instructions'
 import { PROVIDERS } from '@/constants/providers'
 import { get_api_configuration } from '@/utils/get-api-configuration'
+import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 
 export const handle_make_api_call = async (
   prompt_view_provider: PromptViewProvider,
@@ -31,6 +32,13 @@ export const handle_make_api_call = async (
   const providers_manager = new ProvidersManager(
     prompt_view_provider.extension_context
   )
+
+  const api_configurations = await providers_manager.get_api_configurations()
+
+  if (!api_configurations.length) {
+    show_incomplete_setup_warning('api')
+    return
+  }
 
   const current_instructions = prompt_view_provider.current_instructions.trim()
 
@@ -52,7 +60,7 @@ export const handle_make_api_call = async (
   })
 
   if (!collected_files) {
-    vscode.window.showInformationMessage(
+    vscode.window.showWarningMessage(
       t('views.common.handlers.common.context-cannot-be-empty')
     )
     return

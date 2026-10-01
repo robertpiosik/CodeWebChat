@@ -39,7 +39,6 @@ export type PromptFieldProps = {
   on_submit_with_control: () => void
   on_copy: () => void
   is_connected: boolean
-  is_action_disabled?: boolean
   current_selection?: SelectionState | null
   on_caret_position_change: (caret_position: number) => void
   is_web_target: boolean
@@ -114,7 +113,6 @@ export type PromptFieldProps = {
     attach_selected_files: string
     more: string
   }
-  
 }
 
 export const PromptField: React.FC<PromptFieldProps> = (props) => {
@@ -354,24 +352,21 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         stopPropagation: () => {}
                       } as any)
                       close_dropdown()
-                    },
-                    is_disabled: props.is_action_disabled
+                    }
                   }
                 ]
               : []),
             {
               label: props.translations.send_with_ellipsis,
               shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
-              on_click: handle_select_click,
-              is_disabled: props.is_action_disabled
+              on_click: handle_select_click
             },
             ...(props.target == 'WEB'
               ? [
                   {
                     label: props.translations.copy_prompt,
                     shortcut: is_mac ? '⌘C' : 'Ctrl+C',
-                    on_click: handle_copy_click,
-                    is_disabled: props.is_action_disabled
+                    on_click: handle_copy_click
                   }
                 ]
               : []),
@@ -392,10 +387,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               on_click: () => {
                 props.on_preview_prompt?.()
                 close_dropdown()
-              },
-              is_disabled: props.is_action_disabled
+              }
             }
-          ].filter((item) => !(!has_content && item.is_disabled))
+          ]
 
     const disconnected_dropdown_items =
       (props.target == 'API' || props.target == 'CLI') && !props.value
@@ -406,8 +400,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   {
                     label: props.translations.copy_prompt,
                     shortcut: is_mac ? '⌘C' : 'Ctrl+C',
-                    on_click: handle_copy_click,
-                    is_disabled: props.is_action_disabled
+                    on_click: handle_copy_click
                   }
                 ]
               : []),
@@ -428,10 +421,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               on_click: () => {
                 props.on_preview_prompt?.()
                 close_dropdown()
-              },
-              is_disabled: props.is_action_disabled
+              }
             }
-          ].filter((item) => !(!has_content && item.is_disabled))
+          ]
 
     return (
       <div
@@ -682,9 +674,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
           <div className={styles['footer__right__submit']} ref={dropdown_ref}>
             {props.target && props.on_target_change && (
-              <div
-                className={styles['footer__right__target-switch']}
-              >
+              <div className={styles['footer__right__target-switch']}>
                 {(is_target_dropdown_open || is_alt_pressed) && (
                   <div
                     className={
@@ -692,14 +682,18 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     }
                   >
                     <div
-                      className={styles['footer__right__target-switch__dropdown']}
+                      className={
+                        styles['footer__right__target-switch__dropdown']
+                      }
                       onClick={(e) => e.stopPropagation()}
                     >
                       {(['WEB', 'API', 'CLI'] as Target[]).map((t, idx) => (
                         <button
                           key={t}
                           className={
-                            styles['footer__right__target-switch__dropdown-item']
+                            styles[
+                              'footer__right__target-switch__dropdown-item'
+                            ]
                           }
                           onClick={(e) => {
                             e.stopPropagation()
@@ -710,7 +704,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         >
                           {is_alt_pressed && t != props.target ? (
                             <KeycapWrapper char={(idx + 1).toString()}>
-                              <span >{t}</span>
+                              <span>{t}</span>
                             </KeycapWrapper>
                           ) : (
                             t
@@ -783,7 +777,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       onMouseEnter={() => set_is_recording_hovered(true)}
                       onMouseLeave={() => set_is_recording_hovered(false)}
                     />
-                  )                  : (
+                  ) : (
                     <button
                       className={cn(
                         styles['footer__right__submit__button'],
@@ -796,7 +790,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       }}
                       onMouseEnter={() => set_show_submit_tooltip(true)}
                       onMouseLeave={() => set_show_submit_tooltip(false)}
-                      disabled={props.is_action_disabled}
                     />
                   )}
                   {primary_dropdown_items.length > 0 && (
@@ -804,9 +797,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       <button
                         ref={chevron_button_ref}
                         className={styles['footer__right__submit__button']}
-                      onClick={() => {
-                        toggle_dropdown()
-                      }}
+                        onClick={() => {
+                          toggle_dropdown()
+                        }}
                         onMouseEnter={() => set_is_more_hovered(true)}
                         onMouseLeave={() => set_is_more_hovered(false)}
                       >
@@ -881,7 +874,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         props.on_copy()
                       }}
                       title={props.translations.copy_prompt}
-                      disabled={props.is_action_disabled}
                     />
                     {disconnected_dropdown_items.length > 0 && (
                       <>

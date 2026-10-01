@@ -21,24 +21,6 @@ export const translations = {
     hu: 'Promptek automatikus kitöltése a böngészőbővítményen keresztül.',
     bg: 'Автоматично попълване на промптове чрез разширението за браузър.'
   },
-  'web.notice-websockets': {
-    en: 'Communication with the browser uses local WebSockets.',
-    pl: 'Komunikacja z przeglądarką odbywa się przez lokalne WebSockety.',
-    'zh-cn': '与浏览器的通信使用本地 WebSocket.',
-    ja: 'ブラウザとの通信にはローカル WebSocket を使用します.',
-    'zh-tw': '與瀏覽器的通訊使用本地 WebSocket.',
-    de: 'Die Kommunikation mit dem Browser erfolgt über lokale WebSockets.',
-    es: 'La comunicación con el navegador utiliza WebSockets locales.',
-    fr: 'La communication avec le navigateur utilise des WebSockets locaux.',
-    'pt-br': 'A comunicação com o navegador usa WebSockets locais.',
-    ru: 'Связь с браузером осуществляется через локальные WebSocket-соединения.',
-    ko: '브라우저와의 통신은 로컬 WebSocket을 사용합니다.',
-    it: 'La comunicazione con il browser utiliza WebSocket locali.',
-    tr: 'Tarayıcı ile iletişim yerel WebSocket kullanır.',
-    cs: 'Komunikace s prohlížečem využívá lokální WebSocket.',
-    hu: 'A böngészővel való kommunikáció helyi WebSocketeket használ.',
-    bg: 'Комуникацията с браузъра използва локални WebSocket.'
-  },
   'web.notice-forwarding': {
     en: 'Use {forwarding} of port 55155 when using remote machine via SSH.',
     pl: 'Użyj {forwarding} portu 55155 podczas korzystania ze zdalnej maszyny przez SSH.',

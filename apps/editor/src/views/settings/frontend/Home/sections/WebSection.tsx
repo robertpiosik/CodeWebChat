@@ -150,10 +150,6 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
         notices={[
           {
             type: 'info',
-            message: t('web.notice-websockets')
-          },
-          {
-            type: 'info',
             message: (
               <Translation
                 id="web.notice-forwarding"

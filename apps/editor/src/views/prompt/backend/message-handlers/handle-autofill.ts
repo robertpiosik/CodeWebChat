@@ -72,7 +72,7 @@ export const handle_autofill = async (params: {
     params.prompt_view_provider.web_prompt_type == 'edit-files' &&
     !collected_files
   ) {
-    vscode.window.showInformationMessage(
+    vscode.window.showWarningMessage(
       t('views.common.handlers.common.context-cannot-be-empty')
     )
     return

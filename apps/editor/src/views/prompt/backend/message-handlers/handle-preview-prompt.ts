@@ -44,7 +44,7 @@ export const handle_preview_prompt = async (params: {
     })
 
     if (!collected_files) {
-      vscode.window.showInformationMessage(
+      vscode.window.showWarningMessage(
         t('views.common.handlers.common.context-cannot-be-empty')
       )
       return

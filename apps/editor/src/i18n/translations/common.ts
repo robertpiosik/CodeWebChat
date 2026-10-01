@@ -53,24 +53,6 @@ export const translations = {
     hu: 'A felhasználó megszakította a műveletet',
     bg: 'Потребителят отмени операцията'
   },
-  'common.warning.setup-incomplete': {
-    en: 'Setup incomplete.',
-    pl: 'Konfiguracja niekompletna.',
-    'zh-cn': '设置未完成。',
-    ja: 'セットアップが未完了です。',
-    'zh-tw': '設定未完成。',
-    de: 'Einrichtung unvollständig.',
-    es: 'Configuración incompleta.',
-    fr: 'Configuration incomplète.',
-    'pt-br': 'Configuração incompleta.',
-    ru: 'Настройка не завершена.',
-    ko: '설정이 완료되지 않았습니다.',
-    it: 'Configurazione incompleta.',
-    tr: 'Kurulum tamamlanmadı.',
-    cs: 'Nastavení není dokončeno.',
-    hu: 'A beállítás nem teljes.',
-    bg: 'Настройката е непълна.'
-  },
   'common.error.provider-not-found': {
     en: 'Provider {name} not found.',
     pl: 'Nie znaleziono providera {name}.',

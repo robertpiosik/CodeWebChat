@@ -108,9 +108,7 @@ export const create_handle_key_down = (
     const selection = window.getSelection()
     if (!selection || selection.rangeCount == 0 || selection.isCollapsed) {
       e.preventDefault()
-      if (!props.is_action_disabled) {
-        props.on_copy()
-      }
+      props.on_copy()
       return true
     }
     return false
