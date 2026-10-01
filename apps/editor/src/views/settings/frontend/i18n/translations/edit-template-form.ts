@@ -1,22 +1,4 @@
 export const translations = {
-  'edit-template-form.name.label': {
-    en: 'Name',
-    pl: 'Nazwa',
-    'zh-cn': '名称',
-    ja: '名前',
-    'zh-tw': '名稱',
-    de: 'Name',
-    es: 'Nombre',
-    fr: 'Nom',
-    'pt-br': 'Nome',
-    ru: 'Имя',
-    ko: '이름',
-    it: 'Nome',
-    tr: 'Ad',
-    cs: 'Název',
-    hu: 'Név',
-    bg: 'Име'
-  },
   'edit-template-form.name.placeholder': {
     en: 'E.g., Refactor Function',
     pl: 'Np. Refaktoryzuj funkcję',

@@ -224,21 +224,15 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   options={[
                     {
                       value: 'ask',
-                      label: t(
-                        'general.commits.use-context-files-in-commit-message-prompt.ask'
-                      )
+                      label: t('common.ask')
                     },
                     {
                       value: 'always',
-                      label: t(
-                        'general.commits.use-context-files-in-commit-message-prompt.always'
-                      )
+                      label: t('common.always')
                     },
                     {
                       value: 'never',
-                      label: t(
-                        'general.commits.use-context-files-in-commit-message-prompt.never'
-                      )
+                      label: t('common.never')
                     }
                   ]}
                   value={props.use_context_files_in_commit_message_prompt}
@@ -258,21 +252,15 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   options={[
                     {
                       value: 'ask',
-                      label: t(
-                        'general.commits.attach-ascii-tree-of-context.ask'
-                      )
+                      label: t('common.ask')
                     },
                     {
                       value: 'always',
-                      label: t(
-                        'general.commits.attach-ascii-tree-of-context.always'
-                      )
+                      label: t('common.always')
                     },
                     {
                       value: 'never',
-                      label: t(
-                        'general.commits.attach-ascii-tree-of-context.never'
-                      )
+                      label: t('common.never')
                     }
                   ]}
                   value={props.attach_ascii_tree_of_context}
@@ -336,7 +324,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   options={[
                     {
                       value: 'ask',
-                      label: t('general.voice-input.default-action.ask')
+                      label: t('common.ask')
                     },
                     {
                       value: 'send-request',

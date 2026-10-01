@@ -1,22 +1,4 @@
 export const translations = {
-  'edit-provider-form.name.label': {
-    en: 'Name',
-    pl: 'Nazwa',
-    'zh-cn': '名称',
-    ja: '名前',
-    'zh-tw': '名稱',
-    de: 'Name',
-    es: 'Nombre',
-    fr: 'Nom',
-    'pt-br': 'Nome',
-    ru: 'Название',
-    ko: '이름',
-    it: 'Nome',
-    tr: 'Ad',
-    cs: 'Název',
-    hu: 'Név',
-    bg: 'Име'
-  },
   'edit-provider-form.name.placeholder': {
     en: 'e.g. OpenAI',
     pl: 'np. OpenAI',

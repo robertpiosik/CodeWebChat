@@ -68,7 +68,7 @@ export const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   },
   {
     id: 'section:web:group:web-defaults',
-    label: 'web.default-configurations.title'
+    label: 'common.defaults'
   },
   {
     id: 'section:api',
@@ -88,7 +88,7 @@ export const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   },
   {
     id: 'section:api:group:api-defaults',
-    label: 'api.default-configurations.title'
+    label: 'common.defaults'
   },
   {
     id: 'section:cli',
@@ -100,7 +100,7 @@ export const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   },
   {
     id: 'section:cli:group:agent-defaults',
-    label: 'cli.default-configurations.title'
+    label: 'common.defaults'
   }
 ]
 

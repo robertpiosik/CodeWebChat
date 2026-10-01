@@ -169,11 +169,11 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
         }
       >
         <UiGroup
-          title={t('cli.default-configurations.title')}
+          title={t('common.defaults')}
           is_disabled={props.cli_configurations.length === 0}
         >
           <DefaultConfigurationSelector
-            title={t('cli.default-configurations.tool.agentic-search')}
+            title={t('common.agentic-search')}
             value={props.agent_defaults['agentic-search'] || null}
             configurations={selector_configurations}
             on_unset={() =>
@@ -184,11 +184,11 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }
             translations={{
               select: t('agents.configurations.action.select-default'),
-              unset: t('agents.configurations.action.unset-default')
+              unset: t('common.unset-default')
             }}
           />
           <DefaultConfigurationSelector
-            title={t('cli.default-configurations.tool.code-at-cursor')}
+            title={t('common.code-at-cursor')}
             value={props.agent_defaults['code-at-cursor'] || null}
             configurations={selector_configurations}
             on_unset={() =>
@@ -199,11 +199,11 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }
             translations={{
               select: t('agents.configurations.action.select-default'),
-              unset: t('agents.configurations.action.unset-default')
+              unset: t('common.unset-default')
             }}
           />
           <DefaultConfigurationSelector
-            title={t('cli.default-configurations.tool.commit-message')}
+            title={t('common.commit-message')}
             value={props.agent_defaults['commit-message'] || null}
             configurations={selector_configurations}
             on_unset={() =>
@@ -214,11 +214,11 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }
             translations={{
               select: t('agents.configurations.action.select-default'),
-              unset: t('agents.configurations.action.unset-default')
+              unset: t('common.unset-default')
             }}
           />
           <DefaultConfigurationSelector
-            title={t('cli.default-configurations.tool.intelligent-search')}
+            title={t('common.intelligent-search')}
             value={props.agent_defaults['intelligent-search'] || null}
             configurations={selector_configurations}
             on_unset={() =>
@@ -229,11 +229,11 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }
             translations={{
               select: t('agents.configurations.action.select-default'),
-              unset: t('agents.configurations.action.unset-default')
+              unset: t('common.unset-default')
             }}
           />
           <DefaultConfigurationSelector
-            title={t('cli.default-configurations.tool.patch-repair')}
+            title={t('common.patch-repair')}
             value={props.agent_defaults['patch-repair'] || null}
             configurations={selector_configurations}
             on_unset={() =>
@@ -244,11 +244,11 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }
             translations={{
               select: t('agents.configurations.action.select-default'),
-              unset: t('agents.configurations.action.unset-default')
+              unset: t('common.unset-default')
             }}
           />
           <DefaultConfigurationSelector
-            title={t('cli.default-configurations.tool.voice-input')}
+            title={t('common.voice-input')}
             value={props.agent_defaults['voice-input'] || null}
             configurations={selector_configurations}
             on_unset={() =>
@@ -259,7 +259,7 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }
             translations={{
               select: t('agents.configurations.action.select-default'),
-              unset: t('agents.configurations.action.unset-default')
+              unset: t('common.unset-default')
             }}
           />
         </UiGroup>

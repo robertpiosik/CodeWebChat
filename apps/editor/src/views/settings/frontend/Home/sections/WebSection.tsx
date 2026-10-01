@@ -339,11 +339,11 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
         }
       >
         <UiGroup
-          title={t('web.default-configurations.title')}
+          title={t('common.defaults')}
           is_disabled={props.web_configurations.length === 0}
         >
           <DefaultConfigurationSelector
-            title={t('web.default-configurations.tool.code-at-cursor')}
+            title={t('common.code-at-cursor')}
             value={props.web_defaults['code-at-cursor'] || null}
             configurations={selector_configurations}
             on_unset={() =>
@@ -354,11 +354,11 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }
             translations={{
               select: t('chatbots.configurations.action.select-default'),
-              unset: t('chatbots.configurations.action.unset-default')
+              unset: t('common.unset-default')
             }}
           />
           <DefaultConfigurationSelector
-            title={t('web.default-configurations.tool.intelligent-search')}
+            title={t('common.intelligent-search')}
             value={props.web_defaults['intelligent-search'] || null}
             configurations={selector_configurations}
             on_unset={() =>
@@ -369,11 +369,11 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }
             translations={{
               select: t('chatbots.configurations.action.select-default'),
-              unset: t('chatbots.configurations.action.unset-default')
+              unset: t('common.unset-default')
             }}
           />
           <DefaultConfigurationSelector
-            title={t('web.default-configurations.tool.patch-repair')}
+            title={t('common.patch-repair')}
             value={props.web_defaults['patch-repair'] || null}
             configurations={selector_configurations}
             on_unset={() =>
@@ -384,7 +384,22 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }
             translations={{
               select: t('chatbots.configurations.action.select-default'),
-              unset: t('chatbots.configurations.action.unset-default')
+              unset: t('common.unset-default')
+            }}
+          />
+          <DefaultConfigurationSelector
+            title={t('common.commit-message')}
+            value={props.web_defaults['commit-message'] || null}
+            configurations={selector_configurations}
+            on_unset={() =>
+              props.on_set_default_web_configuration('commit-message', null)
+            }
+            on_select={() =>
+              props.on_select_default_web_configuration('commit-message')
+            }
+            translations={{
+              select: t('chatbots.configurations.action.select-default'),
+              unset: t('common.unset-default')
             }}
           />
         </UiGroup>

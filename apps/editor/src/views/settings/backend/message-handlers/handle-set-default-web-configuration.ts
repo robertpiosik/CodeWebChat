@@ -26,6 +26,12 @@ export const handle_set_default_web_configuration = async (
       } else {
         delete new_c.isDefaultForIntelligentSearch
       }
+    } else if (message.web_feature == 'commit-message') {
+      if (c.name == message.web_configuration_name) {
+        new_c.isDefaultForCommitMessage = true
+      } else {
+        delete new_c.isDefaultForCommitMessage
+      }
     }
     return new_c
   })

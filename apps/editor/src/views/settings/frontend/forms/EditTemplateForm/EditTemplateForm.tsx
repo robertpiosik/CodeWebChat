@@ -29,7 +29,7 @@ export const EditTemplateForm: React.FC<Props> = (props) => {
     <UiScrollable top_shadow>
       <div className={styles.form}>
         <UiFieldset>
-          <UiField label={t('edit-template-form.name.label')} html_for="name">
+          <UiField label={t('common.name')} html_for="name">
             <UiInput
               id="name"
               type="text"

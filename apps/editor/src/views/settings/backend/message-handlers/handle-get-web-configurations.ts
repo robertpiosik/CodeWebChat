@@ -43,7 +43,10 @@ export const handle_get_web_configurations = async (
       'intelligent-search':
         web_configurations_config.find(
           (c: any) => c.isDefaultForIntelligentSearch
-        )?.name || null
+        )?.name || null,
+      'commit-message':
+        web_configurations_config.find((c: any) => c.isDefaultForCommitMessage)
+          ?.name || null
     }
   })
 }
