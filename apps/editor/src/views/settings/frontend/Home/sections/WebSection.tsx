@@ -358,6 +358,21 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }}
           />
           <DefaultConfigurationSelector
+            title={t('common.commit-message')}
+            value={props.web_defaults['commit-message'] || null}
+            configurations={selector_configurations}
+            on_unset={() =>
+              props.on_set_default_web_configuration('commit-message', null)
+            }
+            on_select={() =>
+              props.on_select_default_web_configuration('commit-message')
+            }
+            translations={{
+              select: t('chatbots.configurations.action.select-default'),
+              unset: t('common.unset-default')
+            }}
+          />
+          <DefaultConfigurationSelector
             title={t('common.intelligent-search')}
             value={props.web_defaults['intelligent-search'] || null}
             configurations={selector_configurations}
@@ -381,21 +396,6 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }
             on_select={() =>
               props.on_select_default_web_configuration('patch-repair')
-            }
-            translations={{
-              select: t('chatbots.configurations.action.select-default'),
-              unset: t('common.unset-default')
-            }}
-          />
-          <DefaultConfigurationSelector
-            title={t('common.commit-message')}
-            value={props.web_defaults['commit-message'] || null}
-            configurations={selector_configurations}
-            on_unset={() =>
-              props.on_set_default_web_configuration('commit-message', null)
-            }
-            on_select={() =>
-              props.on_select_default_web_configuration('commit-message')
             }
             translations={{
               select: t('chatbots.configurations.action.select-default'),
