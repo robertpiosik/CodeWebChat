@@ -9,34 +9,34 @@ type Props = {
   is_accept_disabled: boolean
 }
 
-export const ResponsePreviewFooter: React.FC<Props> = ({
-  on_back,
-  on_reject,
-  on_accept,
-  is_accept_disabled
-}) => {
+export const ResponsePreviewFooter: React.FC<Props> = (props) => {
   const { container_ref, compact_step } = use_compacting()
 
   return (
     <div className={styles.container} ref={container_ref}>
       <Button
-        on_click={on_back}
+        on_click={props.on_back}
         is_secondary
         title="Back"
-        codicon="chevron-left"
+        codicon={compact_step >= 1 ? 'chevron-left' : undefined}
       >
-        {compact_step < 1 && <span className={styles.text}>Back</span>}
-      </Button>
-      <Button on_click={on_reject} is_danger title="Reject" codicon="close">
-        {compact_step < 2 && <span className={styles.text}>Reject</span>}
+        {compact_step < 1 && <span>Back</span>}
       </Button>
       <Button
-        on_click={on_accept}
-        disabled={is_accept_disabled}
-        title="Accept"
-        codicon="check"
+        on_click={props.on_reject}
+        is_danger
+        title="Reject"
+        codicon={compact_step >= 2 ? 'close-small' : undefined}
       >
-        {compact_step < 3 && <span className={styles.text}>Accept</span>}
+        {compact_step < 2 && <span>Reject</span>}
+      </Button>
+      <Button
+        on_click={props.on_accept}
+        disabled={props.is_accept_disabled}
+        title="Accept"
+        codicon={compact_step >= 3 ? 'check' : undefined}
+      >
+        {compact_step < 3 && <span>Accept</span>}
       </Button>
     </div>
   )

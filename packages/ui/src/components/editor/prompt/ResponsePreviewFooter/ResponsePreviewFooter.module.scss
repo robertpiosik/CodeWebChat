@@ -6,16 +6,3 @@
     flex: 1;
   }
 }
-
-.text {
-  &--hidden {
-    display: none;
-  }
-}
-
-.icon {
-  display: none;
-  &--visible {
-    display: inline-block;
-  }
-}
