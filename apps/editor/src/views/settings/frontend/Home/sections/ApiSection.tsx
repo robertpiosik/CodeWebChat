@@ -361,14 +361,14 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }}
           />
           <DefaultConfigurationSelector
-            title={t('api.default-configurations.tool.voice-input')}
-            value={props.defaults['voice-input'] || null}
+            title={t('api.default-configurations.tool.commit-message')}
+            value={props.defaults['commit-message'] || null}
             configurations={selector_configurations}
             on_unset={() =>
-              props.on_set_default_api_configuration('voice-input', null)
+              props.on_set_default_api_configuration('commit-message', null)
             }
             on_select={() =>
-              props.on_select_default_api_configuration('voice-input')
+              props.on_select_default_api_configuration('commit-message')
             }
             translations={{
               select: t('api.configurations.action.select-default'),
@@ -406,14 +406,14 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }}
           />
           <DefaultConfigurationSelector
-            title={t('api.default-configurations.tool.commit-message')}
-            value={props.defaults['commit-message'] || null}
+            title={t('api.default-configurations.tool.voice-input')}
+            value={props.defaults['voice-input'] || null}
             configurations={selector_configurations}
             on_unset={() =>
-              props.on_set_default_api_configuration('commit-message', null)
+              props.on_set_default_api_configuration('voice-input', null)
             }
             on_select={() =>
-              props.on_select_default_api_configuration('commit-message')
+              props.on_select_default_api_configuration('voice-input')
             }
             translations={{
               select: t('api.configurations.action.select-default'),

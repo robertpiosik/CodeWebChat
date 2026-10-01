@@ -203,6 +203,21 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }}
           />
           <DefaultConfigurationSelector
+            title={t('cli.default-configurations.tool.commit-message')}
+            value={props.agent_defaults['commit-message'] || null}
+            configurations={selector_configurations}
+            on_unset={() =>
+              props.on_set_default_cli_configuration('commit-message', null)
+            }
+            on_select={() =>
+              props.on_select_default_cli_configuration('commit-message')
+            }
+            translations={{
+              select: t('agents.configurations.action.select-default'),
+              unset: t('agents.configurations.action.unset-default')
+            }}
+          />
+          <DefaultConfigurationSelector
             title={t('cli.default-configurations.tool.intelligent-search')}
             value={props.agent_defaults['intelligent-search'] || null}
             configurations={selector_configurations}
@@ -241,21 +256,6 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }
             on_select={() =>
               props.on_select_default_cli_configuration('voice-input')
-            }
-            translations={{
-              select: t('agents.configurations.action.select-default'),
-              unset: t('agents.configurations.action.unset-default')
-            }}
-          />
-          <DefaultConfigurationSelector
-            title={t('cli.default-configurations.tool.commit-message')}
-            value={props.agent_defaults['commit-message'] || null}
-            configurations={selector_configurations}
-            on_unset={() =>
-              props.on_set_default_cli_configuration('commit-message', null)
-            }
-            on_select={() =>
-              props.on_select_default_cli_configuration('commit-message')
             }
             translations={{
               select: t('agents.configurations.action.select-default'),
