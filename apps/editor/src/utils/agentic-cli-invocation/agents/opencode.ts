@@ -23,7 +23,7 @@ export const opencode_agent: CodingAgent = {
     params.cwd
   ],
   get_integrated_terminal_args: (params) => ['run', '--dir', params.cwd],
-  get_post_integrated_terminal_args: () => ['--continue'],
+  get_post_integrated_terminal_args: () => ['--mini', '--continue'],
   parse_stream_line: (parsed, report_progress) => {
     let action_name = ''
     if (parsed.type == 'tool_use' && parsed.part?.tool) {
