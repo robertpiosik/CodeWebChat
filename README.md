@@ -23,7 +23,7 @@
 
 ## Sessionless design
 
-**Without sessions, there is no context accumulation.** Instead of increasing complexity with each turn, you first select context files and then send lean markdown [prompts](#prompts). In effect, models spend less time _thinking_, **reducing response times and quota usage by 10x**.
+**Without sessions, there is no context accumulation.** Instead of increasing complexity with each message to the agent, you first select context files and then send lean markdown [prompts](#prompts). In effect, models spend less time _thinking_, **reducing response times and quota usage by 10x**.
 
 ## Send prompts with...
 
