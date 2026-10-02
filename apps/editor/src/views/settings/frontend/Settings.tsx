@@ -8,7 +8,7 @@ import { use_cli_configuration_editing } from './hooks/use-cli-configuration-edi
 import { EditCliConfigurationForm } from '@/views/shared/forms/EditCliConfigurationForm/EditCliConfigurationForm'
 import { use_api_configuration_editing } from './hooks/use-api-configuration-editing'
 import { use_provider_editing } from './hooks/use-provider-editing'
-import { Modal as UiModal } from '@ui/components/editor/settings/Modal'
+import { Modal as UiModal } from '@ui/components/editor/settings-view/Modal'
 import { EditWebConfigurationForm } from '@/views/shared/forms/EditWebConfigurationForm'
 import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurationForm'
 import { EditProviderForm } from './forms/EditProviderForm'

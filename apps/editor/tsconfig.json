@@ -20,8 +20,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "../../packages/shared/src/**/*.ts",
-    "../../packages/ui/src/**/*",
-    "src/views/settings/helpers/open-settings.ts"
+    "../../packages/ui/src/**/*"
   ],
   "exclude": ["node_modules"]
 }

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Layout as UiLayout } from '@ui/components/editor/settings/Layout'
+import { Layout as UiLayout } from '@ui/components/editor/settings-view/Layout'
 import { use_scroll_to } from './hooks/use-scroll-to'
-import { NavigationSection as UiNavigationSection } from '@ui/components/editor/settings/NavigationSection'
-import { NavigationItemSection as UiNavigationItemSection } from '@ui/components/editor/settings/NavigationItemSection'
-import { NavigationItemGroup as UiNavigationItemGroup } from '@ui/components/editor/settings/NavigationItemGroup'
+import { NavigationSection as UiNavigationSection } from '@ui/components/editor/settings-view/NavigationSection'
+import { NavigationItemSection as UiNavigationItemSection } from '@ui/components/editor/settings-view/NavigationItemSection'
+import { NavigationItemGroup as UiNavigationItemGroup } from '@ui/components/editor/settings-view/NavigationItemGroup'
 import { ApiSection } from './sections/ApiSection'
 import {
   ApiConfiguration,

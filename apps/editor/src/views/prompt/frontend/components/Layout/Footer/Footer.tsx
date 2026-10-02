@@ -3,7 +3,7 @@ import styles from './Footer.module.scss'
 import { use_compacting } from '@shared/hooks'
 import { LayoutContext } from '../../../contexts/LayoutContext'
 import { use_translation } from '../../../i18n/use-translation'
-import { CompactableActionButton } from '@ui/components/editor/prompt/CompactableActionButton'
+import { CompactableActionButton } from '@ui/components/editor/prompt-view/CompactableActionButton'
 
 type Props = {
   on_history_click?: () => void

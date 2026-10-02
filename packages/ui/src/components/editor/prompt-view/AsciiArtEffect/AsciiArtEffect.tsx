@@ -28,8 +28,14 @@ export const AsciiArtEffect = ({ density = 1 }: Props) => {
     }
 
     const handle_mouse_enter = () => {
-      el.style.setProperty('--mask-offset-x', `${Math.floor(Math.random() * 100)}px`)
-      el.style.setProperty('--mask-offset-y', `${Math.floor(Math.random() * 100)}px`)
+      el.style.setProperty(
+        '--mask-offset-x',
+        `${Math.floor(Math.random() * 100)}px`
+      )
+      el.style.setProperty(
+        '--mask-offset-y',
+        `${Math.floor(Math.random() * 100)}px`
+      )
     }
 
     parent.addEventListener('mousemove', handle_mouse_move)

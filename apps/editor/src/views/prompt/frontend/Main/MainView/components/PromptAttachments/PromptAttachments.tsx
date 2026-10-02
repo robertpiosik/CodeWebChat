@@ -1,5 +1,5 @@
 import React from 'react'
-import { StatusBar } from '@ui/components/editor/prompt/StatusBar'
+import { StatusBar } from '@ui/components/editor/prompt-view/StatusBar'
 import { display_token_count } from '@shared/utils/display-token-count'
 
 type Props = {

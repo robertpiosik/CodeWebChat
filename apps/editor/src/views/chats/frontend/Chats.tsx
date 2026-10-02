@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Progress as UiProgress } from '@ui/components/editor/chats/Progress'
-import { Chats as UiChats } from '@ui/components/editor/chats/Chats'
+import { Progress as UiProgress } from '@ui/components/editor/chats-view/Progress'
+import { Chats as UiChats } from '@ui/components/editor/chats-view/Chats'
 import { BackendMessage } from '../types/messages'
 
 const vscode = acquireVsCodeApi()

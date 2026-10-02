@@ -1,6 +1,6 @@
 import React from 'react'
-import { StatusBar } from '@ui/components/editor/prompt/StatusBar'
-import { Spacer as UiSpacer } from '@ui/components/editor/prompt/Spacer'
+import { StatusBar } from '@ui/components/editor/prompt-view/StatusBar'
+import { Spacer as UiSpacer } from '@ui/components/editor/prompt-view/Spacer'
 
 type Props = {
   is_connected: boolean

@@ -1,14 +1,14 @@
 import { forwardRef } from 'react'
 import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { Dropdown as UiDropdown } from '@ui/components/editor/common/Dropdown'
-import { Item as UiItem } from '@ui/components/editor/settings/Item'
-import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
-import { Section as UiSection } from '@ui/components/editor/settings/Section'
+import { Item as UiItem } from '@ui/components/editor/settings-view/Item'
+import { Group as UiGroup } from '@ui/components/editor/settings-view/Group/Group'
+import { Section as UiSection } from '@ui/components/editor/settings-view/Section'
 import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
-import { Templates } from '@ui/components/editor/settings/Templates'
+import { Templates } from '@ui/components/editor/settings-view/Templates'
 import { Template } from '@/views/settings/types/messages'
 
 type Props = {

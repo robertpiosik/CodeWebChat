@@ -5,8 +5,8 @@ import {
   WebPromptType,
   CliPromptType
 } from '@shared/types/prompt-types'
-import { IconAccentButton as UiIconAccentButton } from '@ui/components/editor/prompt/IconAccentButton'
-import { KeycapWrapper as UiKeycapWrapper } from '@ui/components/editor/prompt/KeycapWrapper'
+import { IconAccentButton as UiIconAccentButton } from '@ui/components/editor/prompt-view/IconAccentButton'
+import { KeycapWrapper as UiKeycapWrapper } from '@ui/components/editor/prompt-view/KeycapWrapper'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import styles from './Header.module.scss'
 import {
@@ -15,9 +15,9 @@ import {
   cli_prompt_type_labels
 } from '../../prompt-type-labels'
 import { use_translation } from '@/views/prompt/frontend/i18n/use-translation'
-import { StatusBar as UiStatusBar } from '@ui/components/editor/prompt/StatusBar'
-import { Spacer as UiSpacer } from '@ui/components/editor/prompt/Spacer'
-import { Responses as UiResponses } from '@ui/components/editor/prompt/Responses'
+import { StatusBar as UiStatusBar } from '@ui/components/editor/prompt-view/StatusBar'
+import { Spacer as UiSpacer } from '@ui/components/editor/prompt-view/Spacer'
+import { Responses as UiResponses } from '@ui/components/editor/prompt-view/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 
 type Props = {

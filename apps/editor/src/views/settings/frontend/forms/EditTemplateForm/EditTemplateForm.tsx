@@ -4,7 +4,7 @@ import { Field as UiField } from '@ui/components/editor/common/Field'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
-import { Fieldset as UiFieldset } from '@ui/components/editor/prompt/Fieldset'
+import { Fieldset as UiFieldset } from '@ui/components/editor/prompt-view/Fieldset'
 import { use_translation } from '../../i18n/use-translation'
 import { Template } from '@/views/settings/types/messages'
 

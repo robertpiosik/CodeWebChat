@@ -19,7 +19,7 @@ import {
 } from '@/views/prompt/types/messages'
 import { ApiConfiguration } from '@/views/prompt/types/messages'
 import { post_message } from '../utils/post-message'
-import { Configurations as UiConfigurations } from '@ui/components/editor/prompt/Configurations'
+import { Configurations as UiConfigurations } from '@ui/components/editor/prompt-view/Configurations'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 
 type Props = {

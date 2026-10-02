@@ -11,7 +11,7 @@ import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { DropdownMenu } from '../../DropdownMenu'
 import { use_is_mac } from '@shared/hooks'
 import { Tooltip } from '../../Tooltip'
-import { KeycapWrapper } from '../../../prompt/KeycapWrapper'
+import { KeycapWrapper } from '../../../prompt-view/KeycapWrapper'
 import { Target } from '@shared/types/target'
 import { display_token_count } from '@shared/utils/display-token-count'
 import {
