@@ -8,7 +8,7 @@ export type TabsProps = {
   active_tab_index: number
   on_tabs_reorder?: (new_order: number[]) => void
   handle_input_click?: (e: React.MouseEvent<HTMLDivElement>) => void
-  is_hidden?: boolean
+  is_empty?: boolean
 }
 
 export type TabsRef = {
@@ -65,27 +65,7 @@ export const Tabs = forwardRef<TabsRef, TabsProps>((props, ref) => {
     })
   }, [props.tabs_count])
 
-  if (props.is_hidden) {
-    if (props.tabs_count > 1) {
-      return (
-        <div className={styles.tabs} style={{ visibility: 'hidden' }}>
-          {tab_items.map((item) => (
-            <div key={item.id} className={styles.tabs__tab} />
-          ))}
-          <div className={cn(styles.tabs__tab, styles['tabs__tab--new'])} />
-        </div>
-      )
-    } else if (props.tabs_count === 1) {
-      return (
-        <div className={styles.tabs} style={{ visibility: 'hidden' }}>
-          <div className={cn(styles.tabs__tab, styles['tabs__tab--new'])} />
-        </div>
-      )
-    }
-    return null
-  }
-
-  if (props.tabs_count > 1) {
+  if (props.tabs_count >= 1) {
     return (
       <ReactSortable
         list={tab_items}
@@ -108,8 +88,12 @@ export const Tabs = forwardRef<TabsRef, TabsProps>((props, ref) => {
         {tab_items.map((item, i) => {
           const is_active = i === props.active_tab_index
           const is_hovered = hovered_tab_index === i
+          const can_close = !(props.tabs_count === 1 && props.is_empty)
           const show_close =
-            is_active && is_hovered && effective_has_left_active_tab
+            is_active &&
+            is_hovered &&
+            effective_has_left_active_tab &&
+            can_close
           return (
             <div
               key={item.id}
@@ -138,18 +122,6 @@ export const Tabs = forwardRef<TabsRef, TabsProps>((props, ref) => {
           onClick={props.handle_input_click}
         />
       </ReactSortable>
-    )
-  }
-
-  if (props.tabs_count === 1) {
-    return (
-      <div className={styles.tabs}>
-        <div
-          className={cn(styles.tabs__tab, styles['tabs__tab--new'])}
-          data-role="tab-new"
-          onClick={props.handle_input_click}
-        />
-      </div>
     )
   }
 

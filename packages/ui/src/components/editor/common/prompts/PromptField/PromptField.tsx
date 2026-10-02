@@ -1,16 +1,12 @@
 import { useRef, useEffect, useMemo, useState, useCallback } from 'react'
 import styles from './PromptField.module.scss'
 import cn from 'classnames'
-import { Icon } from '../../Icon'
 import { use_handlers } from './hooks/use-handlers'
 import { use_dropdown } from './hooks/use-dropdown'
 import { use_ghost_text } from './hooks/use-ghost-text'
 import { use_drag_drop } from './hooks/use-drag-drop'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
-import { DropdownMenu } from '../../DropdownMenu'
 import { use_is_mac } from '@shared/hooks'
-import { Tooltip } from '../../Tooltip'
-import { KeycapWrapper } from '../../../prompt-view/KeycapWrapper'
 import { Target } from '@shared/types/target'
 import { display_token_count } from '@shared/utils/display-token-count'
 import {
@@ -20,6 +16,7 @@ import {
   get_highlighted_text
 } from '../shared/symbols'
 import { Tabs, TabsRef } from './components/Tabs'
+import { Footer } from './components/Footer'
 
 export type EditFormat = 'whole' | 'search-replace' | 'diff' | 'truncated'
 
@@ -120,51 +117,14 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [caret_position, set_caret_position] = useState(0)
   const prev_tab_index_ref = useRef(props.active_tab_index)
   const [should_show_ghost_text, set_should_show_ghost_text] = useState(false)
-  const [show_submit_tooltip, set_show_submit_tooltip] = useState(false)
   const [is_text_selecting, set_is_text_selecting] = useState(false)
   const [is_focused, set_is_focused] = useState(false)
-  const [is_recording_hovered, set_is_recording_hovered] = useState(false)
-  const [is_edit_format_hovered, set_is_edit_format_hovered] = useState(false)
-  const [is_more_hovered, set_is_more_hovered] = useState(false)
-  const [is_target_dropdown_open, set_is_target_dropdown_open] = useState(false)
-  const [hovered_left_action, set_hovered_left_action] = useState<
-    'at' | 'hash' | 'slash' | null
-  >(null)
 
   const container_inner_ref = useRef<HTMLDivElement>(null)
   const tabs_ref = useRef<TabsRef>(null)
 
-  const chevron_button_ref = useRef<HTMLButtonElement>(null)
-  const disconnected_chevron_button_ref = useRef<HTMLButtonElement>(null)
-
   const has_content =
     !!props.value || !!(props.selected_files && props.selected_files.length > 0)
-
-  useEffect(() => {
-    const has_submit_button =
-      !props.is_copy_only &&
-      (!props.is_web_target || (props.is_web_target && props.is_connected)) &&
-      !props.is_recording &&
-      !!props.value
-
-    if (!has_submit_button) {
-      set_show_submit_tooltip(false)
-    }
-  }, [
-    props.value,
-    props.is_recording,
-    props.is_web_target,
-    props.is_connected,
-    props.is_copy_only
-  ])
-
-  useEffect(() => {
-    const has_mic_button = props.is_recording || !props.value
-
-    if (!has_mic_button) {
-      set_is_recording_hovered(false)
-    }
-  }, [props.value, props.is_recording, props.is_web_target, props.is_connected])
 
   const { is_alt_pressed, handle_container_key_down } =
     use_keyboard_shortcuts(props)
@@ -308,597 +268,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     }
   }, [props.is_recording])
 
-  useEffect(() => {
-    if (is_target_dropdown_open) {
-      const handle_click = () => {
-        set_is_target_dropdown_open(false)
-      }
-
-      document.addEventListener('click', handle_click)
-      return () => {
-        document.removeEventListener('click', handle_click)
-      }
-    }
-  }, [is_target_dropdown_open])
-
-  const render_footer = () => {
-    const primary_dropdown_items =
-      (props.target == 'API' || props.target == 'CLI') && !props.value
-        ? []
-        : [
-            ...(!props.value
-              ? [
-                  {
-                    label: props.translations.send,
-                    shortcut: is_mac ? '↩' : 'Enter',
-                    on_click: () => {
-                      handle_submit({
-                        stopPropagation: () => {}
-                      } as any)
-                      close_dropdown()
-                    }
-                  }
-                ]
-              : []),
-            {
-              label: props.translations.send_with_ellipsis,
-              shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
-              on_click: handle_select_click
-            },
-            ...(props.target == 'WEB'
-              ? [
-                  {
-                    label: props.translations.copy_prompt,
-                    shortcut: is_mac ? '⌘C' : 'Ctrl+C',
-                    on_click: handle_copy_click
-                  }
-                ]
-              : []),
-            ...(props.value
-              ? [
-                  {
-                    label: props.translations.voice_input,
-                    shortcut: is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space',
-                    on_click: () => {
-                      props.on_recording_started()
-                      close_dropdown()
-                    }
-                  }
-                ]
-              : []),
-            {
-              label: props.translations.preview_prompt,
-              on_click: () => {
-                props.on_preview_prompt?.()
-                close_dropdown()
-              }
-            }
-          ]
-
-    const disconnected_dropdown_items =
-      (props.target == 'API' || props.target == 'CLI') && !props.value
-        ? []
-        : [
-            ...(!props.value
-              ? [
-                  {
-                    label: props.translations.copy_prompt,
-                    shortcut: is_mac ? '⌘C' : 'Ctrl+C',
-                    on_click: handle_copy_click
-                  }
-                ]
-              : []),
-            ...(props.value
-              ? [
-                  {
-                    label: props.translations.voice_input,
-                    shortcut: is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space',
-                    on_click: () => {
-                      props.on_recording_started()
-                      close_dropdown()
-                    }
-                  }
-                ]
-              : []),
-            {
-              label: props.translations.preview_prompt,
-              on_click: () => {
-                props.on_preview_prompt?.()
-                close_dropdown()
-              }
-            }
-          ]
-
-    return (
-      <div
-        className={styles.footer}
-        onClick={() => {
-          if (input_ref.current) {
-            input_ref.current.focus()
-            const selection = window.getSelection()
-            if (selection) {
-              const range = document.createRange()
-              range.selectNodeContents(input_ref.current)
-              if (!props.value) {
-                range.collapse(true)
-              }
-              selection.removeAllRanges()
-              selection.addRange(range)
-            }
-          }
-        }}
-      >
-        {hovered_left_action == 'at' && (
-          <Tooltip
-            message={props.translations.reference_file}
-            align="left"
-            offset={9}
-          />
-        )}
-        {hovered_left_action == 'hash' && (
-          <Tooltip
-            message={props.translations.insert_symbol}
-            align="left"
-            offset={28}
-          />
-        )}
-        {hovered_left_action == 'slash' && (
-          <Tooltip
-            message={props.translations.use_template}
-            align="left"
-            offset={48}
-          />
-        )}
-        {show_submit_tooltip && (
-          <Tooltip
-            message={
-              props.last_choice_tooltip
-                ? `${props.translations.send_with} ${props.last_choice_tooltip.name}`
-                : props.translations.send_with_ellipsis
-            }
-            details={props.last_choice_tooltip?.details}
-            offset={28}
-            align="right"
-          />
-        )}
-        {is_recording_hovered && (
-          <Tooltip
-            message={
-              props.is_recording
-                ? props.translations.stop_recording
-                : props.translations.voice_input
-            }
-            offset={
-              !props.is_copy_only &&
-              (!props.is_web_target ||
-                (props.is_web_target && props.is_connected)) &&
-              primary_dropdown_items.length > 0
-                ? 28
-                : 12
-            }
-            align="right"
-          />
-        )}
-        {is_more_hovered && !is_dropdown_open && (
-          <Tooltip
-            message={props.translations.more}
-            align="right"
-            offset={11}
-          />
-        )}
-        <div
-          className={styles.footer__left}
-          onClick={(e) => {
-            e.stopPropagation()
-          }}
-        >
-          <button
-            onClick={() => {
-              props.on_at_sign_click()
-            }}
-            className={cn(styles['footer__left__button'])}
-            onMouseEnter={() => set_hovered_left_action('at')}
-            onMouseLeave={() => set_hovered_left_action(null)}
-          >
-            <Icon variant="AT_SIGN" />
-          </button>
-          <button
-            onClick={props.on_hash_sign_click}
-            className={cn(styles['footer__left__button'])}
-            onMouseEnter={() => set_hovered_left_action('hash')}
-            onMouseLeave={() => set_hovered_left_action(null)}
-          >
-            <Icon variant="HASH_SIGN" />
-          </button>
-          <button
-            onClick={props.on_slash_click}
-            className={cn(styles['footer__left__button'])}
-            onMouseEnter={() => set_hovered_left_action('slash')}
-            onMouseLeave={() => set_hovered_left_action(null)}
-          >
-            <Icon variant="SLASH" />
-          </button>
-          <span className={styles.icon}></span>
-        </div>
-        <div
-          className={styles.footer__right}
-          onClick={(e) => {
-            e.stopPropagation()
-          }}
-        >
-          {props.show_edit_format_selector && props.edit_format && (
-            <div className={styles['footer__right__edit-format']}>
-              {is_edit_format_hovered && (
-                <Tooltip
-                  message={props.translations.edit_format}
-                  align="center"
-                />
-              )}
-              {!is_alt_pressed && (
-                <span className={styles['footer__right__edit-format__plus']}>
-                  +{' '}
-                </span>
-              )}
-              <button
-                className={cn(styles['footer__right__edit-format__button'], {
-                  [styles['footer__right__edit-format__button--alt-pressed']]:
-                    is_alt_pressed
-                })}
-                onClick={() => props.on_edit_format_change?.()}
-                onMouseEnter={() => set_is_edit_format_hovered(true)}
-                onMouseLeave={() => set_is_edit_format_hovered(false)}
-              >
-                {is_alt_pressed ? (
-                  <span
-                    className={styles['footer__right__edit-format__keycaps']}
-                  >
-                    <KeycapWrapper
-                      char={props.edit_format != 'whole' ? 'W' : undefined}
-                    >
-                      <span
-                        className={cn(
-                          styles['footer__right__edit-format__keycap'],
-                          {
-                            [styles[
-                              'footer__right__edit-format__keycap--active'
-                            ]]: props.edit_format == 'whole'
-                          }
-                        )}
-                        style={{
-                          visibility:
-                            props.edit_format != 'whole' ? 'hidden' : undefined
-                        }}
-                      >
-                        W
-                      </span>
-                    </KeycapWrapper>
-                    <KeycapWrapper
-                      char={
-                        props.edit_format != 'search-replace' ? 'S' : undefined
-                      }
-                    >
-                      <span
-                        className={cn(
-                          styles['footer__right__edit-format__keycap'],
-                          {
-                            [styles[
-                              'footer__right__edit-format__keycap--active'
-                            ]]: props.edit_format == 'search-replace'
-                          }
-                        )}
-                        style={{
-                          visibility:
-                            props.edit_format != 'search-replace'
-                              ? 'hidden'
-                              : undefined
-                        }}
-                      >
-                        S
-                      </span>
-                    </KeycapWrapper>
-                    <KeycapWrapper
-                      char={props.edit_format != 'diff' ? 'D' : undefined}
-                    >
-                      <span
-                        className={cn(
-                          styles['footer__right__edit-format__keycap'],
-                          {
-                            [styles[
-                              'footer__right__edit-format__keycap--active'
-                            ]]: props.edit_format == 'diff'
-                          }
-                        )}
-                        style={{
-                          visibility:
-                            props.edit_format != 'diff' ? 'hidden' : undefined
-                        }}
-                      >
-                        D
-                      </span>
-                    </KeycapWrapper>
-                    <KeycapWrapper
-                      char={props.edit_format != 'truncated' ? 'T' : undefined}
-                    >
-                      <span
-                        className={cn(
-                          styles['footer__right__edit-format__keycap'],
-                          {
-                            [styles[
-                              'footer__right__edit-format__keycap--active'
-                            ]]: props.edit_format == 'truncated'
-                          }
-                        )}
-                        style={{
-                          visibility:
-                            props.edit_format != 'truncated'
-                              ? 'hidden'
-                              : undefined
-                        }}
-                      >
-                        T
-                      </span>
-                    </KeycapWrapper>
-                  </span>
-                ) : (
-                  <span className={styles['footer__right__edit-format__text']}>
-                    {
-                      {
-                        whole: props.translations.edit_format_whole,
-                        'search-replace':
-                          props.translations.edit_format_search_replace,
-                        diff: props.translations.edit_format_diff,
-                        truncated: props.translations.edit_format_truncated
-                      }[props.edit_format as EditFormat]
-                    }
-                  </span>
-                )}
-              </button>
-            </div>
-          )}
-
-          <div className={styles['footer__right__submit']} ref={dropdown_ref}>
-            {props.target && props.on_target_change && (
-              <div className={styles['footer__right__target-switch']}>
-                {(is_target_dropdown_open || is_alt_pressed) && (
-                  <div
-                    className={
-                      styles['footer__right__target-switch__dropdown-wrapper']
-                    }
-                  >
-                    <div
-                      className={
-                        styles['footer__right__target-switch__dropdown']
-                      }
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {(['WEB', 'API', 'CLI'] as Target[]).map((t, idx) => (
-                        <button
-                          key={t}
-                          className={
-                            styles[
-                              'footer__right__target-switch__dropdown-item'
-                            ]
-                          }
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            props.on_target_change!(t)
-                            set_is_target_dropdown_open(false)
-                          }}
-                          disabled={t == props.target}
-                        >
-                          {is_alt_pressed && t != props.target ? (
-                            <KeycapWrapper char={(idx + 1).toString()}>
-                              <span>{t}</span>
-                            </KeycapWrapper>
-                          ) : (
-                            t
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                <button
-                  className={cn(
-                    styles['footer__right__submit__button'],
-                    styles['footer__right__target-switch__button'],
-                    {
-                      [styles['footer__right__submit__button--hovered']]:
-                        is_target_dropdown_open || is_alt_pressed
-                    }
-                  )}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    set_is_target_dropdown_open(!is_target_dropdown_open)
-                  }}
-                >
-                  <span
-                    className={styles['footer__right__target-switch__label']}
-                  >
-                    {props.target == 'WEB'
-                      ? 'WEB'
-                      : props.target == 'API'
-                        ? 'API'
-                        : 'CLI'}
-                  </span>
-                </button>
-              </div>
-            )}
-            {!props.is_copy_only &&
-              (!props.is_web_target ||
-                (props.is_web_target && props.is_connected)) && (
-                <>
-                  {props.is_recording ? (
-                    <button
-                      className={cn(
-                        styles['footer__right__submit__button'],
-                        styles['footer__right__submit__button--submit'],
-                        styles['footer__right__submit__button--recording'],
-                        'codicon',
-                        is_recording_hovered
-                          ? 'codicon-debug-stop'
-                          : 'codicon-mic-filled'
-                      )}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        props.on_recording_finished()
-                      }}
-                      onMouseEnter={() => set_is_recording_hovered(true)}
-                      onMouseLeave={() => set_is_recording_hovered(false)}
-                    />
-                  ) : !props.value ? (
-                    <button
-                      className={cn(
-                        styles['footer__right__submit__button'],
-                        styles['footer__right__submit__button--submit'],
-                        'codicon',
-                        'codicon-mic'
-                      )}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        props.on_recording_started()
-                      }}
-                      onMouseEnter={() => set_is_recording_hovered(true)}
-                      onMouseLeave={() => set_is_recording_hovered(false)}
-                    />
-                  ) : (
-                    <button
-                      className={cn(
-                        styles['footer__right__submit__button'],
-                        styles['footer__right__submit__button--submit'],
-                        'codicon',
-                        'codicon-send'
-                      )}
-                      onClick={(e) => {
-                        handle_submit(e as any)
-                      }}
-                      onMouseEnter={() => set_show_submit_tooltip(true)}
-                      onMouseLeave={() => set_show_submit_tooltip(false)}
-                    />
-                  )}
-                  {primary_dropdown_items.length > 0 && (
-                    <>
-                      <button
-                        ref={chevron_button_ref}
-                        className={styles['footer__right__submit__button']}
-                        onClick={() => {
-                          toggle_dropdown()
-                        }}
-                        onMouseEnter={() => set_is_more_hovered(true)}
-                        onMouseLeave={() => set_is_more_hovered(false)}
-                      >
-                        <span
-                          className={cn(
-                            {
-                              [styles[
-                                'footer__right__submit__button--toggled'
-                              ]]: is_dropdown_open
-                            },
-                            'codicon',
-                            'codicon-chevron-down'
-                          )}
-                        />
-                      </button>
-                      <DropdownMenu
-                        anchor_ref={chevron_button_ref}
-                        is_open={is_dropdown_open}
-                        items={primary_dropdown_items}
-                      />
-                    </>
-                  )}
-                </>
-              )}
-            {(props.is_copy_only ||
-              (props.is_web_target && !props.is_connected)) && (
-              <>
-                {props.is_recording ? (
-                  <button
-                    className={cn(
-                      styles['footer__right__submit__button'],
-                      styles['footer__right__submit__button--submit'],
-                      styles['footer__right__submit__button--recording'],
-                      'codicon',
-                      is_recording_hovered
-                        ? 'codicon-debug-stop'
-                        : 'codicon-mic-filled'
-                    )}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      props.on_recording_finished()
-                    }}
-                    onMouseEnter={() => set_is_recording_hovered(true)}
-                    onMouseLeave={() => set_is_recording_hovered(false)}
-                  />
-                ) : !props.value ? (
-                  <button
-                    className={cn(
-                      styles['footer__right__submit__button'],
-                      styles['footer__right__submit__button--submit'],
-                      'codicon',
-                      'codicon-mic'
-                    )}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      props.on_recording_started()
-                    }}
-                    onMouseEnter={() => set_is_recording_hovered(true)}
-                    onMouseLeave={() => set_is_recording_hovered(false)}
-                  />
-                ) : (
-                  <>
-                    <button
-                      className={cn(
-                        styles['footer__right__submit__button'],
-                        styles['footer__right__submit__button--copy'],
-                        'codicon',
-                        'codicon-copy'
-                      )}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        props.on_copy()
-                      }}
-                      title={props.translations.copy_prompt}
-                    />
-                    {disconnected_dropdown_items.length > 0 && (
-                      <>
-                        <button
-                          ref={disconnected_chevron_button_ref}
-                          className={styles['footer__right__submit__button']}
-                          onClick={() => {
-                            toggle_dropdown()
-                          }}
-                          onMouseEnter={() => set_is_more_hovered(true)}
-                          onMouseLeave={() => set_is_more_hovered(false)}
-                        >
-                          <span
-                            className={cn(
-                              {
-                                [styles[
-                                  'footer__right__submit__button--toggled'
-                                ]]: is_dropdown_open
-                              },
-                              'codicon',
-                              'codicon-chevron-down'
-                            )}
-                          />
-                        </button>
-                        <DropdownMenu
-                          anchor_ref={disconnected_chevron_button_ref}
-                          is_open={is_dropdown_open}
-                          items={disconnected_dropdown_items}
-                        />
-                      </>
-                    )}
-                  </>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className={styles.container}>
       <div
@@ -928,9 +297,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   </div>
                 )}
                 <Tabs
-                  is_hidden
                   tabs_count={props.tabs_count}
                   active_tab_index={props.active_tab_index}
+                  is_empty={!props.value}
                 />
               </div>
               <div className={styles['placeholder-text']}>{placeholder}</div>
@@ -953,6 +322,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               active_tab_index={props.active_tab_index}
               on_tabs_reorder={props.on_tabs_reorder}
               handle_input_click={handle_input_click}
+              is_empty={!props.value}
             />
           </div>
           <div
@@ -1005,7 +375,19 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           />
         </div>
 
-        {render_footer()}
+        <Footer
+          props={props}
+          input_ref={input_ref}
+          is_mac={is_mac}
+          is_alt_pressed={is_alt_pressed}
+          is_dropdown_open={is_dropdown_open}
+          toggle_dropdown={toggle_dropdown}
+          close_dropdown={close_dropdown}
+          dropdown_ref={dropdown_ref}
+          handle_submit={handle_submit}
+          handle_copy_click={handle_copy_click}
+          handle_select_click={handle_select_click}
+        />
       </div>
     </div>
   )
