@@ -136,7 +136,7 @@ _Explanations, planning, and analysis._
 
 ### 📄 Agentic search
 
-_Task-relevant files via tool calling._
+_Task-relevant files from your favorite coding agent._
 
 <details>
 <summary>AGENT</summary>
