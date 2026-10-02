@@ -1,5 +1,4 @@
 import { useRef, useEffect, useMemo, useState, useCallback } from 'react'
-import { ReactSortable } from 'react-sortablejs'
 import styles from './PromptField.module.scss'
 import cn from 'classnames'
 import { Icon } from '../../Icon'
@@ -20,6 +19,7 @@ import {
   map_raw_pos_to_display_pos,
   get_highlighted_text
 } from '../shared/symbols'
+import { Tabs, TabsRef } from './components/Tabs'
 
 export type EditFormat = 'whole' | 'search-replace' | 'diff' | 'truncated'
 
@@ -131,24 +131,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     'at' | 'hash' | 'slash' | null
   >(null)
 
-  const [tab_items, set_tab_items] = useState<{ id: string }[]>([])
-
   const container_inner_ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    set_tab_items((prev) => {
-      if (prev.length === props.tabs_count) return prev
-      if (prev.length < props.tabs_count) {
-        return [
-          ...prev,
-          ...Array.from({ length: props.tabs_count - prev.length }).map(() => ({
-            id: Math.random().toString(36).substring(7)
-          }))
-        ]
-      }
-      return prev.slice(0, props.tabs_count)
-    })
-  }, [props.tabs_count])
+  const tabs_ref = useRef<TabsRef>(null)
 
   const chevron_button_ref = useRef<HTMLButtonElement>(null)
   const disconnected_chevron_button_ref = useRef<HTMLButtonElement>(null)
@@ -943,105 +927,34 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     {display_token_count(props.prompt_token_count)}
                   </div>
                 )}
-                {props.tabs_count > 1 && (
-                  <div
-                    className={cn(
-                      styles['top-right__clear-button'],
-                      'codicon',
-                      'codicon-close-small'
-                    )}
-                  />
-                )}
+                <Tabs
+                  is_hidden
+                  tabs_count={props.tabs_count}
+                  active_tab_index={props.active_tab_index}
+                />
               </div>
-              {props.tabs_count > 1 ? (
-                <div className={styles.tabs} style={{ visibility: 'hidden' }}>
-                  {tab_items.map((item) => (
-                    <div key={item.id} className={styles.tabs__tab} />
-                  ))}
-                  <div
-                    className={cn(styles.tabs__tab, styles['tabs__tab--new'])}
-                  />
-                </div>
-              ) : props.tabs_count === 1 ? (
-                <div className={styles.tabs} style={{ visibility: 'hidden' }}>
-                  <div
-                    className={cn(styles.tabs__tab, styles['tabs__tab--new'])}
-                  />
-                </div>
-              ) : null}
               <div className={styles['placeholder-text']}>{placeholder}</div>
             </div>
           )}
-          <div className={styles['top-right']}>
+          <div
+            className={styles['top-right']}
+            onMouseLeave={() => {
+              tabs_ref.current?.handle_mouse_leave()
+            }}
+          >
             {has_content && props.prompt_token_count > 250 && (
               <div className={styles['top-right__prompt-token-count']}>
                 {display_token_count(props.prompt_token_count)}
               </div>
             )}
-            {(!!props.value || props.tabs_count > 1) && (
-              <div
-                className={cn(
-                  styles['top-right__clear-button'],
-                  'codicon',
-                  'codicon-close-small'
-                )}
-                data-role="clear-button"
-                onClick={handle_input_click}
-              />
-            )}
+            <Tabs
+              ref={tabs_ref}
+              tabs_count={props.tabs_count}
+              active_tab_index={props.active_tab_index}
+              on_tabs_reorder={props.on_tabs_reorder}
+              handle_input_click={handle_input_click}
+            />
           </div>
-          {props.tabs_count > 1 ? (
-            <ReactSortable
-              list={tab_items}
-              setList={(new_list) => {
-                const has_changed = new_list.some(
-                  (item, i) => item.id !== tab_items[i]?.id
-                )
-                if (has_changed) {
-                  const new_order = new_list.map((item) =>
-                    tab_items.findIndex((t) => t.id === item.id)
-                  )
-                  set_tab_items(new_list)
-                  props.on_tabs_reorder?.(new_order)
-                }
-              }}
-              className={styles.tabs}
-              animation={150}
-              filter={`.${styles['tabs__tab--new']}`}
-            >
-              {tab_items.map((item, i) => (
-                <div
-                  key={item.id}
-                  className={cn(styles.tabs__tab, {
-                    [styles['tabs__tab--active']]: i === props.active_tab_index
-                  })}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    props.on_tab_change(i)
-                  }}
-                >
-                  <div className={styles['tabs__tab-icon']} />
-                </div>
-              ))}
-              <div
-                className={cn(styles.tabs__tab, styles['tabs__tab--new'])}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  props.on_new_tab()
-                }}
-              />
-            </ReactSortable>
-          ) : props.tabs_count === 1 ? (
-            <div className={styles.tabs}>
-              <div
-                className={cn(styles.tabs__tab, styles['tabs__tab--new'])}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  props.on_new_tab()
-                }}
-              />
-            </div>
-          ) : null}
           <div
             ref={input_ref}
             contentEditable={true}

@@ -63,9 +63,10 @@
   float: right;
   display: flex;
   align-items: center;
-  margin: 2px 2px 0 4px;
+  margin: 3px 3px 0 4px;
   position: relative;
   z-index: 2;
+  gap: 4px;
 
   &__prompt-token-count {
     font-size: 10px;
@@ -74,27 +75,6 @@
     pointer-events: none;
     font-variant-numeric: tabular-nums;
     transform: translateY(0.5px);
-  }
-
-  &__clear-button {
-    position: relative;
-    width: 18px;
-    cursor: pointer;
-    color: var(--vscode-icon-foreground);
-    opacity: var(--dimmed-opacity);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-bottom: 2px;
-
-    &::before {
-      font-size: 13px !important;
-      line-height: 1;
-    }
-
-    &:hover {
-      opacity: 1;
-    }
   }
 }
 
@@ -345,14 +325,12 @@
 }
 
 .tabs {
-  float: left;
   display: flex;
   flex-wrap: wrap;
   user-select: none;
-  margin: 2px 1px 0 -2px;
   position: relative;
   z-index: 2;
-  margin: 7px 1px 0 5px;
+  margin-top: 1px;
 
   &__tab {
     height: 15px;
@@ -384,6 +362,14 @@
       .tabs__tab-icon {
         &::before {
           content: '\ea71';
+        }
+      }
+
+      &.tabs__tab--show-close {
+        .tabs__tab-icon {
+          &::before {
+            content: '\ea76';
+          }
         }
       }
     }
