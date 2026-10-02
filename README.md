@@ -43,6 +43,93 @@ Invoke your favorite coding agent headlessly or in the integrated terminal.
 
 Overview of CWC-constructed prompts.
 
+### 📄 Editing
+
+_New features, bug fixes, and refactors._
+
+<details>
+<summary>WEB/API</summary>
+
+```
+# Files
+
+[SELECTED FILES]
+
+# Output formatting
+
+Whenever showing a new, updated, renamed, or deleted file, provide a brief explanation, then print the path in a markdown heading (e.g. ### New file: `src/examples/hello.py`, ### Updated file: `src/examples/hello.py`, ### Renamed file: `src/examples/hello.py` (old) `src/welcome.py` (new), ### Deleted file: `src/examples/hello.py`), followed by a markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
+
+[EXAMPLE]
+
+# Task
+
+[INSTRUCTIONS]
+```
+
+</details>
+
+<details>
+<summary>AGENT</summary>
+
+```
+# Files
+
+[SELECTED FILES]
+
+# Requirements
+
+- All project's files were preloaded to [files](#files). You must work strictly within the provided context.
+- Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
+- Exception: If [task](#task) includes *.png image paths, read them using the appropriate tool.
+- Exception: Perform file system operations (create, update, delete) required to complete the [task](#task).
+
+# Task
+
+[INSTRUCTIONS]
+```
+
+</details>
+
+### 📄 Asking
+
+_Explanations, planning, and analysis._
+
+<details>
+<summary>WEB/API</summary>
+
+```
+# Files
+
+[SELECTED FILES]
+
+# Task
+
+[INSTRUCTIONS]
+```
+
+</details>
+
+<details>
+<summary>AGENT</summary>
+
+```
+# Files
+
+[SELECTED FILES]
+
+# Requirements
+
+- All project's files were preloaded to [files](#files). You must work strictly within the provided context.
+- Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
+- Exception: If [task](#task) includes *.png image paths, read them using the appropriate tool.
+
+# Task
+
+[INSTRUCTIONS]
+```
+
+</details>
+
 ### 📄 Agentic search
 
 _Task-relevant files via tool calling._
@@ -154,93 +241,6 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 - Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
 
 # Query
-
-[INSTRUCTIONS]
-```
-
-</details>
-
-### 📄 Editing
-
-_New features, bug fixes, and refactors._
-
-<details>
-<summary>WEB/API</summary>
-
-```
-# Files
-
-[SELECTED FILES]
-
-# Output formatting
-
-Whenever showing a new, updated, renamed, or deleted file, provide a brief explanation, then print the path in a markdown heading (e.g. ### New file: `src/examples/hello.py`, ### Updated file: `src/examples/hello.py`, ### Renamed file: `src/examples/hello.py` (old) `src/welcome.py` (new), ### Deleted file: `src/examples/hello.py`), followed by a markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
-
-[EXAMPLE]
-
-# Task
-
-[INSTRUCTIONS]
-```
-
-</details>
-
-<details>
-<summary>AGENT</summary>
-
-```
-# Files
-
-[SELECTED FILES]
-
-# Requirements
-
-- All project's files were preloaded to [files](#files). You must work strictly within the provided context.
-- Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
-- Exception: If [task](#task) includes *.png image paths, read them using the appropriate tool.
-- Exception: Perform file system operations (create, update, delete) required to complete the [task](#task).
-
-# Task
-
-[INSTRUCTIONS]
-```
-
-</details>
-
-### 📄 Asking
-
-_Explanations, planning, and analysis._
-
-<details>
-<summary>WEB/API</summary>
-
-```
-# Files
-
-[SELECTED FILES]
-
-# Task
-
-[INSTRUCTIONS]
-```
-
-</details>
-
-<details>
-<summary>AGENT</summary>
-
-```
-# Files
-
-[SELECTED FILES]
-
-# Requirements
-
-- All project's files were preloaded to [files](#files). You must work strictly within the provided context.
-- Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
-- Exception: If [task](#task) includes *.png image paths, read them using the appropriate tool.
-
-# Task
 
 [INSTRUCTIONS]
 ```
