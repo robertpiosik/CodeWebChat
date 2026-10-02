@@ -3,7 +3,7 @@ import { ReactSortable } from 'react-sortablejs'
 import cn from 'classnames'
 import styles from '../../PromptField.module.scss'
 
-export type TabsProps = {
+type Props = {
   tabs_count: number
   active_tab_index: number
   on_tabs_reorder?: (new_order: number[]) => void
@@ -15,7 +15,7 @@ export type TabsRef = {
   handle_mouse_leave: () => void
 }
 
-export const Tabs = forwardRef<TabsRef, TabsProps>((props, ref) => {
+export const Tabs = forwardRef<TabsRef, Props>((props, ref) => {
   const [tab_items, set_tab_items] = useState<{ id: string }[]>([])
   const [has_left_active_tab, set_has_left_active_tab] = useState(true)
   const [hovered_tab_index, set_hovered_tab_index] = useState<number | null>(

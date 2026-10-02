@@ -8,7 +8,7 @@ import { KeycapWrapper } from '../../../../../prompt-view/KeycapWrapper'
 import { Target } from '@shared/types/target'
 import type { PromptFieldProps, EditFormat } from '../../PromptField'
 
-export type Props = {
+type Props = {
   props: PromptFieldProps
   input_ref: RefObject<HTMLDivElement>
   is_mac: boolean
