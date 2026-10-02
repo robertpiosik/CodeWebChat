@@ -27,7 +27,7 @@
 
 > [!TIP]
 >
-> Select context files using your favorite coding agent and the [Agentic Search prompt](#-agentic-search).
+> Find task-relevant files by invoking coding agents with the [Agentic Search prompt](#-agentic-search).
 
 ## Send prompts with...
 
@@ -136,7 +136,7 @@ _Explanations, planning, and analysis._
 
 ### 📄 Agentic search
 
-_Task-relevant files from your favorite coding agent._
+_Task-relevant files from coding agents._
 
 <details>
 <summary>AGENT</summary>
