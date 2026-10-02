@@ -21,13 +21,13 @@
 
 **CWC** operates 100% on your machine. No code, prompts or usage data are collected.
 
-## Sessionless design
+## Single-turn prompts
 
-**Without sessions, there is no context accumulation.** Instead of messaging the agent, you first select context files, then send lean markdown [prompts](#prompts) with chatbots, API calls or headless CLI invocations.
+Instead of messaging the agent in an ever-growing conversation, you first select task-relevant files, then send lean markdown [prompts](#prompts) with chatbots, API calls or headless CLI invocations.
 
 > [!IMPORTANT]
 >
-> Single-turn prompts make model _think_ less. **Reducing response times and quota usage by 10x**.
+> Easy to unpack intent make model _think_ less. **Reducing response times and quota usage by 10x**.
 
 > [!TIP]
 >
