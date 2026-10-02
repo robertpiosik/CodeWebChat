@@ -27,7 +27,7 @@
 
 > [!IMPORTANT]
 >
-> Models focused on the task from the start spend less time _thinking_. **Reducing response times and quota usage by 10x**.
+> Single-turn prompts make model _think_ less. **Reducing response times and quota usage by 10x**.
 
 > [!TIP]
 >
