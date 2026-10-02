@@ -39,10 +39,7 @@ type Props = {
   is_connected: boolean
   ask_instructions: string
   edit_instructions: string
-  set_instructions: (
-    value: string,
-    prompt_type: 'ask-about-files' | 'edit-files'
-  ) => void
+  set_instructions: (value: string, prompt_type: 'ask' | 'edit') => void
   target: Target
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
@@ -212,10 +209,10 @@ export const Main: React.FC<Props> = (props) => {
     let history: string[] | undefined
     let set_history: React.Dispatch<React.SetStateAction<string[] | undefined>>
 
-    if (current_prompt_type == 'ask-about-files') {
+    if (current_prompt_type == 'ask') {
       history = ask_about_files_history
       set_history = set_ask_about_files_history
-    } else if (current_prompt_type == 'edit-files') {
+    } else if (current_prompt_type == 'edit') {
       history = edit_files_history
       set_history = set_edit_files_history
     } else {
@@ -480,8 +477,8 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const get_current_instructions = () => {
-    if (current_prompt_type == 'ask-about-files') return props.ask_instructions
-    if (current_prompt_type == 'edit-files') return props.edit_instructions
+    if (current_prompt_type == 'ask') return props.ask_instructions
+    if (current_prompt_type == 'edit') return props.edit_instructions
     return ''
   }
 
@@ -562,9 +559,9 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const instructions =
-    current_prompt_type == 'ask-about-files'
+    current_prompt_type == 'ask'
       ? props.ask_instructions
-      : current_prompt_type == 'edit-files'
+      : current_prompt_type == 'edit'
         ? props.edit_instructions
         : ''
 
@@ -573,9 +570,9 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   let current_history: string[] | undefined
-  if (current_prompt_type == 'ask-about-files') {
+  if (current_prompt_type == 'ask') {
     current_history = ask_about_files_history
-  } else if (current_prompt_type == 'edit-files') {
+  } else if (current_prompt_type == 'edit') {
     current_history = edit_files_history
   }
 

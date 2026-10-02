@@ -127,11 +127,11 @@ export const use_keyboard_shortcuts = (params: {
         event.preventDefault()
 
         if (params.target == 'API') {
-          params.on_api_prompt_type_change('edit-files')
+          params.on_api_prompt_type_change('edit')
         } else if (params.target == 'CLI') {
-          params.on_cli_prompt_type_change('edit-files')
+          params.on_cli_prompt_type_change('edit')
         } else {
-          params.on_web_prompt_type_change('edit-files')
+          params.on_web_prompt_type_change('edit')
         }
         return
       }
@@ -139,11 +139,11 @@ export const use_keyboard_shortcuts = (params: {
       if (event.code == 'KeyA') {
         if (params.target == 'WEB') {
           event.preventDefault()
-          params.on_web_prompt_type_change('ask-about-files')
+          params.on_web_prompt_type_change('ask')
           return
         } else if (params.target == 'CLI') {
           event.preventDefault()
-          params.on_cli_prompt_type_change('ask-about-files')
+          params.on_cli_prompt_type_change('ask')
           return
         }
       }

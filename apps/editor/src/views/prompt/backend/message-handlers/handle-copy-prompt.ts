@@ -34,7 +34,7 @@ export const handle_copy_prompt = async (params: {
   let output_formatting: string | undefined = undefined
   const user_instructions = processed_instructions
 
-  if (params.prompt_view_provider.prompt_type == 'edit-files') {
+  if (params.prompt_view_provider.prompt_type == 'edit') {
     const edit_format = params.prompt_view_provider.edit_format
     output_formatting = {
       whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,

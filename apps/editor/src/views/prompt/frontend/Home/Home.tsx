@@ -134,27 +134,21 @@ export const Home: React.FC<Props> = (props) => {
           label="WEB"
           on_click={props.on_chatbots_click}
           is_compact
-          hover_color={
-            props.web_prompt_type == 'edit-files' ? 'blue' : 'purple'
-          }
+          hover_color={props.web_prompt_type == 'edit' ? 'blue' : 'purple'}
           keycap_char={is_alt_pressed ? '1' : undefined}
         />
         <UiTargetButton
           label="API"
           on_click={props.on_api_calls_click}
           is_compact
-          hover_color={
-            props.api_prompt_type == 'edit-files' ? 'blue' : 'purple'
-          }
+          hover_color={props.api_prompt_type == 'edit' ? 'blue' : 'purple'}
           keycap_char={is_alt_pressed ? '2' : undefined}
         />
         <UiTargetButton
           label="CLI"
           on_click={props.on_cli_calls_click}
           is_compact
-          hover_color={
-            props.cli_prompt_type == 'edit-files' ? 'blue' : 'purple'
-          }
+          hover_color={props.cli_prompt_type == 'edit' ? 'blue' : 'purple'}
           keycap_char={is_alt_pressed ? '3' : undefined}
         />
       </div>
@@ -171,21 +165,21 @@ export const Home: React.FC<Props> = (props) => {
             : t('home.target.web.description')
         }
         on_click={props.on_chatbots_click}
-        hover_color={props.web_prompt_type == 'edit-files' ? 'blue' : 'purple'}
+        hover_color={props.web_prompt_type == 'edit' ? 'blue' : 'purple'}
         keycap_char={is_alt_pressed ? '1' : undefined}
       />
       <UiTargetButton
         label="API"
         description={t('home.target.api.description')}
         on_click={props.on_api_calls_click}
-        hover_color={props.api_prompt_type == 'edit-files' ? 'blue' : 'purple'}
+        hover_color={props.api_prompt_type == 'edit' ? 'blue' : 'purple'}
         keycap_char={is_alt_pressed ? '2' : undefined}
       />
       <UiTargetButton
         label="CLI"
         description={t('home.target.cli.description')}
         on_click={props.on_cli_calls_click}
-        hover_color={props.cli_prompt_type == 'edit-files' ? 'blue' : 'purple'}
+        hover_color={props.cli_prompt_type == 'edit' ? 'blue' : 'purple'}
         keycap_char={is_alt_pressed ? '3' : undefined}
       />
     </div>

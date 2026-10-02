@@ -32,7 +32,7 @@ export const handle_preview_web_configuration = async (
 
   let output_formatting: string | undefined = undefined
   const user_instructions = processed_instructions
-  if (prompt_view_provider.web_prompt_type == 'edit-files') {
+  if (prompt_view_provider.web_prompt_type == 'edit') {
     output_formatting = {
       whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
       truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
@@ -67,7 +67,7 @@ export const handle_preview_web_configuration = async (
         instruction: text_to_send,
         web_configuration: web_configuration_for_preview,
         inject_apply_response_button:
-          prompt_view_provider.web_prompt_type == 'edit-files',
+          prompt_view_provider.web_prompt_type == 'edit',
         raw_instructions: current_instructions
       }
     )

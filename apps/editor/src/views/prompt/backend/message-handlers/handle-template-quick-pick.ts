@@ -24,10 +24,10 @@ export const handle_template_quick_pick = async (
 
   let templates_key: string | undefined
   switch (prompt_type) {
-    case 'ask-about-files':
+    case 'ask':
       templates_key = 'templatesForAskAboutFiles'
       break
-    case 'edit-files':
+    case 'edit':
       templates_key = 'templatesForEditFiles'
       break
   }

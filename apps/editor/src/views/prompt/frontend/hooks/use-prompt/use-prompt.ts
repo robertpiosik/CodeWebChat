@@ -272,7 +272,7 @@ export const use_prompt = (vscode: any) => {
 
     if (sync_prompt_type) {
       if ((new_target == 'API' || new_target == 'CLI') && web_prompt_type) {
-        if (web_prompt_type == 'edit-files') {
+        if (web_prompt_type == 'edit') {
           if (new_target == 'API')
             handle_api_prompt_type_change(web_prompt_type, true)
           else handle_cli_prompt_type_change(web_prompt_type, true)

@@ -63,7 +63,7 @@ export const Header: React.FC<Props> = (props) => {
             props.target == 'WEB' &&
             (!props.is_browser_connection_status_bar_closed ||
               (props.response_history.length > 0 &&
-                props.web_prompt_type === 'edit-files')) &&
+                props.web_prompt_type === 'edit')) &&
             !props.is_content_scrollable && (
               <>
                 <div
@@ -92,7 +92,7 @@ export const Header: React.FC<Props> = (props) => {
                     </>
                   )}
                   {props.response_history.length > 0 &&
-                    props.web_prompt_type === 'edit-files' && (
+                    props.web_prompt_type === 'edit' && (
                       <UiResponses
                         response_history={props.response_history}
                         on_response_history_item_click={() => {}}
@@ -110,7 +110,7 @@ export const Header: React.FC<Props> = (props) => {
           {props.is_landscape &&
             props.target == 'CLI' &&
             props.response_history.length > 0 &&
-            props.cli_prompt_type === 'edit-files' &&
+            props.cli_prompt_type === 'edit' &&
             !props.is_content_scrollable && (
               <>
                 <div
@@ -121,7 +121,7 @@ export const Header: React.FC<Props> = (props) => {
                   }}
                 >
                   {props.response_history.length > 0 &&
-                    props.cli_prompt_type === 'edit-files' && (
+                    props.cli_prompt_type === 'edit' && (
                       <UiResponses
                         response_history={props.response_history}
                         on_response_history_item_click={() => {}}
@@ -140,7 +140,7 @@ export const Header: React.FC<Props> = (props) => {
             props.target == 'API' &&
             (props.is_api_warning_visible ||
               (props.response_history.length > 0 &&
-                props.api_prompt_type === 'edit-files')) &&
+                props.api_prompt_type === 'edit')) &&
             !props.is_content_scrollable && (
               <>
                 <div
@@ -169,7 +169,7 @@ export const Header: React.FC<Props> = (props) => {
                     </>
                   )}
                   {props.response_history.length > 0 &&
-                    props.api_prompt_type === 'edit-files' && (
+                    props.api_prompt_type === 'edit' && (
                       <UiResponses
                         response_history={props.response_history}
                         on_response_history_item_click={() => {}}
@@ -189,36 +189,32 @@ export const Header: React.FC<Props> = (props) => {
               <div className={styles.header__types__inner}>
                 <UiKeycapWrapper char={props.is_alt_pressed ? 'E' : undefined}>
                   <UiIconAccentButton
-                    label={web_prompt_type_labels['edit-files']}
+                    label={web_prompt_type_labels['edit']}
                     icon="edit-sparkle"
-                    is_active={props.web_prompt_type == 'edit-files'}
+                    is_active={props.web_prompt_type == 'edit'}
                     active_color="blue"
                     is_compact={
                       !props.is_landscape &&
-                      (props.web_prompt_type == 'edit-files'
+                      (props.web_prompt_type == 'edit'
                         ? compact_step >= 2
                         : compact_step >= 1)
                     }
-                    on_click={() =>
-                      props.on_web_prompt_type_change('edit-files')
-                    }
+                    on_click={() => props.on_web_prompt_type_change('edit')}
                   />
                 </UiKeycapWrapper>
                 <UiKeycapWrapper char={props.is_alt_pressed ? 'A' : undefined}>
                   <UiIconAccentButton
-                    label={web_prompt_type_labels['ask-about-files']}
+                    label={web_prompt_type_labels['ask']}
                     icon="chat-sparkle"
-                    is_active={props.web_prompt_type == 'ask-about-files'}
+                    is_active={props.web_prompt_type == 'ask'}
                     active_color="purple"
                     is_compact={
                       !props.is_landscape &&
-                      (props.web_prompt_type == 'ask-about-files'
+                      (props.web_prompt_type == 'ask'
                         ? compact_step >= 2
                         : compact_step >= 1)
                     }
-                    on_click={() =>
-                      props.on_web_prompt_type_change('ask-about-files')
-                    }
+                    on_click={() => props.on_web_prompt_type_change('ask')}
                   />
                 </UiKeycapWrapper>
               </div>
@@ -227,12 +223,12 @@ export const Header: React.FC<Props> = (props) => {
           {props.target == 'API' && (
             <>
               <UiIconAccentButton
-                label={api_prompt_type_labels['edit-files']}
+                label={api_prompt_type_labels['edit']}
                 icon="edit-sparkle"
-                is_active={props.api_prompt_type == 'edit-files'}
+                is_active={props.api_prompt_type == 'edit'}
                 active_color="blue"
                 is_compact={!props.is_landscape && compact_step >= 1}
-                on_click={() => props.on_api_prompt_type_change('edit-files')}
+                on_click={() => props.on_api_prompt_type_change('edit')}
               />
             </>
           )}
@@ -241,36 +237,32 @@ export const Header: React.FC<Props> = (props) => {
               <div className={styles.header__types__inner}>
                 <UiKeycapWrapper char={props.is_alt_pressed ? 'E' : undefined}>
                   <UiIconAccentButton
-                    label={cli_prompt_type_labels['edit-files']}
+                    label={cli_prompt_type_labels['edit']}
                     icon="edit-sparkle"
-                    is_active={props.cli_prompt_type == 'edit-files'}
+                    is_active={props.cli_prompt_type == 'edit'}
                     active_color="blue"
                     is_compact={
                       !props.is_landscape &&
-                      (props.cli_prompt_type == 'edit-files'
+                      (props.cli_prompt_type == 'edit'
                         ? compact_step >= 2
                         : compact_step >= 1)
                     }
-                    on_click={() =>
-                      props.on_cli_prompt_type_change('edit-files')
-                    }
+                    on_click={() => props.on_cli_prompt_type_change('edit')}
                   />
                 </UiKeycapWrapper>
                 <UiKeycapWrapper char={props.is_alt_pressed ? 'A' : undefined}>
                   <UiIconAccentButton
-                    label={cli_prompt_type_labels['ask-about-files']}
+                    label={cli_prompt_type_labels['ask']}
                     icon="chat-sparkle"
-                    is_active={props.cli_prompt_type == 'ask-about-files'}
+                    is_active={props.cli_prompt_type == 'ask'}
                     active_color="purple"
                     is_compact={
                       !props.is_landscape &&
-                      (props.cli_prompt_type == 'ask-about-files'
+                      (props.cli_prompt_type == 'ask'
                         ? compact_step >= 2
                         : compact_step >= 1)
                     }
-                    on_click={() =>
-                      props.on_cli_prompt_type_change('ask-about-files')
-                    }
+                    on_click={() => props.on_cli_prompt_type_change('ask')}
                   />
                 </UiKeycapWrapper>
               </div>

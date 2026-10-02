@@ -194,8 +194,8 @@ export const Prompt = () => {
         : target == 'API'
           ? api_prompt_type
           : cli_prompt_type
-    if (prompt_type == 'ask-about-files') return ask_about_context_instructions
-    if (prompt_type == 'edit-files') return edit_files_instructions
+    if (prompt_type == 'ask') return ask_about_context_instructions
+    if (prompt_type == 'edit') return edit_files_instructions
     return undefined
   }
 
@@ -445,8 +445,7 @@ export const Prompt = () => {
                   on_click={handle_preview_web_configuration}
                   disabled={
                     !is_connected ||
-                    (web_prompt_type == 'edit-files' &&
-                      selected_files.length == 0)
+                    (web_prompt_type == 'edit' && selected_files.length == 0)
                   }
                 >
                   Preview

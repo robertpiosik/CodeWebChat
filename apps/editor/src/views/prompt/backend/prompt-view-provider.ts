@@ -210,8 +210,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
 
   public get active_instructions_state(): InstructionsState {
     const type = this.prompt_type
-    if (type == 'ask-about-files') return this.ask_about_context_instructions
-    if (type == 'edit-files') return this.edit_files_instructions
+    if (type == 'ask') return this.ask_about_context_instructions
+    if (type == 'edit') return this.edit_files_instructions
     return this.edit_files_instructions
   }
 
@@ -337,17 +337,17 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     this.web_prompt_type =
       this.extension_context.workspaceState.get<WebPromptType>(
         WEB_TARGET_STATE_KEY,
-        'edit-files'
+        'edit'
       )
     this.api_prompt_type =
       this.extension_context.workspaceState.get<ApiPromptType>(
         API_TARGET_STATE_KEY,
-        'edit-files'
+        'edit'
       )
     this.cli_prompt_type =
       this.extension_context.workspaceState.get<CliPromptType>(
         CLI_TARGET_STATE_KEY,
-        'edit-files'
+        'edit'
       )
 
     this.extension_context.subscriptions.push(
@@ -927,7 +927,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       config_cli_configuration_to_ui_format
     )
 
-    const cli_prompt_types: CliPromptType[] = ['ask-about-files', 'edit-files']
+    const cli_prompt_types: CliPromptType[] = ['ask', 'edit']
 
     this.send_message({
       command: 'CLI_CONFIGURATIONS',
@@ -976,7 +976,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
         return config_web_configuration_to_ui_format({ ...config, model })
       })
 
-    const web_prompt_types: WebPromptType[] = ['ask-about-files', 'edit-files']
+    const web_prompt_types: WebPromptType[] = ['ask', 'edit']
 
     this.send_message({
       command: 'WEB_CONFIGURATIONS',
@@ -997,7 +997,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
         })
       ),
       selected_api_configuration_id_by_prompt_type: {
-        'edit-files': this.extension_context.workspaceState.get<string>(
+        edit: this.extension_context.workspaceState.get<string>(
           LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
         )
       }

@@ -15,13 +15,13 @@ export const handle_save_instructions = async (
   const { prompt_type, instruction } = message as any
   const instruction_state = instruction as InstructionsState
 
-  if (prompt_type == 'ask-about-files') {
+  if (prompt_type == 'ask') {
     prompt_view_provider.ask_about_context_instructions = instruction_state
     await prompt_view_provider.extension_context.workspaceState.update(
       INSTRUCTIONS_ASK_STATE_KEY,
       instruction_state
     )
-  } else if (prompt_type == 'edit-files') {
+  } else if (prompt_type == 'edit') {
     prompt_view_provider.edit_files_instructions = instruction_state
     await prompt_view_provider.extension_context.workspaceState.update(
       INSTRUCTIONS_EDIT_FILES_STATE_KEY,

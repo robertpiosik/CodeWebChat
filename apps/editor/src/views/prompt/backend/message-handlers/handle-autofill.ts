@@ -69,7 +69,7 @@ export const handle_autofill = async (params: {
   })
 
   if (
-    params.prompt_view_provider.web_prompt_type == 'edit-files' &&
+    params.prompt_view_provider.web_prompt_type == 'edit' &&
     !collected_files
   ) {
     vscode.window.showWarningMessage(
@@ -80,7 +80,7 @@ export const handle_autofill = async (params: {
 
   let output_formatting: string | undefined = undefined
   const user_instructions = processed_instructions
-  if (params.prompt_view_provider.web_prompt_type == 'edit-files') {
+  if (params.prompt_view_provider.web_prompt_type == 'edit') {
     output_formatting = {
       whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
       truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
@@ -98,7 +98,7 @@ export const handle_autofill = async (params: {
   })
 
   const prompt_type = params.prompt_view_provider.web_prompt_type
-  const inject_apply_response_button = prompt_type == 'edit-files'
+  const inject_apply_response_button = prompt_type == 'edit'
 
   sent =
     await params.prompt_view_provider.websocket_server_instance.initialize_chat(

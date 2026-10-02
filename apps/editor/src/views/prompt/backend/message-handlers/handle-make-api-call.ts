@@ -93,7 +93,7 @@ export const handle_make_api_call = async (
     let system_instructions = ''
     let user_content = ''
 
-    if (prompt_type == 'edit-files') {
+    if (prompt_type == 'edit') {
       edit_format = prompt_view_provider.edit_format
       const output_formatting = {
         whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
@@ -170,7 +170,7 @@ export const handle_make_api_call = async (
           reasoning_effort: api_configuration.reasoning_effort
         }
 
-        if (prompt_type == 'edit-files') {
+        if (prompt_type == 'edit') {
           vscode.commands.executeCommand('codeWebChat.applyResponse', {
             response: result.response,
             raw_instructions: current_instructions,

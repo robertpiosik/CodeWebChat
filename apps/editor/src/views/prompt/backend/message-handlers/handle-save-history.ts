@@ -13,10 +13,10 @@ export const handle_save_history = async (
   let key: string | undefined
 
   switch (message.prompt_type) {
-    case 'ask-about-files':
+    case 'ask':
       key = HISTORY_ASK_ABOUT_FILES_STATE_KEY
       break
-    case 'edit-files':
+    case 'edit':
       key = HISTORY_EDIT_FILES_STATE_KEY
       break
   }

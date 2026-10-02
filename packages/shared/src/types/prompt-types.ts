@@ -1,5 +1,5 @@
-export type WebPromptType = 'edit-files' | 'ask-about-files'
+export type WebPromptType = 'edit' | 'ask'
 
-export type ApiPromptType = 'edit-files'
+export type ApiPromptType = 'edit'
 
-export type CliPromptType = 'edit-files' | 'ask-about-files'
+export type CliPromptType = 'edit' | 'ask'

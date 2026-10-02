@@ -74,7 +74,7 @@ export interface GetInstructionsMessage extends BaseMessage {
 export interface SaveInstructionsMessage extends BaseMessage {
   command: 'SAVE_INSTRUCTIONS'
   instruction: InstructionsState
-  prompt_type: 'ask-about-files' | 'edit-files'
+  prompt_type: 'ask' | 'edit'
 }
 
 export interface GetEditFormat extends BaseMessage {
@@ -141,7 +141,7 @@ export interface GetResponseHistoryMessage extends BaseMessage {
 export interface SaveHistoryMessage extends BaseMessage {
   command: 'SAVE_HISTORY'
   messages: string[]
-  prompt_type: 'ask-about-files' | 'edit-files'
+  prompt_type: 'ask' | 'edit'
 }
 
 export interface CreateWebConfigurationMessage extends BaseMessage {

@@ -178,13 +178,13 @@ export const MainView: React.FC<Props> = (props) => {
   const [is_content_scrollable, set_is_content_scrollable] = useState(false)
 
   const show_edit_format_selector =
-    (props.target == 'WEB' && props.web_prompt_type == 'edit-files') ||
-    (props.target == 'API' && props.api_prompt_type == 'edit-files')
+    (props.target == 'WEB' && props.web_prompt_type == 'edit') ||
+    (props.target == 'API' && props.api_prompt_type == 'edit')
 
   const is_required_context_empty =
-    ((props.target == 'WEB' && props.web_prompt_type == 'edit-files') ||
-      (props.target == 'API' && props.api_prompt_type == 'edit-files') ||
-      (props.target == 'CLI' && props.cli_prompt_type == 'edit-files')) &&
+    ((props.target == 'WEB' && props.web_prompt_type == 'edit') ||
+      (props.target == 'API' && props.api_prompt_type == 'edit') ||
+      (props.target == 'CLI' && props.cli_prompt_type == 'edit')) &&
     props.selected_files.length == 0
 
   const handle_input_change = (value: string) => {
@@ -346,14 +346,14 @@ export const MainView: React.FC<Props> = (props) => {
       files_count={props.selected_files.length}
       theme={
         props.target == 'WEB'
-          ? props.web_prompt_type == 'edit-files'
+          ? props.web_prompt_type == 'edit'
             ? 'blue'
             : 'purple'
           : props.target == 'API'
-            ? props.api_prompt_type == 'edit-files'
+            ? props.api_prompt_type == 'edit'
               ? 'blue'
               : 'purple'
-            : props.cli_prompt_type == 'edit-files'
+            : props.cli_prompt_type == 'edit'
               ? 'blue'
               : 'purple'
       }
@@ -413,7 +413,7 @@ export const MainView: React.FC<Props> = (props) => {
           ? props.web_prompt_type
           : props.target == 'API'
             ? props.api_prompt_type
-            : props.cli_prompt_type) == 'edit-files' && (
+            : props.cli_prompt_type) == 'edit' && (
           <UiResponses
             response_history={props.response_history}
             on_response_history_item_click={
@@ -462,7 +462,7 @@ export const MainView: React.FC<Props> = (props) => {
               ? props.web_prompt_type
               : props.target == 'API'
                 ? props.api_prompt_type
-                : props.cli_prompt_type) == 'edit-files'
+                : props.cli_prompt_type) == 'edit'
               ? props.edit_instructions_token_count
               : props.ask_instructions_token_count
           }
@@ -483,14 +483,14 @@ export const MainView: React.FC<Props> = (props) => {
             is_required_context_empty
               ? 'yellow'
               : props.target == 'WEB'
-                ? props.web_prompt_type == 'edit-files'
+                ? props.web_prompt_type == 'edit'
                   ? 'blue'
                   : 'purple'
                 : props.target == 'API'
-                  ? props.api_prompt_type == 'edit-files'
+                  ? props.api_prompt_type == 'edit'
                     ? 'blue'
                     : 'purple'
-                  : props.cli_prompt_type == 'edit-files'
+                  : props.cli_prompt_type == 'edit'
                     ? 'blue'
                     : 'purple'
           }
@@ -594,7 +594,7 @@ export const MainView: React.FC<Props> = (props) => {
             </>
           )}
           {props.response_history.length > 0 &&
-            props.web_prompt_type === 'edit-files' && (
+            props.web_prompt_type === 'edit' && (
               <UiResponses
                 response_history={props.response_history}
                 on_response_history_item_click={() => {}}
@@ -629,7 +629,7 @@ export const MainView: React.FC<Props> = (props) => {
             </>
           )}
           {props.response_history.length > 0 &&
-            props.api_prompt_type === 'edit-files' && (
+            props.api_prompt_type === 'edit' && (
               <UiResponses
                 response_history={props.response_history}
                 on_response_history_item_click={() => {}}
@@ -646,7 +646,7 @@ export const MainView: React.FC<Props> = (props) => {
       {props.target == 'CLI' && (
         <>
           {props.response_history.length > 0 &&
-            props.cli_prompt_type === 'edit-files' && (
+            props.cli_prompt_type === 'edit' && (
               <UiResponses
                 response_history={props.response_history}
                 on_response_history_item_click={() => {}}

@@ -23,7 +23,7 @@ export const use_instructions = (
 
   const handle_instructions_change = (
     value: string,
-    prompt_type: 'ask-about-files' | 'edit-files'
+    prompt_type: 'ask' | 'edit'
   ) => {
     const update_state = (
       current_state: InstructionsState | undefined,
@@ -46,12 +46,12 @@ export const use_instructions = (
       })
     }
 
-    if (prompt_type == 'ask-about-files') {
+    if (prompt_type == 'ask') {
       update_state(
         ask_about_context_instructions,
         set_ask_about_context_instructions
       )
-    } else if (prompt_type == 'edit-files') {
+    } else if (prompt_type == 'edit') {
       update_state(edit_files_instructions, set_edit_files_instructions)
     }
   }
@@ -80,9 +80,9 @@ export const use_instructions = (
       })
     }
 
-    if (prompt_type == 'ask-about-files') {
+    if (prompt_type == 'ask') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
-    } else if (prompt_type == 'edit-files') {
+    } else if (prompt_type == 'edit') {
       update(edit_files_instructions, set_edit_files_instructions)
     }
   }
@@ -114,9 +114,9 @@ export const use_instructions = (
       })
     }
 
-    if (prompt_type == 'ask-about-files') {
+    if (prompt_type == 'ask') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
-    } else if (prompt_type == 'edit-files') {
+    } else if (prompt_type == 'edit') {
       update(edit_files_instructions, set_edit_files_instructions)
     }
   }
@@ -156,9 +156,9 @@ export const use_instructions = (
       })
     }
 
-    if (prompt_type == 'ask-about-files') {
+    if (prompt_type == 'ask') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
-    } else if (prompt_type == 'edit-files') {
+    } else if (prompt_type == 'edit') {
       update(edit_files_instructions, set_edit_files_instructions)
     }
   }
@@ -194,9 +194,9 @@ export const use_instructions = (
       })
     }
 
-    if (prompt_type == 'ask-about-files') {
+    if (prompt_type == 'ask') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
-    } else if (prompt_type == 'edit-files') {
+    } else if (prompt_type == 'edit') {
       update(edit_files_instructions, set_edit_files_instructions)
     }
   }
