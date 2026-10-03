@@ -18,6 +18,7 @@ export const handle_copy_prompt = async (params: {
     recent_files,
     collected_files,
     processed_instructions,
+    processed_completed_tasks,
     skill_definitions
   } = await build_prompt_payload({
     prompt_view_provider: params.prompt_view_provider,
@@ -36,7 +37,7 @@ export const handle_copy_prompt = async (params: {
   const user_instructions = processed_instructions
 
   if (params.prompt_view_provider.prompt_type == 'edit') {
-    completed_tasks = params.prompt_view_provider.completed_tasks
+    completed_tasks = processed_completed_tasks
     const edit_format = params.prompt_view_provider.edit_format
     output_formatting = {
       whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,

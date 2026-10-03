@@ -15,13 +15,24 @@ export const build_cli_prompt = async (params: {
 
   const current_instructions = prompt_view_provider.current_instructions.trim()
 
-  const { instructions: processed_query, skill_definitions } =
+  const delimiter = `__CWC_TASK_DELIMITER_${Math.random().toString(36).substring(2)}_${Date.now()}__`
+  const combined_instructions = [
+    current_instructions,
+    ...prompt_view_provider.completed_tasks
+  ].join(delimiter)
+
+  const { instructions: processed_combined, skill_definitions } =
     await replace_symbols({
-      instructions: current_instructions,
+      instructions: combined_instructions,
       extension_context: prompt_view_provider.extension_context,
       workspace_provider: prompt_view_provider.workspace_provider,
-      image_as_paths: true
+      image_as_paths: true,
+      symbols_cache: prompt_view_provider.symbols_cache
     })
+
+  const split_processed = processed_combined.split(delimiter)
+  const processed_query = split_processed[0]
+  const processed_completed_tasks = split_processed.slice(1)
 
   const roots = prompt_view_provider.workspace_provider.get_workspace_roots()
 
@@ -80,7 +91,7 @@ export const build_cli_prompt = async (params: {
   let completed_tasks: string[] | undefined = undefined
 
   if (prompt_view_provider.cli_prompt_type == 'edit') {
-    completed_tasks = prompt_view_provider.completed_tasks
+    completed_tasks = processed_completed_tasks
     requirements_list.push(cli_edit_ask_requirements.exception_read_images)
     requirements_list.push(
       cli_edit_ask_requirements.exception_allow_file_system_operations

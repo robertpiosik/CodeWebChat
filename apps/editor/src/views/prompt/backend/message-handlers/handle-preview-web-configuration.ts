@@ -24,6 +24,7 @@ export const handle_preview_web_configuration = async (
     other_files,
     recent_files,
     processed_instructions,
+    processed_completed_tasks,
     skill_definitions
   } = await build_prompt_payload({
     prompt_view_provider,
@@ -34,7 +35,7 @@ export const handle_preview_web_configuration = async (
   let completed_tasks: string[] | undefined = undefined
   const user_instructions = processed_instructions
   if (prompt_view_provider.web_prompt_type == 'edit') {
-    completed_tasks = prompt_view_provider.completed_tasks
+    completed_tasks = processed_completed_tasks
     output_formatting = {
       whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
       truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,

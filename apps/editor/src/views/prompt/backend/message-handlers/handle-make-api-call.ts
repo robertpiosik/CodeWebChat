@@ -54,6 +54,7 @@ export const handle_make_api_call = async (
     recent_files,
     collected_files,
     processed_instructions,
+    processed_completed_tasks,
     skill_definitions
   } = await build_prompt_payload({
     prompt_view_provider
@@ -96,7 +97,7 @@ export const handle_make_api_call = async (
 
     if (prompt_type == 'edit') {
       edit_format = prompt_view_provider.edit_format
-      completed_tasks = prompt_view_provider.completed_tasks
+      completed_tasks = processed_completed_tasks
       const output_formatting = {
         whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
         truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
