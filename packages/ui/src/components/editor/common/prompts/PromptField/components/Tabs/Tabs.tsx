@@ -8,7 +8,6 @@ type Props = {
   active_tab_index: number
   on_tabs_reorder?: (new_order: number[]) => void
   handle_input_click?: (e: React.MouseEvent<HTMLDivElement>) => void
-  is_empty?: boolean
 }
 
 export type TabsRef = {
@@ -86,9 +85,9 @@ export const Tabs = forwardRef<TabsRef, Props>((props, ref) => {
         filter={`.${styles['tabs__tab--new']}`}
       >
         {tab_items.map((item, i) => {
-          const is_active = i === props.active_tab_index
-          const is_hovered = hovered_tab_index === i
-          const can_close = !(props.tabs_count === 1 && props.is_empty)
+          const is_active = i == props.active_tab_index
+          const is_hovered = hovered_tab_index == i
+          const can_close = props.tabs_count >= 1
           const show_close =
             is_active &&
             is_hovered &&

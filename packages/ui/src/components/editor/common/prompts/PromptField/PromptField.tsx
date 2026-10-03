@@ -299,7 +299,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 <Tabs
                   tabs_count={props.tabs_count}
                   active_tab_index={props.active_tab_index}
-                  is_empty={!props.value}
                 />
               </div>
               <div className={styles['placeholder-text']}>{placeholder}</div>
@@ -322,7 +321,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               active_tab_index={props.active_tab_index}
               on_tabs_reorder={props.on_tabs_reorder}
               handle_input_click={handle_input_click}
-              is_empty={!props.value}
             />
           </div>
           <div
