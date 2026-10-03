@@ -29,7 +29,7 @@ Instead of messaging the agent in an ever-growing conversation, you first select
 
 > [!TIP]
 >
-> [Agentic Search](#-agentic-search) helps you select task-relevant files with your coding agent.
+> [Agentic Search](#-agentic-search) selects task-relevant files via your favorite agentic harness.
 
 ## Send prompts with...
 
@@ -138,7 +138,7 @@ _Explanations, planning, and analysis._
 
 ### 📄 Agentic search
 
-_Task-relevant files from popular coding agents._
+_Find Task-relevant files via your favorite agentic harness._
 
 <details>
 <summary>AGENT</summary>
