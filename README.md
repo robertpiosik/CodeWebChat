@@ -25,9 +25,7 @@
 
 Instead of messaging the agent in an ever-growing conversation, you first select task-relevant files, then send [lean markdown prompts](#prompts) with chatbots, API calls or headless CLI invocations.
 
-> [!IMPORTANT]
->
-> [Lean markdown prompts](#prompts) make models _think_ less. Response times are lower and quotas last longer!
+Because they make intent very easy to unpack, models _think_ less lowering response times and saving quotas 10x!
 
 > [!TIP]
 >
