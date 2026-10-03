@@ -63,7 +63,7 @@
   float: right;
   display: flex;
   align-items: center;
-  margin: 3px 3px 0 4px;
+  margin: 3px 5px 0 4px;
   position: relative;
   z-index: 2;
   gap: 4px;
@@ -348,12 +348,6 @@
 
     &--new {
       padding: 0;
-      width: 15px;
-
-      &::before {
-        font-family: 'codicon';
-        content: '\ea60';
-      }
     }
 
     &--active {

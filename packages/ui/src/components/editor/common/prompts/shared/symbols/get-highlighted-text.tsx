@@ -270,7 +270,9 @@ export const get_highlighted_text = (params: {
     tabs_items += `<span class="${cn(
       pfStyles['tabs__tab'],
       pfStyles['tabs__tab--new']
-    )}" data-role="tab-new" title="New Tab"></span>`
+    )}" data-role="tab-new" title="New Tab"><span class="${
+      pfStyles['tabs__tab-icon']
+    }"></span></span>`
 
     header_html += `<span class="${pfStyles['tabs']}" data-role="tabs-container">${tabs_items}</span>`
   }

@@ -119,7 +119,9 @@ export const Tabs = forwardRef<TabsRef, Props>((props, ref) => {
           className={cn(styles.tabs__tab, styles['tabs__tab--new'])}
           data-role="tab-new"
           onClick={props.handle_input_click}
-        />
+        >
+          <div className={styles['tabs__tab-icon']} />
+        </div>
       </ReactSortable>
     )
   }
