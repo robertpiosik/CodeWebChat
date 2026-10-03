@@ -10,7 +10,7 @@ export const handle_preview_skill_symbol = async (message: {
   try {
     const instruction = `#Skill(${message.agent}:${message.repo}:${message.skill_name})`
     const { skill_definitions } = await replace_skill_symbol({
-      instruction
+      instructions: [instruction]
     })
 
     if (skill_definitions) {

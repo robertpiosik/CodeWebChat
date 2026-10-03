@@ -3,54 +3,58 @@ import * as os from 'os'
 import * as path from 'path'
 
 export const replace_pasted_text_symbol = async (params: {
-  instruction: string
-}): Promise<string> => {
-  const regex = /#PastedText\(([a-fA-F0-9]+)(?::\d+)?\)/g
+  instructions: string[]
+}): Promise<string[]> => {
+  return Promise.all(
+    params.instructions.map(async (instruction) => {
+      const regex = /#PastedText\(([a-fA-F0-9]+)(?::\d+)?\)/g
 
-  const matches = Array.from(params.instruction.matchAll(regex))
+      const matches = Array.from(instruction.matchAll(regex))
 
-  if (matches.length == 0) {
-    return params.instruction
-  }
-
-  const replacements = await Promise.all(
-    matches.map(async (match) => {
-      const hash = match[1]
-      const filename = `cwc-paste-${hash}.txt`
-      const file_path = path.join(os.tmpdir(), filename)
-      try {
-        const content = await fs.promises.readFile(file_path, 'utf-8')
-        return {
-          content,
-          success: true
-        }
-      } catch (error) {
-        return {
-          success: false
-        }
+      if (matches.length == 0) {
+        return instruction
       }
+
+      const replacements = await Promise.all(
+        matches.map(async (match) => {
+          const hash = match[1]
+          const filename = `cwc-paste-${hash}.txt`
+          const file_path = path.join(os.tmpdir(), filename)
+          try {
+            const content = await fs.promises.readFile(file_path, 'utf-8')
+            return {
+              content,
+              success: true
+            }
+          } catch (error) {
+            return {
+              success: false
+            }
+          }
+        })
+      )
+
+      let result_string = ''
+      let last_index = 0
+
+      for (let i = 0; i < matches.length; i++) {
+        const match = matches[i]
+        const replacement = replacements[i]
+
+        result_string += instruction.slice(last_index, match.index)
+
+        if (replacement.success && replacement.content) {
+          result_string += `\n\`\`\`\n${replacement.content}\n\`\`\`\n`
+        } else {
+          result_string += match[0]
+        }
+
+        last_index = match.index + match[0].length
+      }
+
+      result_string += instruction.slice(last_index).trim()
+
+      return result_string
     })
   )
-
-  let result_string = ''
-  let last_index = 0
-
-  for (let i = 0; i < matches.length; i++) {
-    const match = matches[i]
-    const replacement = replacements[i]
-
-    result_string += params.instruction.slice(last_index, match.index)
-
-    if (replacement.success && replacement.content) {
-      result_string += `\n\`\`\`\n${replacement.content}\n\`\`\`\n`
-    } else {
-      result_string += match[0]
-    }
-
-    last_index = match.index + match[0].length
-  }
-
-  result_string += params.instruction.slice(last_index).trim()
-
-  return result_string
 }

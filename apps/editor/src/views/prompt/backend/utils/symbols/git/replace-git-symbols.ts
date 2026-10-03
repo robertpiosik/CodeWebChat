@@ -121,270 +121,303 @@ export const build_changes_markdown = (params: {
 }
 
 export const replace_changes_symbol = async (params: {
-  instruction: string
+  instructions: string[]
   symbols_cache?: SymbolCacheManager
-}): Promise<{ instruction: string; changes_definitions: string }> => {
+}): Promise<{ instructions: string[]; changes_definitions: string }> => {
   const regex = /#Changes\(([^)]+)\)/g
-  const matches = [...params.instruction.matchAll(regex)]
-
-  let result_instruction = params.instruction
+  const result_instructions = [...params.instructions]
   let changes_definitions = ''
+  const appended_keys = new Set<string>()
 
-  if (matches.length == 0) {
-    return { instruction: result_instruction, changes_definitions }
-  }
+  for (let i = 0; i < result_instructions.length; i++) {
+    const matches = [...result_instructions[i].matchAll(regex)]
 
-  for (const match of matches) {
-    const full_match = match[0]
-    const branch_spec = match[1]
-    const escaped_branch_spec = branch_spec.replace(
-      /[.*+?^${}()|[\]\\]/g,
-      '\\$&'
-    )
-    const replacement_regex = new RegExp(
-      `\\s*#Changes\\(${escaped_branch_spec}\\)\\s*`
-    )
-
-    // Skip if the placeholder is already gone (e.g., duplicate processing)
-    if (!replacement_regex.test(result_instruction)) {
+    if (matches.length == 0) {
       continue
     }
 
-    const multi_root_match = branch_spec.match(/^([^/]+)\/(.+)$/)
-
-    if (multi_root_match) {
-      const [, folder_name, branch_name] = multi_root_match
-
-      const workspace_folders = vscode.workspace.workspaceFolders
-      if (!workspace_folders) {
-        vscode.window.showErrorMessage(
-          t('common.error.no-workspace-folders-found')
-        )
-        if (params.symbols_cache) {
-          params.symbols_cache.set(full_match, '', '')
-        }
-        result_instruction = result_instruction.replace(replacement_regex, '')
-        continue
-      }
-
-      const target_folder = workspace_folders.find(
-        (folder) => folder.name == folder_name
+    for (const match of matches) {
+      const full_match = match[0]
+      const branch_spec = match[1]
+      const escaped_branch_spec = branch_spec.replace(
+        /[.*+?^${}()|[\]\\]/g,
+        '\\$&'
       )
-      if (!target_folder) {
-        vscode.window.showErrorMessage(
-          t('common.error.workspace-folder-not-found', { folder_name })
-        )
-        if (params.symbols_cache) {
-          params.symbols_cache.set(full_match, '', '')
-        }
-        result_instruction = result_instruction.replace(replacement_regex, '')
+      const replacement_regex = new RegExp(
+        `\\s*#Changes\\(${escaped_branch_spec}\\)\\s*`
+      )
+
+      if (!replacement_regex.test(result_instructions[i])) {
         continue
       }
 
-      let cache_key = full_match
-      try {
-        const head_sha = execSync('git rev-parse HEAD', {
-          cwd: target_folder.uri.fsPath
-        })
-          .toString()
-          .trim()
+      const multi_root_match = branch_spec.match(/^([^/]+)\/(.+)$/)
 
-        cache_key = `${full_match}:${head_sha}`
+      if (multi_root_match) {
+        const [, folder_name, branch_name] = multi_root_match
 
-        if (params.symbols_cache) {
-          const cached = params.symbols_cache.get(cache_key)
-          if (cached) {
-            changes_definitions += cached.definitions
-            result_instruction = result_instruction.replace(
-              replacement_regex,
-              cached.replacement
-            )
-            continue
+        const workspace_folders = vscode.workspace.workspaceFolders
+        if (!workspace_folders) {
+          vscode.window.showErrorMessage(
+            t('common.error.no-workspace-folders-found')
+          )
+          if (params.symbols_cache) {
+            params.symbols_cache.set(full_match, '', '')
           }
+          result_instructions[i] = result_instructions[i].replace(
+            replacement_regex,
+            ''
+          )
+          continue
         }
 
-        const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
-          cwd: target_folder.uri.fsPath
-        })
-          .toString()
-          .trim()
+        const target_folder = workspace_folders.find(
+          (folder) => folder.name == folder_name
+        )
+        if (!target_folder) {
+          vscode.window.showErrorMessage(
+            t('common.error.workspace-folder-not-found', { folder_name })
+          )
+          if (params.symbols_cache) {
+            params.symbols_cache.set(full_match, '', '')
+          }
+          result_instructions[i] = result_instructions[i].replace(
+            replacement_regex,
+            ''
+          )
+          continue
+        }
 
-        let diff_base: string
-        if (current_branch == branch_name) {
-          // If comparing to same branch, use merge-base to show changes since branch point
-          diff_base = execSync(`git merge-base HEAD ${branch_name}`, {
+        let cache_key = full_match
+        try {
+          const head_sha = execSync('git rev-parse HEAD', {
             cwd: target_folder.uri.fsPath
           })
             .toString()
             .trim()
-        } else {
-          diff_base = branch_name
-        }
-        const diff_command = `git diff ${diff_base}`
-        const diff = execSync(diff_command, {
-          cwd: target_folder.uri.fsPath
-        }).toString()
 
-        if (!diff || diff.length == 0) {
-          vscode.window.showInformationMessage(
-            t(
-              'views.prompt.utils.symbols.git.replace-git-symbols.no-changes-found-between-branches-in-folder',
-              { branch_name, folder_name }
-            )
-          )
+          cache_key = `${full_match}:${head_sha}`
+
           if (params.symbols_cache) {
-            params.symbols_cache.set(cache_key, '', '')
+            const cached = params.symbols_cache.get(cache_key)
+            if (cached) {
+              if (!appended_keys.has(cache_key)) {
+                changes_definitions += cached.definitions
+                appended_keys.add(cache_key)
+              }
+              result_instructions[i] = result_instructions[i].replace(
+                replacement_regex,
+                cached.replacement
+              )
+              continue
+            }
           }
-          result_instruction = result_instruction.replace(replacement_regex, '')
-          continue
-        }
 
-        const replacement_text = build_changes_markdown({
-          diff,
-          branch_name,
-          path_prefix: workspace_folders.length > 1 ? folder_name : undefined
-        })
-        const link_hash = `diff-with-${branch_name
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '')}`
-        const replacement = ` [Diff with ${branch_name}](#${link_hash}) `
-
-        if (params.symbols_cache) {
-          params.symbols_cache.set(cache_key, replacement, replacement_text)
-        }
-
-        changes_definitions += replacement_text
-        result_instruction = result_instruction.replace(
-          replacement_regex,
-          replacement
-        )
-      } catch (error) {
-        vscode.window.showErrorMessage(
-          t('common.error.failed-to-get-changes-from-branch-in-folder', {
-            branch_name,
-            folder_name
+          const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
+            cwd: target_folder.uri.fsPath
           })
-        )
-        Logger.error({
-          function_name: 'replace_changes_symbol',
-          message: `Error getting diff from branch ${branch_name} in folder ${folder_name}`,
-          data: error
-        })
-        if (params.symbols_cache) {
-          params.symbols_cache.set(cache_key, '', '')
-        }
-        result_instruction = result_instruction.replace(replacement_regex, '')
-      }
-    } else {
-      const branch_name = branch_spec
-      const repository = await get_git_repository()
-      if (!repository) {
-        vscode.window.showErrorMessage(
-          t('common.error.no-git-repository-found')
-        )
-        if (params.symbols_cache) {
-          params.symbols_cache.set(full_match, '', '')
-        }
-        result_instruction = result_instruction.replace(replacement_regex, '')
-        continue
-      }
+            .toString()
+            .trim()
 
-      let cache_key = full_match
-      try {
-        const head_sha = execSync('git rev-parse HEAD', {
-          cwd: repository.rootUri.fsPath
-        })
-          .toString()
-          .trim()
+          let diff_base: string
+          if (current_branch == branch_name) {
+            diff_base = execSync(`git merge-base HEAD ${branch_name}`, {
+              cwd: target_folder.uri.fsPath
+            })
+              .toString()
+              .trim()
+          } else {
+            diff_base = branch_name
+          }
+          const diff_command = `git diff ${diff_base}`
+          const diff = execSync(diff_command, {
+            cwd: target_folder.uri.fsPath
+          }).toString()
 
-        cache_key = `${full_match}:${head_sha}`
-
-        if (params.symbols_cache) {
-          const cached = params.symbols_cache.get(cache_key)
-          if (cached) {
-            changes_definitions += cached.definitions
-            result_instruction = result_instruction.replace(
+          if (!diff || diff.length == 0) {
+            vscode.window.showInformationMessage(
+              t(
+                'views.prompt.utils.symbols.git.replace-git-symbols.no-changes-found-between-branches-in-folder',
+                { branch_name, folder_name }
+              )
+            )
+            if (params.symbols_cache) {
+              params.symbols_cache.set(cache_key, '', '')
+            }
+            result_instructions[i] = result_instructions[i].replace(
               replacement_regex,
-              cached.replacement
+              ''
             )
             continue
           }
+
+          const replacement_text = build_changes_markdown({
+            diff,
+            branch_name,
+            path_prefix: workspace_folders.length > 1 ? folder_name : undefined
+          })
+          const link_hash = `diff-with-${branch_name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '')}`
+          const replacement = ` [Diff with ${branch_name}](#${link_hash}) `
+
+          if (params.symbols_cache) {
+            params.symbols_cache.set(cache_key, replacement, replacement_text)
+          }
+
+          if (!appended_keys.has(cache_key)) {
+            changes_definitions += replacement_text
+            appended_keys.add(cache_key)
+          }
+          result_instructions[i] = result_instructions[i].replace(
+            replacement_regex,
+            replacement
+          )
+        } catch (error) {
+          vscode.window.showErrorMessage(
+            t('common.error.failed-to-get-changes-from-branch-in-folder', {
+              branch_name,
+              folder_name
+            })
+          )
+          Logger.error({
+            function_name: 'replace_changes_symbol',
+            message: `Error getting diff from branch ${branch_name} in folder ${folder_name}`,
+            data: error
+          })
+          if (params.symbols_cache) {
+            params.symbols_cache.set(cache_key, '', '')
+          }
+          result_instructions[i] = result_instructions[i].replace(
+            replacement_regex,
+            ''
+          )
+        }
+      } else {
+        const branch_name = branch_spec
+        const repository = await get_git_repository()
+        if (!repository) {
+          vscode.window.showErrorMessage(
+            t('common.error.no-git-repository-found')
+          )
+          if (params.symbols_cache) {
+            params.symbols_cache.set(full_match, '', '')
+          }
+          result_instructions[i] = result_instructions[i].replace(
+            replacement_regex,
+            ''
+          )
+          continue
         }
 
-        const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
-          cwd: repository.rootUri.fsPath
-        })
-          .toString()
-          .trim()
-
-        let diff_base: string
-        if (current_branch == branch_name) {
-          // If comparing to same branch, use merge-base to show changes since branch point
-          diff_base = execSync(`git merge-base HEAD ${branch_name}`, {
+        let cache_key = full_match
+        try {
+          const head_sha = execSync('git rev-parse HEAD', {
             cwd: repository.rootUri.fsPath
           })
             .toString()
             .trim()
-        } else {
-          diff_base = branch_name
-        }
-        const diff_command = `git diff ${diff_base}`
-        const diff = execSync(diff_command, {
-          cwd: repository.rootUri.fsPath
-        }).toString()
 
-        if (!diff || diff.length == 0) {
-          vscode.window.showInformationMessage(
-            t(
-              'views.prompt.utils.symbols.git.replace-git-symbols.no-changes-found-between-branches',
-              { branch_name }
+          cache_key = `${full_match}:${head_sha}`
+
+          if (params.symbols_cache) {
+            const cached = params.symbols_cache.get(cache_key)
+            if (cached) {
+              if (!appended_keys.has(cache_key)) {
+                changes_definitions += cached.definitions
+                appended_keys.add(cache_key)
+              }
+              result_instructions[i] = result_instructions[i].replace(
+                replacement_regex,
+                cached.replacement
+              )
+              continue
+            }
+          }
+
+          const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
+            cwd: repository.rootUri.fsPath
+          })
+            .toString()
+            .trim()
+
+          let diff_base: string
+          if (current_branch == branch_name) {
+            diff_base = execSync(`git merge-base HEAD ${branch_name}`, {
+              cwd: repository.rootUri.fsPath
+            })
+              .toString()
+              .trim()
+          } else {
+            diff_base = branch_name
+          }
+          const diff_command = `git diff ${diff_base}`
+          const diff = execSync(diff_command, {
+            cwd: repository.rootUri.fsPath
+          }).toString()
+
+          if (!diff || diff.length == 0) {
+            vscode.window.showInformationMessage(
+              t(
+                'views.prompt.utils.symbols.git.replace-git-symbols.no-changes-found-between-branches',
+                { branch_name }
+              )
             )
+            if (params.symbols_cache) {
+              params.symbols_cache.set(cache_key, '', '')
+            }
+            result_instructions[i] = result_instructions[i].replace(
+              replacement_regex,
+              ''
+            )
+            continue
+          }
+
+          const replacement_text = build_changes_markdown({
+            diff,
+            branch_name
+          })
+          const link_hash = `diff-with-${branch_name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '')}`
+          const replacement = ` [Diff with ${branch_name}](#${link_hash}) `
+
+          if (params.symbols_cache) {
+            params.symbols_cache.set(cache_key, replacement, replacement_text)
+          }
+
+          if (!appended_keys.has(cache_key)) {
+            changes_definitions += replacement_text
+            appended_keys.add(cache_key)
+          }
+          result_instructions[i] = result_instructions[i].replace(
+            replacement_regex,
+            replacement
           )
+        } catch (error) {
+          vscode.window.showErrorMessage(
+            t('common.error.failed-to-get-changes-from-branch', { branch_name })
+          )
+          Logger.error({
+            function_name: 'replace_changes_symbol',
+            message: `Error getting diff from branch ${branch_name}`,
+            data: error
+          })
           if (params.symbols_cache) {
             params.symbols_cache.set(cache_key, '', '')
           }
-          result_instruction = result_instruction.replace(replacement_regex, '')
-          continue
+          result_instructions[i] = result_instructions[i].replace(
+            replacement_regex,
+            ''
+          )
         }
-
-        const replacement_text = build_changes_markdown({
-          diff,
-          branch_name
-        })
-        const link_hash = `diff-with-${branch_name
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '')}`
-        const replacement = ` [Diff with ${branch_name}](#${link_hash}) `
-
-        if (params.symbols_cache) {
-          params.symbols_cache.set(cache_key, replacement, replacement_text)
-        }
-
-        changes_definitions += replacement_text
-        result_instruction = result_instruction.replace(
-          replacement_regex,
-          replacement
-        )
-      } catch (error) {
-        vscode.window.showErrorMessage(
-          t('common.error.failed-to-get-changes-from-branch', { branch_name })
-        )
-        Logger.error({
-          function_name: 'replace_changes_symbol',
-          message: `Error getting diff from branch ${branch_name}`,
-          data: error
-        })
-        if (params.symbols_cache) {
-          params.symbols_cache.set(cache_key, '', '')
-        }
-        result_instruction = result_instruction.replace(replacement_regex, '')
       }
     }
   }
 
-  return { instruction: result_instruction, changes_definitions }
+  return { instructions: result_instructions, changes_definitions }
 }
 
 export const build_commit_changes_markdown = (params: {
@@ -466,157 +499,170 @@ export const build_commit_changes_markdown = (params: {
 }
 
 export const replace_commit_symbol = async (params: {
-  instruction: string
+  instructions: string[]
   symbols_cache?: SymbolCacheManager
-}): Promise<{ instruction: string; commit_definitions: string }> => {
+}): Promise<{ instructions: string[]; commit_definitions: string }> => {
   const regex =
     /#(Commit|CommitMessage)\(([^:]+):([a-fA-F0-9]+)\s*(?:"((?:[^"\\]|\\.)*)")?\)/g
 
-  let result_instruction = params.instruction
+  const result_instructions = [...params.instructions]
   let commit_definitions = ''
-  const matches = [...result_instruction.matchAll(regex)]
+  const appended_keys = new Set<string>()
 
   const workspace_folders = vscode.workspace.workspaceFolders
   if (!workspace_folders) {
     return {
-      instruction: result_instruction.replace(regex, ''),
+      instructions: result_instructions.map((inst) => inst.replace(regex, '')),
       commit_definitions: ''
     }
   }
 
-  for (const match of matches) {
-    const full_match = match[0]
-    const symbol_type = match[1]
-    const folder_name = match[2]
-    const commit_hash = match[3]
-    const commit_message = match[4]?.replace(/\\(.)/g, '$1')
+  for (let i = 0; i < result_instructions.length; i++) {
+    const matches = [...result_instructions[i].matchAll(regex)]
 
-    if (params.symbols_cache) {
-      const cached = params.symbols_cache.get(full_match)
-      if (cached) {
-        commit_definitions += cached.definitions
-        result_instruction = result_instruction.replace(
-          new RegExp(
-            `\\s*${full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`
-          ),
-          cached.replacement
-        )
-        continue
-      }
-    }
+    for (const match of matches) {
+      const full_match = match[0]
+      const symbol_type = match[1]
+      const folder_name = match[2]
+      const commit_hash = match[3]
+      const commit_message = match[4]?.replace(/\\(.)/g, '$1')
 
-    const target_folder = workspace_folders.find(
-      (folder) => folder.name === folder_name
-    )
-    if (!target_folder) {
-      vscode.window.showErrorMessage(
-        t('common.error.workspace-folder-not-found', { folder_name })
-      )
       if (params.symbols_cache) {
-        params.symbols_cache.set(full_match, '', '')
-      }
-      result_instruction = result_instruction.replace(full_match, '')
-      continue
-    }
-
-    try {
-      let replacement_text = ''
-
-      let commit_message_body = ''
-      try {
-        const raw_msg = execSync(`git show -s --format=%B ${commit_hash}`, {
-          cwd: target_folder.uri.fsPath,
-          encoding: 'utf-8'
-        }).toString()
-        commit_message_body = AsciiTree.strip_from_text(raw_msg)
-      } catch (error) {
-        Logger.warn({
-          function_name: 'replace_commit_symbol',
-          message: `Failed to read commit message for ${commit_hash}`,
-          data: error
-        })
-      }
-
-      const short_hash = commit_hash.substring(0, 7)
-      const header_text = `Commit ${short_hash}`
-      const title_text = commit_message
-        ? `Commit ${short_hash} (${commit_message})`
-        : `Commit ${short_hash}`
-      const link_hash = header_text
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '')
-
-      if (symbol_type === 'Commit') {
-        const diff = execSync(`git show ${commit_hash}`, {
-          cwd: target_folder.uri.fsPath,
-          encoding: 'utf-8'
-        }).toString()
-
-        if (!diff || diff.length == 0) {
-          vscode.window.showInformationMessage(
-            t(
-              'views.prompt.handlers.utils.symbols.git.replace-git-symbols.commit-seems-empty',
-              { commit_hash }
-            )
-          )
-          if (params.symbols_cache) {
-            params.symbols_cache.set(full_match, '', '')
+        const cached = params.symbols_cache.get(full_match)
+        if (cached) {
+          if (!appended_keys.has(full_match)) {
+            commit_definitions += cached.definitions
+            appended_keys.add(full_match)
           }
-          result_instruction = result_instruction.replace(full_match, '')
+          result_instructions[i] = result_instructions[i].replace(
+            new RegExp(
+              `\\s*${full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`
+            ),
+            cached.replacement
+          )
           continue
         }
-
-        replacement_text = build_commit_changes_markdown({
-          diff,
-          commit_hash,
-          path_prefix: workspace_folders.length > 1 ? folder_name : undefined,
-          commit_message: commit_message_body
-        })
-      } else {
-        if (commit_message_body) {
-          replacement_text = `---\n\n${commit_message_body}\n\n---\n\n`
-        }
       }
 
-      if (symbol_type === 'Commit') {
-        const replacement = ` [${title_text}](#${link_hash}) `
-        if (params.symbols_cache) {
-          params.symbols_cache.set(full_match, replacement, replacement_text)
-        }
-        commit_definitions += replacement_text
-        result_instruction = result_instruction.replace(
-          new RegExp(
-            `\\s*${full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`
-          ),
-          replacement
-        )
-      } else {
-        const replacement = `\n\n${replacement_text}`
-        if (params.symbols_cache) {
-          params.symbols_cache.set(full_match, replacement, '')
-        }
-        result_instruction = result_instruction.replace(
-          new RegExp(
-            `\\s*${full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`
-          ),
-          replacement
-        )
-      }
-    } catch (error) {
-      vscode.window.showErrorMessage(
-        t('common.error.failed-to-get-diff-for-commit', { commit_hash })
+      const target_folder = workspace_folders.find(
+        (folder) => folder.name === folder_name
       )
-      Logger.error({
-        function_name: 'replace_commit_symbol',
-        message: `Error getting diff for commit ${commit_hash}`,
-        data: error
-      })
-      if (params.symbols_cache) {
-        params.symbols_cache.set(full_match, '', '')
+      if (!target_folder) {
+        vscode.window.showErrorMessage(
+          t('common.error.workspace-folder-not-found', { folder_name })
+        )
+        if (params.symbols_cache) {
+          params.symbols_cache.set(full_match, '', '')
+        }
+        result_instructions[i] = result_instructions[i].replace(full_match, '')
+        continue
       }
-      result_instruction = result_instruction.replace(full_match, '')
+
+      try {
+        let replacement_text = ''
+
+        let commit_message_body = ''
+        try {
+          const raw_msg = execSync(`git show -s --format=%B ${commit_hash}`, {
+            cwd: target_folder.uri.fsPath,
+            encoding: 'utf-8'
+          }).toString()
+          commit_message_body = AsciiTree.strip_from_text(raw_msg)
+        } catch (error) {
+          Logger.warn({
+            function_name: 'replace_commit_symbol',
+            message: `Failed to read commit message for ${commit_hash}`,
+            data: error
+          })
+        }
+
+        const short_hash = commit_hash.substring(0, 7)
+        const header_text = `Commit ${short_hash}`
+        const title_text = commit_message
+          ? `Commit ${short_hash} (${commit_message})`
+          : `Commit ${short_hash}`
+        const link_hash = header_text
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '')
+
+        if (symbol_type === 'Commit') {
+          const diff = execSync(`git show ${commit_hash}`, {
+            cwd: target_folder.uri.fsPath,
+            encoding: 'utf-8'
+          }).toString()
+
+          if (!diff || diff.length == 0) {
+            vscode.window.showInformationMessage(
+              t(
+                'views.prompt.handlers.utils.symbols.git.replace-git-symbols.commit-seems-empty',
+                { commit_hash }
+              )
+            )
+            if (params.symbols_cache) {
+              params.symbols_cache.set(full_match, '', '')
+            }
+            result_instructions[i] = result_instructions[i].replace(
+              full_match,
+              ''
+            )
+            continue
+          }
+
+          replacement_text = build_commit_changes_markdown({
+            diff,
+            commit_hash,
+            path_prefix: workspace_folders.length > 1 ? folder_name : undefined,
+            commit_message: commit_message_body
+          })
+        } else {
+          if (commit_message_body) {
+            replacement_text = `---\n\n${commit_message_body}\n\n---\n\n`
+          }
+        }
+
+        if (symbol_type === 'Commit') {
+          const replacement = ` [${title_text}](#${link_hash}) `
+          if (params.symbols_cache) {
+            params.symbols_cache.set(full_match, replacement, replacement_text)
+          }
+          if (!appended_keys.has(full_match)) {
+            commit_definitions += replacement_text
+            appended_keys.add(full_match)
+          }
+          result_instructions[i] = result_instructions[i].replace(
+            new RegExp(
+              `\\s*${full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`
+            ),
+            replacement
+          )
+        } else {
+          const replacement = `\n\n${replacement_text}`
+          if (params.symbols_cache) {
+            params.symbols_cache.set(full_match, replacement, '')
+          }
+          result_instructions[i] = result_instructions[i].replace(
+            new RegExp(
+              `\\s*${full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`
+            ),
+            replacement
+          )
+        }
+      } catch (error) {
+        vscode.window.showErrorMessage(
+          t('common.error.failed-to-get-diff-for-commit', { commit_hash })
+        )
+        Logger.error({
+          function_name: 'replace_commit_symbol',
+          message: `Error getting diff for commit ${commit_hash}`,
+          data: error
+        })
+        if (params.symbols_cache) {
+          params.symbols_cache.set(full_match, '', '')
+        }
+        result_instructions[i] = result_instructions[i].replace(full_match, '')
+      }
     }
   }
-  return { instruction: result_instruction, commit_definitions }
+  return { instructions: result_instructions, commit_definitions }
 }

@@ -14,7 +14,7 @@ export const handle_preview_commit_symbol = async (message: {
       : ''
     const instruction = `#${message.type}(${message.repo_name}:${message.commit_hash}${message_escaped})`
     const { commit_definitions } = await replace_commit_symbol({
-      instruction
+      instructions: [instruction]
     })
 
     if (commit_definitions) {

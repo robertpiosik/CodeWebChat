@@ -11,19 +11,15 @@ import { Logger } from '@shared/utils/logger'
 import { SymbolCacheManager } from '../symbol-cache'
 
 export const replace_saved_context_symbol = async (params: {
-  instruction: string
+  instructions: string[]
   extension_context: vscode.ExtensionContext
   workspace_provider: WorkspaceProvider
   symbols_cache?: SymbolCacheManager
-}): Promise<{ instruction: string; context_definitions: string }> => {
+}): Promise<{ instructions: string[]; context_definitions: string }> => {
   const regex = /#SavedContext\(([^)]+)\)/g
-  let result_instruction = params.instruction
+  const result_instructions = [...params.instructions]
   let context_definitions = ''
-
-  const matches = [...result_instruction.matchAll(regex)]
-  if (matches.length == 0) {
-    return { instruction: result_instruction, context_definitions: '' }
-  }
+  const appended_keys = new Set<string>()
 
   const { merged: internal_contexts } = load_and_merge_global_contexts(
     params.extension_context
@@ -32,101 +28,119 @@ export const replace_saved_context_symbol = async (params: {
 
   const all_contexts = [...internal_contexts, ...file_contexts]
 
-  for (const match of matches) {
-    const full_match = match[0]
-    let context_name = match[1].trim()
-
-    // Handle quoted names or prefixed names like: WorkspaceState "a"
-    const quoted_match = context_name.match(/["']([^"']+)["']$/)
-    if (quoted_match) {
-      context_name = quoted_match[1]
-    }
-
-    const escaped_match = full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    const replacement_regex = new RegExp(`\\s*${escaped_match}\\s*`, 'g')
-
-    if (!result_instruction.match(replacement_regex)) {
+  for (let i = 0; i < result_instructions.length; i++) {
+    const matches = [...result_instructions[i].matchAll(regex)]
+    if (matches.length == 0) {
       continue
     }
 
-    if (params.symbols_cache) {
-      const cached = params.symbols_cache.get(full_match)
-      if (cached) {
-        context_definitions += cached.definitions
-        result_instruction = result_instruction.replace(
+    for (const match of matches) {
+      const full_match = match[0]
+      let context_name = match[1].trim()
+
+      // Handle quoted names or prefixed names like: WorkspaceState "a"
+      const quoted_match = context_name.match(/["']([^"']+)["']$/)
+      if (quoted_match) {
+        context_name = quoted_match[1]
+      }
+
+      const escaped_match = full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      const replacement_regex = new RegExp(`\\s*${escaped_match}\\s*`, 'g')
+
+      if (!result_instructions[i].match(replacement_regex)) {
+        continue
+      }
+
+      if (params.symbols_cache) {
+        const cached = params.symbols_cache.get(full_match)
+        if (cached) {
+          if (!appended_keys.has(full_match)) {
+            context_definitions += cached.definitions
+            appended_keys.add(full_match)
+          }
+          result_instructions[i] = result_instructions[i].replace(
+            replacement_regex,
+            cached.replacement
+          )
+          continue
+        }
+      }
+
+      const saved_context = all_contexts.find((c) => c.name === context_name)
+
+      if (!saved_context) {
+        vscode.window.showWarningMessage(
+          `Saved context "${context_name}" not found.`
+        )
+        if (params.symbols_cache) {
+          params.symbols_cache.set(full_match, ' ', '')
+        }
+        result_instructions[i] = result_instructions[i].replace(
           replacement_regex,
-          cached.replacement
+          ' '
         )
         continue
       }
-    }
 
-    const saved_context = all_contexts.find((c) => c.name === context_name)
+      const paths = await resolve_context_paths({
+        context: saved_context,
+        workspace_root:
+          params.workspace_provider.get_workspace_roots()[0] || '',
+        workspace_provider: params.workspace_provider
+      })
 
-    if (!saved_context) {
-      vscode.window.showWarningMessage(
-        `Saved context "${context_name}" not found.`
-      )
-      if (params.symbols_cache) {
-        params.symbols_cache.set(full_match, ' ', '')
-      }
-      result_instruction = result_instruction.replace(replacement_regex, ' ')
-      continue
-    }
+      let files_markdown = ''
+      for (const p of paths) {
+        try {
+          if (fs.existsSync(p) && fs.statSync(p).isFile()) {
+            const content = fs.readFileSync(p, 'utf-8')
+            const root =
+              params.workspace_provider.get_workspace_root_for_file(p)
+            const relative_path = root ? path.relative(root, p) : p
 
-    const paths = await resolve_context_paths({
-      context: saved_context,
-      workspace_root: params.workspace_provider.get_workspace_roots()[0] || '',
-      workspace_provider: params.workspace_provider
-    })
-
-    let files_markdown = ''
-    for (const p of paths) {
-      try {
-        if (fs.existsSync(p) && fs.statSync(p).isFile()) {
-          const content = fs.readFileSync(p, 'utf-8')
-          const root = params.workspace_provider.get_workspace_root_for_file(p)
-          const relative_path = root ? path.relative(root, p) : p
-
-          const backticks = content.includes('```') ? '````' : '```'
-          files_markdown += `### File: \`${relative_path.replace(
-            /\\/g,
-            '/'
-          )}\`\n\n${backticks}\n${content}\n${backticks}\n\n`
+            const backticks = content.includes('```') ? '````' : '```'
+            files_markdown += `### File: \`${relative_path.replace(
+              /\\/g,
+              '/'
+            )}\`\n\n${backticks}\n${content}\n${backticks}\n\n`
+          }
+        } catch (error) {
+          Logger.warn({
+            function_name: 'replace_saved_context_symbol',
+            message: `Failed to read file ${p} from saved context ${context_name}`,
+            data: error
+          })
         }
-      } catch (error) {
-        Logger.warn({
-          function_name: 'replace_saved_context_symbol',
-          message: `Failed to read file ${p} from saved context ${context_name}`,
-          data: error
-        })
       }
+
+      const link_hash = context_name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '')
+      const replacement = ` [${context_name}](#${link_hash}) `
+
+      if (files_markdown) {
+        const defs = `# ${context_name}\n\n${files_markdown}`
+        if (!appended_keys.has(full_match)) {
+          context_definitions += defs
+          appended_keys.add(full_match)
+        }
+
+        if (params.symbols_cache) {
+          params.symbols_cache.set(full_match, replacement, defs)
+        }
+      } else {
+        if (params.symbols_cache) {
+          params.symbols_cache.set(full_match, replacement, '')
+        }
+      }
+
+      result_instructions[i] = result_instructions[i].replace(
+        replacement_regex,
+        replacement
+      )
     }
-
-    const link_hash = context_name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '')
-    const replacement = ` [${context_name}](#${link_hash}) `
-
-    if (files_markdown) {
-      const defs = `# ${context_name}\n\n${files_markdown}`
-      context_definitions += defs
-
-      if (params.symbols_cache) {
-        params.symbols_cache.set(full_match, replacement, defs)
-      }
-    } else {
-      if (params.symbols_cache) {
-        params.symbols_cache.set(full_match, replacement, '')
-      }
-    }
-
-    result_instruction = result_instruction.replace(
-      replacement_regex,
-      replacement
-    )
   }
 
-  return { instruction: result_instruction, context_definitions }
+  return { instructions: result_instructions, context_definitions }
 }

@@ -26,24 +26,22 @@ export const build_prompt_payload = async (params: {
   recent_files = collected.recent_files
   collected_files = other_files + recent_files
 
-  const delimiter = `__CWC_TASK_DELIMITER_${Math.random().toString(36).substring(2)}_${Date.now()}__`
-  const combined_instructions = [
+  const instructions_to_process = [
     prompt_view_provider.current_instructions.trim() || '',
     ...prompt_view_provider.completed_tasks
-  ].join(delimiter)
+  ]
 
-  const { instructions: processed_combined, skill_definitions } =
+  const { instructions: processed_instructions_array, skill_definitions } =
     await replace_symbols({
-      instructions: combined_instructions,
+      instructions: instructions_to_process,
       extension_context: prompt_view_provider.extension_context,
       workspace_provider: prompt_view_provider.workspace_provider,
       remove_images,
       symbols_cache: prompt_view_provider.symbols_cache
     })
 
-  const split_processed = processed_combined.split(delimiter)
-  const processed_instructions = split_processed[0]
-  const processed_completed_tasks = split_processed.slice(1)
+  const processed_instructions = processed_instructions_array[0]
+  const processed_completed_tasks = processed_instructions_array.slice(1)
 
   return {
     other_files,

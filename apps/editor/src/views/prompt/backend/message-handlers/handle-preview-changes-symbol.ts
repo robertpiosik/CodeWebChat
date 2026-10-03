@@ -8,7 +8,7 @@ export const handle_preview_changes_symbol = async (message: {
   try {
     const instruction = `#Changes(${message.branch_name})`
     const { changes_definitions } = await replace_changes_symbol({
-      instruction
+      instructions: [instruction]
     })
 
     if (changes_definitions) {

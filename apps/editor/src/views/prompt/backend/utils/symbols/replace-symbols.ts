@@ -13,81 +13,82 @@ import { replace_fragment_symbol } from './fragment/replace-fragment-symbol'
 import { SymbolCacheManager } from './symbol-cache'
 
 export const replace_symbols = async (params: {
-  instructions: string
+  instructions: string[]
   extension_context: vscode.ExtensionContext
   workspace_provider: WorkspaceProvider
   remove_images?: boolean
   image_as_paths?: boolean
   symbols_cache?: SymbolCacheManager
-}): Promise<{ instructions: string; skill_definitions: string }> => {
-  let processed_instructions = params.instructions
+}): Promise<{ instructions: string[]; skill_definitions: string }> => {
+  let processed_instructions = [...params.instructions]
   let skill_definitions = ''
 
-  if (processed_instructions.includes('#Changes(')) {
+  if (processed_instructions.some((i) => i.includes('#Changes('))) {
     const result = await replace_changes_symbol({
-      instruction: processed_instructions,
+      instructions: processed_instructions,
       symbols_cache: params.symbols_cache
     })
-    processed_instructions = result.instruction
+    processed_instructions = result.instructions
     skill_definitions += result.changes_definitions
   }
 
   if (
-    processed_instructions.includes('#Commit(') ||
-    processed_instructions.includes('#CommitMessage(')
+    processed_instructions.some(
+      (i) => i.includes('#Commit(') || i.includes('#CommitMessage(')
+    )
   ) {
     const result = await replace_commit_symbol({
-      instruction: processed_instructions,
+      instructions: processed_instructions,
       symbols_cache: params.symbols_cache
     })
-    processed_instructions = result.instruction
+    processed_instructions = result.instructions
     skill_definitions += result.commit_definitions
   }
 
-  if (processed_instructions.includes('#SavedContext(')) {
+  if (processed_instructions.some((i) => i.includes('#SavedContext('))) {
     const result = await replace_saved_context_symbol({
-      instruction: processed_instructions,
+      instructions: processed_instructions,
       extension_context: params.extension_context,
       workspace_provider: params.workspace_provider,
       symbols_cache: params.symbols_cache
     })
-    processed_instructions = result.instruction
+    processed_instructions = result.instructions
     skill_definitions += result.context_definitions
   }
 
-  if (processed_instructions.includes('#Skill(')) {
+  if (processed_instructions.some((i) => i.includes('#Skill('))) {
     const result = await replace_skill_symbol({
-      instruction: processed_instructions,
+      instructions: processed_instructions,
       symbols_cache: params.symbols_cache
     })
-    processed_instructions = result.instruction
+    processed_instructions = result.instructions
     skill_definitions += result.skill_definitions
   }
 
-  if (processed_instructions.includes('#Image(')) {
+  if (processed_instructions.some((i) => i.includes('#Image('))) {
     processed_instructions = await replace_image_symbol({
-      instruction: processed_instructions,
+      instructions: processed_instructions,
       remove: params.remove_images,
       as_paths: params.image_as_paths
     })
   }
 
-  if (processed_instructions.includes('#PastedText(')) {
+  if (processed_instructions.some((i) => i.includes('#PastedText('))) {
     processed_instructions = await replace_pasted_text_symbol({
-      instruction: processed_instructions
+      instructions: processed_instructions
     })
   }
 
-  if (processed_instructions.includes('#Website(')) {
+  if (processed_instructions.some((i) => i.includes('#Website('))) {
     processed_instructions = await replace_website_symbol({
-      instruction: processed_instructions,
+      instructions: processed_instructions,
       symbols_cache: params.symbols_cache
     })
   }
 
-  if (processed_instructions.includes('#Fragment(')) {
+  if (processed_instructions.some((i) => i.includes('#Fragment('))) {
     processed_instructions = await replace_fragment_symbol({
-      instruction: processed_instructions,
+      instructions: processed_instructions,
       workspace_provider: params.workspace_provider
     })
   }

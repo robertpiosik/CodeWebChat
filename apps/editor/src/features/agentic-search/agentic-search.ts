@@ -72,13 +72,15 @@ export const agentic_search = async (params: {
       default_agent_key: 'isDefaultForAgenticSearch',
       show_back_button: true,
       build_prompt: async () => {
-        const { instructions: processed_query, skill_definitions } =
+        const { instructions: processed_queries, skill_definitions } =
           await replace_symbols({
-            instructions: query,
+            instructions: [query],
             extension_context: params.extension_context,
             workspace_provider: params.workspace_provider,
             image_as_paths: true
           })
+
+        const processed_query = processed_queries[0]
 
         const final_query = skill_definitions
           ? `${processed_query}\n\n${skill_definitions}`

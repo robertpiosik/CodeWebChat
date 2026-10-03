@@ -562,14 +562,14 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
 
   public async send_token_count() {
     const edit_instructions_result = await replace_symbols({
-      instructions: this.current_edit_files_instruction.trim(),
+      instructions: [this.current_edit_files_instruction.trim()],
       extension_context: this.extension_context,
       workspace_provider: this.workspace_provider,
       remove_images: true,
       symbols_cache: this.symbols_cache
     })
     const ask_instructions_result = await replace_symbols({
-      instructions: this.current_ask_about_context_instruction.trim(),
+      instructions: [this.current_ask_about_context_instruction.trim()],
       extension_context: this.extension_context,
       workspace_provider: this.workspace_provider,
       remove_images: true,
@@ -580,12 +580,12 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       command: 'TOKEN_COUNT_UPDATED',
       selected_files_token_count: this.current_selected_files_token_count,
       edit_instructions_token_count: Math.ceil(
-        (edit_instructions_result.instructions.length +
+        (edit_instructions_result.instructions[0].length +
           edit_instructions_result.skill_definitions.length) /
           4
       ),
       ask_instructions_token_count: Math.ceil(
-        (ask_instructions_result.instructions.length +
+        (ask_instructions_result.instructions[0].length +
           ask_instructions_result.skill_definitions.length) /
           4
       )
