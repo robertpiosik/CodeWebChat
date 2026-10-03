@@ -31,7 +31,7 @@ Instead of messaging the agent in an ever-growing conversation, you first select
 
 > [!TIP]
 >
-> For task-relevant files, invoke popular coding agents with the [Agentic Search prompt](#-agentic-search).
+> Find task-relevant files with popular coding agents and the [Agentic Search prompt](#-agentic-search).
 
 ## Send prompts with...
 
