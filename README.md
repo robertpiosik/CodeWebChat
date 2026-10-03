@@ -27,7 +27,7 @@ Instead of messaging the agent in an ever-growing conversation, you first select
 
 > [!IMPORTANT]
 >
-> Easy to unpack intent make model _think_ less. **Reducing response times and quota usage by 10x**.
+> With intent easy to unpack, models _think_ less. Response times are short and quotas last longer.
 
 > [!TIP]
 >
