@@ -19,6 +19,7 @@ export const create_handle_input_click = ({
     const text_element = target.closest('[data-role="symbol-text"]')
     const tab_item = target.closest('[data-role="tab-item"]')
     const tab_new = target.closest('[data-role="tab-new"]')
+    const tab_close = target.closest('[data-role="tab-close"]')
 
     if (icon_element) {
       e.preventDefault()
@@ -140,14 +141,20 @@ export const create_handle_input_click = ({
       if (index !== props.active_tab_index) {
         props.on_tab_change?.(index)
       } else {
-        if (props.value) {
-          handle_clear()
-        } else if (props.tabs_count > 1) {
-          props.on_tab_delete(props.active_tab_index)
-        }
         if (params.input_ref.current) {
           params.input_ref.current.focus()
         }
+      }
+    } else if (tab_close) {
+      e.preventDefault()
+      e.stopPropagation()
+      if (props.value) {
+        handle_clear()
+      } else if (props.tabs_count > 1) {
+        props.on_tab_delete(props.active_tab_index)
+      }
+      if (params.input_ref.current) {
+        params.input_ref.current.focus()
       }
     } else if (tab_new) {
       e.preventDefault()

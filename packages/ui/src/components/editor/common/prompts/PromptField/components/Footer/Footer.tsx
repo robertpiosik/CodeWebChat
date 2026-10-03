@@ -1,15 +1,15 @@
 import { useRef, useEffect, useState, RefObject } from 'react'
 import cn from 'classnames'
-import styles from '../../PromptField.module.scss'
+import styles from './Footer.module.scss'
 import { Icon } from '../../../../Icon'
 import { DropdownMenu } from '../../../../DropdownMenu'
 import { Tooltip } from '../../../../Tooltip'
 import { KeycapWrapper } from '../../../../../prompt-view/KeycapWrapper'
 import { Target } from '@shared/types/target'
-import type { PromptFieldProps, EditFormat } from '../../PromptField'
+import type { PromptField, EditFormat } from '../../PromptField'
 
 type Props = {
-  props: PromptFieldProps
+  props: PromptField.Props
   input_ref: RefObject<HTMLDivElement>
   is_mac: boolean
   is_alt_pressed: boolean

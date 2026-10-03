@@ -1,0 +1,63 @@
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  user-select: none;
+  position: relative;
+  z-index: 2;
+  margin-top: 1px;
+
+  &__tab {
+    height: 15px;
+    width: 13px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    gap: 4px;
+    cursor: pointer;
+    position: relative;
+    opacity: var(--dimmed-opacity);
+
+    &--new {
+      padding: 0;
+    }
+
+    &--close {
+      padding: 0;
+      .tabs__tab-icon {
+        &::before {
+          content: '\ea76';
+        }
+      }
+    }
+
+    &--active {
+      opacity: 1;
+
+      .tabs__tab-icon {
+        &::before {
+          content: '\ea71';
+        }
+      }
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+
+      &::before {
+        font-family: 'codicon';
+        content: '\eabc';
+        font-size: 11px;
+      }
+    }
+  }
+}

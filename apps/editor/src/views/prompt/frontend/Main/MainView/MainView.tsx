@@ -147,6 +147,9 @@ type Props = {
   on_skill_click?: (agent: string, repo: string, skill_name: string) => void
   on_install_browser_extension: () => void
   on_agentic_search: () => void
+  completed_tasks: string[]
+  on_task_completed: () => void
+  on_clear_completed_tasks: () => void
 }
 
 const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
@@ -177,15 +180,19 @@ export const MainView: React.FC<Props> = (props) => {
   const is_landscape = use_is_landscape()
   const [is_content_scrollable, set_is_content_scrollable] = useState(false)
 
+  const is_edit_prompt_type =
+    (props.target == 'WEB'
+      ? props.web_prompt_type
+      : props.target == 'API'
+        ? props.api_prompt_type
+        : props.cli_prompt_type) == 'edit'
+
   const show_edit_format_selector =
     (props.target == 'WEB' && props.web_prompt_type == 'edit') ||
     (props.target == 'API' && props.api_prompt_type == 'edit')
 
   const is_required_context_empty =
-    ((props.target == 'WEB' && props.web_prompt_type == 'edit') ||
-      (props.target == 'API' && props.api_prompt_type == 'edit') ||
-      (props.target == 'CLI' && props.cli_prompt_type == 'edit')) &&
-    props.selected_files.length == 0
+    is_edit_prompt_type && props.selected_files.length == 0
 
   const handle_input_change = (value: string) => {
     props.set_instructions(value)
@@ -370,7 +377,6 @@ export const MainView: React.FC<Props> = (props) => {
   const prompt_section = (
     <>
       <UiSpacer height={is_landscape ? 6 : 2} />
-
       <BrowserConnectionStatus
         is_visible={props.target == 'WEB'}
         is_connected={props.is_connected}
@@ -408,32 +414,25 @@ export const MainView: React.FC<Props> = (props) => {
         </>
       )}
 
-      {props.response_history.length > 0 &&
-        (props.target == 'WEB'
-          ? props.web_prompt_type
-          : props.target == 'API'
-            ? props.api_prompt_type
-            : props.cli_prompt_type) == 'edit' && (
-          <UiResponses
-            response_history={props.response_history}
-            on_response_history_item_click={
-              props.on_response_history_item_click
-            }
-            selected_history_item_created_at={
-              props.selected_history_item_created_at
-            }
-            on_selected_history_item_change={
-              props.on_selected_history_item_change
-            }
-            on_response_history_item_remove={
-              props.on_response_history_item_remove
-            }
-            translations={{
-              applied_manually: t('common.applied-manually'),
-              reject: t('action.reject')
-            }}
-          />
-        )}
+      {props.response_history.length > 0 && is_edit_prompt_type && (
+        <UiResponses
+          response_history={props.response_history}
+          on_response_history_item_click={props.on_response_history_item_click}
+          selected_history_item_created_at={
+            props.selected_history_item_created_at
+          }
+          on_selected_history_item_change={
+            props.on_selected_history_item_change
+          }
+          on_response_history_item_remove={
+            props.on_response_history_item_remove
+          }
+          translations={{
+            applied_manually: t('common.applied-manually'),
+            reject: t('action.reject')
+          }}
+        />
+      )}
 
       <div className={styles.prompt}>
         <UiPromptField
@@ -458,11 +457,7 @@ export const MainView: React.FC<Props> = (props) => {
           on_caret_position_change={props.on_caret_position_change}
           caret_position_to_set={props.caret_position_to_set}
           prompt_token_count={
-            (props.target == 'WEB'
-              ? props.web_prompt_type
-              : props.target == 'API'
-                ? props.api_prompt_type
-                : props.cli_prompt_type) == 'edit'
+            is_edit_prompt_type
               ? props.edit_instructions_token_count
               : props.ask_instructions_token_count
           }
@@ -517,6 +512,13 @@ export const MainView: React.FC<Props> = (props) => {
           are_keyboard_shortcuts_disabled={
             props.are_keyboard_shortcuts_disabled
           }
+          completed_tasks={is_edit_prompt_type ? props.completed_tasks : []}
+          on_task_completed={
+            is_edit_prompt_type ? props.on_task_completed : undefined
+          }
+          on_clear_completed_tasks={
+            is_edit_prompt_type ? props.on_clear_completed_tasks : undefined
+          }
           translations={{
             voice_input: t('prompt-field.voice-input'),
             stop_recording: t('prompt-field.stop-recording'),
@@ -542,7 +544,9 @@ export const MainView: React.FC<Props> = (props) => {
             preview_prompt: t('prompt-field.action.preview-prompt'),
             send: t('prompt-field.action.send'),
             attach_selected_files: t('prompt-field.attach-selected-files'),
-            more: t('prompt-field.more')
+            more: t('prompt-field.more'),
+            completed_tasks: t('prompt-field.completed-tasks'),
+            clear_session: t('prompt-field.clear-session')
           }}
         />
       </div>

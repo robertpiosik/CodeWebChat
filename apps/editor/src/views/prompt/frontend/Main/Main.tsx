@@ -115,6 +115,7 @@ export const Main: React.FC<Props> = (props) => {
   const [caret_position_to_set, set_caret_position_to_set] = useState<
     number | undefined
   >()
+  const [completed_tasks, set_completed_tasks] = useState<string[]>([])
 
   useEffect(() => {
     const handle_message = async (event: MessageEvent) => {
@@ -156,6 +157,9 @@ export const Main: React.FC<Props> = (props) => {
         case 'EDIT_FORMAT':
           set_edit_format(message.edit_format)
           break
+        case 'COMPLETED_TASKS':
+          set_completed_tasks((message as any).completed_tasks)
+          break
         case 'SELECTED_WEB_CONFIGURATION_CHANGED':
           set_selected_web_configuration_name_by_mode((prev) => ({
             ...prev,
@@ -184,7 +188,8 @@ export const Main: React.FC<Props> = (props) => {
       { command: 'GET_CLI_CONFIGURATIONS' },
       { command: 'GET_HISTORY' },
       { command: 'GET_INSTRUCTIONS' },
-      { command: 'GET_EDIT_FORMAT' }
+      { command: 'GET_EDIT_FORMAT' },
+      { command: 'GET_COMPLETED_TASKS' }
     ]
     initial_messages.forEach((message) => post_message(props.vscode, message))
 
@@ -558,6 +563,20 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
+  const handle_task_completed = () => {
+    if (props.edit_instructions.trim()) {
+      post_message(props.vscode, {
+        command: 'SAVE_COMPLETED_TASKS'
+      })
+    }
+  }
+
+  const handle_clear_completed_tasks = () => {
+    post_message(props.vscode, {
+      command: 'CLEAR_COMPLETED_TASKS'
+    })
+  }
+
   const instructions =
     current_prompt_type == 'ask'
       ? props.ask_instructions
@@ -698,6 +717,9 @@ export const Main: React.FC<Props> = (props) => {
       on_skill_click={props.on_skill_click}
       on_install_browser_extension={handle_install_browser_extension}
       on_agentic_search={props.on_agentic_search}
+      completed_tasks={completed_tasks}
+      on_task_completed={handle_task_completed}
+      on_clear_completed_tasks={handle_clear_completed_tasks}
     />
   )
 }

@@ -2,14 +2,18 @@
   appearance: none;
   height: 15px;
   width: 15px;
-  background-color: var(--vscode-checkbox-background);
-  color: var(--vscode-checkbox-foreground);
-  border: 1px solid var(--vscode-checkbox-border);
+  background-color: var(--cwc-bg-tertiary);
+  color: var(--cwc-text-color);
+  border: 1px solid var(--cwc-border-color);
   border-radius: 3px;
   position: relative;
   cursor: pointer;
   flex-shrink: 0;
   margin: 0;
+
+  &:hover {
+    border-color: var(--cwc-border-color-hover);
+  }
 
   &:focus {
     outline: none;

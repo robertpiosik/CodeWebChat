@@ -67,6 +67,7 @@ export namespace PromptBuilder {
     skill_definitions?: string
     output_formatting?: string
     requirements?: string[]
+    completed_tasks?: string[]
     user_instructions?: string
   }): { part1: string; part2: string; full_prompt: string } => {
     let part1 = ''
@@ -123,6 +124,14 @@ export namespace PromptBuilder {
     if (sys) {
       part2 += `${sys}\n\n`
       full_prompt += `${sys}\n\n`
+    }
+
+    if (params.completed_tasks && params.completed_tasks.length > 0) {
+      const tasks_str = params.completed_tasks
+        .map((t) => `- [x] ${t}`)
+        .join('\n')
+      part2 += `# Completed tasks\n\n${tasks_str}\n\n`
+      full_prompt += `# Completed tasks\n\n${tasks_str}\n\n`
     }
 
     if (part1.length > 0 || part2.length > 0 || full_prompt.length > 0) {

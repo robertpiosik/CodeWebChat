@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
-import type { PromptFieldProps } from '../PromptField'
+import type { PromptField } from '../PromptField'
 
-export const use_dropdown = (props: PromptFieldProps) => {
+export const use_dropdown = (props: PromptField.Props) => {
   const dropdown_ref = useRef<HTMLDivElement>(null)
   const [is_dropdown_open, set_is_dropdown_open] = useState(false)
 

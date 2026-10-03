@@ -32,9 +32,11 @@ export const handle_copy_prompt = async (params: {
   }
 
   let output_formatting: string | undefined = undefined
+  let completed_tasks: string[] | undefined = undefined
   const user_instructions = processed_instructions
 
   if (params.prompt_view_provider.prompt_type == 'edit') {
+    completed_tasks = params.prompt_view_provider.completed_tasks
     const edit_format = params.prompt_view_provider.edit_format
     output_formatting = {
       whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
@@ -49,6 +51,7 @@ export const handle_copy_prompt = async (params: {
     files_context_part2: recent_files,
     skill_definitions,
     output_formatting,
+    completed_tasks,
     user_instructions
   })
   const text = build_result.full_prompt

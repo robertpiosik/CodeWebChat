@@ -603,6 +603,23 @@ export interface InstallBrowserExtensionMessage extends BaseMessage {
   command: 'INSTALL_BROWSER_EXTENSION'
 }
 
+export interface GetCompletedTasksMessage extends BaseMessage {
+  command: 'GET_COMPLETED_TASKS'
+}
+
+export interface SaveCompletedTasksMessage extends BaseMessage {
+  command: 'SAVE_COMPLETED_TASKS'
+}
+
+export interface ClearCompletedTasksMessage extends BaseMessage {
+  command: 'CLEAR_COMPLETED_TASKS'
+}
+
+export interface CompletedTasksMessage extends BaseMessage {
+  command: 'COMPLETED_TASKS'
+  completed_tasks: string[]
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -708,6 +725,9 @@ export type FrontendMessage =
   | UpdateAgentConfigurationMessage
   | DeleteAgentConfigurationMessage
   | PickAgentMessage
+  | GetCompletedTasksMessage
+  | SaveCompletedTasksMessage
+  | ClearCompletedTasksMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -1038,3 +1058,4 @@ export type BackendMessage =
   | StartAgentConfigurationCreationMessage
   | NewlyPickedAgentMessage
   | SelectedAgentConfigurationChangedMessage
+  | CompletedTasksMessage

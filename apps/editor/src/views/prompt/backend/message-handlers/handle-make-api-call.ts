@@ -92,9 +92,11 @@ export const handle_make_api_call = async (
     let edit_format: EditFormat = 'whole'
     let system_instructions = ''
     let user_content = ''
+    let completed_tasks: string[] | undefined = undefined
 
     if (prompt_type == 'edit') {
       edit_format = prompt_view_provider.edit_format
+      completed_tasks = prompt_view_provider.completed_tasks
       const output_formatting = {
         whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
         truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
@@ -113,6 +115,7 @@ export const handle_make_api_call = async (
         files_context_part2: recent_files,
         skill_definitions,
         output_formatting,
+        completed_tasks,
         user_instructions: processed_instructions
       })
       user_content = build_user_content({

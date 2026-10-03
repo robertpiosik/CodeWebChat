@@ -95,7 +95,10 @@ import {
   handle_pick_api_reasoning_effort,
   handle_select_edit_format_instructions,
   handle_update_last_used_web_configuration,
-  handle_pick_agent
+  handle_pick_agent,
+  handle_get_completed_tasks,
+  handle_save_completed_tasks,
+  handle_clear_completed_tasks
 } from './message-handlers'
 import { handle_agentic_search } from './message-handlers/handle-agentic-search'
 import { SelectionState } from '../types/messages'
@@ -109,7 +112,8 @@ import {
   CLI_TARGET_STATE_KEY,
   LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
   get_last_used_web_configuration_key,
-  get_last_used_cli_configuration_key
+  get_last_used_cli_configuration_key,
+  COMPLETED_TASKS_STATE_KEY
 } from '@/constants/state-keys'
 import {
   config_web_configuration_to_ui_format,
@@ -177,6 +181,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
   public message_listeners: ((message: BackendMessage) => void)[] = []
   public symbols_cache = new SymbolCacheManager()
   public agentic_search_state: AgenticSearchState
+  public completed_tasks: string[] = []
 
   // Voice input
   public is_recording = false
@@ -314,6 +319,11 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     )
     this.ask_about_context_instructions = this._load_instructions(
       INSTRUCTIONS_ASK_STATE_KEY
+    )
+
+    this.completed_tasks = this.extension_context.workspaceState.get<string[]>(
+      COMPLETED_TASKS_STATE_KEY,
+      []
     )
 
     this.edit_format =
@@ -901,6 +911,12 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_toggle_pinned_cli_configuration(message)
           } else if (message.command == 'PICK_AGENT') {
             await handle_pick_agent(this, message)
+          } else if (message.command == 'GET_COMPLETED_TASKS') {
+            handle_get_completed_tasks(this)
+          } else if (message.command == 'SAVE_COMPLETED_TASKS') {
+            await handle_save_completed_tasks(this)
+          } else if (message.command == 'CLEAR_COMPLETED_TASKS') {
+            await handle_clear_completed_tasks(this)
           }
         } catch (error) {
           Logger.error({

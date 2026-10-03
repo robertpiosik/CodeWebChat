@@ -15,7 +15,7 @@ export type StatusBarAction = {
 export type Props = {
   label: string
   theme?: 'default' | 'warning' | 'success' | 'error' | 'blue' | 'purple'
-  placement?: 'top' | 'bottom'
+  placement?: 'top' | 'bottom' | 'in-between'
   icon?: string
   icon_spin?: boolean
   description?: React.ReactNode

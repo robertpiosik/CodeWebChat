@@ -17,6 +17,8 @@ import {
 } from '../shared/symbols'
 import { Tabs, TabsRef } from './components/Tabs'
 import { Footer } from './components/Footer'
+import { CompletedTasks } from './components/CompletedTasks'
+import { Checkbox } from '../../Checkbox/Checkbox'
 
 export type EditFormat = 'whole' | 'search-replace' | 'diff' | 'truncated'
 
@@ -28,91 +30,98 @@ export type SelectionState = {
   end_col: number
 }
 
-export type PromptFieldProps = {
-  value: string
-  chat_history: string[]
-  on_change: (value: string) => void
-  on_submit: () => void
-  on_submit_with_control: () => void
-  on_copy: () => void
-  is_connected: boolean
-  current_selection?: SelectionState | null
-  on_caret_position_change: (caret_position: number) => void
-  is_web_target: boolean
-  on_at_sign_click: () => void
-  on_hash_sign_click: () => void
-  on_slash_click: () => void
-  send_with_shift_enter?: boolean
-  caret_position_to_set?: number
-  on_caret_position_set?: () => void
-  focus_key?: number
-  focus_and_select_key?: number
-  last_choice_tooltip?: { name: string; details?: string }
-  show_edit_format_selector?: boolean
-  edit_format?: EditFormat
-  on_edit_format_change?: (format?: EditFormat) => void
-  selected_files?: string[]
-  currently_open_file_path?: string
-  currently_open_file_text?: string
-  on_go_to_file: (file_path: string) => void
-  on_pasted_lines_click: (path: string, start?: string, end?: string) => void
-  on_open_website: (url: string) => void
-  on_paste_image: (base64_content: string) => void
-  on_open_image: (hash: string) => void
-  on_paste_long_text: (text: string) => void
-  on_open_pasted_text: (hash: string) => void
-  on_paste_url: (url: string) => void
-  on_changes_click?: (branch_name: string) => void
-  on_commit_click?: (
-    repo_name: string,
-    commit_hash: string,
-    type: 'Commit' | 'CommitMessage',
-    commit_message?: string
-  ) => void
-  on_skill_click?: (agent: string, repo: string, skill_name: string) => void
-  on_preview_prompt?: () => void
-  is_recording: boolean
-  on_recording_started: () => void
-  on_recording_finished: () => void
-  tabs_count: number
-  active_tab_index: number
-  on_tab_change: (index: number) => void
-  on_new_tab: () => void
-  on_tab_delete: (index: number) => void
-  on_tabs_reorder?: (new_order: number[]) => void
-  voice_input_push_to_talk?: boolean
-  prompt_token_count: number
-  is_copy_only?: boolean
-  target: Target
-  on_target_change: (target: Target) => void
-  active_border_color?: 'blue' | 'purple' | 'yellow'
-  are_keyboard_shortcuts_disabled?: boolean
-  translations: {
-    voice_input: string
-    stop_recording: string
-    reference_file: string
-    insert_symbol: string
-    use_template: string
-    edit_format: string
-    edit_format_whole: string
-    edit_format_search_replace: string
-    edit_format_diff: string
-    edit_format_truncated: string
-    placeholder_code_history: string
-    placeholder_code: string
-    placeholder_history: string
-    placeholder_default: string
-    send_with: string
-    send_with_ellipsis: string
-    copy_prompt: string
-    preview_prompt: string
-    send: string
-    attach_selected_files: string
-    more: string
+export namespace PromptField {
+  export type Props = {
+    value: string
+    chat_history: string[]
+    on_change: (value: string) => void
+    on_submit: () => void
+    on_submit_with_control: () => void
+    on_copy: () => void
+    is_connected: boolean
+    current_selection?: SelectionState | null
+    on_caret_position_change: (caret_position: number) => void
+    is_web_target: boolean
+    on_at_sign_click: () => void
+    on_hash_sign_click: () => void
+    on_slash_click: () => void
+    send_with_shift_enter?: boolean
+    caret_position_to_set?: number
+    on_caret_position_set?: () => void
+    focus_key?: number
+    focus_and_select_key?: number
+    last_choice_tooltip?: { name: string; details?: string }
+    show_edit_format_selector?: boolean
+    edit_format?: EditFormat
+    on_edit_format_change?: (format?: EditFormat) => void
+    selected_files?: string[]
+    currently_open_file_path?: string
+    currently_open_file_text?: string
+    on_go_to_file: (file_path: string) => void
+    on_pasted_lines_click: (path: string, start?: string, end?: string) => void
+    on_open_website: (url: string) => void
+    on_paste_image: (base64_content: string) => void
+    on_open_image: (hash: string) => void
+    on_paste_long_text: (text: string) => void
+    on_open_pasted_text: (hash: string) => void
+    on_paste_url: (url: string) => void
+    on_changes_click?: (branch_name: string) => void
+    on_commit_click?: (
+      repo_name: string,
+      commit_hash: string,
+      type: 'Commit' | 'CommitMessage',
+      commit_message?: string
+    ) => void
+    on_skill_click?: (agent: string, repo: string, skill_name: string) => void
+    on_preview_prompt?: () => void
+    is_recording: boolean
+    on_recording_started: () => void
+    on_recording_finished: () => void
+    tabs_count: number
+    active_tab_index: number
+    on_tab_change: (index: number) => void
+    on_new_tab: () => void
+    on_tab_delete: (index: number) => void
+    on_tabs_reorder?: (new_order: number[]) => void
+    voice_input_push_to_talk?: boolean
+    prompt_token_count: number
+    is_copy_only?: boolean
+    target: Target
+    on_target_change: (target: Target) => void
+    active_border_color?: 'blue' | 'purple' | 'yellow'
+    are_keyboard_shortcuts_disabled?: boolean
+    completed_tasks: string[]
+    on_task_completed?: () => void
+    on_clear_completed_tasks?: () => void
+    translations: {
+      voice_input: string
+      stop_recording: string
+      reference_file: string
+      insert_symbol: string
+      use_template: string
+      edit_format: string
+      edit_format_whole: string
+      edit_format_search_replace: string
+      edit_format_diff: string
+      edit_format_truncated: string
+      placeholder_code_history: string
+      placeholder_code: string
+      placeholder_history: string
+      placeholder_default: string
+      send_with: string
+      send_with_ellipsis: string
+      copy_prompt: string
+      preview_prompt: string
+      send: string
+      attach_selected_files: string
+      more: string
+      completed_tasks: string
+      clear_session: string
+    }
   }
 }
 
-export const PromptField: React.FC<PromptFieldProps> = (props) => {
+export const PromptField: React.FC<PromptField.Props> = (props) => {
   const input_ref = useRef<HTMLDivElement>(null)
   const [caret_position, set_caret_position] = useState(0)
   const prev_tab_index_ref = useRef(props.active_tab_index)
@@ -285,11 +294,42 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         onClick={() => input_ref.current?.focus()}
       >
         <div className={styles['input-wrapper']}>
-          {!props.value && (
-            <div className={styles['placeholder-mirror']}>
+          <div className={styles['input-row']}>
+            <div className={styles['input-content']}>
+              {!props.value && (
+                <div className={styles['placeholder-mirror']}>
+                  <div
+                    className={styles['top-right']}
+                    style={{ visibility: 'hidden' }}
+                  >
+                    {has_content && props.prompt_token_count > 250 && (
+                      <div className={styles['top-right__prompt-token-count']}>
+                        {display_token_count(props.prompt_token_count)}
+                      </div>
+                    )}
+                    <Tabs
+                      tabs_count={props.tabs_count}
+                      active_tab_index={props.active_tab_index}
+                    />
+                  </div>
+                  {props.on_task_completed && (
+                    <div
+                      className={styles['checkbox-wrapper']}
+                      style={{ visibility: 'hidden' }}
+                    >
+                      <Checkbox checked={false} on_change={() => {}} />
+                    </div>
+                  )}
+                  <div className={styles['placeholder-text']}>
+                    {placeholder}
+                  </div>
+                </div>
+              )}
               <div
                 className={styles['top-right']}
-                style={{ visibility: 'hidden' }}
+                onMouseLeave={() => {
+                  tabs_ref.current?.handle_mouse_leave()
+                }}
               >
                 {has_content && props.prompt_token_count > 250 && (
                   <div className={styles['top-right__prompt-token-count']}>
@@ -297,79 +337,87 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   </div>
                 )}
                 <Tabs
+                  ref={tabs_ref}
                   tabs_count={props.tabs_count}
                   active_tab_index={props.active_tab_index}
+                  on_tabs_reorder={props.on_tabs_reorder}
+                  handle_input_click={handle_input_click}
                 />
               </div>
-              <div className={styles['placeholder-text']}>{placeholder}</div>
-            </div>
-          )}
-          <div
-            className={styles['top-right']}
-            onMouseLeave={() => {
-              tabs_ref.current?.handle_mouse_leave()
-            }}
-          >
-            {has_content && props.prompt_token_count > 250 && (
-              <div className={styles['top-right__prompt-token-count']}>
-                {display_token_count(props.prompt_token_count)}
-              </div>
-            )}
-            <Tabs
-              ref={tabs_ref}
-              tabs_count={props.tabs_count}
-              active_tab_index={props.active_tab_index}
-              on_tabs_reorder={props.on_tabs_reorder}
-              handle_input_click={handle_input_click}
-            />
-          </div>
-          <div
-            ref={input_ref}
-            contentEditable={true}
-            suppressContentEditableWarning={true}
-            onInput={(e) => {
-              set_should_show_ghost_text(true)
-              handle_input_change(e)
-            }}
-            onKeyDown={(e) => {
-              if (
-                e.key == 'ArrowRight' ||
-                e.key == 'ArrowLeft' ||
-                e.key == 'ArrowUp' ||
-                e.key == 'ArrowDown'
-              ) {
-                set_should_show_ghost_text(false)
-                const ghost_text_node = input_ref.current?.querySelector(
-                  'span[data-type="ghost-text"]'
-                )
-                if (ghost_text_node && !e.ctrlKey && !e.altKey && !e.metaKey) {
-                  ghost_text_node.remove()
-                  e.preventDefault()
-                  const selection = window.getSelection()
-                  if (selection) {
-                    const type = e.shiftKey ? 'extend' : 'move'
-                    selection.modify(type, 'forward', 'character')
+              {props.on_task_completed && (
+                <div className={styles['checkbox-wrapper']}>
+                  <Checkbox
+                    checked={false}
+                    on_change={() => {
+                      props.on_task_completed!()
+                    }}
+                  />
+                </div>
+              )}
+              <div
+                ref={input_ref}
+                contentEditable={true}
+                suppressContentEditableWarning={true}
+                onInput={(e) => {
+                  set_should_show_ghost_text(true)
+                  handle_input_change(e)
+                }}
+                onKeyDown={(e) => {
+                  if (
+                    e.key == 'ArrowRight' ||
+                    e.key == 'ArrowLeft' ||
+                    e.key == 'ArrowUp' ||
+                    e.key == 'ArrowDown'
+                  ) {
+                    set_should_show_ghost_text(false)
+                    const ghost_text_node = input_ref.current?.querySelector(
+                      'span[data-type="ghost-text"]'
+                    )
+                    if (
+                      ghost_text_node &&
+                      !e.ctrlKey &&
+                      !e.altKey &&
+                      !e.metaKey
+                    ) {
+                      ghost_text_node.remove()
+                      e.preventDefault()
+                      const selection = window.getSelection()
+                      if (selection) {
+                        const type = e.shiftKey ? 'extend' : 'move'
+                        selection.modify(type, 'forward', 'character')
+                      }
+                    }
+                  } else {
+                    set_should_show_ghost_text(true)
                   }
-                }
-              } else {
-                set_should_show_ghost_text(true)
-              }
-              handle_key_down(e)
+                  handle_key_down(e)
+                }}
+                onCopy={handle_copy}
+                onCut={handle_cut}
+                onPaste={handle_paste}
+                onClick={handle_input_click}
+                onMouseDown={handle_mouse_down}
+                onDragStart={handle_drag_start}
+                onDrop={handle_drop}
+                onDragOver={handle_drag_over}
+                onDragEnd={handle_drag_end}
+                onFocus={() => set_is_focused(true)}
+                onBlur={() => set_is_focused(false)}
+                className={cn(styles.input, {
+                  [styles['input--empty']]: !props.value
+                })}
+              />
+            </div>
+          </div>
+          <CompletedTasks
+            tasks={props.completed_tasks}
+            selected_files={props.selected_files}
+            is_web_target={props.is_web_target}
+            on_clear_completed_tasks={props.on_clear_completed_tasks}
+            translations={{
+              completed_tasks: props.translations.completed_tasks,
+              clear_session: props.translations.clear_session
             }}
-            onCopy={handle_copy}
-            onCut={handle_cut}
-            onPaste={handle_paste}
-            onClick={handle_input_click}
-            onMouseDown={handle_mouse_down}
-            onDragStart={handle_drag_start}
-            onDrop={handle_drop}
-            onDragOver={handle_drag_over}
-            onDragEnd={handle_drag_end}
-            onFocus={() => set_is_focused(true)}
-            onBlur={() => set_is_focused(false)}
-            className={cn(styles.input, {
-              [styles['input--empty']]: !props.value
-            })}
           />
         </div>
 

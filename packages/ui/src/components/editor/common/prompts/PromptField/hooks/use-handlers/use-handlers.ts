@@ -1,5 +1,5 @@
 import { RefObject, useState, useEffect, useRef } from 'react'
-import type { PromptFieldProps } from '../../PromptField'
+import type { PromptField } from '../../PromptField'
 import {
   get_caret_position_from_div,
   set_caret_position_for_div,
@@ -18,7 +18,7 @@ import { create_handle_submit } from './handle-submit'
 import { create_handle_key_down } from './handle-key-down'
 
 export const use_handlers = (
-  props: PromptFieldProps,
+  props: PromptField.Props,
   params: {
     input_ref: RefObject<HTMLDivElement>
     ghost_text: string
@@ -115,9 +115,17 @@ export const use_handlers = (
       }
     }
     document.addEventListener('selectionchange', on_selection_change)
+    const current_input = params.input_ref.current
+    if (current_input) {
+      current_input.addEventListener('focus', on_selection_change)
+    }
     on_selection_change()
-    return () =>
+    return () => {
       document.removeEventListener('selectionchange', on_selection_change)
+      if (current_input) {
+        current_input.removeEventListener('focus', on_selection_change)
+      }
+    }
   }, [
     props.value,
     props.selected_files,
@@ -141,6 +149,11 @@ export const use_handlers = (
               raw_text: props.value,
               context_file_paths: props.selected_files ?? []
             })
+
+            raw_caret_pos_ref.current = caret_pos
+            props_ref.current.on_caret_position_change(caret_pos)
+            params.set_caret_position(display_pos)
+
             set_caret_position_for_div(params.input_ref.current, display_pos)
             on_set()
           }

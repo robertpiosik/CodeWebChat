@@ -4,10 +4,10 @@ import {
   map_raw_pos_to_display_pos,
   set_caret_position_for_div
 } from '../../shared/symbols'
-import type { PromptFieldProps } from '../PromptField'
+import type { PromptField } from '../PromptField'
 
 export const use_drag_drop = (
-  props: PromptFieldProps,
+  props: PromptField.Props,
   input_ref: RefObject<HTMLDivElement>
 ) => {
   const dragged_text_range_ref = useRef<{ start: number; end: number } | null>(

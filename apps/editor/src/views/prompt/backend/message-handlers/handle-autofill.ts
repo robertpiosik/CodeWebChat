@@ -79,8 +79,10 @@ export const handle_autofill = async (params: {
   }
 
   let output_formatting: string | undefined = undefined
+  let completed_tasks: string[] | undefined = undefined
   const user_instructions = processed_instructions
   if (params.prompt_view_provider.web_prompt_type == 'edit') {
+    completed_tasks = params.prompt_view_provider.completed_tasks
     output_formatting = {
       whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
       truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
@@ -94,6 +96,7 @@ export const handle_autofill = async (params: {
     files_context_part2: recent_files,
     skill_definitions,
     output_formatting,
+    completed_tasks,
     user_instructions
   })
 

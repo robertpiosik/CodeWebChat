@@ -77,7 +77,10 @@ export const build_cli_prompt = async (params: {
   const requirements_list = [cli_edit_ask_requirements.preloaded_context]
   requirements_list.push(cli_edit_ask_requirements.disable_tool_calling)
 
+  let completed_tasks: string[] | undefined = undefined
+
   if (prompt_view_provider.cli_prompt_type == 'edit') {
+    completed_tasks = prompt_view_provider.completed_tasks
     requirements_list.push(cli_edit_ask_requirements.exception_read_images)
     requirements_list.push(
       cli_edit_ask_requirements.exception_allow_file_system_operations
@@ -90,6 +93,7 @@ export const build_cli_prompt = async (params: {
     files_context,
     skill_definitions,
     requirements: requirements_list,
+    completed_tasks,
     user_instructions: processed_query
   })
 

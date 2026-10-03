@@ -23,6 +23,7 @@ export const CHECKPOINTS_STATE_KEY = 'checkpoints'
 export const TEMPORARY_CHECKPOINT_STATE_KEY = 'temporary-checkpoint'
 export const CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY =
   'checkpoint-operation-in-progress'
+export const COMPLETED_TASKS_STATE_KEY = 'completed-tasks'
 
 export const CHATS_VIEW_CHAT_HISTORY_STATE_KEY = 'chats-view-chat-history'
 

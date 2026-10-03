@@ -1,5 +1,5 @@
 import { RefObject, MutableRefObject, Dispatch, SetStateAction } from 'react'
-import type { PromptFieldProps } from '../../PromptField'
+import type { PromptField } from '../../PromptField'
 
 export type HistoryEntry = {
   value: string
@@ -7,7 +7,7 @@ export type HistoryEntry = {
 }
 
 export type HandlerContext = {
-  props: PromptFieldProps
+  props: PromptField.Props
   params: {
     input_ref: RefObject<HTMLDivElement>
     ghost_text: string
@@ -15,7 +15,7 @@ export type HandlerContext = {
     set_caret_position: (pos: number) => void
   }
   refs: {
-    props_ref: MutableRefObject<PromptFieldProps>
+    props_ref: MutableRefObject<PromptField.Props>
     raw_caret_pos_ref: MutableRefObject<number>
     has_modified_current_entry_ref: MutableRefObject<boolean>
     is_shift_pressed_ref: MutableRefObject<boolean>

@@ -376,5 +376,41 @@ export const prompt_field = {
     cs: 'Více',
     hu: 'Több',
     bg: 'Още'
+  },
+  'prompt-field.completed-tasks': {
+    en: 'completed tasks',
+    pl: 'zakończone zadania',
+    'zh-cn': '已完成任务',
+    ja: '完了したタスク',
+    'zh-tw': '已完成任務',
+    de: 'abgeschlossene Aufgaben',
+    es: 'tareas completadas',
+    fr: 'tâches terminées',
+    'pt-br': 'tarefas concluídas',
+    ru: 'завершенные задачи',
+    ko: '완료된 작업',
+    it: 'attività completate',
+    tr: 'tamamlanan görevler',
+    cs: 'dokončené úkoly',
+    hu: 'befejezett feladatok',
+    bg: 'завършени задачи'
+  },
+  'prompt-field.clear-session': {
+    en: 'Clear session',
+    pl: 'Wyczyść sesję',
+    'zh-cn': '清除会话',
+    ja: 'セッションをクリア',
+    'zh-tw': '清除會話',
+    de: 'Sitzung löschen',
+    es: 'Borrar sesión',
+    fr: 'Effacer la session',
+    'pt-br': 'Limpar sessão',
+    ru: 'Очистить сессию',
+    ko: '세션 지우기',
+    it: 'Cancella sessione',
+    tr: 'Oturumu temizle',
+    cs: 'Vymazat relaci',
+    hu: 'Munkamenet törlése',
+    bg: 'Изчистване на сесията'
   }
 } as const

@@ -43,6 +43,7 @@ export const Empty = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     prompt_token_count={0}
+    completed_tasks={[]}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -64,7 +65,9 @@ export const Empty = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More'
+      more: 'More',
+      completed_tasks: 'Completed tasks',
+      clear_session: 'Clear session'
     }}
   />
 )
@@ -107,6 +110,7 @@ export const WithText = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     prompt_token_count={0}
+    completed_tasks={[]}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -128,7 +132,9 @@ export const WithText = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More'
+      more: 'More',
+      completed_tasks: 'Completed tasks',
+      clear_session: 'Clear session'
     }}
   />
 )
@@ -171,6 +177,7 @@ export const LongText = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    completed_tasks={[]}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -192,7 +199,9 @@ export const LongText = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More'
+      more: 'More',
+      completed_tasks: 'Completed tasks',
+      clear_session: 'Clear session'
     }}
   />
 )
@@ -235,6 +244,7 @@ export const WithPlaceholderSavedContext = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     prompt_token_count={0}
+    completed_tasks={[]}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -256,7 +266,9 @@ export const WithPlaceholderSavedContext = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More'
+      more: 'More',
+      completed_tasks: 'Completed tasks',
+      clear_session: 'Clear session'
     }}
   />
 )
@@ -299,6 +311,7 @@ export const WithCommit = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     prompt_token_count={0}
+    completed_tasks={[]}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -320,7 +333,9 @@ export const WithCommit = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More'
+      more: 'More',
+      completed_tasks: 'Completed tasks',
+      clear_session: 'Clear session'
     }}
   />
 )
@@ -362,6 +377,7 @@ export const WithCommitWithQuotes = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     prompt_token_count={0}
+    completed_tasks={[]}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -383,7 +399,9 @@ export const WithCommitWithQuotes = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More'
+      more: 'More',
+      completed_tasks: 'Completed tasks',
+      clear_session: 'Clear session'
     }}
   />
 )
@@ -433,6 +451,7 @@ export const WithEditFormatSelector = () => {
       on_new_tab={() => {}}
       on_tab_delete={() => {}}
       prompt_token_count={0}
+      completed_tasks={[]}
       translations={{
         voice_input: 'Voice input',
         stop_recording: 'Stop recording',
@@ -454,7 +473,9 @@ export const WithEditFormatSelector = () => {
         preview_prompt: 'Preview prompt',
         send: 'Send',
         attach_selected_files: 'Attach selected files',
-        more: 'More'
+        more: 'More',
+        completed_tasks: 'Completed tasks',
+        clear_session: 'Clear session'
       }}
     />
   )
@@ -496,6 +517,7 @@ export const WithWarning = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     prompt_token_count={0}
+    completed_tasks={[]}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -517,7 +539,9 @@ export const WithWarning = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More'
+      more: 'More',
+      completed_tasks: 'Completed tasks',
+      clear_session: 'Clear session'
     }}
   />
 )
@@ -560,6 +584,7 @@ export const WithFilePaths = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     prompt_token_count={0}
+    completed_tasks={[]}
     translations={{
       voice_input: 'Voice input',
       stop_recording: 'Stop recording',
@@ -581,7 +606,9 @@ export const WithFilePaths = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More'
+      more: 'More',
+      completed_tasks: 'Completed tasks',
+      clear_session: 'Clear session'
     }}
   />
 )
@@ -652,6 +679,7 @@ export const WithTabs = () => {
       on_new_tab={handle_new_tab}
       on_tab_delete={handle_tab_delete}
       prompt_token_count={0}
+      completed_tasks={[]}
       translations={{
         voice_input: 'Voice input',
         stop_recording: 'Stop recording',
@@ -673,7 +701,9 @@ export const WithTabs = () => {
         preview_prompt: 'Preview prompt',
         send: 'Send',
         attach_selected_files: 'Attach selected files',
-        more: 'More'
+        more: 'More',
+        completed_tasks: 'Completed tasks',
+        clear_session: 'Clear session'
       }}
     />
   )
