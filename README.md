@@ -31,7 +31,7 @@ Instead of messaging the agent in an ever-growing conversation, you first select
 
 > [!TIP]
 >
-> For task-relevant files, CWC can invoke popular coding agents with the [Agentic Search prompt](#-agentic-search).
+> For task-relevant files, invoke popular coding agents with the [Agentic Search prompt](#-agentic-search).
 
 ## Send prompts with...
 
