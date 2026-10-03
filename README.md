@@ -23,11 +23,11 @@
 
 ## Single-turn prompts
 
-Instead of messaging the agent in an ever-growing conversation, you first select task-relevant files, then send lean [markdown prompts](#prompts) with chatbots, API calls or headless CLI invocations.
+Instead of messaging the agent in an ever-growing conversation, you first select task-relevant files, then send [lean markdown prompts](#prompts) with chatbots, API calls or headless CLI invocations.
 
 > [!IMPORTANT]
 >
-> [Markdown prompts](#prompts) make models _think_ less. Response times are short and quotas last longer.
+> [Lean markdown prompts](#prompts) make models _think_ less. Response times are short and quotas last longer.
 
 > [!TIP]
 >
