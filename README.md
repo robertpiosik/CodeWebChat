@@ -27,7 +27,7 @@ Instead of messaging the agent in an ever-growing conversation, you first select
 
 > [!IMPORTANT]
 >
-> [Lean markdown prompts](#prompts) make models _think_ less. Response times are short and quotas last longer.
+> [Lean markdown prompts](#prompts) make models _think_ less, making quotas last even 10x longer!
 
 > [!TIP]
 >
