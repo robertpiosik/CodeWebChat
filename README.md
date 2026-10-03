@@ -29,7 +29,7 @@ Instead of messaging the agent in an ever-growing conversation, you first select
 
 > [!TIP]
 >
-> [Agentic Search](#-agentic-search) selects task-relevant files via your favorite agentic harness.
+> [Agentic Search](#-agentic-search) finds task-relevant files via your favorite agentic harness.
 
 ## Send prompts with...
 
