@@ -47,14 +47,20 @@ export const Item: React.FC<Props> = (props) => {
           <div className={styles.content__right}>
             {props.slot_right}
             {props.is_toggleable && (
-              <IconButton
-                codicon_icon={is_expanded ? 'chevron-up' : 'chevron-down'}
-                title={
-                  is_expanded
-                    ? props.translations?.collapse
-                    : props.translations?.expand
-                }
-              />
+              <div
+                className={cn(styles.chevron, {
+                  [styles['chevron--collapsed']]: !is_expanded
+                })}
+              >
+                <IconButton
+                  codicon_icon={is_expanded ? 'chevron-up' : 'chevron-down'}
+                  title={
+                    is_expanded
+                      ? props.translations?.collapse
+                      : props.translations?.expand
+                  }
+                />
+              </div>
             )}
           </div>
         )}

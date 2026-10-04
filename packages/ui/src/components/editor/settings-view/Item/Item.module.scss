@@ -61,3 +61,11 @@
   padding: 0 12px 12px 12px;
   margin-top: -5px;
 }
+
+.chevron {
+  display: flex;
+
+  &--collapsed {
+    pointer-events: none;
+  }
+}
