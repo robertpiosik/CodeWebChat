@@ -86,5 +86,9 @@ export const handle_save_completed_tasks = async (
         command: 'FOCUS_PROMPT_FIELD'
       })
     }
+  } else {
+    vscode.window.showInformationMessage(
+      t('views.common.handlers.common.instructions-cannot-be-empty')
+    )
   }
 }

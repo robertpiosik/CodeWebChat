@@ -564,11 +564,9 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_task_completed = () => {
-    if (props.edit_instructions.trim()) {
-      post_message(props.vscode, {
-        command: 'SAVE_COMPLETED_TASKS'
-      })
-    }
+    post_message(props.vscode, {
+      command: 'SAVE_COMPLETED_TASKS'
+    })
   }
 
   const handle_clear_completed_tasks = () => {
