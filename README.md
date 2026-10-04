@@ -23,7 +23,7 @@
 
 ## Sessionless design
 
-Instead of messaging the agent in an ever-growing session, you first select task-relevant files for context, then send [lean markdown prompts](#prompts) with chatbots, API calls, or headless CLI invocations. **LLMs focused on the task from the start _think_ less, lowering response times and saving quotas 10x!**
+Instead of messaging the agent in an ever-growing session, you first select task-relevant files for context, then send [lean markdown prompts](#prompts) with chatbots, API calls, or headless CLI invocations. **LLMs focused on the task from the start _think_ less, lowering response times and cutting token usage by 10x!**
 
 ## Send prompts with...
 
