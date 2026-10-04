@@ -135,7 +135,9 @@ export const PromptField: React.FC<PromptField.Props> = (props) => {
   const tabs_ref = useRef<TabsRef>(null)
 
   const has_content =
-    !!props.value || !!(props.selected_files && props.selected_files.length > 0)
+    !!props.value ||
+    !!(props.selected_files && props.selected_files.length > 0) ||
+    props.completed_tasks.length > 0
 
   const { is_alt_pressed, handle_container_key_down } =
     use_keyboard_shortcuts(props)

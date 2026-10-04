@@ -17,6 +17,7 @@ export const handle_clear_completed_tasks = async (
     command: 'COMPLETED_TASKS',
     completed_tasks: prompt_view_provider.completed_tasks
   })
+  prompt_view_provider.send_token_count()
 
   const selection = await vscode.window.showInformationMessage(
     t('views.prompt.handlers.handle-clear-completed-tasks.cleared'),
@@ -33,5 +34,6 @@ export const handle_clear_completed_tasks = async (
       command: 'COMPLETED_TASKS',
       completed_tasks: prompt_view_provider.completed_tasks
     })
+    prompt_view_provider.send_token_count()
   }
 }
