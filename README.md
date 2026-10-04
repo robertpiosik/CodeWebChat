@@ -25,11 +25,11 @@
 
 Instead of messaging the agent in an ever-growing conversation, you first select task-relevant files, then send [lean markdown prompts](#prompts) with chatbots, API calls, or headless CLI invocations.
 
-**LLMs focused on the task from the start _think_ less, lowering response times and saving quotas 10x!**
-
 > [!TIP]
 >
 > [Agentic Search](#-agentic-search) finds task-relevant files via your favorite agentic harness.
+
+**LLMs focused on the task from the start _think_ less, lowering response times and saving quotas 10x!**
 
 ## Send prompts with...
 
