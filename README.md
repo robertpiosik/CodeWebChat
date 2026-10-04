@@ -21,15 +21,9 @@
 
 **CWC** operates 100% on your machine. No code, prompts or usage data are collected.
 
-## Single-turn prompts
+## Sessionless design
 
-Instead of messaging the agent in an ever-growing conversation, you first select task-relevant files, then send [lean markdown prompts](#prompts) with chatbots, API calls, or headless CLI invocations.
-
-> [!TIP]
->
-> [Agentic Search](#-agentic-search) finds task-relevant files via your favorite agentic harness.
-
-**LLMs focused on the task from the start _think_ less, lowering response times and saving quotas 10x!**
+Instead of messaging the agent in an ever-growing session, you first select task-relevant files for context, then send [lean markdown prompts](#prompts) with chatbots, API calls, or headless CLI invocations. **LLMs focused on the task from the start _think_ less, lowering response times and saving quotas 10x!**
 
 ## Send prompts with...
 
