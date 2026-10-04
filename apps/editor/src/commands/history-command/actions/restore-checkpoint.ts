@@ -5,7 +5,8 @@ import * as vscode from 'vscode'
 import {
   TEMPORARY_CHECKPOINT_STATE_KEY,
   CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
-  CONTEXT_SELECTED_PATHS_STATE_KEY
+  CONTEXT_SELECTED_PATHS_STATE_KEY,
+  COMPLETED_TASKS_STATE_KEY
 } from '@/constants/state-keys'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import type { Checkpoint } from '@/features/checkpoints/types'
@@ -457,6 +458,29 @@ export const restore_checkpoint = async (params: {
           })
         }
 
+        if (params.checkpoint.completed_tasks) {
+          params.prompt_view_provider.completed_tasks =
+            params.checkpoint.completed_tasks
+          await params.extension_context.workspaceState.update(
+            COMPLETED_TASKS_STATE_KEY,
+            params.checkpoint.completed_tasks
+          )
+          params.prompt_view_provider.send_message({
+            command: 'COMPLETED_TASKS',
+            completed_tasks: params.checkpoint.completed_tasks
+          })
+        } else {
+          params.prompt_view_provider.completed_tasks = []
+          await params.extension_context.workspaceState.update(
+            COMPLETED_TASKS_STATE_KEY,
+            []
+          )
+          params.prompt_view_provider.send_message({
+            command: 'COMPLETED_TASKS',
+            completed_tasks: []
+          })
+        }
+
         const active_file = open_files.find((f) => f.isActive)
 
         for (const file of open_files) {
@@ -493,6 +517,8 @@ export const restore_checkpoint = async (params: {
           )
           params.workspace_provider.load_selected_files_state()
         }
+
+        params.prompt_view_provider.send_token_count()
 
         await params.extension_context.workspaceState.update(
           CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,

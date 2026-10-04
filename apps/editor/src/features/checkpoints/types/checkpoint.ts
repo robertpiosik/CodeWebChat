@@ -26,10 +26,11 @@ export interface Checkpoint {
   trigger: CheckpointTrigger
   description?: string
   is_pinned?: boolean
-  git_data?: Record<string, GitCheckpointData> // folder name -> git data
+  git_data?: Record<string, GitCheckpointData>
   uses_git?: boolean
   response_history?: ResponseHistoryItem[]
   response_preview_item_created_at?: number
   selected_files?: string[]
   active_tabs?: CheckpointTab[]
+  completed_tasks?: string[]
 }

@@ -208,7 +208,8 @@ export const create_checkpoint = async (params: {
         uses_git,
         git_data: Object.keys(git_data).length > 0 ? git_data : undefined,
         selected_files: params.workspace_provider.get_all_selected_paths(),
-        active_tabs
+        active_tabs,
+        completed_tasks: [...params.prompt_view_provider.completed_tasks]
       }
 
       if (trigger == 'manual' && !response_preview_promise_resolve) {
