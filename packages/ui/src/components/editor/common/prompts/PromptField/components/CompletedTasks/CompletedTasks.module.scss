@@ -28,6 +28,7 @@
     opacity: 0;
   }
 
+  &--expanded &__right,
   &:hover &__right {
     opacity: 1;
   }
@@ -49,18 +50,23 @@
   }
 }
 
+.tasks-list {
+  cursor: pointer;
+}
+
 .completed-task {
   padding: 2px 7px;
-  pointer-events: none;
   opacity: var(--dimmed-opacity);
 
   &__checkbox {
     float: left;
     display: flex;
     margin: 2px 5px 0 0;
+    pointer-events: none;
   }
 
   &__text {
     display: inline;
+    pointer-events: none;
   }
 }

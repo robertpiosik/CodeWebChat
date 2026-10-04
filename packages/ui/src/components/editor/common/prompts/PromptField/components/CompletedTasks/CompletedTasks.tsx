@@ -100,7 +100,10 @@ export const CompletedTasks: React.FC<CompletedTasksProps> = ({
         )}
       </div>
       {is_expanded && (
-        <>
+        <div
+          className={styles['tasks-list']}
+          onClick={() => set_is_expanded(false)}
+        >
           {[...tasks].reverse().map((task, idx) => (
             <CompletedTask
               key={idx}
@@ -109,7 +112,7 @@ export const CompletedTasks: React.FC<CompletedTasksProps> = ({
               is_web_target={is_web_target}
             />
           ))}
-        </>
+        </div>
       )}
     </>
   )
