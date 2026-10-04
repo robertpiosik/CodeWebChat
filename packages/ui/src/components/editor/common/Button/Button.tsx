@@ -3,7 +3,9 @@ import styles from './Button.module.scss'
 import cn from 'classnames'
 
 type Props = {
-  on_click?: () => void
+  on_click?: (
+    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
+  ) => void
   url?: string
   disabled?: boolean
   children?: React.ReactNode

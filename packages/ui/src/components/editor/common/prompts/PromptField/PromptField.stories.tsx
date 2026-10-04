@@ -67,6 +67,7 @@ export const Empty = () => (
       attach_selected_files: 'Attach selected files',
       more: 'More',
       completed_tasks: 'Completed tasks',
+      completed_task: 'Completed task',
       clear_session: 'Clear session'
     }}
   />
@@ -134,6 +135,7 @@ export const WithText = () => (
       attach_selected_files: 'Attach selected files',
       more: 'More',
       completed_tasks: 'Completed tasks',
+      completed_task: 'Completed task',
       clear_session: 'Clear session'
     }}
   />
@@ -201,6 +203,7 @@ export const LongText = () => (
       attach_selected_files: 'Attach selected files',
       more: 'More',
       completed_tasks: 'Completed tasks',
+      completed_task: 'Completed task',
       clear_session: 'Clear session'
     }}
   />
@@ -268,6 +271,7 @@ export const WithPlaceholderSavedContext = () => (
       attach_selected_files: 'Attach selected files',
       more: 'More',
       completed_tasks: 'Completed tasks',
+      completed_task: 'Completed task',
       clear_session: 'Clear session'
     }}
   />
@@ -335,6 +339,7 @@ export const WithCommit = () => (
       attach_selected_files: 'Attach selected files',
       more: 'More',
       completed_tasks: 'Completed tasks',
+      completed_task: 'Completed task',
       clear_session: 'Clear session'
     }}
   />
@@ -401,6 +406,7 @@ export const WithCommitWithQuotes = () => (
       attach_selected_files: 'Attach selected files',
       more: 'More',
       completed_tasks: 'Completed tasks',
+      completed_task: 'Completed task',
       clear_session: 'Clear session'
     }}
   />
@@ -475,6 +481,7 @@ export const WithEditFormatSelector = () => {
         attach_selected_files: 'Attach selected files',
         more: 'More',
         completed_tasks: 'Completed tasks',
+        completed_task: 'Completed task',
         clear_session: 'Clear session'
       }}
     />
@@ -541,6 +548,7 @@ export const WithWarning = () => (
       attach_selected_files: 'Attach selected files',
       more: 'More',
       completed_tasks: 'Completed tasks',
+      completed_task: 'Completed task',
       clear_session: 'Clear session'
     }}
   />
@@ -608,6 +616,7 @@ export const WithFilePaths = () => (
       attach_selected_files: 'Attach selected files',
       more: 'More',
       completed_tasks: 'Completed tasks',
+      completed_task: 'Completed task',
       clear_session: 'Clear session'
     }}
   />
@@ -703,6 +712,7 @@ export const WithTabs = () => {
         attach_selected_files: 'Attach selected files',
         more: 'More',
         completed_tasks: 'Completed tasks',
+        completed_task: 'Completed task',
         clear_session: 'Clear session'
       }}
     />

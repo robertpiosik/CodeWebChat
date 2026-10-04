@@ -546,6 +546,7 @@ export const MainView: React.FC<Props> = (props) => {
             attach_selected_files: t('prompt-field.attach-selected-files'),
             more: t('prompt-field.more'),
             completed_tasks: t('prompt-field.completed-tasks'),
+            completed_task: t('prompt-field.completed-task'),
             clear_session: t('prompt-field.clear-session')
           }}
         />

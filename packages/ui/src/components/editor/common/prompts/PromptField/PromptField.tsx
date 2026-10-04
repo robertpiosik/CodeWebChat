@@ -19,6 +19,7 @@ import { Tabs, TabsRef } from './components/Tabs'
 import { Footer } from './components/Footer'
 import { CompletedTasks } from './components/CompletedTasks'
 import { Checkbox } from '../../Checkbox/Checkbox'
+import { KeycapWrapper } from '../../../prompt-view/KeycapWrapper'
 
 export type EditFormat = 'whole' | 'search-replace' | 'diff' | 'truncated'
 
@@ -116,6 +117,7 @@ export namespace PromptField {
       attach_selected_files: string
       more: string
       completed_tasks: string
+      completed_task: string
       clear_session: string
     }
   }
@@ -317,7 +319,13 @@ export const PromptField: React.FC<PromptField.Props> = (props) => {
                       className={styles['checkbox-wrapper']}
                       style={{ visibility: 'hidden' }}
                     >
-                      <Checkbox checked={false} on_change={() => {}} />
+                      {is_alt_pressed ? (
+                        <KeycapWrapper char="C">
+                          <Checkbox checked={false} on_change={() => {}} />
+                        </KeycapWrapper>
+                      ) : (
+                        <Checkbox checked={false} on_change={() => {}} />
+                      )}
                     </div>
                   )}
                   <div className={styles['placeholder-text']}>
@@ -346,12 +354,23 @@ export const PromptField: React.FC<PromptField.Props> = (props) => {
               </div>
               {props.on_task_completed && (
                 <div className={styles['checkbox-wrapper']}>
-                  <Checkbox
-                    checked={false}
-                    on_change={() => {
-                      props.on_task_completed!()
-                    }}
-                  />
+                  {is_alt_pressed ? (
+                    <KeycapWrapper char="C">
+                      <Checkbox
+                        checked={false}
+                        on_change={() => {
+                          props.on_task_completed!()
+                        }}
+                      />
+                    </KeycapWrapper>
+                  ) : (
+                    <Checkbox
+                      checked={false}
+                      on_change={() => {
+                        props.on_task_completed!()
+                      }}
+                    />
+                  )}
                 </div>
               )}
               <div
@@ -416,6 +435,7 @@ export const PromptField: React.FC<PromptField.Props> = (props) => {
             on_clear_completed_tasks={props.on_clear_completed_tasks}
             translations={{
               completed_tasks: props.translations.completed_tasks,
+              completed_task: props.translations.completed_task,
               clear_session: props.translations.clear_session
             }}
           />

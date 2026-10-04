@@ -158,6 +158,20 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
         props.on_copy()
       }
     }
+    if (
+      e.code == 'KeyC' &&
+      e.altKey &&
+      left_alt_pressed_ref.current &&
+      !e.ctrlKey &&
+      !e.metaKey &&
+      !e.shiftKey
+    ) {
+      if (props.on_task_completed) {
+        e.stopPropagation()
+        e.preventDefault()
+        props.on_task_completed()
+      }
+    }
   }
 
   return { is_alt_pressed, handle_container_key_down }

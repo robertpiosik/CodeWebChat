@@ -377,9 +377,27 @@ export const prompt_field = {
     hu: 'Több',
     bg: 'Още'
   },
+  'prompt-field.completed-task': {
+    en: 'completed task',
+    pl: 'ukończone zadanie',
+    'zh-cn': '已完成任务',
+    ja: '完了したタスク',
+    'zh-tw': '已完成任務',
+    de: 'abgeschlossene Aufgabe',
+    es: 'tarea completada',
+    fr: 'tâche terminée',
+    'pt-br': 'tarefa concluída',
+    ru: 'завершенная задача',
+    ko: '완료된 작업',
+    it: 'attività completata',
+    tr: 'tamamlanan görev',
+    cs: 'dokončený úkol',
+    hu: 'befejezett feladat',
+    bg: 'завършена задача'
+  },
   'prompt-field.completed-tasks': {
     en: 'completed tasks',
-    pl: 'zakończone zadania',
+    pl: 'ukończonych zadań',
     'zh-cn': '已完成任务',
     ja: '完了したタスク',
     'zh-tw': '已完成任務',

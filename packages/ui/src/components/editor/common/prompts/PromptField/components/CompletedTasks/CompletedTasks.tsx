@@ -45,6 +45,7 @@ type CompletedTasksProps = {
   on_clear_completed_tasks?: () => void
   translations: {
     completed_tasks: string
+    completed_task: string
     clear_session: string
   }
 }
@@ -77,12 +78,22 @@ export const CompletedTasks: React.FC<CompletedTasksProps> = ({
             })}
           />
           <div className={styles['header__text']}>
-            {tasks.length} {translations.completed_tasks}
+            {tasks.length}{' '}
+            {tasks.length === 1
+              ? translations.completed_task
+              : translations.completed_tasks}
           </div>
         </div>
         {on_clear_completed_tasks && (
           <div className={styles['header__right']}>
-            <Button is_small is_secondary on_click={on_clear_completed_tasks}>
+            <Button
+              is_small
+              is_secondary
+              on_click={(e) => {
+                e.stopPropagation()
+                on_clear_completed_tasks()
+              }}
+            >
               {translations.clear_session}
             </Button>
           </div>
