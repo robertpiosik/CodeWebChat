@@ -250,7 +250,9 @@ export class WorkspaceProvider
       const workspace_root = this.get_workspace_root_for_file(file_path)
       while (workspace_root && dir_path.startsWith(workspace_root)) {
         this._update_parent_state(dir_path)
-        dir_path = path.dirname(dir_path)
+        const next_dir_path = path.dirname(dir_path)
+        if (next_dir_path == dir_path) break
+        dir_path = next_dir_path
       }
     }
 
@@ -407,7 +409,9 @@ export class WorkspaceProvider
       let parent_dir = path.dirname(changed_file_path)
       while (parent_dir.startsWith(workspace_root)) {
         this._update_parent_state(parent_dir)
-        parent_dir = path.dirname(parent_dir)
+        const next_parent = path.dirname(parent_dir)
+        if (next_parent == parent_dir) break
+        parent_dir = next_parent
       }
 
       this._on_did_change_selected_files.fire()
@@ -468,16 +472,20 @@ export class WorkspaceProvider
       while (dir_path.startsWith(workspace_root)) {
         this._token_calculator.invalidate_directory_selected_count(dir_path)
         await this._update_parent_state(dir_path)
-        dir_path = path.dirname(dir_path)
+        const next_dir_path = path.dirname(dir_path)
+        if (next_dir_path == dir_path) break
+        dir_path = next_dir_path
       }
 
       this._dispatch_change_events()
     }
 
-    let dir_path = parent_dir
-    while (dir_path.startsWith(workspace_root)) {
-      this._token_calculator.invalidate_directory_counts(dir_path)
-      dir_path = path.dirname(dir_path)
+    let dir_path2 = parent_dir
+    while (dir_path2.startsWith(workspace_root)) {
+      this._token_calculator.invalidate_directory_counts(dir_path2)
+      const next_dir_path2 = path.dirname(dir_path2)
+      if (next_dir_path2 == dir_path2) break
+      dir_path2 = next_dir_path2
     }
 
     this._schedule_refresh()
@@ -1013,7 +1021,9 @@ export class WorkspaceProvider
     while (workspace_root && dir_path.startsWith(workspace_root)) {
       this._token_calculator.invalidate_directory_selected_count(dir_path)
       await this._update_parent_state(dir_path)
-      dir_path = path.dirname(dir_path)
+      const next_dir_path = path.dirname(dir_path)
+      if (next_dir_path == dir_path) break
+      dir_path = next_dir_path
     }
 
     this._dispatch_change_events()
@@ -1308,7 +1318,9 @@ export class WorkspaceProvider
       const workspace_root = this.get_workspace_root_for_file(file_path)
       while (workspace_root && dir_path.startsWith(workspace_root)) {
         await this._update_parent_state(dir_path)
-        dir_path = path.dirname(dir_path)
+        const next_dir_path = path.dirname(dir_path)
+        if (next_dir_path == dir_path) break
+        dir_path = next_dir_path
       }
     }
 
@@ -1438,12 +1450,14 @@ export class WorkspaceProvider
     const workspace_root = this.get_workspace_root_for_file(file_path)
     if (!workspace_root) {
       const basename = path.basename(file_path)
+      if (!basename || basename.trim() == '') return false
       if (this._user_allow_patterns.ignores(basename)) {
         return false
       }
       return this._user_ignore_patterns.ignores(basename)
     }
     const relative_path = path.relative(workspace_root, file_path)
+    if (!relative_path || relative_path.trim() == '') return false
     if (this._user_allow_patterns.ignores(relative_path)) {
       return false
     }

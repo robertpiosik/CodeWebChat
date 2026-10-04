@@ -362,7 +362,9 @@ export class TokenCalculator implements vscode.Disposable {
       this._directory_file_counts.delete(dir_path)
       this._directory_selected_token_counts.delete(dir_path)
       this._directory_selected_shrink_token_counts.delete(dir_path)
-      dir_path = path.dirname(dir_path)
+      const next_dir_path = path.dirname(dir_path)
+      if (next_dir_path == dir_path) break
+      dir_path = next_dir_path
     }
   }
 
