@@ -23,15 +23,12 @@
 
 ## Sessionless design
 
-Instead of messaging the agent in an ever-growing session, you first select task-relevant files on a file tree, then send [lean markdown prompts](#prompts) with chatbots, API calls, or headless CLI invocations.
+Instead of messaging the agent in an ever-growing session, you first select task-relevant files on a file tree manually or with the help of built-in tools like **Agentic Search**, then send [lean markdown prompts](#prompts).
 
-### Prompt caching
-
-With context files laid down before task instructions and ordered by selection/modification recency, you typically pay for a small delta of change in a small message, not a monstrositiy with multiple compactions in it.
-
-### Efficiency and speed
-
-**LLMs focused on the task from the start _think_ less, lowering response times and cutting token usage by 10x!**
+- low prompt complexity makes _thinking_ shorter
+- iterate on instructions without context bloat
+- highly-optimized for prompt caching
+- **go 10x further with your quotas!**
 
 ## Send prompts with...
 
