@@ -23,7 +23,7 @@
 
 ## Sessionless design
 
-CWC proposes a workflow that replaces messaging the model in an ever-growing conversation with [markdown prompts](#prompts), **for 10x more usage compared to coding with agents alone!**
+CWC replaces messaging the model in an ever-growing conversation with [markdown prompts](#prompts), **for 10x more usage compared to coding with agents alone!**
 
 ## Send prompts with...
 
