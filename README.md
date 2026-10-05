@@ -30,7 +30,7 @@ CWC proposes a workflow that replaces messaging the model in an ever-growing con
 - type instructions
 - run [Agentic Search](#-agentic-search) for task-relevant files
 - select examples for model guidance
-- send CWC-constructed prompt
+- send CWC-constructed markdown
 
 ## Send prompts with...
 
