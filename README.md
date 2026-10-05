@@ -23,12 +23,14 @@
 
 ## Sessionless design
 
-Instead of messaging the agent in an ever-growing session, you first select task-relevant files on a file tree manually or with the help of built-in tools like [**Agentic Search**](#-agentic-search), then send lean markdown prompts.
+CWC proposes a workflow that replaces messaging the model in an ever-growing conversation with single-turn [prompts](#prompts), **for 10x more usage compared to coding with agents alone**.
 
-- low prompt complexity makes _thinking_ shorter
-- iterate on instructions without context bloat
-- highly-optimized for prompt caching
-- **go 10x further with your quotas!**
+#### The workflow
+
+- type instructions
+- run Agentic Search for task-relevant files
+- select examples for model guidance
+- iterate without context bloat
 
 ## Send prompts with...
 
