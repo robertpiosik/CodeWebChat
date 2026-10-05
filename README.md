@@ -23,7 +23,7 @@
 
 ## Sessionless design
 
-Instead of messaging the agent in an ever-growing session, you first select task-relevant files on a file tree manually or with the help of built-in tools like **Agentic Search**, then send [lean markdown prompts](#prompts).
+Instead of messaging the agent in an ever-growing session, you first select task-relevant files on a file tree manually or with the help of built-in tools like [**Agentic Search**](#-agentic-search), then send lean markdown prompts.
 
 - low prompt complexity makes _thinking_ shorter
 - iterate on instructions without context bloat
@@ -47,6 +47,29 @@ Invoke your favorite coding agent headlessly or in the integrated terminal.
 ## Prompts
 
 Overview of CWC-constructed prompts.
+
+### 📄 Agentic search
+
+_Find Task-relevant files via your favorite agentic harness._
+
+<details>
+<summary>AGENT</summary>
+
+```
+# Task
+
+In the project, find the complete set of primary and structural files relevant to the query.
+
+# Output formatting
+
+Output strictly as a bulleted list of file paths without explanations or any other text (e.g., - `path/to/file.ext`).
+
+# Query
+
+[INSTRUCTIONS]
+```
+
+</details>
 
 ### 📄 Editing
 
@@ -129,29 +152,6 @@ _Explanations, planning, and analysis._
 - Exception: If [task](#task) includes *.png image paths, read them using the appropriate tool.
 
 # Task
-
-[INSTRUCTIONS]
-```
-
-</details>
-
-### 📄 Agentic search
-
-_Find Task-relevant files via your favorite agentic harness._
-
-<details>
-<summary>AGENT</summary>
-
-```
-# Task
-
-In the project, find the complete set of primary and structural files relevant to the query.
-
-# Output formatting
-
-Output strictly as a bulleted list of file paths without explanations or any other text (e.g., - `path/to/file.ext`).
-
-# Query
 
 [INSTRUCTIONS]
 ```
