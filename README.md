@@ -28,7 +28,7 @@ CWC proposes a workflow that replaces messaging the model in an ever-growing con
 #### The workflow
 
 - type instructions
-- run Agentic Search for task-relevant files
+- run [Agentic Search](#-agentic-search) for task-relevant files
 - select examples for model guidance
 - iterate without context bloat
 
