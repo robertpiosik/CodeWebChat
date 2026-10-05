@@ -23,14 +23,14 @@
 
 ## Sessionless design
 
-CWC proposes a workflow that replaces messaging the model in an ever-growing conversation with [single-turn prompts](#prompts), **for 10x more usage compared to coding with agents alone!**
+CWC proposes a workflow that replaces messaging the model in an ever-growing conversation with [markdown prompts](#prompts), **for 10x more usage compared to coding with agents alone!**
 
 #### The workflow
 
 - type instructions
 - run [Agentic Search](#-agentic-search) for task-relevant files
 - select examples for model guidance
-- send CWC-constructed markdown
+- send CWC-constructed [markdown prompts](#prompts)
 
 ## Send prompts with...
 
