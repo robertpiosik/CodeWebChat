@@ -23,9 +23,7 @@
 
 ## Sessionless design
 
-CWC replaces agentic sessions with [lean markdown prompts](#prompts) you send in _single-turns_ with chatbots, API calls, or CLI invocations.
-
-As you work on your tasks, the constructed markdown is intelligently managed; for example, recently selected or updated files are moved to the end for the best prompt cacheability.
+CWC replaces agentic sessions with [lean markdown prompts](#prompts) you send in _single-turns_ with chatbots, API calls, or CLI invocations. As you work on your tasks, the constructed markdown is intelligently managed; for example, recently selected or updated files are moved to the end for the best prompt cacheability.
 
 **With CWC, you should get 10x more usage out of your quotas compared to coding with agents alone!**
 
