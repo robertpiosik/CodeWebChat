@@ -28,9 +28,39 @@ import { invoke_agentic_cli } from '@/utils/agentic-cli-invocation'
 
 const MIN_RECORDING_DURATION = 1000
 
+const voice_input_tracked_files = new Map<string, string>()
+let active_editor_listener: vscode.Disposable | null = null
+
 const start_recording = (prompt_view_provider: PromptViewProvider) => {
   prompt_view_provider.audio_chunks = []
   prompt_view_provider.recording_start_time = Date.now()
+  voice_input_tracked_files.clear()
+
+  const active_editor = vscode.window.activeTextEditor
+  if (active_editor && prompt_view_provider.currently_open_file_path) {
+    voice_input_tracked_files.set(
+      active_editor.document.uri.fsPath,
+      prompt_view_provider.currently_open_file_path
+    )
+  }
+
+  active_editor_listener = vscode.window.onDidChangeActiveTextEditor(
+    (editor) => {
+      setTimeout(() => {
+        if (
+          editor &&
+          editor === vscode.window.activeTextEditor &&
+          prompt_view_provider.currently_open_file_path
+        ) {
+          voice_input_tracked_files.set(
+            editor.document.uri.fsPath,
+            prompt_view_provider.currently_open_file_path
+          )
+        }
+      }, 150)
+    }
+  )
+
   try {
     prompt_view_provider.recording_process = spawn('rec', [
       '-q',
@@ -98,6 +128,11 @@ const start_recording = (prompt_view_provider: PromptViewProvider) => {
         is_recording: false
       })
       prompt_view_provider.recording_process = null
+
+      if (active_editor_listener) {
+        active_editor_listener.dispose()
+        active_editor_listener = null
+      }
     })
   } catch (error) {
     Logger.error({
@@ -105,10 +140,20 @@ const start_recording = (prompt_view_provider: PromptViewProvider) => {
       message: 'Failed to start recording',
       data: { error }
     })
+
+    if (active_editor_listener) {
+      active_editor_listener.dispose()
+      active_editor_listener = null
+    }
   }
 }
 
 const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
+  if (active_editor_listener) {
+    active_editor_listener.dispose()
+    active_editor_listener = null
+  }
+
   if (prompt_view_provider.recording_process) {
     prompt_view_provider.recording_process.kill()
     prompt_view_provider.recording_process = null
@@ -211,6 +256,30 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
 
       show_action_quick_pick = false
 
+      let files_context = ''
+      if (voice_input_tracked_files.size > 0) {
+        files_context = '# Files\n\n'
+        for (const [
+          file_path,
+          display_path
+        ] of voice_input_tracked_files.entries()) {
+          try {
+            const document = await vscode.workspace.openTextDocument(
+              vscode.Uri.file(file_path)
+            )
+            const content = document.getText()
+            const backticks = content.includes('```') ? '````' : '```'
+            files_context += `### File: \`${display_path}\`\n\n${backticks}\n${content}\n${backticks}\n\n`
+          } catch (error) {
+            Logger.warn({
+              function_name: 'stop_recording',
+              message: 'Failed to read tracked file',
+              data: { file_path, error }
+            })
+          }
+        }
+      }
+
       if (current_action == 'invoke-agent') {
         const temp_audio_path = path.join(
           os.tmpdir(),
@@ -218,7 +287,16 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
         )
         await fs.promises.writeFile(temp_audio_path, audio_buffer)
 
-        const cli_prompt = `# Task\n\n${voice_input_task_instructions}\n\nAudio file: \`${temp_audio_path.replace(/\\/g, '/')}\`\n\n# Output formatting\n\n${voice_input_output_formatting}\n\n# Requirements\n\n- ${cli_edit_ask_requirements.disable_tool_calling}\n- ${cli_edit_ask_requirements.exception_read_audio}`
+        const requirements = [
+          cli_edit_ask_requirements.disable_tool_calling,
+          cli_edit_ask_requirements.exception_read_audio
+        ]
+        if (files_context) {
+          requirements.unshift(cli_edit_ask_requirements.preloaded_context)
+        }
+        const req_str = requirements.map((r) => `- ${r}`).join('\n')
+
+        const cli_prompt = `${files_context}# Task\n\n${voice_input_task_instructions}\n\nAudio file: \`${temp_audio_path.replace(/\\/g, '/')}\`\n\n# Output formatting\n\n${voice_input_output_formatting}\n\n# Requirements\n\n${req_str}`
 
         const invoke_cli_result = await invoke_agentic_cli({
           workspace_provider: prompt_view_provider.workspace_provider,
@@ -302,7 +380,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
                   content: [
                     {
                       type: 'text',
-                      text: `# Task\n\n${voice_input_task_instructions}\n\n# Output formatting\n\n${voice_input_output_formatting}`
+                      text: `${files_context}# Task\n\n${voice_input_task_instructions}\n\n# Output formatting\n\n${voice_input_output_formatting}`
                     },
                     {
                       type: 'input_audio',
