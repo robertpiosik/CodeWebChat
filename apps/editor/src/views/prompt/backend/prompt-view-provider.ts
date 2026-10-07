@@ -689,7 +689,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             } else {
               this._save_instructions_timeout = setTimeout(() => {
                 this.send_token_count()
-              }, 1000)
+              }, 500)
             }
           } else if (message.command == 'GET_CONNECTION_STATUS') {
             handle_get_connection_status(this)
