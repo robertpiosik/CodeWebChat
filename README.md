@@ -23,7 +23,7 @@
 
 ## Sessionless design
 
-CWC replaces ever-growing agentic sessions with [lean markdown prompts](#prompts) you send in _single-turns_ with chatbots, API calls, or CLI invocations.
+CWC replaces ever-growing agentic sessions with [lean markdown prompts](#prompts) you send as standalone messages with 15+ free chatbots, API calls, or headless CLI invocations.
 
 **Expect minimal _thinking_ times, quotas lasting 10x longer and sustained intelligence.**
 
