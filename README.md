@@ -459,6 +459,10 @@ _Speech-to-text transcriptions._
 <summary>API</summary>
 
 ```
+# Files
+
+[FILES SEEN DURING RECORDING]
+
 # Task
 
 Transcribe using clean verbatim. Remove filler words (such as 'um,' 'uh,' 'like'), false starts, and stutters. Preserve the speaker's exact words, slang, and sentence structure, but use natural punctuation and sentence breaks to ensure readability.
@@ -474,6 +478,10 @@ Respond with the audio transcription or the word INAUDIBLE, without explanations
 <summary>AGENT</summary>
 
 ```
+# Files
+
+[SELECTED FILES]
+
 # Task
 
 Transcribe using clean verbatim. Remove filler words (such as 'um,' 'uh,' 'like'), false starts, and stutters. Preserve the speaker's exact words, slang, and sentence structure, but use natural punctuation and sentence breaks to ensure readability.
@@ -486,6 +494,7 @@ Respond with the audio transcription or the word INAUDIBLE, without explanations
 
 # Requirements
 
+- All necessary files for the [task](#task) were preloaded to [files](#files). Reading any other files is FORBIDDEN.
 - Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.
 - Exception: If [task](#task) includes *.wav audio file paths, read them using the appropriate tool.
 ```
