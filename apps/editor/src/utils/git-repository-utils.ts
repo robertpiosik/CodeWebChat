@@ -11,6 +11,8 @@ import { display_token_count } from '@shared/utils/display-token-count'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { search_files } from '@/features/search-files'
+import { CommitMessageDetails } from './commit-message-details'
+import { normalize_path } from './normalize-path'
 
 export type GitRepository = {
   rootUri: vscode.Uri
@@ -235,11 +237,26 @@ export const prepare_staged_changes = async (params: {
         params.repository.state.workingTreeChanges[0].uri.fsPath
       ]
     } else {
+      let prompts_for_repo: CommitMessageDetails.Prompt[] = []
+      if (params.extension_context) {
+        const all_prompts = CommitMessageDetails.load_all(
+          params.extension_context
+        )
+        prompts_for_repo = all_prompts[params.repository.rootUri.fsPath] || []
+      }
+
       const items = await Promise.all(
         params.repository.state.workingTreeChanges.map(async (change: any) => {
           const relative_path = path.relative(
             params.repository.rootUri.fsPath,
             change.uri.fsPath
+          )
+          const normalized_path = normalize_path(relative_path)
+          const file_prompts = prompts_for_repo.filter(
+            (p) =>
+              p.prompt.trim() !== '' &&
+              (p.files.includes(normalized_path) ||
+                p.files.includes(change.uri.fsPath))
           )
           const dir_name = path.dirname(relative_path)
 
@@ -324,7 +341,15 @@ export const prepare_staged_changes = async (params: {
                 : undefined
           })
 
+          let prompts_content = ''
+          if (file_prompts.length > 0) {
+            prompts_content = file_prompts
+              .map((p) => `- ${p.prompt}`)
+              .join('\n')
+          }
+
           const file_content = [
+            prompts_content,
             final_diff_content ? final_diff_content : '',
             !is_deleted && full_content && !is_too_large ? full_content : ''
           ]
