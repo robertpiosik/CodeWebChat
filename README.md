@@ -13,7 +13,7 @@
 
 <p align="center"><strong>Blazing fast AI coding for VS Code</strong></p>
 
-<p align="center"><i>autofill agents · send requests · invoke agents</br>independent, free and privacy-first</i></p>
+<p align="center"><i>autofill chatbots · send requests · invoke agents</br>free, independent and privacy-first</i></p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
