@@ -25,7 +25,7 @@
 
 CWC replaces ever-growing agentic sessions with cache-friendly [markdown prompts](#prompts).
 
-**Expect minimal _thinking_ times, quotas lasting 10x longer and sustained intelligence.**
+**Expect less _thinking_, quotas lasting 10x longer and high intelligence even from mid-tier models.**
 
 ## Send prompts with...
 
