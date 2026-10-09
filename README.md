@@ -37,7 +37,7 @@ Code with local models or call remote model providers with your own keys.
 
 ### 👉 Agents
 
-Invoke your favorite CLI headlessly or in the integrated terminal.
+Invoke your favorite CLI headlessly, or in the integrated terminal.
 
 ## Prompts
 
