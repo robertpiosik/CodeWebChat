@@ -544,10 +544,14 @@ export const MainView: React.FC<Props> = (props) => {
             preview_prompt: t('prompt-field.action.preview-prompt'),
             send: t('prompt-field.action.send'),
             attach_selected_files: t('prompt-field.attach-selected-files'),
-            more: t('prompt-field.more'),
             completed_tasks: t('prompt-field.completed-tasks'),
             completed_task: t('prompt-field.completed-task'),
-            clear_session: t('prompt-field.clear-session')
+            clear_session: t('prompt-field.clear-session'),
+            change_target: t('prompt-field.change-target'),
+            mark_as_complete: t('prompt-field.mark-as-complete'),
+            new_tab: t('prompt-field.new-tab'),
+            clear_tab: t('prompt-field.clear-tab'),
+            close_tab: t('prompt-field.close-tab')
           }}
         />
       </div>

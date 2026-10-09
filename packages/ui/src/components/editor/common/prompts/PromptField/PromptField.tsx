@@ -20,6 +20,7 @@ import { Footer } from './components/Footer'
 import { CompletedTasks } from './components/CompletedTasks'
 import { Checkbox } from '../../Checkbox/Checkbox'
 import { KeycapWrapper } from '../../../prompt-view/KeycapWrapper'
+import { Tooltip } from '../../Tooltip'
 
 export type EditFormat = 'whole' | 'search-replace' | 'diff' | 'truncated'
 
@@ -115,10 +116,14 @@ export namespace PromptField {
       preview_prompt: string
       send: string
       attach_selected_files: string
-      more: string
       completed_tasks: string
       completed_task: string
       clear_session: string
+      change_target: string
+      mark_as_complete: string
+      new_tab: string
+      clear_tab: string
+      close_tab: string
     }
   }
 }
@@ -130,6 +135,7 @@ export const PromptField: React.FC<PromptField.Props> = (props) => {
   const [should_show_ghost_text, set_should_show_ghost_text] = useState(false)
   const [is_text_selecting, set_is_text_selecting] = useState(false)
   const [is_focused, set_is_focused] = useState(false)
+  const [is_checkbox_hovered, set_is_checkbox_hovered] = useState(false)
 
   const container_inner_ref = useRef<HTMLDivElement>(null)
   const tabs_ref = useRef<TabsRef>(null)
@@ -352,10 +358,27 @@ export const PromptField: React.FC<PromptField.Props> = (props) => {
                   active_tab_index={props.active_tab_index}
                   on_tabs_reorder={props.on_tabs_reorder}
                   handle_input_click={handle_input_click}
+                  has_text={!!props.value}
+                  translations={{
+                    new_tab: props.translations.new_tab,
+                    clear_tab: props.translations.clear_tab,
+                    close_tab: props.translations.close_tab
+                  }}
                 />
               </div>
               {props.on_task_completed && (
-                <div className={styles['checkbox-wrapper']}>
+                <div
+                  className={styles['checkbox-wrapper']}
+                  onMouseEnter={() => set_is_checkbox_hovered(true)}
+                  onMouseLeave={() => set_is_checkbox_hovered(false)}
+                >
+                  {is_checkbox_hovered && (
+                    <Tooltip
+                      message={props.translations.mark_as_complete}
+                      position="right"
+                      align="center"
+                    />
+                  )}
                   {is_alt_pressed ? (
                     <KeycapWrapper char="C">
                       <Checkbox

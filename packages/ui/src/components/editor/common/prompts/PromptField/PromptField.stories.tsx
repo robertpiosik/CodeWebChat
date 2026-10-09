@@ -65,10 +65,14 @@ export const Empty = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More',
       completed_tasks: 'Completed tasks',
       completed_task: 'Completed task',
-      clear_session: 'Clear session'
+      clear_session: 'Clear session',
+      change_target: 'Change target',
+      mark_as_complete: 'Mark as complete',
+      new_tab: 'New tab',
+      clear_tab: 'Clear tab',
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -133,10 +137,14 @@ export const WithText = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More',
       completed_tasks: 'Completed tasks',
       completed_task: 'Completed task',
-      clear_session: 'Clear session'
+      clear_session: 'Clear session',
+      change_target: 'Change target',
+      mark_as_complete: 'Mark as complete',
+      new_tab: 'New tab',
+      clear_tab: 'Clear tab',
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -201,10 +209,14 @@ export const LongText = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More',
       completed_tasks: 'Completed tasks',
       completed_task: 'Completed task',
-      clear_session: 'Clear session'
+      clear_session: 'Clear session',
+      change_target: 'Change target',
+      mark_as_complete: 'Mark as complete',
+      new_tab: 'New tab',
+      clear_tab: 'Clear tab',
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -269,10 +281,14 @@ export const WithPlaceholderSavedContext = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More',
       completed_tasks: 'Completed tasks',
       completed_task: 'Completed task',
-      clear_session: 'Clear session'
+      clear_session: 'Clear session',
+      change_target: 'Change target',
+      mark_as_complete: 'Mark as complete',
+      new_tab: 'New tab',
+      clear_tab: 'Clear tab',
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -337,10 +353,14 @@ export const WithCommit = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More',
       completed_tasks: 'Completed tasks',
       completed_task: 'Completed task',
-      clear_session: 'Clear session'
+      clear_session: 'Clear session',
+      change_target: 'Change target',
+      mark_as_complete: 'Mark as complete',
+      new_tab: 'New tab',
+      clear_tab: 'Clear tab',
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -404,10 +424,14 @@ export const WithCommitWithQuotes = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More',
       completed_tasks: 'Completed tasks',
       completed_task: 'Completed task',
-      clear_session: 'Clear session'
+      clear_session: 'Clear session',
+      change_target: 'Change target',
+      mark_as_complete: 'Mark as complete',
+      new_tab: 'New tab',
+      clear_tab: 'Clear tab',
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -479,10 +503,14 @@ export const WithEditFormatSelector = () => {
         preview_prompt: 'Preview prompt',
         send: 'Send',
         attach_selected_files: 'Attach selected files',
-        more: 'More',
         completed_tasks: 'Completed tasks',
         completed_task: 'Completed task',
-        clear_session: 'Clear session'
+        clear_session: 'Clear session',
+        change_target: 'Change target',
+        mark_as_complete: 'Mark as complete',
+        new_tab: 'New tab',
+        clear_tab: 'Clear tab',
+        close_tab: 'Close tab'
       }}
     />
   )
@@ -546,10 +574,14 @@ export const WithWarning = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More',
       completed_tasks: 'Completed tasks',
       completed_task: 'Completed task',
-      clear_session: 'Clear session'
+      clear_session: 'Clear session',
+      change_target: 'Change target',
+      mark_as_complete: 'Mark as complete',
+      new_tab: 'New tab',
+      clear_tab: 'Clear tab',
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -614,10 +646,14 @@ export const WithFilePaths = () => (
       preview_prompt: 'Preview prompt',
       send: 'Send',
       attach_selected_files: 'Attach selected files',
-      more: 'More',
       completed_tasks: 'Completed tasks',
       completed_task: 'Completed task',
-      clear_session: 'Clear session'
+      clear_session: 'Clear session',
+      change_target: 'Change target',
+      mark_as_complete: 'Mark as complete',
+      new_tab: 'New tab',
+      clear_tab: 'Clear tab',
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -710,10 +746,14 @@ export const WithTabs = () => {
         preview_prompt: 'Preview prompt',
         send: 'Send',
         attach_selected_files: 'Attach selected files',
-        more: 'More',
         completed_tasks: 'Completed tasks',
         completed_task: 'Completed task',
-        clear_session: 'Clear session'
+        clear_session: 'Clear session',
+        change_target: 'Change target',
+        mark_as_complete: 'Mark as complete',
+        new_tab: 'New tab',
+        clear_tab: 'Clear tab',
+        close_tab: 'Close tab'
       }}
     />
   )

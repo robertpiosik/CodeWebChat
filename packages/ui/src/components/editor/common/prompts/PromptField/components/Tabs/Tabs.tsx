@@ -2,12 +2,19 @@ import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { ReactSortable } from 'react-sortablejs'
 import cn from 'classnames'
 import styles from './Tabs.module.scss'
+import { Tooltip } from '../../../../Tooltip'
 
 type Props = {
   tabs_count: number
   active_tab_index: number
   on_tabs_reorder?: (new_order: number[]) => void
   handle_input_click?: (e: React.MouseEvent<HTMLDivElement>) => void
+  has_text?: boolean
+  translations?: {
+    new_tab: string
+    clear_tab: string
+    close_tab: string
+  }
 }
 
 export type TabsRef = {
@@ -16,9 +23,12 @@ export type TabsRef = {
 
 export const Tabs = forwardRef<TabsRef, Props>((props, ref) => {
   const [tab_items, set_tab_items] = useState<{ id: string }[]>([])
+  const [hovered_tab, set_hovered_tab] = useState<'new' | 'close' | null>(null)
 
   useImperativeHandle(ref, () => ({
-    handle_mouse_leave: () => {}
+    handle_mouse_leave: () => {
+      set_hovered_tab(null)
+    }
   }))
 
   useEffect(() => {
@@ -68,7 +78,7 @@ export const Tabs = forwardRef<TabsRef, Props>((props, ref) => {
               data-index={i}
               onClick={props.handle_input_click}
             >
-              <div className={styles['tabs__tab-icon']} />
+              <div className={styles['tabs__tab__icon']} />
             </div>
           )
         })}
@@ -76,15 +86,39 @@ export const Tabs = forwardRef<TabsRef, Props>((props, ref) => {
           className={cn(styles.tabs__tab, styles['tabs__tab--new'])}
           data-role="tab-new"
           onClick={props.handle_input_click}
+          onMouseEnter={() => set_hovered_tab('new')}
+          onMouseLeave={() => set_hovered_tab(null)}
         >
-          <div className={styles['tabs__tab-icon']} />
+          {hovered_tab == 'new' && props.translations && (
+            <Tooltip
+              message={props.translations.new_tab}
+              position="bottom"
+              align="right"
+              offset={6}
+            />
+          )}
+          <div className={styles['tabs__tab__icon']} />
         </div>
         <div
           className={cn(styles.tabs__tab, styles['tabs__tab--close'])}
           data-role="tab-close"
           onClick={props.handle_input_click}
+          onMouseEnter={() => set_hovered_tab('close')}
+          onMouseLeave={() => set_hovered_tab(null)}
         >
-          <div className={styles['tabs__tab-icon']} />
+          {hovered_tab == 'close' && props.translations && (
+            <Tooltip
+              message={
+                props.has_text || props.tabs_count == 1
+                  ? props.translations.clear_tab
+                  : props.translations.close_tab
+              }
+              position="bottom"
+              align="right"
+              offset={3}
+            />
+          )}
+          <div className={styles['tabs__tab__icon']} />
         </div>
       </ReactSortable>
     )

@@ -9,7 +9,6 @@
   &__tab {
     height: 15px;
     width: 13px;
-    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -21,12 +20,14 @@
     opacity: var(--dimmed-opacity);
 
     &--new {
-      padding: 0;
+      padding-right: 14px;
+      padding-left: 7px;
     }
 
     &--close {
-      padding: 0;
-      .tabs__tab-icon {
+      padding-right: 10px;
+
+      .tabs__tab__icon {
         &::before {
           content: '\ea76';
         }
@@ -36,7 +37,7 @@
     &--active {
       opacity: 1;
 
-      .tabs__tab-icon {
+      .tabs__tab__icon {
         &::before {
           content: '\ea71';
         }
@@ -47,7 +48,7 @@
       opacity: 1;
     }
 
-    &-icon {
+    &__icon {
       display: flex;
       align-items: center;
       justify-content: center;
