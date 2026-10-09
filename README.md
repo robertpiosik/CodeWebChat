@@ -13,7 +13,7 @@
 
 <p align="center"><strong>Blazing fast AI coding for VS Code</strong></p>
 
-<p align="center"><i>autofill chatbots · send requests · invoke agents</br>free, independent and privacy-first</i></p>
+<p align="center"><i>autofill 15+ free chatbots · send requests · invoke agents</br>free, independent and privacy-first</i></p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
@@ -23,7 +23,7 @@
 
 ## Sessionless design
 
-CWC replaces ever-growing agentic sessions with cache-friendly [markdown prompts](#prompts) you send as standalone messages with 15+ free chatbots, API requests or agents.
+CWC replaces ever-growing agentic sessions with cache-friendly [markdown prompts](#prompts).
 
 **Expect minimal _thinking_ times, quotas lasting 10x longer and sustained intelligence.**
 
@@ -35,7 +35,7 @@ Copy & paste into chatbots or autofill via [browser extension](https://github.co
 
 ### 👉 API requests
 
-Call OpenAI-API-compatible model providers directly from your editor.
+Call OpenAI-API-compatible model providers with your own keys (BYOK).
 
 ### 👉 Agents
 
