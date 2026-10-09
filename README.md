@@ -23,7 +23,7 @@
 
 ## Sessionless design
 
-CWC replaces ever-growing agentic sessions with cache-friendly, lean [markdown prompts](#markdown-prompts). **Expect less _thinking_, quotas lasting 10x longer, and cheap, mid-tier models being good enough.**
+CWC replaces ever-growing agentic sessions with cache-friendly, lean [markdown prompts](#markdown-prompts). **Expect less _thinking_, quotas lasting 10x longer, and sustained intelligence.**
 
 ## Send prompts with...
 
