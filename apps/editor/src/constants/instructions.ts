@@ -70,13 +70,13 @@ export const voice_input_output_formatting =
 
 export const cli_edit_ask_requirements = {
   preloaded_context:
-    'All necessary files for the [task](#task) were preloaded to [files](#files). Reading any other files is FORBIDDEN.',
+    'All necessary files for the [task](#task) were preloaded to [files](#files). Reading other files is FORBIDDEN.',
   disable_tool_calling:
     'Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.',
   exception_read_images:
-    'Exception: If [task](#task) includes *.png image paths, read them using the appropriate tool.',
+    'EXCEPTION: If [task](#task) includes *.png image paths, read them using the appropriate tool.',
   exception_read_audio:
-    'Exception: If [task](#task) includes *.wav audio file paths, read them using the appropriate tool.',
+    'EXCEPTION: If [task](#task) includes *.wav audio file paths, read them using the appropriate tool.',
   exception_allow_file_system_operations:
-    'Exception: Perform file system operations (create, update, delete, rename, move) required to complete the [task](#task).'
+    'EXCEPTION: Perform file system operations (create, update, delete, rename, move) required to complete the [task](#task).'
 }
