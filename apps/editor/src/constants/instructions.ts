@@ -72,7 +72,7 @@ export const cli_edit_ask_requirements = {
   preloaded_context:
     'All necessary files for the [task](#task) were preloaded to [files](#files). Reading other files is FORBIDDEN.',
   disable_tool_calling:
-    'Calling tools, including shell commands (e.g. grep, glob, ls, git, etc.) is FORBIDDEN.',
+    'Using tools or shell commands for discovery or information gathering (e.g., grep, glob, ls, git, etc.) is FORBIDDEN.',
   exception_read_images:
     'EXCEPTION: If [task](#task) includes *.png image paths, read them using the appropriate tool.',
   exception_read_audio:
