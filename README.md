@@ -23,7 +23,7 @@
 
 ## Sessionless design
 
-CWC replaces ever-growing agentic sessions with highly cacheable, [markdown prompts](#prompts) you send as standalone messages with 15+ free chatbots, API requests or agents.
+CWC replaces ever-growing agentic sessions with cache-friendly [markdown prompts](#prompts) you send as standalone messages with 15+ free chatbots, API requests or agents.
 
 **Expect minimal _thinking_ times, quotas lasting 10x longer and sustained intelligence.**
 
