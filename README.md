@@ -66,7 +66,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 ### 📄 Editing
 
-_New features, bug fixes and refactors._
+_Implement new features, fix bugs, refactor code._
 
 <details>
 <summary>WEB/API</summary>
@@ -113,7 +113,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 
 ### 📄 Asking
 
-_Explanations, planning, and analysis._
+_Get explanations, plan features._
 
 <details>
 <summary>WEB/API</summary>
@@ -247,7 +247,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 ### 📄 Code at cursor
 
-_TAB completions from SOTA reasoning models._
+_Quality TAB completions from reasoning models._
 
 <details>
 <summary>WEB</summary>
@@ -337,7 +337,7 @@ Find correct replacement text for the <missing_text> symbol.
 
 ### 📄 Commit messages
 
-_Summaries based on staged changes and context files._
+_Get change summaries adhering to your preferred style._
 
 <details>
 <summary>WEB/API</summary>
@@ -397,7 +397,7 @@ Write a brief and precise summary for the changes, limited to a single sentence.
 
 ### 📄 Patch repair
 
-_Applying malformed edits._
+_Apply malformed edits._
 
 <details>
 <summary>WEB/API</summary>
@@ -449,7 +449,7 @@ Apply the attached changes to the file without explanations or any other text.
 
 ### 📄 Voice input
 
-_Speech-to-text transcriptions._
+_Transcribe speech-to-text with file awareness._
 
 <details>
 <summary>API</summary>
