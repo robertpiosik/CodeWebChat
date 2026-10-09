@@ -35,7 +35,7 @@ Copy & paste into chatbots or autofill via [browser extension](https://github.co
 
 ### 👉 API requests
 
-Code with local models or call remote OpenAI-API-compatible model providers with your own keys.
+Code with local models or call remote model providers with your own keys.
 
 ### 👉 Agents
 
