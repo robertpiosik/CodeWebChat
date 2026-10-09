@@ -35,11 +35,11 @@ Copy & paste into chatbots or autofill via [browser extension](https://github.co
 
 ### 👉 API requests
 
-Call OpenAI-API-compatible model providers with your own keys (BYOK).
+Use local models or call remote OpenAI-API-compatible model providers with your own keys.
 
 ### 👉 Agents
 
-Invoke your favorite coding agent headlessly or in the integrated terminal.
+Invoke your favorite CLI headlessly or in the integrated terminal.
 
 ## Prompts
 
