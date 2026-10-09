@@ -25,7 +25,7 @@
 
 CWC replaces ever-growing agentic sessions with cache-friendly, lean [markdown prompts](#markdown-prompts). **Expect less _thinking_, quotas lasting 10x longer, and great accuracy—even from mid-tier models.**
 
-## Send prompts with...
+## Send markdown prompts with...
 
 ### 👉 15+ free chatbots
 
