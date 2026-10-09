@@ -66,7 +66,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 ### 📄 Editing
 
-_New features, bug fixes, and refactors._
+_New features, bug fixes and refactors._
 
 <details>
 <summary>WEB/API</summary>
