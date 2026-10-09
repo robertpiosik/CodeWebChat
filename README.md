@@ -43,7 +43,7 @@ Invoke your favorite CLI headlessly or in the integrated terminal.
 
 ### 📄 Agentic search
 
-_Find Task-relevant files with your favorite agentic harness._
+_Task-relevant files from your favorite agentic harness._
 
 <details>
 <summary>AGENT</summary>
