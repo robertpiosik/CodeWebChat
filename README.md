@@ -45,7 +45,7 @@ Invoke your favorite CLI headlessly or in the integrated terminal.
 
 ### 📄 Agentic search
 
-_Find Task-relevant files via your favorite agentic harness._
+_Find Task-relevant files with your favorite agentic harness._
 
 <details>
 <summary>AGENT</summary>
@@ -155,7 +155,7 @@ _Explanations, planning, and analysis._
 
 ### 📄 Intelligent search
 
-_Narrow-down broader selection._
+_Narrow-down broader file selection._
 
 <details>
 <summary>WEB</summary>
