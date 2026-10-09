@@ -43,7 +43,7 @@ Invoke your favorite CLI headlessly or in the integrated terminal.
 
 ## Prompts
 
-Overview of CWC-constructed prompts.
+Overview of CWC-constructed markdown prompts.
 
 ### 📄 Agentic search
 
