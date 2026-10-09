@@ -33,13 +33,15 @@ Copy & paste into chatbots or autofill via [browser extension](https://github.co
 
 ### 👉 API requests
 
-Code with local models or call remote model providers with your own keys.
+Code with local models or bring your own keys for OpenAI-API-compatible model providers.
 
 ### 👉 Agents
 
-Invoke your favorite CLI headlessly, or in the integrated terminal.
+Invoke your favorite CLI headlessly or in the integrated terminal.
 
 ## Prompts
+
+Find task-relevant files, ask questions, make edits, or generate commit messages. Review **CWC**-constructed markdown prompts for common use-cases.
 
 ### 📄 Agentic search
 
