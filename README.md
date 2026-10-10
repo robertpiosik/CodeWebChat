@@ -31,7 +31,7 @@ Find task-relevant files, ask questions, make edits, or generate commit messages
 
 ### 📄 Agentic search
 
-_Task-relevant files from your favorite agent._
+_Let your favorite agentic harness find task-relevant files._
 
 <details>
 <summary>AGENT</summary>
