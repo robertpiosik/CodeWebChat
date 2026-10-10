@@ -50,11 +50,11 @@ Copy & paste into a chatbot of choice or autofill via [browser extension](https:
 - Yuanbao
 - Z
 
-### 👉 API requests
+### ✌️ API requests
 
 Run local models, or bring your own keys for remote model providers.
 
-### 👉 Agents
+### 👌 Agents
 
 Invoke headlessly, or in the integrated terminal one of the supported CLIs...
 
