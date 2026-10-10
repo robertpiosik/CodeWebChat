@@ -41,7 +41,7 @@ Invoke your favorite CLI headlessly or in the integrated terminal.
 
 ## Prompts
 
-Find task-relevant files, ask questions, make edits, or generate commit messages. **CWC** constructs markdown prompts for common use-cases.
+Find task-relevant files, ask questions, make edits, or generate commit messages. **CWC** constructs cache-friendly, lean markdown prompts for common use-cases.
 
 ### 📄 Agentic search
 
