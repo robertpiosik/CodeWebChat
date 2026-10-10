@@ -25,9 +25,9 @@
 
 **CWC** replaces ever-growing agentic sessions with lean markdown [prompts](#prompts) you send with...
 
-### 👉 Free chatbots
+### 🫰 Free chatbots
 
-Copy & paste into a chatbot of choice or autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) in:
+Copy & paste into a chatbot of choice or autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) in...
 
 - AI Studio
 - Arena
@@ -40,8 +40,7 @@ Copy & paste into a chatbot of choice or autofill via [browser extension](https:
 - GitHub Copilot
 - Grok
 - HuggingChat
-- Kimi (China)
-- Kimi (Global)
+- Kimi
 - Meta AI
 - Mistral
 - Open WebUI
@@ -53,11 +52,11 @@ Copy & paste into a chatbot of choice or autofill via [browser extension](https:
 
 ### 👉 API requests
 
-Run local models or bring your own keys for OpenAI-API-compatible model providers.
+Run local models, or bring your own keys for remote model providers.
 
 ### 👉 Agents
 
-Invoke a supported CLI headlessly or in the integrated terminal:
+Invoke headlessly, or in the integrated terminal one of the supported CLIs...
 
 - Antigravity
 - Claude Code
