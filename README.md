@@ -23,7 +23,7 @@
 
 ## Sessionless design
 
-Instead of working in an ever-growing sessions, **CWC** helps you construct lean markdown [prompts](#prompts). Expect less _thinking_ and longer lasting quotas!
+Instead of working in an ever-growing sessions, **CWC** helps you construct lean markdown [prompts](#prompts). With intent easier to 'unpack', expect less _thinking_ and longer lasting quotas!
 
 ## Prompts
 
