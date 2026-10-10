@@ -25,48 +25,6 @@
 
 **CWC** replaces ever-growing agentic sessions with lean, cache-friendly markdown [prompts](#prompts). Expect less _thinking_, longer lasting quotas and cheap models getting the job done.
 
-## Supported targets
-
-### WEB
-
-Copy & paste into a chatbot of choice or autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) in:
-
-- AI Studio
-- Arena
-- ChatGPT
-- Claude
-- Copilot
-- DeepSeek
-- Doubao
-- Gemini
-- GitHub Copilot
-- Grok
-- HuggingChat
-- Kimi
-- Meta AI
-- Mistral
-- Open WebUI
-- OpenRouter
-- Qwen
-- Together
-- Yuanbao
-- Z
-
-### API
-
-Run local models, or bring your own keys for remote model providers.
-
-### CLI
-
-Invoke headlessly, or in the integrated terminal:
-
-- Antigravity
-- Claude Code
-- Codex
-- Cursor
-- Grok Build
-- OpenCode
-
 ## Prompts
 
 Find task-relevant files, ask questions, make edits, or generate commit messages. **CWC** constructs lean, cache-friendly markdown prompts for common use cases.
