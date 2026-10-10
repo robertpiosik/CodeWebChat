@@ -23,9 +23,7 @@
 
 ## Sessionless design
 
-**CWC** replaces ever-growing agentic sessions with cache-friendly, lean markdown [prompts](#prompts).
-
-## Send prompts with...
+**CWC** replaces ever-growing agentic sessions with cache-friendly, lean markdown [prompts](#prompts) you send with...
 
 ### 👉 Free chatbots
 
