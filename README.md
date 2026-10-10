@@ -25,8 +25,8 @@
 
 CWC replaces ever-growing agentic sessions with cache-friendly, lean markdown [prompts](#prompts).
 
-- find task-relevant files with agent
-- replace most skills by selecting examples
+- find task-relevant files with [agent](#-agentic-search)
+- replace most skills with selected examples
 - iterate on instructions without context bloat
 
 ## Send prompts with...
