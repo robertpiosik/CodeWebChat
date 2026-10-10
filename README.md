@@ -13,7 +13,7 @@
 
 <p align="center"><strong>Blazing fast AI coding for VS Code</strong></p>
 
-<p align="center">autofill 15+ free chatbots · send API requests · invoke CLI agents</br><i>free, independent, privacy-first</i></p>
+<p align="center">autofill free chatbots · send API requests · invoke CLI agents</br><i>free, independent, privacy-first</i></p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
@@ -27,7 +27,7 @@ CWC replaces ever-growing agentic sessions with cache-friendly, lean markdown [p
 
 ## Send prompts with...
 
-### 👉 15+ free chatbots
+### 👉 free chatbots
 
 Copy & paste into chatbots or **autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) in:**
 
