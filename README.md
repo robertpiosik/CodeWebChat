@@ -504,7 +504,7 @@ Respond with the audio transcription or the word INAUDIBLE, without explanations
 ```
 # Files
 
-[SELECTED FILES]
+[FILES SEEN DURING RECORDING]
 
 # Task
 
