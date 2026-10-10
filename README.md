@@ -19,7 +19,7 @@
 
 ## Privacy-first
 
-**CWC** operates 100% on your machine. No code, prompts or usage data are collected.
+100% local operation means no code, prompts or usage data are collected.
 
 ## Sessionless design
 
