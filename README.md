@@ -23,7 +23,7 @@
 
 ## Sessionless design
 
-**CWC** replaces ever-growing agentic sessions with lean markdown [prompts](#prompts) you send with...
+**CWC** replaces ever-growing agentic sessions with lean markdown [prompts](#prompts) you can send everywhere!
 
 ### 🫰 Free chatbots
 
@@ -69,9 +69,9 @@ Invoke headlessly, or in the integrated terminal:
 
 Find task-relevant files, ask questions, make edits, or generate commit messages. **CWC** constructs lean markdown prompts for common use cases.
 
-> [!IMPORTANT]
+> [!NOTE]
 >
-> For the an outstanding prompt cache unitilzation, whenever including selected files, they're placed with recency-based ordering.
+> **CWC** was designed for the best prompt cache utilization from the ground up. Whenever including selected files, they're placed based on selection/modification recency, always preceding task instructions.
 
 ### 📄 Agentic search
 
