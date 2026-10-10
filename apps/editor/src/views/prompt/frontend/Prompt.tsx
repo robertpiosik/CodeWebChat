@@ -429,7 +429,11 @@ export const Prompt = () => {
         </div>
 
         {updating_web_configuration && (
-          <div className={styles.slot}>
+          <div
+            className={cn(styles.slot, {
+              [styles['slot--hidden']]: !!items_in_preview
+            })}
+          >
             <UiPage
               on_back_click={edit_web_configuration_back_click_handler}
               footer_slot={
@@ -478,7 +482,11 @@ export const Prompt = () => {
         )}
 
         {updating_api_configuration && (
-          <div className={styles.slot}>
+          <div
+            className={cn(styles.slot, {
+              [styles['slot--hidden']]: !!items_in_preview
+            })}
+          >
             <UiPage
               on_back_click={edit_api_configuration_back_click_handler}
               footer_slot={
@@ -520,7 +528,11 @@ export const Prompt = () => {
         )}
 
         {updating_cli_configuration && (
-          <div className={styles.slot}>
+          <div
+            className={cn(styles.slot, {
+              [styles['slot--hidden']]: !!items_in_preview
+            })}
+          >
             <UiPage
               on_back_click={edit_cli_configuration_back_click_handler}
               footer_slot={
