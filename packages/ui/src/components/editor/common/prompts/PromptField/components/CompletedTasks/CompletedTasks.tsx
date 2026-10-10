@@ -38,7 +38,7 @@ export const CompletedTask: React.FC<TaskProps> = ({
   )
 }
 
-type CompletedTasksProps = {
+type Props = {
   tasks: string[]
   selected_files?: string[]
   is_web_target?: boolean
@@ -48,17 +48,19 @@ type CompletedTasksProps = {
     completed_task: string
     clear_session: string
   }
+  is_expanded: boolean
+  set_is_expanded: (is_expanded: boolean) => void
 }
 
-export const CompletedTasks: React.FC<CompletedTasksProps> = ({
+export const CompletedTasks: React.FC<Props> = ({
   tasks,
   selected_files,
   is_web_target,
   on_clear_completed_tasks,
-  translations
+  translations,
+  is_expanded,
+  set_is_expanded
 }) => {
-  const [is_expanded, set_is_expanded] = useState(false)
-
   if (tasks.length === 0) {
     return null
   }

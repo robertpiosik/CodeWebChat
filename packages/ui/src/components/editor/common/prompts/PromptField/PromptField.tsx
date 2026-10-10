@@ -136,6 +136,8 @@ export const PromptField: React.FC<PromptField.Props> = (props) => {
   const [is_text_selecting, set_is_text_selecting] = useState(false)
   const [is_focused, set_is_focused] = useState(false)
   const [is_checkbox_hovered, set_is_checkbox_hovered] = useState(false)
+  const [is_completed_tasks_expanded, set_is_completed_tasks_expanded] =
+    useState(false)
 
   const container_inner_ref = useRef<HTMLDivElement>(null)
   const tabs_ref = useRef<TabsRef>(null)
@@ -405,6 +407,7 @@ export const PromptField: React.FC<PromptField.Props> = (props) => {
                 onInput={(e) => {
                   set_should_show_ghost_text(true)
                   handle_input_change(e)
+                  set_is_completed_tasks_expanded(false)
                 }}
                 onKeyDown={(e) => {
                   if (
@@ -463,6 +466,8 @@ export const PromptField: React.FC<PromptField.Props> = (props) => {
               completed_task: props.translations.completed_task,
               clear_session: props.translations.clear_session
             }}
+            is_expanded={is_completed_tasks_expanded}
+            set_is_expanded={set_is_completed_tasks_expanded}
           />
         </div>
 
