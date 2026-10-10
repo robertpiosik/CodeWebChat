@@ -34,29 +34,29 @@ Copy & paste into chatbots or autofill via [browser extension](https://github.co
 <details>
 <summary>Supported chatbots</summary>
 
-| Chatbot        | URL                                          |
-| -------------- | -------------------------------------------- |
-| AI Studio      | https://aistudio.google.com/prompts/new_chat |
-| Arena          | https://arena.ai/                            |
-| ChatGPT        | https://chatgpt.com/                         |
-| Claude         | https://claude.ai/new                        |
-| Copilot        | https://copilot.com/chat                     |
-| DeepSeek       | https://chat.deepseek.com/                   |
-| Doubao         | https://www.doubao.com/chat/                 |
-| Gemini         | https://gemini.google.com/app                |
-| GitHub Copilot | https://github.com/copilot                   |
-| Grok           | https://grok.com/                            |
-| HuggingChat    | https://huggingface.co/chat/                 |
-| Kimi (China)   | https://www.kimi.com/                        |
-| Kimi (Global)  | https://www.kimi.ai/                         |
-| Meta AI        | https://www.meta.ai/                         |
-| Mistral        | https://chat.mistral.ai/chat                 |
-| Open WebUI     | http://openwebui/                            |
-| OpenRouter     | https://openrouter.ai/chat                   |
-| Qwen           | https://chat.qwen.ai/                        |
-| Together       | https://chat.together.ai/                    |
-| Yuanbao        | https://yuanbao.tencent.com/chat             |
-| Z              | https://chat.z.ai/                           |
+| Chatbot        | URL                                                 |
+| -------------- | --------------------------------------------------- |
+| AI Studio      | [aistudio.google.com](https://aistudio.google.com/) |
+| Arena          | https://arena.ai/                                   |
+| ChatGPT        | https://chatgpt.com/                                |
+| Claude         | https://claude.ai/new                               |
+| Copilot        | https://copilot.com/chat                            |
+| DeepSeek       | https://chat.deepseek.com/                          |
+| Doubao         | https://www.doubao.com/chat/                        |
+| Gemini         | https://gemini.google.com/app                       |
+| GitHub Copilot | https://github.com/copilot                          |
+| Grok           | https://grok.com/                                   |
+| HuggingChat    | https://huggingface.co/chat/                        |
+| Kimi (China)   | https://www.kimi.com/                               |
+| Kimi (Global)  | https://www.kimi.ai/                                |
+| Meta AI        | https://www.meta.ai/                                |
+| Mistral        | https://chat.mistral.ai/chat                        |
+| Open WebUI     | http://openwebui/                                   |
+| OpenRouter     | https://openrouter.ai/chat                          |
+| Qwen           | https://chat.qwen.ai/                               |
+| Together       | https://chat.together.ai/                           |
+| Yuanbao        | https://yuanbao.tencent.com/chat                    |
+| Z              | https://chat.z.ai/                                  |
 
 </details>
 
