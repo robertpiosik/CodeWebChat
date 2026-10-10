@@ -25,9 +25,9 @@
 
 **CWC** replaces ever-growing agentic sessions with lean, cache-friendly markdown [prompts](#prompts). Expect less _thinking_, longer lasting quotas and cheap models getting the job done.
 
-## Send prompts with...
+## Supported targets
 
-### 🫰 Free chatbots
+### WEB
 
 Copy & paste into a chatbot of choice or autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) in:
 
@@ -52,11 +52,11 @@ Copy & paste into a chatbot of choice or autofill via [browser extension](https:
 - Yuanbao
 - Z
 
-### ✌️ API requests
+### API
 
 Run local models, or bring your own keys for remote model providers.
 
-### 👌 Agents
+### CLI
 
 Invoke headlessly, or in the integrated terminal:
 
