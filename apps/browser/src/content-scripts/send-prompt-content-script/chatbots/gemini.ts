@@ -112,24 +112,23 @@ export const gemini: Chatbot = {
       menu_content.querySelectorAll('gem-menu-item')
     )
 
-    const extended_thinking_item = all_menu_items.find(
+    const target_item = all_menu_items.find(
       (item) =>
         item.querySelector('.label')?.textContent?.trim().toLowerCase() ==
-        'extended thinking'
+        reasoning_effort.toLowerCase()
     ) as HTMLElement
 
-    if (!extended_thinking_item) {
+    if (!target_item) {
       document.dispatchEvent(
         new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
       )
       return
     }
 
-    const is_extended = extended_thinking_item.classList.contains('selected')
-    const target_is_extended = reasoning_effort.toLowerCase() == 'extended'
+    const is_selected = target_item.classList.contains('selected')
 
-    if (is_extended !== target_is_extended) {
-      extended_thinking_item.click()
+    if (!is_selected) {
+      target_item.click()
     } else {
       document.dispatchEvent(
         new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })

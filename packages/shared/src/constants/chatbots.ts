@@ -89,7 +89,7 @@ export const CHATBOTS = {
     url_override_label: 'Gem URL',
     url_override_disabled_options: ['temporary-chat'],
     supports_reasoning_effort: true,
-    supported_reasoning_efforts: ['Standard', 'Extended'],
+    supported_reasoning_efforts: ['Low', 'Medium', 'High'],
     models: {
       'flash-lite': { label: 'Flash-Lite' },
       flash: { label: 'Flash' },
