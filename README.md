@@ -25,10 +25,6 @@
 
 CWC replaces ever-growing agentic sessions with cache-friendly, lean markdown [prompts](#prompts).
 
-- find task-relevant files with [agent](#-agentic-search)
-- replace most skills with selected examples
-- iterate on instructions without context bloat
-
 ## Send prompts with...
 
 ### 👉 Free chatbots
@@ -78,7 +74,7 @@ Find task-relevant files, ask questions, make edits, or generate commit messages
 
 ### 📄 Agentic search
 
-_Task-relevant files from your favorite agentic harness._
+_Task-relevant files from your favorite agent._
 
 <details>
 <summary>AGENT</summary>
