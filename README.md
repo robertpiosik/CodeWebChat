@@ -27,7 +27,7 @@
 
 ### 🫰 Free chatbots
 
-Copy & paste into a chatbot of choice or autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) in...
+Copy & paste into a chatbot of choice or autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) in:
 
 - AI Studio
 - Arena
@@ -56,7 +56,7 @@ Run local models, or bring your own keys for remote model providers.
 
 ### 👌 Agents
 
-Invoke headlessly, or in the integrated terminal one of the supported CLIs...
+Invoke headlessly, or in the integrated terminal:
 
 - Antigravity
 - Claude Code
