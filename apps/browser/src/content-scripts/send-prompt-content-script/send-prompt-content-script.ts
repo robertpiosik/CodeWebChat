@@ -42,7 +42,7 @@ const is_openrouter = current_url.startsWith(openrouter_url)
 const chatgpt_url = 'https://chatgpt.com/'
 const is_chatgpt = current_url.startsWith(chatgpt_url)
 
-const copilot_url = 'https://copilot.microsoft.com/'
+const copilot_url = 'https://copilot.com/chat'
 const is_copilot = current_url.startsWith(copilot_url)
 
 const github_copilot_url = 'https://github.com/copilot'

@@ -72,7 +72,12 @@ export const CHATBOTS = {
     }
   } as Chatbot,
   Copilot: {
-    url: 'https://copilot.microsoft.com/'
+    url: 'https://copilot.com/chat',
+    supports_reasoning_effort: true,
+    supported_reasoning_efforts: ['Auto', 'Quick', 'Deep'],
+    supported_options: {
+      temporary: 'Temporary chat'
+    }
   } as Chatbot,
   DeepSeek: {
     url: 'https://chat.deepseek.com/',
