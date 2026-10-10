@@ -31,13 +31,34 @@ CWC replaces ever-growing agentic sessions with cache-friendly, lean markdown [p
 
 Copy & paste into chatbots or autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser).
 
+<details>
+<summary>Supported chatbots</summary>
+
+AI Studio, Arena, ChatGPT, Claude, Copilot, DeepSeek, Doubao, Gemini, GitHub Copilot, Grok, HuggingChat, Kimi (China), Kimi (Global), Meta AI, Mistral, Open WebUI, OpenRouter, Qwen, Together, Yuanbao, Z.
+
+</details>
+
 ### 👉 API requests
 
 Code with local models or bring your own keys for OpenAI-API-compatible model providers.
 
+<details>
+<summary>Predefined providers</summary>
+
+Anthropic, Cerebras, Chutes, DeepInfra, DeepSeek, Fireworks, Google, Groq, HuggingFace, Hyperbolic, LM Studio, Meta, Mistral, Ollama, OpenAI, OpenRouter, TogetherAI, xAI, Z.AI.
+
+</details>
+
 ### 👉 Agents
 
 Invoke your favorite CLI headlessly or in the integrated terminal.
+
+<details>
+<summary>Supported CLIs</summary>
+
+Antigravity, Claude Code, Codex, Cursor, Grok Build, OpenCode.
+
+</details>
 
 ## Prompts
 
