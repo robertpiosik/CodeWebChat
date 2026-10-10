@@ -32,7 +32,7 @@
 _Let your favorite agentic harness find task-relevant files._
 
 <details>
-<summary>AGENT</summary>
+<summary>CLI</summary>
 
 ```
 # Task
@@ -76,7 +76,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 </details>
 
 <details>
-<summary>AGENT</summary>
+<summary>CLI</summary>
 
 ```
 # Files
@@ -117,7 +117,7 @@ _Get explanations, plan features._
 </details>
 
 <details>
-<summary>AGENT</summary>
+<summary>CLI</summary>
 
 ```
 # Files
@@ -200,7 +200,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 </details>
 
 <details>
-<summary>AGENT</summary>
+<summary>CLI</summary>
 
 ```
 # Files
@@ -290,7 +290,7 @@ Find correct replacement text for the <missing_text> symbol.
 </details>
 
 <details>
-<summary>AGENT</summary>
+<summary>CLI</summary>
 
 ````
 # Files
@@ -352,7 +352,7 @@ Write a brief and precise summary for the changes, limited to a single sentence.
 </details>
 
 <details>
-<summary>AGENT</summary>
+<summary>CLI</summary>
 
 ```
 # Files
@@ -407,7 +407,7 @@ Apply the attached changes to the file without explanations or any other text.
 </details>
 
 <details>
-<summary>AGENT</summary>
+<summary>CLI</summary>
 
 ```
 # File: `[FILE PATH]`
@@ -457,7 +457,7 @@ Respond with the audio transcription or the word INAUDIBLE, without explanations
 </details>
 
 <details>
-<summary>AGENT</summary>
+<summary>CLI</summary>
 
 ```
 # Files
