@@ -13,7 +13,7 @@
 
 <p align="center"><strong>Blazing fast AI coding for VS Code</strong></p>
 
-<p align="center">autofill free chatbots · send API requests · invoke CLI agents</br><i>free, independent, privacy-first</i></p>
+<p align="center">autofill free chatbots · send API requests · invoke agentic CLIs</br><i>free, independent, privacy-first</i></p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
@@ -29,7 +29,7 @@ CWC replaces ever-growing agentic sessions with cache-friendly, lean markdown [p
 
 ### 👉 Free chatbots
 
-Copy & paste into chatbots or **autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) in:**
+Copy & paste into any chatbot or **autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) in:**
 
 - AI Studio
 - Arena
@@ -55,7 +55,7 @@ Copy & paste into chatbots or **autofill via [browser extension](https://github.
 
 ### 👉 API requests
 
-Code with local models or bring your own keys for OpenAI-API-compatible model providers.
+Run local models or bring your own keys for OpenAI-API-compatible model providers.
 
 ### 👉 Agents
 
