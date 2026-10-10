@@ -27,7 +27,7 @@
 
 ### 👉 Free chatbots
 
-Copy & paste into any chatbot or **autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) in:**
+Copy & paste into chatbot of choice or **autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) in:**
 
 - AI Studio
 - Arena
