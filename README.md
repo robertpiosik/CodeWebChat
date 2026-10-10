@@ -27,7 +27,7 @@ CWC replaces ever-growing agentic sessions with cache-friendly, lean markdown [p
 
 ## Send prompts with...
 
-### 👉 free chatbots
+### 👉 Free chatbots
 
 Copy & paste into chatbots or **autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) in:**
 
