@@ -23,11 +23,9 @@
 
 ## Sessionless design
 
-**CWC** replaces ever-growing agentic sessions with lean, cache-friendly markdown [prompts](#prompts). Expect less _thinking_, longer lasting quotas and cheap models getting the job done.
+**CWC** replaces ever-growing agentic sessions with lean, cache-friendly markdown [prompts](#prompts). Expect less _thinking_, longer lasting quotas, and cheap models getting the job done.
 
 ## Prompts
-
-Find task-relevant files, ask questions, make edits, or generate commit messages. **CWC** constructs lean, cache-friendly markdown prompts for common use cases.
 
 ### 📄 Agentic search
 
