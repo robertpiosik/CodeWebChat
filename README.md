@@ -59,9 +59,7 @@ Code with local models or bring your own keys for OpenAI-API-compatible model pr
 
 ### 👉 Agents
 
-Invoke your favorite CLI headlessly or in the integrated terminal.
-
-**Supported CLIs:**
+Invoke one of your favorite CLIs headlessly or in the integrated terminal:
 
 - Antigravity
 - Claude Code
