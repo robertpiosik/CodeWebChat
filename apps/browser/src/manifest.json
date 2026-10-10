@@ -4,7 +4,7 @@
   "name": "Autofill for Code Web Chat",
   "short_name": "CWC",
   "description": "Got tired with copy and paste? Enable prompt autofill!",
-  "version": "2026.1010.14",
+  "version": "2026.1010.15",
   "homepage_url": "https://github.com/robertpiosik/CodeWebChat",
   "icons": {
     "16": "icons/icon-16.png",
@@ -36,6 +36,7 @@
         "https://huggingface.co/chat/",
         "https://arena.ai/*",
         "https://www.kimi.ai/",
+        "https://www.kimi.com/",
         "https://www.meta.ai/",
         "https://chat.mistral.ai/*",
         "http://openwebui/",

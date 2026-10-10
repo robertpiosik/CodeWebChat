@@ -45,15 +45,16 @@ const map_web_configuration_to_item = (
   if (!is_unnamed && web_configuration.chatbot)
     details.push(web_configuration.chatbot)
   if (model) details.push(model)
-  if (
-    web_configuration.reasoningEffort &&
-    (chatbot?.supports_reasoning_effort ||
-      !!(
-        web_configuration.model &&
-        chatbot_models?.[web_configuration.model]?.supported_reasoning_efforts
-      ))
-  ) {
-    details.push(web_configuration.reasoningEffort)
+  if (web_configuration.reasoningEffort) {
+    const supported_efforts =
+      chatbot?.supported_reasoning_efforts ||
+      (web_configuration.model &&
+        chatbot_models?.[web_configuration.model]
+          ?.supported_reasoning_efforts) ||
+      []
+    if (supported_efforts.includes(web_configuration.reasoningEffort)) {
+      details.push(web_configuration.reasoningEffort)
+    }
   }
   return {
     label: `${is_unnamed ? web_configuration.chatbot! : web_configuration.name!.replace(/\s*\(\d+\)$/, '')}`,

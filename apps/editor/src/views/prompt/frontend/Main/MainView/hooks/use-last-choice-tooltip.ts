@@ -56,7 +56,20 @@ export const use_last_choice_tooltip = (params: {
                 }
               }
               if (reasoning_effort) {
-                base = base ? `${base} · ${reasoning_effort}` : reasoning_effort
+                const chatbot_config = chatbot
+                  ? CHATBOTS[chatbot as keyof typeof CHATBOTS]
+                  : undefined
+                const supported_efforts =
+                  chatbot_config?.supported_reasoning_efforts ||
+                  (model &&
+                    chatbot_config?.models?.[model]
+                      ?.supported_reasoning_efforts) ||
+                  []
+                if (supported_efforts.includes(reasoning_effort)) {
+                  base = base
+                    ? `${base} · ${reasoning_effort}`
+                    : reasoning_effort
+                }
               }
               return base
             }

@@ -131,7 +131,15 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
       }
 
       if (reasoning_effort) {
-        details.push(reasoning_effort)
+        const chatbot_config = chatbot ? CHATBOTS[chatbot] : undefined
+        const supported_efforts =
+          chatbot_config?.supported_reasoning_efforts ||
+          (model &&
+            chatbot_config?.models?.[model]?.supported_reasoning_efforts) ||
+          []
+        if (supported_efforts.includes(reasoning_effort)) {
+          details.push(reasoning_effort)
+        }
       }
 
       return details
@@ -214,7 +222,16 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                 }
 
                 if (reasoning_effort) {
-                  details.push(reasoning_effort)
+                  const chatbot_config = chatbot ? CHATBOTS[chatbot] : undefined
+                  const supported_efforts =
+                    chatbot_config?.supported_reasoning_efforts ||
+                    (model &&
+                      chatbot_config?.models?.[model]
+                        ?.supported_reasoning_efforts) ||
+                    []
+                  if (supported_efforts.includes(reasoning_effort)) {
+                    details.push(reasoning_effort)
+                  }
                 }
 
                 return details
