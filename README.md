@@ -31,83 +31,46 @@ CWC replaces ever-growing agentic sessions with cache-friendly, lean markdown [p
 
 Copy & paste into chatbots or autofill via [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser).
 
-<details>
-<summary>Supported chatbots</summary>
+**Autofill supported in:**
 
-| Chatbot        | URL                                                 |
-| -------------- | --------------------------------------------------- |
-| AI Studio      | [aistudio.google.com](https://aistudio.google.com/) |
-| Arena          | https://arena.ai/                                   |
-| ChatGPT        | https://chatgpt.com/                                |
-| Claude         | https://claude.ai/new                               |
-| Copilot        | https://copilot.com/chat                            |
-| DeepSeek       | https://chat.deepseek.com/                          |
-| Doubao         | https://www.doubao.com/chat/                        |
-| Gemini         | https://gemini.google.com/app                       |
-| GitHub Copilot | https://github.com/copilot                          |
-| Grok           | https://grok.com/                                   |
-| HuggingChat    | https://huggingface.co/chat/                        |
-| Kimi (China)   | https://www.kimi.com/                               |
-| Kimi (Global)  | https://www.kimi.ai/                                |
-| Meta AI        | https://www.meta.ai/                                |
-| Mistral        | https://chat.mistral.ai/chat                        |
-| Open WebUI     | http://openwebui/                                   |
-| OpenRouter     | https://openrouter.ai/chat                          |
-| Qwen           | https://chat.qwen.ai/                               |
-| Together       | https://chat.together.ai/                           |
-| Yuanbao        | https://yuanbao.tencent.com/chat                    |
-| Z              | https://chat.z.ai/                                  |
-
-</details>
+- AI Studio
+- Arena
+- ChatGPT
+- Claude
+- Copilot
+- DeepSeek
+- Doubao
+- Gemini
+- GitHub Copilot
+- Grok
+- HuggingChat
+- Kimi (China)
+- Kimi (Global)
+- Meta AI
+- Mistral
+- Open WebUI
+- OpenRouter
+- Qwen
+- Together
+- Yuanbao
+- Z
 
 ### 👉 API requests
 
 Code with local models or bring your own keys for OpenAI-API-compatible model providers.
 
-<details>
-<summary>Predefined providers</summary>
-
-| Provider    | URL                                                        |
-| ----------- | ---------------------------------------------------------- |
-| Anthropic   | https://api.anthropic.com/v1                               |
-| Cerebras    | https://api.cerebras.ai/v1                                 |
-| Chutes      | https://llm.chutes.ai/v1                                   |
-| DeepInfra   | https://api.deepinfra.com/v1                               |
-| DeepSeek    | https://api.deepseek.com/v1                                |
-| Fireworks   | https://api.fireworks.ai/inference/v1                      |
-| Google      | https://generativelanguage.googleapis.com/v1beta/openai/v1 |
-| Groq        | https://api.groq.com/openai/v1                             |
-| HuggingFace | https://router.huggingface.co/v1                           |
-| Hyperbolic  | https://api.hyperbolic.xyz/v1                              |
-| LM Studio   | http://localhost:1234/v1                                   |
-| Meta        | https://api.meta.ai/v1                                     |
-| Mistral     | https://api.mistral.ai/v1                                  |
-| Ollama      | http://localhost:11434/v1                                  |
-| OpenAI      | https://api.openai.com/v1                                  |
-| OpenRouter  | https://openrouter.ai/api/v1                               |
-| TogetherAI  | https://api.together.xyz/v1                                |
-| xAI         | https://api.x.ai/v1                                        |
-| Z.AI        | https://api.z.ai/api/paas/v4                               |
-
-</details>
-
 ### 👉 Agents
 
 Invoke your favorite CLI headlessly or in the integrated terminal.
 
-<details>
-<summary>Supported CLIs</summary>
+**Supported CLIs:**
 
-| CLI         | URL                                                 |
-| ----------- | --------------------------------------------------- |
-| Antigravity | https://antigravity.google/product/antigravity-cli/ |
-| Claude Code | https://code.claude.com/docs/en/quickstart          |
-| Codex       | https://learn.chatgpt.com/docs/codex/cli            |
-| Cursor      | https://cursor.com/cli                              |
-| Grok Build  | https://x.ai/build                                  |
-| OpenCode    | https://opencode.ai/                                |
-
-</details>
+- Antigravity
+- Claude Code
+- Codex
+- Cursor
+- Grok Build
+- OpenCode
 
 ## Prompts
 
