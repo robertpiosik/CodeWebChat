@@ -120,7 +120,7 @@ export const CHATBOTS = {
     supported_reasoning_efforts: ['Low', 'Medium', 'High']
   } as Chatbot,
   Kimi: {
-    url: 'https://www.kimi.com/'
+    url: 'https://www.kimi.ai/'
   } as Chatbot,
   'Meta AI': {
     url: 'https://www.meta.ai/'

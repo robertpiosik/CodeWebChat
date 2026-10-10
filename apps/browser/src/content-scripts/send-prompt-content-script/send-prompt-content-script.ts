@@ -75,7 +75,7 @@ const is_grok = current_url.startsWith(grok_url)
 const doubao_url = 'https://www.doubao.com/chat/'
 const is_doubao = current_url.startsWith(doubao_url)
 
-const kimi_url = 'https://www.kimi.com/'
+const kimi_url = 'https://www.kimi.ai/'
 const is_kimi = current_url.startsWith(kimi_url)
 
 const meta_url = 'https://www.meta.ai/'

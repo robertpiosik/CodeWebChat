@@ -9,7 +9,7 @@ export const kimi: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
       const check_for_element = () => {
-        if (document.querySelector('.current-model')) {
+        if (document.querySelector('[data-testid="model-select-trigger"]')) {
           resolve(null)
         } else {
           setTimeout(check_for_element, 100)
