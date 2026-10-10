@@ -413,24 +413,6 @@ export const prompt_field = {
     hu: 'Munkamenet törlése',
     bg: 'Изчистване на сесията'
   },
-  'prompt-field.change-target': {
-    en: 'Change target',
-    pl: 'Zmień cel',
-    'zh-cn': '更改目标',
-    ja: 'ターゲットを変更',
-    'zh-tw': '更改目標',
-    de: 'Ziel ändern',
-    es: 'Cambiar objetivo',
-    fr: 'Changer la cible',
-    'pt-br': 'Alterar alvo',
-    ru: 'Изменить цель',
-    ko: '대상 변경',
-    it: 'Cambia destinazione',
-    tr: 'Hedefi değiştir',
-    cs: 'Změnit cíl',
-    hu: 'Cél módosítása',
-    bg: 'Промяна на целта'
-  },
   'prompt-field.mark-as-complete': {
     en: 'Mark as complete',
     pl: 'Oznacz jako ukończone',

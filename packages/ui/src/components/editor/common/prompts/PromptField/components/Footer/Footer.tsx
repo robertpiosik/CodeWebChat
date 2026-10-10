@@ -26,7 +26,6 @@ export const Footer: React.FC<Props> = (props) => {
   const [show_submit_tooltip, set_show_submit_tooltip] = useState(false)
   const [is_recording_hovered, set_is_recording_hovered] = useState(false)
   const [is_edit_format_hovered, set_is_edit_format_hovered] = useState(false)
-  const [is_target_hovered, set_is_target_hovered] = useState(false)
   const [is_target_dropdown_open, set_is_target_dropdown_open] = useState(false)
   const [hovered_left_action, set_hovered_left_action] = useState<
     'at' | 'hash' | 'slash' | null
@@ -421,14 +420,6 @@ export const Footer: React.FC<Props> = (props) => {
         >
           {props.props.target && props.props.on_target_change && (
             <div className={styles['footer__right__target-switch']}>
-              {is_target_hovered &&
-                !is_target_dropdown_open &&
-                !props.is_alt_pressed && (
-                  <Tooltip
-                    message={props.props.translations.change_target}
-                    align="center"
-                  />
-                )}
               {(is_target_dropdown_open || props.is_alt_pressed) && (
                 <div
                   className={
@@ -477,8 +468,6 @@ export const Footer: React.FC<Props> = (props) => {
                   e.stopPropagation()
                   set_is_target_dropdown_open(!is_target_dropdown_open)
                 }}
-                onMouseEnter={() => set_is_target_hovered(true)}
-                onMouseLeave={() => set_is_target_hovered(false)}
               >
                 <span className={styles['footer__right__target-switch__label']}>
                   {props.props.target == 'WEB'

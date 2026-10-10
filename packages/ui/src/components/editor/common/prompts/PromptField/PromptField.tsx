@@ -119,7 +119,6 @@ export namespace PromptField {
       completed_tasks: string
       completed_task: string
       clear_session: string
-      change_target: string
       mark_as_complete: string
       new_tab: string
       clear_tab: string
