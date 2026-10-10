@@ -69,10 +69,6 @@ Invoke headlessly, or in the integrated terminal:
 
 Find task-relevant files, ask questions, make edits, or generate commit messages. **CWC** constructs lean markdown prompts for common use cases.
 
-> [!NOTE]
->
-> **CWC** was designed for the best prompt cache utilization from the ground up. Whenever including selected files, they're placed based on selection/modification recency, always preceding task instructions.
-
 ### 📄 Agentic search
 
 _Task-relevant files from your favorite agent._
