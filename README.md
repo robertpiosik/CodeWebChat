@@ -23,7 +23,7 @@
 
 ## Sessionless design
 
-Instead of ever-growing agentic sessions, **CWC** constructs lean markdown [prompts](#prompts). Expect less _thinking_, longer lasting quotas, and mid-tier models getting the job done.
+Instead of ever-growing sessions, **CWC** constructs lean markdown [prompts](#prompts). Expect less _thinking_ and longer lasting quotas!
 
 ## Prompts
 
