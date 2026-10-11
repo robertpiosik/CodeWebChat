@@ -31,7 +31,7 @@ Autofill 15+ free chatbots, send API requests, or invoke agentic CLIs with **CWC
 
 ## Prompts
 
-### 📄 Agentic search
+### 📄 Agentic Search
 
 _Let your favorite agentic harness find task-relevant files._
 
@@ -141,7 +141,7 @@ _Get explanations, plan features._
 
 </details>
 
-### 📄 Intelligent search
+### 📄 Intelligent Search
 
 _Narrow-down broader file selection._
 
@@ -235,7 +235,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 
 </details>
 
-### 📄 Code at cursor
+### 📄 Code at Cursor
 
 _Quality TAB completions from reasoning models._
 
@@ -325,7 +325,7 @@ Find correct replacement text for the <missing_text> symbol.
 
 </details>
 
-### 📄 Commit messages
+### 📄 Commit Messages
 
 _Get change summaries adhering to your preferred style._
 
@@ -385,7 +385,7 @@ Write a brief and precise summary for the changes, limited to a single sentence.
 
 </details>
 
-### 📄 Patch repair
+### 📄 Patch Repair
 
 _Apply malformed edits._
 
@@ -437,7 +437,7 @@ Apply the attached changes to the file without explanations or any other text.
 
 </details>
 
-### 📄 Voice input
+### 📄 Voice Input
 
 _Transcribe speech-to-text with file awareness._
 
