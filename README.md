@@ -23,9 +23,11 @@
 
 ## Introduction
 
-Autofill 15+ free chatbots, send API requests, or invoke agentic CLIs with CWC-constructed, [lean markdown prompts](#prompts) covering all common use cases. Without ever-growing sessions and limiting the use of tool calling\*, **CWC** creates a workflow that is at the frontier of speed, token efficiency, and accuracy.
+Autofill 15+ free chatbots, send API requests, or invoke agentic CLIs with **CWC**-constructed, [lean markdown prompts](#prompts) for all common use cases. Without ever-growing sessions and limiting the use of tool calling\*, **CWC** creates a workflow that is at the frontier of speed, token efficiency, and accuracy.
 
-<sub>\*Only [Agentic Search](#-agentic-search) call tools for codebase discovery.</sub>
+**Expect less _thinking_, quotas lasting 10x longer and mid-tier models getting the job done!**
+
+<sub>\*Only [Agentic Search](#-agentic-search) relies on tool calling for codebase discovery. Runs on-demand.</sub>
 
 ## Prompts
 
