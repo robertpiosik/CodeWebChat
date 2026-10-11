@@ -19,11 +19,11 @@
 
 ## Privacy-first
 
-100% local operation means no code, prompts or usage data are collected.
+100% local operation means no code, prompts, or usage data are collected.
 
 ## Introduction
 
-Autofill 15+ free chatbots, send API requests, or invoke agentic CLIs with markdown [prompts](#prompts) for all common use cases. Without ever-growing sessions and limited use of tool calling\*, **CWC** creates a workflow that is at the frontier of speed, token efficiency, and accuracy.
+Autofill 15+ free chatbots, send API requests, or invoke agentic CLIs with CWC-constructed, [lean markdown prompts](#prompts) covering all common use cases. Without ever-growing sessions and limited use of tool calling\*, **CWC** creates a workflow that is at the frontier of speed, token efficiency, and accuracy.
 
 <sub>\*Only [Agentic Search](#-agentic-search) call tools for codebase discovery.</sub>
 
