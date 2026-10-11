@@ -25,7 +25,7 @@
 
 Autofill 15+ free chatbots, send API requests or invoke agentic CLIs with CWC-constructed markdown [prompts](#prompts) for all common use cases. With its limited use of tool calling\*, **CWC** creates a workflow that is at the frontier of speed, token efficiency, and accuracy.
 
-<sub>\* only [Agentic Search](#-agentic-search) and applying edits in the CLI target call tools</sub>
+<sub>\*only [Agentic Search](#-agentic-search) and applying edits in the CLI target call tools</sub>
 
 ## Prompts
 
