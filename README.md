@@ -21,9 +21,9 @@
 
 100% local operation means no code, prompts or usage data are collected.
 
-## Sessionless design
+## Introduction
 
-Instead of working in an ever-growing sessions, **CWC** helps you construct lean markdown prompts for one-off, cache-friendly messages. Expect less _thinking_, longer lasting quotas and zero drops in intelligence!
+Autofill 15+ free chatbots, send API requests or invoke agentic CLIs with CWC-constructed markdown prompts prepared for all common use cases.
 
 ## Prompts
 
