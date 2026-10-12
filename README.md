@@ -23,7 +23,7 @@
 
 ## Introduction
 
-Autofill 15+ free chatbots, send API requests, or invoke agentic CLIs with **CWC**-constructed, [lean markdown prompts](#prompts). Without ever-growing sessions and minimal use of tool calling, **CWC** creates a workflow that is at the frontier of speed, token efficiency, and accuracy.
+Autofill 15+ free chatbots, send API requests, or invoke agentic CLIs with **CWC**-constructed, [lean markdown prompts](#prompts). Without ever-growing sessions, **CWC** creates a workflow that is at the frontier of speed, token efficiency, and accuracy.
 
 ## Prompts
 
