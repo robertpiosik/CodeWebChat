@@ -13,7 +13,7 @@
 
 <p align="center"><strong>Blazing fast AI coding with static context</strong></p>
 
-<p align="center">autofill 15+ free chatbots · send API requests · invoke agentic CLIs</br><i>free, independent, privacy-first</i></p>
+<p align="center">VS Code · Cursor · Antigravity</br><i>chatbots · APIs · CLIs</i></br><i>free, independent, privacy-first</i></p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
