@@ -28,7 +28,7 @@ Use popular chatbots in your browser, send API requests, or invoke agentic CLIs 
 <details>
 <summary>Automated context selection</summary>
 
-CWC can invoke your favorite agentic CLI with [Agentic Search prompt](#-agentic-search). All keyword-matched files that don't make sense for the task are filtered out and don't clutter the context window.
+CWC can invoke your favorite agentic CLI with [Agentic Search prompt](#-agentic-search) with current task instructions or custom query. All keyword-matched files that don't make sense are filtered out and don't clutter the context window.
 
 </details>
 
