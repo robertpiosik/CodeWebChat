@@ -27,7 +27,7 @@ Autofill 15+ free chatbots, send API requests, or invoke agentic CLIs with **CWC
 
 **First-class support for prompt caching**
 
-To maximize prompt cache hits, unchanged files come first, followed by recently modified files and task instructions at the very end.
+To maximize prompt cache hits in markdowns including selected files, unchanged files come first, followed by recently modified files and task instructions at the very end.
 
 **Effective steering with examples**
 
