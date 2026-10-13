@@ -98,7 +98,8 @@ export const CHATBOTS = {
     models: {
       'flash-lite': { label: 'Flash-Lite' },
       flash: { label: 'Flash' },
-      pro: { label: 'Pro' }
+      pro: { label: 'Pro' },
+      argon: { label: 'Argon' }
     }
   } as Chatbot,
   'GitHub Copilot': {
