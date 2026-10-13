@@ -23,7 +23,7 @@
 
 ## Introduction
 
-Autofill 15+ free chatbots, send API requests, or invoke agentic CLIs with **CWC**-constructed, [lean markdown prompts](#prompts). Without ever-growing sessions, **CWC** proposes a workflow that is at the frontier of speed, token efficiency, and accuracy.
+Autofill 15+ free chatbots, send API requests, or invoke agentic CLIs with **CWC**-constructed, [lean markdown prompts](#prompts). Because context files come from a file tree rather than an ever-growing session, the model focuses on the problem from the start, generating accurate responses in seconds.
 
 ## Prompts
 
