@@ -27,7 +27,8 @@ export const get_patch_repair_config = async (params: {
     last_used_state_key: LAST_USED_PATCH_REPAIR_CONFIG_ID_STATE_KEY,
     default_api_configuration:
       await params.providers_manager.get_default_patch_repair_api_configuration(),
-    caller_name: 'get_patch_repair_config'
+    caller_name: 'get_patch_repair_config',
+    auto_select_last_used: false
   })
 
   if (!result || result === 'back') {
