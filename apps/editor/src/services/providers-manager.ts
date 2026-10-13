@@ -83,7 +83,7 @@ export class ProvidersManager {
     }
   }
 
-  public async save_providers(providers: Provider[]) {
+  async save_providers(providers: Provider[]) {
     try {
       await this._extension_context.secrets.store(
         SECRET_STORAGE_PROVIDERS_KEY,
@@ -118,12 +118,12 @@ export class ProvidersManager {
     }
   }
 
-  public async get_providers(): Promise<Provider[]> {
+  async get_providers(): Promise<Provider[]> {
     await this._load_promise
     return this._providers
   }
 
-  public async get_provider(name: string): Promise<Provider | undefined> {
+  async get_provider(name: string): Promise<Provider | undefined> {
     await this._load_promise
     return this._providers.find((provider) => provider.name == name)
   }
@@ -144,7 +144,7 @@ export class ProvidersManager {
     return api_configuration
   }
 
-  public async get_api_configurations(): Promise<ApiConfiguration[]> {
+  async get_api_configurations(): Promise<ApiConfiguration[]> {
     await this._load_promise
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const settings_configs = config.get<ConfigApiConfigurationFormat[]>(
@@ -168,7 +168,7 @@ export class ProvidersManager {
     )
   }
 
-  public async save_api_configurations(api_configurations: ApiConfiguration[]) {
+  async save_api_configurations(api_configurations: ApiConfiguration[]) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const old_settings_configs = config.get<ConfigApiConfigurationFormat[]>(
       'models',
@@ -276,7 +276,7 @@ export class ProvidersManager {
     )
   }
 
-  public async get_default_code_at_cursor_api_configuration(): Promise<
+  async get_default_code_at_cursor_api_configuration(): Promise<
     ApiConfiguration | undefined
   > {
     await this._load_promise
@@ -285,7 +285,7 @@ export class ProvidersManager {
     )
   }
 
-  public async set_default_code_at_cursor_api_configuration(
+  async set_default_code_at_cursor_api_configuration(
     api_configuration: ApiConfiguration | null
   ) {
     await this._set_default_api_configuration_in_settings(
@@ -294,7 +294,7 @@ export class ProvidersManager {
     )
   }
 
-  public async get_default_patch_repair_api_configuration(): Promise<
+  async get_default_patch_repair_api_configuration(): Promise<
     ApiConfiguration | undefined
   > {
     await this._load_promise
@@ -303,7 +303,7 @@ export class ProvidersManager {
     )
   }
 
-  public async set_default_patch_repair_api_configuration(
+  async set_default_patch_repair_api_configuration(
     api_configuration: ApiConfiguration | null
   ) {
     await this._set_default_api_configuration_in_settings(
@@ -312,7 +312,7 @@ export class ProvidersManager {
     )
   }
 
-  public async get_default_voice_input_api_configuration(): Promise<
+  async get_default_voice_input_api_configuration(): Promise<
     ApiConfiguration | undefined
   > {
     await this._load_promise
@@ -321,7 +321,7 @@ export class ProvidersManager {
     )
   }
 
-  public async set_default_voice_input_api_configuration(
+  async set_default_voice_input_api_configuration(
     api_configuration: ApiConfiguration | null
   ) {
     await this._set_default_api_configuration_in_settings(
@@ -330,7 +330,7 @@ export class ProvidersManager {
     )
   }
 
-  public async get_default_intelligent_search_api_configuration(): Promise<
+  async get_default_intelligent_search_api_configuration(): Promise<
     ApiConfiguration | undefined
   > {
     await this._load_promise
@@ -339,7 +339,7 @@ export class ProvidersManager {
     )
   }
 
-  public async set_default_intelligent_search_api_configuration(
+  async set_default_intelligent_search_api_configuration(
     api_configuration: ApiConfiguration | null
   ) {
     await this._set_default_api_configuration_in_settings(
@@ -348,7 +348,7 @@ export class ProvidersManager {
     )
   }
 
-  public async get_default_commit_message_api_configuration(): Promise<
+  async get_default_commit_message_api_configuration(): Promise<
     ApiConfiguration | undefined
   > {
     await this._load_promise
@@ -357,7 +357,7 @@ export class ProvidersManager {
     )
   }
 
-  public async set_default_commit_message_api_configuration(
+  async set_default_commit_message_api_configuration(
     api_configuration: ApiConfiguration | null
   ) {
     await this._set_default_api_configuration_in_settings(
@@ -366,7 +366,7 @@ export class ProvidersManager {
     )
   }
 
-  public async update_provider_name_in_api_configurations(params: {
+  async update_provider_name_in_api_configurations(params: {
     old_name: string
     new_name: string
   }): Promise<void> {

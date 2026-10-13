@@ -25,7 +25,7 @@ type ApiResponse = {
 export class ModelFetcher {
   private _fetched_providers: ProviderModels = {}
 
-  public async get_models(params: {
+  async get_models(params: {
     base_url: string
     api_key?: string
   }): Promise<Model[]> {

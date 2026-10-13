@@ -79,7 +79,7 @@ export class SettingsViewProvider {
     public readonly extension_context: vscode.ExtensionContext
   ) {}
 
-  public createOrShow(section_to_show?: string) {
+  createOrShow(section_to_show?: string) {
     const column = vscode.window.activeTextEditor
       ? vscode.window.activeTextEditor.viewColumn
       : undefined
@@ -301,7 +301,7 @@ export class SettingsViewProvider {
     )
   }
 
-  public postMessage(message: BackendMessage) {
+  postMessage(message: BackendMessage) {
     if (this._webview_panel) {
       this._webview_panel.webview.postMessage(message)
     }

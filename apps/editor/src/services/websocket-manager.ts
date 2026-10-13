@@ -371,7 +371,7 @@ export class WebSocketManager {
     })
   }
 
-  public async initialize_chat(params: {
+  async initialize_chat(params: {
     text: string
     web_configuration_name: string
     raw_instructions?: string
@@ -478,7 +478,7 @@ export class WebSocketManager {
     return true
   }
 
-  public async preview_web_configuration(params: {
+  async preview_web_configuration(params: {
     instruction: string
     web_configuration: WebConfiguration
     raw_instructions: string

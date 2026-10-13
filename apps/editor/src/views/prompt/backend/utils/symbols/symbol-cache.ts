@@ -9,12 +9,12 @@ export interface SymbolCacheEntry {
 export class SymbolCacheManager {
   private cache = new Map<string, SymbolCacheEntry>()
 
-  public get(key: string): SymbolCacheEntry | undefined {
+  get(key: string): SymbolCacheEntry | undefined {
     this.clear_old_entries()
     return this.cache.get(key)
   }
 
-  public set(key: string, replacement: string, definitions: string = ''): void {
+  set(key: string, replacement: string, definitions: string = ''): void {
     this.cache.set(key, {
       replacement,
       definitions,
@@ -22,7 +22,7 @@ export class SymbolCacheManager {
     })
   }
 
-  public clear_old_entries(): void {
+  clear_old_entries(): void {
     const now = Date.now()
     for (const [key, entry] of this.cache.entries()) {
       if (now - entry.timestamp >= SYMBOL_CACHE_DURATION) {
@@ -31,7 +31,7 @@ export class SymbolCacheManager {
     }
   }
 
-  public clear(): void {
+  clear(): void {
     this.cache.clear()
   }
 }

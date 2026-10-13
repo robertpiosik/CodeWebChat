@@ -31,13 +31,13 @@ export class ChatsViewProvider implements vscode.WebviewViewProvider {
       ) || []
   }
 
-  public set_prompt_view_api_calls_manager(
+  set_prompt_view_api_calls_manager(
     prompt_view_api_calls_manager: PromptViewApiCallsManager
   ) {
     this.prompt_view_api_calls_manager = prompt_view_api_calls_manager
   }
 
-  public add_chat(chat: ApiChatResult) {
+  add_chat(chat: ApiChatResult) {
     this.chats.push(chat)
     this.extension_context.workspaceState.update(
       CHATS_VIEW_CHAT_HISTORY_STATE_KEY,
@@ -49,7 +49,7 @@ export class ChatsViewProvider implements vscode.WebviewViewProvider {
     })
   }
 
-  public send_message(message: BackendMessage) {
+  send_message(message: BackendMessage) {
     if (this.webview_view) {
       this.webview_view.webview.postMessage(message)
     }

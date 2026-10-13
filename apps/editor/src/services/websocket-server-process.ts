@@ -290,7 +290,7 @@ class WebSocketServer {
     }
   }
 
-  public start() {
+  start() {
     this.server.listen(DEFAULT_PORT, () => {
       console.log(
         `WebSocket server is running on ws://localhost:${DEFAULT_PORT}`

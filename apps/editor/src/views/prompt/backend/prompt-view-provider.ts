@@ -189,7 +189,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
   public audio_chunks: Buffer[] = []
   public recording_start_time: number = 0
 
-  public get current_ask_about_context_instruction(): string {
+  get current_ask_about_context_instruction(): string {
     return (
       this.ask_about_context_instructions.instructions[
         this.ask_about_context_instructions.active_index
@@ -197,7 +197,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     )
   }
 
-  public get current_edit_files_instruction(): string {
+  get current_edit_files_instruction(): string {
     return (
       this.edit_files_instructions.instructions[
         this.edit_files_instructions.active_index
@@ -205,7 +205,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     )
   }
 
-  public get prompt_type(): WebPromptType | ApiPromptType | CliPromptType {
+  get prompt_type(): WebPromptType | ApiPromptType | CliPromptType {
     return this.target == 'WEB'
       ? this.web_prompt_type
       : this.target == 'API'
@@ -213,14 +213,14 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
         : this.cli_prompt_type
   }
 
-  public get active_instructions_state(): InstructionsState {
+  get active_instructions_state(): InstructionsState {
     const type = this.prompt_type
     if (type == 'ask') return this.ask_about_context_instructions
     if (type == 'edit') return this.edit_files_instructions
     return this.edit_files_instructions
   }
 
-  public get current_instructions(): string {
+  get current_instructions(): string {
     const state = this.active_instructions_state
     return state.instructions[state.active_index] || ''
   }
@@ -231,7 +231,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     | ((choice: 'Switch' | undefined) => void)
     | undefined = undefined
 
-  public set_prompt_view_api_calls_manager(
+  set_prompt_view_api_calls_manager(
     prompt_view_api_calls_manager: PromptViewApiCallsManager
   ) {
     this.prompt_view_api_calls_manager = prompt_view_api_calls_manager
@@ -264,7 +264,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     })
   }
 
-  public async send_setup_progress() {
+  async send_setup_progress() {
     const providers_manager = new ProvidersManager(this.extension_context)
     const [providers, configs] = await Promise.all([
       providers_manager.get_providers(),
@@ -280,7 +280,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     })
   }
 
-  public send_currently_open_file_text() {
+  send_currently_open_file_text() {
     const active_editor = vscode.window.activeTextEditor
     this.send_message({
       command: 'CURRENTLY_OPEN_FILE_TEXT',
@@ -554,13 +554,13 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     )
   }
 
-  public cancel_all_patch_repairs() {
+  cancel_all_patch_repairs() {
     const controllers = [...this.patch_repair_abort_controllers]
     this.patch_repair_abort_controllers = []
     controllers.forEach((item) => item.controller.abort('Preview finished.'))
   }
 
-  public async send_token_count() {
+  async send_token_count() {
     const edit_instructions_result = await replace_symbols({
       instructions: [
         this.current_edit_files_instruction.trim(),
@@ -601,7 +601,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     })
   }
 
-  public send_selected_files() {
+  send_selected_files() {
     const file_paths = get_selected_files({
       workspace_provider: this.workspace_provider,
       shared_context_state: this.shared_context_state
@@ -622,7 +622,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     )
   }
 
-  public send_message(message: BackendMessage) {
+  send_message(message: BackendMessage) {
     if (this.webview_view) {
       this.webview_view.webview.postMessage(message)
     }
@@ -631,7 +631,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     }
   }
 
-  public show_preview_ongoing_modal() {
+  show_preview_ongoing_modal() {
     const items_without_files_count = this.response_history.filter(
       (item) => item.files === undefined
     ).length
@@ -943,7 +943,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     )
   }
 
-  public send_cli_configurations_to_webview(_: vscode.Webview) {
+  send_cli_configurations_to_webview(_: vscode.Webview) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
 
     const cli_configurations_config =
@@ -975,7 +975,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     })
   }
 
-  public send_web_configurations_to_webview(_: vscode.Webview) {
+  send_web_configurations_to_webview(_: vscode.Webview) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
 
     const web_configurations_config =
@@ -1029,7 +1029,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     })
   }
 
-  public set_undo_button_state = (can_undo: boolean) => {
+  set_undo_button_state = (can_undo: boolean) => {
     this.send_message({
       command: 'CAN_UNDO_CHANGED',
       can_undo
@@ -1045,7 +1045,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     })
   }
 
-  public add_text_at_cursor_position(text: string, chars_to_remove_before = 0) {
+  add_text_at_cursor_position(text: string, chars_to_remove_before = 0) {
     const target_state = this.active_instructions_state
     const current_instructions = this.current_instructions
 

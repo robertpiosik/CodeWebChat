@@ -70,7 +70,7 @@ export class OpenEditorsProvider
     }, 500)
   }
 
-  public update_workspace_folders(
+  update_workspace_folders(
     workspace_folders: readonly vscode.WorkspaceFolder[]
   ) {
     this._workspace_roots = workspace_folders

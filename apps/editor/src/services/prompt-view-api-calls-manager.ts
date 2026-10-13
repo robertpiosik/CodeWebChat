@@ -27,7 +27,7 @@ export class PromptViewApiCallsManager {
     this.chats_view_provider.send_message(message)
   }
 
-  public async send_llm_message(params: {
+  async send_llm_message(params: {
     base_url: string
     api_key: string
     body: any
@@ -230,7 +230,7 @@ export class PromptViewApiCallsManager {
     )
   }
 
-  public cancel_api_call(request_id: string) {
+  cancel_api_call(request_id: string) {
     const controller = this.abort_controllers.get(request_id)
     if (controller) {
       controller.abort('Cancelled by user.')
@@ -238,7 +238,7 @@ export class PromptViewApiCallsManager {
     }
   }
 
-  public cancel_all_requests() {
+  cancel_all_requests() {
     this.abort_controllers.forEach((controller) => {
       controller.abort('Cancelled by user.')
     })

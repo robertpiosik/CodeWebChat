@@ -82,15 +82,13 @@ export class WorkspaceProvider
   private _is_file_watcher_paused = false
   private _resume_file_watcher_timeout: NodeJS.Timeout | null = null
 
-  public set_selected_files_view_collapsible_state(
+  set_selected_files_view_collapsible_state(
     state: vscode.TreeItemCollapsibleState
   ) {
     this._selected_files_view_collapsible_state = state
   }
 
-  public set_workspace_view_collapsible_state(
-    state: vscode.TreeItemCollapsibleState
-  ) {
+  set_workspace_view_collapsible_state(state: vscode.TreeItemCollapsibleState) {
     this._workspace_view_collapsible_state = state
   }
 
@@ -165,7 +163,7 @@ export class WorkspaceProvider
     )
   }
 
-  public load_selected_files_state() {
+  load_selected_files_state() {
     const load = async () => {
       const reg_paths = this._extension_context.workspaceState.get<string[]>(
         CONTEXT_SELECTED_PATHS_STATE_KEY
@@ -186,7 +184,7 @@ export class WorkspaceProvider
     load()
   }
 
-  public get_export_state() {
+  get_export_state() {
     return {
       selected_files: Array.from(this._checked_items.entries())
         .filter(([, state]) => state == vscode.TreeItemCheckboxState.Checked)
@@ -195,11 +193,11 @@ export class WorkspaceProvider
     }
   }
 
-  public get_selection_timestamp(path: string): number | undefined {
+  get_selection_timestamp(path: string): number | undefined {
     return this._selected_timestamps.get(path)
   }
 
-  public get_workspace_root_for_file(file_path: string): string | undefined {
+  get_workspace_root_for_file(file_path: string): string | undefined {
     if (this._file_workspace_map.has(file_path)) {
       return this._file_workspace_map.get(file_path)
     }
@@ -262,7 +260,7 @@ export class WorkspaceProvider
     }
   }
 
-  public dispose() {
+  dispose() {
     this._watcher.dispose()
     this._ranges_watcher.dispose()
     this._gitignore_watcher.dispose()
@@ -339,7 +337,7 @@ export class WorkspaceProvider
     }
   }
 
-  public mark_opened_from_workspace_view(file_path: string) {
+  mark_opened_from_workspace_view(file_path: string) {
     this._opened_from_workspace_view.add(file_path)
   }
 
@@ -357,11 +355,11 @@ export class WorkspaceProvider
     return open_uris
   }
 
-  public get_workspace_roots(): string[] {
+  get_workspace_roots(): string[] {
     return this._workspace_roots
   }
 
-  public get_workspace_name(root_path: string): string {
+  get_workspace_name(root_path: string): string {
     const index = this._workspace_roots.indexOf(root_path)
     if (index !== -1) {
       return this._workspace_names[index]
@@ -369,7 +367,7 @@ export class WorkspaceProvider
     return path.basename(root_path)
   }
 
-  public pause_file_watcher(): void {
+  pause_file_watcher(): void {
     if (this._resume_file_watcher_timeout) {
       clearTimeout(this._resume_file_watcher_timeout)
       this._resume_file_watcher_timeout = null
@@ -377,7 +375,7 @@ export class WorkspaceProvider
     this._is_file_watcher_paused = true
   }
 
-  public resume_file_watcher(): void {
+  resume_file_watcher(): void {
     if (this._resume_file_watcher_timeout) {
       clearTimeout(this._resume_file_watcher_timeout)
     }
@@ -400,7 +398,7 @@ export class WorkspaceProvider
     return true
   }
 
-  public invalidate_token_counts_for_file(changed_file_path: string) {
+  invalidate_token_counts_for_file(changed_file_path: string) {
     this._token_calculator.invalidate_token_counts_for_file(changed_file_path)
   }
 
@@ -517,7 +515,7 @@ export class WorkspaceProvider
     this._schedule_refresh()
   }
 
-  public refresh() {
+  refresh() {
     if (this._refresh_timeout) {
       clearTimeout(this._refresh_timeout)
       this._refresh_timeout = null
@@ -535,7 +533,7 @@ export class WorkspaceProvider
     }, 1500)
   }
 
-  public async clear_selected_files(): Promise<void> {
+  async clear_selected_files(): Promise<void> {
     this._checked_items.clear()
     this._selected_timestamps.clear()
     this._partially_selected_dirs.clear()
@@ -606,7 +604,7 @@ export class WorkspaceProvider
     return element
   }
 
-  public async getChildren(element?: FileItem): Promise<FileItem[]> {
+  async getChildren(element?: FileItem): Promise<FileItem[]> {
     await this.gitignore_initialization
     await this.ranges_initialization
 
@@ -653,9 +651,7 @@ export class WorkspaceProvider
     }
   }
 
-  public async getSelectedFilesViewChildren(
-    element?: FileItem
-  ): Promise<FileItem[]> {
+  async getSelectedFilesViewChildren(element?: FileItem): Promise<FileItem[]> {
     await this.gitignore_initialization
     await this.ranges_initialization
 
@@ -760,7 +756,7 @@ export class WorkspaceProvider
     }
     return items
   }
-  public async load_all_ranges(): Promise<void> {
+  async load_all_ranges(): Promise<void> {
     if (this._check_file_watcher_paused()) return
 
     this._file_ranges.clear()
@@ -823,11 +819,11 @@ export class WorkspaceProvider
     return undefined
   }
 
-  public get_range(filePath: string): string | undefined {
+  get_range(filePath: string): string | undefined {
     return this._file_ranges.get(filePath)
   }
 
-  public apply_range_to_content(content: string, range_string: string): string {
+  apply_range_to_content(content: string, range_string: string): string {
     const lines = content.split(/\r?\n/)
     const total_lines = lines.length
     const included_lines = new Set<number>()
@@ -857,13 +853,13 @@ export class WorkspaceProvider
     return sorted_indices.map((i) => lines[i - 1]).join('\n')
   }
 
-  public get_cached_token_count(
+  get_cached_token_count(
     file_path: string
   ): { total: number; shrink: number } | undefined {
     return this._token_calculator.get_cached_token_count(file_path)
   }
 
-  public async calculate_file_tokens(
+  async calculate_file_tokens(
     file_path: string
   ): Promise<{ total: number; shrink: number }> {
     return this._token_calculator.calculate_file_tokens(file_path)
@@ -1018,7 +1014,7 @@ export class WorkspaceProvider
     return items
   }
 
-  public async update_checkbox_state(
+  async update_checkbox_state(
     item: FileItem,
     state: vscode.TreeItemCheckboxState
   ): Promise<void> {
@@ -1250,13 +1246,13 @@ export class WorkspaceProvider
     }
   }
 
-  public get_checkbox_state(path: string): vscode.TreeItemCheckboxState {
+  get_checkbox_state(path: string): vscode.TreeItemCheckboxState {
     return (
       this._checked_items.get(path) ?? vscode.TreeItemCheckboxState.Unchecked
     )
   }
 
-  public get_selected_files(): string[] {
+  get_selected_files(): string[] {
     return Array.from(this._checked_items.entries())
       .filter(
         ([file_path, state]) =>
@@ -1273,13 +1269,13 @@ export class WorkspaceProvider
       .map(([path, _]) => path)
   }
 
-  public get_all_selected_paths(): string[] {
+  get_all_selected_paths(): string[] {
     return Array.from(this._checked_items.entries())
       .filter(([, state]) => state == vscode.TreeItemCheckboxState.Checked)
       .map(([path]) => path)
   }
 
-  public async set_selected_files(
+  async set_selected_files(
     file_paths: string[],
     timestamps?: Map<string, number>
   ): Promise<void> {
@@ -1433,7 +1429,7 @@ export class WorkspaceProvider
     this._dispatch_change_events()
   }
 
-  public is_excluded(relative_path: string): boolean {
+  is_excluded(relative_path: string): boolean {
     if (!relative_path || relative_path.trim() == '') {
       return false
     }
@@ -1472,7 +1468,7 @@ export class WorkspaceProvider
     this._token_calculator.clear_caches()
   }
 
-  public is_ignored_by_patterns(file_path: string): boolean {
+  is_ignored_by_patterns(file_path: string): boolean {
     const workspace_root = this.get_workspace_root_for_file(file_path)
     if (!workspace_root) {
       const basename = path.basename(file_path)
@@ -1490,17 +1486,17 @@ export class WorkspaceProvider
     return this._user_ignore_patterns.ignores(relative_path)
   }
 
-  public is_partially_selected(path: string): boolean {
+  is_partially_selected(path: string): boolean {
     return this._partially_selected_dirs.has(path)
   }
 
-  public async get_selected_files_token_count(options?: {
+  async get_selected_files_token_count(options?: {
     exclude_file_path?: string
   }): Promise<{ total: number; shrink: number }> {
     return this._token_calculator.get_selected_files_token_count(options)
   }
 
-  public async find_all_files(root_path: string): Promise<string[]> {
+  async find_all_files(root_path: string): Promise<string[]> {
     const files: string[] = []
     const visited = new Set<string>()
 
@@ -1572,7 +1568,7 @@ export class WorkspaceProvider
     return files
   }
 
-  public async get_all_files_for_uri(uri: vscode.Uri): Promise<vscode.Uri[]> {
+  async get_all_files_for_uri(uri: vscode.Uri): Promise<vscode.Uri[]> {
     try {
       const stat = await vscode.workspace.fs.stat(uri)
       if (stat.type & vscode.FileType.File) {
@@ -1614,7 +1610,7 @@ export class WorkspaceProvider
     return []
   }
 
-  public async update_workspace_folders(
+  async update_workspace_folders(
     workspace_folders: readonly vscode.WorkspaceFolder[]
   ): Promise<void> {
     const selected_paths = this.get_all_selected_paths()
