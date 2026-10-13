@@ -82,7 +82,8 @@ export const Responses: React.FC<Props> = (props) => {
             </div>
             <div className={styles['responses__item__content__right']}>
               {item.lines_added !== undefined &&
-                item.lines_removed !== undefined && (
+                item.lines_removed !== undefined &&
+                (item.lines_added > 0 || item.lines_removed > 0) && (
                   <div
                     className={styles['responses__item__content__right__stats']}
                   >

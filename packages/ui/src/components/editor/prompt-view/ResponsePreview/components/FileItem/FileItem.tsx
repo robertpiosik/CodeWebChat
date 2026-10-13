@@ -168,16 +168,24 @@ export const FileItem: FC<Props> = (props) => {
           ) : (
             <>
               <div className={styles['file__line-numbers']}>
-                {props.file.file_state != 'deleted' && (
-                  <span className={styles['file__line-numbers__added']}>
-                    +{props.file.lines_added}
-                  </span>
-                )}
-                {props.file.file_state != 'new' && (
-                  <span className={styles['file__line-numbers__removed']}>
-                    -{props.file.lines_removed}
-                  </span>
-                )}
+                {props.file.file_state != 'deleted' &&
+                  !(
+                    props.file.file_state == 'new' &&
+                    props.file.lines_added == 0
+                  ) && (
+                    <span className={styles['file__line-numbers__added']}>
+                      +{props.file.lines_added}
+                    </span>
+                  )}
+                {props.file.file_state != 'new' &&
+                  !(
+                    props.file.file_state == 'deleted' &&
+                    props.file.lines_removed == 0
+                  ) && (
+                    <span className={styles['file__line-numbers__removed']}>
+                      -{props.file.lines_removed}
+                    </span>
+                  )}
               </div>
               <div className={styles['file__actions']}>
                 {props.file.content !== undefined &&
