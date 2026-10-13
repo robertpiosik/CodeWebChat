@@ -76,6 +76,12 @@ export const generate_commit_message_with_api = async (params: {
         }
 
         let commit_message = response_result.response
+        const match = commit_message.match(
+          /\*\*Commit message:\*\*\s*([\s\S]*)/i
+        )
+        if (match) {
+          commit_message = match[1].trim()
+        }
         commit_message = strip_wrapping_quotes(commit_message)
         // Sanitize to prevent shell syntax errors
         commit_message = commit_message.replace(/[<>`$()]/g, '')
