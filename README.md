@@ -31,7 +31,7 @@ To maximize prompt cache hits in markdowns including selected files, unchanged f
 
 **Effective steering with examples**
 
-Here, agentic codebase discovery is isolated and runs on-demand, so you can include examples from the codebase that the model should be inspired by, without introducing task-irrelevant instructions.
+Here, agentic codebase discovery is isolated and runs on-demand. Include examples from the codebase that the model should be inspired by, without polluting the context window with task-irrelevant instructions.
 
 ## Prompts
 
