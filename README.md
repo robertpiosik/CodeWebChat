@@ -23,7 +23,7 @@
 
 ## Introduction
 
-Autofill 15+ free chatbots, send API requests, or invoke agentic CLIs with **CWC**-constructed, [lean markdown prompts](#prompts). Because context files come from a file tree rather than an ever-growing session, the model focuses on the problem from the start, generating accurate responses in seconds.
+Autofill 15+ free chatbots, send API requests, or invoke agentic CLIs with **CWC**-constructed, lean [markdown prompts](#markdown-prompts). Because context files come from a file tree rather than an ever-growing session, the model focuses on the problem from the start, generating accurate responses in seconds.
 
 **First-class support for prompt caching**
 
@@ -33,7 +33,7 @@ In markdowns that include selected files, to maximize prompt cache hits, unchang
 
 Here, agentic codebase discovery is isolated and runs on-demand. Include examples from the codebase that the model should be inspired by, without polluting the context window with task-irrelevant instructions.
 
-## Prompts
+## Markdown Prompts
 
 ### 📄 Agentic Search
 
