@@ -23,7 +23,7 @@
 
 ## Introduction
 
-Use popular chatbots in your browser, send API requests, or invoke agentic CLIs with CWC-constructed, lean [markdown prompts](#markdown-prompts). With a simple checkbox tick on a file tree, the context for the task is set. The model focused on the task from the start generates accurate responses in seconds.
+Use popular chatbots in your browser, send API requests, or invoke agentic CLIs with CWC-constructed, lean [markdown prompts](#markdown-prompts). With a simple checkbox tick on a file tree, the context for the task is set and without any tool calling, the model generates accurate response in seconds.
 
 **Automated context selection**
 
