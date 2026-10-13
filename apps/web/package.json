@@ -8,6 +8,18 @@
     "test:watch": "jest --watch",
     "lint": "next lint"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "@formatjs/intl-localematcher": "^0.5.4",
+    "negotiator": "^0.6.3",
+    "next": "^14.2.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/negotiator": "^0.6.3",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.0.0"
+  }
 }
