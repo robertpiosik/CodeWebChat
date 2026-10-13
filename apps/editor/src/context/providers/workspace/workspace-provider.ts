@@ -80,6 +80,7 @@ export class WorkspaceProvider
   private _workspace_view_collapsible_state: vscode.TreeItemCollapsibleState =
     vscode.TreeItemCollapsibleState.Collapsed
   private _is_file_watcher_paused = false
+  private _resume_file_watcher_timeout: NodeJS.Timeout | null = null
 
   public set_selected_files_view_collapsible_state(
     state: vscode.TreeItemCollapsibleState
@@ -273,6 +274,9 @@ export class WorkspaceProvider
     if (this._refresh_timeout) {
       clearTimeout(this._refresh_timeout)
     }
+    if (this._resume_file_watcher_timeout) {
+      clearTimeout(this._resume_file_watcher_timeout)
+    }
 
     this._token_calculator.dispose()
   }
@@ -366,12 +370,34 @@ export class WorkspaceProvider
   }
 
   public pause_file_watcher(): void {
+    if (this._resume_file_watcher_timeout) {
+      clearTimeout(this._resume_file_watcher_timeout)
+      this._resume_file_watcher_timeout = null
+    }
     this._is_file_watcher_paused = true
   }
 
   public resume_file_watcher(): void {
-    this._is_file_watcher_paused = false
+    if (this._resume_file_watcher_timeout) {
+      clearTimeout(this._resume_file_watcher_timeout)
+    }
+    this._resume_file_watcher_timeout = setTimeout(() => {
+      this._is_file_watcher_paused = false
+      this._resume_file_watcher_timeout = null
+    }, 500)
     this.refresh()
+  }
+
+  private _check_file_watcher_paused(): boolean {
+    if (!this._is_file_watcher_paused) return false
+    if (this._resume_file_watcher_timeout) {
+      clearTimeout(this._resume_file_watcher_timeout)
+      this._resume_file_watcher_timeout = setTimeout(() => {
+        this._is_file_watcher_paused = false
+        this._resume_file_watcher_timeout = null
+      }, 500)
+    }
+    return true
   }
 
   public invalidate_token_counts_for_file(changed_file_path: string) {
@@ -379,7 +405,7 @@ export class WorkspaceProvider
   }
 
   private _on_file_system_changed(changed_file_path?: string) {
-    if (this._is_file_watcher_paused) return
+    if (this._check_file_watcher_paused()) return
 
     if (!changed_file_path) return
 
@@ -421,7 +447,7 @@ export class WorkspaceProvider
   }
 
   private async _handle_file_create(created_file_path?: string): Promise<void> {
-    if (this._is_file_watcher_paused) return
+    if (this._check_file_watcher_paused()) return
 
     if (!created_file_path) return
 
@@ -735,7 +761,7 @@ export class WorkspaceProvider
     return items
   }
   public async load_all_ranges(): Promise<void> {
-    if (this._is_file_watcher_paused) return
+    if (this._check_file_watcher_paused()) return
 
     this._file_ranges.clear()
     for (const workspace_root of this._workspace_roots) {
@@ -1328,7 +1354,7 @@ export class WorkspaceProvider
   }
 
   private async _load_all_gitignore_files(): Promise<void> {
-    if (this._is_file_watcher_paused) return
+    if (this._check_file_watcher_paused()) return
 
     const gitignore_files: string[] = []
     const visited = new Set<string>()
