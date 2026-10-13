@@ -23,15 +23,28 @@
 
 ## Introduction
 
-Autofill 15+ free chatbots, send API requests, or invoke agentic CLIs with **CWC**-constructed, lean [markdown prompts](#markdown-prompts). Because context files come from a file tree rather than an ever-growing session, the model focuses on the problem from the start, generating accurate responses in seconds.
+Use popular chatbots in your browser, send API requests, or invoke agentic CLIs with CWC-constructed, lean [markdown prompts](#markdown-prompts). Because simple checkbox clicks on a file tree set context for the task, the model focuses on the problem from the start, generating accurate responses in seconds.
 
-**First-class support for prompt caching**
+<details>
+<summary>Automated context selection</summary>
+
+CWC can invoke your favorite agentic CLI with [Agentic Search prompt](#-agentic-search). All keyword-matched files that don't make sense for the task are filtered out and don't clutter the context window.
+
+</details>
+
+<details>
+<summary>First-class support for prompt caching</summary>
 
 In markdowns that include selected files, to maximize prompt cache hits, unchanged files come first, followed by recently modified files and task instructions at the very end.
 
-**Effective steering with examples**
+</details>
 
-Here, agentic codebase discovery ([_Agentic Search_](#-agentic-search)) runs on-demand. Include examples from the codebase that the model should be inspired by, without polluting the context window with task-irrelevant instructions.
+<details>
+<summary>Effective steering with examples</summary>
+
+_Check_ examples in the file tree the model should be inspired by and don't pollute the context window with additional instructions.
+
+</details>
 
 ## Markdown Prompts
 
