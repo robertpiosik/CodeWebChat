@@ -17,7 +17,8 @@ import {
   LAST_USED_COMMIT_MESSAGE_ACTION_STATE_KEY,
   LAST_USE_CONTEXT_FILES_STATE_KEY,
   LAST_USED_AGENT_FOR_COMMIT_MESSAGE_STATE_KEY,
-  LAST_SELECTED_WORKSPACE_FOR_COMMIT_MESSAGE_STATE_KEY
+  LAST_SELECTED_WORKSPACE_FOR_COMMIT_MESSAGE_STATE_KEY,
+  LAST_ACCEPTED_COMMIT_MESSAGE_STATE_KEY
 } from '@/constants/state-keys'
 import { get_prompt_data } from './get-prompt-data'
 import { display_token_count } from '@shared/utils/display-token-count'
@@ -524,7 +525,10 @@ export const run_generate_action = async (params: {
           commit_message = response_text
           action_completed = true
         } else if (action == 'manual') {
-          commit_message = await vscode.env.clipboard.readText()
+          commit_message = params.extension_context.workspaceState.get<string>(
+            LAST_ACCEPTED_COMMIT_MESSAGE_STATE_KEY,
+            ''
+          )
           action_completed = true
         } else {
           const api_configuration_data =
@@ -970,6 +974,10 @@ export const run_generate_action = async (params: {
       const commit_message_value =
         final_edited_message + selected_prompts_text + tree_text
       repository.inputBox.value = commit_message_value
+      await params.extension_context.workspaceState.update(
+        LAST_ACCEPTED_COMMIT_MESSAGE_STATE_KEY,
+        commit_message_value
+      )
       await vscode.commands.executeCommand('git.commit', repository)
       CommitMessageDetails.remove_committed_files({
         extension_context: params.extension_context,
@@ -994,8 +1002,13 @@ export const run_generate_action = async (params: {
               .map((p) => `- ${truncate_prompt(p.prompt)}`)
               .join('\n')
           : ''
-      repository.inputBox.value =
+      const commit_message_value =
         final_edited_message + prompts_text + tree_text
+      repository.inputBox.value = commit_message_value
+      await params.extension_context.workspaceState.update(
+        LAST_ACCEPTED_COMMIT_MESSAGE_STATE_KEY,
+        commit_message_value
+      )
     }
 
     break

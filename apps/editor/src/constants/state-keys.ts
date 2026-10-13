@@ -123,6 +123,8 @@ export const LAST_SELECTED_WORKSPACE_FOR_COMMIT_MESSAGE_STATE_KEY =
   'last-selected-workspace-for-commit-message'
 export const LAST_USED_AGENT_FOR_COMMIT_MESSAGE_STATE_KEY =
   'last-used-agent-for-commit-message'
+export const LAST_ACCEPTED_COMMIT_MESSAGE_STATE_KEY =
+  'last-accepted-commit-message'
 
 export const LAST_INTELLIGENT_FILE_SEARCH_SHRINK_STATE_KEY =
   'last-intelligent-file-search-shrink'
