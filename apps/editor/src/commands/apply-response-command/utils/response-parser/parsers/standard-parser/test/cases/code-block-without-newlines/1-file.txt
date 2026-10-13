@@ -1,0 +1,5 @@
+<<<<<<< SEARCH
+this is a sample file with some text line 3
+=======
+arr matey, this be a sample file with some treasure-text, line 3 o' the seven seas 🏴‍☠️
+>>>>>>> REPLACE

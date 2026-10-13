@@ -248,6 +248,22 @@ describe('standard-parser', () => {
       })
     })
 
+    it('parses code blocks without newlines after opening backticks or before closing backticks', () => {
+      const test_case = 'code-block-without-newlines'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'file',
+        file_path: 'test_file.txt',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+    })
+
     it('parses deleted file header', () => {
       const test_case = 'delete-file-header'
       const text = load_test_case_file(test_case, `${test_case}.txt`)

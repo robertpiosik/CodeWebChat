@@ -47,7 +47,14 @@ export const file_blocks_parser = (params: {
         current_text_block = ''
 
         const after_backticks = line.substring(backtick_index + 3).trim()
-        current_language = after_backticks.split(/[:\s{]/)[0]
+        const is_conflict_marker_on_opening_line =
+          after_backticks.startsWith('<<<<<<<')
+
+        if (is_conflict_marker_on_opening_line) {
+          current_language = ''
+        } else {
+          current_language = after_backticks.split(/[:\s{]/)[0]
+        }
 
         state = 'CONTENT'
         backtick_nesting_level = 1
@@ -91,7 +98,9 @@ export const file_blocks_parser = (params: {
             header_path_already_used = true
           }
         }
-        current_content = ''
+        current_content = is_conflict_marker_on_opening_line
+          ? after_backticks
+          : ''
         is_markdown_container_block = false
         continue
       }
