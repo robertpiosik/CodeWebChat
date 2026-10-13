@@ -25,9 +25,13 @@
 
 Autofill 15+ free chatbots, send API requests, or invoke agentic CLIs with **CWC**-constructed, [lean markdown prompts](#prompts). Because context files come from a file tree rather than an ever-growing session, the model focuses on the problem from the start, generating accurate responses in seconds.
 
-**First-class support for prompt cache**
+**First-class support for prompt caching**
 
-To maximize prompt cache hits, unchanged files first are placed first, appending recently modified files and task instructions at the very end.
+To maximize prompt cache hits, unchanged files come first, followed by recently modified files and task instructions at the very end.
+
+**Effective steering with examples**
+
+Here, agentic codebase discovery is isolated and runs on-demand, so you can include examples from the codebase that the model should be inspired by, without introducing task-irrelevant instructions.
 
 ## Prompts
 
