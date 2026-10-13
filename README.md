@@ -26,21 +26,21 @@
 Use popular chatbots in your browser, send API requests, or invoke agentic CLIs with CWC-constructed, lean [markdown prompts](#markdown-prompts). Because simple checkbox clicks on a file tree set context for the task, the model focuses on the problem from the start, generating accurate responses in seconds.
 
 <details>
-<summary>Automated context selection</summary>
+<summary><strong>Automated context selection</strong></summary>
 
 CWC can invoke your favorite agentic CLI with [Agentic Search prompt](#-agentic-search) with current task instructions or custom query. All keyword-matched files that don't make sense are filtered out and don't clutter the context window.
 
 </details>
 
 <details>
-<summary>First-class support for prompt caching</summary>
+<summary><strong>First-class support for prompt caching</strong></summary>
 
 In markdowns that include selected files, to maximize prompt cache hits, unchanged files come first, followed by recently modified files and task instructions at the very end.
 
 </details>
 
 <details>
-<summary>Effective steering with examples</summary>
+<summary><strong>Effective steering with examples</strong></summary>
 
 _Check_ examples in the file tree the model should be inspired by and don't pollute the context window with additional instructions.
 
@@ -53,7 +53,7 @@ _Check_ examples in the file tree the model should be inspired by and don't poll
 _Let your favorite agentic harness find task-relevant files._
 
 <details>
-<summary>CLI</summary>
+<summary><strong>CLI</strong></summary>
 
 ```
 # Task
@@ -76,7 +76,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 _Implement new features, fix bugs, refactor code._
 
 <details>
-<summary>WEB/API</summary>
+<summary><strong>WEB/API</strong></summary>
 
 ```
 # Files
@@ -97,7 +97,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 </details>
 
 <details>
-<summary>CLI</summary>
+<summary><strong>CLI</strong></summary>
 
 ```
 # Files
@@ -123,7 +123,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 _Get explanations, plan features._
 
 <details>
-<summary>WEB/API</summary>
+<summary><strong>WEB/API</strong></summary>
 
 ```
 # Files
@@ -138,7 +138,7 @@ _Get explanations, plan features._
 </details>
 
 <details>
-<summary>CLI</summary>
+<summary><strong>CLI</strong></summary>
 
 ```
 # Files
@@ -163,7 +163,7 @@ _Get explanations, plan features._
 _Narrow-down broader file selection._
 
 <details>
-<summary>WEB</summary>
+<summary><strong>WEB</strong></summary>
 
 ```
 # Files
@@ -194,7 +194,7 @@ These files contain the core greeting logic and module exports.
 </details>
 
 <details>
-<summary>API</summary>
+<summary><strong>API</strong></summary>
 
 ```
 # Files
@@ -221,7 +221,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 </details>
 
 <details>
-<summary>CLI</summary>
+<summary><strong>CLI</strong></summary>
 
 ```
 # Files
@@ -257,7 +257,7 @@ Output strictly as a bulleted list of file paths without explanations or any oth
 _Quality TAB completions from reasoning models._
 
 <details>
-<summary>WEB</summary>
+<summary><strong>WEB</strong></summary>
 
 ````
 # Files
@@ -284,7 +284,7 @@ Find correct replacement text for the <missing_text> symbol.
 </details>
 
 <details>
-<summary>API</summary>
+<summary><strong>API</strong></summary>
 
 ````
 # Files
@@ -311,7 +311,7 @@ Find correct replacement text for the <missing_text> symbol.
 </details>
 
 <details>
-<summary>CLI</summary>
+<summary><strong>CLI</strong></summary>
 
 ````
 # Files
@@ -347,7 +347,7 @@ Find correct replacement text for the <missing_text> symbol.
 _Get change summaries adhering to your preferred style._
 
 <details>
-<summary>WEB/API</summary>
+<summary><strong>WEB/API</strong></summary>
 
 ```
 
@@ -373,7 +373,7 @@ Write a brief and precise summary for the changes, limited to a single sentence.
 </details>
 
 <details>
-<summary>CLI</summary>
+<summary><strong>CLI</strong></summary>
 
 ```
 # Files
@@ -407,7 +407,7 @@ Write a brief and precise summary for the changes, limited to a single sentence.
 _Apply malformed edits._
 
 <details>
-<summary>WEB/API</summary>
+<summary><strong>WEB/API</strong></summary>
 
 ```
 [ORIGINAL FILE]
@@ -428,7 +428,7 @@ Apply the attached changes to the file without explanations or any other text.
 </details>
 
 <details>
-<summary>CLI</summary>
+<summary><strong>CLI</strong></summary>
 
 ```
 # File: `[FILE PATH]`
@@ -459,7 +459,7 @@ Apply the attached changes to the file without explanations or any other text.
 _Transcribe speech-to-text with file awareness._
 
 <details>
-<summary>API</summary>
+<summary><strong>API</strong></summary>
 
 ```
 # Files
@@ -478,7 +478,7 @@ Respond with the audio transcription or the word INAUDIBLE, without explanations
 </details>
 
 <details>
-<summary>CLI</summary>
+<summary><strong>CLI</strong></summary>
 
 ```
 # Files
