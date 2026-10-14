@@ -133,6 +133,30 @@ export const preview_handler = async (params: {
       const { workspace_map, default_workspace } =
         get_workspace_map_and_default()
 
+      const newly_created_files = preview_result.accepted_files
+        .filter((f) => f.file_state === 'new')
+        .map((f) => {
+          const workspace_root = resolve_workspace_root({
+            workspace_name: f.workspace_name,
+            workspace_map,
+            default_workspace
+          })
+          if (!workspace_root) return undefined
+          return path.isAbsolute(f.file_path)
+            ? normalize_path(f.file_path)
+            : normalize_path(path.join(workspace_root, f.file_path))
+        })
+        .filter((p): p is string => p !== undefined)
+
+      if (newly_created_files.length > 0) {
+        const current_selected =
+          params.workspace_provider.get_all_selected_paths()
+        const new_selected = Array.from(
+          new Set([...current_selected, ...newly_created_files])
+        )
+        await params.workspace_provider.set_selected_files(new_selected)
+      }
+
       const files_by_workspace = new Map<string, string[]>()
       for (const state of accepted_states) {
         const workspace_root = resolve_workspace_root({
