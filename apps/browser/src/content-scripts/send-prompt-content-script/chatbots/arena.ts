@@ -59,7 +59,7 @@ export const arena: Chatbot = {
       chatbot_name: 'Arena',
       is_generating: () => !!document.querySelector('ol .animate-spin'),
       footer_selector:
-        'ol .bg-surface-primary > div:last-child > div.text-text-primary',
+        'ol .bg-surface-primary > div:last-child > div > div, [role="presentation"] > div',
       add_buttons: params.inject_button ? add_buttons : undefined
     })
   }
