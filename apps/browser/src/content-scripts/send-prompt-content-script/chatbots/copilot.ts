@@ -10,10 +10,7 @@ export const copilot: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
       const check_for_element = () => {
-        if (
-          document.getElementById('gptModeSwitcher') &&
-          document.getElementById('m365-chat-editor-target-element')
-        ) {
+        if (document.querySelector('#greeting')?.textContent) {
           resolve(null)
         } else {
           setTimeout(check_for_element, 100)
@@ -75,7 +72,17 @@ export const copilot: Chatbot = {
       return
     }
 
-    const menu_items = Array.from(popover.querySelectorAll('[role="menuitem"]'))
+    const menu_items = await new Promise<Element[]>((resolve) => {
+      const check_for_items = () => {
+        const items = Array.from(popover.querySelectorAll('[role="menuitem"]'))
+        if (items.length > 0) {
+          resolve(items)
+        } else {
+          setTimeout(check_for_items, 100)
+        }
+      }
+      check_for_items()
+    })
 
     let target_text = ''
     if (reasoning_effort.toLowerCase() == 'auto') {
@@ -88,16 +95,18 @@ export const copilot: Chatbot = {
 
     const target_item = menu_items.find((item) => {
       const title = item.querySelector('h4')?.textContent?.trim().toLowerCase()
-      return title == target_text
+      if (title == target_text) return true
+
+      const primary_text = item
+        .querySelector('.fai-CapabilityPickerMenuItem__primaryContentWrapper')
+        ?.textContent?.trim()
+        .toLowerCase()
+      if (primary_text == target_text) return true
+
+      return false
     }) as HTMLElement
 
-    if (target_item) {
-      target_item.click()
-    } else {
-      document.dispatchEvent(
-        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
-      )
-    }
+    target_item.click()
 
     await new Promise((resolve) => requestAnimationFrame(resolve))
   },
