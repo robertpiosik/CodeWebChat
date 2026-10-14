@@ -28,18 +28,12 @@ Use popular chatbots in your browser, send API requests, or invoke agentic CLIs 
 <details>
 <summary><strong>Automated context selection</strong></summary>
 
-<br />
-
 CWC can invoke your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search) using the current task instructions or a custom query. Irrelevant keyword-matched files are filtered out so they don't clutter the context window.
-
-<br />
 
 </details>
 
 <details>
 <summary><strong>First-class support for prompt caching</strong></summary>
-
-<br />
 
 To maximize prompt cache hits when including selected files, unchanged files are placed first, followed by recently modified ones, and task instructions are placed at the very end.
 
@@ -47,8 +41,6 @@ To maximize prompt cache hits when including selected files, unchanged files are
 
 <details>
 <summary><strong>Effective steering with examples</strong></summary>
-
-<br />
 
 Replace most skills with a simple checkbox tick. Providing examples can make your task instructions simpler and guide the model toward outputs you're looking for.
 
