@@ -168,10 +168,13 @@ export const CHATBOTS = {
     url: 'https://chat.qwen.ai/',
     supports_url_override: true,
     url_override_label: 'Project URL',
+    url_override_disabled_options: ['temporary'],
     supported_options: {
-      thinking: 'Thinking',
-      search: 'Search',
       temporary: 'Temporary'
+    },
+    models: {
+      fast: { label: 'Fast' },
+      thinking: { label: 'Thinking' }
     }
   } as Chatbot,
   Together: {
@@ -181,9 +184,6 @@ export const CHATBOTS = {
     url: 'https://yuanbao.tencent.com/chat'
   } as Chatbot,
   Z: {
-    url: 'https://chat.z.ai/',
-    supported_options: {
-      'deep-think': 'Deep Think'
-    }
+    url: 'https://chat.z.ai/'
   } as Chatbot
 }

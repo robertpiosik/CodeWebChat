@@ -18,28 +18,6 @@ export const z_ai: Chatbot = {
       check_for_element()
     })
   },
-  set_options: async (chat) => {
-    const options = chat.options
-
-    const deep_think_button = document.querySelector(
-      'button[data-autothink]'
-    ) as HTMLButtonElement
-    if (!deep_think_button) {
-      report_initialization_error({
-        function_name: 'z_ai.set_options',
-        log_message: 'Auto think button not found'
-      })
-      return
-    }
-
-    const should_be_on = options?.includes('deep-think') || false
-    const is_on = deep_think_button.getAttribute('data-autothink') == 'true'
-
-    if (should_be_on != is_on) {
-      deep_think_button.click()
-      await new Promise((r) => requestAnimationFrame(r))
-    }
-  },
   enter_message: async (params) => {
     const input_element = document.querySelector(
       'textarea'
@@ -80,7 +58,8 @@ export const z_ai: Chatbot = {
       chatbot_name: 'Z.AI',
       is_generating: () =>
         !document.querySelector('button[id="send-message-button"]'),
-      footer_selector: '.chat-assistant + div',
+      footer_selector:
+        'div[id="messages-container"] > div > div > div > div > div:last-child > div > div:last-child > div > div:last-child',
       add_buttons: params.inject_button ? add_buttons : undefined
     })
   }

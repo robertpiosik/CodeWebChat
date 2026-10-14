@@ -9,7 +9,7 @@ export const yuanbao: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
       const check_for_element = () => {
-        if (document.querySelector('.input-guide-v2')) {
+        if (document.querySelector('div[contenteditable="true"]')) {
           resolve(null)
         } else {
           setTimeout(check_for_element, 100)
@@ -41,18 +41,34 @@ export const yuanbao: Chatbot = {
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
         footer,
-        perform_copy: (f) => {
-          const copy_button = f.querySelector(
-            '.agent-chat__toolbar__copy'
+        perform_copy: async (f) => {
+          const copy_dropdown_arrow = f.querySelector(
+            'div[class*="ToolbarCopy_arrowIconWrap"]'
           ) as HTMLElement
-          if (!copy_button) {
+          if (!copy_dropdown_arrow) {
             report_initialization_error({
               function_name: 'yuanbao.perform_copy',
-              log_message: 'Copy button not found'
+              log_message: 'Copy dropdown arrow not found'
             })
             return
           }
-          copy_button.click()
+          copy_dropdown_arrow.click()
+
+          await new Promise((resolve) => setTimeout(resolve, 100))
+
+          const dropdown_items = document.querySelectorAll(
+            '.t-popup__content[class*="ToolbarCopy_dropdown-menu"] .t-dropdown__item'
+          )
+          const copy_markdown_option = dropdown_items[1] as HTMLElement
+
+          if (!copy_markdown_option) {
+            report_initialization_error({
+              function_name: 'yuanbao.perform_copy',
+              log_message: 'Copy as markdown option not found'
+            })
+            return
+          }
+          copy_markdown_option.click()
         },
         insert_button: (f, b) => f.insertBefore(b, f.children[6])
       })

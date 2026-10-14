@@ -11,7 +11,7 @@ export const qwen: Chatbot = {
     await new Promise((resolve) => {
       const check_for_element = () => {
         const model_selector_button = document.querySelector(
-          '.ant-dropdown-trigger'
+          'textarea.message-input-textarea'
         ) as HTMLElement
 
         if (model_selector_button) {
@@ -22,13 +22,13 @@ export const qwen: Chatbot = {
       }
       check_for_element()
     })
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    await new Promise((resolve) => setTimeout(resolve, 1500))
   },
   set_model: async (chat) => {
     const model = chat.model
     if (!model) return
     const model_selector_button = document.querySelector(
-      '.header-left .ant-dropdown-trigger'
+      '.qwen-chat-v2-dropdown-menu-select'
     ) as HTMLElement
     if (!model_selector_button) {
       report_initialization_error({
@@ -47,30 +47,18 @@ export const qwen: Chatbot = {
 
     model_selector_button.click()
     await new Promise((r) => requestAnimationFrame(r))
+    await new Promise((r) => setTimeout(r, 100))
 
-    const expand_more = document.querySelector(
-      '[class*="index-module__model-selector-view-more__"]'
-    ) as HTMLElement
-    if (expand_more) {
-      expand_more.click()
-      await new Promise((r) => setTimeout(r, 300))
-    } else {
-      report_initialization_error({
-        function_name: 'set_model',
-        log_message: 'Expand more button not found'
-      })
-      return
-    }
     const model_buttons = document.querySelectorAll(
-      '[class*="index-module__model-selector-dropdown-menu-item___"]'
-    ) as NodeListOf<HTMLButtonElement>
+      '.qwen-chat-v2-dropdown-menu-item'
+    ) as NodeListOf<HTMLElement>
     for (const button of Array.from(model_buttons)) {
-      const model_name_element = (button.querySelector(
-        '[class*="index-module__model-name-text___"]'
-      ) || button.querySelector('div.text-15')) as HTMLDivElement
+      const model_name_element = button.querySelector(
+        '.qwen-chat-v2-dropdown-menu-item-label'
+      ) as HTMLSpanElement
       if (
         model_name_element &&
-        model_name_element.textContent ==
+        model_name_element.textContent?.trim() ==
           CHATBOTS['Qwen'].models?.[model]?.label
       ) {
         button.click()
@@ -88,41 +76,12 @@ export const qwen: Chatbot = {
         const temporary_button = document.querySelector(
           '.temporary-chat-entry'
         ) as HTMLButtonElement
-        if (!temporary_button) {
-          report_initialization_error({
-            function_name: 'set_options',
-            log_message: 'Temporary chat button not found'
-          })
-          return
+        if (
+          temporary_button &&
+          temporary_button.getAttribute('aria-pressed') !== 'true'
+        ) {
+          temporary_button.click()
         }
-        temporary_button.click()
-        await new Promise((r) => requestAnimationFrame(r))
-      } else if (option == 'thinking' && supported_options?.['thinking']) {
-        const thinking_button = document.querySelector(
-          '.chat-message-input-thinking-budget-btn > div'
-        ) as HTMLDivElement
-        if (!thinking_button) {
-          report_initialization_error({
-            function_name: 'set_options',
-            log_message: 'Thinking button not found'
-          })
-          return
-        }
-        thinking_button.click()
-        await new Promise((r) => requestAnimationFrame(r))
-      } else if (option == 'search' && supported_options?.['search']) {
-        const search_button = document.querySelector(
-          '.chat-message-input-thinking-budget-btn + div'
-        ) as HTMLDivElement
-        if (!search_button) {
-          report_initialization_error({
-            function_name: 'set_options',
-            log_message: 'Search button not found'
-          })
-          return
-        }
-        search_button.click()
-        await new Promise((r) => requestAnimationFrame(r))
       }
     }
   },
@@ -150,7 +109,7 @@ export const qwen: Chatbot = {
         get_code_from_block: (b) => b.querySelector('.cm-line')?.textContent,
         perform_copy: (f) => {
           const copy_button = f.querySelector(
-            'div.qwen-chat-package-comp-new-action-control-container-copy'
+            'button:first-child'
           ) as HTMLElement
           if (!copy_button) {
             report_initialization_error({
@@ -168,8 +127,8 @@ export const qwen: Chatbot = {
           }
           copy_button.click()
         },
-        insert_button: (f, b) => f.insertBefore(b, f.children[0]),
-        customize_button: (b) => (b.style.order = '7')
+        insert_button: (f, b) =>
+          f.insertBefore(b, f.children[f.children.length])
       })
     }
 

@@ -43,7 +43,7 @@
         "https://openrouter.ai/chat*",
         "https://chat.qwen.ai/*",
         "https://chat.together.ai/",
-        "https://yuanbao.tencent.com/chat*",
+        "https://yuanbao.tencent.com/*",
         "https://chat.z.ai/",
         "http://localhost/"
       ],
