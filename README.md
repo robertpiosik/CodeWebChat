@@ -32,6 +32,8 @@ Use popular chatbots in your browser, send API requests, or invoke agentic CLIs 
 
 CWC can invoke your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search) using the current task instructions or a custom query. Irrelevant keyword-matched files are filtered out so they don't clutter the context window.
 
+<br />
+
 </details>
 
 <details>
