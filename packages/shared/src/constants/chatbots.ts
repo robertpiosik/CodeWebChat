@@ -111,7 +111,11 @@ export const CHATBOTS = {
     supports_url_override: true,
     url_override_label: 'Project URL',
     url_override_disabled_options: ['private'],
-    supported_options: { private: 'Private' }
+    supported_options: { private: 'Private' },
+    models: {
+      fast: { label: 'Fast' },
+      expert: { label: 'Expert' }
+    }
   } as Chatbot,
   HuggingChat: {
     url: 'https://huggingface.co/chat/',

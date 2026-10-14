@@ -80,9 +80,6 @@ export const hugging_chat: Chatbot = {
         function_name: 'hugging_chat.set_reasoning_effort',
         log_message: `Reasoning effort option "${reasoning_effort}" not found`
       })
-      document.dispatchEvent(
-        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
-      )
     }
     await new Promise((resolve) => setTimeout(resolve, 250))
   },

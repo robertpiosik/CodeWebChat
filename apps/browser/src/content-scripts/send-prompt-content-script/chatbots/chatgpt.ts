@@ -129,16 +129,6 @@ export const chatgpt: Chatbot = {
 
       await new Promise((resolve) => requestAnimationFrame(resolve))
     }
-
-    slider_control.dispatchEvent(
-      new KeyboardEvent('keydown', {
-        key: 'Escape',
-        bubbles: true,
-        cancelable: true
-      })
-    )
-
-    await new Promise((resolve) => requestAnimationFrame(resolve))
   },
   set_options: async (chat) => {
     const options = chat.options

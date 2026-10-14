@@ -118,21 +118,12 @@ export const gemini: Chatbot = {
         reasoning_effort.toLowerCase()
     ) as HTMLElement
 
-    if (!target_item) {
-      document.dispatchEvent(
-        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
-      )
-      return
-    }
+    if (!target_item) return
 
     const is_selected = target_item.classList.contains('selected')
 
     if (!is_selected) {
       target_item.click()
-    } else {
-      document.dispatchEvent(
-        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
-      )
     }
 
     await new Promise((resolve) => requestAnimationFrame(resolve))

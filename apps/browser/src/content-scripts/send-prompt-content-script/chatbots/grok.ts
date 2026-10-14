@@ -19,6 +19,52 @@ export const grok: Chatbot = {
       check_for_element()
     })
   },
+  set_model: async (chat) => {
+    const model = chat.model
+    if (model && CHATBOTS['Grok'].models && model in CHATBOTS['Grok'].models) {
+      const model_selector_trigger = document.querySelector(
+        'button#model-select-trigger'
+      ) as HTMLButtonElement
+      if (!model_selector_trigger) {
+        report_initialization_error({
+          function_name: 'set_model',
+          log_message: 'Model selector trigger not found'
+        })
+        return
+      }
+
+      const model_label = CHATBOTS['Grok'].models[model].label
+      const target_label_lower = model_label.toLowerCase()
+
+      model_selector_trigger.click()
+      await new Promise((r) => requestAnimationFrame(r))
+
+      const menu_items = Array.from(
+        document.querySelectorAll(
+          '[data-radix-menu-content] [role="menuitemradio"]'
+        )
+      )
+      let found = false
+      for (const item of menu_items) {
+        const text = item.textContent?.trim().toLowerCase()
+        if (text && text.includes(target_label_lower)) {
+          const is_checked = item.getAttribute('aria-checked') == 'true'
+          if (!is_checked) {
+            ;(item as HTMLElement).click()
+          }
+          found = true
+          break
+        }
+      }
+      if (!found) {
+        report_initialization_error({
+          function_name: 'set_model',
+          log_message: `Model option for "${model_label}" not found`
+        })
+      }
+      await new Promise((r) => requestAnimationFrame(r))
+    }
+  },
   set_options: async (chat) => {
     const options = chat.options
     if (!options) return
