@@ -53,6 +53,7 @@ export const Prompt = () => {
     chat_input_focus_key,
     set_chat_input_focus_key,
     chat_input_focus_and_select_key,
+    set_chat_input_focus_and_select_key,
     can_undo,
     send_with_shift_enter,
     handle_instructions_change,
@@ -406,19 +407,19 @@ export const Prompt = () => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
                   handle_target_change('WEB')
-                  set_chat_input_focus_key((k) => k + 1)
+                  set_chat_input_focus_and_select_key((k) => k + 1)
                 }}
                 on_api_calls_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
                   handle_target_change('API')
-                  set_chat_input_focus_key((k) => k + 1)
+                  set_chat_input_focus_and_select_key((k) => k + 1)
                 }}
                 on_cli_calls_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
                   handle_target_change('CLI')
-                  set_chat_input_focus_key((k) => k + 1)
+                  set_chat_input_focus_and_select_key((k) => k + 1)
                 }}
                 version={version}
                 is_setup_complete={is_setup_complete}

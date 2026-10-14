@@ -314,6 +314,7 @@ export const use_prompt = (vscode: any) => {
     chat_input_focus_key,
     set_chat_input_focus_key,
     chat_input_focus_and_select_key,
+    set_chat_input_focus_and_select_key,
     can_undo,
     send_with_shift_enter,
     handle_instructions_change,
