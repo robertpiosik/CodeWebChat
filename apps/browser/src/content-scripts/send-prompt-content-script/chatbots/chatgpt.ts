@@ -11,19 +11,19 @@ export const chatgpt: Chatbot = {
     await new Promise((resolve) => {
       const check_for_element = () => {
         const input_element = document.querySelector(
-          'div#prompt-textarea'
+          'div[contenteditable="true"]'
         ) as HTMLElement
 
-        const thread_header_button = document.querySelector(
-          'div[data-testid="thread-header-right-actions"] > div:first-child button'
-        )
+        // const thread_header_button = document.querySelector(
+        //   'div[data-testid="thread-header-right-actions"] > div:first-child button'
+        // )
 
-        const reasoning_effort_button = document.querySelector(
-          'div[data-composer-transition-slot="trailing"] > div:first-child button'
-        )
+        // const reasoning_effort_button = document.querySelector(
+        //   'div[data-composer-transition-slot="trailing"] > div:first-child button'
+        // )
 
-        const is_ready =
-          thread_header_button !== null || reasoning_effort_button !== null
+        const is_ready = true
+        // thread_header_button !== null || reasoning_effort_button !== null
 
         if (input_element && is_ready) {
           input_element.innerText = ' '
@@ -147,7 +147,7 @@ export const chatgpt: Chatbot = {
     for (const option of options) {
       if (option == 'temporary' && supported_options?.['temporary']) {
         const button = document.querySelector(
-          '#conversation-header-actions button'
+          '[data-testid="app-shell-header-context-menu-surface"] > div:last-child > div:last-child button'
         )
         let found = false
         if (button) {
@@ -172,55 +172,12 @@ export const chatgpt: Chatbot = {
             // Don't show alert because temporary mode doesn't work in projects (url override)
           })
         }
-      } else if (
-        option == 'think (free)' &&
-        supported_options?.['think (free)']
-      ) {
-        const think_icon_path = document.querySelector(
-          'path[d^="M14.8974 2.29998"]'
-        )
-        if (think_icon_path) {
-          const think_button = think_icon_path.closest(
-            'button'
-          ) as HTMLButtonElement
-          if (think_button) {
-            think_button.click()
-          }
-        } else {
-          const plus_button = document.querySelector(
-            '[data-testid="composer-plus-btn"]'
-          ) as HTMLButtonElement
-          if (plus_button) {
-            plus_button.dispatchEvent(
-              new PointerEvent('pointerdown', {
-                bubbles: true
-              })
-            )
-            await new Promise((resolve) => requestAnimationFrame(resolve))
-            const thinking_menuitem = Array.from(
-              document.querySelectorAll('[role="menuitemradio"]')
-            ).find((el) => el.textContent?.includes('Thinking')) as HTMLElement
-            if (thinking_menuitem) {
-              thinking_menuitem.click()
-            } else {
-              report_initialization_error({
-                function_name: 'set_options',
-                log_message: 'Thinking menu item not found'
-              })
-            }
-          } else {
-            report_initialization_error({
-              function_name: 'set_options',
-              log_message: 'Think button icon not found'
-            })
-          }
-        }
       }
     }
   },
   enter_message: async (params) => {
     const input_element = document.querySelector(
-      'div#prompt-textarea'
+      'div[contenteditable="true"]'
     ) as HTMLTextAreaElement
     if (!input_element) {
       report_initialization_error({
@@ -240,7 +197,7 @@ export const chatgpt: Chatbot = {
         footer,
         perform_copy: (f) => {
           const copy_button = f.querySelector(
-            'button[data-testid="copy-turn-action-button"]'
+            'button:first-child'
           ) as HTMLElement
           if (!copy_button) {
             report_initialization_error({
@@ -259,8 +216,11 @@ export const chatgpt: Chatbot = {
     observe_for_responses({
       chatbot_name: 'ChatGPT',
       is_generating: () =>
-        !!document.querySelector('button[data-testid="stop-button"]'),
-      footer_selector: '.agent-turn > div:nth-of-type(2) > div',
+        !!document.querySelector(
+          'button path[d="M4.5 5.75C4.5 5.05964 5.05964 4.5 5.75 4.5H14.25C14.9404 4.5 15.5 5.05964 15.5 5.75V14.25C15.5 14.9404 14.9404 15.5 14.25 15.5H5.75C5.05964 15.5 4.5 14.9404 4.5 14.25V5.75Z"]'
+        ),
+      footer_selector:
+        'div[data-talvt-turn-state="complete"] > div:last-child > div',
       add_buttons: params.inject_button ? add_buttons : undefined
     })
   }

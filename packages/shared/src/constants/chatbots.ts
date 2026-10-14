@@ -58,8 +58,7 @@ export const CHATBOTS = {
     supports_reasoning_effort: true,
     supported_reasoning_efforts: ['instant', 'medium', 'high'],
     supported_options: {
-      temporary: 'Temporary',
-      'think (free)': 'Think (free)'
+      temporary: 'Temporary'
     }
   } as Chatbot,
   Claude: {
