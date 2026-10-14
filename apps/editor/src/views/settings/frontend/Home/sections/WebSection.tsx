@@ -58,7 +58,8 @@ const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   Qwen: 'QWEN',
   Together: 'TOGETHER',
   Yuanbao: 'YUANBAO',
-  Z: 'Z_AI'
+  'Z (China)': 'Z_AI',
+  'Z (Global)': 'Z_AI'
 }
 
 export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
