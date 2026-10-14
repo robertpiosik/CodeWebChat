@@ -108,6 +108,7 @@ export const mistral: Chatbot = {
 
     input_element.textContent = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
+    input_element.focus()
     await new Promise((r) => requestAnimationFrame(r))
   },
   setup_observer: (params) => {
