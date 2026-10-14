@@ -9,7 +9,11 @@ export const mistral: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
       const check_for_element = () => {
-        if (document.querySelector('div[contenteditable="true"]')) {
+        if (
+          document.querySelector(
+            'div[data-chat-input-bar="true"] > div >div > div > div > div:last-child button'
+          )
+        ) {
           resolve(null)
         } else {
           setTimeout(check_for_element, 100)
@@ -22,12 +26,9 @@ export const mistral: Chatbot = {
   set_options: async (chat) => {
     const options = chat.options
 
-    if (
-      options?.includes('incognito') &&
-      !window.location.pathname.includes('/incognito')
-    ) {
+    if (options?.includes('incognito')) {
       const incognito_button = document.querySelector(
-        'a[href="/incognito"]'
+        'a[href="/work/temporary-chat"]'
       ) as HTMLAnchorElement
       if (incognito_button) {
         incognito_button.click()
@@ -117,7 +118,7 @@ export const mistral: Chatbot = {
         footer,
         perform_copy: (f) => {
           const copy_button = f.querySelector(
-            'button:nth-child(6)'
+            'button:nth-child(5)'
           ) as HTMLElement
           if (!copy_button) {
             report_initialization_error({
@@ -139,16 +140,12 @@ export const mistral: Chatbot = {
       })
     }
 
-    const footer_selector =
-      'div[data-message-author-role="assistant"] > div + div > div:last-child > div:first-child'
-
     requestAnimationFrame(() => {
       observe_for_responses({
         chatbot_name: 'Mistral',
-        is_generating: () =>
-          !document.querySelector(footer_selector) ||
-          !!document.querySelector('form rect[rx="2"]'),
-        footer_selector,
+        is_generating: () => !!document.querySelector('form rect[rx="2"]'),
+        footer_selector:
+          'div[data-message-author-role="assistant"] > div > div:last-child > div:first-child',
         add_buttons: params.inject_button ? add_buttons : undefined
       })
     })

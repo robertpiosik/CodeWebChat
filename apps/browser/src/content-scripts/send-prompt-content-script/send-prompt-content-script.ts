@@ -54,7 +54,7 @@ const is_claude = current_url.startsWith(claude_url)
 const deepseek_url = 'https://chat.deepseek.com/'
 const is_deepseek = current_url.startsWith(deepseek_url)
 
-const mistral_url = 'https://chat.mistral.ai/'
+const mistral_url = 'https://chat.mistral.ai/work'
 const is_mistral = current_url.startsWith(mistral_url)
 
 const qwen_url = 'https://chat.qwen.ai/'

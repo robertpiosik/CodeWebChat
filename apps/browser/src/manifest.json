@@ -38,7 +38,7 @@
         "https://www.kimi.ai/",
         "https://www.kimi.com/",
         "https://www.meta.ai/",
-        "https://chat.mistral.ai/*",
+        "https://chat.mistral.ai/work*",
         "http://openwebui/",
         "https://openrouter.ai/chat*",
         "https://chat.qwen.ai/*",

@@ -130,7 +130,7 @@ export const CHATBOTS = {
     url: 'https://www.meta.ai/'
   } as Chatbot,
   Mistral: {
-    url: 'https://chat.mistral.ai/chat',
+    url: 'https://chat.mistral.ai/work',
     supports_url_override: true,
     url_override_label: 'Project URL',
     url_override_disabled_options: ['incognito'],
