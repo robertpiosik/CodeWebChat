@@ -183,7 +183,10 @@ export const CHATBOTS = {
   Yuanbao: {
     url: 'https://yuanbao.tencent.com/chat'
   } as Chatbot,
-  Z: {
+  'Z (Global)': {
     url: 'https://chat.z.ai/'
+  } as Chatbot,
+  'Z (China)': {
+    url: 'https://zchat.z.ai/'
   } as Chatbot
 }

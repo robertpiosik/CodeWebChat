@@ -87,8 +87,11 @@ const is_meta = current_url.startsWith(meta_url)
 const together_url = 'https://chat.together.ai/'
 const is_together = current_url.startsWith(together_url)
 
-const z_ai_url = 'https://chat.z.ai/'
-const is_z_ai = current_url.startsWith(z_ai_url)
+const z_ai_global_url = 'https://chat.z.ai/'
+const z_ai_china_url = 'https://zchat.z.ai/'
+const is_z_ai =
+  current_url.startsWith(z_ai_global_url) ||
+  current_url.startsWith(z_ai_china_url)
 
 const is_open_webui = document.title.includes('Open WebUI')
 
