@@ -20,11 +20,12 @@
     opacity: var(--dimmed-opacity);
 
     &--new {
-      padding-right: 14px;
+      padding-right: 9px;
       padding-left: 7px;
     }
 
     &--close {
+      padding-left: 5px;
       padding-right: 10px;
 
       .tabs__tab__icon {
