@@ -422,6 +422,14 @@ export class WorkspaceProvider
       return
     }
 
+    const relative_path = path.relative(workspace_root, changed_file_path)
+    if (
+      this.is_excluded(relative_path) ||
+      this.is_excluded(relative_path + '/')
+    ) {
+      return
+    }
+
     this._token_calculator.invalidate_token_counts_for_file(changed_file_path)
 
     if (!fs.existsSync(changed_file_path)) {
@@ -461,9 +469,16 @@ export class WorkspaceProvider
       return
     }
 
+    const relative_path = path.relative(workspace_root, created_file_path)
+    if (
+      this.is_excluded(relative_path) ||
+      this.is_excluded(relative_path + '/')
+    ) {
+      return
+    }
+
     this._file_workspace_map.set(created_file_path, workspace_root)
     const parent_dir = path.dirname(created_file_path)
-    const relative_path = path.relative(workspace_root, created_file_path)
 
     let is_directory = false
     try {
@@ -474,35 +489,33 @@ export class WorkspaceProvider
       await this._load_all_gitignore_files()
     }
 
-    if (!this.is_excluded(is_directory ? relative_path + '/' : relative_path)) {
-      this._checked_items.set(
+    this._checked_items.set(
+      created_file_path,
+      vscode.TreeItemCheckboxState.Checked
+    )
+    this._selected_timestamps.set(
+      created_file_path,
+      Math.floor(Date.now() / 1000)
+    )
+
+    if (is_directory) {
+      await this._update_directory_checkbox_state(
         created_file_path,
-        vscode.TreeItemCheckboxState.Checked
+        vscode.TreeItemCheckboxState.Checked,
+        false
       )
-      this._selected_timestamps.set(
-        created_file_path,
-        Math.floor(Date.now() / 1000)
-      )
-
-      if (is_directory) {
-        await this._update_directory_checkbox_state(
-          created_file_path,
-          vscode.TreeItemCheckboxState.Checked,
-          false
-        )
-      }
-
-      let dir_path = parent_dir
-      while (dir_path.startsWith(workspace_root)) {
-        this._token_calculator.invalidate_directory_selected_count(dir_path)
-        await this._update_parent_state(dir_path)
-        const next_dir_path = path.dirname(dir_path)
-        if (next_dir_path == dir_path) break
-        dir_path = next_dir_path
-      }
-
-      this._dispatch_change_events()
     }
+
+    let dir_path = parent_dir
+    while (dir_path.startsWith(workspace_root)) {
+      this._token_calculator.invalidate_directory_selected_count(dir_path)
+      await this._update_parent_state(dir_path)
+      const next_dir_path = path.dirname(dir_path)
+      if (next_dir_path == dir_path) break
+      dir_path = next_dir_path
+    }
+
+    this._dispatch_change_events()
 
     let dir_path2 = parent_dir
     while (dir_path2.startsWith(workspace_root)) {
