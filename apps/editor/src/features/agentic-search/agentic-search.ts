@@ -38,30 +38,6 @@ export const agentic_search = async (params: {
   let query = params.query
 
   while (true) {
-    const query_result = await prompt_for_search_term(query)
-
-    if (query_result.back) {
-      return 'back'
-    }
-
-    if (query_result.value === undefined) {
-      return undefined
-    }
-
-    query = query_result.value
-
-    if (query.trim() == '') {
-      continue
-    }
-
-    await params.extension_context.workspaceState.update(
-      LAST_AGENTIC_SEARCH_QUERY_STATE_KEY,
-      {
-        instructions: params.current_instructions,
-        query
-      }
-    )
-
     const result = await invoke_agentic_cli({
       workspace_provider: params.workspace_provider,
       extension_context: params.extension_context,
@@ -70,28 +46,56 @@ export const agentic_search = async (params: {
       last_selected_workspace_state_key:
         LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY,
       default_agent_key: 'isDefaultForAgenticSearch',
-      show_back_button: true,
+      show_back_button: false,
       build_prompt: async () => {
-        const { instructions: processed_queries, skill_definitions } =
-          await replace_symbols({
-            instructions: [query],
-            extension_context: params.extension_context,
-            workspace_provider: params.workspace_provider,
-            image_as_paths: true
+        while (true) {
+          const query_result = await prompt_for_search_term(query, {
+            show_back_button: true
           })
 
-        const processed_query = processed_queries[0]
+          if (query_result.back) {
+            return 'back'
+          }
 
-        const final_query = skill_definitions
-          ? `${processed_query}\n\n${skill_definitions}`
-          : processed_query
+          if (query_result.value === undefined) {
+            return undefined
+          }
 
-        return build_agent_prompt(final_query)
+          query = query_result.value
+
+          if (query.trim() == '') {
+            continue
+          }
+
+          await params.extension_context.workspaceState.update(
+            LAST_AGENTIC_SEARCH_QUERY_STATE_KEY,
+            {
+              instructions: params.current_instructions,
+              query
+            }
+          )
+
+          const { instructions: processed_queries, skill_definitions } =
+            await replace_symbols({
+              instructions: [query],
+              extension_context: params.extension_context,
+              workspace_provider: params.workspace_provider,
+              image_as_paths: true
+            })
+
+          const processed_query = processed_queries[0]
+
+          const final_query = skill_definitions
+            ? `${processed_query}\n\n${skill_definitions}`
+            : processed_query
+
+          return build_agent_prompt(final_query)
+        }
       }
     })
 
     if (result === 'back') {
-      continue
+      return 'back'
     }
 
     if (!result) {

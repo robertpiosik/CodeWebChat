@@ -3,7 +3,10 @@ import { t } from '@/i18n'
 
 export const prompt_for_search_term = async (
   initial_search_term: string,
-  on_change?: (value: string) => void
+  options?: {
+    on_change?: (value: string) => void
+    show_back_button?: boolean
+  }
 ): Promise<{ value: string | undefined; back?: boolean }> => {
   const close_button = {
     iconPath: new vscode.ThemeIcon('close'),
@@ -15,7 +18,14 @@ export const prompt_for_search_term = async (
   input_box.prompt = t('feature.search-files.prompt.intelligent')
   input_box.placeholder = t('common.action.search')
   input_box.value = initial_search_term
-  input_box.buttons = [close_button]
+
+  const buttons: vscode.QuickInputButton[] = []
+  if (options?.show_back_button) {
+    buttons.push(vscode.QuickInputButtons.Back)
+  }
+  buttons.push(close_button)
+
+  input_box.buttons = buttons
   input_box.ignoreFocusOut = true
 
   return new Promise<{ value: string | undefined; back?: boolean }>(
@@ -25,7 +35,11 @@ export const prompt_for_search_term = async (
 
       disposables.push(
         input_box.onDidTriggerButton((button) => {
-          if (button === close_button) {
+          if (button === vscode.QuickInputButtons.Back) {
+            is_resolved = true
+            resolve({ value: undefined, back: true })
+            input_box.hide()
+          } else if (button === close_button) {
             is_resolved = true
             resolve({ value: undefined })
             input_box.hide()
@@ -47,8 +61,8 @@ export const prompt_for_search_term = async (
           if (input_box.value.trim().length > 0) {
             input_box.validationMessage = undefined
           }
-          if (on_change) {
-            on_change(input_box.value)
+          if (options?.on_change) {
+            options.on_change(input_box.value)
           }
         }),
         input_box.onDidHide(() => {
