@@ -25,20 +25,26 @@
 
 Use popular chatbots in your browser, send API requests, or invoke agentic CLIs with CWC-constructed, lean [markdown prompts](#markdown-prompts). With a simple checkbox tick on a file tree, the context for the task is set and without any tool calling, the model generates accurate response in seconds.
 
-<small>
-
-**Automated context selection**
+<details>
+<summary><strong>Automated context selection</strong> (click to expand)</summary>
 
 CWC can invoke your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search) using the current task instructions or a custom query. Irrelevant keyword-matched files are filtered out so they don't clutter the context window.
 
-**First-class support for prompt caching**
+</details>
+
+<details>
+<summary><strong>First-class support for prompt caching</strong></summary>
 
 To maximize prompt cache hits when including selected files, unchanged files are placed first, followed by recently modified ones, and task instructions are placed at the very end.
 
-**Effective steering with examples**
+</details>
+
+<details>
+<summary><strong>Effective steering with examples</strong></summary>
 
 Replace most skills with a simple checkbox tick. Providing examples can make your task instructions simpler and guide the model toward outputs you're looking for.
-</small>
+
+</details>
 
 ## Markdown Prompts
 
