@@ -1022,6 +1022,16 @@
           "scope": "resource",
           "default": "In the project, find the complete set of primary and structural files relevant to the query."
         },
+        "codeWebChat.agenticSearchInvocationCount": {
+          "type": "integer",
+          "scope": "resource",
+          "enum": [
+            1,
+            2,
+            3
+          ],
+          "default": 1
+        },
         "codeWebChat.editFilesSystemInstructions": {
           "type": "string",
           "scope": "resource",

@@ -14,6 +14,8 @@ import {
   handle_get_include_prompts_in_commit_messages,
   handle_get_default_option_for_voice_input,
   handle_get_voice_input_instructions,
+  handle_get_agentic_search_instructions,
+  handle_get_agentic_search_invocation_count,
   handle_get_edit_files_system_instructions,
   handle_get_gemini_user_id,
   handle_get_ai_studio_user_id,
@@ -28,6 +30,8 @@ import {
   handle_update_include_prompts_in_commit_messages,
   handle_update_default_option_for_voice_input,
   handle_update_voice_input_instructions,
+  handle_update_agentic_search_instructions,
+  handle_update_agentic_search_invocation_count,
   handle_update_edit_files_system_instructions,
   handle_update_gemini_user_id,
   handle_update_ai_studio_user_id,
@@ -197,6 +201,16 @@ export class SettingsViewProvider {
           await handle_get_voice_input_instructions(this)
         } else if (message.command == 'UPDATE_VOICE_INPUT_INSTRUCTIONS') {
           await handle_update_voice_input_instructions(message)
+        } else if (message.command == 'GET_AGENTIC_SEARCH_INSTRUCTIONS') {
+          await handle_get_agentic_search_instructions(this)
+        } else if (message.command == 'UPDATE_AGENTIC_SEARCH_INSTRUCTIONS') {
+          await handle_update_agentic_search_instructions(message)
+        } else if (message.command == 'GET_AGENTIC_SEARCH_INVOCATION_COUNT') {
+          await handle_get_agentic_search_invocation_count(this)
+        } else if (
+          message.command == 'UPDATE_AGENTIC_SEARCH_INVOCATION_COUNT'
+        ) {
+          await handle_update_agentic_search_invocation_count(message)
         } else if (message.command == 'GET_GEMINI_USER_ID') {
           await handle_get_gemini_user_id(this)
         } else if (message.command == 'UPDATE_GEMINI_USER_ID') {
@@ -287,6 +301,8 @@ export class SettingsViewProvider {
           void handle_get_include_prompts_in_commit_messages(this)
           void handle_get_default_option_for_voice_input(this)
           void handle_get_voice_input_instructions(this)
+          void handle_get_agentic_search_instructions(this)
+          void handle_get_agentic_search_invocation_count(this)
           void handle_get_gemini_user_id(this)
           void handle_get_ai_studio_user_id(this)
           void handle_get_send_with_shift_enter(this)

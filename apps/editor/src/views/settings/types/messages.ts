@@ -102,6 +102,24 @@ export interface GetVoiceInputInstructionsMessage {
   command: 'GET_VOICE_INPUT_INSTRUCTIONS'
 }
 
+export interface GetAgenticSearchInstructionsMessage {
+  command: 'GET_AGENTIC_SEARCH_INSTRUCTIONS'
+}
+
+export interface UpdateAgenticSearchInstructionsMessage {
+  command: 'UPDATE_AGENTIC_SEARCH_INSTRUCTIONS'
+  instructions: string
+}
+
+export interface GetAgenticSearchInvocationCountMessage {
+  command: 'GET_AGENTIC_SEARCH_INVOCATION_COUNT'
+}
+
+export interface UpdateAgenticSearchInvocationCountMessage {
+  command: 'UPDATE_AGENTIC_SEARCH_INVOCATION_COUNT'
+  count: 1 | 2 | 3
+}
+
 export interface UpdateVoiceInputInstructionsMessage {
   command: 'UPDATE_VOICE_INPUT_INSTRUCTIONS'
   instructions: string
@@ -362,6 +380,10 @@ export type FrontendMessage =
   | UpdateDefaultOptionForVoiceInputMessage
   | GetVoiceInputInstructionsMessage
   | UpdateVoiceInputInstructionsMessage
+  | GetAgenticSearchInstructionsMessage
+  | UpdateAgenticSearchInstructionsMessage
+  | GetAgenticSearchInvocationCountMessage
+  | UpdateAgenticSearchInvocationCountMessage
   | GetEditFilesSystemInstructionsMessage
   | UpdateEditFilesSystemInstructionsMessage
   | SettingsUiReadyMessage
@@ -449,6 +471,17 @@ export interface VoiceInputInstructionsMessage {
   command: 'VOICE_INPUT_INSTRUCTIONS'
   instructions: string
   default_instructions: string
+}
+
+export interface AgenticSearchInstructionsMessage {
+  command: 'AGENTIC_SEARCH_INSTRUCTIONS'
+  instructions: string
+  default_instructions: string
+}
+
+export interface AgenticSearchInvocationCountMessage {
+  command: 'AGENTIC_SEARCH_INVOCATION_COUNT'
+  count: 1 | 2 | 3
 }
 
 export interface EditFilesSystemInstructionsMessage {
@@ -599,6 +632,8 @@ export type BackendMessage =
   | SelectAllPromptsInCommitMessagesByDefaultMessage
   | DefaultOptionForVoiceInputMessage
   | VoiceInputInstructionsMessage
+  | AgenticSearchInstructionsMessage
+  | AgenticSearchInvocationCountMessage
   | EditFilesSystemInstructionsMessage
   | GeminiUserIdMessage
   | AiStudioUserIdMessage

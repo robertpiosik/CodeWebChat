@@ -38,6 +38,9 @@ export const agentic_search = async (params: {
   let query = params.query
 
   while (true) {
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const invocation_count = config.get<number>('agenticSearchInvocationCount')
+
     const result = await invoke_agentic_cli({
       workspace_provider: params.workspace_provider,
       extension_context: params.extension_context,
@@ -47,6 +50,7 @@ export const agentic_search = async (params: {
         LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY,
       default_agent_key: 'isDefaultForAgenticSearch',
       show_back_button: false,
+      invocation_count,
       build_prompt: async () => {
         while (true) {
           const query_result = await prompt_for_search_term(query, {

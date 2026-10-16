@@ -108,6 +108,9 @@ export const Settings = () => {
       settings_hook.default_edit_files_system_instructions !== undefined &&
       settings_hook.voice_input_instructions !== undefined &&
       settings_hook.default_voice_input_instructions !== undefined &&
+      settings_hook.agentic_search_instructions !== undefined &&
+      settings_hook.default_agentic_search_instructions !== undefined &&
+      settings_hook.agentic_search_invocation_count !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
       settings_hook.default_commit_message_instructions !== undefined &&
       settings_hook.attach_ascii_tree_of_context !== undefined &&
@@ -188,6 +191,19 @@ export const Settings = () => {
         }
         on_voice_input_instructions_change={
           settings_hook.handle_voice_input_instructions_change
+        }
+        agentic_search_instructions={settings_hook.agentic_search_instructions!}
+        default_agentic_search_instructions={
+          settings_hook.default_agentic_search_instructions!
+        }
+        on_agentic_search_instructions_change={
+          settings_hook.handle_agentic_search_instructions_change
+        }
+        agentic_search_invocation_count={
+          settings_hook.agentic_search_invocation_count!
+        }
+        on_agentic_search_invocation_count_change={
+          settings_hook.handle_agentic_search_invocation_count_change
         }
         commit_message_instructions={settings_hook.commit_message_instructions!}
         default_commit_message_instructions={

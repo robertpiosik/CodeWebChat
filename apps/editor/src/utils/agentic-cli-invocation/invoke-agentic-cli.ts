@@ -37,6 +37,7 @@ export const invoke_agentic_cli = async (params: {
   cli_configuration_name?: string
   use_quick_pick?: boolean
   default_agent_key?: keyof ConfigAgentConfigurationFormat
+  invocation_count?: number
 }): Promise<
   { agent_output: string; selected_root: string } | undefined | 'back'
 > => {
@@ -588,165 +589,181 @@ export const invoke_agentic_cli = async (params: {
         return { agent_output: '', selected_root: selected_root! }
       }
 
-      let agent_output = ''
-      let raw_stream_output = ''
+      const invocation_count = params.invocation_count || 1
       let is_cancelled = false
+      const agent_outputs: string[] = []
 
       output_channel.clear()
       const start_time = Date.now()
 
       try {
-        await vscode.window.withProgress(
-          {
-            location: vscode.ProgressLocation.Notification,
-            title: params.notification_title,
-            cancellable: true
-          },
-          async (progress, token) => {
-            progress.report({
-              message: t('utils.agentic-cli-invocation.agent.waiting-for-agent')
-            })
+        await Promise.all(
+          Array.from({ length: invocation_count }).map(async (_, index) => {
+            return vscode.window.withProgress(
+              {
+                location: vscode.ProgressLocation.Notification,
+                title: params.notification_title,
+                cancellable: true
+              },
+              async (progress, token) => {
+                progress.report({
+                  message: t(
+                    'utils.agentic-cli-invocation.agent.waiting-for-agent'
+                  )
+                })
 
-            if (token.isCancellationRequested) {
-              is_cancelled = true
-              return
-            }
+                if (token.isCancellationRequested) {
+                  is_cancelled = true
+                  return
+                }
 
-            const base_args = agent_info.get_isolated_dir_args({
-              cwd: selected_root
-            })
+                const base_args = agent_info.get_isolated_dir_args({
+                  cwd: selected_root
+                })
 
-            let args = [...base_args, ...custom_args]
+                let args = [...base_args, ...custom_args]
 
-            if (agent_info.get_prompt_file_args) {
-              args = [
-                ...args,
-                ...agent_info.get_prompt_file_args(temp_prompt_path)
-              ]
-            }
+                if (agent_info.get_prompt_file_args) {
+                  args = [
+                    ...args,
+                    ...agent_info.get_prompt_file_args(temp_prompt_path)
+                  ]
+                }
 
-            return new Promise<void>((resolve, reject) => {
-              const child = spawn(executable, args, {
-                cwd: selected_root,
-                shell: false,
-                stdio: agent_info.get_prompt_file_args
-                  ? ['ignore', 'pipe', 'pipe']
-                  : ['pipe', 'pipe', 'pipe']
-              })
+                return new Promise<void>((resolve, reject) => {
+                  let current_agent_output = ''
+                  let current_raw_stream_output = ''
+                  const child = spawn(executable, args, {
+                    cwd: selected_root,
+                    shell: false,
+                    stdio: agent_info.get_prompt_file_args
+                      ? ['ignore', 'pipe', 'pipe']
+                      : ['pipe', 'pipe', 'pipe']
+                  })
 
-              if (!agent_info.get_prompt_file_args && child.stdin) {
-                const read_stream = fs.createReadStream(temp_prompt_path)
-                read_stream.pipe(child.stdin)
+                  if (!agent_info.get_prompt_file_args && child.stdin) {
+                    const read_stream = fs.createReadStream(temp_prompt_path)
+                    read_stream.pipe(child.stdin)
 
-                read_stream.on('error', (err) => {
-                  Logger.error({
-                    function_name: 'invoke_agentic_cli',
-                    message: 'Failed to read temp prompt file',
-                    data: err
+                    read_stream.on('error', (err) => {
+                      Logger.error({
+                        function_name: 'invoke_agentic_cli',
+                        message: 'Failed to read temp prompt file',
+                        data: err
+                      })
+                    })
+                  }
+
+                  child.stdout?.on('data', (data) => {
+                    const chunk = data.toString()
+                    output_channel.append(chunk)
+                    if (agent_info.parse_stream_line) {
+                      current_raw_stream_output += chunk
+                      const lines = current_raw_stream_output.split('\n')
+                      current_raw_stream_output = lines.pop() || ''
+                      for (const line of lines) {
+                        const trimmed = line.trim()
+                        if (!trimmed) continue
+                        try {
+                          const parsed = JSON.parse(trimmed)
+                          const result = agent_info.parse_stream_line(
+                            parsed,
+                            (msg) => {
+                              progress.report({ message: msg })
+                            }
+                          )
+
+                          if (result?.output !== undefined) {
+                            current_agent_output = result.output
+                          }
+                        } catch (e) {
+                          // Ignore parse errors for partial chunks
+                        }
+                      }
+                    } else {
+                      current_agent_output += chunk
+                    }
+                  })
+
+                  child.stderr?.on('data', (data) => {
+                    const chunk = data.toString()
+                    output_channel.append(chunk)
+                  })
+
+                  token.onCancellationRequested(() => {
+                    is_cancelled = true
+                    child.kill()
+                    resolve()
+                  })
+
+                  child.on('close', async () => {
+                    if (
+                      agent_info.parse_final_output &&
+                      current_raw_stream_output.trim()
+                    ) {
+                      try {
+                        const parsed = JSON.parse(
+                          current_raw_stream_output.trim()
+                        )
+                        current_agent_output =
+                          agent_info.parse_final_output(
+                            parsed,
+                            current_agent_output
+                          ) ?? current_agent_output
+                      } catch (e) {
+                        // Ignore
+                      }
+                    }
+
+                    if (
+                      params.generate_diff_for_temp_dir &&
+                      temp_dir_path &&
+                      invocation_count === 1
+                    ) {
+                      try {
+                        const diff_markdown = await generate_diff_markdown(
+                          temp_dir_path,
+                          file_mappings
+                        )
+
+                        const trimmed_output = current_agent_output
+                          .trim()
+                          .replace(/\[([^\]]+)\]\([^)]+\)/g, '`$1`')
+                          .replace(/```[\s\S]*?```/g, '')
+                          .trim()
+                        const trimmed_diff = diff_markdown.trim()
+
+                        if (trimmed_output && trimmed_diff) {
+                          current_agent_output =
+                            trimmed_output + '\n\n' + trimmed_diff
+                        } else {
+                          current_agent_output = trimmed_diff || trimmed_output
+                        }
+                      } catch (e) {
+                        Logger.error({
+                          function_name: 'invoke_agentic_cli',
+                          message: 'Failed to generate diff',
+                          data: e
+                        })
+                      }
+                    }
+
+                    agent_outputs[index] = current_agent_output
+                    resolve()
+                  })
+
+                  child.on('error', (err) => {
+                    Logger.error({
+                      function_name: 'invoke_agentic_cli',
+                      message: 'Agent execution failed',
+                      data: err
+                    })
+                    reject(err)
                   })
                 })
               }
-
-              child.stdout?.on('data', (data) => {
-                const chunk = data.toString()
-                output_channel.append(chunk)
-                if (agent_info.parse_stream_line) {
-                  raw_stream_output += chunk
-                  const lines = raw_stream_output.split('\n')
-                  raw_stream_output = lines.pop() || ''
-                  for (const line of lines) {
-                    const trimmed = line.trim()
-                    if (!trimmed) continue
-                    try {
-                      const parsed = JSON.parse(trimmed)
-                      const result = agent_info.parse_stream_line(
-                        parsed,
-                        (msg) => {
-                          progress.report({ message: msg })
-                        }
-                      )
-
-                      if (result?.output !== undefined) {
-                        agent_output = result.output
-                      }
-                    } catch (e) {
-                      // Ignore parse errors for partial chunks
-                    }
-                  }
-                } else {
-                  agent_output += chunk
-                }
-              })
-
-              child.stderr?.on('data', (data) => {
-                const chunk = data.toString()
-                output_channel.append(chunk)
-              })
-
-              token.onCancellationRequested(() => {
-                is_cancelled = true
-                child.kill()
-                resolve()
-              })
-
-              child.on('close', async () => {
-                if (agent_info.parse_final_output && raw_stream_output.trim()) {
-                  try {
-                    const parsed = JSON.parse(raw_stream_output.trim())
-                    agent_output =
-                      agent_info.parse_final_output(parsed, agent_output) ??
-                      agent_output
-                  } catch (e) {
-                    // Ignore
-                  }
-                }
-
-                if (params.generate_diff_for_temp_dir && temp_dir_path) {
-                  try {
-                    const diff_markdown = await generate_diff_markdown(
-                      temp_dir_path,
-                      file_mappings
-                    )
-
-                    const trimmed_output = agent_output
-                      .trim()
-                      .replace(/\[([^\]]+)\]\([^)]+\)/g, '`$1`')
-                      .replace(/```[\s\S]*?```/g, '')
-                      .trim()
-                    const trimmed_diff = diff_markdown.trim()
-
-                    if (trimmed_output && trimmed_diff) {
-                      agent_output = trimmed_output + '\n\n' + trimmed_diff
-                    } else {
-                      agent_output = trimmed_diff || trimmed_output
-                    }
-                  } catch (e) {
-                    Logger.error({
-                      function_name: 'invoke_agentic_cli',
-                      message: 'Failed to generate diff',
-                      data: e
-                    })
-                  }
-                }
-
-                Logger.info({
-                  function_name: 'invoke_agentic_cli',
-                  message: "Agent's response",
-                  data: agent_output
-                })
-                resolve()
-              })
-
-              child.on('error', (err) => {
-                Logger.error({
-                  function_name: 'invoke_agentic_cli',
-                  message: 'Agent execution failed',
-                  data: err
-                })
-                reject(err)
-              })
-            })
-          }
+            )
+          })
         )
       } catch (err) {
         vscode.window.showErrorMessage(
@@ -762,6 +779,14 @@ export const invoke_agentic_cli = async (params: {
         go_back_to_caller = true
         break
       }
+
+      const agent_output = agent_outputs.join('\n\n')
+
+      Logger.info({
+        function_name: 'invoke_agentic_cli',
+        message: "Agent's response",
+        data: agent_output
+      })
 
       vscode.window.showInformationMessage(
         t('utils.agentic-cli-invocation.agent.finished', {

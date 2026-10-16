@@ -23,6 +23,7 @@ export type NavItem =
   | 'section:general:group:prompt'
   | 'section:general:group:commits'
   | 'section:general:group:voice-input'
+  | 'section:general:group:agentic-search'
   | 'section:web'
   | 'section:web:group:chatbots'
   | 'section:web:group:web-defaults'
@@ -57,6 +58,10 @@ export const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     id: 'section:general:group:voice-input',
     label: 'general.voice-input.title'
+  },
+  {
+    id: 'section:general:group:agentic-search',
+    label: 'general.agentic-search.title'
   },
   {
     id: 'section:web',
@@ -124,6 +129,11 @@ type Props = {
   voice_input_instructions: string
   default_voice_input_instructions: string
   on_voice_input_instructions_change: (instructions: string) => void
+  agentic_search_instructions: string
+  default_agentic_search_instructions: string
+  on_agentic_search_instructions_change: (instructions: string) => void
+  agentic_search_invocation_count: 1 | 2 | 3
+  on_agentic_search_invocation_count_change: (count: 1 | 2 | 3) => void
   gemini_user_id: number | null
   ai_studio_user_id: number | null
   send_with_shift_enter: boolean
@@ -225,6 +235,8 @@ export const Home: React.FC<Props> = (props) => {
   const [commit_instructions, set_commit_instructions] = useState('')
   const [edit_files_instructions, set_edit_files_instructions] = useState('')
   const [voice_instructions, set_voice_instructions] = useState('')
+  const [agentic_search_instructions, set_agentic_search_instructions] =
+    useState('')
 
   const get_has_warning = (id: NavItem): boolean => {
     if (id == 'section:api:group:providers') {
@@ -247,6 +259,10 @@ export const Home: React.FC<Props> = (props) => {
   useEffect(() => {
     set_voice_instructions(props.voice_input_instructions || '')
   }, [props.voice_input_instructions])
+
+  useEffect(() => {
+    set_agentic_search_instructions(props.agentic_search_instructions || '')
+  }, [props.agentic_search_instructions])
 
   return (
     <div style={{ height: '100vh' }}>
@@ -366,6 +382,39 @@ export const Home: React.FC<Props> = (props) => {
               props.default_voice_input_instructions
             )
           }}
+          agentic_search_instructions={agentic_search_instructions}
+          set_agentic_search_instructions={set_agentic_search_instructions}
+          on_agentic_search_instructions_blur={() => {
+            props.on_agentic_search_instructions_change(
+              agentic_search_instructions
+            )
+            if (
+              agentic_search_instructions == '' &&
+              props.agentic_search_instructions ==
+                props.default_agentic_search_instructions
+            ) {
+              set_agentic_search_instructions(
+                props.default_agentic_search_instructions
+              )
+            }
+          }}
+          default_agentic_search_instructions={
+            props.default_agentic_search_instructions
+          }
+          on_restore_agentic_search_instructions={() => {
+            set_agentic_search_instructions(
+              props.default_agentic_search_instructions
+            )
+            props.on_agentic_search_instructions_change(
+              props.default_agentic_search_instructions
+            )
+          }}
+          agentic_search_invocation_count={
+            props.agentic_search_invocation_count
+          }
+          on_agentic_search_invocation_count_change={
+            props.on_agentic_search_invocation_count_change
+          }
           commit_instructions={commit_instructions}
           set_commit_instructions={set_commit_instructions}
           on_commit_instructions_blur={() => {

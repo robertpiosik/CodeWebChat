@@ -40,6 +40,13 @@ type Props = {
   on_voice_instructions_blur: () => void
   default_voice_instructions: string
   on_restore_voice_instructions: () => void
+  agentic_search_instructions: string
+  set_agentic_search_instructions: (instructions: string) => void
+  on_agentic_search_instructions_blur: () => void
+  default_agentic_search_instructions: string
+  on_restore_agentic_search_instructions: () => void
+  agentic_search_invocation_count: 1 | 2 | 3
+  on_agentic_search_invocation_count_change: (count: 1 | 2 | 3) => void
   commit_instructions: string
   set_commit_instructions: (instructions: string) => void
   on_commit_instructions_blur: () => void
@@ -341,6 +348,60 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   ]}
                   value={props.default_option_for_voice_input}
                   onChange={props.on_default_option_for_voice_input_change}
+                />
+              }
+            />
+          </UiGroup>
+        </div>
+
+        <div
+          ref={(el) =>
+            props.set_section_ref('section:general:group:agentic-search', el)
+          }
+        >
+          <UiGroup title={t('general.agentic-search.title')}>
+            <UiItem
+              title={t('common.instructions')}
+              description={t('general.agentic-search.instructions.description')}
+              is_toggleable
+              translations={{
+                expand: t('common.expand'),
+                collapse: t('common.collapse')
+              }}
+            >
+              <UiTextarea
+                value={props.agentic_search_instructions}
+                min_rows={3}
+                on_change={props.set_agentic_search_instructions}
+                on_blur={props.on_agentic_search_instructions_blur}
+                action_icon={
+                  props.agentic_search_instructions !=
+                  props.default_agentic_search_instructions
+                    ? 'discard'
+                    : undefined
+                }
+                action_title={t('general.action.restore-default')}
+                on_action_click={props.on_restore_agentic_search_instructions}
+              />
+            </UiItem>
+            <UiItem
+              title={t('general.agentic-search.invocation-count.title')}
+              description={t(
+                'general.agentic-search.invocation-count.description'
+              )}
+              slot_right={
+                <UiDropdown
+                  options={[
+                    { value: '1', label: '1' },
+                    { value: '2', label: '2' },
+                    { value: '3', label: '3' }
+                  ]}
+                  value={props.agentic_search_invocation_count.toString()}
+                  onChange={(val) =>
+                    props.on_agentic_search_invocation_count_change(
+                      parseInt(val, 10) as 1 | 2 | 3
+                    )
+                  }
                 />
               }
             />
