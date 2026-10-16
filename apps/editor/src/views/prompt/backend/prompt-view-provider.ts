@@ -375,7 +375,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       vscode.workspace.onDidChangeWorkspaceFolders(() => {
         handle_get_tasks(this)
         handle_get_workspace_state(this)
-        this.send_selected_files()
+        this.send_token_count()
       })
     )
 
@@ -428,7 +428,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       this.current_selected_files_token_count = token_count
       if (this.webview_view) {
         this.send_token_count()
-        this.send_selected_files()
       }
     })
 
@@ -579,6 +578,11 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       symbols_cache: this.symbols_cache
     })
 
+    const selected_files = get_selected_files({
+      workspace_provider: this.workspace_provider,
+      shared_context_state: this.shared_context_state
+    })
+
     this.send_message({
       command: 'TOKEN_COUNT_UPDATED',
       selected_files_token_count: this.current_selected_files_token_count,
@@ -597,19 +601,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
         ) +
           ask_instructions_result.skill_definitions.length) /
           4
-      )
-    })
-  }
-
-  send_selected_files() {
-    const file_paths = get_selected_files({
-      workspace_provider: this.workspace_provider,
-      shared_context_state: this.shared_context_state
-    })
-
-    this.send_message({
-      command: 'SELECTED_FILES',
-      file_paths
+      ),
+      selected_files
     })
   }
 
@@ -890,8 +883,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_pick_tasks_workspace(this, message)
           } else if (message.command == 'GET_TOKEN_COUNT') {
             this.send_token_count()
-          } else if (message.command == 'GET_SELECTED_FILES') {
-            this.send_selected_files()
           } else if (message.command == 'PREVIEW_PROMPT') {
             await handle_preview_prompt({
               prompt_view_provider: this

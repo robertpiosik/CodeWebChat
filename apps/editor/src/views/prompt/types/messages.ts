@@ -567,10 +567,6 @@ export interface GetTokenCountMessage extends BaseMessage {
   command: 'GET_TOKEN_COUNT'
 }
 
-export interface GetSelectedFilesMessage extends BaseMessage {
-  command: 'GET_SELECTED_FILES'
-}
-
 export interface PreviewPromptMessage extends BaseMessage {
   command: 'PREVIEW_PROMPT'
 }
@@ -711,7 +707,6 @@ export type FrontendMessage =
   | PickTasksWorkspaceMessage
   | GetIsModernUiMessage
   | GetTokenCountMessage
-  | GetSelectedFilesMessage
   | PreviewPromptMessage
   | InstallBrowserExtensionMessage
   | PreviewChangesSymbolMessage
@@ -816,6 +811,7 @@ export interface TokenCountMessage extends BaseMessage {
   selected_files_token_count: number
   edit_instructions_token_count: number
   ask_instructions_token_count: number
+  selected_files: string[]
 }
 
 export interface WebConfigurationUpdatedMessage extends BaseMessage {
@@ -869,11 +865,6 @@ export interface CanUndoChangedMessage extends BaseMessage {
 
 export interface ResetApplyButtonTemporaryDisabledStateMessage extends BaseMessage {
   command: 'RESET_APPLY_BUTTON_TEMPORARY_DISABLED_STATE'
-}
-
-export interface SelectedFilesMessage extends BaseMessage {
-  command: 'SELECTED_FILES'
-  file_paths: string[]
 }
 
 export interface SendWithShiftEnterMessage extends BaseMessage {
@@ -1022,7 +1013,6 @@ export type BackendMessage =
   | ApiPromptTypeMessage
   | CliPromptTypeMessage
   | VersionMessage
-  | SelectedFilesMessage
   | SendWithShiftEnterMessage
   | CanUndoChangedMessage
   | ResetApplyButtonTemporaryDisabledStateMessage

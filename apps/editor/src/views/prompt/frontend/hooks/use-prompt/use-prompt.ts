@@ -211,7 +211,6 @@ export const use_prompt = (vscode: any) => {
       { command: 'GET_VOICE_INPUT_PUSH_TO_TALK' },
       { command: 'GET_IS_MODERN_UI' },
       { command: 'GET_TOKEN_COUNT' },
-      { command: 'GET_SELECTED_FILES' },
       { command: 'GET_API_CONFIGURATIONS' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
