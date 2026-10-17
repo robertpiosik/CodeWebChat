@@ -201,13 +201,6 @@ export const Footer: React.FC<Props> = (props) => {
           offset={28}
         />
       )}
-      {hovered_left_action == 'slash' && (
-        <Tooltip
-          message={props.props.translations.use_template}
-          align="left"
-          offset={48}
-        />
-      )}
       {show_submit_tooltip && (
         <Tooltip
           message={
@@ -268,6 +261,12 @@ export const Footer: React.FC<Props> = (props) => {
           onMouseEnter={() => set_hovered_left_action('slash')}
           onMouseLeave={() => set_hovered_left_action(null)}
         >
+          {hovered_left_action == 'slash' && (
+            <Tooltip
+              message={props.props.translations.use_template}
+              align="center"
+            />
+          )}
           <Icon variant="SLASH" />
         </button>
         <span className={styles.icon}></span>
