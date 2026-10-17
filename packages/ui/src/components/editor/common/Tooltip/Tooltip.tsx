@@ -9,19 +9,12 @@ type Props = {
   is_warning?: boolean
   details?: React.ReactNode
   offset?: number
-  translate?: { x: number; y: number }
 }
 
 export const Tooltip: React.FC<Props> = (params) => {
   const style = {
     ...(params.offset !== undefined
       ? { '--tooltip-offset': `${params.offset}px` }
-      : {}),
-    ...(params.translate
-      ? {
-          '--tooltip-translate-x': `${params.translate.x}px`,
-          '--tooltip-translate-y': `${params.translate.y}px`
-        }
       : {})
   } as React.CSSProperties
 

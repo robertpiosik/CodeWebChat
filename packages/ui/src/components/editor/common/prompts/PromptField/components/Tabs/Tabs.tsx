@@ -94,8 +94,7 @@ export const Tabs = forwardRef<TabsRef, Props>((props, ref) => {
               message={props.translations.new_tab}
               position="bottom"
               align="right"
-              offset={6}
-              translate={{ x: 5, y: 0 }}
+              offset={1}
             />
           )}
           <div className={styles['tabs__tab__icon']} />

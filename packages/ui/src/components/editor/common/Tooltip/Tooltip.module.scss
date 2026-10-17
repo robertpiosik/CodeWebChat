@@ -51,16 +51,13 @@
     }
 
     &.tooltip--align-left {
-      transform: translateY(calc(-100% + 1px))
-        translate(var(--tooltip-translate-x, 0), var(--tooltip-translate-y, 0));
+      transform: translateY(calc(-100% + 1px));
     }
     &.tooltip--align-right {
-      transform: translateY(calc(-100% + 1px))
-        translate(var(--tooltip-translate-x, 0), var(--tooltip-translate-y, 0));
+      transform: translateY(calc(-100% + 1px));
     }
     &.tooltip--align-center {
-      transform: translateX(-50%) translateY(calc(-100% - 5px))
-        translate(var(--tooltip-translate-x, 0), var(--tooltip-translate-y, 0));
+      transform: translateX(-50%) translateY(calc(-100% - 5px));
     }
   }
 
@@ -74,16 +71,13 @@
     }
 
     &.tooltip--align-left {
-      transform: translateY(4px)
-        translate(var(--tooltip-translate-x, 0), var(--tooltip-translate-y, 0));
+      transform: translateY(4px);
     }
     &.tooltip--align-right {
-      transform: translateY(4px)
-        translate(var(--tooltip-translate-x, 0), var(--tooltip-translate-y, 0));
+      transform: translateY(4px);
     }
     &.tooltip--align-center {
-      transform: translateX(-50%) translateY(4px)
-        translate(var(--tooltip-translate-x, 0), var(--tooltip-translate-y, 0));
+      transform: translateX(-50%) translateY(4px);
     }
   }
 
@@ -98,8 +92,7 @@
     }
 
     &.tooltip--align-center {
-      transform: translateY(-50%) translateX(6px)
-        translate(var(--tooltip-translate-x, 0), var(--tooltip-translate-y, 0));
+      transform: translateY(-50%) translateX(6px);
 
       &::after {
         top: 50%;
