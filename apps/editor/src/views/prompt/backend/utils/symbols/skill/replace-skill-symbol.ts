@@ -4,7 +4,7 @@ import { Logger } from '@shared/utils/logger'
 import {
   agents,
   discover_skills
-} from '../../../message-handlers/handle-hash-sign-quick-pick/symbols/skill-symbol'
+} from '@/views/shared/utils/hash-sign-quick-pick/symbols/skill-symbol'
 import { normalize_path } from '@/utils/normalize-path'
 import { SymbolCacheManager } from '../symbol-cache'
 

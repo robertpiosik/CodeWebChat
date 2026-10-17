@@ -8,7 +8,7 @@ import { GIT_LOG_SINCE_DURATION } from '@/constants/values'
 import { t } from '@/i18n'
 import { display_token_count } from '@shared/utils/display-token-count'
 import { AsciiTree } from '@/utils/ascii-tree/ascii-tree'
-import { build_commit_changes_markdown } from '../../../utils/symbols/git/replace-git-symbols'
+import { build_commit_changes_markdown } from '@/views/prompt/backend/utils/symbols/git/replace-git-symbols'
 
 export const handle_commit_item = async (
   extension_context: vscode.ExtensionContext,

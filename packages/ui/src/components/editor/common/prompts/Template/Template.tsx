@@ -26,6 +26,7 @@ export type TemplateHandle = {
 export type TemplateProps = {
   id: string
   value?: string
+  placeholder?: string
   on_change: (value: string) => void
   on_focus: () => void
   on_insert_symbol_click: () => void
@@ -161,6 +162,13 @@ export const Template = forwardRef<TemplateHandle, TemplateProps>(
 
     return (
       <div className={styles['template-wrapper']}>
+        {!props.value && props.placeholder && (
+          <div className={styles['placeholder-mirror']}>
+            <div className={styles['placeholder-text']}>
+              {props.placeholder}
+            </div>
+          </div>
+        )}
         <div
           id={props.id}
           ref={input_ref}

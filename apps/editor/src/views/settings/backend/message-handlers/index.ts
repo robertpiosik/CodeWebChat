@@ -1,3 +1,4 @@
+export * from './handle-hash-sign-quick-pick'
 export * from './handle-get-templates'
 export * from './handle-update-templates'
 export * from './handle-create-template'

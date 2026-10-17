@@ -356,6 +356,10 @@ export interface DeleteTemplateMessage {
   index: number
 }
 
+export interface ShowHashSignQuickPickMessage {
+  command: 'SHOW_HASH_SIGN_QUICK_PICK'
+}
+
 export interface GetIsModernUiMessage {
   command: 'GET_IS_MODERN_UI'
 }
@@ -420,6 +424,7 @@ export type FrontendMessage =
   | UpdateTemplatesMessage
   | CreateTemplateMessage
   | DeleteTemplateMessage
+  | ShowHashSignQuickPickMessage
   | GetAgentConfigurationsMessage
   | ReorderAgentConfigurationsMessage
   | DeleteAgentConfigurationMessage
@@ -623,6 +628,11 @@ export interface StartTemplateCreationMessage {
   insertion_index?: number
 }
 
+export interface InsertSymbolMessage {
+  command: 'INSERT_SYMBOL'
+  text: string
+}
+
 export type BackendMessage =
   | ProvidersMessage
   | ApiConfigurationsMessage
@@ -655,6 +665,7 @@ export type BackendMessage =
   | IsModernUiMessage
   | TemplatesMessage
   | StartTemplateCreationMessage
+  | InsertSymbolMessage
   | AgentConfigurationsMessage
   | AgentConfigurationUpdatedMessage
   | StartAgentConfigurationCreationMessage

@@ -477,6 +477,7 @@ export const Settings = () => {
             <EditTemplateForm
               template={updating_template.template}
               on_update={set_updated_template}
+              vscode={vscode}
             />
           </UiModal.Form>
         </UiModal>

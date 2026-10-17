@@ -69,7 +69,8 @@ import {
   handle_get_is_modern_ui,
   handle_set_default_cli_configuration,
   handle_select_default_cli_configuration,
-  handle_open_editor_settings
+  handle_open_editor_settings,
+  handle_hash_sign_quick_pick
 } from './message-handlers'
 import { webview_html } from '@/views/shared/utils/webview-html'
 
@@ -143,6 +144,8 @@ export class SettingsViewProvider {
           await handle_delete_provider(this, message)
         } else if (message.command == 'UPDATE_PROVIDER') {
           await handle_update_provider(this, message)
+        } else if (message.command == 'SHOW_HASH_SIGN_QUICK_PICK') {
+          await handle_hash_sign_quick_pick(this)
         } else if (message.command == 'GET_TEMPLATES') {
           await handle_get_templates(this)
         } else if (message.command == 'UPDATE_TEMPLATES') {

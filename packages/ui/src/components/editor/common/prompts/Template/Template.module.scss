@@ -27,6 +27,22 @@
   }
 }
 
+.placeholder-mirror {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.placeholder-text {
+  padding: 6px 8px;
+  color: var(--vscode-input-placeholderForeground);
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 .toolbar {
   display: flex;
   position: absolute;

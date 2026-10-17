@@ -4,7 +4,7 @@ import { promisify } from 'util'
 import { t } from '@/i18n'
 import { LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY } from '@/constants/state-keys'
 import { display_token_count } from '@shared/utils/display-token-count'
-import { build_changes_markdown } from '../../../utils/symbols/git/replace-git-symbols'
+import { build_changes_markdown } from '@/views/prompt/backend/utils/symbols/git/replace-git-symbols'
 
 const execAsync = promisify(exec)
 
