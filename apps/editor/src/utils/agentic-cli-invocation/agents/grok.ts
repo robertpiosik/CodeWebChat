@@ -50,7 +50,6 @@ export const grok_agent: CodingAgent = {
             : parsed.result.text || parsed.result.response || ''
       }
     } else if (parsed.text && typeof parsed.text === 'string' && !parsed.type) {
-      // Possible fallback for plain objects
       accumulated_output += parsed.text
       return { output: accumulated_output }
     }
