@@ -21,6 +21,10 @@ const get_output_channel = () => {
   return _output_channel
 }
 
+export const show_agentic_cli_output_channel = () => {
+  get_output_channel().show(true)
+}
+
 export const invoke_agentic_cli = async (params: {
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext

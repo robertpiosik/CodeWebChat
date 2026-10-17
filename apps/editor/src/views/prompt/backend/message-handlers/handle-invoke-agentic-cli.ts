@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { t } from '@/i18n'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { invoke_agentic_cli } from '@/utils/agentic-cli-invocation'
+import { show_agentic_cli_output_channel } from '@/utils/agentic-cli-invocation/invoke-agentic-cli'
 import { build_cli_prompt } from './utils/build-cli-prompt'
 import {
   get_last_used_cli_configuration_key,
@@ -71,10 +72,26 @@ export const handle_invoke_agentic_cli = async (
 
   const { agent_output } = result
 
-  if (agent_output && prompt_view_provider.cli_prompt_type == 'edit') {
-    vscode.commands.executeCommand('codeWebChat.applyResponse', {
-      response: agent_output,
-      raw_instructions: current_instructions
-    })
+  if (
+    agent_output !== undefined &&
+    prompt_view_provider.cli_prompt_type == 'edit'
+  ) {
+    if (!agent_output.trim()) {
+      show_agentic_cli_output_channel()
+      return
+    }
+
+    const has_results = await vscode.commands.executeCommand(
+      'codeWebChat.applyResponse',
+      {
+        response: agent_output,
+        raw_instructions: current_instructions,
+        is_from_agentic_cli: true
+      }
+    )
+
+    if (!has_results) {
+      show_agentic_cli_output_channel()
+    }
   }
 }

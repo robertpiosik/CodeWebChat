@@ -74,7 +74,7 @@ export const apply_response_command = (params: {
           vscode.window.showErrorMessage(
             t('command.apply-response-command.error.no-workspace-folder')
           )
-          return
+          return false
         }
 
         response = args?.response
@@ -84,13 +84,13 @@ export const apply_response_command = (params: {
             vscode.window.showInformationMessage(
               t('command.apply-response-command.info.clipboard-empty')
             )
-            return
+            return false
           }
         } else if (!response) {
           vscode.window.showErrorMessage(
             t('command.apply-response-command.error.response-missing')
           )
-          return
+          return false
         }
 
         while (in_progress && !get_response_preview_promise_resolve()) {
@@ -121,7 +121,7 @@ export const apply_response_command = (params: {
             'codeWebChat.internal.generateCommitMessageWithProvidedTextAndCommit',
             commit_message_item.message
           )
-          return
+          return true
         }
 
         is_intelligent_file_search_results = response_items.some(
@@ -134,7 +134,7 @@ export const apply_response_command = (params: {
 
         if (patch_repair_items.length > 0) {
           if (!resolve_fn) {
-            return
+            return false
           }
 
           await handle_patch_repair({
@@ -142,7 +142,7 @@ export const apply_response_command = (params: {
             prompt_view_provider: params.prompt_view_provider,
             workspace_provider: params.workspace_provider
           })
-          return
+          return true
         }
 
         is_code_at_cursor = response_items.some(
@@ -164,7 +164,25 @@ export const apply_response_command = (params: {
               content: item.content
             }
           )
-          return
+          return true
+        }
+
+        const has_valid_blocks =
+          (args?.files_with_content && args.files_with_content.length > 0) ||
+          response_items.some(
+            (item) => item.type == 'file' || item.type == 'diff'
+          )
+
+        if (
+          !has_valid_blocks &&
+          !is_intelligent_file_search_results &&
+          !is_code_at_cursor &&
+          !commit_message_item &&
+          patch_repair_items.length === 0
+        ) {
+          if ((args as any)?.is_from_agentic_cli) {
+            return false
+          }
         }
 
         if (resolve_fn && !is_intelligent_file_search_results) {
@@ -211,7 +229,7 @@ export const apply_response_command = (params: {
               await command_lifecycle_promise
             }
           } else {
-            return
+            return false
           }
         }
 
@@ -367,6 +385,7 @@ export const apply_response_command = (params: {
             msg: err.message
           })
         )
+        return false
       } finally {
         in_progress = false
         if (before_checkpoint) {
@@ -382,6 +401,8 @@ export const apply_response_command = (params: {
           command_lifecycle_promise = null
         }
       }
+
+      return true
     }
   )
 }
