@@ -365,9 +365,7 @@ export const invoke_agentic_cli = async (params: {
           )
         } else {
           temp_dir_path = path.join(os.tmpdir(), 'cwc-cli')
-          await fs.promises
-            .rm(temp_dir_path, { recursive: true, force: true })
-            .catch(() => {})
+          await fs.promises.rm(temp_dir_path, { recursive: true, force: true })
           await fs.promises.mkdir(temp_dir_path, { recursive: true })
         }
 
