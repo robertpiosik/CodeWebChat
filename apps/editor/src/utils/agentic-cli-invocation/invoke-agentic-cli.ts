@@ -594,7 +594,7 @@ export const invoke_agentic_cli = async (params: {
       }
 
       const invocation_count = params.invocation_count || 1
-      let is_cancelled = false
+      let cancelled_count = 0
       const agent_outputs: string[] = []
 
       output_channel.clear()
@@ -617,7 +617,7 @@ export const invoke_agentic_cli = async (params: {
                 })
 
                 if (token.isCancellationRequested) {
-                  is_cancelled = true
+                  cancelled_count++
                   return
                 }
 
@@ -695,7 +695,7 @@ export const invoke_agentic_cli = async (params: {
                   })
 
                   token.onCancellationRequested(() => {
-                    is_cancelled = true
+                    cancelled_count++
                     child.kill()
                     resolve()
                   })
@@ -779,12 +779,12 @@ export const invoke_agentic_cli = async (params: {
         break
       }
 
-      if (is_cancelled) {
+      if (cancelled_count === invocation_count) {
         go_back_to_caller = true
         break
       }
 
-      const agent_output = agent_outputs.join('\n\n')
+      const agent_output = agent_outputs.filter(Boolean).join('\n\n')
 
       Logger.info({
         function_name: 'invoke_agentic_cli',
