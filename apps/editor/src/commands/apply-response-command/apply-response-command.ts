@@ -181,6 +181,9 @@ export const apply_response_command = (params: {
           patch_repair_items.length === 0
         ) {
           if ((args as any)?.is_from_agentic_cli) {
+            vscode.window.showWarningMessage(
+              t('command.apply-response-command.error.no-valid-response')
+            )
             return false
           }
         }
