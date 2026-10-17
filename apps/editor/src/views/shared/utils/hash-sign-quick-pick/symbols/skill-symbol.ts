@@ -259,9 +259,7 @@ export const handle_skill_item = async (): Promise<
 
   if (detected_agents.length == 0) {
     vscode.window.showInformationMessage(
-      t(
-        'views.prompt.handlers.handle-hash-sign-quick-pick.skill-symbol.no-agents'
-      )
+      t('views.shared.utils.hash-sign-quick-pick.skill-symbol.no-agents')
     )
     return 'continue'
   }
@@ -338,7 +336,7 @@ export const handle_skill_item = async (): Promise<
     if (skills.length == 0) {
       vscode.window.showInformationMessage(
         t(
-          'views.prompt.handlers.handle-hash-sign-quick-pick.skill-symbol.no-skills'
+          'views.shared.utils.hash-sign-quick-pick.skill-symbol.no-skills'
         ).replace('{0}', agent.display_name)
       )
       continue

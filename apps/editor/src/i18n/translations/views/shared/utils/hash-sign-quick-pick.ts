@@ -1,5 +1,5 @@
 export const translations = {
-  'views.prompt.handlers.handle-hash-sign-quick-pick.changes-symbol.failed-to-get-git-branches':
+  'views.shared.utils.hash-sign-quick-pick.changes-symbol.failed-to-get-git-branches':
     {
       en: 'Failed to get Git branches. Make sure you are in a Git repository.',
       pl: 'Nie udało się pobrać gałęzi Git. Upewnij się, że jesteś w repozytorium Git.',
@@ -19,26 +19,25 @@ export const translations = {
       hu: 'Nem sikerült lekérni a Git ágakat. Győződjön meg arról, hogy Git tárolóban van.',
       bg: 'Неуспешно получаване на Git клонове. Уверете се, че сте в Git хранилище.'
     },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.commit-symbol.no-commits':
-    {
-      en: 'No git commits found in "{0}".',
-      pl: 'Nie znaleziono zatwierdzeń git w "{0}".',
-      'zh-cn': '在 "{0}" 中未找到 git 提交。',
-      ja: '"{0}" に git コミットが見つかりません。',
-      'zh-tw': '在 "{0}" 中未找到 git 提交。',
-      de: 'Keine Git-Commits in "{0}" gefunden.',
-      es: 'No se encontraron confirmaciones de git en "{0}".',
-      fr: 'Aucun commit git trouvé dans "{0}".',
-      'pt-br': 'Nenhum commit do git encontrado em "{0}".',
-      ru: 'В "{0}" не найдено коммитов git.',
-      ko: '"{0}"에서 git 커밋을 찾을 수 없습니다.',
-      it: 'Nessun commit git trovato in "{0}".',
-      tr: '"{0}" içinde git işlemesi bulunamadı.',
-      cs: 'V "{0}" nebyly nalezeny žádné odevzdání git.',
-      hu: 'Nem találhatók git commitok a(z) "{0}" tárolóban.',
-      bg: 'Не са намерени git къмити в "{0}".'
-    },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.commit-symbol.failed-to-get-commits':
+  'views.shared.utils.hash-sign-quick-pick.commit-symbol.no-commits': {
+    en: 'No git commits found in "{0}".',
+    pl: 'Nie znaleziono zatwierdzeń git w "{0}".',
+    'zh-cn': '在 "{0}" 中未找到 git 提交。',
+    ja: '"{0}" に git コミットが見つかりません。',
+    'zh-tw': '在 "{0}" 中未找到 git 提交。',
+    de: 'Keine Git-Commits in "{0}" gefunden.',
+    es: 'No se encontraron confirmaciones de git en "{0}".',
+    fr: 'Aucun commit git trouvé dans "{0}".',
+    'pt-br': 'Nenhum commit do git encontrado em "{0}".',
+    ru: 'В "{0}" не найдено коммитов git.',
+    ko: '"{0}"에서 git 커밋을 찾을 수 없습니다.',
+    it: 'Nessun commit git trovato in "{0}".',
+    tr: '"{0}" içinde git işlemesi bulunamadı.',
+    cs: 'V "{0}" nebyly nalezeny žádné odevzdání git.',
+    hu: 'Nem találhatók git commitok a(z) "{0}" tárolóban.',
+    bg: 'Не са намерени git къмити в "{0}".'
+  },
+  'views.shared.utils.hash-sign-quick-pick.commit-symbol.failed-to-get-commits':
     {
       en: 'Failed to get git commits. Please ensure git is installed.',
       pl: 'Nie udało się pobrać zatwierdzeń git. Upewnij się, że git jest zainstalowany.',
@@ -58,7 +57,7 @@ export const translations = {
       hu: 'Nem sikerült lekérni a git commitokat. Kérjük, ellenőrizze, hogy a git telepítve van-e.',
       bg: 'Неуспешно получаване на git къмити. Моля, уверете се, че git е инсталиран.'
     },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.saved-context-symbol.failed-to-load':
+  'views.shared.utils.hash-sign-quick-pick.saved-context-symbol.failed-to-load':
     {
       en: 'Failed to load saved contexts. Please check your configuration.',
       pl: 'Nie udało się załadować zapisanych kontekstów. Sprawdź swoją konfigurację.',
@@ -78,7 +77,7 @@ export const translations = {
       hu: 'Nem sikerült betölteni a mentett kontextusokat. Kérjük, ellenőrizze a konfigurációt.',
       bg: 'Неуспешно зареждане на запазените контексти. Моля, проверете конфигурацията си.'
     },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.skill-symbol.no-agents': {
+  'views.shared.utils.hash-sign-quick-pick.skill-symbol.no-agents': {
     en: 'No supported agents with skills detected.',
     pl: 'Nie wykryto obsługiwanych agentów z umiejętnościami.',
     'zh-cn': '未检测到支持技能的代理。',
@@ -96,7 +95,7 @@ export const translations = {
     hu: 'Nem találhatók támogatott ágensek képességekkel.',
     bg: 'Не са открити поддържани агенти с умения.'
   },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.skill-symbol.no-skills': {
+  'views.shared.utils.hash-sign-quick-pick.skill-symbol.no-skills': {
     en: 'No skills found for {0}.',
     pl: 'Nie znaleziono umiejętności dla {0}.',
     'zh-cn': '未找到 {0} 的技能。',
@@ -114,45 +113,43 @@ export const translations = {
     hu: 'Nem találhatók képességek a(z) {0} számára.',
     bg: 'Не са намерени умения за {0}.'
   },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.changes.label':
-    {
-      en: 'Changes',
-      pl: 'Zmiany',
-      'zh-cn': '更改',
-      ja: '変更',
-      'zh-tw': '變更',
-      de: 'Änderungen',
-      es: 'Cambios',
-      fr: 'Modifications',
-      'pt-br': 'Alterações',
-      ru: 'Изменения',
-      ko: '변경 사항',
-      it: 'Modifiche',
-      tr: 'Değişiklikler',
-      cs: 'Změny',
-      hu: 'Változások',
-      bg: 'Промени'
-    },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.changes.description':
-    {
-      en: 'Diff with the selected branch',
-      pl: 'Różnica z wybraną gałęzią',
-      'zh-cn': '与选定分支的差异',
-      ja: '選択したブランチとの差分',
-      'zh-tw': '與選定分支的差異',
-      de: 'Diff mit dem ausgewählten Zweig',
-      es: 'Diferencia con la rama seleccionada',
-      fr: 'Différence avec la branche sélectionnée',
-      'pt-br': 'Diferença com a branch selecionada',
-      ru: 'Различия с выбранной веткой',
-      ko: '선택한 브랜치와의 차이',
-      it: 'Differenza con il ramo selezionato',
-      tr: 'Seçili dal ile fark',
-      cs: 'Rozdíl s vybranou větví',
-      hu: 'Különbség a kiválasztott ággal',
-      bg: 'Разлика с избрания клон'
-    },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.commit.label': {
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.changes.label': {
+    en: 'Changes',
+    pl: 'Zmiany',
+    'zh-cn': '更改',
+    ja: '変更',
+    'zh-tw': '變更',
+    de: 'Änderungen',
+    es: 'Cambios',
+    fr: 'Modifications',
+    'pt-br': 'Alterações',
+    ru: 'Изменения',
+    ko: '변경 사항',
+    it: 'Modifiche',
+    tr: 'Değişiklikler',
+    cs: 'Změny',
+    hu: 'Változások',
+    bg: 'Промени'
+  },
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.changes.description': {
+    en: 'Diff with the selected branch',
+    pl: 'Różnica z wybraną gałęzią',
+    'zh-cn': '与选定分支的差异',
+    ja: '選択したブランチとの差分',
+    'zh-tw': '與選定分支的差異',
+    de: 'Diff mit dem ausgewählten Zweig',
+    es: 'Diferencia con la rama seleccionada',
+    fr: 'Différence avec la branche sélectionnée',
+    'pt-br': 'Diferença com a branch selecionada',
+    ru: 'Различия с выбранной веткой',
+    ko: '선택한 브랜치와의 차이',
+    it: 'Differenza con il ramo selezionato',
+    tr: 'Seçili dal ile fark',
+    cs: 'Rozdíl s vybranou větví',
+    hu: 'Különbség a kiválasztott ággal',
+    bg: 'Разлика с избрания клон'
+  },
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.commit.label': {
     en: 'Commit',
     pl: 'Zatwierdzenie',
     'zh-cn': '提交',
@@ -170,45 +167,79 @@ export const translations = {
     hu: 'Commit',
     bg: 'Къмит'
   },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.commit.description':
-    {
-      en: 'Changes from a specific commit',
-      pl: 'Zmiany z określonego zatwierdzenia',
-      'zh-cn': '来自特定提交的更改',
-      ja: '特定のコミットからの変更',
-      'zh-tw': '來自特定提交的變更',
-      de: 'Änderungen von einem bestimmten Commit',
-      es: 'Cambios de una confirmación específica',
-      fr: "Modifications d'un commit spécifique",
-      'pt-br': 'Alterações de um commit específico',
-      ru: 'Изменения из определенного коммита',
-      ko: '특정 커밋의 변경 사항',
-      it: 'Modifiche da un commit specifico',
-      tr: 'Belirli bir işlemeden değişiklikler',
-      cs: 'Změny z konkrétního odevzdání',
-      hu: 'Változások egy adott commitból',
-      bg: 'Промени от специфичен къмит'
-    },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.saved-context.label':
-    {
-      en: 'Saved context',
-      pl: 'Zapisany kontekst',
-      'zh-cn': '保存的上下文',
-      ja: '保存されたコンテキスト',
-      'zh-tw': '儲存的上下文',
-      de: 'Gespeicherter Kontext',
-      es: 'Contexto guardado',
-      fr: 'Contexte enregistré',
-      'pt-br': 'Contexto salvo',
-      ru: 'Сохраненный контекст',
-      ko: '저장된 컨텍스트',
-      it: 'Contesto salvato',
-      tr: 'Kaydedilmiş bağlam',
-      cs: 'Uložený kontext',
-      hu: 'Mentett kontextus',
-      bg: 'Запазен контекст'
-    },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.saved-context.description':
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.commit.added': {
+    en: 'Commit added.',
+    pl: 'Commit dodany.',
+    'zh-cn': '提交已添加。',
+    ja: 'コミットが追加されました。',
+    'zh-tw': '提交已添加。',
+    de: 'Commit hinzugefügt.',
+    es: 'Confirmación añadida.',
+    fr: 'Commit ajouté.',
+    'pt-br': 'Commit adicionado.',
+    ru: 'Коммит добавлен.',
+    ko: '커밋이 추가되었습니다.',
+    it: 'Commit aggiunto.',
+    tr: 'İşleme eklendi.',
+    cs: 'Odevzdání přidáno.',
+    hu: 'Commit hozzáadva.',
+    bg: 'Къмит добавен.'
+  },
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.commit.add-another': {
+    en: 'Add another',
+    pl: 'Dodaj kolejne',
+    'zh-cn': '添加另一个',
+    ja: '別のコミットを追加',
+    'zh-tw': '添加另一個',
+    de: 'Weiteren hinzufügen',
+    es: 'Agregar otro',
+    fr: 'Ajouter un autre',
+    'pt-br': 'Adicionar outro',
+    ru: 'Добавить еще один',
+    ko: '다른 커밋 추가',
+    it: 'Aggiungi un altro',
+    tr: 'Başka ekle',
+    cs: 'Přidat další',
+    hu: 'Másik hozzáadása',
+    bg: 'Добавете друг'
+  },
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.commit.description': {
+    en: 'Changes from a specific commit',
+    pl: 'Zmiany z określonego zatwierdzenia',
+    'zh-cn': '来自特定提交的更改',
+    ja: '特定のコミットからの変更',
+    'zh-tw': '來自特定提交的變更',
+    de: 'Änderungen von einem bestimmten Commit',
+    es: 'Cambios de una confirmación específica',
+    fr: "Modifications d'un commit spécifique",
+    'pt-br': 'Alterações de um commit específico',
+    ru: 'Изменения из определенного коммита',
+    ko: '특정 커밋의 변경 사항',
+    it: 'Modifiche da un commit specifico',
+    tr: 'Belirli bir işlemeden değişiklikler',
+    cs: 'Změny z konkrétního odevzdání',
+    hu: 'Változások egy adott commitból',
+    bg: 'Промени от специфичен къмит'
+  },
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.saved-context.label': {
+    en: 'Saved context',
+    pl: 'Zapisany kontekst',
+    'zh-cn': '保存的上下文',
+    ja: '保存されたコンテキスト',
+    'zh-tw': '儲存的上下文',
+    de: 'Gespeicherter Kontext',
+    es: 'Contexto guardado',
+    fr: 'Contexte enregistré',
+    'pt-br': 'Contexto salvo',
+    ru: 'Сохраненный контекст',
+    ko: '저장된 컨텍스트',
+    it: 'Contesto salvato',
+    tr: 'Kaydedilmiş bağlam',
+    cs: 'Uložený kontext',
+    hu: 'Mentett kontextus',
+    bg: 'Запазен контекст'
+  },
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.saved-context.description':
     {
       en: 'Files from the workspace',
       pl: 'Pliki z obszaru roboczego',
@@ -227,7 +258,7 @@ export const translations = {
       hu: 'Fájlok a munkaterületről',
       bg: 'Файлове от работното пространство'
     },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.skill.label': {
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.skill.label': {
     en: 'Skill',
     pl: 'Umiejętność',
     'zh-cn': '技能',
@@ -245,45 +276,43 @@ export const translations = {
     hu: 'Képesség',
     bg: 'Умение'
   },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.skill.description':
-    {
-      en: 'Files of a selected skill',
-      pl: 'Pliki wybranej umiejętności',
-      'zh-cn': '选定技能的文件',
-      ja: '選択したスキルのファイル',
-      'zh-tw': '選定技能的文件',
-      de: 'Dateien eines ausgewählten Skills',
-      es: 'Archivos de una habilidad seleccionada',
-      fr: "Fichiers d'une compétence sélectionnée",
-      'pt-br': 'Arquivos de uma habilidade selecionada',
-      ru: 'Файлы выбранного навыка',
-      ko: '선택한 스킬의 파일',
-      it: 'File di una competenza selezionata',
-      tr: 'Seçilen bir yeteneğin dosyaları',
-      cs: 'Soubory vybrané dovednosti',
-      hu: 'Egy kiválasztott képesség fájljai',
-      bg: 'Файлове на избрано умение'
-    },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.skill.tooltip':
-    {
-      en: 'Discover skills at skills.sh',
-      pl: 'Odkryj umiejętności na skills.sh',
-      'zh-cn': '在 skills.sh 发现技能',
-      ja: 'skills.sh でスキルを見つける',
-      'zh-tw': '在 skills.sh 發現技能',
-      de: 'Entdecke Skills auf skills.sh',
-      es: 'Descubre habilidades en skills.sh',
-      fr: 'Découvrez des compétences sur skills.sh',
-      'pt-br': 'Descubra habilidades em skills.sh',
-      ru: 'Откройте для себя навыки на skills.sh',
-      ko: 'skills.sh에서 스킬 발견하기',
-      it: 'Scopri le competenze su skills.sh',
-      tr: "skills.sh'de yetenekleri keşfedin",
-      cs: 'Objevte dovednosti na skills.sh',
-      hu: 'Fedezz fel képességeket a skills.sh oldalon',
-      bg: 'Открийте умения на skills.sh'
-    },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.placeholder': {
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.skill.description': {
+    en: 'Files of a selected skill',
+    pl: 'Pliki wybranej umiejętności',
+    'zh-cn': '选定技能的文件',
+    ja: '選択したスキルのファイル',
+    'zh-tw': '選定技能的文件',
+    de: 'Dateien eines ausgewählten Skills',
+    es: 'Archivos de una habilidad seleccionada',
+    fr: "Fichiers d'une compétence sélectionnée",
+    'pt-br': 'Arquivos de uma habilidade selecionada',
+    ru: 'Файлы выбранного навыка',
+    ko: '선택한 스킬의 파일',
+    it: 'File di una competenza selezionata',
+    tr: 'Seçilen bir yeteneğin dosyaları',
+    cs: 'Soubory vybrané dovednosti',
+    hu: 'Egy kiválasztott képesség fájljai',
+    bg: 'Файлове на избрано умение'
+  },
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.skill.tooltip': {
+    en: 'Discover skills at skills.sh',
+    pl: 'Odkryj umiejętności na skills.sh',
+    'zh-cn': '在 skills.sh 发现技能',
+    ja: 'skills.sh でスキルを見つける',
+    'zh-tw': '在 skills.sh 發現技能',
+    de: 'Entdecke Skills auf skills.sh',
+    es: 'Descubre habilidades en skills.sh',
+    fr: 'Découvrez des compétences sur skills.sh',
+    'pt-br': 'Descubra habilidades em skills.sh',
+    ru: 'Откройте для себя навыки на skills.sh',
+    ko: 'skills.sh에서 스킬 발견하기',
+    it: 'Scopri le competenze su skills.sh',
+    tr: "skills.sh'de yetenekleri keşfedin",
+    cs: 'Objevte dovednosti na skills.sh',
+    hu: 'Fedezz fel képességeket a skills.sh oldalon',
+    bg: 'Открийте умения на skills.sh'
+  },
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.placeholder': {
     en: 'Select symbol to insert',
     pl: 'Wybierz symbol do wstawienia',
     'zh-cn': '选择要插入的符号',
@@ -301,7 +330,7 @@ export const translations = {
     hu: 'Válassza ki a beszúrandó szimbólumot',
     bg: 'Изберете символ за вмъкване'
   },
-  'views.prompt.handlers.handle-hash-sign-quick-pick.quick-pick.title': {
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.title': {
     en: 'Symbols',
     pl: 'Symbole',
     'zh-cn': '符号',

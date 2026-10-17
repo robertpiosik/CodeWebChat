@@ -215,7 +215,7 @@ export const handle_saved_context_item = async (
   } catch (error) {
     vscode.window.showErrorMessage(
       t(
-        'views.prompt.handlers.handle-hash-sign-quick-pick.saved-context-symbol.failed-to-load'
+        'views.shared.utils.hash-sign-quick-pick.saved-context-symbol.failed-to-load'
       )
     )
     return 'continue'

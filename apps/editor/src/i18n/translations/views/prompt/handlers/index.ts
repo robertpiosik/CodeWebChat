@@ -1,5 +1,4 @@
 import { translations as handle_delete_task } from './handle-delete-task'
-import { translations as handle_hash_sign_quick_pick } from './handle-hash-sign-quick-pick'
 import { translations as handle_make_api_call } from './handle-make-api-call'
 import { translations as handle_select_edit_format_instructions } from './handle-select-edit-format-instructions'
 import { translations as handle_voice_input } from './handle-voice-input'
@@ -16,7 +15,6 @@ import { translations as handle_clear_completed_tasks } from './handle-clear-com
 
 export const translations = {
   ...handle_delete_task,
-  ...handle_hash_sign_quick_pick,
   ...handle_make_api_call,
   ...handle_select_edit_format_instructions,
   ...handle_voice_input,

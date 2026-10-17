@@ -290,7 +290,7 @@ export const handle_changes_item = async (
   } catch (error) {
     vscode.window.showErrorMessage(
       t(
-        'views.prompt.handlers.handle-hash-sign-quick-pick.changes-symbol.failed-to-get-git-branches'
+        'views.shared.utils.hash-sign-quick-pick.changes-symbol.failed-to-get-git-branches'
       )
     )
     return 'continue'

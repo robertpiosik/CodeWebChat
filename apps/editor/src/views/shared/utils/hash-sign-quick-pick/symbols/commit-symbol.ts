@@ -122,7 +122,7 @@ export const handle_commit_item = async (
       if (!log_output.trim()) {
         vscode.window.showErrorMessage(
           t(
-            'views.prompt.handlers.handle-hash-sign-quick-pick.commit-symbol.no-commits'
+            'views.shared.utils.hash-sign-quick-pick.commit-symbol.no-commits'
           ).replace('{0}', selected_folder.name)
         )
         if (git_folders.length > 1) {
@@ -317,7 +317,19 @@ export const handle_commit_item = async (
           `#${symbol}(${selected_folder.name}:${selected_commit.label} "${message}") `
         )
 
-        continue
+        const add_another_label = t(
+          'views.shared.utils.hash-sign-quick-pick.quick-pick.commit.add-another'
+        )
+        const action = await vscode.window.showInformationMessage(
+          t('views.shared.utils.hash-sign-quick-pick.quick-pick.commit.added'),
+          add_another_label
+        )
+
+        if (action === add_another_label) {
+          continue
+        }
+
+        return undefined
       }
 
       if (go_back_to_folders) {
@@ -329,7 +341,7 @@ export const handle_commit_item = async (
   } catch (error) {
     vscode.window.showErrorMessage(
       t(
-        'views.prompt.handlers.handle-hash-sign-quick-pick.commit-symbol.failed-to-get-commits'
+        'views.shared.utils.hash-sign-quick-pick.commit-symbol.failed-to-get-commits'
       )
     )
     return 'continue'
