@@ -36,7 +36,8 @@ export const claude_agent: CodingAgent = {
     'stream-json',
     '--verbose',
     '--include-partial-messages',
-    '--dangerously-skip-permissions'
+    '--permission-mode',
+    'auto'
   ],
   get_integrated_terminal_args: () => ['--permission-mode', 'plan'],
   parse_stream_line: (parsed, report_progress) => {
