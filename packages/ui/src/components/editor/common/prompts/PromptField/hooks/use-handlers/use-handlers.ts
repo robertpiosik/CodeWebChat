@@ -154,6 +154,7 @@ export const use_handlers = (
             props_ref.current.on_caret_position_change(caret_pos)
             params.set_caret_position(display_pos)
 
+            params.input_ref.current.focus({ preventScroll: true })
             set_caret_position_for_div(params.input_ref.current, display_pos)
             on_set()
           }
@@ -171,7 +172,17 @@ export const use_handlers = (
     if (params.input_ref.current) {
       requestAnimationFrame(() => {
         if (!params.input_ref.current) return
+        const caret_to_restore =
+          props_ref.current.caret_position_to_set ?? raw_caret_pos_ref.current
+
         params.input_ref.current.focus({ preventScroll: true })
+
+        const display_pos = map_raw_pos_to_display_pos({
+          raw_pos: caret_to_restore,
+          raw_text: props_ref.current.value,
+          context_file_paths: props_ref.current.selected_files ?? []
+        })
+        set_caret_position_for_div(params.input_ref.current, display_pos)
       })
     }
   }, [props.focus_key])
