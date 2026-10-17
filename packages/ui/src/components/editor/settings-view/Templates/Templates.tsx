@@ -81,17 +81,11 @@ export const Templates: React.FC<Templates.Props> = (props) => {
                 )}
                 <span className={styles.group__label}>{label}</span>
               </div>
-              <IconButton
-                codicon_icon={is_expanded ? 'chevron-up' : 'chevron-down'}
-                title={
-                  is_expanded
-                    ? props.translations.collapse
-                    : props.translations.expand
-                }
-                on_click={(e) => {
-                  e.stopPropagation()
-                  toggle_expanded(key)
-                }}
+              <span
+                className={cn(
+                  'codicon',
+                  is_expanded ? 'codicon-chevron-up' : 'codicon-chevron-down'
+                )}
               />
             </div>
 
