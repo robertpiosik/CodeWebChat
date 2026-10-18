@@ -23,7 +23,7 @@
 
 ## Introduction
 
-Use popular chatbots in your browser, send API requests, or invoke agentic CLIs with CWC-constructed, lean [markdown prompts](#markdown-prompts) covering everyday tasks.
+Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs with CWC-constructed, lean [markdown prompts](#markdown-prompts) covering everyday tasks.
 
 > [!TIP]
 >
