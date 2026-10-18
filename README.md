@@ -23,7 +23,7 @@
 
 ## Introduction
 
-Use popular chatbots in your browser, send API requests, or invoke agentic CLIs with CWC-constructed, lean [markdown prompts](#markdown-prompts). Simply tick checkboxes on a file tree or use built-in tools to set the context for the task. By sending selected files with task instructions, you get accurate responses in seconds.
+Use popular chatbots in your browser, send API requests, or invoke agentic CLIs with CWC-constructed, lean [markdown prompts](#markdown-prompts). Simply tick checkboxes on a file tree or use built-in tools to set the context for the task, and without further tool calling, get accurate outputs in seconds.
 
 > [!TIP]
 >
