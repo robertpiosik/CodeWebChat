@@ -32,13 +32,17 @@ export const CHATBOTS = {
       'url-context': 'URL context'
     },
     models: {
+      'gemini-4-argon': {
+        label: 'Gemini 4 Argon',
+        supported_reasoning_efforts: ['Low', 'Medium', 'High']
+      },
       'gemini-pro-latest': {
         label: 'Gemini Pro Latest',
         supported_reasoning_efforts: ['Low', 'Medium', 'High']
       },
       'gemini-flash-latest': {
         label: 'Gemini Flash Latest',
-        supported_reasoning_efforts: ['Minimal', 'Low', 'Medium', 'High']
+        supported_reasoning_efforts: ['Low', 'Medium', 'High']
       },
       'gemini-flash-lite-latest': {
         label: 'Gemini Flash-Lite Latest',
