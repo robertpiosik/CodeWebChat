@@ -17,6 +17,7 @@ let is_processing = false
 let is_waiting_for_focus = false
 let is_first_item_in_queue = true
 let last_opened_tab_id: number | undefined
+let last_opened_tab_injected_apply_button = false
 let is_finished_responding = false
 
 const CHAT_INITIALIZATION_TIMEOUT = 5000
@@ -118,7 +119,7 @@ const process_next_chat = async () => {
 
   let tab_reused = false
 
-  if (last_opened_tab_id !== undefined && is_finished_responding) {
+  if (last_opened_tab_id !== undefined && is_finished_responding && last_opened_tab_injected_apply_button) {
     try {
       const tab = await browser.tabs.get(last_opened_tab_id)
       if (tab.active) {
@@ -142,6 +143,7 @@ const process_next_chat = async () => {
     last_opened_tab_id = new_tab.id
   }
 
+  last_opened_tab_injected_apply_button = current_chat_message.inject_apply_response_button ?? false
   is_finished_responding = false
 
   current_queue_item.timeout_id = setTimeout(() => {
