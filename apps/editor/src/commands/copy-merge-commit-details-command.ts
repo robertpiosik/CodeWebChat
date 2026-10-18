@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
-import { execSync } from 'child_process'
+import { execSync, execFileSync } from 'child_process'
 import { get_git_repository } from '@/utils/git-repository-utils'
+import { is_valid_git_branch_name } from '@/utils/is-valid-git-branch-name'
 import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
 import { AsciiTree } from '@/utils/ascii-tree'
@@ -45,7 +46,7 @@ export const copy_merge_commit_details_command = (): vscode.Disposable => {
               name
             }
           })
-          .filter((b) => b.name.length > 0)
+          .filter((b) => is_valid_git_branch_name(b.name))
 
         if (branches.length === 0) {
           vscode.window.showInformationMessage(
@@ -103,8 +104,14 @@ export const copy_merge_commit_details_command = (): vscode.Disposable => {
 
         let log_output = ''
         try {
-          log_output = execSync(
-            `git log ${selected_branch.name}..HEAD --pretty=format:"%s%n%b%n%x00"`,
+          log_output = execFileSync(
+            'git',
+            [
+              'log',
+              `${selected_branch.name}..HEAD`,
+              '--pretty=format:%s%n%b%n%x00',
+              '--'
+            ],
             {
               cwd: repository.rootUri.fsPath,
               encoding: 'utf-8'

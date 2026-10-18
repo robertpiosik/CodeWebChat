@@ -1,4 +1,4 @@
-import { execSync } from 'child_process'
+import { execSync, execFileSync } from 'child_process'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as vscode from 'vscode'
@@ -13,6 +13,7 @@ import { AsciiTree } from '@/utils/ascii-tree'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { show_parent_folder_quick_pick } from '@/utils/show-parent-folder-quick-pick'
 import { get_error_message } from '@/utils/get-error-message'
+import { is_valid_git_branch_name } from '@/utils/is-valid-git-branch-name'
 
 export const select_files_of_commit_command = (
   workspace_provider: WorkspaceProvider,
@@ -169,7 +170,7 @@ export const select_files_of_commit_command = (
                     name
                   }
                 })
-                .filter((b) => b.name.length > 0)
+                .filter((b) => is_valid_git_branch_name(b.name))
 
               if (branches.length === 0) {
                 vscode.window.showInformationMessage(
@@ -232,8 +233,15 @@ export const select_files_of_commit_command = (
               }
 
               try {
-                files_output = execSync(
-                  `git log ${selected_branch.name}..HEAD --name-only --pretty="format:%B"`,
+                files_output = execFileSync(
+                  'git',
+                  [
+                    'log',
+                    `${selected_branch.name}..HEAD`,
+                    '--name-only',
+                    '--pretty=format:%B',
+                    '--'
+                  ],
                   {
                     cwd: repository.rootUri.fsPath,
                     encoding: 'utf-8'
