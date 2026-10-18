@@ -1,12 +1,13 @@
 import * as vscode from 'vscode'
-import { execSync, exec } from 'child_process'
+import { execSync, execFile } from 'child_process'
 import { promisify } from 'util'
 import { t } from '@/i18n'
 import { LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY } from '@/constants/state-keys'
 import { display_token_count } from '@shared/utils/display-token-count'
 import { build_changes_markdown } from '@/views/prompt/backend/utils/symbols/git/replace-git-symbols'
+import { is_valid_git_branch_name } from '@/utils/is-valid-git-branch-name'
 
-const execAsync = promisify(exec)
+const execFileAsync = promisify(execFile)
 
 export const handle_changes_item = async (
   extension_context: vscode.ExtensionContext
@@ -43,7 +44,7 @@ export const handle_changes_item = async (
         const branches = branches_output
           .split('\n')
           .map((b) => b.replace(/^\*/, '').trim())
-          .filter((b) => b.length > 0)
+          .filter((b) => is_valid_git_branch_name(b))
 
         if (branches.length > 0) {
           workspace_with_branches.push({ folder, branches })
@@ -176,8 +177,9 @@ export const handle_changes_item = async (
               try {
                 let diff_base: string
                 if (current_branch === branch_name) {
-                  const { stdout } = await execAsync(
-                    `git merge-base HEAD ${branch_name}`,
+                  const { stdout } = await execFileAsync(
+                    'git',
+                    ['merge-base', 'HEAD', branch_name],
                     { cwd }
                   )
                   diff_base = stdout.trim()
@@ -185,8 +187,9 @@ export const handle_changes_item = async (
                   diff_base = branch_name
                 }
 
-                const { stdout: diff } = await execAsync(
-                  `git diff ${diff_base}`,
+                const { stdout: diff } = await execFileAsync(
+                  'git',
+                  ['diff', diff_base, '--'],
                   {
                     cwd,
                     maxBuffer: 1024 * 1024 * 100

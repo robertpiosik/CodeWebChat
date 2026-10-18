@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
-import { execSync } from 'child_process'
+import { execSync, execFileSync } from 'child_process'
 import { get_git_repository } from '@/utils/git-repository-utils'
+import { is_valid_git_branch_name } from '@/utils/is-valid-git-branch-name'
 import { AsciiTree } from '@/utils/ascii-tree/ascii-tree'
 import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
@@ -156,6 +157,23 @@ export const replace_changes_symbol = async (params: {
       if (multi_root_match) {
         const [, folder_name, branch_name] = multi_root_match
 
+        if (!is_valid_git_branch_name(branch_name)) {
+          vscode.window.showErrorMessage(
+            t('common.error.failed-to-get-changes-from-branch-in-folder', {
+              branch_name,
+              folder_name
+            })
+          )
+          if (params.symbols_cache) {
+            params.symbols_cache.set(full_match, '', '')
+          }
+          result_instructions[i] = result_instructions[i].replace(
+            replacement_regex,
+            ''
+          )
+          continue
+        }
+
         const workspace_folders = vscode.workspace.workspaceFolders
         if (!workspace_folders) {
           vscode.window.showErrorMessage(
@@ -221,16 +239,19 @@ export const replace_changes_symbol = async (params: {
 
           let diff_base: string
           if (current_branch == branch_name) {
-            diff_base = execSync(`git merge-base HEAD ${branch_name}`, {
-              cwd: target_folder.uri.fsPath
-            })
+            diff_base = execFileSync(
+              'git',
+              ['merge-base', 'HEAD', branch_name],
+              {
+                cwd: target_folder.uri.fsPath
+              }
+            )
               .toString()
               .trim()
           } else {
             diff_base = branch_name
           }
-          const diff_command = `git diff ${diff_base}`
-          const diff = execSync(diff_command, {
+          const diff = execFileSync('git', ['diff', diff_base, '--'], {
             cwd: target_folder.uri.fsPath
           }).toString()
 
@@ -296,6 +317,21 @@ export const replace_changes_symbol = async (params: {
         }
       } else {
         const branch_name = branch_spec
+
+        if (!is_valid_git_branch_name(branch_name)) {
+          vscode.window.showErrorMessage(
+            t('common.error.failed-to-get-changes-from-branch', { branch_name })
+          )
+          if (params.symbols_cache) {
+            params.symbols_cache.set(full_match, '', '')
+          }
+          result_instructions[i] = result_instructions[i].replace(
+            replacement_regex,
+            ''
+          )
+          continue
+        }
+
         const repository = await get_git_repository()
         if (!repository) {
           vscode.window.showErrorMessage(
@@ -344,16 +380,19 @@ export const replace_changes_symbol = async (params: {
 
           let diff_base: string
           if (current_branch == branch_name) {
-            diff_base = execSync(`git merge-base HEAD ${branch_name}`, {
-              cwd: repository.rootUri.fsPath
-            })
+            diff_base = execFileSync(
+              'git',
+              ['merge-base', 'HEAD', branch_name],
+              {
+                cwd: repository.rootUri.fsPath
+              }
+            )
               .toString()
               .trim()
           } else {
             diff_base = branch_name
           }
-          const diff_command = `git diff ${diff_base}`
-          const diff = execSync(diff_command, {
+          const diff = execFileSync('git', ['diff', diff_base, '--'], {
             cwd: repository.rootUri.fsPath
           }).toString()
 
