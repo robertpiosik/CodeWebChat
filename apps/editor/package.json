@@ -1214,7 +1214,7 @@
         },
         "codeWebChat.providers": {
           "type": "array",
-          "scope": "resource",
+          "scope": "application",
           "items": {
             "type": "object",
             "properties": {
