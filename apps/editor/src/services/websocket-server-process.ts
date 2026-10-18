@@ -1,9 +1,10 @@
+import * as crypto from 'crypto'
 import * as http from 'http'
 import * as process from 'process'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const WebSocket = require('ws')
 
-import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
+import { DEFAULT_PORT, CLIENT_TYPE } from '@shared/constants/websocket'
 
 interface BrowserClient {
   ws: WebSocket
@@ -16,13 +17,12 @@ interface BrowserClient {
 
 interface VSCodeClient {
   ws: WebSocket
-  client_id: number
+  client_id: string
   is_alive: boolean
 }
 
 class WebSocketServer {
-  private vscode_clients: Map<number, VSCodeClient> = new Map()
-  private vscode_client_counter: number = 0
+  private vscode_clients: Map<string, VSCodeClient> = new Map()
   private browser_clients: Map<number, BrowserClient> = new Map()
   private browser_client_counter: number = 0
   private connections: Set<WebSocket> = new Set()
@@ -31,7 +31,20 @@ class WebSocketServer {
 
   constructor() {
     this.server = this._create_http_server()
-    this.wss = new WebSocket.Server({ server: this.server })
+    this.wss = new WebSocket.Server({
+      server: this.server,
+      verifyClient: (info: any, cb: any) => {
+        const origin = info.req.headers.origin
+        if (origin) {
+          const allowed_prefixes = ['chrome-extension://', 'moz-extension://']
+          if (!allowed_prefixes.some((prefix) => origin.startsWith(prefix))) {
+            cb(false, 403, 'Forbidden')
+            return
+          }
+        }
+        cb(true)
+      }
+    })
     this._setup_websocket_server()
 
     setInterval(() => this._ping_clients(), 10 * 1000)
@@ -74,21 +87,17 @@ class WebSocketServer {
 
   private _handle_connection(ws: any, request: any) {
     const url = new URL(request.url || '', `http://localhost:${DEFAULT_PORT}`)
-    const token = url.searchParams.get('token')
+    const client_type = url.searchParams.get('client_type')
 
     if (
-      token != SECURITY_TOKENS.BROWSER &&
-      token != SECURITY_TOKENS.EDITOR &&
-      token != SECURITY_TOKENS.LEGACY_BROWSER &&
-      token != SECURITY_TOKENS.LEGACY_EDITOR
+      client_type != CLIENT_TYPE.BROWSER &&
+      client_type != CLIENT_TYPE.EDITOR
     ) {
-      ws.close(1008, 'Invalid security token')
+      ws.close(1008, 'Invalid client type')
       return
     }
 
-    const is_browser_client =
-      token == SECURITY_TOKENS.BROWSER ||
-      token == SECURITY_TOKENS.LEGACY_BROWSER
+    const is_browser_client = client_type == CLIENT_TYPE.BROWSER
 
     if (is_browser_client) {
       this._handle_browser_connection(ws, url)
@@ -213,7 +222,7 @@ class WebSocketServer {
       }
       this._notify_vscode_clients()
     } else {
-      let disconnected_client_id: number | null = null
+      let disconnected_client_id: string | null = null
       for (const [client_id, client] of this.vscode_clients.entries()) {
         if (client.ws === ws) {
           disconnected_client_id = client_id
@@ -235,11 +244,14 @@ class WebSocketServer {
       }
     }
     this.connections.delete(ws)
+
+    if (this.connections.size == 0) {
+      this._shutdown()
+    }
   }
 
-  private _generate_client_id(): number {
-    this.vscode_client_counter += 1
-    return this.vscode_client_counter
+  private _generate_client_id(): string {
+    return crypto.randomUUID()
   }
 
   private _get_connected_browsers_list() {
@@ -291,7 +303,7 @@ class WebSocketServer {
   }
 
   start() {
-    this.server.listen(DEFAULT_PORT, () => {
+    this.server.listen(DEFAULT_PORT, '127.0.0.1', () => {
       console.log(
         `WebSocket server is running on ws://localhost:${DEFAULT_PORT}`
       )

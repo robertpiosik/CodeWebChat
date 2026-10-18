@@ -46,7 +46,7 @@ To maximize prompt cache hits when including selected files, unchanged files are
 <details>
 <summary><strong>Effective steering with examples</strong></summary>
 
-Replace most skills with a simple checkbox tick. Providing examples can make your task instructions simpler and guide the model toward outputs you're looking for.
+Replace most skills with a simple checkbox tick. Providing examples right form the repository can make your task instructions simpler and guide the model toward outputs you're looking for.
 
 </details>
 

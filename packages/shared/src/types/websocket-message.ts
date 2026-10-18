@@ -17,7 +17,7 @@ export type InitializeChatMessage = {
   action: 'initialize-chat'
   text: string
   url: string
-  client_id: number // Client ID to identify which editor sent this message
+  client_id: string 
   model?: string
   target_browser_id?: number
   reasoning_effort?: string
@@ -34,13 +34,13 @@ export type BrowserConnectionStatusMessage = {
 
 export type ApplyResponseMessage = {
   action: 'apply-response'
-  client_id: number
+  client_id: string
   raw_instructions?: string
 }
 
 export type ClientIdAssignmentMessage = {
   action: 'client-id-assignment'
-  client_id: number
+  client_id: string
 }
 
 export type PingMessage = {

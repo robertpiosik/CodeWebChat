@@ -4,7 +4,7 @@ type ChatInitializedMessage = {
 
 type ApplyResponseMessage = {
   action: 'apply-response'
-  client_id: number
+  client_id: string
   raw_instructions?: string
 }
 

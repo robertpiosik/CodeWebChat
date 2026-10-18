@@ -9,7 +9,7 @@ import {
 import { show_response_ready_notification } from './show-response-ready-notification'
 
 export function add_apply_response_button(params: {
-  client_id: number
+  client_id: string
   raw_instructions?: string
   footer: Element
   get_code_from_block?: (code_block: Element) => string | null | undefined

@@ -11,7 +11,7 @@ import {
   WebSocketMessage
 } from '@shared/types/websocket-message'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
+import { DEFAULT_PORT, CLIENT_TYPE } from '@shared/constants/websocket'
 import { Logger } from '@shared/utils/logger'
 import { WebConfiguration } from '@/types/web-configuration'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
@@ -26,14 +26,14 @@ import { t } from '@/i18n'
 export class WebSocketManager {
   private extension_context: vscode.ExtensionContext
   private port: number = DEFAULT_PORT
-  private security_token: string = SECURITY_TOKENS.EDITOR
+  private client_type: string = CLIENT_TYPE.EDITOR
   private client: WebSocket.WebSocket | null = null
   private _on_connection_status_change: vscode.EventEmitter<boolean> =
     new vscode.EventEmitter<boolean>()
   private connected_browsers: ConnectedBrowser[] = []
   private reconnect_timer: NodeJS.Timeout | null = null
   private has_connected_browsers: boolean = false
-  private client_id: number | null = null
+  private client_id: string | null = null
 
   public readonly on_connection_status_change: vscode.Event<boolean> =
     this._on_connection_status_change.event
@@ -168,7 +168,7 @@ export class WebSocketManager {
       }
     }
 
-    const ws_url = `ws://localhost:${this.port}?token=${this.security_token}`
+    const ws_url = `ws://localhost:${this.port}?client_type=${this.client_type}`
     this.client = new WebSocket.WebSocket(ws_url)
 
     this.client.on('open', () => {

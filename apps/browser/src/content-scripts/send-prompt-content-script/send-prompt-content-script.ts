@@ -200,7 +200,7 @@ const main = async () => {
     const stored_data = storage[storage_key] as {
       text: string
       current_chat: Chat
-      client_id: number
+      client_id: string
       raw_instructions?: string
       inject_apply_response_button?: boolean
     }

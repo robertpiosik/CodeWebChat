@@ -1,6 +1,6 @@
 import { WebSocketMessage } from '@shared/types/websocket-message'
 import { handle_messages } from './message-handler'
-import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
+import { DEFAULT_PORT, CLIENT_TYPE } from '@shared/constants/websocket'
 import browser from 'webextension-polyfill'
 let websocket: WebSocket | null = null
 let is_reconnecting = false
@@ -76,7 +76,7 @@ export const connect_websocket = async (): Promise<void> => {
       storage['browser-profile-name'] as string | undefined
     )?.trim()
 
-    let ws_url = `ws://localhost:${DEFAULT_PORT}?token=${SECURITY_TOKENS.BROWSER}&version=${version}&user_agent=${encodeURIComponent(user_agent)}`
+    let ws_url = `ws://localhost:${DEFAULT_PORT}?client_type=${CLIENT_TYPE.BROWSER}&version=${version}&user_agent=${encodeURIComponent(user_agent)}`
     if (profile_name) {
       ws_url += `&profile_name=${encodeURIComponent(profile_name)}`
     }
