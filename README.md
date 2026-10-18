@@ -23,7 +23,7 @@
 
 ## Introduction
 
-Use popular chatbots in your browser, send API requests, or invoke agentic CLIs with CWC-constructed, lean [markdown prompts](#markdown-prompts).
+Use popular chatbots in your browser, send API requests, or invoke agentic CLIs with [markdown prompts](#markdown-prompts).
 
 > [!TIP]
 >
