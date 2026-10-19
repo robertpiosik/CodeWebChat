@@ -12,7 +12,7 @@ import { get_error_message } from '@/utils/get-error-message'
 export const initial_select_model = async (
   model_fetcher: ModelFetcher,
   provider: Provider
-): Promise<string | undefined> => {
+): Promise<string | 'back' | undefined> => {
   let base_url: string | undefined
 
   try {
@@ -62,14 +62,20 @@ export const initial_select_model = async (
 
       while (true) {
         const selected_model_item = await new Promise<
-          vscode.QuickPickItem | undefined
+          vscode.QuickPickItem | 'back' | undefined
         >((resolve) => {
           const quick_pick =
             vscode.window.createQuickPick<vscode.QuickPickItem>()
+          quick_pick.ignoreFocusOut = true
           quick_pick.items = model_items
           quick_pick.title = t('common.select-model.title')
           quick_pick.placeholder = t('common.select-model.placeholder')
-          quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+          const close_button: vscode.QuickInputButton = {
+            iconPath: new vscode.ThemeIcon('close'),
+            tooltip: t('common.close')
+          }
+          quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 
           if (last_selected_model_id) {
             const active = model_items.find(
@@ -92,6 +98,10 @@ export const initial_select_model = async (
             }),
             quick_pick.onDidTriggerButton((button) => {
               if (button === vscode.QuickInputButtons.Back) {
+                accepted = true
+                resolve('back')
+                quick_pick.hide()
+              } else if (button === close_button) {
                 quick_pick.hide()
               }
             }),
@@ -104,6 +114,7 @@ export const initial_select_model = async (
           quick_pick.show()
         })
 
+        if (selected_model_item === 'back') return 'back'
         if (!selected_model_item) return undefined
 
         if (selected_model_item === manual_entry_item) {
@@ -156,7 +167,8 @@ export const initial_select_model = async (
   while (true) {
     const input = await vscode.window.showInputBox({
       title: t('common.select-model.title'),
-      prompt: t('common.prompt.enter-model-name')
+      prompt: t('common.prompt.enter-model-name'),
+      ignoreFocusOut: true
     })
 
     if (!input) return undefined

@@ -35,7 +35,6 @@ export const initial_select_provider = async (
       label: string
       provider?: Provider
     }>()
-    quick_pick.ignoreFocusOut = true
     quick_pick.items = provider_items
     quick_pick.title = t(
       'views.shared.actions.api.create.interactions.initial-select-provider.title'

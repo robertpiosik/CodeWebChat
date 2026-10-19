@@ -79,11 +79,16 @@ export const create = async (params: {
     )
     if (!selected_provider) return undefined
 
-    selected_model = await initial_select_model(
+    const model_result = await initial_select_model(
       model_fetcher,
       selected_provider
     )
-    if (selected_model) break
+
+    if (model_result === 'back') continue
+    if (!model_result) return undefined
+
+    selected_model = model_result
+    break
   }
 
   const api_configuration_to_add: ApiConfiguration = {
