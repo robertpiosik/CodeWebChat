@@ -75,6 +75,18 @@ export const create_handle_input_click = ({
         }
       }
 
+      const saved_context_symbol_element = text_element.closest<HTMLElement>(
+        '[data-type="saved-context-symbol"]'
+      )
+      if (saved_context_symbol_element) {
+        const context_type = saved_context_symbol_element.dataset.contextType
+        const context_name = saved_context_symbol_element.dataset.contextName
+
+        if (context_type && context_name) {
+          props.on_saved_context_click?.(context_type, context_name)
+        }
+      }
+
       const image_symbol_element = text_element.closest<HTMLElement>(
         '[data-type="image-symbol"]'
       )

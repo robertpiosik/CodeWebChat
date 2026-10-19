@@ -591,6 +591,12 @@ export interface PreviewSkillSymbolMessage extends BaseMessage {
   skill_name: string
 }
 
+export interface PreviewSavedContextSymbolMessage extends BaseMessage {
+  command: 'PREVIEW_SAVED_CONTEXT_SYMBOL'
+  context_type: string
+  context_name: string
+}
+
 export interface AgenticSearchMessage extends BaseMessage {
   command: 'AGENTIC_SEARCH'
 }
@@ -712,6 +718,7 @@ export type FrontendMessage =
   | PreviewChangesSymbolMessage
   | PreviewCommitSymbolMessage
   | PreviewSkillSymbolMessage
+  | PreviewSavedContextSymbolMessage
   | AgenticSearchMessage
   | GetAgentConfigurationsMessage
   | ReorderAgentConfigurationsMessage

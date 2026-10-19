@@ -145,6 +145,7 @@ type Props = {
     commit_message?: string
   ) => void
   on_skill_click?: (agent: string, repo: string, skill_name: string) => void
+  on_saved_context_click?: (context_type: string, context_name: string) => void
   on_install_browser_extension: () => void
   on_agentic_search: () => void
   on_clear_context: () => void
@@ -506,6 +507,7 @@ export const MainView: React.FC<Props> = (props) => {
           on_clear_context={props.on_clear_context}
           on_commit_click={props.on_commit_click}
           on_skill_click={props.on_skill_click}
+          on_saved_context_click={props.on_saved_context_click}
           on_preview_prompt={props.on_preview_prompt}
           is_recording={props.is_recording}
           on_recording_started={props.on_recording_started}

@@ -101,6 +101,7 @@ import {
   handle_clear_completed_tasks
 } from './message-handlers'
 import { handle_agentic_search } from './message-handlers/handle-agentic-search'
+import { handle_preview_saved_context_symbol } from './message-handlers/handle-preview-saved-context-symbol'
 import { SelectionState } from '../types/messages'
 import {
   EDIT_FORMAT_STATE_KEY,
@@ -895,6 +896,11 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_preview_commit_symbol(message)
           } else if (message.command == 'PREVIEW_SKILL_SYMBOL') {
             await handle_preview_skill_symbol(message)
+          } else if (message.command == 'PREVIEW_SAVED_CONTEXT_SYMBOL') {
+            await handle_preview_saved_context_symbol({
+              prompt_view_provider: this,
+              message
+            })
           } else if (message.command == 'AGENTIC_SEARCH') {
             await handle_agentic_search(this)
           } else if (message.command == 'GET_CLI_CONFIGURATIONS') {

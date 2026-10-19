@@ -75,6 +75,10 @@ export namespace PromptField {
       commit_message?: string
     ) => void
     on_skill_click?: (agent: string, repo: string, skill_name: string) => void
+    on_saved_context_click?: (
+      context_type: string,
+      context_name: string
+    ) => void
     on_preview_prompt?: () => void
     is_recording: boolean
     on_recording_started: () => void

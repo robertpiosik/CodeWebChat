@@ -170,6 +170,18 @@
     content: '\eab3';
   }
 
+  &--saved-context &__text {
+    cursor: pointer;
+
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-charts-blue) 30%,
+        transparent
+      );
+    }
+  }
+
   &--pasted-lines &__icon::before {
     content: '\eac0';
   }

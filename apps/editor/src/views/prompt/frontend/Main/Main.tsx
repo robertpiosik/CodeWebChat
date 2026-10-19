@@ -92,6 +92,7 @@ type Props = {
 }
 
 export const Main: React.FC<Props> = (props) => {
+  const { vscode } = props
   const [web_configurations, set_web_configurations] =
     useState<WebConfiguration[]>()
   const [
@@ -719,7 +720,21 @@ export const Main: React.FC<Props> = (props) => {
       on_preview_prompt={props.on_preview_prompt}
       on_changes_click={props.on_changes_click}
       on_commit_click={props.on_commit_click}
-      on_skill_click={props.on_skill_click}
+      on_skill_click={(agent, repo, skill_name) => {
+        post_message(vscode, {
+          command: 'PREVIEW_SKILL_SYMBOL',
+          agent,
+          repo,
+          skill_name
+        })
+      }}
+      on_saved_context_click={(context_type, context_name) => {
+        post_message(vscode, {
+          command: 'PREVIEW_SAVED_CONTEXT_SYMBOL',
+          context_type,
+          context_name
+        })
+      }}
       on_install_browser_extension={handle_install_browser_extension}
       on_agentic_search={props.on_agentic_search}
       on_clear_context={handle_clear_context}
