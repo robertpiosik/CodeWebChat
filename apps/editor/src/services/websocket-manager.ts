@@ -55,7 +55,7 @@ export class WebSocketManager {
             resolve(false)
           })
         })
-        .listen(port)
+        .listen(port, '127.0.0.1')
     })
   }
 

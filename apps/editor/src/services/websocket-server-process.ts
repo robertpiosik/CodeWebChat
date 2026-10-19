@@ -28,11 +28,13 @@ class WebSocketServer {
   private connections: Set<WebSocket> = new Set()
   private server: http.Server
   private wss: any
+  private shutdown_timer: NodeJS.Timeout | null = null
 
   constructor() {
     this.server = this._create_http_server()
     this.wss = new WebSocket.Server({
       server: this.server,
+      maxPayload: 10 * 1024 * 1024,
       verifyClient: (info: any, cb: any) => {
         const origin = info.req.headers.origin
         if (origin) {
@@ -48,8 +50,26 @@ class WebSocketServer {
     this._setup_websocket_server()
 
     setInterval(() => this._ping_clients(), 10 * 1000)
+    this._schedule_shutdown()
 
     console.log(`Starting WebSocket server process (PID: ${process.pid})`)
+  }
+
+  private _schedule_shutdown() {
+    if (!this.shutdown_timer) {
+      this.shutdown_timer = setTimeout(() => {
+        if (this.vscode_clients.size == 0) {
+          this._shutdown()
+        }
+      }, 10000)
+    }
+  }
+
+  private _cancel_shutdown() {
+    if (this.shutdown_timer) {
+      clearTimeout(this.shutdown_timer)
+      this.shutdown_timer = null
+    }
   }
 
   private _create_http_server(): http.Server {
@@ -107,6 +127,7 @@ class WebSocketServer {
 
     this.connections.add(ws)
 
+    ws.on('error', (err: any) => console.error('WS Error:', err))
     ws.on('message', (message: any) => this._handle_message(message, ws))
     ws.on('close', () => this._handle_disconnection(ws, is_browser_client))
   }
@@ -134,6 +155,8 @@ class WebSocketServer {
   }
 
   private _handle_vscode_connection(ws: WebSocket) {
+    this._cancel_shutdown()
+
     const client_id = this._generate_client_id()
     this.vscode_clients.set(client_id, { ws, client_id, is_alive: true })
 
@@ -169,6 +192,10 @@ class WebSocketServer {
     try {
       msg_data = JSON.parse(msg_string)
     } catch {
+      return
+    }
+
+    if (!msg_data || typeof msg_data != 'object') {
       return
     }
 
@@ -245,8 +272,8 @@ class WebSocketServer {
     }
     this.connections.delete(ws)
 
-    if (this.connections.size == 0) {
-      this._shutdown()
+    if (this.vscode_clients.size == 0) {
+      this._schedule_shutdown()
     }
   }
 
