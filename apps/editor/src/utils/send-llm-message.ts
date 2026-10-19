@@ -148,12 +148,6 @@ export const send_llm_message = async (params: {
     const request_url = params.base_url + '/chat/completions'
     const request_body: any = { ...params.body, stream: true }
 
-    Logger.info({
-      function_name: 'send_llm_message',
-      message: 'API Request Body',
-      data: request_body
-    })
-
     let buffer = ''
     let full_response = ''
     let content_for_client = ''
@@ -161,9 +155,6 @@ export const send_llm_message = async (params: {
     let think_block_closed = false
     let processed_think_content_length = 0
     let api_thoughts = ''
-
-    let last_log_time = Date.now()
-    let logged_content_length = 0
 
     const process_content = (new_content: string) => {
       if (!new_content) return
@@ -335,17 +326,6 @@ export const send_llm_message = async (params: {
         }
 
         process_content(new_content)
-
-        const current_time = Date.now()
-        if (current_time - last_log_time >= 1000) {
-          Logger.info({
-            function_name: 'send_llm_message',
-            message: 'Streaming tokens',
-            data: `\n${full_response.substring(logged_content_length)}`
-          })
-          last_log_time = current_time
-          logged_content_length = full_response.length
-        }
       })
 
       response.data.on('end', () => {
@@ -418,19 +398,6 @@ export const send_llm_message = async (params: {
                 'Detected closing tag without opening tag (or before opening tag), stripped content before'
             })
           }
-        }
-
-        Logger.info({
-          function_name: 'send_llm_message',
-          message: 'Combined code received (full response):',
-          data: full_response
-        })
-        if (in_think_block || api_thoughts) {
-          Logger.info({
-            function_name: 'send_llm_message',
-            message: 'Combined code received (for client):',
-            data: content_for_client
-          })
         }
 
         resolve({ response: final_content, thoughts })
