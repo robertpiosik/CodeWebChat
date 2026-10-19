@@ -1,4 +1,5 @@
 import * as child_process from 'child_process'
+import * as fs from 'fs'
 import * as http from 'http'
 import * as net from 'net'
 import * as path from 'path'
@@ -43,6 +44,13 @@ export class WebSocketManager {
     this._initialize_server()
   }
 
+  private get _lockfile_path(): string {
+    return path.join(
+      this.extension_context.globalStorageUri.fsPath,
+      'websocket-lock.json'
+    )
+  }
+
   private async _is_port_in_use(port: number): Promise<boolean> {
     return new Promise((resolve) => {
       const tester = net
@@ -79,13 +87,22 @@ export class WebSocketManager {
     )
 
     try {
+      const global_storage_path = this.extension_context.globalStorageUri.fsPath
+      if (!fs.existsSync(global_storage_path)) {
+        fs.mkdirSync(global_storage_path, { recursive: true })
+      }
+
       const spawned = child_process.spawn(
         process.execPath,
         [server_script_path],
         {
           detached: true,
           stdio: 'ignore',
-          env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' }
+          env: {
+            ...process.env,
+            ELECTRON_RUN_AS_NODE: '1',
+            CWC_WEBSOCKET_LOCKFILE: this._lockfile_path
+          }
         }
       )
 
@@ -166,9 +183,51 @@ export class WebSocketManager {
         this._schedule_reconnect()
         return
       }
+    } else {
+      try {
+        await this._wait_for_server_ready(5, 500)
+      } catch (error) {
+        Logger.error({
+          function_name: '_connect_as_client',
+          message:
+            'Existing WebSocket server is not responding to health check',
+          data: error
+        })
+      }
     }
 
-    const ws_url = `ws://localhost:${this.port}?client_type=${this.client_type}`
+    let token = ''
+    try {
+      if (fs.existsSync(this._lockfile_path)) {
+        const lock_data = JSON.parse(
+          fs.readFileSync(this._lockfile_path, 'utf8')
+        )
+        try {
+          process.kill(lock_data.pid, 0)
+          token = lock_data.token
+        } catch (e: any) {
+          if (e.code === 'ESRCH') {
+            Logger.warn({
+              function_name: '_connect_as_client',
+              message: `Process ${lock_data.pid} is not running.`
+            })
+          } else {
+            token = lock_data.token
+          }
+        }
+      }
+    } catch (e) {
+      Logger.error({
+        function_name: '_connect_as_client',
+        message: 'Failed to read lockfile',
+        data: e
+      })
+    }
+
+    let ws_url = `ws://localhost:${this.port}?client_type=${this.client_type}`
+    if (token) {
+      ws_url += `&token=${token}`
+    }
     this.client = new WebSocket.WebSocket(ws_url)
 
     this.client.on('open', () => {
