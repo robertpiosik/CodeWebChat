@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import axios, { AxiosResponse } from 'axios'
 import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
+import { build_request_headers } from '@/utils/build-request-headers'
 
 type StreamCallback = (tokens_per_second: number, total_tokens: number) => void
 type ThinkingStreamCallback = (text: string) => void
@@ -257,18 +258,10 @@ export const send_llm_message = async (params: {
       }
     }
 
-    const headers: Record<string, string> = {
-      ...(params.api_key
-        ? { ['Authorization']: `Bearer ${params.api_key}` }
-        : {}),
-      ['Content-Type']: 'application/json',
-      ...(params.base_url == 'https://openrouter.ai/api/v1'
-        ? {
-            'HTTP-Referer': 'https://codeweb.chat/',
-            'X-Title': 'Code Web Chat'
-          }
-        : {})
-    }
+    const headers = build_request_headers({
+      base_url: params.base_url,
+      api_key: params.api_key
+    })
 
     let response: AxiosResponse<NodeJS.ReadableStream>
     let attempt = 0

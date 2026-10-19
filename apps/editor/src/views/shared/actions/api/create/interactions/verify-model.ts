@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
 import { t } from '@/i18n'
+import { build_request_headers } from '@/utils/build-request-headers'
 
 export const verify_model = async (params: {
   model: string
@@ -68,12 +69,10 @@ export const verify_model = async (params: {
             stream: true
           },
           {
-            headers: {
-              'Content-Type': 'application/json',
-              ...(params.api_key
-                ? { Authorization: `Bearer ${params.api_key}` }
-                : {})
-            },
+            headers: build_request_headers({
+              base_url: params.base_url,
+              api_key: params.api_key
+            }),
             signal: abort_controller.signal,
             responseType: 'stream'
           }

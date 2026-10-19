@@ -1,6 +1,7 @@
 import { Logger } from '@shared/utils/logger'
 import { PROVIDERS } from '@/constants/providers'
 import axios from 'axios'
+import { build_request_headers } from '@/utils/build-request-headers'
 
 export const MODELS_ROUTE_NOT_FOUND_ERROR = '/models route not found'
 
@@ -37,10 +38,7 @@ export class ModelFetcher {
       const response = await axios.get<ApiResponse>(
         `${params.base_url}/models`,
         {
-          headers: {
-            ['Content-Type']: 'application/json',
-            Authorization: params.api_key ? `Bearer ${params.api_key}` : ''
-          }
+          headers: build_request_headers(params)
         }
       )
 

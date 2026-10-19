@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { Provider } from '@/services/providers-manager'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import axios from 'axios'
+import { build_request_headers } from '@/utils/build-request-headers'
 
 export const verify_reasoning_effort = async (params: {
   base_url: string
@@ -39,12 +40,10 @@ export const verify_reasoning_effort = async (params: {
       params.base_url + '/chat/completions',
       body,
       {
-        headers: {
-          ...(params.api_key
-            ? { ['Authorization']: `Bearer ${params.api_key}` }
-            : {}),
-          ['Content-Type']: 'application/json'
-        },
+        headers: build_request_headers({
+          base_url: params.base_url,
+          api_key: params.api_key
+        }),
         signal: abort_controller.signal,
         responseType: 'stream'
       }
