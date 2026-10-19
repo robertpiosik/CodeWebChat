@@ -5,7 +5,7 @@ export const normalize_header_line = (params: {
   line: string
   is_single_root: boolean
 }): string => {
-  const processed_line = params.line.replace(/\s+\d{4}-\d{2}-\d{2}.*$/, '')
+  const processed_line = params.line.replace(/\s\d{4}-\d{2}-\d{2}.*$/, '')
 
   if (processed_line.startsWith('--- ')) {
     let path_part = strip_quotes(processed_line.substring(4).trim())
