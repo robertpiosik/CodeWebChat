@@ -59,8 +59,7 @@ export const edit_model_for_api_configuration = async (params: {
 
     if (models.length > 0) {
       const manual_entry_item: vscode.QuickPickItem = {
-        label: `$(add) ${t('common.action.enter-manually')}`,
-        alwaysShow: true
+        label: `$(add) ${t('common.action.enter-manually')}`
       }
 
       const separator_item: vscode.QuickPickItem = {
@@ -68,14 +67,16 @@ export const edit_model_for_api_configuration = async (params: {
         kind: vscode.QuickPickItemKind.Separator
       }
 
+      const models_only_items: vscode.QuickPickItem[] = models.map((model) => ({
+        label: model.name || model.id,
+        description: model.name ? model.id : undefined,
+        detail: model.description
+      }))
+
       const model_items: vscode.QuickPickItem[] = [
         manual_entry_item,
         separator_item,
-        ...models.map((model) => ({
-          label: model.name || model.id,
-          description: model.name ? model.id : undefined,
-          detail: model.description
-        }))
+        ...models_only_items
       ]
 
       let last_selected_model_id = params.api_configuration.model
@@ -107,6 +108,13 @@ export const edit_model_for_api_configuration = async (params: {
           const disposables: vscode.Disposable[] = []
 
           disposables.push(
+            quick_pick.onDidChangeValue((value) => {
+              if (value) {
+                quick_pick.items = models_only_items
+              } else {
+                quick_pick.items = model_items
+              }
+            }),
             quick_pick.onDidAccept(() => {
               accepted = true
               resolve(quick_pick.selectedItems[0])

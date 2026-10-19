@@ -13,6 +13,13 @@ export const pick_provider_source = async (params?: {
   )
   const available_built_in = Object.entries(PROVIDERS)
 
+  const providers_only_items: vscode.QuickPickItem[] = available_built_in.map(
+    ([id, info]) => ({
+      label: id,
+      detail: info.base_url
+    })
+  )
+
   const items: vscode.QuickPickItem[] = [
     {
       label: custom_label,
@@ -30,10 +37,7 @@ export const pick_provider_source = async (params?: {
       label: t('views.shared.actions.api.upsert-provider.options.predefined'),
       kind: vscode.QuickPickItemKind.Separator
     },
-    ...available_built_in.map(([id, info]) => ({
-      label: id,
-      detail: info.base_url
-    }))
+    ...providers_only_items
   ]
 
   const quick_pick = vscode.window.createQuickPick()
@@ -55,31 +59,51 @@ export const pick_provider_source = async (params?: {
   }
 
   return new Promise((resolve) => {
-    quick_pick.onDidTriggerButton((button) => {
-      if (button === vscode.QuickInputButtons.Back) {
-        quick_pick.hide()
-        resolve('BACK')
-      } else if (button === close_button) {
-        quick_pick.hide()
-      }
-    })
-    quick_pick.onDidAccept(() => {
-      const selected = quick_pick.selectedItems[0]
-      quick_pick.hide()
-      if (!selected) return resolve(null)
+    let is_resolved = false
+    const disposables: vscode.Disposable[] = []
 
-      if (selected.label === custom_label) {
-        resolve({})
-      } else if (selected.label === extended_label) {
-        resolve({ is_extended: true })
-      } else {
-        resolve({ id: selected.label })
-      }
-    })
-    quick_pick.onDidHide(() => {
-      quick_pick.dispose()
-      resolve(null)
-    })
+    disposables.push(
+      quick_pick.onDidChangeValue((value) => {
+        if (value) {
+          quick_pick.items = providers_only_items
+        } else {
+          quick_pick.items = items
+        }
+      }),
+      quick_pick.onDidTriggerButton((button) => {
+        if (button === vscode.QuickInputButtons.Back) {
+          is_resolved = true
+          quick_pick.hide()
+          resolve('BACK')
+        } else if (button === close_button) {
+          quick_pick.hide()
+        }
+      }),
+      quick_pick.onDidAccept(() => {
+        const selected = quick_pick.selectedItems[0]
+        quick_pick.hide()
+        if (!selected) {
+          is_resolved = true
+          return resolve(null)
+        }
+
+        is_resolved = true
+        if (selected.label === custom_label) {
+          resolve({})
+        } else if (selected.label === extended_label) {
+          resolve({ is_extended: true })
+        } else {
+          resolve({ id: selected.label })
+        }
+      }),
+      quick_pick.onDidHide(() => {
+        if (!is_resolved) {
+          resolve(null)
+        }
+        disposables.forEach((d) => d.dispose())
+        quick_pick.dispose()
+      })
+    )
     quick_pick.show()
   })
 }
