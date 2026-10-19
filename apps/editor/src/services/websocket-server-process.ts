@@ -1,5 +1,4 @@
 import * as crypto from 'crypto'
-import * as fs from 'fs'
 import * as http from 'http'
 import * as process from 'process'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -29,27 +28,8 @@ class WebSocketServer {
   private connections: Set<WebSocket> = new Set()
   private server: http.Server
   private wss: any
-  private lockfile_path: string | null = null
-  private session_token: string | null = null
 
   constructor() {
-    this.lockfile_path = process.env.CWC_WEBSOCKET_LOCKFILE || null
-    if (this.lockfile_path) {
-      this.session_token = crypto.randomBytes(32).toString('hex')
-      try {
-        fs.writeFileSync(
-          this.lockfile_path,
-          JSON.stringify({
-            pid: process.pid,
-            token: this.session_token
-          }),
-          { mode: 0o600 }
-        )
-      } catch (e) {
-        console.error('Failed to write lockfile', e)
-      }
-    }
-
     this.server = this._create_http_server()
     this.wss = new WebSocket.Server({
       server: this.server,
@@ -118,14 +98,6 @@ class WebSocketServer {
     }
 
     const is_browser_client = client_type == CLIENT_TYPE.BROWSER
-
-    if (!is_browser_client && this.session_token) {
-      const token = url.searchParams.get('token')
-      if (token !== this.session_token) {
-        ws.close(1008, 'Invalid session token')
-        return
-      }
-    }
 
     if (is_browser_client) {
       this._handle_browser_connection(ws, url)
@@ -344,18 +316,6 @@ class WebSocketServer {
     })
     this.wss.close()
     this.server.close(() => {
-      if (this.lockfile_path) {
-        try {
-          if (fs.existsSync(this.lockfile_path)) {
-            const data = JSON.parse(fs.readFileSync(this.lockfile_path, 'utf8'))
-            if (data.pid === process.pid) {
-              fs.unlinkSync(this.lockfile_path)
-            }
-          }
-        } catch (e) {
-          console.error('Failed to cleanup lockfile', e)
-        }
-      }
       process.exit(0)
     })
   }
