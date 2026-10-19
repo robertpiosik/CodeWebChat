@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "Save File Selection...",
-  "codeWebChat.restoreFileSelection.title": "Restore File Selection...",
+  "codeWebChat.saveContext.title": "Save Context...",
+  "codeWebChat.restoreContext.title": "Restore Context...",
   "codeWebChat.applyResponse.title": "Apply Chat Response",
   "codeWebChat.copyMarkdown.title": "Copy Markdown",
   "codeWebChat.history.title": "History",

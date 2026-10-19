@@ -1,5 +1,5 @@
 export const translations = {
-  'command.save-file-selection-command.nothing-in-context-to-save': {
+  'command.save-context-command.nothing-in-context-to-save': {
     en: 'There is nothing in your context to save.',
     pl: 'Nie ma nic w kontekście do zapisania.',
     'zh-cn': '上下文中没有要保存的内容。',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Nincs semmi a kontextusban, amit menteni lehetne.',
     bg: 'Няма нищо за запазване в контекста.'
   },
-  'command.save-file-selection-command.destination.title': {
+  'command.save-context-command.destination.title': {
     en: 'Destination',
     pl: 'Miejsce docelowe',
     'zh-cn': '目标',
@@ -35,7 +35,7 @@ export const translations = {
     hu: 'Cél',
     bg: 'Дестинация'
   },
-  'command.save-file-selection-command.save-new-context.label': {
+  'command.save-context-command.save-new-context.label': {
     en: '$(add) Save new context...',
     pl: '$(add) Zapisz nowy kontekst...',
     'zh-cn': '$(add) 保存新上下文...',
@@ -53,7 +53,7 @@ export const translations = {
     hu: '$(add) Új kontextus mentése...',
     bg: '$(add) Запазване на нов контекст...'
   },
-  'command.save-file-selection-command.save.placeholder': {
+  'command.save-context-command.save.placeholder': {
     en: 'Select a context to overwrite or create a new one',
     pl: 'Wybierz kontekst do nadpisania lub utwórz nowy',
     'zh-cn': '选择一个要覆盖的上下文或创建一个新的',
@@ -71,7 +71,7 @@ export const translations = {
     hu: 'Válasszon kontextust a felülíráshoz vagy hozzon létre egy újat',
     bg: 'Изберете контекст за презаписване или създайте нов'
   },
-  'command.save-file-selection-command.overwrite.prompt': {
+  'command.save-context-command.overwrite.prompt': {
     en: 'Overwrite context "{name}"?',
     pl: 'Nadpisać kontekst "{name}"?',
     'zh-cn': '覆盖上下文“{name}”？',
@@ -89,7 +89,7 @@ export const translations = {
     hu: 'Felülírja a(z) "{name}" kontextust?',
     bg: 'Презаписване на контекст "{name}"?'
   },
-  'command.save-file-selection-command.overwrite.action': {
+  'command.save-context-command.overwrite.action': {
     en: 'Overwrite',
     pl: 'Nadpisz',
     'zh-cn': '覆盖',
@@ -107,7 +107,7 @@ export const translations = {
     hu: 'Felülírás',
     bg: 'Презаписване'
   },
-  'command.save-file-selection-command.success.saved-successfully': {
+  'command.save-context-command.success.saved-successfully': {
     en: 'Saved successfully.',
     pl: 'Zapisano pomyślnie.',
     'zh-cn': '保存成功。',
@@ -125,7 +125,7 @@ export const translations = {
     hu: 'Sikeresen mentve.',
     bg: 'Успешно запазено.'
   },
-  'command.save-file-selection-command.success.context-updated': {
+  'command.save-context-command.success.context-updated': {
     en: 'Updated successfully.',
     pl: 'Zaktualizowano pomyślnie.',
     'zh-cn': '更新成功。',

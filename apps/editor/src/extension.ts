@@ -19,8 +19,8 @@ import {
   apply_response_command,
   copy_markdown_commands,
   copy_paths_commands,
-  save_file_selection_command,
-  restore_file_selection_command,
+  save_context_command,
+  restore_context_command,
   select_workspace_file_command,
   code_at_cursor_commands,
   close_editor_command,
@@ -173,11 +173,11 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     save_all_command(),
     new_file_command(),
     new_folder_command(),
-    save_file_selection_command({
+    save_context_command({
       workspace_provider,
       extension_context
     }),
-    restore_file_selection_command({
+    restore_context_command({
       workspace_provider,
       extension_context,
       on_context_selected: () => {}

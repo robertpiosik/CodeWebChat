@@ -1,5 +1,5 @@
 export const translations = {
-  'command.restore-file-selection-command.sources.commit-files': {
+  'command.restore-context-command.sources.commit-files': {
     en: 'Files of a commit...',
     pl: 'Pliki z commita...',
     'zh-cn': '提交的文件...',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Egy commit fájljai...',
     bg: 'Файлове от commit...'
   },
-  'command.restore-file-selection-command.source.title': {
+  'command.restore-context-command.source.title': {
     en: 'Source',
     pl: 'Źródło',
     'zh-cn': '来源',
@@ -35,7 +35,7 @@ export const translations = {
     hu: 'Forrás',
     bg: 'Източник'
   },
-  'command.restore-file-selection-command.select-saved.workspace': {
+  'command.restore-context-command.select-saved.workspace': {
     en: 'Saved contexts (from workspace state)',
     pl: 'Wybierz zapisany kontekst (ze stanu obszaru roboczego)',
     'zh-cn': '选择已保存的上下文 (来自工作区状态)',
@@ -53,7 +53,7 @@ export const translations = {
     hu: 'Mentett kontextus kiválasztása (a munkaterület állapotából)',
     bg: 'Изберете запазен контекст (от състоянието на работното пространство)'
   },
-  'command.restore-file-selection-command.select-saved.file': {
+  'command.restore-context-command.select-saved.file': {
     en: 'Saved contexts (from .vscode/contexts.json)',
     pl: 'Wybierz zapisany kontekst (z .vscode/contexts.json)',
     'zh-cn': '选择已保存的上下文 (来自 .vscode/contexts.json)',
@@ -71,7 +71,7 @@ export const translations = {
     hu: 'Mentett kontextus kiválasztása (.vscode/contexts.json-ból)',
     bg: 'Изберете запазен контекст (от .vscode/contexts.json)'
   },
-  'command.restore-file-selection-command.unstaged.include': {
+  'command.restore-context-command.unstaged.include': {
     en: 'Select files to include',
     pl: 'Wybierz pliki do włączenia',
     'zh-cn': '选择要包含的文件',
@@ -89,7 +89,7 @@ export const translations = {
     hu: 'Válassza ki a belefoglalandó fájlokat',
     bg: 'Изберете файлове за включване'
   },
-  'command.restore-file-selection-command.unstaged.apply': {
+  'command.restore-context-command.unstaged.apply': {
     en: 'How would you like to apply the {count} selected files?',
     pl: 'W jaki sposób chcesz zastosować {count} zaznaczonych plików?',
     'zh-cn': '您希望如何应用选定的 {count} 个文件？',
@@ -107,7 +107,7 @@ export const translations = {
     hu: 'Hogyan szeretné alkalmazni a(z) {count} kiválasztott fájlt?',
     bg: 'Как искате да приложите избраните {count} файла?'
   },
-  'command.restore-file-selection-command.delete.empty-state': {
+  'command.restore-context-command.delete.empty-state': {
     en: 'No saved contexts remaining in the Workspace State.',
     pl: 'Brak zapisanych kontekstów w stanie obszaru roboczego.',
     'zh-cn': '工作区状态中没有剩余的已保存上下文。',
@@ -126,7 +126,7 @@ export const translations = {
     bg: 'Няма останали запазени контексти в състоянието на работното пространство.'
   },
 
-  'command.restore-file-selection-command.restored': {
+  'command.restore-context-command.restored': {
     en: 'Restored context "{name}".',
     pl: 'Przywrócono kontekst "{name}".',
     'zh-cn': '已恢复上下文“{name}”。',

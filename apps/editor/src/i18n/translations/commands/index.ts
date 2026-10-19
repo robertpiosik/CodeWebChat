@@ -1,8 +1,8 @@
 import { translations as generate_commit_message_command } from './generate-commit-message-command'
 import { translations as code_at_cursor_command } from './code-at-cursor-command'
 import { translations as apply_response_command } from './apply-response-command'
-import { translations as restore_file_selection_command } from './restore-file-selection-command'
-import { translations as save_file_selection_command } from './save-file-selection-command'
+import { translations as restore_context_command } from './restore-context-command'
+import { translations as save_context_command } from './save-context-command'
 import { translations as select_workspace_file_command } from './select-workspace-file-command'
 import { translations as select_definition_file_command } from './select-definition-file-command'
 import { translations as select_referencing_files_command } from './select-referencing-files-command'
@@ -27,8 +27,8 @@ export const translations = {
   ...generate_commit_message_command,
   ...code_at_cursor_command,
   ...apply_response_command,
-  ...restore_file_selection_command,
-  ...save_file_selection_command,
+  ...restore_context_command,
+  ...save_context_command,
   ...select_workspace_file_command,
   ...select_definition_file_command,
   ...select_referencing_files_command,

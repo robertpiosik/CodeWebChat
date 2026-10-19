@@ -167,13 +167,13 @@
         "icon": "$(twitter)"
       },
       {
-        "command": "codeWebChat.restoreFileSelection",
-        "title": "%codeWebChat.restoreFileSelection.title%",
+        "command": "codeWebChat.restoreContext",
+        "title": "%codeWebChat.restoreContext.title%",
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.saveFileSelection",
-        "title": "%codeWebChat.saveFileSelection.title%",
+        "command": "codeWebChat.saveContext",
+        "title": "%codeWebChat.saveContext.title%",
         "category": "Code Web Chat"
       },
       {
@@ -640,12 +640,12 @@
           "group": "navigation@3"
         },
         {
-          "command": "codeWebChat.restoreFileSelection",
+          "command": "codeWebChat.restoreContext",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "2_more@1"
         },
         {
-          "command": "codeWebChat.saveFileSelection",
+          "command": "codeWebChat.saveContext",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "2_more@2"
         },

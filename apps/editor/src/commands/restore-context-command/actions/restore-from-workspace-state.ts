@@ -80,7 +80,7 @@ export const restore_from_workspace_state = async (params: {
       const quick_pick = vscode.window.createQuickPick()
       quick_pick.title = t('common.context.saved-entries')
       quick_pick.placeholder = t(
-        'command.restore-file-selection-command.select-saved.workspace'
+        'command.restore-context-command.select-saved.workspace'
       )
       quick_pick.buttons = [back_or_close_button]
       quick_pick.items = await create_quick_pick_items(internal_contexts)
@@ -278,7 +278,7 @@ export const restore_from_workspace_state = async (params: {
                   })
                 }
                 vscode.window.showInformationMessage(
-                  t('command.restore-file-selection-command.restored', {
+                  t('command.restore-context-command.restored', {
                     name: deleted_context_name
                   })
                 )
@@ -291,7 +291,7 @@ export const restore_from_workspace_state = async (params: {
 
               if (internal_contexts.length == 0) {
                 await vscode.window.showInformationMessage(
-                  t('command.restore-file-selection-command.delete.empty-state')
+                  t('command.restore-context-command.delete.empty-state')
                 )
                 go_back_after_delete = true
                 quick_pick.hide()

@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "Zapisz wybór plików...",
-  "codeWebChat.restoreFileSelection.title": "Przywróć wybór plików...",
+  "codeWebChat.saveContext.title": "Zapisz kontekst...",
+  "codeWebChat.restoreContext.title": "Przywróć kontekst...",
   "codeWebChat.applyResponse.title": "Zintegruj wiadomość czatbota",
   "codeWebChat.copyMarkdown.title": "Kopiuj Markdown",
   "codeWebChat.history.title": "Historia",

@@ -5,17 +5,17 @@ import { save_to_workspace_state } from './actions/save-to-workspace-state'
 import { save_to_json_file } from './actions/save-to-json-file'
 import { t } from '@/i18n'
 
-export const save_file_selection_command = (params: {
+export const save_context_command = (params: {
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
 }): vscode.Disposable => {
   return vscode.commands.registerCommand(
-    'codeWebChat.saveFileSelection',
+    'codeWebChat.saveContext',
     async () => {
       const selected_files = params.workspace_provider.get_selected_files()
       if (selected_files.length == 0) {
         vscode.window.showInformationMessage(
-          t('command.save-file-selection-command.nothing-in-context-to-save')
+          t('command.save-context-command.nothing-in-context-to-save')
         )
         return
       }
@@ -27,7 +27,7 @@ export const save_file_selection_command = (params: {
 
         const { source } = await select_context_source({
           extension_context: params.extension_context,
-          title: t('command.save-file-selection-command.destination.title'),
+          title: t('command.save-context-command.destination.title'),
           mode: 'save'
         })
 

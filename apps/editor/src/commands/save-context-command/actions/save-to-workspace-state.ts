@@ -20,7 +20,7 @@ export const save_to_workspace_state = async (params: {
   let { merged: internal_contexts, context_to_roots } =
     load_and_merge_global_contexts(params.extension_context)
   const LABEL_SAVE_NEW_CONTEXT = t(
-    'command.save-file-selection-command.save-new-context.label'
+    'command.save-context-command.save-new-context.label'
   )
 
   const edit_button = {
@@ -62,9 +62,7 @@ export const save_to_workspace_state = async (params: {
 
     const quick_pick = vscode.window.createQuickPick<any>()
     quick_pick.title = t('common.context.saved-entries')
-    quick_pick.placeholder = t(
-      'command.save-file-selection-command.save.placeholder'
-    )
+    quick_pick.placeholder = t('command.save-context-command.save.placeholder')
     quick_pick.items = items
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
@@ -252,7 +250,7 @@ export const save_to_workspace_state = async (params: {
       }
 
       vscode.window.showInformationMessage(
-        t('command.save-file-selection-command.success.saved-successfully')
+        t('command.save-context-command.success.saved-successfully')
       )
 
       const reloaded = load_and_merge_global_contexts(params.extension_context)
@@ -265,16 +263,14 @@ export const save_to_workspace_state = async (params: {
     if (selection.context) {
       const context_name = selection.context.name
       const choice = await vscode.window.showWarningMessage(
-        t('command.save-file-selection-command.overwrite.prompt', {
+        t('command.save-context-command.overwrite.prompt', {
           name: context_name
         }),
         { modal: true },
-        t('command.save-file-selection-command.overwrite.action')
+        t('command.save-context-command.overwrite.action')
       )
 
-      if (
-        choice === t('command.save-file-selection-command.overwrite.action')
-      ) {
+      if (choice === t('command.save-context-command.overwrite.action')) {
         const current_roots = context_to_roots.get(context_name) || []
         const all_roots = new Set([
           ...current_roots,
@@ -309,7 +305,7 @@ export const save_to_workspace_state = async (params: {
         }
 
         vscode.window.showInformationMessage(
-          t('command.save-file-selection-command.success.context-updated')
+          t('command.save-context-command.success.context-updated')
         )
 
         const reloaded = load_and_merge_global_contexts(

@@ -79,7 +79,7 @@ export const restore_from_json_file = async (params: {
       const quick_pick = vscode.window.createQuickPick<any>()
       quick_pick.title = t('common.context.saved-entries')
       quick_pick.placeholder = t(
-        'command.restore-file-selection-command.select-saved.file'
+        'command.restore-context-command.select-saved.file'
       )
       quick_pick.buttons = [back_or_close_button]
       quick_pick.items = await create_items()
