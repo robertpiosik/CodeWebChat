@@ -86,7 +86,8 @@ export const Template = forwardRef<TemplateHandle, TemplateProps>(
     const highlighted_html = useMemo(() => {
       return get_highlighted_text({
         text: props.value || '',
-        context_file_paths: []
+        context_file_paths: [],
+        interactive_text: false
       })
     }, [props.value])
 

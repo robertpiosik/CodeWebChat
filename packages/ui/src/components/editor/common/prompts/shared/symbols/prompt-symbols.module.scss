@@ -211,6 +211,14 @@
       transparent
     );
   }
+
+  &--non-interactive &__text {
+    cursor: text !important;
+
+    &:hover {
+      background-color: transparent !important;
+    }
+  }
 }
 
 .inline-code {

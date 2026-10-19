@@ -17,6 +17,7 @@ const escape_html = (str: string): string => {
 const process_text_part_for_files = (params: {
   text: string
   context_file_paths: string[]
+  interactive_text: boolean
 }): string => {
   const file_path_regex = /`([^`]+)`/g
   const parts = params.text.split(file_path_regex)
@@ -27,10 +28,7 @@ const process_text_part_for_files = (params: {
         const file_path = part
         if (params.context_file_paths.includes(file_path)) {
           const filename = file_path.split('/').pop() || file_path
-          return `<span class="${cn(
-            styles['symbol'],
-            styles['symbol--file']
-          )}" data-type="file-symbol" data-path="${escape_html(
+          return `<span class="${cn(styles['symbol'], styles['symbol--file'], { [styles['symbol--non-interactive']]: !params.interactive_text })}" data-type="file-symbol" data-path="${escape_html(
             file_path
           )}" title="${escape_html(file_path)}"><span class="${
             styles['symbol__icon']
@@ -54,7 +52,9 @@ export const get_highlighted_text = (params: {
     count: number
     active_index: number
   }
+  interactive_text?: boolean
 }): string => {
+  const interactive_text = params.interactive_text ?? true
   const saved_context_regex_part =
     '#SavedContext\\((?:WorkspaceState|JSON) "(?:\\\\.|[^"\\\\])*"\\)'
 
@@ -95,11 +95,7 @@ export const get_highlighted_text = (params: {
 
         const is_warning = !params.context_file_paths.includes(path)
 
-        return `<span class="${cn(
-          styles['symbol'],
-          styles['symbol--pasted-lines'],
-          { [styles['symbol--error']]: is_warning }
-        )}" data-type="pasted-lines-symbol"${
+        return `<span class="${cn(styles['symbol'], styles['symbol--pasted-lines'], { [styles['symbol--error']]: is_warning, [styles['symbol--non-interactive']]: !interactive_text })}" data-type="pasted-lines-symbol"${
           is_warning ? ' title="File with selection is not selected"' : ''
         } data-path="${escape_html(path)}" data-start-line="${start_line}" data-start-col="${start_col}" data-end-line="${end_line}" data-end-col="${end_col}"><span class="${
           styles['symbol__icon']
@@ -110,10 +106,7 @@ export const get_highlighted_text = (params: {
 
       if (part && /^#Changes\([^)]+\)$/.test(part)) {
         const branch_name = part.slice(9, -1)
-        return `<span class="${cn(
-          styles['symbol'],
-          styles['symbol--changes']
-        )}" data-type="changes-symbol" data-branch-name="${escape_html(
+        return `<span class="${cn(styles['symbol'], styles['symbol--changes'], { [styles['symbol--non-interactive']]: !interactive_text })}" data-type="changes-symbol" data-branch-name="${escape_html(
           branch_name
         )}"><span class="${
           styles['symbol__icon']
@@ -133,7 +126,8 @@ export const get_highlighted_text = (params: {
           .replace(/\\\\/g, '\\')
         return `<span class="${cn(
           styles['symbol'],
-          styles['symbol--saved-context']
+          styles['symbol--saved-context'],
+          { [styles['symbol--non-interactive']]: !interactive_text }
         )}" data-type="saved-context-symbol" data-context-type="${context_type}" data-context-name="${escape_html(
           context_name
         )}"><span class="${
@@ -155,7 +149,8 @@ export const get_highlighted_text = (params: {
         const short_hash = commit_hash.substring(0, 7)
         return `<span class="${cn(
           styles['symbol'],
-          styles[`symbol--${symbol.toLowerCase()}`]
+          styles[`symbol--${symbol.toLowerCase()}`],
+          { [styles['symbol--non-interactive']]: !interactive_text }
         )}" data-type="${symbol.toLowerCase()}-symbol" data-repo-name="${escape_html(
           repo_name
         )}" data-commit-hash="${escape_html(
@@ -175,10 +170,7 @@ export const get_highlighted_text = (params: {
         const repo = skill_match[2]
         const skill_name = skill_match[3]
 
-        return `<span class="${cn(
-          styles['symbol'],
-          styles['symbol--skill']
-        )}" data-type="skill-symbol" data-agent="${escape_html(
+        return `<span class="${cn(styles['symbol'], styles['symbol--skill'], { [styles['symbol--non-interactive']]: !interactive_text })}" data-type="skill-symbol" data-agent="${escape_html(
           agent
         )}" data-repo="${escape_html(repo)}" data-skill-name="${escape_html(
           skill_name
@@ -194,7 +186,8 @@ export const get_highlighted_text = (params: {
         const hash = image_match[1]
         const is_warning = params.is_web_target
         return `<span class="${cn(styles['symbol'], styles['symbol--image'], {
-          [styles['symbol--error']]: is_warning
+          [styles['symbol--error']]: is_warning,
+          [styles['symbol--non-interactive']]: !interactive_text
         })}" data-type="image-symbol" data-hash="${hash}"${
           is_warning
             ? ' title="The prompt autofill feature can\'t handle images.\nUpload in chatbot or use API with a multimodal model."'
@@ -217,7 +210,9 @@ export const get_highlighted_text = (params: {
           label = website_match[3].replace(/\\"/g, '"').replace(/\\\\/g, '\\')
         }
 
-        return `<span class="${cn(styles['symbol'], styles['symbol--website'])}" data-type="website-symbol" data-url="${escape_html(url)}" data-id-and-token="${id_and_token}" data-title="${escape_html(website_match[3] || '')}" title="${escape_html(label)}"><span class="${styles['symbol__icon']}" data-role="symbol-icon"></span><span class="${styles['symbol__text']}" data-role="symbol-text">${escape_html(label)}</span></span>`
+        return `<span class="${cn(styles['symbol'], styles['symbol--website'], {
+          [styles['symbol--non-interactive']]: !interactive_text
+        })}" data-type="website-symbol" data-url="${escape_html(url)}" data-id-and-token="${id_and_token}" data-title="${escape_html(website_match[3] || '')}" title="${escape_html(label)}"><span class="${styles['symbol__icon']}" data-role="symbol-icon"></span><span class="${styles['symbol__text']}" data-role="symbol-text">${escape_html(label)}</span></span>`
       }
 
       const pasted_text_match = part.match(
@@ -230,7 +225,8 @@ export const get_highlighted_text = (params: {
         const label = `Pasted ${display_token_count(token_count)} tokens`
         return `<span class="${cn(
           styles['symbol'],
-          styles['symbol--pasted-text']
+          styles['symbol--pasted-text'],
+          { [styles['symbol--non-interactive']]: !interactive_text }
         )}" data-type="pasted-text-symbol" data-hash="${hash}" data-token-count="${token_count_str}"><span class="${
           styles['symbol__icon']
         }" data-role="symbol-icon"></span><span class="${
@@ -240,7 +236,8 @@ export const get_highlighted_text = (params: {
 
       return process_text_part_for_files({
         text: part,
-        context_file_paths: params.context_file_paths
+        context_file_paths: params.context_file_paths,
+        interactive_text
       })
     })
     .join('')
