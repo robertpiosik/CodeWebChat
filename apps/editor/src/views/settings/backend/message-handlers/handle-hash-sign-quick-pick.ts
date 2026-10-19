@@ -13,7 +13,8 @@ export const handle_hash_sign_quick_pick = async (
 
   const replacement = await hash_sign_quick_pick({
     extension_context: provider.extension_context,
-    on_insert
+    on_insert,
+    exclude: ['commit']
   })
 
   if (replacement) {

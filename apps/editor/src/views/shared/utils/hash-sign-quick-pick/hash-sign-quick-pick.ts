@@ -16,41 +16,61 @@ const skill_label = `$(thinking) ${t('views.shared.utils.hash-sign-quick-pick.qu
 export const hash_sign_quick_pick = async (params: {
   extension_context: vscode.ExtensionContext
   on_insert: (text: string) => void
+  exclude?: ('changes' | 'commit' | 'saved-context' | 'skill')[]
 }): Promise<string | undefined> => {
-  const items: vscode.QuickPickItem[] = [
-    {
-      label: changes_label,
-      description: t(
-        'views.shared.utils.hash-sign-quick-pick.quick-pick.changes.description'
-      )
-    },
-    {
-      label: commit_label,
-      description: t(
-        'views.shared.utils.hash-sign-quick-pick.quick-pick.commit.description'
-      )
-    },
-    {
-      label: saved_context_label,
-      description: t(
-        'views.shared.utils.hash-sign-quick-pick.quick-pick.saved-context.description'
-      )
-    },
-    {
-      label: skill_label,
-      description: t(
-        'views.shared.utils.hash-sign-quick-pick.quick-pick.skill.description'
-      ),
-      buttons: [
-        {
-          iconPath: new vscode.ThemeIcon('globe'),
-          tooltip: t(
-            'views.shared.utils.hash-sign-quick-pick.quick-pick.skill.tooltip'
-          )
-        }
-      ]
+  const items: vscode.QuickPickItem[] = (
+    [
+      {
+        label: changes_label,
+        description: t(
+          'views.shared.utils.hash-sign-quick-pick.quick-pick.changes.description'
+        )
+      },
+      {
+        label: commit_label,
+        description: t(
+          'views.shared.utils.hash-sign-quick-pick.quick-pick.commit.description'
+        )
+      },
+      {
+        label: saved_context_label,
+        description: t(
+          'views.shared.utils.hash-sign-quick-pick.quick-pick.saved-context.description'
+        )
+      },
+      {
+        label: skill_label,
+        description: t(
+          'views.shared.utils.hash-sign-quick-pick.quick-pick.skill.description'
+        ),
+        buttons: [
+          {
+            iconPath: new vscode.ThemeIcon('globe'),
+            tooltip: t(
+              'views.shared.utils.hash-sign-quick-pick.quick-pick.skill.tooltip'
+            )
+          }
+        ]
+      }
+    ] as vscode.QuickPickItem[]
+  ).filter((item) => {
+    if (params.exclude?.includes('changes') && item.label == changes_label) {
+      return false
     }
-  ]
+    if (params.exclude?.includes('commit') && item.label == commit_label) {
+      return false
+    }
+    if (
+      params.exclude?.includes('saved-context') &&
+      item.label === saved_context_label
+    ) {
+      return false
+    }
+    if (params.exclude?.includes('skill') && item.label == skill_label) {
+      return false
+    }
+    return true
+  })
 
   const last_selected_symbol =
     params.extension_context.workspaceState.get<string>(
