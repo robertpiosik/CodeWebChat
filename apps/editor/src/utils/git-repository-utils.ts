@@ -1,4 +1,4 @@
-import { execSync } from 'child_process'
+import { execFileSync } from 'child_process'
 import * as path from 'path'
 import * as vscode from 'vscode'
 import { t } from '@/i18n'
@@ -280,9 +280,13 @@ export const prepare_staged_changes = async (params: {
                   lines.map((l: string) => '+' + l).join('\n')
               }
             } else {
-              const raw_diff = execSync(`git diff -- "${change.uri.fsPath}"`, {
-                cwd: params.repository.rootUri.fsPath
-              }).toString()
+              const raw_diff = execFileSync(
+                'git',
+                ['diff', '--', change.uri.fsPath],
+                {
+                  cwd: params.repository.rootUri.fsPath
+                }
+              ).toString()
 
               if (
                 raw_diff.includes('\n+++ /dev/null') ||
@@ -522,16 +526,11 @@ export const prepare_staged_changes = async (params: {
       }
     }
 
-    const file_args = files_to_stage
-      .map((file: string) => `"${file.replace(/"/g, '\\"')}"`)
-      .join(' ')
-    execSync(`git add -- ${file_args}`, {
-      cwd: params.repository.rootUri.fsPath
-    })
+    await params.repository.add(files_to_stage)
     await params.repository.status()
   }
 
-  const diff = execSync('git diff --staged', {
+  const diff = execFileSync('git', ['diff', '--staged'], {
     cwd: params.repository.rootUri.fsPath
   }).toString()
 
