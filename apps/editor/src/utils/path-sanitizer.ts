@@ -1,3 +1,4 @@
+import * as fs from 'fs'
 import * as path from 'path'
 import { normalize_path } from './normalize-path'
 
@@ -9,17 +10,19 @@ import { normalize_path } from './normalize-path'
  * @returns A sanitized version of the name with dangerous characters removed
  */
 export const sanitize_file_name = (name: string): string => {
-  // Remove path traversal sequences
-  let sanitized = name.replace(/\.\.\//g, '').replace(/\.\.\\/g, '')
+  if (name.includes('..')) {
+    return ''
+  }
 
-  // Remove leading slashes and backslashes to prevent absolute paths
-  // but preserve leading dots for hidden files
-  sanitized = sanitized.replace(/^[/\\]+/, '')
+  const segments = name.split(/[/\\]/)
+  if (segments.some(seg => seg === '.git')) {
+    return ''
+  }
 
-  // Convert Windows-style backslashes to forward slashes for consistency
+  let sanitized = name.replace(/^[/\\]+/, '')
+
   sanitized = normalize_path(sanitized)
 
-  // Return the sanitized name, preserving valid path segments
   return sanitized
 }
 
@@ -39,10 +42,18 @@ export const create_safe_path = (
     return null // Return null if sanitization results in empty string
   }
 
-  const full_path = path.join(parent_path, sanitized_name)
+  let resolved_parent: string
+  try {
+    resolved_parent = fs.realpathSync(parent_path)
+  } catch (err) {
+    resolved_parent = path.resolve(parent_path)
+  }
 
-  // Verify the constructed path is still within the parent directory
-  if (!full_path.startsWith(parent_path)) {
+  const full_path = path.resolve(resolved_parent, sanitized_name)
+
+  const relative_path = path.relative(resolved_parent, full_path)
+
+  if (relative_path.startsWith('..') || path.isAbsolute(relative_path)) {
     return null
   }
 
