@@ -15,7 +15,7 @@ export const sanitize_file_name = (name: string): string => {
   }
 
   const segments = name.split(/[/\\]/)
-  if (segments.some(seg => seg === '.git')) {
+  if (segments.some((seg) => seg === '.git')) {
     return ''
   }
 
@@ -50,6 +50,26 @@ export const create_safe_path = (
   }
 
   const full_path = path.resolve(resolved_parent, sanitized_name)
+
+  let current_path = full_path
+  while (true) {
+    try {
+      const real_path = fs.realpathSync(current_path)
+      const prefix = resolved_parent.endsWith(path.sep)
+        ? resolved_parent
+        : resolved_parent + path.sep
+      if (real_path !== resolved_parent && !real_path.startsWith(prefix)) {
+        return null
+      }
+      break
+    } catch {
+      const parent = path.dirname(current_path)
+      if (parent === current_path) {
+        break
+      }
+      current_path = parent
+    }
+  }
 
   const relative_path = path.relative(resolved_parent, full_path)
 
