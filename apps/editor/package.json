@@ -1045,7 +1045,7 @@
         },
         "codeWebChat.agents": {
           "type": "array",
-          "scope": "resource",
+          "scope": "application",
           "default": [
             {
               "name": "(1)",
