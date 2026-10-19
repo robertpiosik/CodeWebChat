@@ -24,6 +24,7 @@ export const agentic_search = async (params: {
   websocket_manager: WebSocketManager
   query: string
   current_instructions: string
+  skip_prompt_if_not_empty?: boolean
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | undefined
@@ -43,6 +44,7 @@ export const agentic_search = async (params: {
   }
 
   let query = params.query
+  let first_run = true
 
   while (true) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -60,19 +62,28 @@ export const agentic_search = async (params: {
       invocation_count,
       build_prompt: async () => {
         while (true) {
-          const query_result = await prompt_for_search_term(query, {
-            show_back_button: true
-          })
+          if (
+            first_run &&
+            params.skip_prompt_if_not_empty &&
+            query.trim() !== ''
+          ) {
+            first_run = false
+          } else {
+            const query_result = await prompt_for_search_term(query, {
+              show_back_button: true
+            })
 
-          if (query_result.back) {
-            return 'back'
+            if (query_result.back) {
+              return 'back'
+            }
+
+            if (query_result.value === undefined) {
+              return undefined
+            }
+
+            query = query_result.value
           }
-
-          if (query_result.value === undefined) {
-            return undefined
-          }
-
-          query = query_result.value
+          first_run = false
 
           if (query.trim() == '') {
             continue
