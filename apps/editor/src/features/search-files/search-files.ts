@@ -108,8 +108,8 @@ export const search_files = async (params: {
             params.workspace_provider.get_selected_files()
 
           if (currently_selected.length === 0) {
-            vscode.window.showInformationMessage(
-              t('common.warning.no-files-selected' as any)
+            vscode.window.showWarningMessage(
+              t('common.warning.no-files-selected')
             )
             continue
           }
@@ -124,7 +124,7 @@ export const search_files = async (params: {
 
           if (files_to_search.length === 0) {
             vscode.window.showInformationMessage(
-              t('feature.search-files.info.no-files-selected-in-folder' as any)
+              t('feature.search-files.info.no-files-selected-in-folder')
             )
             continue
           }

@@ -265,9 +265,7 @@ export const search_files_commands = (
     try {
       const currently_selected = workspace_provider.get_selected_files()
       if (currently_selected.length === 0) {
-        vscode.window.showInformationMessage(
-          t('common.warning.no-files-selected')
-        )
+        vscode.window.showWarningMessage(t('common.warning.no-files-selected'))
         return
       }
 

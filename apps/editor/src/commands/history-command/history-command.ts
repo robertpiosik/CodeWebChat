@@ -138,9 +138,7 @@ export const history_command = (params: {
           })
 
           const map_checkpoint_to_item = (c: Checkpoint) => {
-            const label_text = t(
-              `command.history-command.trigger.${c.trigger}` as any
-            )
+            const label_text = t(`command.history-command.trigger.${c.trigger}`)
             return {
               id: c.timestamp.toString(),
               label: label_text,
