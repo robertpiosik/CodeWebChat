@@ -85,10 +85,10 @@ export const use_prompt = (vscode: any) => {
     })
   }
 
-  const handle_open_pasted_text = (hash: string) => {
+  const handle_open_pasted_text = (id: string) => {
     post_message(vscode, {
       command: 'OPEN_PROMPT_PASTED_TEXT',
-      hash
+      id
     })
   }
 

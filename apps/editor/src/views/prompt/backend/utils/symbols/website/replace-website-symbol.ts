@@ -1,17 +1,18 @@
-import * as crypto from 'crypto'
-import * as fs from 'fs'
-import * as os from 'os'
-import * as path from 'path'
-import { fetch_and_save_website } from '../../website-fetcher'
+import * as vscode from 'vscode'
 import { SymbolCacheManager } from '../symbol-cache'
+import { PersistentTextStorage } from '../../persistent-text-storage'
 
 export const replace_website_symbol = async (params: {
   instructions: string[]
+  extension_context: vscode.ExtensionContext
   symbols_cache?: SymbolCacheManager
 }): Promise<string[]> => {
+  const storage = new PersistentTextStorage(params.extension_context)
+
   return Promise.all(
     params.instructions.map(async (instruction) => {
-      const regex = /#Website\(([^)]+)\)/g
+      const regex =
+        /#Website\([^ ]+ ([a-fA-F0-9]+)(?::\d+)?(?: "((?:\\.|[^"\\])*)")?\)/g
       const matches = Array.from(instruction.matchAll(regex))
 
       if (matches.length == 0) {
@@ -33,26 +34,15 @@ export const replace_website_symbol = async (params: {
             }
           }
 
-          const url = match[1]
-          const hash = crypto.createHash('md5').update(url).digest('hex')
-          const filename = `cwc-website-${hash}.txt`
-          const file_path = path.join(os.tmpdir(), filename)
+          const id = match[1]
 
           try {
-            const content = await fs.promises.readFile(file_path, 'utf-8')
+            const content = await storage.load(id)
             return {
               content,
               success: true
             }
           } catch (error) {
-            // If file is missing (e.g. reboot), try to refetch
-            const content = await fetch_and_save_website(url)
-            if (content) {
-              return {
-                content,
-                success: true
-              }
-            }
             return {
               success: false
             }
@@ -73,7 +63,13 @@ export const replace_website_symbol = async (params: {
         if (replacement.cached && replacement.replacement !== undefined) {
           result_string += replacement.replacement
         } else if (replacement.success && replacement.content) {
-          const rep = `\n\n---\n\n${replacement.content}\n\n---\n\n`
+          let title_str = ''
+          if (match[2]) {
+            const title = match[2].replace(/\\"/g, '"').replace(/\\\\/g, '\\')
+            title_str = `**${title}**\n\n`
+          }
+          const backticks = replacement.content.includes('```') ? '````' : '```'
+          const rep = `\n\n${title_str}${backticks}markdown\n${replacement.content}\n${backticks}\n\n`
           result_string += rep
           if (params.symbols_cache) {
             params.symbols_cache.set(full_match, rep, '')

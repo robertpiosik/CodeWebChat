@@ -67,7 +67,8 @@ export const get_highlighted_text = (params: {
 
   const image_regex_part = '#Image\\([a-fA-F0-9]+\\)'
 
-  const website_regex_part = '#Website\\([^)]+\\)'
+  const website_regex_part =
+    '#Website\\([^ ]+ [a-fA-F0-9]+:\\d+(?: "(?:\\\\.|[^"\\\\])*")?\\)'
 
   const pasted_text_regex_part = '#PastedText\\([a-fA-F0-9]+:\\d+\\)'
 
@@ -205,23 +206,18 @@ export const get_highlighted_text = (params: {
         }" data-role="symbol-text">Image</span></span>`
       }
 
-      const website_match = part.match(/^#Website\(([^)]+)\)$/)
+      const website_match = part.match(
+        /^#Website\(([^ ]+) ([a-fA-F0-9]+:\d+)(?: "((?:\\.|[^"\\])*)")?\)$/
+      )
       if (part && website_match) {
         const url = website_match[1]
+        const id_and_token = website_match[2]
         let label = 'Website'
-        try {
-          label = new URL(url).hostname
-          if (label.startsWith('www.')) {
-            label = label.slice(4)
-          }
-        } catch {}
+        if (website_match[3]) {
+          label = website_match[3].replace(/\\"/g, '"').replace(/\\\\/g, '\\')
+        }
 
-        const display_url = url.replace(/^https?:\/\//, '')
-        const display_url_stripped = display_url.startsWith('www.')
-          ? display_url.slice(4)
-          : display_url
-
-        return `<span class="${cn(styles['symbol'], styles['symbol--website'])}" data-type="website-symbol" data-url="${escape_html(url)}" title="${escape_html(display_url_stripped)}"><span class="${styles['symbol__icon']}" data-role="symbol-icon"></span><span class="${styles['symbol__text']}" data-role="symbol-text">${escape_html(label)}</span></span>`
+        return `<span class="${cn(styles['symbol'], styles['symbol--website'])}" data-type="website-symbol" data-url="${escape_html(url)}" data-id-and-token="${id_and_token}" data-title="${escape_html(website_match[3] || '')}" title="${escape_html(label)}"><span class="${styles['symbol__icon']}" data-role="symbol-icon"></span><span class="${styles['symbol__text']}" data-role="symbol-text">${escape_html(label)}</span></span>`
       }
 
       const pasted_text_match = part.match(

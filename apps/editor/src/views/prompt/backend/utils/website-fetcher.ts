@@ -1,7 +1,3 @@
-import * as crypto from 'crypto'
-import * as fs from 'fs'
-import * as os from 'os'
-import * as path from 'path'
 import axios from 'axios'
 import { JSDOM } from 'jsdom'
 import { Readability, isProbablyReaderable } from '@mozilla/readability'
@@ -90,19 +86,11 @@ const create_turndown_service = () => {
   return turndown_service
 }
 
-export const get_website_file_path = (url: string) => {
-  const hash = crypto.createHash('md5').update(url).digest('hex')
-  const filename = `cwc-website-${hash}.txt`
-  return path.join(os.tmpdir(), filename)
-}
-
-export const fetch_and_save_website = async (
+export const fetch_website = async (
   url: string,
   abort_signal?: AbortSignal
-): Promise<string | null> => {
+): Promise<{ content: string; title: string } | null> => {
   try {
-    const file_path = get_website_file_path(url)
-
     const response = await axios.get(url, {
       headers: {
         'User-Agent':
@@ -170,12 +158,7 @@ export const fetch_and_save_website = async (
           content = remove_markdown_images(content)
 
           if (content && content.trim().length > 0) {
-            if (article.title) {
-              content = `# ${article.title}\n\n${content}`
-            }
-
-            await fs.promises.writeFile(file_path, content, 'utf-8')
-            return content
+            return { content, title: article.title || '' }
           }
         }
       }

@@ -19,10 +19,13 @@ export const simplify_prompt_symbols = (params: { prompt: string }): string => {
   simplified = simplified.replace(/#Skill\([^)]+\)/g, '[Skill]')
   simplified = simplified.replace(/#Image\([a-fA-F0-9]+\)/g, '[Image]')
   simplified = simplified.replace(
-    /#PastedText\([a-fA-F0-9]+:\d+\)/g,
+    /#PastedText\([a-fA-F0-9]+(?::\d+)?\)/g,
     '[Pasted text]'
   )
-  simplified = simplified.replace(/#Website\([^)]+\)/g, '[Website]')
+  simplified = simplified.replace(
+    /#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "(?:\\.|[^"\\])*")?\)/g,
+    '[Website]'
+  )
 
   return simplified
 }

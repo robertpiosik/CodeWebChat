@@ -157,9 +157,12 @@ export const use_symbol_deletion = (params: {
       }
     } else if (symbol_type == 'website-symbol') {
       const url = symbol_element.dataset.url
-      if (!url) return
+      const id_and_token = symbol_element.dataset.idAndToken
+      const title = symbol_element.dataset.title
+      if (!url || !id_and_token) return
 
-      const search_pattern = `#Website(${url})`
+      const title_part = title ? ` "${title}"` : ''
+      const search_pattern = `#Website(${url} ${id_and_token}${title_part})`
       const start_index = get_start_index(symbol_element, search_pattern)
 
       if (start_index != -1) {
@@ -334,7 +337,7 @@ export const use_symbol_deletion = (params: {
   const handle_pasted_text_symbol_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = params.value.substring(0, raw_pos)
     const match = text_before_cursor.match(
-      /#PastedText\(([a-fA-F0-9]+)(?: (\d+))?\)$/
+      /#PastedText\(([a-fA-F0-9]+)(?::\d+)?\)$/
     )
 
     if (match) {
@@ -351,7 +354,9 @@ export const use_symbol_deletion = (params: {
 
   const handle_website_symbol_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = params.value.substring(0, raw_pos)
-    const match = text_before_cursor.match(/#Website\(([^)]+)\)$/)
+    const match = text_before_cursor.match(
+      /#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "(?:\\.|[^"\\])*")?\)$/
+    )
 
     if (match) {
       const start_of_match = raw_pos - match[0].length

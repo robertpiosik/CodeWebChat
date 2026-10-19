@@ -1,11 +1,8 @@
 import * as vscode from 'vscode'
 import { PasteUrlMessage } from '../../types/messages'
 import { PromptViewProvider } from '../prompt-view-provider'
-import * as fs from 'fs'
-import {
-  fetch_and_save_website,
-  get_website_file_path
-} from '../utils/website-fetcher'
+import { fetch_website } from '../utils/website-fetcher'
+import { PersistentTextStorage } from '../utils/persistent-text-storage'
 
 export const handle_paste_url = async (
   prompt_view_provider: PromptViewProvider,
@@ -23,13 +20,9 @@ export const handle_paste_url = async (
   }
 
   try {
-    const url = message.url
-    const file_path = get_website_file_path(url)
-
-    if (fs.existsSync(file_path)) {
-      prompt_view_provider.add_text_at_cursor_position(`#Website(${url})`)
-      return
-    }
+    const storage = new PersistentTextStorage(
+      prompt_view_provider.extension_context
+    )
 
     const abort_controller = new AbortController()
     prompt_view_provider.api_call_abort_controller = abort_controller
@@ -41,15 +34,40 @@ export const handle_paste_url = async (
     })
 
     let content: string | null = null
+    let title: string = ''
+    let id: string | null = null
     try {
-      content = await fetch_and_save_website(url, abort_controller.signal)
+      const result = await fetch_website(message.url, abort_controller.signal)
+      if (result) {
+        content = result.content
+        title = result.title
+        id = await storage.save(content)
+      }
     } finally {
       prompt_view_provider.send_message({ command: 'HIDE_PROGRESS' })
       prompt_view_provider.api_call_abort_controller = null
     }
 
-    if (content) {
-      prompt_view_provider.add_text_at_cursor_position(`#Website(${url})`)
+    if (content && id) {
+      const token_count = Math.ceil(content.length / 4)
+
+      let title_part = ''
+      if (title) {
+        title_part = ` "${title.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`
+      } else {
+        try {
+          const parsed = new URL(message.url)
+          let hostname = parsed.hostname
+          if (hostname.startsWith('www.')) {
+            hostname = hostname.slice(4)
+          }
+          title_part = ` "${hostname}"`
+        } catch {}
+      }
+
+      prompt_view_provider.add_text_at_cursor_position(
+        `#Website(${message.url} ${id}:${token_count}${title_part})`
+      )
     } else {
       await paste_as_text()
     }

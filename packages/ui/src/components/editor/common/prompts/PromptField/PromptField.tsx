@@ -65,7 +65,7 @@ export namespace PromptField {
     on_paste_image: (base64_content: string) => void
     on_open_image: (hash: string) => void
     on_paste_long_text: (text: string) => void
-    on_open_pasted_text: (hash: string) => void
+    on_open_pasted_text: (id: string) => void
     on_paste_url: (url: string) => void
     on_changes_click?: (branch_name: string) => void
     on_commit_click?: (

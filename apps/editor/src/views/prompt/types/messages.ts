@@ -495,7 +495,7 @@ export interface SavePromptPastedTextMessage extends BaseMessage {
 
 export interface OpenPromptPastedTextMessage extends BaseMessage {
   command: 'OPEN_PROMPT_PASTED_TEXT'
-  hash: string
+  id: string
 }
 
 export interface PasteUrlMessage extends BaseMessage {

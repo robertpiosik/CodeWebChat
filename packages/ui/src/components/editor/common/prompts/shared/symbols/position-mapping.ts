@@ -10,7 +10,7 @@ export const map_display_pos_to_raw_pos = (params: {
   let last_raw_index = 0
 
   const regex =
-    /`([^`]+)`|(#Changes\([^)]+\))|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "(?:\\.|[^"\\])*")?\))/g
   let match
 
   while ((match = regex.exec(params.raw_text)) !== null) {
@@ -76,14 +76,13 @@ export const map_display_pos_to_raw_pos = (params: {
         : 0
       is_replacement_match = true
     } else if (website_symbol) {
-      const url = website_symbol.slice(9, -1)
+      const match = website_symbol.match(
+        /^#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "((?:\\.|[^"\\])*)")?\)$/
+      )
       let label = 'Website'
-      try {
-        label = new URL(url).hostname
-        if (label.startsWith('www.')) {
-          label = label.slice(4)
-        }
-      } catch {}
+      if (match && match[1]) {
+        label = match[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\')
+      }
       display_match_length = label.length
       is_replacement_match = true
     }
@@ -129,7 +128,7 @@ export const map_raw_pos_to_display_pos = (params: {
   let last_raw_index = 0
 
   const regex =
-    /`([^`]+)`|(#Changes\([^)]+\))|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "(?:\\.|[^"\\])*")?\))/g
   let match
 
   while ((match = regex.exec(params.raw_text)) !== null) {
@@ -195,14 +194,13 @@ export const map_raw_pos_to_display_pos = (params: {
         : 0
       is_replacement_match = true
     } else if (website_symbol) {
-      const url = website_symbol.slice(9, -1)
+      const match = website_symbol.match(
+        /^#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "((?:\\.|[^"\\])*)")?\)$/
+      )
       let label = 'Website'
-      try {
-        label = new URL(url).hostname
-        if (label.startsWith('www.')) {
-          label = label.slice(4)
-        }
-      } catch {}
+      if (match && match[1]) {
+        label = match[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\')
+      }
       display_match_length = label.length
       is_replacement_match = true
     }

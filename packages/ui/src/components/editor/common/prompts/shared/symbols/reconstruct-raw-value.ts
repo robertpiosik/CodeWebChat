@@ -125,21 +125,21 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
       }
     } else if (el.dataset.type == 'website-symbol') {
       const url = el.dataset.url
-      if (!url) return ''
+      const id_and_token = el.dataset.idAndToken
+      if (!url || !id_and_token) return ''
 
+      const title = el.dataset.title
       let expected_text = 'Website'
-      try {
-        expected_text = new URL(url).hostname
-        if (expected_text.startsWith('www.')) {
-          expected_text = expected_text.slice(4)
-        }
-      } catch {}
+      if (title) {
+        expected_text = title.replace(/\\"/g, '"').replace(/\\\\/g, '\\')
+      }
 
       const index = inner_content.indexOf(expected_text)
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
-        return `${prefix}#Website(${url})${suffix}`
+        const title_part = title ? ` "${title}"` : ''
+        return `${prefix}#Website(${url} ${id_and_token}${title_part})${suffix}`
       }
     }
 

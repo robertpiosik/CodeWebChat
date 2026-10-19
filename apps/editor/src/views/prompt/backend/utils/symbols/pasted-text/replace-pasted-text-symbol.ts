@@ -1,10 +1,12 @@
-import * as fs from 'fs'
-import * as os from 'os'
-import * as path from 'path'
+import * as vscode from 'vscode'
+import { PersistentTextStorage } from '../../persistent-text-storage'
 
 export const replace_pasted_text_symbol = async (params: {
   instructions: string[]
+  extension_context: vscode.ExtensionContext
 }): Promise<string[]> => {
+  const storage = new PersistentTextStorage(params.extension_context)
+
   return Promise.all(
     params.instructions.map(async (instruction) => {
       const regex = /#PastedText\(([a-fA-F0-9]+)(?::\d+)?\)/g
@@ -17,11 +19,9 @@ export const replace_pasted_text_symbol = async (params: {
 
       const replacements = await Promise.all(
         matches.map(async (match) => {
-          const hash = match[1]
-          const filename = `cwc-paste-${hash}.txt`
-          const file_path = path.join(os.tmpdir(), filename)
+          const id = match[1]
           try {
-            const content = await fs.promises.readFile(file_path, 'utf-8')
+            const content = await storage.load(id)
             return {
               content,
               success: true

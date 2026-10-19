@@ -75,13 +75,15 @@ export const replace_symbols = async (params: {
 
   if (processed_instructions.some((i) => i.includes('#PastedText('))) {
     processed_instructions = await replace_pasted_text_symbol({
-      instructions: processed_instructions
+      instructions: processed_instructions,
+      extension_context: params.extension_context
     })
   }
 
   if (processed_instructions.some((i) => i.includes('#Website('))) {
     processed_instructions = await replace_website_symbol({
       instructions: processed_instructions,
+      extension_context: params.extension_context,
       symbols_cache: params.symbols_cache
     })
   }

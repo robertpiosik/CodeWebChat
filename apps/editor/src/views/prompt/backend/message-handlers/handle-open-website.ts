@@ -1,26 +1,50 @@
 import * as vscode from 'vscode'
 import { OpenWebsiteMessage } from '../../types/messages'
 import * as fs from 'fs'
-import { get_website_file_path } from '../utils/website-fetcher'
 import { marked } from 'marked'
+import { PromptViewProvider } from '../prompt-view-provider'
+import { PersistentTextStorage } from '../utils/persistent-text-storage'
 
 let current_preview_url: string | undefined
 
 export const get_current_preview_url = () => current_preview_url
 
-export const handle_open_website = async (message: OpenWebsiteMessage) => {
-  const file_path = get_website_file_path(message.url)
+export const handle_open_website = async (
+  prompt_view_provider: PromptViewProvider,
+  message: OpenWebsiteMessage
+) => {
+  let id: string | undefined
+  let title = 'Website'
 
-  if (fs.existsSync(file_path)) {
+  const escaped_url = message.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const instructions = prompt_view_provider.current_instructions
+  const symbol_regex = new RegExp(
+    `#Website\\(${escaped_url} ([a-fA-F0-9]+):\\d+(?: "((?:\\\\.|[^"\\\\])*)")?\\)`
+  )
+
+  let match = instructions.match(symbol_regex)
+  if (!match) {
+    for (const task of prompt_view_provider.completed_tasks) {
+      match = task.match(symbol_regex)
+      if (match) break
+    }
+  }
+
+  if (match) {
+    id = match[1]
+    if (match[2]) {
+      title = match[2].replace(/\\"/g, '"').replace(/\\\\/g, '\\')
+    }
+  }
+
+  const storage = new PersistentTextStorage(
+    prompt_view_provider.extension_context
+  )
+  const file_path = id ? storage.get_file_path(id) : ''
+
+  if (id && fs.existsSync(file_path)) {
     const markdown = fs.readFileSync(file_path, 'utf8')
     const html = await marked.parse(markdown)
-
-    const url_obj = new URL(message.url)
-    let hostname = url_obj.hostname
-    if (hostname.startsWith('www.')) {
-      hostname = hostname.substring(4)
-    }
-    const title = `${hostname}${url_obj.pathname == '/' ? '' : url_obj.pathname}`
 
     const webview_panel = vscode.window.createWebviewPanel(
       'websitePreview',
@@ -78,7 +102,7 @@ export const handle_open_website = async (message: OpenWebsiteMessage) => {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
         <script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
-        <title>${message.url}</title>
+        <title>${title}</title>
         <style>
           body {
             line-height: 1.5;
@@ -101,6 +125,10 @@ export const handle_open_website = async (message: OpenWebsiteMessage) => {
       </html>
     `
   } else {
-    vscode.env.openExternal(vscode.Uri.parse(message.url))
+    if (message.url.startsWith('http')) {
+      vscode.env.openExternal(vscode.Uri.parse(message.url))
+    } else {
+      vscode.window.showErrorMessage('Website file not found.')
+    }
   }
 }

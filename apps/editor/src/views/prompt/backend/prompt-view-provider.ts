@@ -864,11 +864,11 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'SAVE_PROMPT_PASTED_TEXT') {
             await handle_save_prompt_pasted_text(this, message)
           } else if (message.command == 'OPEN_PROMPT_PASTED_TEXT') {
-            await handle_open_prompt_pasted_text(message)
+            await handle_open_prompt_pasted_text(this, message)
           } else if (message.command == 'PASTE_URL') {
             await handle_paste_url(this, message)
           } else if (message.command == 'OPEN_WEBSITE') {
-            await handle_open_website(message)
+            await handle_open_website(this, message)
           } else if (message.command == 'SET_RECORDING_STATE') {
             await handle_voice_input(this, message)
           } else if (message.command == 'GET_SETUP_PROGRESS') {
