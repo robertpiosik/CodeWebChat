@@ -1,4 +1,4 @@
-import { execSync } from 'child_process'
+import { execFileSync } from 'child_process'
 import * as os from 'os'
 import * as path from 'path'
 import * as vscode from 'vscode'
@@ -182,11 +182,11 @@ export const restore_checkpoint = async (params: {
                 current_git_info.commit_hash == git_info.commit_hash
               ) {
                 try {
-                  execSync(`git restore .`, {
+                  execFileSync('git', ['restore', '.'], {
                     cwd: folder.uri.fsPath,
                     stdio: 'pipe'
                   })
-                  execSync(`git clean -fd`, {
+                  execFileSync('git', ['clean', '-fd'], {
                     cwd: folder.uri.fsPath,
                     stdio: 'pipe'
                   })
@@ -197,11 +197,11 @@ export const restore_checkpoint = async (params: {
                     data: error
                   })
                   try {
-                    execSync(`git checkout .`, {
+                    execFileSync('git', ['checkout', '.'], {
                       cwd: folder.uri.fsPath,
                       stdio: 'pipe'
                     })
-                    execSync(`git clean -fd`, {
+                    execFileSync('git', ['clean', '-fd'], {
                       cwd: folder.uri.fsPath,
                       stdio: 'pipe'
                     })
@@ -245,8 +245,9 @@ export const restore_checkpoint = async (params: {
                     Buffer.from(diff, 'utf8')
                   )
                   try {
-                    execSync(
-                      `git apply --whitespace=nowarn "${temp_diff_path}"`,
+                    execFileSync(
+                      'git',
+                      ['apply', '--whitespace=nowarn', temp_diff_path],
                       {
                         cwd: folder.uri.fsPath,
                         stdio: 'pipe'
@@ -254,8 +255,14 @@ export const restore_checkpoint = async (params: {
                     )
                   } catch (e) {
                     try {
-                      execSync(
-                        `git apply --reject --whitespace=nowarn "${temp_diff_path}"`,
+                      execFileSync(
+                        'git',
+                        [
+                          'apply',
+                          '--reject',
+                          '--whitespace=nowarn',
+                          temp_diff_path
+                        ],
                         {
                           cwd: folder.uri.fsPath,
                           stdio: 'pipe'
@@ -308,13 +315,13 @@ export const restore_checkpoint = async (params: {
                   GIT_WORK_TREE: temp_git_clone_path
                 }
 
-                execSync(`git read-tree "${git_info.commit_hash}"`, {
+                execFileSync('git', ['read-tree', git_info.commit_hash], {
                   cwd: folder.uri.fsPath,
                   env: git_env,
                   stdio: 'pipe'
                 })
 
-                execSync(`git checkout-index -a -f`, {
+                execFileSync('git', ['checkout-index', '-a', '-f'], {
                   cwd: folder.uri.fsPath,
                   env: git_env,
                   stdio: 'pipe'
@@ -343,8 +350,9 @@ export const restore_checkpoint = async (params: {
                     Buffer.from(diff, 'utf8')
                   )
                   try {
-                    execSync(
-                      `git apply --whitespace=nowarn "${temp_diff_path}"`,
+                    execFileSync(
+                      'git',
+                      ['apply', '--whitespace=nowarn', temp_diff_path],
                       {
                         cwd: temp_git_clone_path,
                         stdio: 'pipe'
@@ -352,8 +360,14 @@ export const restore_checkpoint = async (params: {
                     )
                   } catch (e) {
                     try {
-                      execSync(
-                        `git apply --reject --whitespace=nowarn "${temp_diff_path}"`,
+                      execFileSync(
+                        'git',
+                        [
+                          'apply',
+                          '--reject',
+                          '--whitespace=nowarn',
+                          temp_diff_path
+                        ],
                         {
                           cwd: temp_git_clone_path,
                           stdio: 'pipe'
