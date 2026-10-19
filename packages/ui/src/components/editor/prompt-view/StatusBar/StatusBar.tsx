@@ -54,11 +54,17 @@ export const StatusBar: React.FC<Props> = (props) => {
       </div>
       {props.actions && props.actions.length > 0 && (
         <div className={styles.actions}>
-          {props.actions.map((action) => {
+          {props.actions.map((action, index) => {
+            const is_last = index == props.actions!.length - 1
+            const has_label = !!action.label
+
             const content = (
               <div
                 key={action.id}
-                className={styles.action}
+                className={cn(styles.action, {
+                  [styles.last]: is_last,
+                  [styles['no-label']]: !has_label
+                })}
                 onClick={action.on_click}
                 title={action.title}
               >
