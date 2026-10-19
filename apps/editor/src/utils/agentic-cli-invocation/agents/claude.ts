@@ -39,7 +39,7 @@ export const claude_agent: CodingAgent = {
     '--permission-mode',
     'auto'
   ],
-  get_integrated_terminal_args: () => ['--permission-mode', 'plan'],
+  get_integrated_terminal_args: () => ['--permission-mode', 'auto'],
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type == 'stream_event' && parsed.event) {
       if (
