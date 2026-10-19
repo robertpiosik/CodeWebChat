@@ -112,6 +112,38 @@ export const apply_response_command = (params: {
           workspace_files
         })
 
+        const excluded_folders = new Set([
+          '.git',
+          'node_modules',
+          'vendor',
+          '.venv',
+          'dist',
+          'build',
+          'target',
+          'bin',
+          'obj'
+        ])
+
+        response_items = response_items.filter((item: any) => {
+          if (
+            item.file_path &&
+            item.file_path
+              .split(/[/\\]/)
+              .some((segment: string) => excluded_folders.has(segment))
+          ) {
+            return false
+          }
+          if (
+            item.new_file_path &&
+            item.new_file_path
+              .split(/[/\\]/)
+              .some((segment: string) => excluded_folders.has(segment))
+          ) {
+            return false
+          }
+          return true
+        })
+
         const commit_message_item = response_items.find(
           (i) => i.type == 'commit-message'
         ) as any
