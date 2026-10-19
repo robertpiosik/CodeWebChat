@@ -70,5 +70,23 @@ export const selected_files = {
     cs: 'Agentní vyhledávání',
     hu: 'Ügynök alapú keresés',
     bg: 'Агентно търсене'
+  },
+  'selected-files.clear-context': {
+    en: 'Clear Context',
+    pl: 'Wyczyść kontekst',
+    'zh-cn': '清除上下文',
+    ja: 'コンテキストをクリア',
+    'zh-tw': '清除上下文',
+    de: 'Kontext löschen',
+    es: 'Borrar contexto',
+    fr: 'Effacer le contexte',
+    'pt-br': 'Limpar contexto',
+    ru: 'Очистить контекст',
+    ko: '컨텍스트 지우기',
+    it: 'Cancella contesto',
+    tr: 'Bağlamı Temizle',
+    cs: 'Vymazat kontext',
+    hu: 'Környezet törlése',
+    bg: 'Изчистване на контекста'
   }
 } as const

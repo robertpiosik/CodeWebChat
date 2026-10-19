@@ -7,6 +7,8 @@ export namespace DropdownMenu {
   export type Item = {
     label: string
     shortcut?: string
+    suffix_icon?: string
+    icon?: string
     on_click: () => void
     is_checked?: boolean
     is_active?: boolean
@@ -109,18 +111,32 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
                   style={{ visibility: item.is_checked ? 'visible' : 'hidden' }}
                 />
               )}
-              <span>
-                {props.underline_non_selected_items ? (
-                  <>
-                    <span className={styles.underlined}>
-                      {item.label.substring(0, 1)}
-                    </span>
-                    {item.label.substring(1)}
-                  </>
-                ) : (
-                  item.label
+              <div className={styles.item__content}>
+                {item.icon && (
+                  <span
+                    className={cn('codicon', `codicon-${item.icon}`)}
+                    style={{ flexShrink: 0 }}
+                  />
                 )}
-              </span>
+                <span>
+                  {props.underline_non_selected_items ? (
+                    <>
+                      <span className={styles.underlined}>
+                        {item.label.substring(0, 1)}
+                      </span>
+                      {item.label.substring(1)}
+                    </>
+                  ) : (
+                    item.label
+                  )}
+                </span>
+              </div>
+              {item.suffix_icon && (
+                <span
+                  className={cn('codicon', `codicon-${item.suffix_icon}`)}
+                  style={{ flexShrink: 0 }}
+                />
+              )}
             </div>
             {item.shortcut && (
               <div className={styles.item__right}>

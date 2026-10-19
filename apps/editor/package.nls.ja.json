@@ -14,7 +14,7 @@
   "codeWebChat.rateExtension.title": "拡張機能を評価する",
   "codeWebChat.openRepository.title": "GitHubでスターをつける",
   "codeWebChat.followOnX.title": "Xでフォロー",
-  "codeWebChat.clearChecks.title": "選択をクリア",
+  "codeWebChat.clearContext.title": "コンテキストをクリア",
   "codeWebChat.expandContextFolders.title": "フォルダーを展開",
   "codeWebChat.collapseContextFolders.title": "フォルダーを折りたたむ",
   "codeWebChat.collapseWorkspaceFolders.title": "フォルダーを折りたたむ",

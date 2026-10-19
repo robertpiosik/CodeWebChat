@@ -53,14 +53,19 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    overflow: hidden;
     flex: 1;
-    min-width: 0;
 
     > span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    > span {
       font-variant-numeric: tabular-nums;
     }
   }

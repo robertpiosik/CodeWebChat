@@ -147,6 +147,7 @@ type Props = {
   on_skill_click?: (agent: string, repo: string, skill_name: string) => void
   on_install_browser_extension: () => void
   on_agentic_search: () => void
+  on_clear_context: () => void
   completed_tasks: string[]
   on_task_completed: () => void
   on_clear_completed_tasks: () => void
@@ -376,10 +377,12 @@ export const MainView: React.FC<Props> = (props) => {
       }
       is_alt_pressed={is_alt_pressed}
       on_agentic_search={props.on_agentic_search}
+      on_clear_context={props.on_clear_context}
       translations={{
         attaching_file: t('selected-files.attaching-file'),
         attaching_files: t('selected-files.attaching-files'),
-        agentic_search: t('selected-files.agentic-search')
+        agentic_search: t('selected-files.agentic-search'),
+        clear_context: t('selected-files.clear-context')
       }}
     />
   )
@@ -505,6 +508,7 @@ export const MainView: React.FC<Props> = (props) => {
           on_open_pasted_text={props.on_open_pasted_text}
           on_paste_url={props.on_paste_url}
           on_changes_click={props.on_changes_click}
+          on_agentic_search={props.on_agentic_search}
           on_commit_click={props.on_commit_click}
           on_skill_click={props.on_skill_click}
           on_preview_prompt={props.on_preview_prompt}
@@ -560,7 +564,8 @@ export const MainView: React.FC<Props> = (props) => {
             mark_as_complete: t('prompt-field.mark-as-complete'),
             new_tab: t('prompt-field.new-tab'),
             clear_tab: t('prompt-field.clear-tab'),
-            close_tab: t('prompt-field.close-tab')
+            close_tab: t('prompt-field.close-tab'),
+            agentic_search: t('prompt-field.agentic-search')
           }}
         />
       </div>

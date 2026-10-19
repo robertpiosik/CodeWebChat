@@ -177,8 +177,8 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.clearChecks",
-        "title": "%codeWebChat.clearChecks.title%",
+        "command": "codeWebChat.clearContext",
+        "title": "%codeWebChat.clearContext.title%",
         "category": "Code Web Chat",
         "icon": "$(clear-all)"
       },
@@ -479,7 +479,7 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.clearChecks",
+          "command": "codeWebChat.clearContext",
           "when": "false"
         },
         {
@@ -680,7 +680,7 @@
           "group": "3_more@2"
         },
         {
-          "command": "codeWebChat.clearChecks",
+          "command": "codeWebChat.clearContext",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@3"
         },

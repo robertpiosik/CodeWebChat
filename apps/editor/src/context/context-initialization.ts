@@ -258,7 +258,7 @@ export const context_initialization = async (
         extension_context.subscriptions.push(workspace_view)
       }
     ),
-    vscode.commands.registerCommand('codeWebChat.clearChecks', async () => {
+    vscode.commands.registerCommand('codeWebChat.clearContext', async () => {
       await workspace_provider!.clear_selected_files()
       open_editors_provider!.clear_selected_files()
     }),

@@ -575,6 +575,13 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
+  const handle_clear_context = () => {
+    post_message(props.vscode, {
+      command: 'EXECUTE_COMMAND',
+      command_id: 'codeWebChat.clearContext'
+    })
+  }
+
   const instructions =
     current_prompt_type == 'ask'
       ? props.ask_instructions
@@ -715,6 +722,7 @@ export const Main: React.FC<Props> = (props) => {
       on_skill_click={props.on_skill_click}
       on_install_browser_extension={handle_install_browser_extension}
       on_agentic_search={props.on_agentic_search}
+      on_clear_context={handle_clear_context}
       completed_tasks={completed_tasks}
       on_task_completed={handle_task_completed}
       on_clear_completed_tasks={handle_clear_completed_tasks}

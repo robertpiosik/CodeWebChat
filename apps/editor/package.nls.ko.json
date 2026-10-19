@@ -14,7 +14,7 @@
   "codeWebChat.rateExtension.title": "확장 프로그램 평가",
   "codeWebChat.openRepository.title": "GitHub에서 별표 주기",
   "codeWebChat.followOnX.title": "X에서 팔로우",
-  "codeWebChat.clearChecks.title": "선택 취소",
+  "codeWebChat.clearContext.title": "컨텍스트 지우기",
   "codeWebChat.expandContextFolders.title": "폴더 확장",
   "codeWebChat.collapseContextFolders.title": "폴더 축소",
   "codeWebChat.collapseWorkspaceFolders.title": "폴더 축소",

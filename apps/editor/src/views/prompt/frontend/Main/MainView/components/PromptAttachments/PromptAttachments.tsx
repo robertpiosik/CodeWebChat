@@ -10,9 +10,11 @@ type Props = {
     attaching_file: string
     attaching_files: string
     agentic_search: string
+    clear_context: string
   }
   is_alt_pressed?: boolean
   on_agentic_search: () => void
+  on_clear_context: () => void
 }
 
 export const PromptAttachments: React.FC<Props> = (props) => {
@@ -34,13 +36,20 @@ export const PromptAttachments: React.FC<Props> = (props) => {
           : undefined
       }
       actions={[
-        {
-          id: 'agentic-search',
-          icon: 'codicon-search-sparkle',
-          label: props.translations.agentic_search,
-          keycap: props.is_alt_pressed ? 'F' : undefined,
-          on_click: props.on_agentic_search
-        }
+        (props.files_count || 0) === 0
+          ? {
+              id: 'agentic-search',
+              icon: 'codicon-search-sparkle',
+              label: props.translations.agentic_search,
+              keycap: props.is_alt_pressed ? 'F' : undefined,
+              on_click: props.on_agentic_search
+            }
+          : {
+              id: 'clear-context',
+              icon: 'codicon-clear-all',
+              label: props.translations.clear_context,
+              on_click: props.on_clear_context
+            }
       ]}
     />
   )

@@ -14,7 +14,7 @@
   "codeWebChat.rateExtension.title": "Bővítmény értékelése",
   "codeWebChat.openRepository.title": "Csillagozás a GitHubon",
   "codeWebChat.followOnX.title": "Követés az X-en",
-  "codeWebChat.clearChecks.title": "Kijelölések törlése",
+  "codeWebChat.clearContext.title": "Kontextus törlése",
   "codeWebChat.expandContextFolders.title": "Mappák kibontása",
   "codeWebChat.collapseContextFolders.title": "Mappák összecsukása",
   "codeWebChat.collapseWorkspaceFolders.title": "Mappák összecsukása",

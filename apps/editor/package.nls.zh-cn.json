@@ -14,7 +14,7 @@
   "codeWebChat.rateExtension.title": "评价扩展",
   "codeWebChat.openRepository.title": "在 GitHub 上点赞 (Star)",
   "codeWebChat.followOnX.title": "在 X 上关注",
-  "codeWebChat.clearChecks.title": "清除选中",
+  "codeWebChat.clearContext.title": "清除上下文",
   "codeWebChat.expandContextFolders.title": "展开文件夹",
   "codeWebChat.collapseContextFolders.title": "折叠文件夹",
   "codeWebChat.collapseWorkspaceFolders.title": "折叠文件夹",

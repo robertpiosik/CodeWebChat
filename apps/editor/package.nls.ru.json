@@ -14,7 +14,7 @@
   "codeWebChat.rateExtension.title": "Оценить расширение",
   "codeWebChat.openRepository.title": "Поставить звезду на GitHub",
   "codeWebChat.followOnX.title": "Следить в X",
-  "codeWebChat.clearChecks.title": "Снять все отметки",
+  "codeWebChat.clearContext.title": "Очистить контекст",
   "codeWebChat.expandContextFolders.title": "Развернуть папки",
   "codeWebChat.collapseContextFolders.title": "Свернуть папки",
   "codeWebChat.collapseWorkspaceFolders.title": "Свернуть папки",
