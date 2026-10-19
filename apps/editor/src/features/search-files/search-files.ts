@@ -1,3 +1,4 @@
+import * as path from 'path'
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { t } from '@/i18n'
@@ -99,7 +100,39 @@ export const search_files = async (params: {
       } else if (search_mode == 'keywords') {
         flow_result = await perform_keywords_search_mode(flow_params)
       } else if (search_mode == 'intelligent') {
-        const files = await resolve_files()
+        let files = await resolve_files()
+        let is_search_in_selected = params.is_search_in_selected
+
+        if (!is_search_in_selected && !params.is_sub_search) {
+          const currently_selected =
+            params.workspace_provider.get_selected_files()
+
+          if (currently_selected.length === 0) {
+            vscode.window.showInformationMessage(
+              t('common.warning.no-files-selected' as any)
+            )
+            continue
+          }
+
+          let files_to_search = currently_selected
+          if (params.folder_path) {
+            files_to_search = currently_selected.filter((f) => {
+              const relative = path.relative(params.folder_path!, f)
+              return !relative.startsWith('..') && !path.isAbsolute(relative)
+            })
+          }
+
+          if (files_to_search.length === 0) {
+            vscode.window.showInformationMessage(
+              t('feature.search-files.info.no-files-selected-in-folder' as any)
+            )
+            continue
+          }
+
+          files = files_to_search
+          is_search_in_selected = true
+        }
+
         flow_result = await perform_intelligent_search_mode({
           files,
           workspace_provider: params.workspace_provider,
@@ -107,7 +140,7 @@ export const search_files = async (params: {
           websocket_manager: params.websocket_manager,
           show_back_button: params.show_back_button,
           search_in_results,
-          is_search_in_selected: params.is_search_in_selected,
+          is_search_in_selected: is_search_in_selected,
           is_sub_search: params.is_sub_search,
           folder_path: params.folder_path,
           get_file_content: params.get_file_content
