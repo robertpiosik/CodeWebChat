@@ -71,8 +71,7 @@ export const Empty = () => (
       mark_as_complete: 'Mark as complete',
       new_tab: 'New tab',
       clear_tab: 'Clear tab',
-      close_tab: 'Close tab',
-      agentic_search: 'Agentic search'
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -143,8 +142,7 @@ export const WithText = () => (
       mark_as_complete: 'Mark as complete',
       new_tab: 'New tab',
       clear_tab: 'Clear tab',
-      close_tab: 'Close tab',
-      agentic_search: 'Agentic search'
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -215,8 +213,7 @@ export const LongText = () => (
       mark_as_complete: 'Mark as complete',
       new_tab: 'New tab',
       clear_tab: 'Clear tab',
-      close_tab: 'Close tab',
-      agentic_search: 'Agentic search'
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -287,8 +284,7 @@ export const WithPlaceholderSavedContext = () => (
       mark_as_complete: 'Mark as complete',
       new_tab: 'New tab',
       clear_tab: 'Clear tab',
-      close_tab: 'Close tab',
-      agentic_search: 'Agentic search'
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -359,8 +355,7 @@ export const WithCommit = () => (
       mark_as_complete: 'Mark as complete',
       new_tab: 'New tab',
       clear_tab: 'Clear tab',
-      close_tab: 'Close tab',
-      agentic_search: 'Agentic search'
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -430,8 +425,7 @@ export const WithCommitWithQuotes = () => (
       mark_as_complete: 'Mark as complete',
       new_tab: 'New tab',
       clear_tab: 'Clear tab',
-      close_tab: 'Close tab',
-      agentic_search: 'Agentic search'
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -509,8 +503,7 @@ export const WithEditFormatSelector = () => {
         mark_as_complete: 'Mark as complete',
         new_tab: 'New tab',
         clear_tab: 'Clear tab',
-        close_tab: 'Close tab',
-        agentic_search: 'Agentic search'
+        close_tab: 'Close tab'
       }}
     />
   )
@@ -580,8 +573,7 @@ export const WithWarning = () => (
       mark_as_complete: 'Mark as complete',
       new_tab: 'New tab',
       clear_tab: 'Clear tab',
-      close_tab: 'Close tab',
-      agentic_search: 'Agentic search'
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -652,8 +644,7 @@ export const WithFilePaths = () => (
       mark_as_complete: 'Mark as complete',
       new_tab: 'New tab',
       clear_tab: 'Clear tab',
-      close_tab: 'Close tab',
-      agentic_search: 'Agentic search'
+      close_tab: 'Close tab'
     }}
   />
 )
@@ -752,8 +743,7 @@ export const WithTabs = () => {
         mark_as_complete: 'Mark as complete',
         new_tab: 'New tab',
         clear_tab: 'Clear tab',
-        close_tab: 'Close tab',
-        agentic_search: 'Agentic search'
+        close_tab: 'Close tab'
       }}
     />
   )

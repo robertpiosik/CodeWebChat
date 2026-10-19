@@ -132,21 +132,7 @@ export const Footer: React.FC<Props> = (props) => {
               props.props.on_preview_prompt?.()
               props.close_dropdown()
             }
-          },
-          ...(props.props.selected_files &&
-          props.props.selected_files.length > 0 &&
-          props.props.on_agentic_search
-            ? [
-                {
-                  label: props.props.translations.agentic_search,
-                  icon: 'search-sparkle',
-                  on_click: () => {
-                    props.props.on_agentic_search!()
-                    props.close_dropdown()
-                  }
-                }
-              ]
-            : [])
+          }
         ]
 
   const disconnected_dropdown_items =
@@ -182,21 +168,7 @@ export const Footer: React.FC<Props> = (props) => {
               props.props.on_preview_prompt?.()
               props.close_dropdown()
             }
-          },
-          ...(props.props.selected_files &&
-          props.props.selected_files.length > 0 &&
-          props.props.on_agentic_search
-            ? [
-                {
-                  label: props.props.translations.agentic_search,
-                  icon: 'search-sparkle',
-                  on_click: () => {
-                    props.props.on_agentic_search!()
-                    props.close_dropdown()
-                  }
-                }
-              ]
-            : [])
+          }
         ]
 
   return (

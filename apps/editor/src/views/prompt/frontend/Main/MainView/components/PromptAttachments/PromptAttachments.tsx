@@ -5,7 +5,7 @@ import { display_token_count } from '@shared/utils/display-token-count'
 type Props = {
   token_count?: number
   files_count?: number
-  theme?: 'default' | 'warning' | 'success' | 'error' | 'blue' | 'purple'
+  theme: 'blue' | 'purple'
   translations: {
     attaching_file: string
     attaching_files: string
@@ -27,7 +27,7 @@ export const PromptAttachments: React.FC<Props> = (props) => {
   return (
     <StatusBar
       placement="bottom"
-      theme={props.theme ?? 'default'}
+      theme={props.theme}
       icon="codicon-attach"
       label={attaching_files_label}
       description={
@@ -36,20 +36,20 @@ export const PromptAttachments: React.FC<Props> = (props) => {
           : undefined
       }
       actions={[
-        (props.files_count || 0) === 0
-          ? {
-              id: 'agentic-search',
-              icon: 'codicon-search-sparkle',
-              label: props.translations.agentic_search,
-              keycap: props.is_alt_pressed ? 'F' : undefined,
-              on_click: props.on_agentic_search
-            }
-          : {
-              id: 'clear-context',
-              icon: 'codicon-clear-all',
-              label: props.translations.clear_context,
-              on_click: props.on_clear_context
-            }
+        {
+          id: 'agentic-search',
+          icon: 'codicon-search-sparkle',
+          label: props.translations.agentic_search,
+          keycap: props.is_alt_pressed ? 'F' : undefined,
+          on_click: props.on_agentic_search
+        },
+        {
+          id: 'clear-context',
+          icon: 'codicon-clear-all',
+          title: props.translations.clear_context,
+          keycap: props.is_alt_pressed ? 'X' : undefined,
+          on_click: props.on_clear_context
+        }
       ]}
     />
   )

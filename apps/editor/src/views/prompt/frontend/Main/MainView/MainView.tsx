@@ -194,9 +194,6 @@ export const MainView: React.FC<Props> = (props) => {
     (props.target == 'WEB' && props.web_prompt_type == 'edit') ||
     (props.target == 'API' && props.api_prompt_type == 'edit')
 
-  const is_required_context_empty =
-    is_edit_prompt_type && props.selected_files.length == 0
-
   const handle_input_change = (value: string) => {
     props.set_instructions(value)
   }
@@ -441,7 +438,7 @@ export const MainView: React.FC<Props> = (props) => {
             props.on_response_history_item_remove
           }
           translations={{
-            applied_manually: t('common.applied-manually'),
+            applied_manually: t('main.applied-manually'),
             reject: t('action.reject')
           }}
         />
@@ -488,19 +485,17 @@ export const MainView: React.FC<Props> = (props) => {
           target={props.target}
           on_target_change={(target) => props.on_target_change(target)}
           active_border_color={
-            is_required_context_empty
-              ? 'yellow'
-              : props.target == 'WEB'
-                ? props.web_prompt_type == 'edit'
+            props.target == 'WEB'
+              ? props.web_prompt_type == 'edit'
+                ? 'blue'
+                : 'purple'
+              : props.target == 'API'
+                ? props.api_prompt_type == 'edit'
                   ? 'blue'
                   : 'purple'
-                : props.target == 'API'
-                  ? props.api_prompt_type == 'edit'
-                    ? 'blue'
-                    : 'purple'
-                  : props.cli_prompt_type == 'edit'
-                    ? 'blue'
-                    : 'purple'
+                : props.cli_prompt_type == 'edit'
+                  ? 'blue'
+                  : 'purple'
           }
           on_paste_image={props.on_paste_image}
           on_open_image={props.on_open_image}
@@ -508,7 +503,7 @@ export const MainView: React.FC<Props> = (props) => {
           on_open_pasted_text={props.on_open_pasted_text}
           on_paste_url={props.on_paste_url}
           on_changes_click={props.on_changes_click}
-          on_agentic_search={props.on_agentic_search}
+          on_clear_context={props.on_clear_context}
           on_commit_click={props.on_commit_click}
           on_skill_click={props.on_skill_click}
           on_preview_prompt={props.on_preview_prompt}
@@ -564,31 +559,12 @@ export const MainView: React.FC<Props> = (props) => {
             mark_as_complete: t('prompt-field.mark-as-complete'),
             new_tab: t('prompt-field.new-tab'),
             clear_tab: t('prompt-field.clear-tab'),
-            close_tab: t('prompt-field.close-tab'),
-            agentic_search: t('prompt-field.agentic-search')
+            close_tab: t('prompt-field.close-tab')
           }}
         />
       </div>
 
-      {is_required_context_empty ? (
-        <UiStatusBar
-          placement="bottom"
-          theme="warning"
-          icon="codicon-warning"
-          label={t('common.context-is-empty')}
-          actions={[
-            {
-              id: 'agentic-search',
-              icon: 'codicon-search-sparkle',
-              label: t('selected-files.agentic-search'),
-              keycap: is_alt_pressed ? 'F' : undefined,
-              on_click: props.on_agentic_search
-            }
-          ]}
-        />
-      ) : (
-        prompt_attachments
-      )}
+      {prompt_attachments}
 
       {is_landscape && <UiSpacer height={6} />}
     </>

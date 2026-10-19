@@ -95,7 +95,7 @@ export namespace PromptField {
     completed_tasks: string[]
     on_task_completed?: () => void
     on_clear_completed_tasks?: () => void
-    on_agentic_search?: () => void
+    on_clear_context?: () => void
     translations: {
       voice_input: string
       stop_recording: string
@@ -124,7 +124,6 @@ export namespace PromptField {
       new_tab: string
       clear_tab: string
       close_tab: string
-      agentic_search: string
     }
   }
 }
