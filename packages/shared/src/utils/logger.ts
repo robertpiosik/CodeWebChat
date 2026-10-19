@@ -1,48 +1,42 @@
 export namespace Logger {
   const LOG_PREFIX = '[CWC]'
 
-  const sanitize_data = (data: any) => {
-    if (!data || typeof data !== 'object') return data
+  const sanitize_data = (data: any, seen = new WeakSet()): any => {
+    if (data === null || data === undefined) return data
 
-    if (data.isAxiosError) {
-      const sanitized = {
-        name: data.name,
-        message: data.message,
-        stack: data.stack,
-        ...data
-      }
-
-      if (sanitized.config?.headers) {
-        sanitized.config = {
-          ...sanitized.config,
-          headers: { ...sanitized.config.headers }
-        }
-        for (const key in sanitized.config.headers) {
-          if (key.toLowerCase() === 'authorization') {
-            sanitized.config.headers[key] = '[REDACTED]'
-          }
-        }
-      }
-
-      if (sanitized.response?.config?.headers) {
-        sanitized.response = {
-          ...sanitized.response,
-          config: {
-            ...sanitized.response.config,
-            headers: { ...sanitized.response.config.headers }
-          }
-        }
-        for (const key in sanitized.response.config.headers) {
-          if (key.toLowerCase() === 'authorization') {
-            sanitized.response.config.headers[key] = '[REDACTED]'
-          }
-        }
-      }
-
-      return sanitized
+    if (typeof data === 'string') {
+      return data
+        .replace(/(Authorization:\s*Bearer\s+)[^\r\n]+/gi, '$1[REDACTED]')
+        .replace(/(x-api-key:\s*)[^\r\n]+/gi, '$1[REDACTED]')
     }
 
-    return data
+    if (typeof data !== 'object') return data
+
+    if (seen.has(data)) return '[Circular]'
+    seen.add(data)
+
+    if (Array.isArray(data)) {
+      return data.map((item) => sanitize_data(item, seen))
+    }
+
+    const sanitized: any = {}
+
+    if (data instanceof Error) {
+      sanitized.name = data.name
+      sanitized.message = data.message
+      sanitized.stack = data.stack
+    }
+
+    for (const key of Object.keys(data)) {
+      const lower_key = key.toLowerCase()
+      if (lower_key === 'authorization' || lower_key === 'x-api-key') {
+        sanitized[key] = '[REDACTED]'
+      } else {
+        sanitized[key] = sanitize_data(data[key], seen)
+      }
+    }
+
+    return sanitized
   }
 
   export function info(params: {
