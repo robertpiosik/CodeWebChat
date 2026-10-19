@@ -45,6 +45,13 @@ export const invoke_agentic_cli = async (params: {
 }): Promise<
   { agent_output: string; selected_root: string } | undefined | 'back'
 > => {
+  if (!vscode.workspace.isTrusted) {
+    vscode.window.showWarningMessage(
+      t('utils.agentic-cli-invocation.error.workspace-not-trusted')
+    )
+    return undefined
+  }
+
   const roots = params.workspace_provider.get_workspace_roots()
 
   if (roots.length == 0) {

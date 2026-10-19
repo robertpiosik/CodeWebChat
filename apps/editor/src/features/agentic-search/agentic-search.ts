@@ -29,6 +29,13 @@ export const agentic_search = async (params: {
   | undefined
   | 'back'
 > => {
+  if (!vscode.workspace.isTrusted) {
+    vscode.window.showWarningMessage(
+      t('features.agentic-search.error.workspace-not-trusted')
+    )
+    return undefined
+  }
+
   const roots = params.workspace_provider.get_workspace_roots()
 
   if (roots.length == 0) {
