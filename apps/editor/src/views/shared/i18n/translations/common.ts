@@ -1,4 +1,22 @@
 export const translations = {
+  'common.unset': {
+    en: 'unset',
+    pl: 'usuń',
+    'zh-cn': '取消设置',
+    ja: '未設定',
+    'zh-tw': '取消設定',
+    de: 'aufheben',
+    es: 'desarmar',
+    fr: 'annuler',
+    'pt-br': 'desmarcar',
+    ru: 'сбросить',
+    ko: '설정 해제',
+    it: 'annulla',
+    tr: 'kaldır',
+    cs: 'zrušit',
+    hu: 'törlés',
+    bg: 'премахни'
+  },
   'common.reasoning-effort-info': {
     en: 'Controls how much computational time the model allocates to unpack intent, break down complex logic, verify its assumptions, and self-correct.',
     pl: 'Kontroluje, ile czasu obliczeniowego model przeznacza na rozpakowanie twoich intencji, rozbicie złożonej logiki, weryfikację swoich założeń i samokorektę.',

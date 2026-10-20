@@ -35,24 +35,6 @@ export const translations = {
     hu: 'Modell',
     bg: 'Модел'
   },
-  'edit-web-configuration-form.unset': {
-    en: 'Unset',
-    pl: 'Usuń',
-    'zh-cn': '取消设置',
-    ja: '未設定',
-    'zh-tw': '取消設定',
-    de: 'Aufheben',
-    es: 'Desarmar',
-    fr: 'Annuler',
-    'pt-br': 'Desmarcar',
-    ru: 'Сбросить',
-    ko: '설정 해제',
-    it: 'Annulla',
-    tr: 'Kaldır',
-    cs: 'Zrušit',
-    hu: 'Törlés',
-    bg: 'Премахни'
-  },
   'edit-web-configuration-form.model.placeholder': {
     en: 'Enter model name',
     pl: 'Wprowadź nazwę modelu',

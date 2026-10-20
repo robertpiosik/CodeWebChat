@@ -7,6 +7,7 @@ import { BackendMessage } from '@/views/prompt/types/messages'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { Fieldset as UiFieldset } from '@ui/components/editor/prompt-view/Fieldset'
 import { QuickPickButton as UiQuickPickButton } from '@ui/components/editor/common/QuickPickButton'
+import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
 import { use_translation } from '../../i18n/use-translation'
 import { AGENTS } from '@/constants/agents'
 
@@ -14,6 +15,7 @@ type Props = {
   cli_configuration: CliConfiguration
   on_update: (updated_cli_configuration: CliConfiguration) => void
   pick_agent: (agent_id?: string) => void
+  pick_example_flags: (agent: string) => void
 }
 
 export const EditCliConfigurationForm: React.FC<Props> = (props) => {
@@ -43,6 +45,8 @@ export const EditCliConfigurationForm: React.FC<Props> = (props) => {
       const message = event.data as BackendMessage
       if (message.command == 'NEWLY_PICKED_AGENT') {
         set_agent(message.agent_id)
+      } else if (message.command == 'NEWLY_PICKED_EXAMPLE_FLAG') {
+        set_flags(message.flag)
       }
     }
     window.addEventListener('message', handle_message)
@@ -85,6 +89,18 @@ export const EditCliConfigurationForm: React.FC<Props> = (props) => {
           <UiField
             label={t('edit-agent-configuration-form.flags')}
             html_for="flags"
+            action={
+              flags ? (
+                <UiTextButton on_click={() => set_flags(undefined)}>
+                  {t('common.unset')}
+                </UiTextButton>
+              ) : agent &&
+                AGENTS[agent as keyof typeof AGENTS]?.example_flags.length ? (
+                <UiTextButton on_click={() => props.pick_example_flags(agent)}>
+                  {t('edit-agent-configuration-form.examples')}
+                </UiTextButton>
+              ) : undefined
+            }
             info={
               agent && AGENTS[agent as keyof typeof AGENTS]?.docs_url ? (
                 <>

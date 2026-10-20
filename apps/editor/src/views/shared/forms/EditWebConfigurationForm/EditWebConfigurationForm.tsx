@@ -178,7 +178,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
               action={
                 model !== undefined && (
                   <UiTextButton on_click={() => set_model(undefined)}>
-                    {t('edit-web-configuration-form.unset')}
+                    {t('common.unset')}
                   </UiTextButton>
                 )
               }
@@ -202,7 +202,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
               action={
                 model !== undefined && (
                   <UiTextButton on_click={() => set_model(undefined)}>
-                    {t('edit-web-configuration-form.unset')}
+                    {t('common.unset')}
                   </UiTextButton>
                 )
               }
@@ -231,7 +231,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
                   <UiTextButton
                     on_click={() => set_reasoning_effort(undefined)}
                   >
-                    {t('edit-web-configuration-form.unset')}
+                    {t('common.unset')}
                   </UiTextButton>
                 )
               }

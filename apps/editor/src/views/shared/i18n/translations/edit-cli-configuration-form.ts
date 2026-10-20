@@ -53,6 +53,24 @@ export const translations = {
     hu: 'Csoport',
     bg: 'Група'
   },
+  'edit-agent-configuration-form.examples': {
+    en: 'examples',
+    pl: 'przykłady',
+    'zh-cn': '示例',
+    ja: '例',
+    'zh-tw': '範例',
+    de: 'beispiele',
+    es: 'ejemplos',
+    fr: 'exemples',
+    'pt-br': 'exemplos',
+    ru: 'примеры',
+    ko: '예시',
+    it: 'esempi',
+    tr: 'örnekler',
+    cs: 'příklady',
+    hu: 'példák',
+    bg: 'примери'
+  },
   'edit-agent-configuration-form.flags': {
     en: 'Flags',
     pl: 'Flagi',

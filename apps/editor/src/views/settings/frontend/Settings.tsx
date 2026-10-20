@@ -410,6 +410,9 @@ export const Settings = () => {
               pick_agent={(agent_id) => {
                 post_message(vscode, { command: 'PICK_AGENT', agent_id })
               }}
+              pick_example_flags={(agent) => {
+                post_message(vscode, { command: 'PICK_EXAMPLE_FLAGS', agent })
+              }}
             />
           </UiModal.Form>
         </UiModal>

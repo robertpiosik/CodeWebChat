@@ -267,6 +267,11 @@ export interface PickAgentMessage {
   agent_id?: string
 }
 
+export interface PickExampleFlagsMessage {
+  command: 'PICK_EXAMPLE_FLAGS'
+  agent: string
+}
+
 export interface CreateApiConfigurationMessage {
   command: 'CREATE_API_CONFIGURATION'
   api_feature?: ApiFeature
@@ -431,6 +436,7 @@ export type FrontendMessage =
   | CreateAgentConfigurationMessage
   | UpdateAgentConfigurationMessage
   | PickAgentMessage
+  | PickExampleFlagsMessage
   | SetDefaultAgentConfigurationMessage
   | SelectDefaultAgentConfigurationMessage
 
@@ -565,6 +571,11 @@ export interface NewlyPickedAgentMessage {
   agent_id: string
 }
 
+export interface NewlyPickedExampleFlagMessage {
+  command: 'NEWLY_PICKED_EXAMPLE_FLAG'
+  flag: string
+}
+
 export interface WebConfigurationUpdatedMessage {
   command: 'WEB_CONFIGURATION_UPDATED'
 }
@@ -670,3 +681,4 @@ export type BackendMessage =
   | AgentConfigurationUpdatedMessage
   | StartAgentConfigurationCreationMessage
   | NewlyPickedAgentMessage
+  | NewlyPickedExampleFlagMessage

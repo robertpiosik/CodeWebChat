@@ -203,6 +203,11 @@ export interface PickAgentMessage extends BaseMessage {
   agent_id?: string
 }
 
+export interface PickExampleFlagsMessage extends BaseMessage {
+  command: 'PICK_EXAMPLE_FLAGS'
+  agent: string
+}
+
 export interface ExecuteCommandMessage extends BaseMessage {
   command: 'EXECUTE_COMMAND'
   command_id: string
@@ -727,6 +732,7 @@ export type FrontendMessage =
   | UpdateAgentConfigurationMessage
   | DeleteAgentConfigurationMessage
   | PickAgentMessage
+  | PickExampleFlagsMessage
   | GetCompletedTasksMessage
   | SaveCompletedTasksMessage
   | ClearCompletedTasksMessage
@@ -784,6 +790,11 @@ export interface StartAgentConfigurationCreationMessage extends BaseMessage {
 export interface NewlyPickedAgentMessage extends BaseMessage {
   command: 'NEWLY_PICKED_AGENT'
   agent_id: string
+}
+
+export interface NewlyPickedExampleFlagMessage extends BaseMessage {
+  command: 'NEWLY_PICKED_EXAMPLE_FLAG'
+  flag: string
 }
 
 export interface SelectedAgentConfigurationChangedMessage extends BaseMessage {
@@ -1054,5 +1065,6 @@ export type BackendMessage =
   | AgentConfigurationUpdatedMessage
   | StartAgentConfigurationCreationMessage
   | NewlyPickedAgentMessage
+  | NewlyPickedExampleFlagMessage
   | SelectedAgentConfigurationChangedMessage
   | CompletedTasksMessage

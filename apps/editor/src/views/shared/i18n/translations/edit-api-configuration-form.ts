@@ -52,23 +52,5 @@ export const translations = {
     cs: 'Úsilí o uvažování',
     hu: 'Érvelési erőfeszítés',
     bg: 'Усилие за разсъждение'
-  },
-  'edit-api-configuration-form.unset': {
-    en: 'Unset',
-    pl: 'Usuń',
-    'zh-cn': '取消设置',
-    ja: '未設定',
-    'zh-tw': '取消設定',
-    de: 'Aufheben',
-    es: 'Desarmar',
-    fr: 'Annuler',
-    'pt-br': 'Desmarcar',
-    ru: 'Сбросить',
-    ko: '설정 해제',
-    it: 'Annulla',
-    tr: 'Kaldır',
-    cs: 'Zrušit',
-    hu: 'Törlés',
-    bg: 'Премахни'
   }
 } as const

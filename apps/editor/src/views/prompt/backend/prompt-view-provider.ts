@@ -96,6 +96,7 @@ import {
   handle_select_edit_format_instructions,
   handle_update_last_used_web_configuration,
   handle_pick_agent,
+  handle_pick_example_flags,
   handle_get_completed_tasks,
   handle_save_completed_tasks,
   handle_clear_completed_tasks
@@ -917,6 +918,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_toggle_pinned_cli_configuration(message)
           } else if (message.command == 'PICK_AGENT') {
             await handle_pick_agent(this, message)
+          } else if (message.command == 'PICK_EXAMPLE_FLAGS') {
+            await handle_pick_example_flags(this, message)
           } else if (message.command == 'GET_COMPLETED_TASKS') {
             handle_get_completed_tasks(this)
           } else if (message.command == 'SAVE_COMPLETED_TASKS') {

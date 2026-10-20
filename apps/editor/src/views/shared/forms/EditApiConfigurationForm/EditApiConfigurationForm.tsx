@@ -95,7 +95,7 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
             action={
               reasoning_effort !== undefined && (
                 <UiTextButton on_click={() => set_reasoning_effort(undefined)}>
-                  {t('edit-api-configuration-form.unset')}
+                  {t('common.unset')}
                 </UiTextButton>
               )
             }

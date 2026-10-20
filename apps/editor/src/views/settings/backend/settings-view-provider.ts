@@ -64,6 +64,7 @@ import {
   handle_update_cli_configuration,
   handle_reorder_cli_configurations,
   handle_pick_agent,
+  handle_pick_example_flags,
   handle_get_web_configurations,
   handle_get_cli_configurations,
   handle_get_is_modern_ui,
@@ -246,6 +247,8 @@ export class SettingsViewProvider {
           await handle_reorder_cli_configurations(message)
         } else if (message.command == 'PICK_AGENT') {
           await handle_pick_agent(this, message)
+        } else if (message.command == 'PICK_EXAMPLE_FLAGS') {
+          await handle_pick_example_flags(this, message)
         } else if (message.command == 'GET_WEB_CONFIGURATIONS') {
           await handle_get_web_configurations(this)
         } else if (message.command == 'REORDER_WEB_CONFIGURATIONS') {
