@@ -16,7 +16,10 @@ import { build_agent_prompt } from './utils/build-agent-prompt'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
 import { search_files } from '@/features/search-files'
 import { WebSocketManager } from '@/services/websocket-manager'
-import { invoke_agentic_cli } from '@/utils/agentic-cli-invocation'
+import {
+  invoke_agentic_cli,
+  show_agentic_cli_output_channel
+} from '@/utils/agentic-cli-invocation'
 
 export const agentic_search = async (params: {
   workspace_provider: WorkspaceProvider
@@ -130,6 +133,7 @@ export const agentic_search = async (params: {
       vscode.window.showInformationMessage(
         t('common.info.no-items-found', { items: 'files' })
       )
+      show_agentic_cli_output_channel()
       continue
     }
 
@@ -160,6 +164,7 @@ export const agentic_search = async (params: {
       vscode.window.showInformationMessage(
         t('common.info.no-items-found', { items: 'files' })
       )
+      show_agentic_cli_output_channel()
       continue
     }
 
