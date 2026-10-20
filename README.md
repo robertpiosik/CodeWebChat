@@ -37,6 +37,13 @@ CWC can invoke your favorite agentic CLI with the [Agentic Search prompt](#-agen
 </details>
 
 <details>
+<summary><strong>Quotas lasting 10x longer</strong></summary>
+
+Without ever-growing sessions, model is focused on the problem from the start. Expect shorter reasoning and excellent performance even from mid-tier models.
+
+</details>
+
+<details>
 <summary><strong>First-class support for prompt caching</strong></summary>
 
 To maximize prompt cache hits when including selected files, unchanged files are placed first, followed by recently modified ones, and task instructions are placed at the very end.
