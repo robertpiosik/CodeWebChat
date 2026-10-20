@@ -240,7 +240,6 @@ export const MainView: React.FC<Props> = (props) => {
     on_cli_prompt_type_change: props.on_cli_prompt_type_change,
     on_show_home: props.on_show_home,
     on_agentic_search: props.on_agentic_search,
-    on_close_browser_connection: browser_connection.handle_close,
     is_disabled: props.are_keyboard_shortcuts_disabled
   })
 
@@ -392,7 +391,6 @@ export const MainView: React.FC<Props> = (props) => {
         is_visible={props.target == 'WEB'}
         is_connected={props.is_connected}
         is_closed={browser_connection.is_closed}
-        is_alt_pressed={is_alt_pressed}
         on_close={browser_connection.handle_close}
         on_install={props.on_install_browser_extension}
         translations={{
