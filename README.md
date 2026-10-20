@@ -30,16 +30,16 @@ Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs
 > Click ▶ to expand.
 
 <details>
-<summary><strong>Automated context selection</strong></summary>
+<summary><strong>Relevant files from agents</strong></summary>
 
-CWC can invoke your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search) using the current task instructions or a custom query. Irrelevant keyword-matched files are filtered out so they don't clutter the context window.
+Invoke your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search) using the current task instructions or a custom query.
 
 </details>
 
 <details>
 <summary><strong>Quotas lasting 10x longer</strong></summary>
 
-Without ever-growing sessions, model is focused on the problem from the start. Expect shorter reasoning and outstanding accuracy even from mid-tier models.
+Without ever-growing sessions, model is focused on the problem from the start. Expect shorter reasoning and outstanding accuracy, even from mid-tier models.
 
 </details>
 
@@ -61,7 +61,7 @@ Replace most skills with a simple checkbox tick. Providing examples right form t
 
 ### 📄 Agentic Search
 
-_Let your favorite agentic harness find task-relevant files._
+_Let your favorite agentic harness find relevant files._
 
 <details>
 <summary><strong>CLI</strong></summary>
