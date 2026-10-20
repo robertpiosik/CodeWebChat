@@ -1,10 +1,13 @@
 import * as crypto from 'crypto'
 import * as http from 'http'
+import * as path from 'path'
 import * as process from 'process'
+import * as dotenv from 'dotenv'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const WebSocket = require('ws')
-
 import { DEFAULT_PORT, CLIENT_TYPE } from '@shared/constants/websocket'
+
+dotenv.config({ path: path.join(__dirname, '..', '.env') })
 
 interface BrowserClient {
   ws: WebSocket
@@ -36,15 +39,50 @@ class WebSocketServer {
       server: this.server,
       maxPayload: 10 * 1024 * 1024,
       verifyClient: (info: any, cb: any) => {
-        const origin = info.req.headers.origin
-        if (origin) {
-          const allowed_prefixes = ['chrome-extension://', 'moz-extension://']
-          if (!allowed_prefixes.some((prefix) => origin.startsWith(prefix))) {
-            cb(false, 403, 'Forbidden')
-            return
+        const url = new URL(info.req.url, `http://localhost:${DEFAULT_PORT}`)
+        const client_type = url.searchParams.get('client_type')
+
+        if (client_type == CLIENT_TYPE.BROWSER) {
+          const origin = info.req.headers.origin
+
+          // 1. Chrome / Edge / Chromium: Strict Exact Match
+          if (origin == 'chrome-extension://ljookipcanaglfaocjbgdicfbdhhjffp') {
+            return cb(true)
           }
+
+          if (
+            process.env.DEV_CHROME_EXTENSION_ID &&
+            origin ==
+              `chrome-extension://${process.env.DEV_CHROME_EXTENSION_ID}`
+          ) {
+            return cb(true)
+          }
+
+          // 2. Firefox: Wildcard fallback
+          // (Firefox extensions get random origins, making exact matches impossible)
+          if (origin && origin.startsWith('moz-extension://')) {
+            return cb(true)
+          }
+
+          return cb(false, 403, 'Forbidden: Invalid Origin')
         }
-        cb(true)
+
+        if (client_type == CLIENT_TYPE.EDITOR) {
+          // 3. Editors: Enforce the shared file token
+          const provided_token = url.searchParams.get('token')
+          const {
+            get_or_create_shared_token
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+          } = require('../utils/shared-token')
+          const expected_token = get_or_create_shared_token()
+
+          if (provided_token && provided_token == expected_token) {
+            return cb(true)
+          }
+          return cb(false, 401, 'Unauthorized: Invalid token')
+        }
+
+        cb(false, 400, 'Bad Request')
       }
     })
     this._setup_websocket_server()

@@ -18,6 +18,7 @@ import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-c
 import { LAST_SELECTED_BROWSER_ID_STATE_KEY } from '@/constants/state-keys'
 import { ApplyResponseCommandArgs } from '@/commands/apply-response-command/response-processor'
 import { t } from '@/i18n'
+import { get_or_create_shared_token } from '../utils/shared-token'
 
 /**
  * Bridges the current workspace window and a WebSockets server
@@ -26,7 +27,6 @@ import { t } from '@/i18n'
 export class WebSocketManager {
   private extension_context: vscode.ExtensionContext
   private port: number = DEFAULT_PORT
-  private client_type: string = CLIENT_TYPE.EDITOR
   private client: WebSocket.WebSocket | null = null
   private _on_connection_status_change: vscode.EventEmitter<boolean> =
     new vscode.EventEmitter<boolean>()
@@ -168,7 +168,8 @@ export class WebSocketManager {
       }
     }
 
-    const ws_url = `ws://localhost:${this.port}?client_type=${this.client_type}`
+    const token = get_or_create_shared_token()
+    const ws_url = `ws://localhost:${this.port}?client_type=${CLIENT_TYPE.EDITOR}&token=${token}`
     this.client = new WebSocket.WebSocket(ws_url)
 
     this.client.on('open', () => {
