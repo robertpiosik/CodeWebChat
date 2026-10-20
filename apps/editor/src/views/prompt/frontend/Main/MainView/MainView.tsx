@@ -379,7 +379,8 @@ export const MainView: React.FC<Props> = (props) => {
         attaching_file: t('selected-files.attaching-file'),
         attaching_files: t('selected-files.attaching-files'),
         agentic_search: t('selected-files.agentic-search'),
-        clear_context: t('selected-files.clear-context')
+        clear_context: t('selected-files.clear-context'),
+        find_context_files: t('selected-files.find-context-files')
       }}
     />
   )

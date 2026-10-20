@@ -287,6 +287,7 @@ export const Footer: React.FC<Props> = (props) => {
               <Tooltip
                 message={props.props.translations.edit_format}
                 align="center"
+                translate={{ y: -6 }}
               />
             )}
             {!props.is_alt_pressed && (

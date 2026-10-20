@@ -6,7 +6,6 @@
   justify-content: space-between;
   height: var(--height);
   padding: 0 0 0 6px;
-  overflow: hidden;
   margin: 0 20px;
 
   @include modern-ui {
@@ -33,11 +32,14 @@
 }
 
 .theme-default {
-  color: var(--cwc-text-color);
   background-color: var(--cwc-bg-tertiary);
   --theme-description-color: var(--cwc-text-color-dimmed);
 
-  .action {
+  > .content {
+    color: var(--cwc-text-color);
+  }
+
+  .action > span {
     color: var(--vscode-textLink-foreground);
   }
 
@@ -47,9 +49,13 @@
 }
 
 .theme-warning {
-  color: var(--cwc-yellow-foreground);
   background-color: var(--cwc-yellow-background);
   --theme-description-color: var(--cwc-yellow-foreground-dimmed);
+
+  > .content,
+  .action > span {
+    color: var(--cwc-yellow-foreground);
+  }
 
   .action:hover {
     background-color: var(--cwc-yellow-background);
@@ -57,9 +63,13 @@
 }
 
 .theme-success {
-  color: var(--cwc-green-foreground);
   background-color: var(--cwc-green-background);
   --theme-description-color: var(--cwc-green-foreground-dimmed);
+
+  > .content,
+  .action > span {
+    color: var(--cwc-green-foreground);
+  }
 
   .action:hover {
     background-color: var(--cwc-green-background);
@@ -67,9 +77,13 @@
 }
 
 .theme-error {
-  color: var(--cwc-red-foreground);
   background-color: var(--cwc-red-background);
   --theme-description-color: var(--cwc-red-foreground-dimmed);
+
+  > .content,
+  .action > span {
+    color: var(--cwc-red-foreground);
+  }
 
   .action:hover {
     background-color: var(--cwc-red-background);
@@ -77,9 +91,13 @@
 }
 
 .theme-blue {
-  color: var(--cwc-blue-foreground);
   background-color: var(--cwc-blue-background);
   --theme-description-color: var(--cwc-blue-foreground-dimmed);
+
+  > .content,
+  .action > span {
+    color: var(--cwc-blue-foreground);
+  }
 
   .action:hover {
     background-color: var(--cwc-blue-background);
@@ -87,9 +105,13 @@
 }
 
 .theme-purple {
-  color: var(--cwc-purple-foreground);
   background-color: var(--cwc-purple-background);
   --theme-description-color: var(--cwc-purple-foreground-dimmed);
+
+  > .content,
+  .action > span {
+    color: var(--cwc-purple-foreground);
+  }
 
   .action:hover {
     background-color: var(--cwc-purple-background);
@@ -136,6 +158,8 @@
 .actions {
   display: flex;
   height: 100%;
+  border-top-right-radius: inherit;
+  border-bottom-right-radius: inherit;
 }
 
 .action {
@@ -146,6 +170,7 @@
   cursor: pointer;
   white-space: nowrap;
   padding: 0 5px 0 4px;
+  position: relative;
 
   &.no-label {
     padding: 0 4px;
@@ -153,6 +178,8 @@
 
   &.last {
     padding: 0 7px 0 4px;
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
   }
 
   &:hover {

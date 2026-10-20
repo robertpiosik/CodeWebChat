@@ -88,5 +88,23 @@ export const selected_files = {
     cs: 'Vymazat kontext',
     hu: 'Környezet törlése',
     bg: 'Изчистване на контекста'
+  },
+  'selected-files.find-context-files': {
+    en: 'Find relevant files',
+    pl: 'Znajdź odpowiednie pliki',
+    'zh-cn': '查找相关文件',
+    ja: '関連ファイルを検索',
+    'zh-tw': '尋找相關檔案',
+    de: 'Relevante Dateien finden',
+    es: 'Buscar archivos relevantes',
+    fr: 'Trouver des fichiers pertinents',
+    'pt-br': 'Encontrar arquivos relevantes',
+    ru: 'Найти релевантные файлы',
+    ko: '관련 파일 찾기',
+    it: 'Trova file rilevanti',
+    tr: 'İlgili dosyaları bul',
+    cs: 'Najít relevantní soubory',
+    hu: 'Releváns fájlok keresése',
+    bg: 'Намиране на подходящи файлове'
   }
 } as const

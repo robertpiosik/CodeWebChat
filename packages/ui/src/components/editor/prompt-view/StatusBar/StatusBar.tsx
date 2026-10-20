@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import cn from 'classnames'
 import styles from './StatusBar.module.scss'
 import { KeycapWrapper } from '../KeycapWrapper'
+import { Tooltip } from '../../common/Tooltip'
 
 export type StatusBarAction = {
   id: string
   icon: string
   label?: string
   title?: string
+  tooltip?: string
+  tooltip_align?: 'left' | 'center' | 'right'
   keycap?: string
   on_click: (e: React.MouseEvent) => void
 }
@@ -25,6 +28,7 @@ export type Props = {
 
 export const StatusBar: React.FC<Props> = (props) => {
   const theme = props.theme ?? 'default'
+  const [hovered_action, set_hovered_action] = useState<string | null>(null)
 
   return (
     <div
@@ -67,7 +71,18 @@ export const StatusBar: React.FC<Props> = (props) => {
                 })}
                 onClick={action.on_click}
                 title={action.title}
+                onMouseEnter={() => set_hovered_action(action.id)}
+                onMouseLeave={() => set_hovered_action(null)}
               >
+                {hovered_action == action.id && action.tooltip && (
+                  <Tooltip
+                    message={action.tooltip}
+                    position="top"
+                    align={action.tooltip_align || 'center'}
+                    offset={6}
+                    translate={{ y: -7 }}
+                  />
+                )}
                 <span className={cn('codicon', action.icon)} />
                 {action.label && <span>{action.label}</span>}
               </div>
