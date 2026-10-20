@@ -92,6 +92,13 @@ export const handle_open_website = async (
 
     const csp = webview_panel.webview.cspSource
 
+    const escaped_title = title
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;')
+
     webview_panel.webview.html = `
       <!DOCTYPE html>
       <html lang="en">
@@ -102,7 +109,7 @@ export const handle_open_website = async (
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
         <script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
-        <title>${title}</title>
+        <title>${escaped_title}</title>
         <style>
           body {
             line-height: 1.5;
