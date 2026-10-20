@@ -2,6 +2,7 @@ import * as child_process from 'child_process'
 import * as http from 'http'
 import * as net from 'net'
 import * as path from 'path'
+import * as crypto from 'crypto'
 import * as WebSocket from 'ws'
 import * as vscode from 'vscode'
 import {
@@ -115,15 +116,37 @@ export class WebSocketManager {
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       let attempts = 0
+      const challenge = crypto.randomBytes(16).toString('hex')
+      const token = get_or_create_shared_token()
+      const expected_signature = crypto
+        .createHmac('sha256', token)
+        .update(challenge)
+        .digest('hex')
 
       const check = () => {
-        const req = http.get(`http://localhost:${this.port}/health`, (res) => {
-          if (res.statusCode === 200) {
-            resolve()
-          } else {
-            retry()
+        const req = http.get(
+          `http://localhost:${this.port}/health?challenge=${challenge}`,
+          (res) => {
+            let data = ''
+            res.on('data', (chunk) => {
+              data += chunk
+            })
+            res.on('end', () => {
+              if (res.statusCode === 200) {
+                try {
+                  const json = JSON.parse(data)
+                  if (json.signature === expected_signature) {
+                    resolve()
+                    return
+                  }
+                } catch (e) {
+                  // Ignore parse errors and fall through to retry
+                }
+              }
+              retry()
+            })
           }
-        })
+        )
         req.on('error', retry)
         req.end()
       }
@@ -166,11 +189,26 @@ export class WebSocketManager {
         this._schedule_reconnect()
         return
       }
+    } else {
+      // If the port was already in use, verify it's our server before connecting
+      try {
+        await this._wait_for_server_ready(1, 0)
+      } catch (error) {
+        Logger.error({
+          function_name: '_connect_as_client',
+          message: 'Existing server on port failed ownership verification',
+          data: error
+        })
+        this._schedule_reconnect()
+        return
+      }
     }
 
     const token = get_or_create_shared_token()
-    const ws_url = `ws://localhost:${this.port}?client_type=${CLIENT_TYPE.EDITOR}&token=${token}`
-    this.client = new WebSocket.WebSocket(ws_url)
+    const ws_url = `ws://localhost:${this.port}?client_type=${CLIENT_TYPE.EDITOR}`
+    this.client = new WebSocket.WebSocket(ws_url, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
 
     this.client.on('open', () => {
       Logger.info({

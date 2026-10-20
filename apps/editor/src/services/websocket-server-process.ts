@@ -69,7 +69,12 @@ class WebSocketServer {
 
         if (client_type == CLIENT_TYPE.EDITOR) {
           // 3. Editors: Enforce the shared file token
-          const provided_token = url.searchParams.get('token')
+          const auth_header = info.req.headers.authorization
+          let provided_token: string | null = null
+          if (auth_header && auth_header.startsWith('Bearer ')) {
+            provided_token = auth_header.substring(7)
+          }
+
           const {
             get_or_create_shared_token
             // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -122,13 +127,26 @@ class WebSocketServer {
         return
       }
 
-      if (req.url == '/health') {
+      const url = new URL(req.url || '', `http://localhost:${DEFAULT_PORT}`)
+      if (url.pathname == '/health') {
+        const challenge = url.searchParams.get('challenge')
+        const response: any = { status: 'ok' }
+
+        if (challenge) {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          const {
+            get_or_create_shared_token
+          } = require('../utils/shared-token')
+          const token = get_or_create_shared_token()
+          const signature = crypto
+            .createHmac('sha256', token)
+            .update(challenge)
+            .digest('hex')
+          response.signature = signature
+        }
+
         res.writeHead(200, { 'Content-Type': 'application/json' })
-        res.end(
-          JSON.stringify({
-            status: 'ok'
-          })
-        )
+        res.end(JSON.stringify(response))
         return
       }
 
