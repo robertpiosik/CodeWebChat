@@ -148,7 +148,7 @@ export const show_configurations_quick_pick = async <T>(
   }
 
   if (show_back_button) {
-    quick_pick.buttons = [vscode.QuickInputButtons.Back]
+    quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
   } else {
     quick_pick.buttons = [close_button]
   }
