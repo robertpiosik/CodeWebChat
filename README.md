@@ -32,7 +32,7 @@ Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs
 <details>
 <summary><strong>Relevant files from agents</strong></summary>
 
-Invoke your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search) using the current task instructions or a custom query.
+Invoke your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search) using the task instructions or a custom query.
 
 </details>
 
