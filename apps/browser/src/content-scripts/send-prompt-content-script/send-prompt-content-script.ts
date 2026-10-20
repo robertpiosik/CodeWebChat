@@ -24,6 +24,7 @@ import {
   hugging_chat,
   z_ai
 } from './chatbots'
+import { session_state, set_session_state } from './utils/session-state'
 
 // In case url changes on load
 const current_url = window.location.href
@@ -176,8 +177,6 @@ const initialize_chat = async (params: { message: string; chat: Chat }) => {
 }
 
 const main = async () => {
-  const session_data_key = 'cwc-session-data'
-
   const hash = window.location.hash
   const is_cwc_hash = hash.startsWith(hash_prefix_new)
   const batch_id = hash.substring(hash_prefix_new.length + 1)
@@ -235,32 +234,27 @@ const main = async () => {
     if (chatbot?.setup_observer) {
       const inject_button = stored_data.inject_apply_response_button ?? false
 
-      sessionStorage.setItem(
-        session_data_key,
-        JSON.stringify({
-          client_id: stored_data.client_id,
-          raw_instructions: stored_data.raw_instructions,
-          inject_button
-        })
-      )
+      set_session_state({
+        client_id: stored_data.client_id,
+        raw_instructions: stored_data.raw_instructions,
+        inject_button
+      })
       chatbot.setup_observer({
         client_id: stored_data.client_id,
         raw_instructions: stored_data.raw_instructions,
         inject_button
       })
     } else {
-      sessionStorage.removeItem(session_data_key)
+      set_session_state(null)
     }
   } else {
-    const session_data_str = sessionStorage.getItem(session_data_key)
-    if (session_data_str && chatbot) {
+    if (session_state && chatbot) {
       try {
-        const session_data = JSON.parse(session_data_str)
         if (chatbot.setup_observer) {
           chatbot.setup_observer({
-            client_id: session_data.client_id,
-            raw_instructions: session_data.raw_instructions,
-            inject_button: session_data.inject_button ?? true
+            client_id: session_state.client_id,
+            raw_instructions: session_state.raw_instructions,
+            inject_button: session_state.inject_button ?? true
           })
         }
       } catch (e) {

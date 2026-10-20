@@ -7,6 +7,7 @@ import {
   set_button_disabled_state
 } from './apply-response-styles'
 import { show_response_ready_notification } from './show-response-ready-notification'
+import { session_state } from './session-state'
 
 export function add_apply_response_button(params: {
   client_id: string
@@ -40,12 +41,10 @@ export function add_apply_response_button(params: {
       let raw_instructions = params.raw_instructions
 
       try {
-        const session_data_str = sessionStorage.getItem('cwc-session-data')
-        if (session_data_str) {
-          const session_data = JSON.parse(session_data_str)
-          if (session_data.client_id !== undefined) {
-            client_id = session_data.client_id
-            raw_instructions = session_data.raw_instructions
+        if (session_state) {
+          if (session_state.client_id !== undefined) {
+            client_id = session_state.client_id
+            raw_instructions = session_state.raw_instructions
           }
         }
       } catch (error) {
