@@ -5,7 +5,6 @@ export const edit_reasoning_effort_for_api_config = async (
   current_effort?: string
 ) => {
   const effort_options: vscode.QuickPickItem[] = [
-    { label: 'None' },
     { label: 'Minimal' },
     { label: 'Low' },
     { label: 'Medium' },
