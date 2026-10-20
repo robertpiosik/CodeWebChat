@@ -31,7 +31,10 @@ export const AGENTS = {
       '--model claude-opus-5-5 --effort low',
       '--model claude-sonnet-5-5 --effort high',
       '--model claude-sonnet-5-5 --effort medium',
-      '--model claude-sonnet-5-5 --effort low'
+      '--model claude-sonnet-5-5 --effort low',
+      '--model claude-haiku-5-5 --effort high',
+      '--model claude-haiku-5-5 --effort medium',
+      '--model claude-haiku-5-5 --effort low'
     ]
   },
   Codex: {
