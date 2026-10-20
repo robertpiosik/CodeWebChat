@@ -15,12 +15,12 @@ export const AGENTS = {
   'Claude Code': {
     docs_url: 'https://code.claude.com/docs/en/headless',
     homepage_url: 'https://code.claude.com/docs/en/quickstart',
-    flags_placeholder: ''
+    flags_placeholder: '--model claude-sonnet-5-5 --effort high'
   },
   Codex: {
     docs_url: 'https://learn.chatgpt.com/docs/non-interactive-mode',
     homepage_url: 'https://learn.chatgpt.com/docs/codex/cli',
-    flags_placeholder: ''
+    flags_placeholder: '--model gpt-6.1-sol -c model_reasoning_effort=high'
   },
   Cursor: {
     docs_url: 'https://cursor.com/docs/cli/reference/parameters',
