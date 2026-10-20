@@ -139,6 +139,25 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
     e: React.KeyboardEvent<HTMLDivElement>
   ) => {
     if (props.are_keyboard_shortcuts_disabled) return
+
+    if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey) {
+      const match = e.key.match(/^[1-9]$/)
+      if (match) {
+        const index = parseInt(match[0], 10) - 1
+        if (index < props.tabs_count) {
+          e.preventDefault()
+          e.stopPropagation()
+          props.on_tab_change(index)
+          return
+        } else if (index == props.tabs_count) {
+          e.preventDefault()
+          e.stopPropagation()
+          props.on_new_tab()
+          return
+        }
+      }
+    }
+
     if (e.key == 'Escape' && !e.ctrlKey && !e.metaKey && !e.altKey) {
       if (props.is_recording) {
         props.on_recording_finished()
