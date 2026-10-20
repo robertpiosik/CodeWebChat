@@ -369,6 +369,10 @@ export interface GetIsModernUiMessage {
   command: 'GET_IS_MODERN_UI'
 }
 
+export interface CancelTemplateEditMessage {
+  command: 'CANCEL_TEMPLATE_EDIT'
+}
+
 export type FrontendMessage =
   | GetProvidersMessage
   | ReorderProvidersMessage
@@ -439,6 +443,7 @@ export type FrontendMessage =
   | PickExampleFlagsMessage
   | SetDefaultAgentConfigurationMessage
   | SelectDefaultAgentConfigurationMessage
+  | CancelTemplateEditMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ProvidersMessage {
@@ -644,6 +649,10 @@ export interface InsertSymbolMessage {
   text: string
 }
 
+export interface TemplateEditCancelledMessage {
+  command: 'TEMPLATE_EDIT_CANCELLED'
+}
+
 export type BackendMessage =
   | ProvidersMessage
   | ApiConfigurationsMessage
@@ -682,3 +691,4 @@ export type BackendMessage =
   | StartAgentConfigurationCreationMessage
   | NewlyPickedAgentMessage
   | NewlyPickedExampleFlagMessage
+  | TemplateEditCancelledMessage

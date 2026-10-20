@@ -71,7 +71,8 @@ import {
   handle_set_default_cli_configuration,
   handle_select_default_cli_configuration,
   handle_open_editor_settings,
-  handle_hash_sign_quick_pick
+  handle_hash_sign_quick_pick,
+  handle_cancel_template_edit
 } from './message-handlers'
 import { webview_html } from '@/views/shared/utils/webview-html'
 
@@ -155,6 +156,8 @@ export class SettingsViewProvider {
           await handle_create_template(this, message)
         } else if (message.command == 'DELETE_TEMPLATE') {
           await handle_delete_template(this, message)
+        } else if (message.command == 'CANCEL_TEMPLATE_EDIT') {
+          await handle_cancel_template_edit(this, message)
         } else if (message.command == 'GET_API_CONFIGURATIONS') {
           await handle_get_api_configurations(this)
         } else if (message.command == 'SET_DEFAULT_API_CONFIGURATION') {

@@ -8,8 +8,8 @@ import { TextButton as UiTextButton } from '@ui/components/editor/common/TextBut
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
-import { Templates } from '@ui/components/editor/settings-view/Templates'
 import { Template } from '@/views/settings/types/messages'
+import { TemplatesForm } from '../../forms/TemplatesForm'
 
 type Props = {
   send_with_shift_enter: boolean
@@ -139,37 +139,12 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               title={t('general.prompt.templates.title')}
               description={t('general.prompt.templates.description')}
             >
-              <Templates
-                templates={[
-                  {
-                    key: 'templatesForEditFiles',
-                    label: 'Edit',
-                    icon: 'edit-sparkle',
-                    accent_color: 'blue',
-                    items: props.templates.templatesForEditFiles || []
-                  },
-                  {
-                    key: 'templatesForAskAboutFiles',
-                    label: 'Ask',
-                    icon: 'chat-sparkle',
-                    accent_color: 'purple',
-                    items: props.templates.templatesForAskAboutFiles || []
-                  }
-                ]}
-                on_reorder={(key, templates) =>
-                  props.on_update_templates(key, templates)
-                }
+              <TemplatesForm
+                templates={props.templates}
+                on_reorder={props.on_update_templates}
                 on_delete={props.on_delete_template}
                 on_edit={props.on_edit_template}
                 on_add={props.on_add_template}
-                translations={{
-                  item_text: t('general.prompt.templates.item'),
-                  items_text: t('general.prompt.templates.items'),
-                  items_text_many: t('general.prompt.templates.items-many'),
-                  expand: t('common.expand'),
-                  collapse: t('common.collapse'),
-                  add_new: t('action.add-new')
-                }}
               />
             </UiItem>
             <UiItem

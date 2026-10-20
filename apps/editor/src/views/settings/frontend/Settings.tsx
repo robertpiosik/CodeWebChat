@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { use_settings } from './hooks/use-settings'
 import { post_message } from './utils/post-message'
-import { BackendMessage, Template } from '../types/messages'
+import { BackendMessage } from '../types/messages'
 import { Home, NavItem } from './Home/Home'
 import { use_web_configuration_editing } from './hooks/use-web-configuration-editing'
 import { use_cli_configuration_editing } from './hooks/use-cli-configuration-editing'
@@ -13,6 +13,7 @@ import { EditWebConfigurationForm } from '@/views/shared/forms/EditWebConfigurat
 import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurationForm'
 import { EditProviderForm } from './forms/EditProviderForm'
 import { EditTemplateForm } from './forms/EditTemplateForm'
+import { use_template_editing } from './hooks/use-template-editing'
 
 const vscode = acquireVsCodeApi()
 
@@ -58,42 +59,20 @@ export const Settings = () => {
   const [scroll_to_section_on_load, set_scroll_to_section_on_load] =
     useState<NavItem>()
 
-  const [updating_template, set_updating_template] = useState<{
-    key: string
-    index?: number
-    insertion_index?: number
-    template: Template
-  } | null>(null)
-  const [updated_template, set_updated_template] = useState<Template | null>(
-    null
+  const {
+    updating_template,
+    set_updated_template,
+    edit_template_cancel_handler,
+    edit_template_save_handler,
+    start_editing_template
+  } = use_template_editing(
+    vscode,
+    settings_hook.templates,
+    settings_hook.handle_update_templates
   )
 
   const [default_option_for_voice_input, set_default_option_for_voice_input] =
     useState<'ask' | 'send-request' | 'invoke-agent' | undefined>(undefined)
-
-  const edit_template_cancel_handler = () => {
-    set_updating_template(null)
-    set_updated_template(null)
-  }
-
-  const edit_template_save_handler = () => {
-    if (updating_template && updated_template) {
-      const { key, index, insertion_index } = updating_template
-      const templates = [...(settings_hook.templates?.[key] || [])]
-
-      if (index !== undefined) {
-        templates[index] = updated_template
-      } else if (insertion_index !== undefined) {
-        templates.splice(insertion_index, 0, updated_template)
-      } else {
-        templates.push(updated_template)
-      }
-
-      settings_hook.handle_update_templates(key, templates)
-    }
-    set_updating_template(null)
-    set_updated_template(null)
-  }
 
   const all_data_loaded = useMemo(() => {
     return (
@@ -139,13 +118,6 @@ export const Settings = () => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       if (event.data.command == 'SHOW_SECTION') {
         set_scroll_to_section_on_load(event.data.section as NavItem)
-      } else if (event.data.command == 'START_TEMPLATE_CREATION') {
-        set_updating_template({
-          key: event.data.templates_key,
-          insertion_index: event.data.insertion_index,
-          template: event.data.template
-        })
-        set_updated_template(event.data.template)
       } else if (event.data.command === 'DEFAULT_OPTION_FOR_VOICE_INPUT') {
         set_default_option_for_voice_input(event.data.value)
       }
@@ -214,13 +186,7 @@ export const Settings = () => {
         send_with_shift_enter={settings_hook.send_with_shift_enter!}
         templates={settings_hook.templates!}
         on_update_templates={settings_hook.handle_update_templates}
-        on_edit_template={(key, index) => {
-          const template = settings_hook.templates?.[key]?.[index]
-          if (template) {
-            set_updating_template({ key, index, template })
-            set_updated_template(template)
-          }
-        }}
+        on_edit_template={start_editing_template}
         on_add_template={settings_hook.handle_add_template}
         on_delete_template={settings_hook.handle_delete_template}
         set_providers={settings_hook.set_providers}
