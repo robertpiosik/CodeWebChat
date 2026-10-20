@@ -42,6 +42,25 @@ export const extract_paths_from_text = (params: {
 
   for (const original_p of found_paths) {
     let p = original_p
+
+    p = p.replace(/\\/g, '/')
+
+    if (p.startsWith('file://')) {
+      p = p.substring(7)
+    }
+
+    const hash_idx = p.indexOf('#')
+    if (hash_idx != -1) {
+      p = p.substring(0, hash_idx)
+    }
+
+    const query_idx = p.indexOf('?')
+    if (query_idx != -1) {
+      p = p.substring(0, query_idx)
+    }
+
+    p = p.replace(/:[0-9]+(:[0-9]+)?$/, '')
+
     if (p.startsWith('./')) {
       p = p.substring(2)
     } else if (p.startsWith('/')) {
@@ -51,7 +70,7 @@ export const extract_paths_from_text = (params: {
       p = p.substring(1)
     }
 
-    if (!p || p === '.' || p === '..') continue
+    if (!p || p == '.' || p == '..') continue
 
     let idx = params.text.indexOf(original_p)
     if (idx == -1) {
@@ -60,7 +79,7 @@ export const extract_paths_from_text = (params: {
     const safe_idx = idx != -1 ? idx : Infinity
 
     for (const file of params.workspace_files) {
-      if (file === p || file.endsWith('/' + p)) {
+      if (file == p || file.endsWith('/' + p) || p.endsWith('/' + file)) {
         const current_idx = matched_files_with_index.get(file) ?? Infinity
         matched_files_with_index.set(file, Math.min(current_idx, safe_idx))
       }
