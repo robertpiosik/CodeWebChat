@@ -43,6 +43,9 @@ export const build_user_content = (params: {
       }
     } else if (is_openai) {
       cache_config.prompt_cache_breakpoint = { mode: 'explicit' }
+      if (params.provider.extended_cache) {
+        cache_config.prompt_cache_breakpoint.ttl = '12h'
+      }
     }
 
     const user_content: any[] = [

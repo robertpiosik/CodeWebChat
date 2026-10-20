@@ -102,16 +102,21 @@ export const EditProviderForm: React.FC<Props> = (props) => {
             />
           </UiField>
 
-          {base_url.includes('api.anthropic.com') && (
+          {(base_url.includes('api.anthropic.com') ||
+            base_url.includes('api.openai.com')) && (
             <UiField
-              label={t('edit-provider-form.extended-cache.anthropic.title')}
+              label={t('edit-provider-form.extended-cache.title')}
               info={
                 <>
-                  {t('edit-provider-form.extended-cache.anthropic.description')}{' '}
-                  <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching#ttl-support">
-                    {t(
-                      'edit-provider-form.extended-cache.anthropic.learn-more'
-                    )}
+                  {t('edit-provider-form.extended-cache.description')}{' '}
+                  <a
+                    href={
+                      base_url.includes('api.anthropic.com')
+                        ? 'https://platform.claude.com/docs/en/build-with-claude/prompt-caching#ttl-support'
+                        : 'https://developers.openai.com/api/docs/guides/prompt-caching#cache-lifetime'
+                    }
+                  >
+                    {t('edit-provider-form.extended-cache.learn-more')}
                   </a>
                 </>
               }

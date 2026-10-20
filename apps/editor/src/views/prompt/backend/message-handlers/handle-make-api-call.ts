@@ -143,6 +143,9 @@ export const handle_make_api_call = async (
     const is_openai = provider.base_url == PROVIDERS.OpenAI.base_url
     if (is_openai) {
       body.prompt_cache_options = { mode: 'explicit' }
+      if (provider.extended_cache) {
+        body.prompt_cache_options.ttl = '12h'
+      }
     }
 
     apply_reasoning_effort({

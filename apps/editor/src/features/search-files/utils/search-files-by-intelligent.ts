@@ -9,6 +9,7 @@ import { Logger } from '@shared/utils/logger'
 import { FileData } from './analyze-files'
 import { Provider } from '@/services/providers-manager'
 import { t } from '@/i18n'
+import { PROVIDERS } from '@/constants/providers'
 
 export const search_files_by_intelligent = async (
   files_data: FileData[],
@@ -33,7 +34,7 @@ export const search_files_by_intelligent = async (
   const part1 = `# Files\n\n${md_files}`
   const part2 = `# Task\n\n${base_instructions}\n\n# Output formatting\n\n${ai_file_search_format_instructions}\n\n# Query\n\n${instructions}`
   const user_content = build_user_content({
-    provider,
+    provider: { ...provider, extended_cache: false },
     part1,
     part2
   })
@@ -42,6 +43,11 @@ export const search_files_by_intelligent = async (
   const body: { [key: string]: any } = {
     messages,
     model: selected_config.model
+  }
+
+  const is_openai = provider.base_url == PROVIDERS.OpenAI.base_url
+  if (is_openai) {
+    body.prompt_cache_options = { mode: 'explicit' }
   }
 
   apply_reasoning_effort({

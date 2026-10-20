@@ -31,6 +31,7 @@ import {
 } from '@/constants/state-keys'
 import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
+import { PROVIDERS } from '../../../constants/providers'
 
 export const perform_code_at_cursor = async (params: {
   workspace_provider: WorkspaceProvider
@@ -536,6 +537,14 @@ export const perform_code_at_cursor = async (params: {
     const body: { [key: string]: any } = {
       messages,
       model: code_at_cursor_api_configuration.model
+    }
+
+    const is_openai = provider.base_url == PROVIDERS.OpenAI.base_url
+    if (is_openai) {
+      body.prompt_cache_options = { mode: 'explicit' }
+      if (provider.extended_cache) {
+        body.prompt_cache_options.ttl = '12h'
+      }
     }
 
     apply_reasoning_effort({
