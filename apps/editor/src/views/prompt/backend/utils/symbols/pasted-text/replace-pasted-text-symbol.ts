@@ -44,7 +44,8 @@ export const replace_pasted_text_symbol = async (params: {
         result_string += instruction.slice(last_index, match.index)
 
         if (replacement.success && replacement.content) {
-          result_string += `\n\`\`\`\n${replacement.content}\n\`\`\`\n`
+          const backticks = replacement.content.includes('```') ? '````' : '```'
+          result_string += `\n${backticks}\n${replacement.content}\n${backticks}\n`
         } else {
           result_string += match[0]
         }
