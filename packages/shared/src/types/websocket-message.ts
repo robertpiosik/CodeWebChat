@@ -7,7 +7,7 @@ export type Chat = {
 }
 
 export type ConnectedBrowser = {
-  id: number
+  id: string
   version: string
   user_agent: string
   profile_name?: string
@@ -17,9 +17,9 @@ export type InitializeChatMessage = {
   action: 'initialize-chat'
   text: string
   url: string
-  client_id: string 
+  client_id: string
   model?: string
-  target_browser_id?: number
+  target_browser_id?: string
   reasoning_effort?: string
   system_instructions?: string
   options?: string[]

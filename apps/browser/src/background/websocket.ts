@@ -71,12 +71,21 @@ export const connect_websocket = async (): Promise<void> => {
     const version = manifest.version
     const user_agent = navigator.userAgent
 
-    const storage = await browser.storage.local.get('browser-profile-name')
+    const storage = await browser.storage.local.get([
+      'browser-profile-name',
+      'browser-id'
+    ])
     const profile_name = (
       storage['browser-profile-name'] as string | undefined
     )?.trim()
 
-    let ws_url = `ws://localhost:${DEFAULT_PORT}?client_type=${CLIENT_TYPE.BROWSER}&version=${version}&user_agent=${encodeURIComponent(user_agent)}`
+    let browser_id = storage['browser-id'] as string | undefined
+    if (!browser_id) {
+      browser_id = crypto.randomUUID()
+      await browser.storage.local.set({ 'browser-id': browser_id })
+    }
+
+    let ws_url = `ws://localhost:${DEFAULT_PORT}?client_type=${CLIENT_TYPE.BROWSER}&version=${version}&user_agent=${encodeURIComponent(user_agent)}&browser_id=${encodeURIComponent(browser_id)}`
     if (profile_name) {
       ws_url += `&profile_name=${encodeURIComponent(profile_name)}`
     }

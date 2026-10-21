@@ -12,7 +12,7 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') })
 interface BrowserClient {
   ws: WebSocket
   version: string
-  id: number
+  id: string
   user_agent: string
   profile_name?: string
   is_alive: boolean
@@ -26,8 +26,7 @@ interface VSCodeClient {
 
 class WebSocketServer {
   private vscode_clients: Map<string, VSCodeClient> = new Map()
-  private browser_clients: Map<number, BrowserClient> = new Map()
-  private browser_client_counter: number = 0
+  private browser_clients: Map<string, BrowserClient> = new Map()
   private connections: Set<WebSocket> = new Set()
   private server: http.Server
   private wss: any
@@ -117,25 +116,15 @@ class WebSocketServer {
 
   private _create_http_server(): http.Server {
     return http.createServer((req: any, res: any) => {
-      res.setHeader('Access-Control-Allow-Origin', '*')
-      res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-
-      if (req.method == 'OPTIONS') {
-        res.writeHead(204)
-        res.end()
-        return
-      }
-
       const url = new URL(req.url || '', `http://localhost:${DEFAULT_PORT}`)
       if (url.pathname == '/health') {
         const challenge = url.searchParams.get('challenge')
         const response: any = { status: 'ok' }
 
         if (challenge) {
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
           const {
             get_or_create_shared_token
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
           } = require('../utils/shared-token')
           const token = get_or_create_shared_token()
           const signature = crypto
@@ -192,9 +181,7 @@ class WebSocketServer {
     const version = url.searchParams.get('version') || 'unknown'
     const user_agent = url.searchParams.get('user_agent') || 'unknown'
     const profile_name = url.searchParams.get('profile_name') || undefined
-
-    this.browser_client_counter++
-    const id = this.browser_client_counter
+    const id = url.searchParams.get('browser_id') || crypto.randomUUID()
 
     const client: BrowserClient = {
       ws,

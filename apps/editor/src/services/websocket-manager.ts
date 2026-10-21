@@ -307,7 +307,7 @@ export class WebSocketManager {
     }
   }
 
-  private async _select_browser(): Promise<number | undefined> {
+  private async _select_browser(): Promise<string | undefined> {
     if (this.connected_browsers.length == 0) {
       return undefined
     }
@@ -321,10 +321,9 @@ export class WebSocketManager {
       return id
     }
 
-    const last_selected_browser_id =
-      this.extension_context.workspaceState.get<number>(
-        LAST_SELECTED_BROWSER_ID_STATE_KEY
-      )
+    const last_selected_browser_id = this.extension_context.workspaceState.get<
+      string | number
+    >(LAST_SELECTED_BROWSER_ID_STATE_KEY)
 
     const items = this.connected_browsers
       .map((b) => ({
@@ -341,7 +340,7 @@ export class WebSocketManager {
         if (a._has_profile && b._has_profile) {
           return a.label.localeCompare(b.label)
         }
-        return a.id - b.id
+        return a.id.localeCompare(b.id)
       })
       .map((item) => ({
         label: item.label,
@@ -349,15 +348,15 @@ export class WebSocketManager {
         id: item.id
       }))
 
-    return new Promise<number | undefined>((resolve) => {
+    return new Promise<string | undefined>((resolve) => {
       const quick_pick = vscode.window.createQuickPick<
-        vscode.QuickPickItem & { id: number }
+        vscode.QuickPickItem & { id: string }
       >()
       quick_pick.items = items
 
-      if (last_selected_browser_id) {
+      if (last_selected_browser_id !== undefined) {
         const active_item = items.find(
-          (item) => item.id == last_selected_browser_id
+          (item) => item.id === last_selected_browser_id
         )
         if (active_item) {
           quick_pick.activeItems = [active_item]
