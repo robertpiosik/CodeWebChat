@@ -8,6 +8,7 @@ import {
 } from '@/constants/values'
 import { PromptBuilder } from './prompt-builder'
 import { display_token_count } from '@shared/utils/display-token-count'
+import { is_prompt_empty_or_only_symbols } from '@shared/utils/simplify-prompt-symbols'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { search_files } from '@/features/search-files'
@@ -254,7 +255,7 @@ export const prepare_staged_changes = async (params: {
           const normalized_path = normalize_path(relative_path)
           const file_prompts = prompts_for_repo.filter(
             (p) =>
-              p.prompt.trim() !== '' &&
+              !is_prompt_empty_or_only_symbols({ prompt: p.prompt }) &&
               (p.files.includes(normalized_path) ||
                 p.files.includes(change.uri.fsPath))
           )

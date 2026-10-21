@@ -1,7 +1,10 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as vscode from 'vscode'
-import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
+import {
+  simplify_prompt_symbols,
+  is_prompt_empty_or_only_symbols
+} from '@shared/utils/simplify-prompt-symbols'
 import { normalize_path } from './normalize-path'
 
 export namespace CommitMessageDetails {
@@ -91,10 +94,13 @@ export namespace CommitMessageDetails {
     const selected_files_to_add = params.selected_files.map(normalize)
 
     const existing = all_prompts[params.workspace_root].find((p) => {
-      if (simplified_prompt !== '') {
+      if (!is_prompt_empty_or_only_symbols({ prompt: simplified_prompt })) {
         return p.prompt == simplified_prompt
       }
-      return p.prompt == '' && p.files.some((f) => files_to_add.includes(f))
+      return (
+        is_prompt_empty_or_only_symbols({ prompt: p.prompt }) &&
+        p.files.some((f) => files_to_add.includes(f))
+      )
     })
 
     if (existing) {

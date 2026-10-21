@@ -1,4 +1,7 @@
-import { simplify_prompt_symbols } from './simplify-prompt-symbols'
+import {
+  simplify_prompt_symbols,
+  is_prompt_empty_or_only_symbols
+} from './simplify-prompt-symbols'
 
 describe('simplify_prompt_symbols', () => {
   it('should return plain text as is', () => {
@@ -55,5 +58,31 @@ describe('simplify_prompt_symbols', () => {
     expect(simplify_prompt_symbols({ prompt })).toBe(
       '[Fragment] with [Changes]'
     )
+  })
+})
+
+describe('is_prompt_empty_or_only_symbols', () => {
+  it('should return true for empty string', () => {
+    expect(is_prompt_empty_or_only_symbols({ prompt: '' })).toBe(true)
+  })
+
+  it('should return true for whitespace string', () => {
+    expect(is_prompt_empty_or_only_symbols({ prompt: '   ' })).toBe(true)
+  })
+
+  it('should return true for only one symbol', () => {
+    expect(is_prompt_empty_or_only_symbols({ prompt: '[Fragment]' })).toBe(true)
+  })
+
+  it('should return true for multiple symbols with whitespace', () => {
+    expect(
+      is_prompt_empty_or_only_symbols({ prompt: '[Fragment]  [Website] ' })
+    ).toBe(true)
+  })
+
+  it('should return false if there is actual text', () => {
+    expect(
+      is_prompt_empty_or_only_symbols({ prompt: 'Fix this [Fragment]' })
+    ).toBe(false)
   })
 })

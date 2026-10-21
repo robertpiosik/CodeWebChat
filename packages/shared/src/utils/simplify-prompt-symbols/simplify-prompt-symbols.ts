@@ -29,3 +29,22 @@ export const simplify_prompt_symbols = (params: { prompt: string }): string => {
 
   return simplified
 }
+
+export const is_prompt_empty_or_only_symbols = (params: {
+  prompt: string
+}): boolean => {
+  if (!params.prompt) return true
+
+  const stripped = params.prompt
+    .replace(/\[Fragment\]/g, '')
+    .replace(/\[Changes\]/g, '')
+    .replace(/\[Saved context\]/g, '')
+    .replace(/\[Commit\]/g, '')
+    .replace(/\[Skill\]/g, '')
+    .replace(/\[Image\]/g, '')
+    .replace(/\[Pasted text\]/g, '')
+    .replace(/\[Website\]/g, '')
+    .trim()
+
+  return stripped === ''
+}

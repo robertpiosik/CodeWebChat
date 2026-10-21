@@ -22,6 +22,7 @@ import {
 } from '@/constants/state-keys'
 import { get_prompt_data } from './get-prompt-data'
 import { display_token_count } from '@shared/utils/display-token-count'
+import { is_prompt_empty_or_only_symbols } from '@shared/utils/simplify-prompt-symbols'
 import { show_configurations_quick_pick } from '@/utils/show-configurations-quick-pick'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
@@ -612,10 +613,10 @@ export const run_generate_action = async (params: {
       )
 
     const relevant_prompts = all_relevant_prompts.filter(
-      (p) => p.prompt.trim() != ''
+      (p) => !is_prompt_empty_or_only_symbols({ prompt: p.prompt })
     )
-    const empty_prompts = all_relevant_prompts.filter(
-      (p) => p.prompt.trim() == ''
+    const empty_prompts = all_relevant_prompts.filter((p) =>
+      is_prompt_empty_or_only_symbols({ prompt: p.prompt })
     )
 
     const get_tree_text_if_applicable = async (
