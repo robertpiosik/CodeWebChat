@@ -72,7 +72,7 @@ export const selected_files = {
     bg: 'Агентно търсене'
   },
   'selected-files.clear-context': {
-    en: 'Clear Context',
+    en: 'Clear context',
     pl: 'Wyczyść kontekst',
     'zh-cn': '清除上下文',
     ja: 'コンテキストをクリア',

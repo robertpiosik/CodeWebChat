@@ -27,7 +27,11 @@ export const codex_agent: CodingAgent = {
     '--sandbox',
     'read-only'
   ],
-  // get_post_integrated_terminal_args: () => ['continue'], // Broken on their end
+  get_post_integrated_terminal_args: () => [
+    'resume',
+    '--include-non-interactive',
+    '--last'
+  ],
   parse_stream_line: (parsed, report_progress) => {
     if (parsed.type == 'item.started' && parsed.item) {
       const item = parsed.item

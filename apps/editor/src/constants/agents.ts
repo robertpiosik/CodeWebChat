@@ -63,7 +63,7 @@ export const AGENTS = {
     example_flags: []
   },
   OpenCode: {
-    docs_url: 'https://opencode.ai/docs/cli/',
+    docs_url: 'https://opencode.ai/v2/docs',
     homepage_url: 'https://opencode.ai/',
     flags_placeholder: '',
     example_flags: []

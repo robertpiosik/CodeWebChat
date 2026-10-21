@@ -19,11 +19,10 @@ export const opencode_agent: CodingAgent = {
     '--format',
     'json',
     '--auto',
-    '--dir',
     params.cwd
   ],
-  get_integrated_terminal_args: (params) => ['run', '--dir', params.cwd],
-  get_post_integrated_terminal_args: () => ['--mini', '--continue'],
+  get_integrated_terminal_args: (params) => ['run', '--auto', params.cwd],
+  get_post_integrated_terminal_args: () => ['--continue'],
   parse_stream_line: (parsed, report_progress) => {
     let action_name = ''
     if (parsed.type == 'tool_use' && parsed.part?.tool) {
