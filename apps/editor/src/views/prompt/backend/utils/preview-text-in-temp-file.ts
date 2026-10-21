@@ -1,4 +1,3 @@
-import * as crypto from 'crypto'
 import * as fs from 'fs'
 import * as os from 'os'
 import * as path from 'path'
@@ -10,18 +9,27 @@ export const preview_text_in_temp_file = async (params: {
   content: string
   extension?: string
 }): Promise<void> => {
-  const hash = crypto
-    .createHash('md5')
-    .update(`${Date.now()}-${Math.random()}`)
-    .digest('hex')
   const ext = params.extension || '.txt'
-  const temp_file_path = path.join(
-    os.tmpdir(),
-    `${params.prefix}-${hash}${ext}`
-  )
+  let temp_dir_path: string
 
   try {
-    await fs.promises.writeFile(temp_file_path, params.content, 'utf8')
+    temp_dir_path = await fs.promises.mkdtemp(
+      path.join(os.tmpdir(), 'cwc-preview-')
+    )
+  } catch (error) {
+    vscode.window.showErrorMessage(
+      'Failed to create temporary directory for preview.'
+    )
+    return
+  }
+
+  const temp_file_path = path.join(temp_dir_path, `${params.prefix}${ext}`)
+
+  try {
+    await fs.promises.writeFile(temp_file_path, params.content, {
+      encoding: 'utf8',
+      mode: 0o600
+    })
   } catch (error) {
     vscode.window.showErrorMessage(
       'Failed to create temporary file for preview.'

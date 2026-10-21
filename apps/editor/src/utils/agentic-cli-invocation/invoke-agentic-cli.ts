@@ -368,10 +368,16 @@ export const invoke_agentic_cli = async (params: {
       if (params.isolate_in_temp_dir) {
         if (params.copy_selected_files) {
           temp_dir_path = await fs.promises.mkdtemp(
-            path.join(os.tmpdir(), 'cwc-cli-')
+            path.join(os.tmpdir(), 'cwc-cli-edit-')
           )
         } else {
-          temp_dir_path = path.join(os.tmpdir(), 'cwc-cli')
+          // Reuse directory to avoid repeated permission asks
+          const global_storage_path =
+            params.extension_context.globalStorageUri.fsPath
+          if (!fs.existsSync(global_storage_path)) {
+            await fs.promises.mkdir(global_storage_path, { recursive: true })
+          }
+          temp_dir_path = path.join(global_storage_path, 'cwc-cli-ask')
           await fs.promises.rm(temp_dir_path, { recursive: true, force: true })
           await fs.promises.mkdir(temp_dir_path, { recursive: true })
         }
@@ -547,11 +553,14 @@ export const invoke_agentic_cli = async (params: {
         return undefined
       }
 
-      const temp_prompt_path = path.join(
-        os.tmpdir(),
-        `cwc-prompt-${Date.now()}-${Math.floor(Math.random() * 1000)}.md`
+      const temp_prompt_dir = await fs.promises.mkdtemp(
+        path.join(os.tmpdir(), 'cwc-prompt-')
       )
-      await fs.promises.writeFile(temp_prompt_path, final_prompt, 'utf-8')
+      const temp_prompt_path = path.join(temp_prompt_dir, 'prompt.md')
+      await fs.promises.writeFile(temp_prompt_path, final_prompt, {
+        encoding: 'utf-8',
+        mode: 0o600
+      })
 
       if (execution_mode === 'interactive-terminal') {
         const base_args = agent_info.get_integrated_terminal_args
@@ -597,6 +606,12 @@ export const invoke_agentic_cli = async (params: {
           ].join(' ')
           terminal.sendText(post_command_args)
         }
+
+        setTimeout(() => {
+          fs.promises
+            .rm(temp_prompt_dir, { recursive: true, force: true })
+            .catch(() => {})
+        }, 10000)
 
         return { agent_output: '', selected_root: selected_root! }
       }
@@ -785,6 +800,10 @@ export const invoke_agentic_cli = async (params: {
         )
         go_back_to_caller = true
         break
+      } finally {
+        await fs.promises
+          .rm(temp_prompt_dir, { recursive: true, force: true })
+          .catch(() => {})
       }
 
       if (cancelled_count === invocation_count) {

@@ -12,7 +12,11 @@ export const handle_save_prompt_image = async (
 ) => {
   try {
     const buffer = Buffer.from(message.content_base64, 'base64')
-    const hash = crypto.createHash('md5').update(buffer).digest('hex')
+    const hash = crypto
+      .createHash('sha256')
+      .update(buffer)
+      .digest('hex')
+      .substring(0, 16)
     const filename = `cwc-image-${hash}.txt`
     const file_path = path.join(os.tmpdir(), filename)
     await fs.promises.writeFile(file_path, message.content_base64, 'utf-8')

@@ -9,6 +9,9 @@ export const handle_open_prompt_image = async (
 ) => {
   try {
     const hash = message.hash
+    if (!/^[a-fA-F0-9]{16,64}$/.test(hash)) {
+      throw new Error('Invalid image hash')
+    }
     const txt_filename = `cwc-image-${hash}.txt`
     const txt_path = path.join(os.tmpdir(), txt_filename)
 
@@ -29,10 +32,13 @@ export const handle_open_prompt_image = async (
     const buffer = Buffer.from(content_base64, 'base64')
 
     // Create a png file for viewing
+    const png_dir = await fs.promises.mkdtemp(
+      path.join(os.tmpdir(), 'cwc-image-')
+    )
     const png_filename = `cwc-image-${hash}.png`
-    const png_path = path.join(os.tmpdir(), png_filename)
+    const png_path = path.join(png_dir, png_filename)
 
-    await fs.promises.writeFile(png_path, buffer)
+    await fs.promises.writeFile(png_path, buffer, { mode: 0o600 })
 
     // Open the image
     const uri = vscode.Uri.file(png_path)

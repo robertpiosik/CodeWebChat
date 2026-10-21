@@ -40,12 +40,18 @@ export class PersistentTextStorage {
   }
 
   async load(id: string): Promise<string> {
+    if (!/^[a-fA-F0-9]{16,64}$/.test(id)) {
+      throw new Error('Invalid storage ID')
+    }
     const filename = `${id}.txt`
     const file_path = path.join(this.dir_path, filename)
     return await fs.promises.readFile(file_path, 'utf-8')
   }
 
   get_file_path(id: string): string {
+    if (!/^[a-fA-F0-9]{16,64}$/.test(id)) {
+      throw new Error('Invalid storage ID')
+    }
     const filename = `${id}.txt`
     return path.join(this.dir_path, filename)
   }
