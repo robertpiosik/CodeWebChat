@@ -28,15 +28,14 @@ export const create_handle_input_change =
     }
 
     if (char_before_caret == '@') {
-      let should_trigger = true
+      const is_at_start = caret_position == 1
+      let is_after_whitespace = false
       if (caret_position > 1) {
         const char_before_at = new_display_value.charAt(caret_position - 2)
-        if (char_before_at == '@') {
-          should_trigger = false
-        }
+        is_after_whitespace = /\s/.test(char_before_at)
       }
 
-      if (should_trigger) {
+      if (is_at_start || is_after_whitespace) {
         props.on_at_sign_click()
       }
     } else if (char_before_caret == '#') {
