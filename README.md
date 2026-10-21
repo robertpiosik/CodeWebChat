@@ -32,7 +32,7 @@ Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs
 <details>
 <summary><strong>Hands-free relevant file selection</strong></summary>
 
-By headlessly invoking your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search), you can automatically manage your file tree selection.
+By headlessly invoking your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search), you can automatically manage your file tree selection of the current context window.
 
 </details>
 
