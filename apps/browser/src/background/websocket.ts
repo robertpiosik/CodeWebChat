@@ -101,7 +101,6 @@ export const connect_websocket = async (): Promise<void> => {
         }
         return
       }
-      console.debug(message)
       handle_messages(message as WebSocketMessage)
     }
 
@@ -127,10 +126,9 @@ export const connect_websocket = async (): Promise<void> => {
 
 export const send_message_to_server = (message: any): boolean => {
   if (websocket?.readyState == WebSocket.OPEN) {
-    console.debug('Sending message to server:', message)
     websocket.send(JSON.stringify(message))
     return true
   }
-  console.warn('WebSocket not connected, cannot send message:', message)
+  console.warn('WebSocket not connected, cannot send message')
   return false
 }

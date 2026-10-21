@@ -231,7 +231,7 @@ export class WebSocketManager {
         Logger.info({
           function_name: '_connect_as_client',
           message: 'Incoming WS message',
-          data: message
+          data: { action: message.action }
         })
 
         if (message.action == 'client-id-assignment') {
@@ -509,7 +509,12 @@ export class WebSocketManager {
     Logger.info({
       function_name: 'initialize_chat',
       message: 'Sending initialize chat message',
-      data: message
+      data: {
+        url: message.url,
+        model: message.model,
+        target_browser_id: message.target_browser_id,
+        client_id: message.client_id
+      }
     })
 
     this.client?.send(JSON.stringify(message))
@@ -615,7 +620,12 @@ export class WebSocketManager {
     Logger.info({
       function_name: 'preview_web_configuration',
       message: 'Sending preview web configuration message',
-      data: message
+      data: {
+        url: message.url,
+        model: message.model,
+        target_browser_id: message.target_browser_id,
+        client_id: message.client_id
+      }
     })
 
     this.client?.send(JSON.stringify(message))
