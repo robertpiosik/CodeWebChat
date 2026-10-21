@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { execSync, execFileSync } from 'child_process'
+import { execFileSync } from 'child_process'
 import { get_git_repository } from '@/utils/git-repository-utils'
 import { is_valid_git_branch_name } from '@/utils/is-valid-git-branch-name'
 import { AsciiTree } from '@/utils/ascii-tree/ascii-tree'
@@ -208,8 +208,9 @@ export const replace_changes_symbol = async (params: {
 
         let cache_key = full_match
         try {
-          const head_sha = execSync('git rev-parse HEAD', {
-            cwd: target_folder.uri.fsPath
+          const head_sha = execFileSync('git', ['rev-parse', 'HEAD'], {
+            cwd: target_folder.uri.fsPath,
+            encoding: 'utf-8'
           })
             .toString()
             .trim()
@@ -231,9 +232,14 @@ export const replace_changes_symbol = async (params: {
             }
           }
 
-          const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
-            cwd: target_folder.uri.fsPath
-          })
+          const current_branch = execFileSync(
+            'git',
+            ['rev-parse', '--abbrev-ref', 'HEAD'],
+            {
+              cwd: target_folder.uri.fsPath,
+              encoding: 'utf-8'
+            }
+          )
             .toString()
             .trim()
 
@@ -349,8 +355,9 @@ export const replace_changes_symbol = async (params: {
 
         let cache_key = full_match
         try {
-          const head_sha = execSync('git rev-parse HEAD', {
-            cwd: repository.rootUri.fsPath
+          const head_sha = execFileSync('git', ['rev-parse', 'HEAD'], {
+            cwd: repository.rootUri.fsPath,
+            encoding: 'utf-8'
           })
             .toString()
             .trim()
@@ -372,9 +379,14 @@ export const replace_changes_symbol = async (params: {
             }
           }
 
-          const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
-            cwd: repository.rootUri.fsPath
-          })
+          const current_branch = execFileSync(
+            'git',
+            ['rev-parse', '--abbrev-ref', 'HEAD'],
+            {
+              cwd: repository.rootUri.fsPath,
+              encoding: 'utf-8'
+            }
+          )
             .toString()
             .trim()
 
@@ -602,10 +614,14 @@ export const replace_commit_symbol = async (params: {
 
         let commit_message_body = ''
         try {
-          const raw_msg = execSync(`git show -s --format=%B ${commit_hash}`, {
-            cwd: target_folder.uri.fsPath,
-            encoding: 'utf-8'
-          }).toString()
+          const raw_msg = execFileSync(
+            'git',
+            ['show', '-s', '--format=%B', commit_hash],
+            {
+              cwd: target_folder.uri.fsPath,
+              encoding: 'utf-8'
+            }
+          ).toString()
           commit_message_body = AsciiTree.strip_from_text(raw_msg)
         } catch (error) {
           Logger.warn({
@@ -626,7 +642,7 @@ export const replace_commit_symbol = async (params: {
           .replace(/^-|-$/g, '')
 
         if (symbol_type === 'Commit') {
-          const diff = execSync(`git show ${commit_hash}`, {
+          const diff = execFileSync('git', ['show', commit_hash], {
             cwd: target_folder.uri.fsPath,
             encoding: 'utf-8'
           }).toString()

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { execSync } from 'child_process'
+import { execFileSync } from 'child_process'
 import {
   LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY,
   LAST_SELECTED_COMMIT_REFERENCE_ACTION_STATE_KEY
@@ -26,7 +26,7 @@ export const handle_commit_item = async (
     const git_folders: vscode.WorkspaceFolder[] = []
     for (const folder of workspace_folders) {
       try {
-        execSync('git rev-parse --is-inside-work-tree', {
+        execFileSync('git', ['rev-parse', '--is-inside-work-tree'], {
           cwd: folder.uri.fsPath,
           stdio: 'ignore'
         })
@@ -111,8 +111,13 @@ export const handle_commit_item = async (
         return 'continue'
       }
 
-      const log_output = execSync(
-        `git log --pretty=format:"%H%n%s%n%cr" --since="${GIT_LOG_SINCE_DURATION}"`,
+      const log_output = execFileSync(
+        'git',
+        [
+          'log',
+          '--pretty=format:%H%n%s%n%cr',
+          `--since=${GIT_LOG_SINCE_DURATION}`
+        ],
         {
           encoding: 'utf-8',
           cwd: selected_folder.uri.fsPath
@@ -208,10 +213,14 @@ export const handle_commit_item = async (
 
         try {
           let commit_message = ''
-          const raw_msg = execSync(`git show -s --format=%B ${commit_hash}`, {
-            cwd: selected_folder.uri.fsPath,
-            encoding: 'utf-8'
-          }).toString()
+          const raw_msg = execFileSync(
+            'git',
+            ['show', '-s', '--format=%B', commit_hash],
+            {
+              cwd: selected_folder.uri.fsPath,
+              encoding: 'utf-8'
+            }
+          ).toString()
           commit_message = AsciiTree.strip_from_text(raw_msg)
 
           if (commit_message) {
@@ -220,7 +229,7 @@ export const handle_commit_item = async (
             )
           }
 
-          const diff = execSync(`git show ${commit_hash}`, {
+          const diff = execFileSync('git', ['show', commit_hash], {
             cwd: selected_folder.uri.fsPath,
             encoding: 'utf-8'
           }).toString()

@@ -1,4 +1,4 @@
-import { execSync, execFileSync } from 'child_process'
+import { execFileSync } from 'child_process'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as vscode from 'vscode'
@@ -32,8 +32,13 @@ export const select_files_of_commit_command = (
         let last_selected_commit_hash: string | undefined
 
         while (true) {
-          const log_output = execSync(
-            `git log --since="${GIT_LOG_SINCE_DURATION}" --pretty=format:"%H|%s|%ar"`,
+          const log_output = execFileSync(
+            'git',
+            [
+              'log',
+              `--since=${GIT_LOG_SINCE_DURATION}`,
+              '--pretty=format:%H|%s|%ar'
+            ],
             {
               cwd: repository.rootUri.fsPath,
               encoding: 'utf-8'
@@ -150,10 +155,14 @@ export const select_files_of_commit_command = (
             if (selected_commit.hash == 'ahead-of-branch') {
               let branches_output: string = ''
               try {
-                branches_output = execSync(`git branch --sort=-committerdate`, {
-                  cwd: repository.rootUri.fsPath,
-                  encoding: 'utf-8'
-                })
+                branches_output = execFileSync(
+                  'git',
+                  ['branch', '--sort=-committerdate'],
+                  {
+                    cwd: repository.rootUri.fsPath,
+                    encoding: 'utf-8'
+                  }
+                )
                   .toString()
                   .trim()
               } catch (e) {
@@ -264,8 +273,14 @@ export const select_files_of_commit_command = (
               }
             } else {
               try {
-                files_output = execSync(
-                  `git show --name-only --pretty="format:%B" ${selected_commit.hash}`,
+                files_output = execFileSync(
+                  'git',
+                  [
+                    'show',
+                    '--name-only',
+                    '--pretty=format:%B',
+                    selected_commit.hash
+                  ],
                   {
                     cwd: repository.rootUri.fsPath,
                     encoding: 'utf-8'
