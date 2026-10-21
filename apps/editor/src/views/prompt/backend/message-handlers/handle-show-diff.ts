@@ -15,7 +15,7 @@ export const handle_show_diff = async (
       message: 'No workspace folders open'
     })
     vscode.window.showWarningMessage(
-      t('common.error.no-workspace-folders-found')
+      t('common.warning.no-workspace-folders-found')
     )
     return
   }

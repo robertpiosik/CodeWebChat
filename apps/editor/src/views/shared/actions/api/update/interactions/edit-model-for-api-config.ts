@@ -33,9 +33,12 @@ export const edit_model_for_api_configuration = async (params: {
 
   if (!base_url) {
     vscode.window.showErrorMessage(
-      t('common.error.base-url-not-found-for-provider', {
-        name: params.api_configuration.provider_name
-      })
+      t(
+        'views.shared.actions.api.update.interactions.edit-model-for-api-config.error.base-url-not-found-for-provider' as any,
+        {
+          name: params.api_configuration.provider_name
+        }
+      )
     )
     return undefined
   }
@@ -194,7 +197,9 @@ export const edit_model_for_api_configuration = async (params: {
     const new_model_input = await vscode.window.showInputBox({
       title: t('common.select-model.title'),
       value: params.api_configuration.model,
-      prompt: t('common.prompt.enter-model-name')
+      prompt: t(
+        'views.shared.actions.api.update.interactions.edit-model-for-api-config.prompt.enter-model-name'
+      )
     })
 
     if (!new_model_input) return undefined

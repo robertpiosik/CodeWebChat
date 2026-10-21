@@ -484,7 +484,9 @@ export const perform_code_at_cursor = async (params: {
 
     if (!code_at_cursor_api_configuration.provider_name) {
       vscode.window.showErrorMessage(
-        t('common.error.api-provider-not-specified-for-code-at-cursor')
+        t(
+          'command.code-at-cursor-command.error.api-provider-not-specified-for-code-at-cursor'
+        )
       )
       Logger.warn({
         function_name: 'perform_code_at_cursor',
@@ -494,7 +496,9 @@ export const perform_code_at_cursor = async (params: {
       continue
     } else if (!code_at_cursor_api_configuration.model) {
       vscode.window.showErrorMessage(
-        t('common.error.model-not-specified-for-code-at-cursor')
+        t(
+          'command.code-at-cursor-command.error.model-not-specified-for-code-at-cursor'
+        )
       )
       Logger.warn({
         function_name: 'perform_code_at_cursor',
@@ -568,7 +572,9 @@ export const perform_code_at_cursor = async (params: {
         },
         async (progress, token) => {
           token.onCancellationRequested(() => {
-            abort_controller.abort(t('common.cancel.user'))
+            abort_controller.abort(
+              t('command.code-at-cursor-command.cancel.user')
+            )
           })
 
           progress.report({

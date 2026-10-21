@@ -1,4 +1,23 @@
 export const translations = {
+  'views.prompt.handlers.handle-make-api-call.error.edit-files-error': {
+    en: 'An error occurred during file editing. See console for details.',
+    pl: 'Wystąpił błąd podczas edycji pliku. Zobacz konsolę po szczegóły.',
+    'zh-cn': '文件编辑过程中出现错误。有关详细信息，请查看控制台。',
+    ja: 'ファイルの編集中にエラーが発生しました。詳細はコンソールを確認してください。',
+    'zh-tw': '檔案編輯過程中發生錯誤。請查看主控台以獲取詳細資訊。',
+    de: 'Ein Fehler ist bei der Dateibearbeitung aufgetreten. Überprüfen Sie die Konsole für Details.',
+    es: 'Ocurrió un error durante la edición del archivo. Consulta la consola para obtener más detalles.',
+    fr: "Une erreur s'est produite lors de l'édition du fichier. Consultez la console pour plus de détails.",
+    'pt-br':
+      'Ocorreu um erro durante a edição do arquivo. Veja o console para detalhes.',
+    ru: 'Во время редактирования файла произошла ошибка. Смотрите консоль для получения подробностей.',
+    ko: '파일 편집 중 오류가 발생했습니다. 자세한 내용은 콘솔을 확인하세요.',
+    it: 'Si è verificato un errore durante la modifica del file. Consulta la console per i dettagli.',
+    tr: 'Dosya düzenleme sırasında bir hata oluştu. Ayrıntılar için konsola bakın.',
+    cs: 'Během úpravy souboru došlo k chybě. Podrobnosti najdete v konzoli.',
+    hu: 'Hiba történt a fájl szerkesztése közben. A részleteket lásd a konzolon.',
+    bg: 'Възникна грешка по време на редактиране на файла. Вижте конзолата за подробности.'
+  },
   'views.prompt.handlers.handle-make-api-call.select-code-at-cursor-api-configuration':
     {
       en: 'Select code at cursor API configuration',

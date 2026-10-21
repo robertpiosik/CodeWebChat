@@ -35,7 +35,9 @@ export const copy_markdown_commands = (
       }
 
       if (!other_files && !recent_files) {
-        vscode.window.showWarningMessage(t('common.warning.no-files-selected'))
+        vscode.window.showWarningMessage(
+          t('command.search-files-command.warning.no-files-selected')
+        )
         return
       }
 

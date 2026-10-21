@@ -20,22 +20,22 @@ export const select_modified_files_command = (
         const git_extension =
           vscode.extensions.getExtension('vscode.git')?.exports
         if (!git_extension) {
-          vscode.window.showErrorMessage(
-            t('common.error.git-integration-missing')
+          vscode.window.showWarningMessage(
+            t('common.warning.git-integration-missing')
           )
           return
         }
         const git_api = git_extension.getAPI(1)
         if (!git_api) {
-          vscode.window.showErrorMessage(
-            t('common.error.could-not-get-git-api')
+          vscode.window.showWarningMessage(
+            t('common.warning.could-not-get-git-api')
           )
           return
         }
 
         if (git_api.repositories.length == 0) {
           vscode.window.showInformationMessage(
-            t('common.error.no-git-repository-found')
+            t('common.warning.no-git-repository-found')
           )
           return
         }

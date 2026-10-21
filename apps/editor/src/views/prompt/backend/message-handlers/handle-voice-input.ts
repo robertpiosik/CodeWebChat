@@ -96,7 +96,9 @@ const start_recording = (prompt_view_provider: PromptViewProvider) => {
           )
         }
 
-        const learn_more = t('common.action.learn-more')
+        const learn_more = t(
+          'views.prompt.handlers.handle-voice-input.action.learn-more'
+        )
 
         vscode.window
           .showErrorMessage(error_message, learn_more)

@@ -89,7 +89,7 @@ export const update = async (params: {
   if (is_duplicate) {
     const discard_button = 'Discard'
     const result = await vscode.window.showWarningMessage(
-      t('common.error.configuration-already-exists'),
+      t('views.shared.actions.api.update.warning.configuration-already-exists'),
       { modal: true },
       discard_button
     )

@@ -48,7 +48,9 @@ export const handle_patch_repair = async (params: {
 
   if (!original_states || !last_response) {
     vscode.window.showErrorMessage(
-      t('common.error.patch-repair-context-not-found')
+      t(
+        'views.prompt.handlers.handle-patch-repair.error.patch-repair-context-not-found'
+      )
     )
     return
   }
@@ -566,9 +568,12 @@ export const handle_patch_repair = async (params: {
             })
 
             vscode.window.showErrorMessage(
-              t('common.error.applying-changes-generic-error', {
-                msg: error_msg
-              })
+              t(
+                'views.prompt.handlers.handle-patch-repair.error.applying-changes-generic-error' as any,
+                {
+                  msg: error_msg
+                }
+              )
             )
           }
 

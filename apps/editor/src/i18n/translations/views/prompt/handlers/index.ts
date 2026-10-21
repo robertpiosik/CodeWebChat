@@ -12,7 +12,6 @@ import { translations as handle_autofill } from './handle-autofill'
 import { translations as handle_invoke_agentic_cli } from './handle-invoke-agentic-cli'
 import { translations as handle_save_completed_tasks } from './handle-save-completed-tasks'
 import { translations as handle_clear_completed_tasks } from './handle-clear-completed-tasks'
-
 export const translations = {
   ...handle_delete_task,
   ...handle_make_api_call,

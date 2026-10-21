@@ -13,7 +13,7 @@ export const handle_saved_context_item = async (
   try {
     const workspace_folders = vscode.workspace.workspaceFolders || []
     if (workspace_folders.length == 0) {
-      vscode.window.showErrorMessage(t('common.error.no-workspace-root'))
+      vscode.window.showWarningMessage(t('common.warning.no-workspace-root'))
       return undefined
     }
 
@@ -45,9 +45,7 @@ export const handle_saved_context_item = async (
     }
 
     if (source_options.length == 0) {
-      vscode.window.showInformationMessage(
-        t('common.context.no-saved-contexts')
-      )
+      vscode.window.showInformationMessage(t('common.info.no-saved-contexts'))
       return 'continue'
     }
 

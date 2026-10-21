@@ -14,7 +14,7 @@ export const prompt_for_search_term = async (
   }
 
   const input_box = vscode.window.createInputBox()
-  input_box.title = t('common.title.agentic-search')
+  input_box.title = t('feature.agentic-search.title.agentic-search')
   input_box.prompt = t('feature.search-files.prompt.intelligent')
   input_box.placeholder = t('common.action.search')
   input_box.value = initial_search_term

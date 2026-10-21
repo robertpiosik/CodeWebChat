@@ -1,4 +1,42 @@
 export const translations = {
+  'views.shared.actions.api.update.interactions.edit-model-for-api-config.prompt.enter-model-name':
+    {
+      en: 'Enter a model name (ID)',
+      pl: 'Wprowadź nazwę modelu (ID)',
+      'zh-cn': '输入模型名称 (ID)',
+      ja: 'モデル名 (ID) を入力してください',
+      'zh-tw': '輸入模型名稱 (ID)',
+      de: 'Geben Sie einen Modellnamen (ID) ein',
+      es: 'Ingrese el nombre de un modelo (ID)',
+      fr: 'Entrez un nom de modèle (ID)',
+      'pt-br': 'Insira um nome de modelo (ID)',
+      ru: 'Введите имя модели (ID)',
+      ko: '모델 이름 (ID) 입력',
+      it: 'Inserisci il nome di un modello (ID)',
+      tr: 'Bir model adı (ID) girin',
+      cs: 'Zadejte název modelu (ID)',
+      hu: 'Adja meg a modell nevét (ID)',
+      bg: 'Въведете име на модел (ID)'
+    },
+  'views.shared.actions.api.update.interactions.edit-model-for-api-config.error.base-url-not-found-for-provider':
+    {
+      en: 'Base URL not found for provider {name}.',
+      pl: 'Nie znaleziono podstawowego adresu URL dla dostawcy {name}.',
+      'zh-cn': '未找到提供商 {name} 的基本 URL。',
+      ja: 'プロバイダー {name} のベース URL が見つかりません。',
+      'zh-tw': '未找到提供商 {name} 的基本 URL。',
+      de: 'Basis-URL für Anbieter {name} nicht gefunden.',
+      es: 'No se encontró la URL base para el proveedor {name}.',
+      fr: 'URL de base introuvable pour le fournisseur {name}.',
+      'pt-br': 'URL base não encontrada para o provedor {name}.',
+      ru: 'Базовый URL не найден для провайдера {name}.',
+      ko: '공급자 {name}에 대한 기본 URL을 찾을 수 없습니다.',
+      it: 'URL di base non trovato per il provider {name}.',
+      tr: '{name} sağlayıcısı için Temel URL bulunamadı.',
+      cs: 'Základní adresa URL pro poskytovatele {name} nebyla nalezena.',
+      hu: 'Alap URL nem található a(z) {name} szolgáltatóhoz.',
+      bg: 'Не е намерен базов URL за доставчик {name}.'
+    },
   'views.shared.actions.api.update.interactions.edit-model-for-api-config.info.models-route-not-found-manual-entry':
     {
       en: "The '/models' route was not found for {provider_name}. This might mean the provider does not support listing models. You can enter model name manually.",

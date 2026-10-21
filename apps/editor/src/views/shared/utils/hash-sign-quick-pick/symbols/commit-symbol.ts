@@ -17,8 +17,8 @@ export const handle_commit_item = async (
   try {
     const workspace_folders = vscode.workspace.workspaceFolders
     if (!workspace_folders || workspace_folders.length == 0) {
-      vscode.window.showErrorMessage(
-        t('common.error.no-workspace-folders-found')
+      vscode.window.showWarningMessage(
+        t('common.warning.no-workspace-folders-found')
       )
       return undefined
     }
@@ -37,7 +37,9 @@ export const handle_commit_item = async (
     }
 
     if (git_folders.length == 0) {
-      vscode.window.showErrorMessage(t('common.error.no-git-repository-found'))
+      vscode.window.showWarningMessage(
+        t('common.warning.no-git-repository-found')
+      )
       return undefined
     }
 

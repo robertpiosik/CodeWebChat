@@ -200,7 +200,9 @@ export const handle_make_api_call = async (
         data: error
       })
       if (!error_occurred) {
-        const err_msg = t('common.error.edit-files-error')
+        const err_msg = t(
+          'views.prompt.handlers.handle-make-api-call.error.edit-files-error'
+        )
         vscode.window.showErrorMessage(err_msg)
         error_occurred = true
       }

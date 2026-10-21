@@ -49,7 +49,7 @@ export const show_parent_folder_quick_pick = async (params: {
     'utils.show-parent-folder-quick-pick.parent-folders'
   )
   folder_quick_pick.placeholder = t(
-    'common.placeholder.select-item-to-add-to-context',
+    'utils.show-parent-folder-quick-pick.placeholder.select-item-to-add-to-context' as any,
     { item: 'folder' }
   )
   folder_quick_pick.items = folders.map((f) => ({

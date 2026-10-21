@@ -441,15 +441,25 @@ export const send_llm_message = async (params: {
     }
 
     if (axios.isAxiosError(error) && error.response?.status == 429) {
-      vscode.window.showErrorMessage(t('common.error.api-rate-limit-exceeded'))
+      vscode.window.showErrorMessage(
+        t('utils.send-llm-message.error.api-rate-limit-exceeded')
+      )
     } else if (axios.isAxiosError(error) && error.response?.status == 413) {
-      vscode.window.showErrorMessage(t('common.error.api-payload-too-large'))
+      vscode.window.showErrorMessage(
+        t('utils.send-llm-message.error.api-payload-too-large')
+      )
     } else if (axios.isAxiosError(error) && error.response?.status == 400) {
-      vscode.window.showErrorMessage(t('common.error.api-bad-request'))
+      vscode.window.showErrorMessage(
+        t('utils.send-llm-message.error.api-bad-request')
+      )
     } else if (axios.isAxiosError(error) && error.response?.status == 401) {
-      vscode.window.showErrorMessage(t('common.error.api-invalid-key'))
+      vscode.window.showErrorMessage(
+        t('utils.send-llm-message.error.api-invalid-key')
+      )
     } else {
-      vscode.window.showErrorMessage(t('common.error.api-request-failed'))
+      vscode.window.showErrorMessage(
+        t('utils.send-llm-message.error.api-request-failed')
+      )
     }
     Logger.error({
       function_name: 'send_llm_message',

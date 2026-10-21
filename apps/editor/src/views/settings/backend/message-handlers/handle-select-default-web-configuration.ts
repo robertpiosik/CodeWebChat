@@ -58,7 +58,9 @@ export const handle_select_default_web_configuration = async (
   >()
   quick_pick.items = items
   quick_pick.title = t('common.title.chatbots')
-  quick_pick.placeholder = t('common.placeholder.select-chatbot')
+  quick_pick.placeholder = t(
+    'views.settings.handlers.handle-select-default-web-configuration.placeholder.select-chatbot'
+  )
 
   const close_button: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('close'),

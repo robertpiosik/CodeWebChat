@@ -29,7 +29,7 @@ export const select_context_source = async (params: {
     internal_contexts.length == 0 &&
     file_contexts_count == 0
   ) {
-    vscode.window.showInformationMessage(t('common.context.no-saved-contexts'))
+    vscode.window.showInformationMessage(t('common.info.no-saved-contexts'))
     return { source: undefined, skipped_menu: false }
   }
 

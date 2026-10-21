@@ -1,4 +1,22 @@
 export const translations = {
+  'feature.search-files.title.search': {
+    en: 'Search',
+    pl: 'Szukaj',
+    'zh-cn': '搜索',
+    ja: '検索',
+    'zh-tw': '搜尋',
+    de: 'Suchen',
+    es: 'Buscar',
+    fr: 'Rechercher',
+    'pt-br': 'Buscar',
+    ru: 'Поиск',
+    ko: '검색',
+    it: 'Cerca',
+    tr: 'Ara',
+    cs: 'Hledat',
+    hu: 'Keresés',
+    bg: 'Търсене'
+  },
   'feature.search-files.prompt': {
     en: 'Enter text to search for in files.',
     pl: 'Wprowadź tekst do wyszukania w plikach.',

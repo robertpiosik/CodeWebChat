@@ -158,11 +158,14 @@ export const replace_changes_symbol = async (params: {
         const [, folder_name, branch_name] = multi_root_match
 
         if (!is_valid_git_branch_name(branch_name)) {
-          vscode.window.showErrorMessage(
-            t('common.error.failed-to-get-changes-from-branch-in-folder', {
-              branch_name,
-              folder_name
-            })
+          vscode.window.showWarningMessage(
+            t(
+              'views.prompt.utils.symbols.git.replace-git-symbols.failed-to-get-changes-from-branch-in-folder',
+              {
+                branch_name,
+                folder_name
+              }
+            )
           )
           if (params.symbols_cache) {
             params.symbols_cache.set(full_match, '', '')
@@ -176,8 +179,8 @@ export const replace_changes_symbol = async (params: {
 
         const workspace_folders = vscode.workspace.workspaceFolders
         if (!workspace_folders) {
-          vscode.window.showErrorMessage(
-            t('common.error.no-workspace-folders-found')
+          vscode.window.showWarningMessage(
+            t('common.warning.no-workspace-folders-found')
           )
           if (params.symbols_cache) {
             params.symbols_cache.set(full_match, '', '')
@@ -193,8 +196,8 @@ export const replace_changes_symbol = async (params: {
           (folder) => folder.name == folder_name
         )
         if (!target_folder) {
-          vscode.window.showErrorMessage(
-            t('common.error.workspace-folder-not-found', { folder_name })
+          vscode.window.showWarningMessage(
+            t('common.warning.workspace-folder-not-found', { folder_name })
           )
           if (params.symbols_cache) {
             params.symbols_cache.set(full_match, '', '')
@@ -302,11 +305,14 @@ export const replace_changes_symbol = async (params: {
             replacement
           )
         } catch (error) {
-          vscode.window.showErrorMessage(
-            t('common.error.failed-to-get-changes-from-branch-in-folder', {
-              branch_name,
-              folder_name
-            })
+          vscode.window.showWarningMessage(
+            t(
+              'views.prompt.utils.symbols.git.replace-git-symbols.failed-to-get-changes-from-branch-in-folder',
+              {
+                branch_name,
+                folder_name
+              }
+            )
           )
           Logger.error({
             function_name: 'replace_changes_symbol',
@@ -324,9 +330,29 @@ export const replace_changes_symbol = async (params: {
       } else {
         const branch_name = branch_spec
 
+        const workspace_folders = vscode.workspace.workspaceFolders
+        if (workspace_folders && workspace_folders.length > 1) {
+          vscode.window.showWarningMessage(
+            t(
+              'views.prompt.utils.symbols.git.replace-git-symbols.changes-symbol-requires-folder-name'
+            )
+          )
+          if (params.symbols_cache) {
+            params.symbols_cache.set(full_match, '', '')
+          }
+          result_instructions[i] = result_instructions[i].replace(
+            replacement_regex,
+            ''
+          )
+          continue
+        }
+
         if (!is_valid_git_branch_name(branch_name)) {
-          vscode.window.showErrorMessage(
-            t('common.error.failed-to-get-changes-from-branch', { branch_name })
+          vscode.window.showWarningMessage(
+            t(
+              'views.prompt.utils.symbols.git.replace-git-symbols.failed-to-get-changes-from-branch',
+              { branch_name }
+            )
           )
           if (params.symbols_cache) {
             params.symbols_cache.set(full_match, '', '')
@@ -340,8 +366,8 @@ export const replace_changes_symbol = async (params: {
 
         const repository = await get_git_repository()
         if (!repository) {
-          vscode.window.showErrorMessage(
-            t('common.error.no-git-repository-found')
+          vscode.window.showWarningMessage(
+            t('common.warning.no-git-repository-found')
           )
           if (params.symbols_cache) {
             params.symbols_cache.set(full_match, '', '')
@@ -448,8 +474,11 @@ export const replace_changes_symbol = async (params: {
             replacement
           )
         } catch (error) {
-          vscode.window.showErrorMessage(
-            t('common.error.failed-to-get-changes-from-branch', { branch_name })
+          vscode.window.showWarningMessage(
+            t(
+              'views.prompt.utils.symbols.git.replace-git-symbols.failed-to-get-changes-from-branch',
+              { branch_name }
+            )
           )
           Logger.error({
             function_name: 'replace_changes_symbol',
@@ -599,8 +628,8 @@ export const replace_commit_symbol = async (params: {
         (folder) => folder.name === folder_name
       )
       if (!target_folder) {
-        vscode.window.showErrorMessage(
-          t('common.error.workspace-folder-not-found', { folder_name })
+        vscode.window.showWarningMessage(
+          t('common.warning.workspace-folder-not-found', { folder_name })
         )
         if (params.symbols_cache) {
           params.symbols_cache.set(full_match, '', '')
@@ -704,8 +733,11 @@ export const replace_commit_symbol = async (params: {
           )
         }
       } catch (error) {
-        vscode.window.showErrorMessage(
-          t('common.error.failed-to-get-diff-for-commit', { commit_hash })
+        vscode.window.showWarningMessage(
+          t(
+            'views.prompt.utils.symbols.git.replace-git-symbols.failed-to-get-diff-for-commit',
+            { commit_hash }
+          )
         )
         Logger.error({
           function_name: 'replace_commit_symbol',

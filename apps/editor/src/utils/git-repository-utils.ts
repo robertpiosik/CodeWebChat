@@ -32,7 +32,9 @@ export type GitRepository = {
 const get_all_git_repositories = (): GitRepository[] | null => {
   const git_extension = vscode.extensions.getExtension('vscode.git')
   if (!git_extension) {
-    vscode.window.showErrorMessage(t('common.error.git-integration-missing'))
+    vscode.window.showWarningMessage(
+      t('common.warning.git-integration-missing')
+    )
     return null
   }
 
@@ -40,7 +42,9 @@ const get_all_git_repositories = (): GitRepository[] | null => {
   const repositories: GitRepository[] = git_api.repositories
 
   if (!repositories || repositories.length == 0) {
-    vscode.window.showErrorMessage(t('common.error.no-git-repository-found'))
+    vscode.window.showWarningMessage(
+      t('common.warning.no-git-repository-found')
+    )
     return null
   }
 

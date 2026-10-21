@@ -81,7 +81,9 @@ export const pick_model = async (params: {
     })
     vscode.window.showErrorMessage(
       params.chatbot_name == 'OpenRouter'
-        ? t('common.error.failed-to-fetch-open-router-models')
+        ? t(
+            'views.shared.actions.web.pick-model.error.failed-to-fetch-open-router-models'
+          )
         : t('views.shared.actions.web.pick-model.error.failed-to-pick')
     )
     return undefined

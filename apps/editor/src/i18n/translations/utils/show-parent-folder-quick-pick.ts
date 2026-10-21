@@ -1,4 +1,23 @@
 export const translations = {
+  'utils.show-parent-folder-quick-pick.placeholder.select-item-to-add-to-context':
+    {
+      en: 'Select a {item} to add to context',
+      pl: 'Wybierz {item} do dodania do kontekstu',
+      'zh-cn': '选择要添加到上下文的{item}',
+      ja: 'コンテキストに追加する{item}を選択',
+      'zh-tw': '選擇要加入上下文的{item}',
+      de: 'Wählen Sie {item} aus, um es zum Kontext hinzuzufügen',
+      es: 'Seleccione {item} para agregar al contexto',
+      fr: 'Sélectionnez {item} à ajouter au contexte',
+      'pt-br': 'Selecione {item} para adicionar ao contexto',
+      ru: 'Выберите {item} для добавления в контекст',
+      ko: '컨텍스트에 추가할 {item} 선택',
+      it: 'Seleziona {item} da aggiungere al contesto',
+      tr: 'Bağlama eklenecek {item} seçin',
+      cs: 'Vyberte {item} k přidání do kontextu',
+      hu: 'Válasszon {item} a kontextushoz adáshoz',
+      bg: 'Изберете {item} за добавяне към контекста'
+    },
   'utils.show-parent-folder-quick-pick.no-parent-folders': {
     en: 'No parent folders.',
     pl: 'Brak folderów nadrzędnych.',

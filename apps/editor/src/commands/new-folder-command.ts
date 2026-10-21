@@ -20,8 +20,8 @@ export const new_folder_command = () => {
         ) {
           parent_path = vscode.workspace.workspaceFolders[0].uri.fsPath
         } else {
-          vscode.window.showErrorMessage(
-            t('common.error.no-workspace-folder-open')
+          vscode.window.showWarningMessage(
+            t('common.warning.no-workspace-folder-open')
           )
           return
         }

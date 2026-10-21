@@ -49,9 +49,12 @@ export const generate_commit_message_with_api = async (params: {
       })
 
       progress.report({
-        message: t('common.progress.sent-tokens', {
-          tokens: display_token_count(token_count)
-        })
+        message: t(
+          'command.generate-commit-message-command.progress.sent-tokens' as any,
+          {
+            tokens: display_token_count(token_count)
+          }
+        )
       })
 
       try {

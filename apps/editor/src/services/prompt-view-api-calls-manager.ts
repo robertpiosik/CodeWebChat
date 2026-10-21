@@ -94,7 +94,9 @@ export class PromptViewApiCallsManager {
           const is_queued =
             previous_waiting && previous_waiting.body_hash == body_hash
 
-          const queued_msg = t('common.progress.queued')
+          const queued_msg = t(
+            'service.prompt-view-api-calls-manager.progress.queued'
+          )
           const waiting_msg = t('common.progress.waiting-for-server')
           const thinking_msg = t('common.progress.thinking')
           const receiving_msg = t('common.progress.receiving')
@@ -161,10 +163,13 @@ export class PromptViewApiCallsManager {
 
               const msg =
                 tokens_per_second && total_tokens
-                  ? t('common.progress.receiving-stats', {
-                      total_tokens: display_token_count(total_tokens),
-                      tokens_per_second: Math.round(tokens_per_second)
-                    })
+                  ? t(
+                      'service.prompt-view-api-calls-manager.progress.receiving-stats' as any,
+                      {
+                        total_tokens: display_token_count(total_tokens),
+                        tokens_per_second: Math.round(tokens_per_second)
+                      }
+                    )
                   : receiving_msg
 
               progress.report({ message: msg })

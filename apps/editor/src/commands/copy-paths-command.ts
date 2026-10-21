@@ -130,7 +130,9 @@ export const copy_paths_commands = (
       const selected_files = workspace_provider.get_selected_files()
 
       if (selected_files.length == 0) {
-        vscode.window.showWarningMessage(t('common.warning.no-files-selected'))
+        vscode.window.showWarningMessage(
+          t('command.search-files-command.warning.no-files-selected')
+        )
         return
       }
 
@@ -152,7 +154,7 @@ export const copy_paths_commands = (
 
         if (selected_files.length == 0) {
           vscode.window.showWarningMessage(
-            t('common.warning.no-files-selected')
+            t('command.search-files-command.warning.no-files-selected')
           )
           return
         }

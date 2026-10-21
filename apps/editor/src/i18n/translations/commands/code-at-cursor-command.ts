@@ -1,4 +1,61 @@
 export const translations = {
+  'command.code-at-cursor-command.cancel.user': {
+    en: 'User cancelled the operation',
+    pl: 'Użytkownik anulował operację',
+    'zh-cn': '用户取消了操作',
+    ja: 'ユーザーが操作をキャンセルしました',
+    'zh-tw': '使用者取消了操作',
+    de: 'Benutzer hat den Vorgang abgebrochen',
+    es: 'El usuario canceló la operación',
+    fr: "L'utilisateur a annulé l'opération",
+    'pt-br': 'O usuário cancelou a operação',
+    ru: 'Пользователь отменил операцию',
+    ko: '사용자가 작업을 취소했습니다',
+    it: "L'utente ha annullato l'operazione",
+    tr: 'Kullanıcı işlemi iptal etti',
+    cs: 'Uživatel zrušil operaci',
+    hu: 'A felhasználó megszakította a műveletet',
+    bg: 'Потребителят отмени операцията'
+  },
+  'command.code-at-cursor-command.error.api-provider-not-specified-for-code-at-cursor':
+    {
+      en: 'API provider is not specified for Code at Cursor tool.',
+      pl: 'Dostawca API nie został określony dla narzędzia Kod w miejscu kursora.',
+      'zh-cn': '未为光标处代码工具指定 API 提供商。',
+      ja: 'カーソル位置のコード ツール用の API プロバイダーが指定されていません。',
+      'zh-tw': '未為游標處程式碼工具指定 API 供應商。',
+      de: 'API-Anbieter für Code-an-Cursor-Werkzeug nicht angegeben.',
+      es: 'No se especificó un proveedor de API para la herramienta Código en el cursor.',
+      fr: "Le fournisseur API n'est pas spécifié pour l'outil Code au curseur.",
+      'pt-br':
+        'Provedor de API não especificado para a ferramenta Código no Cursor.',
+      ru: 'API провайдер не указан для инструмента Код под курсором.',
+      ko: '커서 위치 코드 도구의 API 제공자가 지정되지 않았습니다.',
+      it: 'Il provider API non è specificato per lo strumento Codice al Cursore.',
+      tr: 'İmleçteki Kod aracı için API sağlayıcısı belirtilmedi.',
+      cs: 'Pro nástroj Kód na kurzoru není zadán poskytovatel API.',
+      hu: 'Az API szolgáltató nincs megadva a Kód a kurzornál eszközhöz.',
+      bg: 'Не е посочен API доставчик за инструмента Код при курсора.'
+    },
+  'command.code-at-cursor-command.error.model-not-specified-for-code-at-cursor':
+    {
+      en: 'Model is not specified for Code at Cursor tool.',
+      pl: 'Model nie został określony dla narzędzia Kod w miejscu kursora.',
+      'zh-cn': '未为光标处代码工具指定模型。',
+      ja: 'カーソル位置のコード ツール用のモデルが指定されていません。',
+      'zh-tw': '未為游標處程式碼工具指定模型。',
+      de: 'Modell für Code-an-Cursor-Werkzeug nicht angegeben.',
+      es: 'No se especificó un modelo para la herramienta Código en el cursor.',
+      fr: "Le modèle n'est pas spécifié pour l'outil Code au curseur.",
+      'pt-br': 'Modelo não especificado para a ferramenta Código no Cursor.',
+      ru: 'Модель не указана для инструмента Код под курсором.',
+      ko: '커서 위치 코드 도구의 모델이 지정되지 않았습니다.',
+      it: 'Il modello non è specificato per lo strumento Codice al Cursore.',
+      tr: 'İmleçteki Kod aracı için model belirtilmedi.',
+      cs: 'Pro nástroj Kód na kurzoru není zadán model.',
+      hu: 'A modell nincs megadva a Kód a kurzornál eszközhöz.',
+      bg: 'Не е посочен модел за инструмента Код при курсора.'
+    },
   'command.code-at-cursor-command.instructions.placeholder': {
     en: 'Enter completion instructions',
     pl: 'Wprowadź instrukcje ukończenia',

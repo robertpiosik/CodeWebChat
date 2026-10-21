@@ -1,4 +1,22 @@
 export const translations = {
+  'views.prompt.handlers.handle-voice-input.action.learn-more': {
+    en: 'Learn more',
+    pl: 'Dowiedz się więcej',
+    'zh-cn': '了解更多',
+    ja: '詳細',
+    'zh-tw': '了解更多',
+    de: 'Mehr erfahren',
+    es: 'Saber más',
+    fr: 'En savoir plus',
+    'pt-br': 'Saiba mais',
+    ru: 'Узнать больше',
+    ko: '더 알아보기',
+    it: 'Scopri di più',
+    tr: 'Daha fazla bilgi',
+    cs: 'Zjistit více',
+    hu: 'Tudjon meg többet',
+    bg: 'Научете повече'
+  },
   'views.prompt.handlers.handle-voice-input.title': {
     en: 'Voice Input',
     pl: 'Wprowadzanie głosowe',

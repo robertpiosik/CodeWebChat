@@ -119,31 +119,49 @@ export const verify_model = async (params: {
   if (error) {
     if (error.status) {
       const status = error.status
-      let reason = t('common.network.error.server-error')
+      let reason = t(
+        'views.shared.actions.api.create.interactions.verify-model.error.server-error'
+      )
       switch (status) {
         case 400:
-          reason = t('common.network.error.bad-request')
+          reason = t(
+            'views.shared.actions.api.create.interactions.verify-model.error.bad-request' as any
+          )
           break
         case 401:
-          reason = t('common.network.error.authentication')
+          reason = t(
+            'views.shared.actions.api.create.interactions.verify-model.error.authentication' as any
+          )
           break
         case 403:
-          reason = t('common.network.error.forbidden')
+          reason = t(
+            'views.shared.actions.api.create.interactions.verify-model.error.forbidden' as any
+          )
           break
         case 404:
-          reason = t('common.network.error.not-found')
+          reason = t(
+            'views.shared.actions.api.create.interactions.verify-model.error.not-found' as any
+          )
           break
         case 429:
-          reason = t('common.network.error.rate-limit')
+          reason = t(
+            'views.shared.actions.api.create.interactions.verify-model.error.rate-limit' as any
+          )
           break
         case 500:
-          reason = t('common.network.error.internal')
+          reason = t(
+            'views.shared.actions.api.create.interactions.verify-model.error.internal' as any
+          )
           break
         case 502:
-          reason = t('common.network.error.bad-gateway')
+          reason = t(
+            'views.shared.actions.api.create.interactions.verify-model.error.bad-gateway' as any
+          )
           break
         case 503:
-          reason = t('common.network.error.service-unavailable')
+          reason = t(
+            'views.shared.actions.api.create.interactions.verify-model.error.service-unavailable' as any
+          )
           break
       }
       detail = params.is_voice_input

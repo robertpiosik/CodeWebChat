@@ -162,7 +162,7 @@ export const run_generate_action = async (params: {
                 'command.generate-commit-message-command.action-quick-pick.title'
               )
               quick_pick.placeholder = t(
-                'common.action-quick-pick.placeholder',
+                'command.generate-commit-message-command.action-quick-pick.placeholder' as any,
                 { tokens: display_token_count(base_token_count) }
               )
               quick_pick.ignoreFocusOut = show_back_button
@@ -265,7 +265,9 @@ export const run_generate_action = async (params: {
                 const attach_label = t(
                   'command.generate-commit-message-command.attach-context-files.attach'
                 )
-                const skip_label = t('common.action.skip')
+                const skip_label = t(
+                  'command.generate-commit-message-command.action.skip'
+                )
                 const last_selected_id =
                   params.extension_context.workspaceState.get<string>(
                     LAST_USE_CONTEXT_FILES_STATE_KEY,
@@ -656,7 +658,9 @@ export const run_generate_action = async (params: {
         const attach_label = t(
           'command.generate-commit-message-command.attach-ascii-tree.attach'
         )
-        const skip_label = t('common.action.skip')
+        const skip_label = t(
+          'command.generate-commit-message-command.action.skip'
+        )
 
         const last_selected_id =
           params.extension_context.workspaceState.get<string>(
@@ -778,7 +782,7 @@ export const run_generate_action = async (params: {
                 has_more_steps ? 'arrow-right' : 'check'
               ),
               tooltip: has_more_steps
-                ? t('common.next')
+                ? t('command.generate-commit-message-command.next')
                 : t('command.generate-commit-message-command.input.accept')
             }
 

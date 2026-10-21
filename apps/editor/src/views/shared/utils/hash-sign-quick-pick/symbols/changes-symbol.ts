@@ -15,8 +15,8 @@ export const handle_changes_item = async (
   try {
     const workspace_folders = vscode.workspace.workspaceFolders
     if (!workspace_folders || workspace_folders.length == 0) {
-      vscode.window.showErrorMessage(
-        t('common.error.no-workspace-folders-found')
+      vscode.window.showWarningMessage(
+        t('common.warning.no-workspace-folders-found')
       )
       return undefined
     }

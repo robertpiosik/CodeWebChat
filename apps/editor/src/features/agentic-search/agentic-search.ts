@@ -56,7 +56,7 @@ export const agentic_search = async (params: {
     const result = await invoke_agentic_cli({
       workspace_provider: params.workspace_provider,
       extension_context: params.extension_context,
-      notification_title: t('common.title.agentic-search'),
+      notification_title: t('feature.agentic-search.title.agentic-search'),
       agent_state_key: LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY,
       last_selected_workspace_state_key:
         LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY,

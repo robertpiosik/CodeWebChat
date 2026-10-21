@@ -36,7 +36,9 @@ export const handle_select_default_cli_configuration = async (
   >()
   quick_pick.items = items
   quick_pick.title = t('common.title.agents')
-  quick_pick.placeholder = t('common.placeholder.select-agent')
+  quick_pick.placeholder = t(
+    'views.settings.handlers.handle-select-default-cli-configuration.placeholder.select-agent'
+  )
 
   const close_button: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('close'),

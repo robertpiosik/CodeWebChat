@@ -109,7 +109,7 @@ export const search_files = async (params: {
 
           if (currently_selected.length === 0) {
             vscode.window.showWarningMessage(
-              t('common.warning.no-files-selected')
+              t('command.search-files-command.warning.no-files-selected')
             )
             continue
           }
