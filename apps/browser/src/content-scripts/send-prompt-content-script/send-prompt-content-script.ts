@@ -216,6 +216,19 @@ const main = async () => {
       return
     }
 
+    try {
+      const target_url = new URL(current_chat.url)
+      if (window.location.origin != target_url.origin) {
+        console.warn(
+          'Origin mismatch: preventing prompt injection on incorrect domain.'
+        )
+        return
+      }
+    } catch (e) {
+      console.error('Invalid target URL', e)
+      return
+    }
+
     if (chatbot?.wait_until_ready) {
       await chatbot.wait_until_ready()
     }

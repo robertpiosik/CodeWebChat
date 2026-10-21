@@ -28,30 +28,6 @@ export const handle_messages = (message: WebSocketMessage) => {
   }
 }
 
-const generate_alphanumeric_id = async (
-  keyspace: string,
-  length: number = 3
-): Promise<string> => {
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  let attempts = 0
-
-  while (attempts < 1000) {
-    let result = ''
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length))
-    }
-    const storage_key = `${keyspace}:${result}`
-    const existing = await browser.storage.local.get(storage_key)
-    if (!existing[storage_key]) {
-      return result
-    }
-    attempts++
-  }
-
-  throw new Error('Unable to generate a unique ID after maximum attempts')
-}
-
 const check_browser_focus = async (): Promise<boolean> => {
   const windows = await browser.windows.getAll()
   return windows.some((win) => win.focused)
@@ -80,7 +56,7 @@ const process_next_chat = async () => {
 
   const current_chat_message = current_queue_item.message
 
-  const batch_id = await generate_alphanumeric_id('chat-init')
+  const batch_id = crypto.randomUUID()
 
   await browser.storage.local.set({
     [`chat-init:${batch_id}`]: {
@@ -119,7 +95,11 @@ const process_next_chat = async () => {
 
   let tab_reused = false
 
-  if (last_opened_tab_id !== undefined && is_finished_responding && last_opened_tab_injected_apply_button) {
+  if (
+    last_opened_tab_id !== undefined &&
+    is_finished_responding &&
+    last_opened_tab_injected_apply_button
+  ) {
     try {
       const tab = await browser.tabs.get(last_opened_tab_id)
       if (tab.active) {
@@ -143,13 +123,17 @@ const process_next_chat = async () => {
     last_opened_tab_id = new_tab.id
   }
 
-  last_opened_tab_injected_apply_button = current_chat_message.inject_apply_response_button ?? false
+  last_opened_tab_injected_apply_button =
+    current_chat_message.inject_apply_response_button ?? false
   is_finished_responding = false
 
   current_queue_item.timeout_id = setTimeout(() => {
     console.warn(
       `Chat initialization timeout for ${current_chat_message.url}. Moving to next chat.`
     )
+    browser.storage.local.remove(`chat-init:${batch_id}`).catch((e) => {
+      console.error('Failed to clean up chat init data on timeout', e)
+    })
     chat_queue.shift()
     process_next_chat()
   }, CHAT_INITIALIZATION_TIMEOUT) as unknown as number
