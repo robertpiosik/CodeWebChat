@@ -64,6 +64,7 @@ export const connect_websocket = async (): Promise<void> => {
     if (!is_healthy) {
       console.debug('Server health check failed, retrying in 5 seconds...')
       is_reconnecting = false
+      setTimeout(check_and_recover_connection, 5000)
       return
     }
 
@@ -119,7 +120,7 @@ export const connect_websocket = async (): Promise<void> => {
         websocket = null
       }
       is_reconnecting = false
-      // Reconnect attempt will be driven by the next alarm tick
+      setTimeout(check_and_recover_connection, 1000)
     }
 
     ws.onerror = () => {
@@ -127,9 +128,11 @@ export const connect_websocket = async (): Promise<void> => {
         websocket = null
       }
       is_reconnecting = false
+      setTimeout(check_and_recover_connection, 1000)
     }
   } catch {
     is_reconnecting = false
+    setTimeout(check_and_recover_connection, 5000)
   }
 }
 
