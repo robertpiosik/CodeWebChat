@@ -30,9 +30,9 @@ Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs
 > Click ▶ to expand.
 
 <details>
-<summary><strong>Relevant files from agents</strong></summary>
+<summary><strong>Hands-free relevant file selection</strong></summary>
 
-Get accurate file selection on the file tree hands-free by invoking your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search).
+By invoking headlessly your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search), the file tree file selection is managed for you automatically.
 
 </details>
 
