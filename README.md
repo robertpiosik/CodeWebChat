@@ -37,9 +37,9 @@ Get accurate file selection on the file tree hands-free by invoking your favorit
 </details>
 
 <details>
-<summary><strong>Quotas lasting 10x longer</strong></summary>
+<summary><strong>Conservative with tokens</strong></summary>
 
-In CWC, there are no ever-growing sessions. Model focused on the problem from the start 'thinks' less and delivers accurate outputs in seconds.
+There are no ever-growing sessions. By keeping intent clear, model is focused on the problem from the start, 'thinks' less and delivers accurate outputs in seconds.
 
 </details>
 
