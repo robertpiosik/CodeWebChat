@@ -32,14 +32,14 @@ Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs
 <details>
 <summary><strong>Hands-free relevant file selection</strong></summary>
 
-By invoking headlessly your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search), the file tree file selection is managed for you automatically.
+By headlessly invoking your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search), you can automatically manage your file tree selection.
 
 </details>
 
 <details>
 <summary><strong>Conservative with tokens</strong></summary>
 
-There are no ever-growing sessions. By keeping intent clear, model is focused on the problem from the start, 'thinks' less and delivers accurate outputs in seconds.
+There are no ever-growing sessions. By keeping your intent clear, model is focused on the problem from the start. Expect minimal 'thinking' and accurate outputs in seconds.
 
 </details>
 
