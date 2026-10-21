@@ -32,14 +32,14 @@ Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs
 <details>
 <summary><strong>Relevant files from agents</strong></summary>
 
-Invoke your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search) using the task instructions or a custom query and get accurate file selection in the context hands-free.
+Get accurate file selection on the file tree hands-free by invoking your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search).
 
 </details>
 
 <details>
 <summary><strong>Quotas lasting 10x longer</strong></summary>
 
-Without ever-growing sessions, model is focused on the problem from the start. Expect shorter reasoning and outstanding accuracy, even from mid-tier models.
+In CWC, there are no ever-growing sessions. Model focused on the problem from the start 'thinks' less and delivers accurate outputs in seconds.
 
 </details>
 
@@ -53,7 +53,7 @@ To maximize prompt cache hits when including selected files, unchanged files are
 <details>
 <summary><strong>Effective steering with examples</strong></summary>
 
-Replace most skills with a simple checkbox tick. Providing examples right form the repository can make your task instructions simpler and guide the model toward outputs you're looking for.
+Replace most skills with a simple checkbox tick on the file tree. Providing examples can make your prompts simpler and guide the model toward outputs you're looking for.
 
 </details>
 
