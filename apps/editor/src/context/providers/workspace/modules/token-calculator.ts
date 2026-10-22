@@ -2,7 +2,6 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
-import { t } from '@/i18n'
 import type { IWorkspaceProvider } from '../workspace-provider'
 import { is_binary_file } from '@/utils/is-binary'
 import { normalize_path } from '@/utils/normalize-path'
@@ -12,190 +11,8 @@ export class TokenCalculator implements vscode.Disposable {
   private _directory_token_counts: Map<string, number> = new Map()
   private _directory_file_counts: Map<string, number> = new Map()
   private _directory_selected_token_counts: Map<string, number> = new Map()
-  private _notified_roots: Set<string> = new Set()
-
-  private _progress_stack: {
-    progress?: vscode.Progress<{ message?: string; increment?: number }>
-    total_files: number
-    processed_files: number
-  }[] = []
 
   constructor(private _provider: IWorkspaceProvider) {}
-
-  private _report_progress() {
-    for (const state of this._progress_stack) {
-      if (state.total_files > 0) {
-        state.processed_files++
-        const increment = (1 / state.total_files) * 100
-        if (state.progress) {
-          state.progress.report({ increment })
-        }
-      }
-    }
-  }
-
-  private async _count_uncached_files_in_dir(
-    dir_path: string
-  ): Promise<number> {
-    if (this._directory_token_counts.has(dir_path)) {
-      return 0
-    }
-
-    let count = 0
-    try {
-      const workspace_root =
-        this._provider.get_workspace_root_for_file(dir_path)
-      if (!workspace_root) return 0
-
-      const relative_dir_path = path.relative(workspace_root, dir_path)
-      if (
-        this._provider.is_excluded(
-          relative_dir_path ? relative_dir_path + '/' : relative_dir_path
-        )
-      ) {
-        return 0
-      }
-
-      const entries = await fs.promises.readdir(dir_path, {
-        withFileTypes: true
-      })
-      for (const entry of entries) {
-        if (entry.isSymbolicLink()) continue
-
-        const full_path = path.join(dir_path, entry.name)
-
-        const file_workspace_root =
-          this._provider.get_workspace_root_for_file(full_path)
-        if (file_workspace_root && file_workspace_root !== workspace_root) {
-          continue
-        }
-
-        const relative_path = path.relative(workspace_root, full_path)
-        if (
-          this._provider.is_excluded(
-            entry.isDirectory() ? relative_path + '/' : relative_path
-          )
-        ) {
-          continue
-        }
-
-        if (this._provider.is_ignored_by_patterns(full_path)) {
-          continue
-        }
-
-        if (entry.isDirectory()) {
-          count += await this._count_uncached_files_in_dir(full_path)
-        } else if (entry.isFile()) {
-          if (!this._file_token_counts.has(full_path)) {
-            count++
-          }
-        }
-      }
-    } catch {}
-    return count
-  }
-
-  async with_token_counting_notification<T>(params: {
-    dir_path?: string
-    roots?: string[]
-    task: () => Promise<T>
-  }): Promise<T> {
-    let total_uncached = 0
-    let should_notify = false
-
-    if (params.dir_path) {
-      total_uncached = await this._count_uncached_files_in_dir(params.dir_path)
-      const workspace_roots = this._provider.get_workspace_roots()
-      if (workspace_roots.includes(params.dir_path)) {
-        if (!this._notified_roots.has(params.dir_path)) {
-          should_notify = true
-          this._notified_roots.add(params.dir_path)
-        }
-      }
-    } else if (params.roots) {
-      for (const root of params.roots) {
-        total_uncached += await this._count_uncached_files_in_dir(root)
-        if (!this._notified_roots.has(root)) {
-          should_notify = true
-          this._notified_roots.add(root)
-        }
-      }
-    }
-
-    if (total_uncached === 0 || !should_notify) {
-      return params.task()
-    }
-
-    const progress_state: {
-      progress?: vscode.Progress<{ message?: string; increment?: number }>
-      total_files: number
-      processed_files: number
-    } = {
-      total_files: total_uncached,
-      processed_files: 0
-    }
-    this._progress_stack.push(progress_state)
-
-    const task_promise = params.task()
-
-    let timeout_handle: NodeJS.Timeout
-    const timeout_promise = new Promise<void>((resolve) => {
-      timeout_handle = setTimeout(() => resolve(), 1000)
-    })
-
-    let is_completed = false
-    task_promise.finally(() => {
-      is_completed = true
-      clearTimeout(timeout_handle)
-    })
-
-    try {
-      await Promise.race([task_promise, timeout_promise])
-    } catch (error) {
-      const index = this._progress_stack.indexOf(progress_state)
-      if (index !== -1) {
-        this._progress_stack.splice(index, 1)
-      }
-      throw error
-    }
-
-    if (!is_completed) {
-      return vscode.window.withProgress(
-        {
-          location: vscode.ProgressLocation.Notification,
-          title: t('context.crunching-token-counts'),
-          cancellable: false
-        },
-        async (progress) => {
-          progress_state.progress = progress
-          if (
-            progress_state.total_files > 0 &&
-            progress_state.processed_files > 0
-          ) {
-            progress.report({
-              increment:
-                (progress_state.processed_files / progress_state.total_files) *
-                100
-            })
-          }
-          try {
-            return await task_promise
-          } finally {
-            const index = this._progress_stack.indexOf(progress_state)
-            if (index !== -1) {
-              this._progress_stack.splice(index, 1)
-            }
-          }
-        }
-      )
-    } else {
-      const index = this._progress_stack.indexOf(progress_state)
-      if (index !== -1) {
-        this._progress_stack.splice(index, 1)
-      }
-      return task_promise
-    }
-  }
 
   invalidate_token_counts_for_file(changed_file_path: string) {
     const workspace_root =
@@ -281,7 +98,6 @@ export class TokenCalculator implements vscode.Disposable {
 
       this._file_token_counts.set(file_path, estimated_tokens)
 
-      this._report_progress()
       return estimated_tokens
     }
 
@@ -321,7 +137,6 @@ export class TokenCalculator implements vscode.Disposable {
 
       this._file_token_counts.set(file_path, token_count)
 
-      this._report_progress()
       return token_count
     } catch (error) {
       Logger.error({
@@ -329,7 +144,6 @@ export class TokenCalculator implements vscode.Disposable {
         message: `Error calculating tokens for ${file_path}`,
         data: error
       })
-      this._report_progress()
       return 0
     }
   }

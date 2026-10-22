@@ -640,10 +640,7 @@ export class WorkspaceProvider
           }
         }
       }
-      return this._token_calculator.with_token_counting_notification({
-        dir_path,
-        task: () => this._get_files_and_directories(dir_path, false)
-      })
+      return this._get_files_and_directories(dir_path, false)
     }
 
     if (this._workspace_roots.length == 0) {
@@ -655,15 +652,9 @@ export class WorkspaceProvider
       if (!fs.existsSync(single_root)) {
         return []
       }
-      return this._token_calculator.with_token_counting_notification({
-        dir_path: single_root,
-        task: () => this._get_files_and_directories(single_root)
-      })
+      return this._get_files_and_directories(single_root)
     } else {
-      return this._token_calculator.with_token_counting_notification({
-        roots: this._workspace_roots,
-        task: () => this._get_workspace_folder_items()
-      })
+      return this._get_workspace_folder_items()
     }
   }
 
@@ -686,26 +677,16 @@ export class WorkspaceProvider
           }
         }
       }
-      return this._token_calculator.with_token_counting_notification({
-        dir_path,
-        task: () => this._get_files_and_directories(dir_path, true)
-      })
+      return this._get_files_and_directories(dir_path, true)
     }
 
     if (this._workspace_roots.length == 1) {
       if (!fs.existsSync(this._workspace_roots[0])) {
         return []
       }
-      return this._token_calculator.with_token_counting_notification({
-        dir_path: this._workspace_roots[0],
-        task: () =>
-          this._get_files_and_directories(this._workspace_roots[0], true)
-      })
+      return this._get_files_and_directories(this._workspace_roots[0], true)
     } else {
-      return this._token_calculator.with_token_counting_notification({
-        roots: this._workspace_roots,
-        task: () => this._get_workspace_folder_items(true)
-      })
+      return this._get_workspace_folder_items(true)
     }
   }
 
