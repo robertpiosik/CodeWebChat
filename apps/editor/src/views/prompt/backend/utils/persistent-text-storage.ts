@@ -3,7 +3,7 @@ import * as path from 'path'
 import * as vscode from 'vscode'
 import * as crypto from 'crypto'
 
-export const GARBAGE_COLLECTION_THRESHOLD = 7884000000 // 3 months
+export const GARBAGE_COLLECTION_THRESHOLD = 31536000000 // 1 year
 
 export class PersistentTextStorage {
   private dir_path: string
