@@ -3,7 +3,8 @@ import {
   useRef,
   useImperativeHandle,
   useEffect,
-  useMemo
+  useMemo,
+  useState
 } from 'react'
 import styles from './Template.module.scss'
 import { Icon } from '../../Icon'
@@ -16,6 +17,7 @@ import {
   map_display_pos_to_raw_pos,
   use_symbol_deletion
 } from '../shared/symbols'
+import { use_undo_redo } from '../shared/hooks/use-undo-redo'
 
 export type TemplateHandle = {
   focus: () => void
@@ -35,6 +37,54 @@ export type TemplateProps = {
 export const Template = forwardRef<TemplateHandle, TemplateProps>(
   (props, ref) => {
     const input_ref = useRef<HTMLDivElement>(null)
+
+    const raw_caret_pos_ref = useRef(0)
+
+    const { save_history, undo, redo } = use_undo_redo({
+      value: props.value || '',
+      raw_caret_pos_ref,
+      on_change: props.on_change,
+      on_restore: (entry) => {
+        setTimeout(() => {
+          if (input_ref.current) {
+            const display_pos = map_raw_pos_to_display_pos({
+              raw_pos: entry.raw_caret_pos,
+              raw_text: entry.value,
+              context_file_paths: []
+            })
+            set_caret_position_for_div(input_ref.current, display_pos)
+          }
+        }, 0)
+      }
+    })
+
+    useEffect(() => {
+      const handle_selection_change = () => {
+        if (
+          document.activeElement === input_ref.current &&
+          input_ref.current
+        ) {
+          const display_pos = get_caret_position_from_div(input_ref.current)
+          const raw_pos = map_display_pos_to_raw_pos({
+            display_pos,
+            raw_text: props.value || '',
+            context_file_paths: []
+          })
+          raw_caret_pos_ref.current = raw_pos
+        }
+      }
+
+      document.addEventListener('selectionchange', handle_selection_change)
+      if (input_ref.current) {
+        input_ref.current.addEventListener('focus', handle_selection_change)
+      }
+      return () => {
+        document.removeEventListener('selectionchange', handle_selection_change)
+        if (input_ref.current) {
+          input_ref.current.removeEventListener('focus', handle_selection_change)
+        }
+      }
+    }, [props.value])
 
     useImperativeHandle(ref, () => ({
       focus: () => input_ref.current?.focus(),
@@ -63,23 +113,31 @@ export const Template = forwardRef<TemplateHandle, TemplateProps>(
       }
     }))
 
+    const update_value = (new_value: string, caret_pos?: number) => {
+      if (new_value === (props.value || '')) return
+      save_history()
+      props.on_change(new_value)
+      if (caret_pos !== undefined) {
+        setTimeout(() => {
+          if (input_ref.current) {
+            const display_pos = map_raw_pos_to_display_pos({
+              raw_pos: caret_pos,
+              raw_text: new_value,
+              context_file_paths: []
+            })
+            set_caret_position_for_div(input_ref.current, display_pos)
+          }
+        }, 0)
+      }
+    }
+
     const { handle_symbol_deletion_by_click, handle_backspace_key } =
       use_symbol_deletion({
         value: props.value || '',
         context_file_paths: [],
         input_ref,
         on_delete: (new_value, new_caret_pos) => {
-          props.on_change(new_value)
-          setTimeout(() => {
-            if (input_ref.current) {
-              const display_pos = map_raw_pos_to_display_pos({
-                raw_pos: new_caret_pos,
-                raw_text: new_value,
-                context_file_paths: []
-              })
-              set_caret_position_for_div(input_ref.current, display_pos)
-            }
-          }, 0)
+          update_value(new_value, new_caret_pos)
         }
       })
 
@@ -113,7 +171,7 @@ export const Template = forwardRef<TemplateHandle, TemplateProps>(
       const new_raw_value = reconstruct_raw_value_from_node(currentTarget)
 
       if (new_raw_value !== props.value) {
-        props.on_change(new_raw_value)
+        update_value(new_raw_value)
       }
 
       const native_event = e.nativeEvent as unknown as { inputType?: string }
@@ -155,8 +213,33 @@ export const Template = forwardRef<TemplateHandle, TemplateProps>(
       }
     }
 
+    const handle_undo = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      undo()
+    }
+
+    const handle_redo = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      redo()
+    }
+
     const handle_key_down = (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === 'Backspace') {
+      const { key, shiftKey } = e
+
+      if ((e.ctrlKey || e.metaKey) && !shiftKey && key.toLowerCase() === 'z') {
+        handle_undo(e)
+        return
+      }
+
+      if (
+        ((e.ctrlKey || e.metaKey) && key.toLowerCase() === 'y') ||
+        ((e.ctrlKey || e.metaKey) && shiftKey && key.toLowerCase() === 'z')
+      ) {
+        handle_redo(e)
+        return
+      }
+
+      if (key === 'Backspace') {
         handle_backspace_key(e)
       }
     }

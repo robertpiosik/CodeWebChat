@@ -82,11 +82,7 @@ export const create_handle_key_down = (
           value.substring(0, current_raw_pos - 1) +
           value.substring(current_raw_pos)
 
-        state.set_undo_stack((prev) => [
-          ...prev,
-          { value, raw_caret_pos: current_raw_pos }
-        ])
-        state.set_redo_stack([])
+        utils.save_history(value, current_raw_pos)
         refs.props_ref.current.on_change(new_value)
         refs.has_modified_current_entry_ref.current = new_value !== ''
         set_caret_position_after_change({
@@ -226,50 +222,12 @@ export const create_handle_key_down = (
 
   const handle_undo_key = (e: React.KeyboardEvent<HTMLDivElement>) => {
     e.preventDefault()
-    if (state.undo_stack.length > 0) {
-      const prev_entry = state.undo_stack[state.undo_stack.length - 1]
-      state.set_undo_stack((prev) => prev.slice(0, -1))
-      state.set_redo_stack((prev) => [
-        ...prev,
-        {
-          value: props.value,
-          raw_caret_pos: refs.raw_caret_pos_ref.current
-        }
-      ])
-      props.on_change(prev_entry.value)
-      set_caret_position_after_change({
-        input_ref: params.input_ref,
-        new_raw_cursor_pos: prev_entry.raw_caret_pos,
-        new_value: prev_entry.value,
-        selected_files: props.selected_files ?? []
-      })
-      state.set_history_index(-1)
-      refs.has_modified_current_entry_ref.current = true
-    }
+    utils.undo()
   }
 
   const handle_redo_key = (e: React.KeyboardEvent<HTMLDivElement>) => {
     e.preventDefault()
-    if (state.redo_stack.length > 0) {
-      const next_entry = state.redo_stack[state.redo_stack.length - 1]
-      state.set_redo_stack((prev) => prev.slice(0, -1))
-      state.set_undo_stack((prev) => [
-        ...prev,
-        {
-          value: props.value,
-          raw_caret_pos: refs.raw_caret_pos_ref.current
-        }
-      ])
-      props.on_change(next_entry.value)
-      set_caret_position_after_change({
-        input_ref: params.input_ref,
-        new_raw_cursor_pos: next_entry.raw_caret_pos,
-        new_value: next_entry.value,
-        selected_files: props.selected_files ?? []
-      })
-      state.set_history_index(-1)
-      refs.has_modified_current_entry_ref.current = true
-    }
+    utils.redo()
   }
 
   const handle_tab_key = (e: React.KeyboardEvent<HTMLDivElement>) => {

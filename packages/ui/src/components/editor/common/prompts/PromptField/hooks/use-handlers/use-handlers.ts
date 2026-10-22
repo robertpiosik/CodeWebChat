@@ -7,7 +7,8 @@ import {
   map_raw_pos_to_display_pos,
   use_symbol_deletion
 } from '../../../shared/symbols'
-import { HandlerContext, HistoryEntry } from './types'
+import { use_undo_redo } from '../../../shared/hooks/use-undo-redo'
+import { HandlerContext } from './types'
 import { set_caret_position_after_change } from './utils'
 import { create_handle_copy } from './handle-copy'
 import { create_handle_cut } from './handle-cut'
@@ -31,8 +32,6 @@ export const use_handlers = (
 
   const [history_index, set_history_index] = useState(-1)
   const [is_history_enabled, set_is_history_enabled] = useState(!props.value)
-  const [undo_stack, set_undo_stack] = useState<HistoryEntry[]>([])
-  const [redo_stack, set_redo_stack] = useState<HistoryEntry[]>([])
   const raw_caret_pos_ref = useRef(0)
   const has_modified_current_entry_ref = useRef(false)
   const is_shift_pressed_ref = useRef(false)
@@ -206,13 +205,25 @@ export const use_handlers = (
     }
   }, [props.focus_and_select_key])
 
+  const { save_history, undo, redo } = use_undo_redo({
+    value: props.value,
+    raw_caret_pos_ref,
+    on_change: props.on_change,
+    on_restore: (entry) => {
+      set_caret_position_after_change({
+        input_ref: params.input_ref,
+        new_raw_cursor_pos: entry.raw_caret_pos,
+        new_value: entry.value,
+        selected_files: props.selected_files ?? []
+      })
+      set_history_index(-1)
+      has_modified_current_entry_ref.current = true
+    }
+  })
+
   const update_value = (new_value: string, caret_pos?: number) => {
     if (new_value === props.value) return
-    set_undo_stack((prev) => [
-      ...prev,
-      { value: props.value, raw_caret_pos: raw_caret_pos_ref.current }
-    ])
-    set_redo_stack([])
+    save_history()
     props.on_change(new_value)
     if (caret_pos !== undefined) {
       set_caret_position_after_change({
@@ -250,17 +261,16 @@ export const use_handlers = (
     state: {
       history_index,
       set_history_index,
-      is_history_enabled,
-      undo_stack,
-      set_undo_stack,
-      redo_stack,
-      set_redo_stack
+      is_history_enabled
     },
     utils: {
       update_value,
       handle_symbol_deletion_by_click,
       handle_backspace_key,
-      perform_paste: () => {}
+      perform_paste: () => {},
+      save_history,
+      undo,
+      redo
     }
   }
 

@@ -1,11 +1,6 @@
 import { RefObject, MutableRefObject, Dispatch, SetStateAction } from 'react'
 import type { PromptField } from '../../PromptField'
 
-export type HistoryEntry = {
-  value: string
-  raw_caret_pos: number
-}
-
 export type HandlerContext = {
   props: PromptField.Props
   params: {
@@ -27,15 +22,14 @@ export type HandlerContext = {
     history_index: number
     set_history_index: Dispatch<SetStateAction<number>>
     is_history_enabled: boolean
-    undo_stack: HistoryEntry[]
-    set_undo_stack: Dispatch<SetStateAction<HistoryEntry[]>>
-    redo_stack: HistoryEntry[]
-    set_redo_stack: Dispatch<SetStateAction<HistoryEntry[]>>
   }
   utils: {
     update_value: (new_value: string, caret_pos?: number) => void
     handle_symbol_deletion_by_click: (element: HTMLElement) => void
     handle_backspace_key: (e: React.KeyboardEvent<HTMLDivElement>) => void
     perform_paste: (text: string) => void
+    save_history: (custom_value?: string, custom_caret_pos?: number) => void
+    undo: () => void
+    redo: () => void
   }
 }
