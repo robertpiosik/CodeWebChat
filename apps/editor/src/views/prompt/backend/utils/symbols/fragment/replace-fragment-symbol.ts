@@ -14,7 +14,8 @@ export const replace_fragment_symbol = async (params: {
       const matches = [...instruction.matchAll(regex)]
       if (matches.length === 0) return instruction
 
-      let result = instruction
+      let result_string = ''
+      let last_index = 0
 
       for (const match of matches) {
         const full_match = match[0]
@@ -76,13 +77,26 @@ export const replace_fragment_symbol = async (params: {
           content = `// Error reading file ${file_path}`
         }
 
-        const range_str = ` (${start_line}-${end_line})`
-        const replacement = `\n\n\`${file_path}\`${range_str}\n\n\`\`\`\n${content}\n\`\`\`\n\n`
+        const text_between = instruction.slice(last_index, match.index)
+        const trimmed_text = text_between.trim()
 
-        result = result.replace(full_match, replacement)
+        if (trimmed_text) {
+          result_string += (result_string ? '\n\n' : '') + trimmed_text
+        }
+
+        const range_str = ` (${start_line}-${end_line})`
+        const replacement = `\`${file_path}\`${range_str}\n\n\`\`\`\n${content}\n\`\`\``
+
+        result_string += (result_string ? '\n\n' : '') + replacement
+        last_index = match.index + full_match.length
       }
 
-      return result
+      const tail = instruction.slice(last_index).trim()
+      if (tail) {
+        result_string += (result_string ? '\n\n' : '') + tail
+      }
+
+      return result_string
     })
   )
 }

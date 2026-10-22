@@ -41,19 +41,28 @@ export const replace_pasted_text_symbol = async (params: {
         const match = matches[i]
         const replacement = replacements[i]
 
-        result_string += instruction.slice(last_index, match.index)
+        const text_between = instruction.slice(last_index, match.index)
+        const trimmed_text = text_between.trim()
+
+        if (trimmed_text) {
+          result_string += (result_string ? '\n\n' : '') + trimmed_text
+        }
 
         if (replacement.success && replacement.content) {
           const backticks = replacement.content.includes('```') ? '````' : '```'
-          result_string += `\n${backticks}\n${replacement.content}\n${backticks}\n`
+          const block = `${backticks}\n${replacement.content}\n${backticks}`
+          result_string += (result_string ? '\n\n' : '') + block
         } else {
-          result_string += match[0]
+          result_string += (result_string ? '\n\n' : '') + match[0]
         }
 
         last_index = match.index + match[0].length
       }
 
-      result_string += instruction.slice(last_index).trim()
+      const tail = instruction.slice(last_index).trim()
+      if (tail) {
+        result_string += (result_string ? '\n\n' : '') + tail
+      }
 
       return result_string
     })
