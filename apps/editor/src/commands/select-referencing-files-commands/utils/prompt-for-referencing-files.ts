@@ -45,7 +45,7 @@ export const prompt_for_referencing_files = async (params: {
 
       const token_count =
         await params.workspace_provider.calculate_file_tokens(file_path)
-      const formatted_token_count = display_token_count(token_count.total)
+      const formatted_token_count = display_token_count(token_count)
 
       const buttons: vscode.QuickInputButton[] = []
       if (has_parent_folder) {
@@ -59,7 +59,7 @@ export const prompt_for_referencing_files = async (params: {
           ? `${formatted_token_count} · ${display_dir}`
           : formatted_token_count,
         file_path,
-        token_count: token_count.total,
+        token_count: token_count,
         range,
         buttons
       }

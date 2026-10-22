@@ -105,7 +105,7 @@ export class WorkspaceProvider
     this._workspace_names = valid_folders.map((folder) => folder.name)
 
     this.onDidChangeSelectedFiles(() => this._save_selected_files_state())
-    this._token_calculator = new TokenCalculator(this, this._extension_context)
+    this._token_calculator = new TokenCalculator(this)
     this._load_ignore_patterns()
 
     this._watcher = vscode.workspace.createFileSystemWatcher('**/*')
@@ -593,10 +593,13 @@ export class WorkspaceProvider
 
     if (element.isDirectory) {
       if (formatted_total) {
-        if (formatted_selected && selected_token_count! < total_token_count!) {
-          display_description = `◐ · ${formatted_total} · ${formatted_selected}`
-        } else if (is_fully_selected) {
+        if (is_fully_selected) {
           display_description = `● · ${formatted_total}`
+        } else if (
+          formatted_selected &&
+          selected_token_count! < total_token_count!
+        ) {
+          display_description = `◐ · ${formatted_total} · ${formatted_selected}`
         } else {
           display_description = formatted_total
         }
@@ -755,9 +758,7 @@ export class WorkspaceProvider
           false,
           false,
           total_tokens.total,
-          total_tokens.shrink,
-          selected_tokens.total,
-          selected_tokens.shrink,
+          selected_tokens,
           undefined,
           true
         )
@@ -866,15 +867,11 @@ export class WorkspaceProvider
     return sorted_indices.map((i) => lines[i - 1]).join('\n')
   }
 
-  get_cached_token_count(
-    file_path: string
-  ): { total: number; shrink: number } | undefined {
+  get_cached_token_count(file_path: string): number | undefined {
     return this._token_calculator.get_cached_token_count(file_path)
   }
 
-  async calculate_file_tokens(
-    file_path: string
-  ): Promise<{ total: number; shrink: number }> {
+  async calculate_file_tokens(file_path: string): Promise<number> {
     return this._token_calculator.calculate_file_tokens(file_path)
   }
 
@@ -1000,10 +997,8 @@ export class WorkspaceProvider
           final_checkbox_state,
           false,
           false,
-          tokens.total,
-          tokens.shrink,
-          selected_tokens?.total,
-          selected_tokens?.shrink,
+          is_directory ? (tokens as any).total : (tokens as number),
+          selected_tokens,
           undefined,
           false,
           range
@@ -1505,7 +1500,7 @@ export class WorkspaceProvider
 
   async get_selected_files_token_count(options?: {
     exclude_file_path?: string
-  }): Promise<{ total: number; shrink: number }> {
+  }): Promise<number> {
     return this._token_calculator.get_selected_files_token_count(options)
   }
 
@@ -1654,9 +1649,7 @@ export class FileItem extends vscode.TreeItem {
     public isSymbolicLink: boolean = false,
     public isOpenFile: boolean = false,
     public tokenCount?: number,
-    public shrinkTokenCount?: number,
     public selectedTokenCount?: number,
-    public selectedShrinkTokenCount?: number,
     description?: string,
     public isWorkspaceRoot: boolean = false,
     public range?: string

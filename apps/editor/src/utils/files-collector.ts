@@ -3,7 +3,6 @@ import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { natural_sort } from '@/utils/natural-sort'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
-import { shrink_file } from '../context/utils/shrink-file/shrink-file'
 import { is_binary_file } from './is-binary'
 import { normalize_path } from './normalize-path'
 
@@ -13,7 +12,6 @@ export namespace FilesCollector {
     open_editors_provider?: OpenEditorsProvider
     additional_paths?: string[]
     exclude_paths?: string[]
-    shrink?: boolean
   }): Promise<{ other_files: string; recent_files: string }> => {
     const workspace_roots = params.workspace_provider.get_workspace_roots()
     const additional_paths = (params.additional_paths ?? []).map((p) => {
@@ -66,10 +64,6 @@ export namespace FilesCollector {
                 content,
                 range
               )
-            }
-
-            if (params.shrink) {
-              content = shrink_file(content, path.extname(file_path))
             }
           }
 

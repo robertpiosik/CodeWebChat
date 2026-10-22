@@ -362,9 +362,8 @@ export const select_files_of_commit_command = (
                       await workspace_provider.calculate_file_tokens(
                         f.absolute_path
                       )
-                    const formatted_token_count = display_token_count(
-                      token_count.total
-                    )
+                    const formatted_token_count =
+                      display_token_count(token_count)
                     const dir_name = path.dirname(f.relative_path)
                     const display_dir = dir_name === '.' ? '' : dir_name
                     const has_parent_folder = dir_name !== '.'
@@ -390,7 +389,7 @@ export const select_files_of_commit_command = (
                         : formatted_token_count,
                       picked: currently_selected_set.has(f.absolute_path),
                       file_path: f.absolute_path,
-                      token_count: token_count.total,
+                      token_count,
                       buttons
                     }
                   })

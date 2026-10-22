@@ -126,10 +126,8 @@ export const context_initialization = async (
   const update_view_badges = async () => {
     let context_token_count = 0
     if (selected_files_provider && selected_files_view) {
-      const token_counts =
+      const context_token_count =
         await workspace_provider.get_selected_files_token_count()
-      const files_count = token_counts.total
-      context_token_count = files_count
 
       workspace_view.badge = {
         value: round_token_count_for_badge(context_token_count),

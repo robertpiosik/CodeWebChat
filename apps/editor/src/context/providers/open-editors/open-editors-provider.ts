@@ -311,8 +311,8 @@ export class OpenEditorsProvider
       const range = this._workspace_provider.get_range(file_path)
       const tokens = is_ignored
         ? undefined
-        : this._workspace_provider.get_cached_token_count(file_path) ||
-          (await this._workspace_provider.calculate_file_tokens(file_path))
+        : (this._workspace_provider.get_cached_token_count(file_path) ??
+          (await this._workspace_provider.calculate_file_tokens(file_path)))
 
       const item = new FileItem(
         file_name,
@@ -322,9 +322,7 @@ export class OpenEditorsProvider
         is_ignored ? undefined : checkbox_state,
         false,
         true,
-        tokens?.total,
-        tokens?.shrink,
-        undefined,
+        tokens,
         undefined,
         description,
         false,

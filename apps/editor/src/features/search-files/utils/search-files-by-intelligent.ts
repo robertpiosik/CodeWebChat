@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
+import * as path from 'path'
 import { send_llm_message } from '@/utils/send-llm-message'
 import { ai_file_search_format_instructions } from '@/constants/instructions'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
@@ -10,6 +11,7 @@ import { FileData } from './analyze-files'
 import { Provider } from '@/services/providers-manager'
 import { t } from '@/i18n'
 import { PROVIDERS } from '@/constants/providers'
+import { shrink_file } from './shrink-file'
 
 export const search_files_by_intelligent = async (
   files_data: FileData[],
@@ -20,7 +22,9 @@ export const search_files_by_intelligent = async (
 ): Promise<string[] | 'cancel' | 'error_no_files' | 'error'> => {
   let md_files = ''
   for (const file of files_data) {
-    const content_to_use = shrink_result ? file.shrunk_content : file.content
+    const content_to_use = shrink_result
+      ? shrink_file(file.content, path.extname(file.file_path))
+      : file.content
     const backticks = content_to_use.includes('```') ? '````' : '```'
     md_files += `### File: \`${file.display_path}\`\n\n${backticks}\n${content_to_use}\n${backticks}\n\n`
   }

@@ -141,7 +141,7 @@ export const prompt_for_imported_files = async (params: {
 
         const token_count =
           await workspace_provider.calculate_file_tokens(file_path)
-        const formatted_token_count = display_token_count(token_count.total)
+        const formatted_token_count = display_token_count(token_count)
 
         const selected_files = workspace_provider.get_selected_files()
         const is_picked = selected_files.includes(file_path)
@@ -159,8 +159,8 @@ export const prompt_for_imported_files = async (params: {
             : formatted_token_count,
           picked: is_picked,
           uri: uri,
-          token_count: token_count.total,
-          tokens: token_count.total,
+          token_count: token_count,
+          tokens: token_count,
           buttons
         }
       })

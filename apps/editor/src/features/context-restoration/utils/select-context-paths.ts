@@ -39,7 +39,7 @@ export const select_context_paths = async (params: {
         local_params.paths.map(async (file_path) => {
           const token_count =
             await params.workspace_provider.calculate_file_tokens(file_path)
-          const formatted_token_count = display_token_count(token_count.total)
+          const formatted_token_count = display_token_count(token_count)
           const workspace_root =
             params.workspace_provider.get_workspace_root_for_file(file_path)
           const relative_path = workspace_root
@@ -67,7 +67,7 @@ export const select_context_paths = async (params: {
             picked: currently_selected_set.has(file_path),
             file_path,
             buttons,
-            token_count: token_count.total
+            token_count: token_count
           }
         })
       )

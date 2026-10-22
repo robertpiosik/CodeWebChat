@@ -2,14 +2,13 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
-import { shrink_file } from '@/context/utils/shrink-file/shrink-file'
+import { shrink_file } from './shrink-file'
 import { t } from '@/i18n'
 
 export interface FileData {
   file_path: string
   display_path: string
   content: string
-  shrunk_content: string
 }
 
 export interface FileAnalysisResult {
@@ -68,12 +67,17 @@ export const analyze_files = async (params: {
             display_path = `${workspace_name}/${relative_path}`
           }
 
-          files_data.push({ file_path, display_path, content, shrunk_content })
+          files_data.push({ file_path, display_path, content })
 
-          const token_count =
-            await params.workspace_provider.calculate_file_tokens(file_path)
-          full_tokens += token_count.total
-          shrink_tokens += token_count.shrink
+          const backticks_full = content.includes('```') ? '````' : '```'
+          const wrapped_full = `### File: \`${display_path}\`\n\n${backticks_full}\n${content}\n${backticks_full}\n\n`
+          full_tokens += Math.floor(wrapped_full.length / 4)
+
+          const backticks_shrunk = shrunk_content.includes('```')
+            ? '````'
+            : '```'
+          const wrapped_shrunk = `### File: \`${display_path}\`\n\n${backticks_shrunk}\n${shrunk_content}\n${backticks_shrunk}\n\n`
+          shrink_tokens += Math.floor(wrapped_shrunk.length / 4)
         } catch (e) {}
       }
     }

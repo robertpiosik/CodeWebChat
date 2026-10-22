@@ -24,7 +24,7 @@ export const create_context_description = async (params: {
       params.workspace_provider.calculate_file_tokens(p)
     )
   )
-  const total_tokens = token_counts.reduce((acc, tc) => acc + tc.total, 0)
+  const total_tokens = token_counts.reduce((acc, tc) => acc + tc, 0)
   const formatted_tokens = display_token_count(total_tokens)
 
   let description = `${formatted_tokens} · ${resolved_paths.length} file${resolved_paths.length == 1 ? '' : 's'}`

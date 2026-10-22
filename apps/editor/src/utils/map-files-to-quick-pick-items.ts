@@ -58,7 +58,7 @@ export const map_files_to_quick_pick_items = async <
 
       const token_count =
         await params.workspace_provider.calculate_file_tokens(file_path)
-      const formatted_token_count = display_token_count(token_count.total)
+      const formatted_token_count = display_token_count(token_count)
 
       const buttons: vscode.QuickInputButton[] = []
       if (has_parent_folder) {
@@ -74,7 +74,7 @@ export const map_files_to_quick_pick_items = async <
           : formatted_token_count,
         file_path,
         workspace_name,
-        token_count: token_count.total,
+        token_count: token_count,
         buttons
       }
     })

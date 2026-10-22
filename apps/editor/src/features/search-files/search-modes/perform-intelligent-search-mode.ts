@@ -29,6 +29,7 @@ import { show_incomplete_setup_warning } from '@/utils/show-missing-configuratio
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { invoke_agentic_cli } from '@/utils/agentic-cli-invocation'
 import { extract_paths_from_bullet_list } from '@/utils/extract-paths-from-bullet-list'
+import { shrink_file } from '../utils/shrink-file'
 
 export const perform_intelligent_search_mode = async (params: {
   files: string[]
@@ -244,7 +245,7 @@ export const perform_intelligent_search_mode = async (params: {
           let md_files = ''
           for (const file of analysis.files_data) {
             const content_to_use = shrink_result
-              ? file.shrunk_content
+              ? shrink_file(file.content, path.extname(file.file_path))
               : file.content
             md_files += `### File: \`${file.display_path}\`\n\n\`\`\`\n${content_to_use}\n\`\`\`\n\n`
           }
@@ -397,7 +398,7 @@ export const perform_intelligent_search_mode = async (params: {
           let md_files = ''
           for (const file of analysis.files_data) {
             const content_to_use = shrink_result
-              ? file.shrunk_content
+              ? shrink_file(file.content, path.extname(file.file_path))
               : file.content
             const backticks = content_to_use.includes('```') ? '````' : '```'
             md_files += `### File: \`${file.display_path}\`\n\n${backticks}\n${content_to_use}\n${backticks}\n\n`

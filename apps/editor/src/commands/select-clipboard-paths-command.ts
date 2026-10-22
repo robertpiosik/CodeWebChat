@@ -181,9 +181,7 @@ export const select_clipboard_paths_command = (
                 const token_count =
                   await workspace_provider.calculate_file_tokens(file_path)
 
-                const formatted_token_count = display_token_count(
-                  token_count.total
-                )
+                const formatted_token_count = display_token_count(token_count)
 
                 const root =
                   workspace_provider.get_workspace_root_for_file(file_path)
@@ -207,7 +205,7 @@ export const select_clipboard_paths_command = (
                     ? `${formatted_token_count} · ${display_dir}`
                     : formatted_token_count,
                   file_path,
-                  token_count: token_count.total,
+                  token_count: token_count,
                   buttons: [
                     {
                       iconPath: new vscode.ThemeIcon('go-to-file'),
