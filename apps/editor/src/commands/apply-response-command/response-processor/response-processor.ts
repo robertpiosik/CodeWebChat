@@ -34,6 +34,16 @@ import {
   resolve_workspace_root
 } from '../utils/workspace'
 
+let _apply_response_output_channel: vscode.OutputChannel | undefined
+
+const get_apply_response_output_channel = () => {
+  if (!_apply_response_output_channel) {
+    _apply_response_output_channel =
+      vscode.window.createOutputChannel('CWC Apply Response')
+  }
+  return _apply_response_output_channel
+}
+
 export type PreviewData = {
   original_states: OriginalFileState[]
   response: string
@@ -385,6 +395,12 @@ export const process_response = async (params: {
       vscode.window.showWarningMessage(
         t('command.apply-response-command.error.no-valid-response')
       )
+
+      const output_channel = get_apply_response_output_channel()
+      output_channel.clear()
+      output_channel.append(params.response)
+      output_channel.show(true)
+
       return null
     }
 
