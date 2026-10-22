@@ -46,7 +46,7 @@ There are no ever-growing sessions. By keeping your intent clear, model is focus
 <details>
 <summary><strong>Iterations without context bloat</strong></summary>
 
-Refine your task instructions without dragging old ones in the condex window. Just reject a invalid edits and prompt again.
+Refine your task instructions without dragging old ones in the condex window. Just reject incorrect edits and prompt again, without penalizing accuracy.
 
 </details>
 
