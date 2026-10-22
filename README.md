@@ -51,16 +51,16 @@ Refine your task instructions without dragging old ones in the condex window. Ju
 </details>
 
 <details>
-<summary><strong>First-class support for prompt caching</strong></summary>
+<summary><strong>Effective steering with examples</strong></summary>
 
-To maximize prompt cache hits when including selected files, unchanged files are placed first, followed by recently modified ones, and task instructions are placed at the very end.
+Replace most skills with a simple checkbox tick on the file tree. Providing examples can make your prompts simpler and guide the model toward outputs you're looking for.
 
 </details>
 
 <details>
-<summary><strong>Effective steering with examples</strong></summary>
+<summary><strong>First-class support for prompt caching</strong></summary>
 
-Replace most skills with a simple checkbox tick on the file tree. Providing examples can make your prompts simpler and guide the model toward outputs you're looking for.
+To maximize prompt cache hits when including selected files, unchanged files are placed first, followed by recently modified ones, and task instructions are placed at the very end.
 
 </details>
 
