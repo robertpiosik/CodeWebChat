@@ -126,7 +126,7 @@ export const context_initialization = async (
   const update_view_badges = async () => {
     let context_token_count = 0
     if (selected_files_provider && selected_files_view) {
-      const context_token_count =
+      context_token_count =
         await workspace_provider.get_selected_files_token_count()
 
       workspace_view.badge = {
