@@ -44,6 +44,13 @@ There are no ever-growing sessions. By keeping your intent clear, model is focus
 </details>
 
 <details>
+<summary><strong>Iterations without context bloat</strong></summary>
+
+Refine your task instructions without dragging old ones in the condex window. Just reject a invalid edits and prompt again.
+
+</details>
+
+<details>
 <summary><strong>First-class support for prompt caching</strong></summary>
 
 To maximize prompt cache hits when including selected files, unchanged files are placed first, followed by recently modified ones, and task instructions are placed at the very end.
