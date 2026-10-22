@@ -28,7 +28,7 @@ export const EditTemplateForm: React.FC<Props> = (props) => {
   useEffect(() => {
     props.on_update({
       name: name.trim() || undefined,
-      template: template.trim()
+      template
     })
   }, [name, template, props.on_update])
 

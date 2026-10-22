@@ -41,8 +41,8 @@ export const use_template_editing = (
       const b = updated_template
       const a_name = (a.name || '').trim()
       const b_name = (b.name || '').trim()
-      const a_template = a.template.trim()
-      const b_template = b.template.trim()
+      const a_template = a.template
+      const b_template = b.template
       const has_changes = a_name !== b_name || a_template !== b_template
 
       if (has_changes) {
