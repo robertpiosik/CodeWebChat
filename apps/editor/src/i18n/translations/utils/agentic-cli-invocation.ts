@@ -215,25 +215,6 @@ export const translations = {
     hu: 'A {agent} CLI nincs telepítve ezen a számítógépen.',
     bg: 'CLI {agent} не е инсталиран на този компютър.'
   },
-  'utils.agentic-cli-invocation.error.workspace-not-trusted': {
-    en: 'Workspace is not trusted. Agentic CLI invocation is disabled.',
-    pl: 'Obszar roboczy nie jest zaufany. Wywoływanie agenta z CLI jest wyłączone.',
-    'zh-cn': '工作区不受信任。智能体 CLI 调用已被禁用。',
-    ja: 'ワークスペースは信頼されていません。エージェント CLI の呼び出しは無効になっています。',
-    'zh-tw': '工作區不受信任。智能體 CLI 呼叫已被停用。',
-    de: 'Der Arbeitsbereich ist nicht vertrauenswürdig. Der Aufruf der Agenten-CLI ist deaktiviert.',
-    es: 'El espacio de trabajo no es de confianza. La invocación del CLI del agente está deshabilitada.',
-    fr: "L'espace de travail n'est pas approuvé. L'invocation du CLI de l'agent est désactivée.",
-    'pt-br':
-      'O espaço de trabalho não é confiável. A invocação do CLI do agente está desativada.',
-    ru: 'Рабочая область не является доверенной. Вызов агентного CLI отключен.',
-    ko: '작업 공간을 신뢰할 수 없습니다. 에이전트 CLI 호출이 비활성화되었습니다.',
-    it: "L'area di lavoro non è attendibile. L'invocazione della CLI dell'agente è disabilitata.",
-    tr: 'Çalışma alanı güvenilir değil. Aracı CLI çağrısı devre dışı bırakıldı.',
-    cs: 'Pracovní prostor není důvěryhodný. Vyvolání agentního CLI je zakázáno.',
-    hu: 'A munkaterület nem megbízható. Az ügynök CLI hívása le van tiltva.',
-    bg: 'Работното пространство не е надеждно. Извикването на агентния CLI е деактивирано.'
-  },
   'utils.agentic-cli-invocation.error.failed': {
     en: 'Agent execution failed: {error}',
     pl: 'Wykonywanie agenta nie powiodło się: {error}',
