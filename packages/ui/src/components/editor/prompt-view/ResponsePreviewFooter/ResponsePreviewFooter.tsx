@@ -15,11 +15,16 @@ export const ResponsePreviewFooter: React.FC<Props> = (props) => {
   const [is_accept_focused, set_is_accept_focused] = useState(false)
 
   useEffect(() => {
+    if (props.is_accept_disabled) {
+      set_is_accept_focused(false)
+      return
+    }
+
     const timeout = setTimeout(() => {
       set_is_accept_focused(true)
     }, 500)
     return () => clearTimeout(timeout)
-  }, [])
+  }, [props.is_accept_disabled])
 
   return (
     <div className={styles.container} ref={container_ref}>
