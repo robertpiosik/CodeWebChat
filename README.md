@@ -46,7 +46,7 @@ Automatically select files attached to task instructions with your favorite agen
 <details>
 <summary><strong>Iterations without context bloat</strong></summary>
 
-Refine your task instructions without dragging old ones in the condex window.
+Refine your task instructions without dragging old ones in the condex window, hurting accuracy and latency.
 
 </details>
 
