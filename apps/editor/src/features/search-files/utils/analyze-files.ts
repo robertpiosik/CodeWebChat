@@ -52,6 +52,14 @@ export const analyze_files = async (params: {
             content = buffer.toString('utf8')
           }
 
+          const range = params.workspace_provider.get_range(file_path)
+          if (range) {
+            content = params.workspace_provider.apply_range_to_content(
+              content,
+              range
+            )
+          }
+
           const shrunk_content = shrink_file(content, path.extname(file_path))
 
           const workspace_root =
