@@ -19,9 +19,10 @@
     text-decoration: none;
   }
 
-  &:focus-visible {
+  &:focus {
     outline-offset: 2px;
-    outline: 1px solid var(--vscode-focusBorder);
+    outline: 1px solid
+      color-mix(in srgb, var(--vscode-button-background) 50%, transparent);
   }
 
   &:disabled {
@@ -37,6 +38,10 @@
     background-color: var(--cwc-bg-secondary);
     color: var(--cwc-text-color);
 
+    &:focus {
+      outline-color: var(--cwc-bg-secondary);
+    }
+
     &:hover {
       background-color: var(--cwc-bg-primary);
     }
@@ -50,6 +55,14 @@
 
   &--danger {
     background-color: var(--vscode-inputValidation-errorBorder);
+
+    &:focus {
+      outline-color: color-mix(
+        in srgb,
+        var(--vscode-inputValidation-errorBorder) 50%,
+        transparent
+      );
+    }
 
     &:hover {
       background-color: color-mix(

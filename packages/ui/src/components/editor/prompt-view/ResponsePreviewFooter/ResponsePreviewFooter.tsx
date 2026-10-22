@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { use_compacting } from '@shared/hooks'
 import { Button } from '../../common/Button'
 import styles from './ResponsePreviewFooter.module.scss'
@@ -11,6 +12,14 @@ type Props = {
 
 export const ResponsePreviewFooter: React.FC<Props> = (props) => {
   const { container_ref, compact_step } = use_compacting()
+  const [is_accept_focused, set_is_accept_focused] = useState(false)
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      set_is_accept_focused(true)
+    }, 500)
+    return () => clearTimeout(timeout)
+  }, [])
 
   return (
     <div className={styles.container} ref={container_ref}>
@@ -34,6 +43,7 @@ export const ResponsePreviewFooter: React.FC<Props> = (props) => {
         on_click={props.on_accept}
         disabled={props.is_accept_disabled}
         title="Accept"
+        is_focused={is_accept_focused}
         codicon={compact_step >= 3 ? 'check' : undefined}
       >
         {compact_step < 3 && <span>Accept</span>}

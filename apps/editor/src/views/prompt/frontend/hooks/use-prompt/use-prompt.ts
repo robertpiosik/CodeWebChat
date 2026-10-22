@@ -194,6 +194,8 @@ export const use_prompt = (vscode: any) => {
         set_is_modern_ui(message.is_modern_ui)
       } else if (message.command === 'API_CONFIGURATIONS') {
         set_api_configurations((message as any).configurations)
+      } else if (message.command === 'RESPONSE_PREVIEW_FINISHED') {
+        set_chat_input_focus_key((k) => k + 1)
       }
     }
     window.addEventListener('message', handle_message)
