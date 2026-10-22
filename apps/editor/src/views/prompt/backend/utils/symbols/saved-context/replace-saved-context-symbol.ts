@@ -9,6 +9,7 @@ import {
 } from '@/features/context-restoration'
 import { Logger } from '@shared/utils/logger'
 import { SymbolCacheManager } from '../symbol-cache'
+import { get_markdown_backticks } from '@/utils/get-markdown-backticks'
 
 export const replace_saved_context_symbol = async (params: {
   instructions: string[]
@@ -98,7 +99,7 @@ export const replace_saved_context_symbol = async (params: {
               params.workspace_provider.get_workspace_root_for_file(p)
             const relative_path = root ? path.relative(root, p) : p
 
-            const backticks = content.includes('```') ? '````' : '```'
+            const backticks = get_markdown_backticks(content)
             files_markdown += `### File: \`${relative_path.replace(
               /\\/g,
               '/'

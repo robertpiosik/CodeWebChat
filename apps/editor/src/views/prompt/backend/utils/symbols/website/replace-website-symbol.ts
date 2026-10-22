@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { SymbolCacheManager } from '../symbol-cache'
 import { PersistentTextStorage } from '../../persistent-text-storage'
+import { get_markdown_backticks } from '@/utils/get-markdown-backticks'
 
 export const replace_website_symbol = async (params: {
   instructions: string[]
@@ -68,7 +69,7 @@ export const replace_website_symbol = async (params: {
             const title = match[2].replace(/\\"/g, '"').replace(/\\\\/g, '\\')
             title_str = `**${title}**\n\n`
           }
-          const backticks = replacement.content.includes('```') ? '````' : '```'
+          const backticks = get_markdown_backticks(replacement.content)
           const rep = `\n\n${title_str}${backticks}markdown\n${replacement.content}\n${backticks}\n\n`
           result_string += rep
           if (params.symbols_cache) {

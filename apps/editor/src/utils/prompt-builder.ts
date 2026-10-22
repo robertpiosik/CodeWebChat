@@ -1,5 +1,6 @@
 import { normalize_path } from './normalize-path'
 import { DIFF_PLACEHOLDERS } from '@/constants/values'
+import { get_markdown_backticks } from './get-markdown-backticks'
 
 export namespace PromptBuilder {
   export const build_file_context = (params: {
@@ -11,7 +12,7 @@ export namespace PromptBuilder {
     if (params.is_binary || params.content === undefined) {
       return `### File: \`${display_path}\`\n\nBinary file\n\n`
     }
-    const backticks = params.content.includes('```') ? '````' : '```'
+    const backticks = get_markdown_backticks(params.content)
     return `### File: \`${display_path}\`\n\n${backticks}\n${params.content}\n${backticks}\n\n`
   }
 
@@ -45,14 +46,14 @@ export namespace PromptBuilder {
       if (is_placeholder) {
         result += `${diff_content}\n\n`
       } else {
-        const backticks = diff_content.includes('```') ? '````' : '```'
+        const backticks = get_markdown_backticks(diff_content)
         result += `${backticks}diff\n${diff_content}\n${backticks}\n\n`
       }
     }
 
     if (params.full_content?.trimEnd()) {
       const full_content = params.full_content.trimEnd()
-      const backticks = full_content.includes('```') ? '````' : '```'
+      const backticks = get_markdown_backticks(full_content)
       result += `${backticks}\n${full_content}\n${backticks}\n\n`
     }
 

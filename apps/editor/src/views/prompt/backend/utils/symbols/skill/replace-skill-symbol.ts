@@ -7,6 +7,7 @@ import {
 } from '@/views/shared/utils/hash-sign-quick-pick/symbols/skill-symbol'
 import { normalize_path } from '@/utils/normalize-path'
 import { SymbolCacheManager } from '../symbol-cache'
+import { get_markdown_backticks } from '@/utils/get-markdown-backticks'
 
 export const replace_skill_symbol = async (params: {
   instructions: string[]
@@ -104,7 +105,7 @@ export const replace_skill_symbol = async (params: {
                 const relative_path = normalize_path(
                   path.relative(skill.path, file_path)
                 )
-                const backticks = content.includes('```') ? '````' : '```'
+                const backticks = get_markdown_backticks(content)
                 skill_content += `### File: \`${relative_path.replace(
                   /\\/g,
                   '/'

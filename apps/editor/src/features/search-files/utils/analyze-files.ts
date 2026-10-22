@@ -5,6 +5,7 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { shrink_file } from './shrink-file'
 import { t } from '@/i18n'
 import { normalize_path } from '@/utils/normalize-path'
+import { get_markdown_backticks } from '@/utils/get-markdown-backticks'
 
 export interface FileData {
   file_path: string
@@ -86,9 +87,8 @@ export const analyze_files = async (params: {
 
           files_data.push({ file_path, display_path, content })
 
-          const backticks_shrunk = shrunk_content.includes('```')
-            ? '````'
-            : '```'
+          const backticks_shrunk = get_markdown_backticks(shrunk_content)
+
           const wrapped_shrunk = `### File: \`${display_path}\`\n\n${backticks_shrunk}\n${shrunk_content}\n${backticks_shrunk}\n\n`
           shrink_tokens += Math.floor(wrapped_shrunk.length / 4)
         } catch (e) {}

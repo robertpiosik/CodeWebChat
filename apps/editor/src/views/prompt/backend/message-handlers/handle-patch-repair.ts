@@ -30,6 +30,7 @@ import {
 } from '@/constants/instructions'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { invoke_agentic_cli } from '@/utils/agentic-cli-invocation'
+import { get_markdown_backticks } from '@/utils/get-markdown-backticks'
 
 export const handle_patch_repair = async (params: {
   prompt_view_provider: PromptViewProvider
@@ -249,7 +250,7 @@ export const handle_patch_repair = async (params: {
   if (action === 'invoke-agent') {
     let cli_prompt = ''
     for (const item of files_to_process) {
-      const backticks = item.file_state.content.includes('```') ? '````' : '```'
+      const backticks = get_markdown_backticks(item.file_state.content)
       const display_path =
         !is_single_root_folder_workspace && item.file_state.workspace_name
           ? `${item.file_state.workspace_name}/${item.file_state.file_path}`
@@ -291,7 +292,7 @@ export const handle_patch_repair = async (params: {
   if (action === 'copy') {
     let chatbot_prompt = ''
     for (const item of files_to_process) {
-      const backticks = item.file_state.content.includes('```') ? '````' : '```'
+      const backticks = get_markdown_backticks(item.file_state.content)
       const display_path =
         !is_single_root_folder_workspace && item.file_state.workspace_name
           ? `${item.file_state.workspace_name}/${item.file_state.file_path}`
@@ -371,9 +372,7 @@ export const handle_patch_repair = async (params: {
     if (selected_web_configuration_name) {
       let chatbot_prompt = ''
       for (const item of files_to_process) {
-        const backticks = item.file_state.content.includes('```')
-          ? '````'
-          : '```'
+        const backticks = get_markdown_backticks(item.file_state.content)
         const display_path =
           !is_single_root_folder_workspace && item.file_state.workspace_name
             ? `${item.file_state.workspace_name}/${item.file_state.file_path}`

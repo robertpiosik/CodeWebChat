@@ -12,6 +12,7 @@ import { Provider } from '@/services/providers-manager'
 import { t } from '@/i18n'
 import { PROVIDERS } from '@/constants/providers'
 import { shrink_file } from './shrink-file'
+import { get_markdown_backticks } from '@/utils/get-markdown-backticks'
 
 export const search_files_by_intelligent = async (
   files_data: FileData[],
@@ -25,7 +26,7 @@ export const search_files_by_intelligent = async (
     const content_to_use = shrink_result
       ? shrink_file(file.content, path.extname(file.file_path))
       : file.content
-    const backticks = content_to_use.includes('```') ? '````' : '```'
+    const backticks = get_markdown_backticks(content_to_use)
     md_files += `### File: \`${file.display_path}\`\n\n${backticks}\n${content_to_use}\n${backticks}\n\n`
   }
 

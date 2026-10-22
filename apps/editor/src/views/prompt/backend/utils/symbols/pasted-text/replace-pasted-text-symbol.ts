@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { PersistentTextStorage } from '../../persistent-text-storage'
+import { get_markdown_backticks } from '@/utils/get-markdown-backticks'
 
 export const replace_pasted_text_symbol = async (params: {
   instructions: string[]
@@ -49,7 +50,7 @@ export const replace_pasted_text_symbol = async (params: {
         }
 
         if (replacement.success && replacement.content) {
-          const backticks = replacement.content.includes('```') ? '````' : '```'
+          const backticks = get_markdown_backticks(replacement.content)
           const block = `${backticks}\n${replacement.content}\n${backticks}`
           result_string += (result_string ? '\n\n' : '') + block
         } else {

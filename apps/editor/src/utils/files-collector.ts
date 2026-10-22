@@ -5,6 +5,7 @@ import { natural_sort } from '@/utils/natural-sort'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import { is_binary_file } from './is-binary'
 import { normalize_path } from './normalize-path'
+import { get_markdown_backticks } from './get-markdown-backticks'
 
 export namespace FilesCollector {
   export const collect_files = async (params: {
@@ -87,7 +88,7 @@ export namespace FilesCollector {
           if (is_binary) {
             collected_text += `### File: \`${display_path}\`\n\nBinary file\n\n`
           } else {
-            const backticks = content.includes('```') ? '````' : '```'
+            const backticks = get_markdown_backticks(content)
             collected_text += `### File: \`${display_path}\`\n\n${backticks}\n${content}\n${backticks}\n\n`
           }
         } catch (error) {

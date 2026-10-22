@@ -25,6 +25,7 @@ import { get_api_configuration } from '@/utils/get-api-configuration'
 import { show_incomplete_setup_warning } from '@/utils/show-missing-configuration-notification'
 import { get_error_message } from '@/utils/get-error-message'
 import { invoke_agentic_cli } from '@/utils/agentic-cli-invocation'
+import { get_markdown_backticks } from '@/utils/get-markdown-backticks'
 
 const MIN_RECORDING_DURATION = 1000
 
@@ -270,7 +271,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
               vscode.Uri.file(file_path)
             )
             const content = document.getText()
-            const backticks = content.includes('```') ? '````' : '```'
+            const backticks = get_markdown_backticks(content)
             files_context += `### File: \`${display_path}\`\n\n${backticks}\n${content}\n${backticks}\n\n`
           } catch (error) {
             Logger.warn({
