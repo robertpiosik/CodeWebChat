@@ -2,7 +2,11 @@ import * as vscode from 'vscode'
 import { t } from '@/i18n'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
-import { RecentApiConfiguration } from '@shared/types/response-history-item'
+import {
+  ApiConfigurationDetails,
+  CliConfigurationDetails,
+  WebConfigurationDetails
+} from '@shared/types/response-history-item'
 import { setup_workspace_listeners } from './workspace-listener'
 import { prepare_files_from_original_states } from './file-preparer'
 import { parse_response } from '../response-parser/response-parser'
@@ -23,8 +27,11 @@ export const preview = async (params: {
   chat_response: string
   extension_context: vscode.ExtensionContext
   created_at?: number
-  recent_api_configuration?: RecentApiConfiguration
+  api_configuration_details?: ApiConfigurationDetails
+  cli_configuration_details?: CliConfigurationDetails
+  web_configuration_details?: WebConfigurationDetails
   workspace_provider: WorkspaceProvider
+  is_from_agentic_cli?: boolean
 }): Promise<{
   accepted_files: PreviewableFile[]
   rejected_states: OriginalFileState[]
@@ -128,7 +135,10 @@ export const preview = async (params: {
         items: items_for_preview,
         raw_instructions: params.raw_instructions,
         created_at: params.created_at,
-        recent_api_configuration: params.recent_api_configuration
+        api_configuration_details: params.api_configuration_details,
+        cli_configuration_details: params.cli_configuration_details,
+        web_configuration_details: params.web_configuration_details,
+        is_from_agentic_cli: params.is_from_agentic_cli
       })
     }
 

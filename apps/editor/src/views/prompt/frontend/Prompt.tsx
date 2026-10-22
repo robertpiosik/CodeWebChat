@@ -102,7 +102,10 @@ export const Prompt = () => {
     raw_instructions,
     preview_item_created_at,
     handle_discard_user_changes_in_preview,
-    recent_api_configuration
+    api_configuration_details,
+    cli_configuration_details,
+    web_configuration_details,
+    is_from_agentic_cli
   } = use_preview_manager(vscode)
 
   const {
@@ -227,7 +230,10 @@ export const Prompt = () => {
       raw_instructions: item.raw_instructions,
       files: item.files,
       created_at: item.created_at,
-      recent_api_configuration: item.recent_api_configuration
+      api_configuration_details: item.api_configuration_details,
+      cli_configuration_details: item.cli_configuration_details,
+      web_configuration_details: item.web_configuration_details,
+      is_from_agentic_cli: item.is_from_agentic_cli
     })
   }
 
@@ -641,11 +647,14 @@ export const Prompt = () => {
                 />
               }
             >
-              <UiResponsePreview
-                items={items_in_preview}
-                raw_instructions={raw_instructions}
-                recent_api_configuration={recent_api_configuration}
-                has_multiple_workspaces={workspace_folder_count > 1}
+                <UiResponsePreview
+                  items={items_in_preview}
+                  raw_instructions={raw_instructions}
+                  api_configuration_details={api_configuration_details}
+                  cli_configuration_details={cli_configuration_details}
+                  web_configuration_details={web_configuration_details}
+                  has_multiple_workspaces={workspace_folder_count > 1}
+                is_from_agentic_cli={is_from_agentic_cli}
                 on_focus_file={(file) => {
                   post_message(vscode, {
                     command: 'FOCUS_ON_FILE_IN_PREVIEW',

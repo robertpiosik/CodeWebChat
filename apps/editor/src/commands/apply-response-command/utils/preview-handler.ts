@@ -2,7 +2,11 @@ import * as path from 'path'
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '../types/original-file-state'
-import { RecentApiConfiguration } from '@shared/types/response-history-item'
+import {
+  ApiConfigurationDetails,
+  CliConfigurationDetails,
+  WebConfigurationDetails
+} from '@shared/types/response-history-item'
 import { undo_files } from './file-operations'
 import { preview } from './preview'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
@@ -29,8 +33,11 @@ export const preview_handler = async (params: {
   }
   raw_instructions?: string
   created_at?: number
-  recent_api_configuration?: RecentApiConfiguration
+  api_configuration_details?: ApiConfigurationDetails
+  cli_configuration_details?: CliConfigurationDetails
+  web_configuration_details?: WebConfigurationDetails
   is_code_at_cursor?: boolean
+  is_from_agentic_cli?: boolean
 }): Promise<boolean> => {
   let resolve_cleanup_promise: () => void
   ongoing_preview_cleanup_promise = new Promise((resolve) => {
@@ -45,8 +52,11 @@ export const preview_handler = async (params: {
       chat_response: params.chat_response,
       extension_context: params.extension_context,
       created_at: params.created_at,
-      recent_api_configuration: params.recent_api_configuration,
-      workspace_provider: params.workspace_provider
+      api_configuration_details: params.api_configuration_details,
+      cli_configuration_details: params.cli_configuration_details,
+      web_configuration_details: params.web_configuration_details,
+      workspace_provider: params.workspace_provider,
+      is_from_agentic_cli: params.is_from_agentic_cli
     })
 
     if (preview_result === null || preview_result.accepted_files.length === 0) {

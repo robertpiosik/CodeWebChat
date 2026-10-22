@@ -18,6 +18,7 @@ export type InitializeChatMessage = {
   text: string
   url: string
   client_id: string
+  chatbot?: string
   model?: string
   target_browser_id?: string
   reasoning_effort?: string
@@ -36,6 +37,11 @@ export type ApplyResponseMessage = {
   action: 'apply-response'
   client_id: string
   raw_instructions?: string
+  web_configuration_details?: {
+    chatbot: string
+    model?: string
+    reasoning_effort?: string
+  }
 }
 
 export type ClientIdAssignmentMessage = {

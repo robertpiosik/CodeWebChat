@@ -43,7 +43,13 @@ export const invoke_agentic_cli = async (params: {
   default_agent_key?: keyof ConfigAgentConfigurationFormat
   invocation_count?: number
 }): Promise<
-  { agent_output: string; selected_root: string } | undefined | 'back'
+  | {
+      agent_output: string
+      selected_root: string
+      cli_configuration_details?: { agent: string; flags?: string }
+    }
+  | undefined
+  | 'back'
 > => {
   const roots = params.workspace_provider.get_workspace_roots()
 
@@ -606,7 +612,16 @@ export const invoke_agentic_cli = async (params: {
             .catch(() => {})
         }, 10000)
 
-        return { agent_output: '', selected_root: selected_root! }
+        return {
+          agent_output: '',
+          selected_root: selected_root!,
+          cli_configuration_details: selected_agent_info
+            ? {
+                agent: selected_agent_info.label,
+                flags: flags_string
+              }
+            : undefined
+        }
       }
 
       const invocation_count = params.invocation_count || 1
@@ -818,7 +833,16 @@ export const invoke_agentic_cli = async (params: {
         })
       )
 
-      return { agent_output, selected_root: selected_root! }
+      return {
+        agent_output,
+        selected_root: selected_root!,
+        cli_configuration_details: selected_agent_info
+          ? {
+              agent: selected_agent_info.label,
+              flags: flags_string
+            }
+          : undefined
+      }
     }
 
     if (go_back_to_agent) {

@@ -230,8 +230,11 @@ export const apply_response_command = (params: {
               response,
               raw_instructions: args?.raw_instructions,
               created_at: Date.now(),
-              recent_api_configuration: args?.recent_api_configuration,
-              is_not_looked_at: true
+              api_configuration_details: args?.api_configuration_details,
+              cli_configuration_details: args?.cli_configuration_details,
+              web_configuration_details: args?.web_configuration_details,
+              is_not_looked_at: true,
+              is_from_agentic_cli: args?.is_from_agentic_cli
             }
 
             created_at_for_switch = new_item.created_at
@@ -367,7 +370,10 @@ export const apply_response_command = (params: {
                 lines_added: total_lines_added,
                 lines_removed: total_lines_removed,
                 files: files_for_history,
-                recent_api_configuration: args?.recent_api_configuration
+                api_configuration_details: args?.api_configuration_details,
+                cli_configuration_details: args?.cli_configuration_details,
+                web_configuration_details: args?.web_configuration_details,
+                is_from_agentic_cli: args?.is_from_agentic_cli
               }
 
               history.push(new_item)
@@ -382,18 +388,21 @@ export const apply_response_command = (params: {
           const history_for_checkpoint = [
             ...params.prompt_view_provider.response_history
           ]
-          const changes_accepted = await preview_handler({
-            original_states: preview_data.original_states,
-            chat_response: preview_data.response,
-            prompt_view_provider: params.prompt_view_provider,
-            workspace_provider: params.workspace_provider,
-            extension_context: params.extension_context,
-            original_editor_state: args?.original_editor_state,
-            raw_instructions: args?.raw_instructions,
-            created_at: created_at_for_preview,
-            recent_api_configuration: args?.recent_api_configuration,
-            is_code_at_cursor
-          })
+            const changes_accepted = await preview_handler({
+              original_states: preview_data.original_states,
+              chat_response: preview_data.response,
+              prompt_view_provider: params.prompt_view_provider,
+              workspace_provider: params.workspace_provider,
+              extension_context: params.extension_context,
+              original_editor_state: args?.original_editor_state,
+              raw_instructions: args?.raw_instructions,
+              created_at: created_at_for_preview,
+              api_configuration_details: args?.api_configuration_details,
+              cli_configuration_details: args?.cli_configuration_details,
+              web_configuration_details: args?.web_configuration_details,
+              is_code_at_cursor,
+              is_from_agentic_cli: args?.is_from_agentic_cli
+            })
 
           if (changes_accepted) {
             params.prompt_view_api_calls_manager.cancel_all_requests()

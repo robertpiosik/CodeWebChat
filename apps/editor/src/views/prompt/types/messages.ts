@@ -2,7 +2,9 @@ import { EditFormat } from '@shared/types/edit-format'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import {
   ResponseHistoryItem,
-  RecentApiConfiguration
+  ApiConfigurationDetails,
+  CliConfigurationDetails,
+  WebConfigurationDetails
 } from '@shared/types/response-history-item'
 import { WebConfiguration } from '@/types/web-configuration'
 import { CliConfiguration } from '@/types/cli-configuration'
@@ -424,7 +426,10 @@ export interface ApplyResponseFromHistoryMessage extends BaseMessage {
   raw_instructions?: string
   files?: FileInPreview[]
   created_at: number
-  recent_api_configuration?: RecentApiConfiguration
+  api_configuration_details?: ApiConfigurationDetails
+  cli_configuration_details?: CliConfigurationDetails
+  web_configuration_details?: WebConfigurationDetails
+  is_from_agentic_cli?: boolean
 }
 
 export interface RemoveResponseHistoryItemMessage extends BaseMessage {
@@ -895,7 +900,10 @@ export interface ResponsePreviewStartedMessage extends BaseMessage {
   items: ItemInPreview[]
   raw_instructions?: string
   created_at?: number
-  recent_api_configuration?: RecentApiConfiguration
+  api_configuration_details?: ApiConfigurationDetails
+  cli_configuration_details?: CliConfigurationDetails
+  web_configuration_details?: WebConfigurationDetails
+  is_from_agentic_cli?: boolean
 }
 
 export interface ResponsePreviewFinishedMessage extends BaseMessage {

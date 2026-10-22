@@ -171,7 +171,7 @@ export const handle_make_api_call = async (
         )
 
       if (result) {
-        const recent_api_configuration = {
+        const api_configuration_details = {
           provider: api_configuration.provider_name,
           model: api_configuration.model,
           reasoning_effort: api_configuration.reasoning_effort
@@ -182,7 +182,7 @@ export const handle_make_api_call = async (
             response: result.response,
             raw_instructions: current_instructions,
             edit_format,
-            recent_api_configuration
+            api_configuration_details
           })
         }
         return

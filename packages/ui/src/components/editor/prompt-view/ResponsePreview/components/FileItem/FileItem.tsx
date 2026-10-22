@@ -18,6 +18,7 @@ type Props = {
   on_patch_repair: (force_model_selection?: boolean) => void
   on_cancel_patch_repair: () => void
   on_go_to_file: () => void
+  is_from_agentic_cli?: boolean
 }
 
 type FileMessage =
@@ -200,7 +201,7 @@ export const FileItem: FC<Props> = (props) => {
                       }}
                     />
                   )}
-                {props.file.ai_content && (
+                {props.file.ai_content && !props.is_from_agentic_cli && (
                   <IconButton
                     codicon_icon="open-preview"
                     title="Preview generated code"
@@ -212,7 +213,8 @@ export const FileItem: FC<Props> = (props) => {
                 )}
                 {props.file.file_state !== 'new' &&
                   props.file.file_state !== 'deleted' &&
-                  !props.file.added_in_preview && (
+                  !props.file.added_in_preview &&
+                  !props.is_from_agentic_cli && (
                     <IconButton
                       codicon_icon="sparkle"
                       title="Apply with Patch Repair"
@@ -262,7 +264,7 @@ export const FileItem: FC<Props> = (props) => {
           }
 
           const message_actions = []
-          if (!props.file.is_applying && !props.file.added_in_preview) {
+          if (!props.file.is_applying && !props.file.added_in_preview && !props.is_from_agentic_cli) {
             message_actions.push({
               id: 'fix',
               icon: 'codicon-sparkle',
@@ -274,7 +276,7 @@ export const FileItem: FC<Props> = (props) => {
               }
             })
           }
-          if (props.file.ai_content) {
+          if (props.file.ai_content && !props.is_from_agentic_cli) {
             message_actions.push({
               id: 'preview',
               icon: 'codicon-open-preview',

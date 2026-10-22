@@ -71,7 +71,14 @@ const process_next_chat = async () => {
       client_id: current_chat_message.client_id,
       raw_instructions: current_chat_message.raw_instructions,
       inject_apply_response_button:
-        current_chat_message.inject_apply_response_button
+        current_chat_message.inject_apply_response_button,
+      web_configuration_details: current_chat_message.chatbot
+        ? {
+            chatbot: current_chat_message.chatbot,
+            model: current_chat_message.model,
+            reasoning_effort: current_chat_message.reasoning_effort
+          }
+        : undefined
     }
   })
 
@@ -185,7 +192,8 @@ export const setup_message_listeners = () => {
           send_message_to_server({
             action: 'apply-response',
             client_id: message.client_id,
-            raw_instructions: message.raw_instructions
+            raw_instructions: message.raw_instructions,
+            web_configuration_details: message.web_configuration_details
           } as ApplyResponseMessage)
         } else if (message.action === 'finished-responding') {
           if (sender.tab?.id && sender.tab.id === last_opened_tab_id) {

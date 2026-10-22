@@ -1,6 +1,10 @@
 import { FC, useRef, useState, useMemo, useEffect } from 'react'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
-import { RecentApiConfiguration } from '@shared/types/response-history-item'
+import {
+  ApiConfigurationDetails,
+  CliConfigurationDetails,
+  WebConfigurationDetails
+} from '@shared/types/response-history-item'
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
@@ -40,7 +44,10 @@ type Props = {
     is_auto_run?: boolean
   ) => void
   raw_instructions?: string
-  recent_api_configuration?: RecentApiConfiguration
+  api_configuration_details?: ApiConfigurationDetails
+  cli_configuration_details?: CliConfigurationDetails
+  web_configuration_details?: WebConfigurationDetails
+  is_from_agentic_cli?: boolean
 }
 
 export const ResponsePreview: FC<Props> = (props) => {
@@ -137,7 +144,7 @@ export const ResponsePreview: FC<Props> = (props) => {
   )
 
   useEffect(() => {
-    if (error_count > 0 && !is_fixing_all && !has_attempted_auto_fix) {
+    if (error_count > 0 && !is_fixing_all && !has_attempted_auto_fix && !props.is_from_agentic_cli) {
       set_is_fixing_all(true)
       set_has_attempted_auto_fix(true)
       const files_to_fix = files_in_preview
@@ -151,7 +158,7 @@ export const ResponsePreview: FC<Props> = (props) => {
         }))
       props.on_fix_all_failed(files_to_fix, true)
     }
-  }, [error_count, is_fixing_all, has_attempted_auto_fix, files_in_preview])
+  }, [error_count, is_fixing_all, has_attempted_auto_fix, files_in_preview, props.is_from_agentic_cli])
 
   const get_status_text = (file: FileInPreview) => {
     if (file.apply_status === 'waiting') return 'Waiting for server...'
@@ -280,28 +287,30 @@ export const ResponsePreview: FC<Props> = (props) => {
                   : 'Failed to apply changes to the file'}
               </span>
             </div>
-            <div
-              className={styles.info__action}
-              onClick={() => {
-                set_is_fixing_all(true)
-                const files_to_fix = files_in_preview
-                  .filter(
-                    (f) =>
-                      f.type === 'file' &&
-                      f.apply_failed &&
-                      !f.applied_with_patch_repair &&
-                      !f.is_applying
-                  )
-                  .map((f) => ({
-                    file_path: f.file_path,
-                    workspace_name: f.workspace_name
-                  }))
-                props.on_fix_all_failed(files_to_fix, false)
-              }}
-            >
-              <span className="codicon codicon-sparkle" />
-              <span>{error_count > 1 ? 'Fix all' : 'Fix'}</span>
-            </div>
+            {!props.is_from_agentic_cli && (
+              <div
+                className={styles.info__action}
+                onClick={() => {
+                  set_is_fixing_all(true)
+                  const files_to_fix = files_in_preview
+                    .filter(
+                      (f) =>
+                        f.type === 'file' &&
+                        f.apply_failed &&
+                        !f.applied_with_patch_repair &&
+                        !f.is_applying
+                    )
+                    .map((f) => ({
+                      file_path: f.file_path,
+                      workspace_name: f.workspace_name
+                    }))
+                  props.on_fix_all_failed(files_to_fix, false)
+                }}
+              >
+                <span className="codicon codicon-sparkle" />
+                <span>{error_count > 1 ? 'Fix all' : 'Fix'}</span>
+              </div>
+            )}
           </div>
         )}
 
@@ -333,6 +342,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                   is_selected={index === last_clicked_file_index}
                   has_multiple_workspaces={props.has_multiple_workspaces}
                   total_files_count={files_in_preview.length}
+                  is_from_agentic_cli={props.is_from_agentic_cli}
                   on_click={() => {
                     set_last_clicked_file_index(index)
                     props.on_focus_file({
@@ -407,12 +417,41 @@ export const ResponsePreview: FC<Props> = (props) => {
             }
           })}
         </div>
-        {props.recent_api_configuration && (
+        {props.api_configuration_details && (
           <div className={styles.configuration}>
             {[
-              props.recent_api_configuration.provider,
-              props.recent_api_configuration.model,
-              props.recent_api_configuration.reasoning_effort
+              props.api_configuration_details.provider,
+              props.api_configuration_details.model,
+              props.api_configuration_details.reasoning_effort
+            ]
+              .filter(Boolean)
+              .map((item, i) => (
+                <div key={i} title={item!}>
+                  {item}
+                </div>
+              ))}
+          </div>
+        )}
+        {props.cli_configuration_details && (
+          <div className={styles.configuration}>
+            {[
+              props.cli_configuration_details.agent,
+              props.cli_configuration_details.flags
+            ]
+              .filter(Boolean)
+              .map((item, i) => (
+                <div key={i} title={item!}>
+                  {item}
+                </div>
+              ))}
+          </div>
+        )}
+        {props.web_configuration_details && (
+          <div className={styles.configuration}>
+            {[
+              props.web_configuration_details.chatbot,
+              props.web_configuration_details.model,
+              props.web_configuration_details.reasoning_effort
             ]
               .filter(Boolean)
               .map((item, i) => (

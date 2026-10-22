@@ -202,6 +202,11 @@ const main = async () => {
       client_id: string
       raw_instructions?: string
       inject_apply_response_button?: boolean
+      web_configuration_details?: {
+        chatbot: string
+        model?: string
+        reasoning_effort?: string
+      }
     }
 
     if (!stored_data) {
@@ -250,7 +255,8 @@ const main = async () => {
       set_session_state({
         client_id: stored_data.client_id,
         raw_instructions: stored_data.raw_instructions,
-        inject_button
+        inject_button,
+        web_configuration_details: stored_data.web_configuration_details
       })
       chatbot.setup_observer({
         client_id: stored_data.client_id,

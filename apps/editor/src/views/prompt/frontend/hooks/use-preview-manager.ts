@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react'
 import { BackendMessage } from '../../types/messages'
 import { post_message } from '../utils/post-message'
-import { RecentApiConfiguration } from '@shared/types/response-history-item'
+import {
+  ApiConfigurationDetails,
+  CliConfigurationDetails,
+  WebConfigurationDetails
+} from '@shared/types/response-history-item'
 import { ItemInPreview } from '@shared/types/file-in-preview'
 
 export const use_preview_manager = (vscode: any) => {
@@ -9,8 +13,14 @@ export const use_preview_manager = (vscode: any) => {
   const [raw_instructions, set_raw_instructions] = useState<string>()
   const [preview_item_created_at, set_preview_item_created_at] =
     useState<number>()
-  const [recent_api_configuration, set_recent_api_configuration] =
-    useState<RecentApiConfiguration>()
+  const [api_configuration_details, set_api_configuration_details] =
+    useState<ApiConfigurationDetails>()
+  const [cli_configuration_details, set_cli_configuration_details] =
+    useState<CliConfigurationDetails>()
+  const [web_configuration_details, set_web_configuration_details] =
+    useState<WebConfigurationDetails>()
+  const [is_from_agentic_cli, set_is_from_agentic_cli] =
+    useState<boolean>(false)
 
   const handle_discard_user_changes_in_preview = (file: {
     file_path: string
@@ -30,7 +40,10 @@ export const use_preview_manager = (vscode: any) => {
         set_items_in_preview(message.items)
         set_raw_instructions(message.raw_instructions)
         set_preview_item_created_at(message.created_at)
-        set_recent_api_configuration(message.recent_api_configuration)
+        set_api_configuration_details(message.api_configuration_details)
+        set_cli_configuration_details(message.cli_configuration_details)
+        set_web_configuration_details(message.web_configuration_details)
+        set_is_from_agentic_cli(message.is_from_agentic_cli ?? false)
       } else if (message.command === 'UPDATE_FILE_IN_PREVIEW') {
         set_items_in_preview((current_items) => {
           const items = current_items ?? []
@@ -106,7 +119,10 @@ export const use_preview_manager = (vscode: any) => {
         set_items_in_preview(undefined)
         set_raw_instructions(undefined)
         set_preview_item_created_at(undefined)
-        set_recent_api_configuration(undefined)
+        set_api_configuration_details(undefined)
+        set_cli_configuration_details(undefined)
+        set_web_configuration_details(undefined)
+        set_is_from_agentic_cli(false)
       }
     }
 
@@ -120,6 +136,9 @@ export const use_preview_manager = (vscode: any) => {
     raw_instructions,
     preview_item_created_at,
     handle_discard_user_changes_in_preview,
-    recent_api_configuration
+    api_configuration_details,
+    cli_configuration_details,
+    web_configuration_details,
+    is_from_agentic_cli
   }
 }

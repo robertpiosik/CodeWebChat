@@ -555,7 +555,10 @@ export const restore_checkpoint = async (params: {
               raw_instructions: item_to_preview.raw_instructions,
               files_with_content: item_to_preview.files,
               created_at: item_to_preview.created_at,
-              recent_api_configuration: item_to_preview.recent_api_configuration
+              api_configuration_details: item_to_preview.api_configuration_details,
+              cli_configuration_details: item_to_preview.cli_configuration_details,
+              web_configuration_details: item_to_preview.web_configuration_details,
+              is_from_agentic_cli: item_to_preview.is_from_agentic_cli
             })
           }
         }

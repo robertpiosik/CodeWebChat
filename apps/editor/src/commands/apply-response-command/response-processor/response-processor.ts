@@ -2,7 +2,11 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as vscode from 'vscode'
 import { OriginalFileState } from '../types/original-file-state'
-import { RecentApiConfiguration } from '@shared/types/response-history-item'
+import {
+  ApiConfigurationDetails,
+  CliConfigurationDetails,
+  WebConfigurationDetails
+} from '@shared/types/response-history-item'
 import { handle_restore_preview } from './handlers/restore-preview-handler'
 import {
   FileItem,
@@ -58,7 +62,10 @@ export type ApplyResponseCommandArgs = {
   }
   files_with_content?: FileInPreview[]
   created_at?: number
-  recent_api_configuration?: RecentApiConfiguration
+  api_configuration_details?: ApiConfigurationDetails
+  cli_configuration_details?: CliConfigurationDetails
+  web_configuration_details?: WebConfigurationDetails
+  is_from_agentic_cli?: boolean
 }
 
 export const process_response = async (params: {

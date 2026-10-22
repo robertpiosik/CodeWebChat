@@ -71,7 +71,7 @@ export const handle_invoke_agentic_cli = async (
     return
   }
 
-  const { agent_output } = result
+  const { agent_output, cli_configuration_details } = result
 
   if (
     agent_output !== undefined &&
@@ -87,7 +87,8 @@ export const handle_invoke_agentic_cli = async (
       {
         response: agent_output,
         raw_instructions: current_instructions,
-        is_from_agentic_cli: true
+        is_from_agentic_cli: true,
+        cli_configuration_details
       }
     )
 

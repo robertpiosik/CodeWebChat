@@ -243,7 +243,8 @@ export class WebSocketManager {
         } else if (message.action === 'apply-response') {
           const apply_msg = message as ApplyResponseMessage
           vscode.commands.executeCommand('codeWebChat.applyResponse', {
-            raw_instructions: apply_msg.raw_instructions
+            raw_instructions: apply_msg.raw_instructions,
+            web_configuration_details: apply_msg.web_configuration_details
           } as ApplyResponseCommandArgs)
         }
       } catch (error) {
@@ -491,6 +492,7 @@ export class WebSocketManager {
       action: 'initialize-chat',
       text: params.text,
       url,
+      chatbot: web_configuration.chatbot,
       model: web_configuration.model,
       target_browser_id,
       reasoning_effort: web_configuration.reasoningEffort,
@@ -602,6 +604,7 @@ export class WebSocketManager {
       action: 'initialize-chat',
       text: params.instruction,
       url,
+      chatbot: params.web_configuration.chatbot,
       model: params.web_configuration.model,
       target_browser_id,
       reasoning_effort: params.web_configuration.reasoning_effort,
