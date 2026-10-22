@@ -333,6 +333,14 @@ export interface UpdateProviderMessage {
   insertion_index?: number
 }
 
+export interface TestProviderConnectionMessage {
+  command: 'TEST_PROVIDER_CONNECTION'
+  original_name?: string
+  base_url: string
+  api_key?: string
+  is_api_key_cleared?: boolean
+}
+
 export type Template = {
   name?: string
   template: string
@@ -428,6 +436,7 @@ export type FrontendMessage =
   | PickApiModelMessage
   | PickApiReasoningEffortMessage
   | UpdateProviderMessage
+  | TestProviderConnectionMessage
   | GetIsModernUiMessage
   | GetTemplatesMessage
   | UpdateTemplatesMessage

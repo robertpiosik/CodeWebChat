@@ -72,7 +72,8 @@ import {
   handle_select_default_cli_configuration,
   handle_open_editor_settings,
   handle_hash_sign_quick_pick,
-  handle_cancel_template_edit
+  handle_cancel_template_edit,
+  handle_test_provider_connection
 } from './message-handlers'
 import { webview_html } from '@/views/shared/utils/webview-html'
 
@@ -146,6 +147,8 @@ export class SettingsViewProvider {
           await handle_delete_provider(this, message)
         } else if (message.command === 'UPDATE_PROVIDER') {
           await handle_update_provider(this, message)
+        } else if (message.command === 'TEST_PROVIDER_CONNECTION') {
+          await handle_test_provider_connection(this, message)
         } else if (message.command === 'SHOW_HASH_SIGN_QUICK_PICK') {
           await handle_hash_sign_quick_pick(this)
         } else if (message.command === 'GET_TEMPLATES') {

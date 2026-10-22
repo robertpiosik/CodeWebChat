@@ -19,7 +19,13 @@
 .footer {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 8px;
   padding: 12px;
   border-top: 1px solid var(--cwc-border-color-dimmed);
 }
+
+.footer-left {
+  margin-right: auto;
+}
+

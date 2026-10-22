@@ -72,22 +72,22 @@ export const translations = {
     bg: 'API Ключ'
   },
   'edit-provider-form.api-key.action.clear': {
-    en: 'Clear',
-    pl: 'Wyczyść',
+    en: 'clear',
+    pl: 'wyczyść',
     'zh-cn': '清除',
     ja: 'クリア',
     'zh-tw': '清除',
-    de: 'Löschen',
-    es: 'Borrar',
-    fr: 'Effacer',
-    'pt-br': 'Limpar',
-    ru: 'Очистить',
+    de: 'löschen',
+    es: 'borrar',
+    fr: 'effacer',
+    'pt-br': 'limpar',
+    ru: 'очистить',
     ko: '지우기',
-    it: 'Cancella',
-    tr: 'Temizle',
-    cs: 'Vymazat',
-    hu: 'Törlés',
-    bg: 'Изчистване'
+    it: 'cancella',
+    tr: 'temizle',
+    cs: 'vymazat',
+    hu: 'törlés',
+    bg: 'изчистване'
   },
   'edit-provider-form.api-key.placeholder.default': {
     en: 'Enter API Key',
@@ -161,5 +161,23 @@ export const translations = {
     cs: 'Dozvědět se více',
     hu: 'Tudjon meg többet',
     bg: 'Научете повече'
+  },
+  'edit-provider-form.action.test-connection': {
+    en: 'Test Connection',
+    pl: 'Testuj połączenie',
+    'zh-cn': '测试连接',
+    ja: '接続をテスト',
+    'zh-tw': '測試連線',
+    de: 'Verbindung testen',
+    es: 'Probar conexión',
+    fr: 'Tester la connexion',
+    'pt-br': 'Testar Conexão',
+    ru: 'Проверить соединение',
+    ko: '연결 테스트',
+    it: 'Testa connessione',
+    tr: 'Bağlantıyı Test Et',
+    cs: 'Testovat připojení',
+    hu: 'Kapcsolat tesztelése',
+    bg: 'Тестване на връзка'
   }
 } as const

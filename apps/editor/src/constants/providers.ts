@@ -11,29 +11,11 @@ export const PROVIDERS = {
   Cerebras: {
     base_url: 'https://api.cerebras.ai/v1'
   },
-  Chutes: {
-    base_url: 'https://llm.chutes.ai/v1'
-  },
-  DeepInfra: {
-    base_url: 'https://api.deepinfra.com/v1'
-  },
   DeepSeek: {
     base_url: 'https://api.deepseek.com/v1'
   },
-  Fireworks: {
-    base_url: 'https://api.fireworks.ai/inference/v1'
-  },
   Google: {
     base_url: 'https://generativelanguage.googleapis.com/v1beta/openai/v1'
-  },
-  Groq: {
-    base_url: 'https://api.groq.com/openai/v1'
-  },
-  Hyperbolic: {
-    base_url: 'https://api.hyperbolic.xyz/v1'
-  },
-  HuggingFace: {
-    base_url: 'https://router.huggingface.co/v1'
   },
   'LM Studio': {
     base_url: 'http://localhost:1234/v1'

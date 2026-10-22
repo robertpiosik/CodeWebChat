@@ -14,10 +14,13 @@ import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurat
 import { EditProviderForm } from './forms/EditProviderForm'
 import { EditTemplateForm } from './forms/EditTemplateForm'
 import { use_template_editing } from './hooks/use-template-editing'
+import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
+import { use_translation } from './i18n/use-translation'
 
 const vscode = acquireVsCodeApi()
 
 export const Settings = () => {
+  const { t } = use_translation()
   const settings_hook = use_settings(vscode)
   const {
     updating_web_configuration,
@@ -49,6 +52,7 @@ export const Settings = () => {
 
   const {
     updating_provider,
+    updated_provider,
     set_updating_provider,
     set_updated_provider,
     edit_provider_cancel_handler,
@@ -424,6 +428,21 @@ export const Settings = () => {
             title="Edit Provider"
             on_save={edit_provider_save_handler}
             on_cancel={edit_provider_cancel_handler}
+            custom_footer_left={
+              <UiTextButton
+                on_click={() => {
+                  post_message(vscode, {
+                    command: 'TEST_PROVIDER_CONNECTION',
+                    original_name: updating_provider.original_name,
+                    base_url: updated_provider?.base_url ?? updating_provider.provider.base_url,
+                    api_key: updated_provider?.api_key ?? '',
+                    is_api_key_cleared: updated_provider?.is_api_key_cleared ?? false
+                  })
+                }}
+              >
+                {t('edit-provider-form.action.test-connection')}
+              </UiTextButton>
+            }
           >
             <EditProviderForm
               provider={updating_provider.provider}
