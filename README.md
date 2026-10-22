@@ -32,7 +32,7 @@ Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs
 <details>
 <summary><strong>Select files hands-free</strong></summary>
 
-By headlessly invoking your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search), you can automatically set relevant files to be attached to task instructions.
+By headlessly invoking your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search), you can automatically set relevant files to be attached in the prompt.
 
 </details>
 
