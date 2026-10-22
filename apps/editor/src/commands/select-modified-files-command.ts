@@ -68,17 +68,6 @@ export const select_modified_files_command = (
           const currently_selected = workspace_provider.get_selected_files()
           const currently_selected_set = new Set(currently_selected)
 
-          if (
-            existing_modified_files.every((file) =>
-              currently_selected_set.has(file)
-            )
-          ) {
-            vscode.window.showInformationMessage(
-              t('command.select-modified-files-command.all-selected')
-            )
-            return
-          }
-
           const quick_pick_items = await Promise.all(
             existing_modified_files.map(async (file_path) => {
               const token_count =
@@ -209,10 +198,7 @@ export const select_modified_files_command = (
             quick_pick.show()
           })
 
-          if (
-            !selected_items ||
-            (Array.isArray(selected_items) && selected_items.length === 0)
-          ) {
+          if (!selected_items) {
             return
           }
 
@@ -241,27 +227,30 @@ export const select_modified_files_command = (
             selected_paths = selected_items.map((item) => item.file_path)
           }
 
-          if (selected_paths.length === 0) {
-            return
-          }
-
-          if (currently_selected.length > 0) {
-            const selected_paths_set = new Set(selected_paths)
-            const is_identical =
-              currently_selected.length === selected_paths_set.size &&
-              currently_selected.every((file) => selected_paths_set.has(file))
-
-            if (is_identical) {
-              vscode.window.showInformationMessage(
-                t('common.info.context-already-set')
-              )
-              return
-            }
-          }
+          const selected_paths_set = new Set(selected_paths)
+          const unchecked_modified_files = new Set(
+            existing_modified_files.filter((f) => !selected_paths_set.has(f))
+          )
 
           const paths_to_apply = [
-            ...new Set([...currently_selected, ...selected_paths])
+            ...new Set([
+              ...currently_selected.filter(
+                (file) => !unchecked_modified_files.has(file)
+              ),
+              ...selected_paths
+            ])
           ]
+
+          const is_identical =
+            currently_selected.length === paths_to_apply.length &&
+            currently_selected.every((file) => paths_to_apply.includes(file))
+
+          if (is_identical) {
+            vscode.window.showInformationMessage(
+              t('common.info.context-already-set')
+            )
+            return
+          }
 
           Logger.info({
             message: `Selected ${selected_paths.length} modified file${
