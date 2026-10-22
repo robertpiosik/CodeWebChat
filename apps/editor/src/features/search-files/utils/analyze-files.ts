@@ -4,6 +4,7 @@ import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { shrink_file } from './shrink-file'
 import { t } from '@/i18n'
+import { normalize_path } from '@/utils/normalize-path'
 
 export interface FileData {
   file_path: string
@@ -37,6 +38,11 @@ export const analyze_files = async (params: {
     async () => {
       for (const file_path of params.files) {
         try {
+          const file_full_tokens =
+            params.workspace_provider.get_cached_token_count(file_path) ??
+            (await params.workspace_provider.calculate_file_tokens(file_path))
+          full_tokens += file_full_tokens
+
           let content: string | undefined
           if (params.get_file_content) {
             content = await params.get_file_content(file_path)
@@ -62,24 +68,23 @@ export const analyze_files = async (params: {
 
           const shrunk_content = shrink_file(content, path.extname(file_path))
 
+          let display_path = normalize_path(file_path)
           const workspace_root =
             params.workspace_provider.get_workspace_root_for_file(file_path)
-          const relative_path = workspace_root
-            ? path.relative(workspace_root, file_path)
-            : file_path
-
-          let display_path = relative_path
-          if (multiple_roots && workspace_root) {
-            const workspace_name =
-              params.workspace_provider.get_workspace_name(workspace_root)
-            display_path = `${workspace_name}/${relative_path}`
+          if (workspace_root) {
+            const relative_path = normalize_path(
+              path.relative(workspace_root, file_path)
+            )
+            if (multiple_roots) {
+              const workspace_name =
+                params.workspace_provider.get_workspace_name(workspace_root)
+              display_path = `${workspace_name}/${relative_path}`
+            } else {
+              display_path = relative_path
+            }
           }
 
           files_data.push({ file_path, display_path, content })
-
-          const backticks_full = content.includes('```') ? '````' : '```'
-          const wrapped_full = `### File: \`${display_path}\`\n\n${backticks_full}\n${content}\n${backticks_full}\n\n`
-          full_tokens += Math.floor(wrapped_full.length / 4)
 
           const backticks_shrunk = shrunk_content.includes('```')
             ? '````'
