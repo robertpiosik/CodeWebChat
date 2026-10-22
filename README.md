@@ -30,30 +30,30 @@ Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs
 > Click ▶ to expand.
 
 <details>
-<summary><strong>Select files hands-free</strong></summary>
+<summary><strong>Sessionless design</strong></summary>
 
-By headlessly invoking your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search), you can automatically set relevant files to be attached in the prompt.
+Without ever-growing sessions, intent is clear. Model focused on the task from the start 'thinks' less.
 
 </details>
 
 <details>
-<summary><strong>Conservative with tokens</strong></summary>
+<summary><strong>Select files hands-free</strong></summary>
 
-There are no ever-growing sessions. By keeping your intent clear, model is focused on the problem from the start. Expect minimal 'thinking' and accurate outputs in seconds.
+Automatically select files attached to task instructions by headlessly invoking your favorite agentic CLI with the [Agentic Search prompt](#-agentic-search).
 
 </details>
 
 <details>
 <summary><strong>Iterations without context bloat</strong></summary>
 
-Refine your task instructions without dragging old ones in the condex window. Just reject incorrect edits and prompt again, without penalizing accuracy.
+Refine your task instructions without dragging old ones in the condex window.
 
 </details>
 
 <details>
 <summary><strong>Effective steering with examples</strong></summary>
 
-Replace most skills with a simple checkbox tick on the file tree. Providing examples can make your prompts simpler and guide the model toward outputs you're looking for.
+Selecting examples can make your prompts simpler and guide the model toward outputs you're looking for.
 
 </details>
 
