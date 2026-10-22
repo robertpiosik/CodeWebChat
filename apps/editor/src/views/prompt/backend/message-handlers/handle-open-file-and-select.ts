@@ -34,7 +34,7 @@ export const handle_open_file_and_select = async (
   }
 
   if (!file_uri) {
-    if (workspace_folders.length == 1) {
+    if (workspace_folders.length === 1) {
       file_uri = vscode.Uri.joinPath(workspace_folders[0].uri, file_path)
     } else {
       for (const folder of workspace_folders) {

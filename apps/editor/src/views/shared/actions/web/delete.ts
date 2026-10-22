@@ -9,7 +9,7 @@ export const remove = async (params: { name: string }): Promise<void> => {
     config.get<ConfigWebConfigurationFormat[]>('chatbots', []) || []
 
   const index = current_web_configurations.findIndex(
-    (c, i) => (c.name ?? `unnamed-${i}`) == params.name
+    (c, i) => (c.name ?? `unnamed-${i}`) === params.name
   )
 
   if (index < 0 || index >= current_web_configurations.length) {
@@ -38,7 +38,7 @@ export const remove = async (params: { name: string }): Promise<void> => {
     delete_button
   )
 
-  if (result != delete_button) {
+  if (result !== delete_button) {
     return
   }
 

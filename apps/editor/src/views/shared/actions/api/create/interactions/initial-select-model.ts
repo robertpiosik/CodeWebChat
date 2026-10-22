@@ -154,7 +154,7 @@ export const initial_select_model = async (
     })
     if (
       error instanceof Error &&
-      error.message == MODELS_ROUTE_NOT_FOUND_ERROR
+      error.message === MODELS_ROUTE_NOT_FOUND_ERROR
     ) {
       vscode.window.showInformationMessage(
         t(

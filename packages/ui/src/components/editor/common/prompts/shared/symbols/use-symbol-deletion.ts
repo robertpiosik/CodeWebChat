@@ -54,27 +54,27 @@ export const use_symbol_deletion = (params: {
 
   const handle_symbol_deletion_by_click = (symbol_element: HTMLElement) => {
     const symbol_type = symbol_element.dataset.type
-    if (symbol_type == 'file-symbol') {
+    if (symbol_type === 'file-symbol') {
       const file_path = symbol_element.dataset.path
       if (!file_path || !params.context_file_paths?.includes(file_path)) return
 
       const search_pattern = `\`${file_path}\``
       const start_index = get_start_index(symbol_element, search_pattern)
 
-      if (start_index != -1) {
+      if (start_index !== -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (symbol_type == 'changes-symbol') {
+    } else if (symbol_type === 'changes-symbol') {
       const branch_name = symbol_element.dataset.branchName
       if (!branch_name) return
 
       const search_pattern = `#Changes(${branch_name})`
       const start_index = get_start_index(symbol_element, search_pattern)
 
-      if (start_index != -1) {
+      if (start_index !== -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (symbol_type == 'saved-context-symbol') {
+    } else if (symbol_type === 'saved-context-symbol') {
       const context_type = symbol_element.dataset.contextType
       const context_name = symbol_element.dataset.contextName
       if (!context_type || !context_name) return
@@ -84,12 +84,12 @@ export const use_symbol_deletion = (params: {
         .replace(/"/g, '\\"')}")`
       const start_index = get_start_index(symbol_element, search_pattern)
 
-      if (start_index != -1) {
+      if (start_index !== -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
     } else if (
-      symbol_type == 'commit-symbol' ||
-      symbol_type == 'commitmessage-symbol'
+      symbol_type === 'commit-symbol' ||
+      symbol_type === 'commitmessage-symbol'
     ) {
       const repo_name = symbol_element.dataset.repoName
       const commit_hash = symbol_element.dataset.commitHash
@@ -97,17 +97,17 @@ export const use_symbol_deletion = (params: {
       if (!repo_name || !commit_hash || commit_message === undefined) return
 
       const symbolName =
-        symbol_type == 'commit-symbol' ? 'Commit' : 'CommitMessage'
+        symbol_type === 'commit-symbol' ? 'Commit' : 'CommitMessage'
       const search_pattern = `#${symbolName}(${repo_name}:${commit_hash} "${commit_message.replace(
         /"/g,
         '\\\\"'
       )}")`
       const start_index = get_start_index(symbol_element, search_pattern)
 
-      if (start_index != -1) {
+      if (start_index !== -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (symbol_type == 'skill-symbol') {
+    } else if (symbol_type === 'skill-symbol') {
       const agent = symbol_element.dataset.agent
       const repo = symbol_element.dataset.repo
       const skillName = symbol_element.dataset.skillName
@@ -116,10 +116,10 @@ export const use_symbol_deletion = (params: {
       const search_pattern = `#Skill(${agent}:${repo}:${skillName})`
       const start_index = get_start_index(symbol_element, search_pattern)
 
-      if (start_index != -1) {
+      if (start_index !== -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (symbol_type == 'pasted-lines-symbol') {
+    } else if (symbol_type === 'pasted-lines-symbol') {
       const path = symbol_element.dataset.path
       const start_line = symbol_element.dataset.startLine
       const start_col = symbol_element.dataset.startCol
@@ -131,20 +131,20 @@ export const use_symbol_deletion = (params: {
 
       const start_index = get_start_index(symbol_element, search_pattern)
 
-      if (start_index != -1) {
+      if (start_index !== -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (symbol_type == 'image-symbol') {
+    } else if (symbol_type === 'image-symbol') {
       const hash = symbol_element.dataset.hash
       if (!hash) return
 
       const search_pattern = `#Image(${hash})`
       const start_index = get_start_index(symbol_element, search_pattern)
 
-      if (start_index != -1) {
+      if (start_index !== -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (symbol_type == 'pasted-text-symbol') {
+    } else if (symbol_type === 'pasted-text-symbol') {
       const hash = symbol_element.dataset.hash
       const token_count = symbol_element.dataset.tokenCount
       if (!hash || !token_count) return
@@ -152,10 +152,10 @@ export const use_symbol_deletion = (params: {
       const search_pattern = `#PastedText(${hash}:${token_count})`
       const start_index = get_start_index(symbol_element, search_pattern)
 
-      if (start_index != -1) {
+      if (start_index !== -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (symbol_type == 'website-symbol') {
+    } else if (symbol_type === 'website-symbol') {
       const url = symbol_element.dataset.url
       const id_and_token = symbol_element.dataset.idAndToken
       const title = symbol_element.dataset.title
@@ -165,17 +165,17 @@ export const use_symbol_deletion = (params: {
       const search_pattern = `#Website(${url} ${id_and_token}${title_part})`
       const start_index = get_start_index(symbol_element, search_pattern)
 
-      if (start_index != -1) {
+      if (start_index !== -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (symbol_type == 'url-symbol') {
+    } else if (symbol_type === 'url-symbol') {
       const url = symbol_element.dataset.url
       if (!url) return
 
       const search_pattern = `#Url(${url})`
       const start_index = get_start_index(symbol_element, search_pattern)
 
-      if (start_index != -1) {
+      if (start_index !== -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
     }
@@ -188,14 +188,14 @@ export const use_symbol_deletion = (params: {
     let start_of_path = -1
     const end_of_path = raw_pos - 1
 
-    if (end_of_path >= 0 && params.value[end_of_path] == '`') {
+    if (end_of_path >= 0 && params.value[end_of_path] === '`') {
       const text_before = params.value.substring(0, end_of_path)
       start_of_path = text_before.lastIndexOf('`')
     }
 
     if (
-      start_of_path != -1 &&
-      end_of_path != -1 &&
+      start_of_path !== -1 &&
+      end_of_path !== -1 &&
       start_of_path < end_of_path
     ) {
       const path_in_backticks = params.value.substring(
@@ -381,42 +381,42 @@ export const use_symbol_deletion = (params: {
       context_file_paths
     })
 
-    if (deletion_params.el.dataset.type == 'file-symbol') {
+    if (deletion_params.el.dataset.type === 'file-symbol') {
       return handle_file_symbol_deletion(raw_pos, context_file_paths)
     }
 
-    if (deletion_params.el.dataset.type == 'changes-symbol') {
+    if (deletion_params.el.dataset.type === 'changes-symbol') {
       return handle_changes_symbol_deletion(raw_pos, context_file_paths)
     }
 
-    if (deletion_params.el.dataset.type == 'saved-context-symbol') {
+    if (deletion_params.el.dataset.type === 'saved-context-symbol') {
       return handle_saved_context_symbol_deletion(raw_pos, context_file_paths)
     }
 
     if (
-      deletion_params.el.dataset.type == 'commit-symbol' ||
-      deletion_params.el.dataset.type == 'commitmessage-symbol'
+      deletion_params.el.dataset.type === 'commit-symbol' ||
+      deletion_params.el.dataset.type === 'commitmessage-symbol'
     ) {
       return handle_commit_symbol_deletion(raw_pos, context_file_paths)
     }
 
-    if (deletion_params.el.dataset.type == 'skill-symbol') {
+    if (deletion_params.el.dataset.type === 'skill-symbol') {
       return handle_skill_symbol_deletion(raw_pos)
     }
 
-    if (deletion_params.el.dataset.type == 'pasted-lines-symbol') {
+    if (deletion_params.el.dataset.type === 'pasted-lines-symbol') {
       return handle_pasted_lines_symbol_deletion(raw_pos)
     }
 
-    if (deletion_params.el.dataset.type == 'image-symbol') {
+    if (deletion_params.el.dataset.type === 'image-symbol') {
       return handle_image_symbol_deletion(raw_pos)
     }
 
-    if (deletion_params.el.dataset.type == 'pasted-text-symbol') {
+    if (deletion_params.el.dataset.type === 'pasted-text-symbol') {
       return handle_pasted_text_symbol_deletion(raw_pos)
     }
 
-    if (deletion_params.el.dataset.type == 'website-symbol') {
+    if (deletion_params.el.dataset.type === 'website-symbol') {
       return handle_website_symbol_deletion(raw_pos)
     }
 
@@ -428,7 +428,7 @@ export const use_symbol_deletion = (params: {
     if (
       !params.input_ref.current ||
       !selection ||
-      selection.rangeCount == 0 ||
+      selection.rangeCount === 0 ||
       !selection.isCollapsed
     ) {
       return
@@ -472,35 +472,35 @@ export const use_symbol_deletion = (params: {
 
     let node_before_cursor: Node | null = null
 
-    if (startContainer.nodeType == Node.TEXT_NODE && startOffset == 0) {
+    if (startContainer.nodeType === Node.TEXT_NODE && startOffset === 0) {
       node_before_cursor = startContainer.previousSibling
     } else if (
-      startContainer.nodeType == Node.ELEMENT_NODE &&
+      startContainer.nodeType === Node.ELEMENT_NODE &&
       startOffset > 0
     ) {
       node_before_cursor = startContainer.childNodes[startOffset - 1]
     } else if (
-      startContainer.nodeType == Node.TEXT_NODE &&
-      startOffset == startContainer.textContent?.length
+      startContainer.nodeType === Node.TEXT_NODE &&
+      startOffset === startContainer.textContent?.length
     ) {
       let parent = startContainer.parentElement
       while (parent && parent !== params.input_ref.current) {
         if (
-          parent.dataset.type == 'file-symbol' ||
-          parent.dataset.type == 'changes-symbol' ||
-          parent.dataset.type == 'saved-context-symbol' ||
-          parent.dataset.type == 'commit-symbol' ||
-          parent.dataset.type == 'commitmessage-symbol' ||
-          parent.dataset.type == 'pasted-lines-symbol' ||
-          parent.dataset.type == 'skill-symbol' ||
-          parent.dataset.type == 'image-symbol' ||
-          parent.dataset.type == 'pasted-text-symbol' ||
-          parent.dataset.type == 'website-symbol'
+          parent.dataset.type === 'file-symbol' ||
+          parent.dataset.type === 'changes-symbol' ||
+          parent.dataset.type === 'saved-context-symbol' ||
+          parent.dataset.type === 'commit-symbol' ||
+          parent.dataset.type === 'commitmessage-symbol' ||
+          parent.dataset.type === 'pasted-lines-symbol' ||
+          parent.dataset.type === 'skill-symbol' ||
+          parent.dataset.type === 'image-symbol' ||
+          parent.dataset.type === 'pasted-text-symbol' ||
+          parent.dataset.type === 'website-symbol'
         ) {
           const range_after = document.createRange()
           range_after.selectNodeContents(parent)
           range_after.setStart(startContainer, startOffset)
-          if (range_after.toString().trim() == '') {
+          if (range_after.toString().trim() === '') {
             node_before_cursor = parent
             break
           }
@@ -515,16 +515,16 @@ export const use_symbol_deletion = (params: {
     ) {
       const el = node_before_cursor as HTMLElement
       if (
-        el.dataset.type == 'file-symbol' ||
-        el.dataset.type == 'changes-symbol' ||
-        el.dataset.type == 'saved-context-symbol' ||
-        el.dataset.type == 'commit-symbol' ||
-        el.dataset.type == 'commitmessage-symbol' ||
-        el.dataset.type == 'pasted-lines-symbol' ||
-        el.dataset.type == 'skill-symbol' ||
-        el.dataset.type == 'image-symbol' ||
-        el.dataset.type == 'pasted-text-symbol' ||
-        el.dataset.type == 'website-symbol'
+        el.dataset.type === 'file-symbol' ||
+        el.dataset.type === 'changes-symbol' ||
+        el.dataset.type === 'saved-context-symbol' ||
+        el.dataset.type === 'commit-symbol' ||
+        el.dataset.type === 'commitmessage-symbol' ||
+        el.dataset.type === 'pasted-lines-symbol' ||
+        el.dataset.type === 'skill-symbol' ||
+        el.dataset.type === 'image-symbol' ||
+        el.dataset.type === 'pasted-text-symbol' ||
+        el.dataset.type === 'website-symbol'
       ) {
         const display_pos = get_caret_position_from_div(
           params.input_ref.current

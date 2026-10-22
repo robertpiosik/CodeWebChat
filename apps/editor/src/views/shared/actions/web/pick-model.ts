@@ -11,7 +11,7 @@ export const pick_model = async (params: {
   try {
     let items: (vscode.QuickPickItem & { model_id: string })[] = []
 
-    if (params.chatbot_name == 'OpenRouter') {
+    if (params.chatbot_name === 'OpenRouter') {
       const response = await axios.get('https://openrouter.ai/api/v1/models')
       const models = response.data.data
 
@@ -52,7 +52,7 @@ export const pick_model = async (params: {
     ]
 
     quick_pick.onDidTriggerButton((button) => {
-      if (button.tooltip == t('common.close')) {
+      if (button.tooltip === t('common.close')) {
         quick_pick.hide()
       }
     })
@@ -80,7 +80,7 @@ export const pick_model = async (params: {
       data: error
     })
     vscode.window.showErrorMessage(
-      params.chatbot_name == 'OpenRouter'
+      params.chatbot_name === 'OpenRouter'
         ? t(
             'views.shared.actions.web.pick-model.error.failed-to-fetch-open-router-models'
           )

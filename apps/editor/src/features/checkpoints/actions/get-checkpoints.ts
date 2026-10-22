@@ -68,7 +68,7 @@ export const get_checkpoints = async (
     try {
       const checkpoint_path = get_checkpoint_path(checkpoint.timestamp)
       await vscode.workspace.fs.stat(vscode.Uri.file(checkpoint_path))
-      if (checkpoint.trigger != 'temporary') valid_checkpoints.push(checkpoint)
+      if (checkpoint.trigger !== 'temporary') valid_checkpoints.push(checkpoint)
     } catch {
       state_updated = true
     }

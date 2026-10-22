@@ -10,7 +10,7 @@
  
 -          const term = keywords_input.trim().toLowerCase()
 +          const term = keywords_input.trim()
-           if (term.length == 0) return
+           if (term.length === 0) return
  
 -          const keywords = [[term]]
 -
@@ -47,7 +47,7 @@
 +
 +          const matched_files = matched_uris.map((uri) => uri.fsPath)
  
-           if (matched_files.length == 0) {
+           if (matched_files.length === 0) {
              vscode.window.showInformationMessage(
 -              'No files found containing these keywords.'
 +              'No files found matching this pattern.'

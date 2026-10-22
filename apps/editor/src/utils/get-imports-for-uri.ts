@@ -83,7 +83,7 @@ export const get_imports_for_uri = async (
             in_import_block = false
           }
         }
-      } else if (ext == '.py') {
+      } else if (ext === '.py') {
         const from_match = line.match(/^\s*from\s+([a-zA-Z0-9_.]+)/)
         if (from_match) {
           const offset = line.indexOf(from_match[1], from_match.index)
@@ -115,7 +115,7 @@ export const get_imports_for_uri = async (
         }
       } else if (['.cs', '.java', '.kt'].includes(ext)) {
         const regex =
-          ext == '.cs'
+          ext === '.cs'
             ? /^\s*using\s+([a-zA-Z0-9_.]+)\s*;/
             : /^\s*import\s+([a-zA-Z0-9_.*]+)\s*;?/
         const match = line.match(regex)
@@ -125,7 +125,7 @@ export const get_imports_for_uri = async (
             new vscode.Position(i, offset + Math.floor(match[1].length / 2))
           )
         }
-      } else if (ext == '.swift') {
+      } else if (ext === '.swift') {
         const match = line.match(/^\s*import\s+([a-zA-Z0-9_.]+)/)
         if (match) {
           const offset = line.indexOf(match[1], match.index)
@@ -133,7 +133,7 @@ export const get_imports_for_uri = async (
             new vscode.Position(i, offset + Math.floor(match[1].length / 2))
           )
         }
-      } else if (ext == '.rs') {
+      } else if (ext === '.rs') {
         const match = line.match(/^\s*(?:use|mod)\s+([a-zA-Z0-9_:]+)/)
         if (match) {
           const offset = line.indexOf(match[1], match.index)
@@ -141,7 +141,7 @@ export const get_imports_for_uri = async (
             new vscode.Position(i, offset + Math.floor(match[1].length / 2))
           )
         }
-      } else if (ext == '.go') {
+      } else if (ext === '.go') {
         if (/^\s*import\s+\(/.test(line)) {
           in_import_block = true
         } else if (in_import_block && /\)/.test(line)) {
@@ -155,7 +155,7 @@ export const get_imports_for_uri = async (
             )
           }
         }
-      } else if (ext == '.rb') {
+      } else if (ext === '.rb') {
         if (/^\s*require(?:_relative)?\b/.test(line)) {
           const match = line.match(/['"]([^'"]+)['"]/)
           if (match) {
@@ -165,7 +165,7 @@ export const get_imports_for_uri = async (
             )
           }
         }
-      } else if (ext == '.php') {
+      } else if (ext === '.php') {
         if (
           /^\s*(?:include|require|include_once|require_once|use)\b/.test(line)
         ) {
@@ -191,7 +191,7 @@ export const get_imports_for_uri = async (
             }
           }
         }
-      } else if (ext == '.dart') {
+      } else if (ext === '.dart') {
         if (/^\s*(?:import|export|part)\b/.test(line)) {
           const match = line.match(/['"]([^'"]+)['"]/)
           if (match) {
@@ -264,7 +264,7 @@ export const get_imports_for_uri = async (
         if (definitions) {
           for (const def of definitions) {
             const uri = 'uri' in def ? def.uri : def.targetUri
-            if (uri.scheme == 'file') found_uris.add(uri.toString())
+            if (uri.scheme === 'file') found_uris.add(uri.toString())
           }
         }
       } catch {}

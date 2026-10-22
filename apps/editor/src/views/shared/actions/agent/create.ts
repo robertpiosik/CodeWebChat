@@ -60,7 +60,7 @@ export const create = async (params: {
     if (!position_quick_pick) return undefined
 
     insertion_index =
-      position_quick_pick == t('common.placement-above')
+      position_quick_pick === t('common.placement-above')
         ? params.reference_index
         : params.reference_index + 1
   }

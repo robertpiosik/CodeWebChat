@@ -69,7 +69,7 @@ const log_action =
 const InteractiveResponsePreview = (props: any) => {
   const [items, set_items] = useState(
     props.items.map((f: any) =>
-      f.type == 'file' ? { ...f, is_checked: true } : f
+      f.type === 'file' ? { ...f, is_checked: true } : f
     )
   )
 
@@ -84,9 +84,9 @@ const InteractiveResponsePreview = (props: any) => {
   }) => {
     set_items(
       items.map((f: any) =>
-        f.type == 'file' &&
-        f.file_path == file_path &&
-        f.workspace_name == workspace_name
+        f.type === 'file' &&
+        f.file_path === file_path &&
+        f.workspace_name === workspace_name
           ? { ...f, is_checked }
           : f
       )

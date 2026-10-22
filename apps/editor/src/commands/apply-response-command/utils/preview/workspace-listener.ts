@@ -61,8 +61,8 @@ const update_response_history = (params: {
     }
     const file_in_history_index = item_to_update.files.findIndex(
       (f) =>
-        f.file_path == params.updated_file.file_path &&
-        f.workspace_name == params.updated_file.workspace_name
+        f.file_path === params.updated_file.file_path &&
+        f.workspace_name === params.updated_file.workspace_name
     )
 
     if (file_in_history_index !== -1) {
@@ -172,7 +172,7 @@ export const setup_workspace_listeners = (params: {
         }
 
         for (const uri of event.files) {
-          if (uri.scheme != 'file') continue
+          if (uri.scheme !== 'file') continue
           await process_uri(uri)
         }
       })()
@@ -183,14 +183,14 @@ export const setup_workspace_listeners = (params: {
   const text_document_change_listener =
     vscode.workspace.onDidChangeTextDocument(async (event) => {
       if (
-        event.document.uri.scheme != 'file' &&
-        event.document.uri.scheme != 'untitled'
+        event.document.uri.scheme !== 'file' &&
+        event.document.uri.scheme !== 'untitled'
       )
         return
 
       const changed_doc_path = event.document.uri.fsPath
       const changed_file_in_preview = params.prepared_files.find(
-        (pf) => pf.sanitized_path == changed_doc_path
+        (pf) => pf.sanitized_path === changed_doc_path
       )
 
       if (changed_file_in_preview) {
@@ -247,7 +247,7 @@ export const setup_workspace_listeners = (params: {
 
         // Check if it's already added to avoid races
         if (
-          params.prepared_files.some((pf) => pf.sanitized_path == file_path)
+          params.prepared_files.some((pf) => pf.sanitized_path === file_path)
         ) {
           return
         }
@@ -289,7 +289,7 @@ export const setup_workspace_listeners = (params: {
           .with({ scheme: 'cwc-preview', query: `hash=${hash}` })
           .toString()
         const is_deleted =
-          !is_new && new_content == '' && original_content != ''
+          !is_new && new_content === '' && original_content !== ''
 
         const previewable_file: PreviewableFile = {
           type: 'file',
@@ -340,7 +340,7 @@ export const setup_workspace_listeners = (params: {
     const uris_to_process: vscode.Uri[] = []
 
     for (const uri of event.files) {
-      if (uri.scheme != 'file') continue
+      if (uri.scheme !== 'file') continue
 
       let found_in_cache = false
       if (deleted_files_content_cache.has(uri.fsPath)) {
@@ -368,7 +368,7 @@ export const setup_workspace_listeners = (params: {
     for (const uri of unique_uris) {
       const deleted_file_path = uri.fsPath
       const deleted_file_in_preview = params.prepared_files.find(
-        (pf) => pf.sanitized_path == deleted_file_path
+        (pf) => pf.sanitized_path === deleted_file_path
       )
 
       if (!deleted_file_in_preview) {
@@ -388,7 +388,7 @@ export const setup_workspace_listeners = (params: {
         }
 
         if (
-          params.prepared_files.some((pf) => pf.sanitized_path == file_path)
+          params.prepared_files.some((pf) => pf.sanitized_path === file_path)
         ) {
           continue
         }
@@ -499,7 +499,7 @@ export const setup_workspace_listeners = (params: {
   const file_created_listener = vscode.workspace.onDidCreateFiles(
     async (event) => {
       for (const uri of event.files) {
-        if (uri.scheme != 'file') continue
+        if (uri.scheme !== 'file') continue
 
         const workspace_folder = vscode.workspace.getWorkspaceFolder(uri)
         if (!workspace_folder) continue
@@ -610,7 +610,7 @@ export const setup_workspace_listeners = (params: {
   const file_renamed_listener = vscode.workspace.onDidRenameFiles(
     async (event) => {
       for (const { oldUri, newUri } of event.files) {
-        if (oldUri.scheme != 'file' || newUri.scheme != 'file') continue
+        if (oldUri.scheme !== 'file' || newUri.scheme !== 'file') continue
 
         // Skip directories (best effort)
         try {
@@ -637,7 +637,7 @@ export const setup_workspace_listeners = (params: {
 
         // Find existing tracked file by old path
         const existing = params.prepared_files.find(
-          (pf) => pf.sanitized_path == oldUri.fsPath
+          (pf) => pf.sanitized_path === oldUri.fsPath
         )
 
         // Read new file content (post-rename)
@@ -895,8 +895,8 @@ export const setup_workspace_listeners = (params: {
   discard_user_changes_in_preview = async ({ file_path, workspace_name }) => {
     const file_to_discard = params.prepared_files.find(
       (f) =>
-        f.previewable_file.file_path == file_path &&
-        f.previewable_file.workspace_name == workspace_name
+        f.previewable_file.file_path === file_path &&
+        f.previewable_file.workspace_name === workspace_name
     )
 
     if (
@@ -935,8 +935,8 @@ export const setup_workspace_listeners = (params: {
   }) => {
     const file_to_toggle = params.prepared_files.find(
       (f) =>
-        f.previewable_file.file_path == file_path &&
-        f.previewable_file.workspace_name == workspace_name
+        f.previewable_file.file_path === file_path &&
+        f.previewable_file.workspace_name === workspace_name
     )
 
     if (!file_to_toggle) return
@@ -950,7 +950,8 @@ export const setup_workspace_listeners = (params: {
       )
       if (item_to_update && item_to_update.files) {
         const file_in_history = item_to_update.files.find(
-          (f) => f.file_path == file_path && f.workspace_name == workspace_name
+          (f) =>
+            f.file_path === file_path && f.workspace_name === workspace_name
         )
         if (file_in_history) {
           file_in_history.is_checked = is_checked
@@ -981,7 +982,7 @@ export const setup_workspace_listeners = (params: {
           file_to_toggle.content_to_restore = current_content
         }
 
-        if (file_to_toggle.previewable_file.file_state == 'new') {
+        if (file_to_toggle.previewable_file.file_state === 'new') {
           try {
             if (fs.existsSync(file_to_toggle.sanitized_path)) {
               await vscode.workspace.fs.delete(
@@ -1000,7 +1001,7 @@ export const setup_workspace_listeners = (params: {
           )
         }
       } else {
-        if (file_to_toggle.previewable_file.file_state == 'deleted') {
+        if (file_to_toggle.previewable_file.file_state === 'deleted') {
           try {
             if (fs.existsSync(file_to_toggle.sanitized_path)) {
               await vscode.workspace.fs.delete(
@@ -1035,8 +1036,8 @@ export const setup_workspace_listeners = (params: {
   }) => {
     const file = params.prepared_files.find(
       (f) =>
-        f.previewable_file.file_path == file_path &&
-        f.previewable_file.workspace_name == workspace_name
+        f.previewable_file.file_path === file_path &&
+        f.previewable_file.workspace_name === workspace_name
     )
     if (file) {
       file.previewable_file.applied_with_patch_repair = true

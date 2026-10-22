@@ -60,7 +60,7 @@ export const handle_create_template = async (
     if (!position_quick_pick) return
 
     insertion_index =
-      position_quick_pick == t('common.placement-above')
+      position_quick_pick === t('common.placement-above')
         ? message.insertion_index
         : message.insertion_index + 1
   }

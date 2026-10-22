@@ -66,7 +66,7 @@ export const handle_select_edit_format_instructions = async (
     vscode.QuickPickItem & { value: EditFormat }
   >()
   quick_pick.items = items
-  quick_pick.activeItems = items.filter((item) => item.value == current_format)
+  quick_pick.activeItems = items.filter((item) => item.value === current_format)
   quick_pick.placeholder = t(
     'views.prompt.handlers.handle-select-edit-format-instructions.placeholder'
   )

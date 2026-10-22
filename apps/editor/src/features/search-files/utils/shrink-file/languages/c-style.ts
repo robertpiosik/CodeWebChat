@@ -18,12 +18,12 @@ export const shrink_c_style = (content: string): string => {
       const next_char = line[i + 1]
 
       if (is_in_block_comment) {
-        if (skip_body_depth == 0) {
+        if (skip_body_depth === 0) {
           processed_line += char
         }
-        if (char == '*' && next_char == '/') {
+        if (char === '*' && next_char === '/') {
           is_in_block_comment = false
-          if (skip_body_depth == 0) {
+          if (skip_body_depth === 0) {
             processed_line += next_char
           }
           i += 2
@@ -34,8 +34,8 @@ export const shrink_c_style = (content: string): string => {
       }
 
       if (is_in_string) {
-        if (char == '\\') {
-          if (skip_body_depth == 0) {
+        if (char === '\\') {
+          if (skip_body_depth === 0) {
             processed_line += char + (next_char || '')
           }
           last_code_buffer += char + (next_char || '')
@@ -45,7 +45,7 @@ export const shrink_c_style = (content: string): string => {
         if (char === is_in_string) {
           is_in_string = false
         }
-        if (skip_body_depth == 0) {
+        if (skip_body_depth === 0) {
           processed_line += char
         }
         last_code_buffer += char
@@ -53,9 +53,9 @@ export const shrink_c_style = (content: string): string => {
         continue
       }
 
-      if (char == '"' || char == "'" || char == '`') {
+      if (char === '"' || char === "'" || char === '`') {
         is_in_string = char
-        if (skip_body_depth == 0) {
+        if (skip_body_depth === 0) {
           processed_line += char
         }
         last_code_buffer += char
@@ -63,23 +63,23 @@ export const shrink_c_style = (content: string): string => {
         continue
       }
 
-      if (char == '/' && next_char == '/') {
-        if (skip_body_depth == 0) {
+      if (char === '/' && next_char === '/') {
+        if (skip_body_depth === 0) {
           processed_line += line.substring(i)
         }
         break
       }
 
-      if (char == '/' && next_char == '*') {
+      if (char === '/' && next_char === '*') {
         is_in_block_comment = true
-        if (skip_body_depth == 0) {
+        if (skip_body_depth === 0) {
           processed_line += '/*'
         }
         i += 2
         continue
       }
 
-      if (char == '{') {
+      if (char === '{') {
         if (skip_body_depth > 0) {
           skip_body_depth++
           last_code_buffer += char
@@ -102,7 +102,7 @@ export const shrink_c_style = (content: string): string => {
             last_code_buffer = ''
           }
         }
-      } else if (char == '}') {
+      } else if (char === '}') {
         if (skip_body_depth > 0) {
           skip_body_depth--
           last_code_buffer += char
@@ -111,7 +111,7 @@ export const shrink_c_style = (content: string): string => {
         }
       }
 
-      if (skip_body_depth == 0) {
+      if (skip_body_depth === 0) {
         processed_line += char
       }
       last_code_buffer += char

@@ -16,7 +16,7 @@ export const delete_checkpoint = async (params: {
       []
     ) ?? []
   const updated_checkpoints = checkpoints.filter(
-    (c) => c.timestamp != params.checkpoint_to_delete.timestamp
+    (c) => c.timestamp !== params.checkpoint_to_delete.timestamp
   )
   await params.extension_context.workspaceState.update(
     CHECKPOINTS_STATE_KEY,

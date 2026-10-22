@@ -14,7 +14,7 @@ export const handle_paste_url = async (
       { modal: true },
       'Yes'
     )
-    if (selection == 'Yes') {
+    if (selection === 'Yes') {
       prompt_view_provider.add_text_at_cursor_position(message.url)
     }
   }

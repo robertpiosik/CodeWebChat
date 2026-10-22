@@ -25,7 +25,7 @@ export const copilot: Chatbot = {
 
     const supported_options = CHATBOTS['Copilot'].supported_options
     for (const option of options) {
-      if (option == 'temporary' && supported_options?.['temporary']) {
+      if (option === 'temporary' && supported_options?.['temporary']) {
         const temporary_button = document.querySelector(
           'button[aria-label="Temporary chat"]'
         ) as HTMLButtonElement
@@ -38,7 +38,7 @@ export const copilot: Chatbot = {
           return
         }
 
-        if (temporary_button.getAttribute('aria-pressed') != 'true') {
+        if (temporary_button.getAttribute('aria-pressed') !== 'true') {
           temporary_button.click()
           await new Promise((r) => requestAnimationFrame(r))
         }
@@ -85,23 +85,23 @@ export const copilot: Chatbot = {
     })
 
     let target_text = ''
-    if (reasoning_effort.toLowerCase() == 'auto') {
+    if (reasoning_effort.toLowerCase() === 'auto') {
       target_text = 'auto'
-    } else if (reasoning_effort.toLowerCase() == 'quick') {
+    } else if (reasoning_effort.toLowerCase() === 'quick') {
       target_text = 'quick response'
-    } else if (reasoning_effort.toLowerCase() == 'deep') {
+    } else if (reasoning_effort.toLowerCase() === 'deep') {
       target_text = 'think deeper'
     }
 
     const target_item = menu_items.find((item) => {
       const title = item.querySelector('h4')?.textContent?.trim().toLowerCase()
-      if (title == target_text) return true
+      if (title === target_text) return true
 
       const primary_text = item
         .querySelector('.fai-CapabilityPickerMenuItem__primaryContentWrapper')
         ?.textContent?.trim()
         .toLowerCase()
-      if (primary_text == target_text) return true
+      if (primary_text === target_text) return true
 
       return false
     }) as HTMLElement

@@ -34,7 +34,7 @@ const delete_old_zip_archives = (current_version: string) => {
 
   files.forEach((file) => {
     const match = file.match(zipPattern)
-    if (match && match[1] != current_version) {
+    if (match && match[1] !== current_version) {
       const filePath = path.join(__dirname, file)
       log(`Deleting old archive: ${file}`)
       fs.unlinkSync(filePath)

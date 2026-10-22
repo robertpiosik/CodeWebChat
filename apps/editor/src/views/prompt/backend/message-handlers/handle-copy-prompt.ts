@@ -36,7 +36,7 @@ export const handle_copy_prompt = async (params: {
   let completed_tasks: string[] | undefined = undefined
   const user_instructions = processed_instructions
 
-  if (params.prompt_view_provider.prompt_type == 'edit') {
+  if (params.prompt_view_provider.prompt_type === 'edit') {
     completed_tasks = processed_completed_tasks
     const edit_format = params.prompt_view_provider.edit_format
     output_formatting = {

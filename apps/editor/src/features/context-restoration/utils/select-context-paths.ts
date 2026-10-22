@@ -46,7 +46,7 @@ export const select_context_paths = async (params: {
             ? path.relative(workspace_root, file_path)
             : file_path
           const dir_name = path.dirname(relative_path)
-          const display_dir = dir_name == '.' ? '' : dir_name
+          const display_dir = dir_name === '.' ? '' : dir_name
 
           const buttons: vscode.QuickInputButton[] = [
             {

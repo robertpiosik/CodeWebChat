@@ -44,11 +44,11 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent) => {
       const message = event.data as BackendMessage
-      if (message.command == 'NEWLY_PICKED_API_MODEL') {
+      if (message.command === 'NEWLY_PICKED_API_MODEL') {
         set_model(message.model_id)
-      } else if (message.command == 'NEWLY_PICKED_PROVIDER') {
+      } else if (message.command === 'NEWLY_PICKED_PROVIDER') {
         set_provider_name(message.provider_name)
-      } else if (message.command == 'NEWLY_PICKED_API_REASONING_EFFORT') {
+      } else if (message.command === 'NEWLY_PICKED_API_REASONING_EFFORT') {
         set_reasoning_effort(message.effort)
       }
     }

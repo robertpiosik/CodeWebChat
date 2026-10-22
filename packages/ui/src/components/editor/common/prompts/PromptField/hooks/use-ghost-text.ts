@@ -97,7 +97,7 @@ export const use_ghost_text = (params: {
             post_caret_range.setStart(range.endContainer, range.endOffset)
             const text_after_cursor = post_caret_range.toString()
 
-            if (text_after_cursor == '' || /^\s/.test(text_after_cursor)) {
+            if (text_after_cursor === '' || /^\s/.test(text_after_cursor)) {
               const pre_caret_range = range.cloneRange()
               pre_caret_range.selectNodeContents(params.input_ref.current)
               pre_caret_range.setEnd(range.startContainer, range.startOffset)

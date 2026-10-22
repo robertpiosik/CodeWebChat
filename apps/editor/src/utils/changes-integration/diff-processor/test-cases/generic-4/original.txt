@@ -51,7 +51,7 @@ export const search_files_for_context_command = (
                 }),
                 input_box.onDidAccept(() => {
                   const value = input_box.value.trim()
-                  if (value.length == 0) {
+                  if (value.length === 0) {
                     input_box.validationMessage =
                       'Please enter at least one keyword'
                     return
@@ -87,7 +87,7 @@ export const search_files_for_context_command = (
           initial_keywords = keywords_input
 
           const term = keywords_input.trim().toLowerCase()
-          if (term.length == 0) return
+          if (term.length === 0) return
 
           const keywords = [[term]]
 
@@ -108,7 +108,7 @@ export const search_files_for_context_command = (
             keywords
           )
 
-          if (matched_files.length == 0) {
+          if (matched_files.length === 0) {
             vscode.window.showInformationMessage(
               'No files found containing these keywords.'
             )
@@ -130,7 +130,7 @@ export const search_files_for_context_command = (
             const dir_name = path.dirname(relative_path)
             return {
               label: path.basename(file_path),
-              description: dir_name == '.' ? '' : dir_name,
+              description: dir_name === '.' ? '' : dir_name,
               file_path: file_path,
               buttons: [open_file_button]
             }
@@ -200,7 +200,7 @@ export const search_files_for_context_command = (
             continue
           }
 
-          if (!selected_items || selected_items.length == 0) {
+          if (!selected_items || selected_items.length === 0) {
             return
           }
 
@@ -291,7 +291,7 @@ export const search_files_for_context_command = (
                 choice.label
               )
 
-              if (choice.label == 'Merge') {
+              if (choice.label === 'Merge') {
                 paths_to_apply = [
                   ...new Set([...currently_selected, ...selected_paths])
                 ]

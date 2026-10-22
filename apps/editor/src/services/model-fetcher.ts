@@ -44,7 +44,7 @@ export class ModelFetcher {
 
       const models: Model[] = response.data.data
         .map((item) => {
-          if (params.base_url == PROVIDERS['Google'].base_url) {
+          if (params.base_url === PROVIDERS['Google'].base_url) {
             return {
               id: item.id.split('/')[1],
               description: item.description
@@ -69,7 +69,7 @@ export class ModelFetcher {
         data: error
       })
       if (axios.isAxiosError(error)) {
-        if (error.response?.status == 404) {
+        if (error.response?.status === 404) {
           throw new Error(MODELS_ROUTE_NOT_FOUND_ERROR)
         } else if (
           error.response?.status &&

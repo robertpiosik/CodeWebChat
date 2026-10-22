@@ -68,7 +68,7 @@ export const save_to_workspace_state = async (params: {
 
     if (name_to_highlight) {
       const active_item = quick_pick.items.find(
-        (i: any) => i.label == name_to_highlight
+        (i: any) => i.label === name_to_highlight
       )
       if (active_item) quick_pick.activeItems = [active_item]
       name_to_highlight = undefined
@@ -179,7 +179,7 @@ export const save_to_workspace_state = async (params: {
           context_to_roots = reloaded.context_to_roots
         }
         name_to_highlight =
-          new_name && new_name != old_name ? new_name : old_name
+          new_name && new_name !== old_name ? new_name : old_name
       } else if (selection.triggeredButton === delete_button) {
         const choice = await vscode.window.showInformationMessage(
           t('common.confirm-delete-named-item', {
@@ -190,7 +190,7 @@ export const save_to_workspace_state = async (params: {
           t('common.delete')
         )
 
-        if (choice == t('common.delete')) {
+        if (choice === t('common.delete')) {
           const roots = context_to_roots.get(old_name) || []
           for (const root of roots) {
             const root_contexts = load_contexts_for_workspace({

@@ -149,7 +149,7 @@ export const run_generate_action = async (params: {
                 )
 
               const active_item = last_action_id
-                ? quick_pick.items.find((i) => i.id == last_action_id)
+                ? quick_pick.items.find((i) => i.id === last_action_id)
                 : undefined
 
               if (active_item) {
@@ -208,7 +208,7 @@ export const run_generate_action = async (params: {
             }
           )
 
-          if (current_action == 'back') {
+          if (current_action === 'back') {
             current_action = undefined
             if (was_empty_stage) {
               if (!show_back_button) {
@@ -372,7 +372,7 @@ export const run_generate_action = async (params: {
           }
         }
 
-        if (action == 'copy') {
+        if (action === 'copy') {
           await vscode.env.clipboard.writeText(final_chatbot_prompt!)
           vscode.window.showInformationMessage(
             t('common.info.copied-to-clipboard', {
@@ -388,7 +388,7 @@ export const run_generate_action = async (params: {
           return
         }
 
-        if (action == 'autofill') {
+        if (action === 'autofill') {
           if (!params.websocket_manager.is_connected_with_browser()) {
             current_action = undefined
             continue
@@ -402,7 +402,7 @@ export const run_generate_action = async (params: {
             (c) => c.chatbot
           )
 
-          if (valid_web_configurations.length == 0) {
+          if (valid_web_configurations.length === 0) {
             show_incomplete_setup_warning('web')
             current_action = undefined
             continue
@@ -416,7 +416,7 @@ export const run_generate_action = async (params: {
 
           if (default_web_config) {
             selected_web_configuration_name = default_web_config.name
-          } else if (valid_web_configurations.length == 1) {
+          } else if (valid_web_configurations.length === 1) {
             selected_web_configuration_name = valid_web_configurations[0].name
           } else {
             const recents_key =
@@ -434,7 +434,7 @@ export const run_generate_action = async (params: {
               ignore_focus_out: true
             })
 
-            if (result == 'back') {
+            if (result === 'back') {
               current_action = undefined
               continue
             } else if (!result) {
@@ -479,7 +479,7 @@ export const run_generate_action = async (params: {
           return
         }
 
-        if (action == 'invoke-agent') {
+        if (action === 'invoke-agent') {
           const invoke_cli_result = await invoke_agentic_cli({
             workspace_provider: params.workspace_provider,
             extension_context: params.extension_context,
@@ -527,7 +527,7 @@ export const run_generate_action = async (params: {
 
           commit_message = response_text
           action_completed = true
-        } else if (action == 'manual') {
+        } else if (action === 'manual') {
           commit_message = params.extension_context.workspaceState.get<string>(
             LAST_ACCEPTED_COMMIT_MESSAGE_STATE_KEY,
             ''
@@ -543,7 +543,7 @@ export const run_generate_action = async (params: {
 
           show_quick_pick = false
 
-          if (api_configuration_data == 'back') {
+          if (api_configuration_data === 'back') {
             current_action = undefined
             continue
           }
@@ -567,12 +567,12 @@ export const run_generate_action = async (params: {
             const error_msg = get_error_message(error)
             if (
               axios.isCancel(error) ||
-              error_msg == 'Operation cancelled by user'
+              error_msg === 'Operation cancelled by user'
             ) {
               show_quick_pick = true
               continue
             } else {
-              if (error_msg == 'API request returned an empty response') {
+              if (error_msg === 'API request returned an empty response') {
                 vscode.window.showErrorMessage(
                   t(
                     'command.generate-commit-message-command.error.empty-response'
@@ -611,7 +611,7 @@ export const run_generate_action = async (params: {
       )
       .filter(
         (p, index, self) =>
-          index == self.findIndex((sp) => sp.prompt == p.prompt)
+          index === self.findIndex((sp) => sp.prompt === p.prompt)
       )
 
     const relevant_prompts = all_relevant_prompts.filter(
@@ -634,7 +634,7 @@ export const run_generate_action = async (params: {
       }
       const selected_files_to_attach = Array.from(selected_files_set)
 
-      if (selected_files_to_attach.length == 0) {
+      if (selected_files_to_attach.length === 0) {
         return ''
       }
 
@@ -652,9 +652,9 @@ export const run_generate_action = async (params: {
         .get<string>('attachAsciiTreeOfContext', 'ask')
 
       let attach_tree = false
-      if (attach_tree_setting == 'always') {
+      if (attach_tree_setting === 'always') {
         attach_tree = true
-      } else if (attach_tree_setting == 'ask') {
+      } else if (attach_tree_setting === 'ask') {
         const attach_label = t(
           'command.generate-commit-message-command.attach-ascii-tree.attach'
         )
@@ -678,7 +678,7 @@ export const run_generate_action = async (params: {
               { label: attach_label, id: 'attach' }
             ]
             quick_pick.activeItems = [
-              quick_pick.items.find((i) => i.id == last_selected_id) ||
+              quick_pick.items.find((i) => i.id === last_selected_id) ||
                 quick_pick.items[1]
             ]
             quick_pick.title = t(
@@ -728,7 +728,7 @@ export const run_generate_action = async (params: {
           }
         )
 
-        if (answer === undefined || answer == 'back') {
+        if (answer === undefined || answer === 'back') {
           return answer
         }
 
@@ -736,7 +736,7 @@ export const run_generate_action = async (params: {
           LAST_ATTACH_ASCII_TREE_STATE_KEY,
           answer
         )
-        attach_tree = answer == 'attach'
+        attach_tree = answer === 'attach'
       }
 
       if (attach_tree) {
@@ -762,8 +762,8 @@ export const run_generate_action = async (params: {
     let is_cancelled = false
     let go_back = false
 
-    while (step != 'finish') {
-      if (step == 'edit_message') {
+    while (step !== 'finish') {
+      if (step === 'edit_message') {
         const edited = await new Promise<string | 'back' | undefined>(
           (resolve) => {
             const input_box = vscode.window.createInputBox()
@@ -834,7 +834,7 @@ export const run_generate_action = async (params: {
           }
         )
 
-        if (edited == 'back') {
+        if (edited === 'back') {
           go_back = true
           break
         } else if (edited === undefined) {
@@ -844,7 +844,7 @@ export const run_generate_action = async (params: {
           final_edited_message = edited
           step = relevant_prompts.length > 0 ? 'select_prompts' : 'attach_tree'
         }
-      } else if (step == 'select_prompts') {
+      } else if (step === 'select_prompts') {
         const picked = await new Promise<
           typeof relevant_prompts | undefined | 'back'
         >((resolve) => {
@@ -908,7 +908,7 @@ export const run_generate_action = async (params: {
           quick_pick.show()
         })
 
-        if (picked == 'back') {
+        if (picked === 'back') {
           if (params.should_commit) {
             step = 'edit_message'
           } else {
@@ -922,7 +922,7 @@ export const run_generate_action = async (params: {
           selected_prompts = picked
           step = 'attach_tree'
         }
-      } else if (step == 'attach_tree') {
+      } else if (step === 'attach_tree') {
         const can_go_back_in_wizard =
           relevant_prompts.length > 0 || params.should_commit
         const show_back_button =
@@ -932,7 +932,7 @@ export const run_generate_action = async (params: {
           empty_prompts,
           show_back_button
         )
-        if (result == 'back') {
+        if (result === 'back') {
           if (relevant_prompts.length > 0) {
             step = 'select_prompts'
           } else if (params.should_commit) {

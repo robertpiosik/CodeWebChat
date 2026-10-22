@@ -67,7 +67,7 @@ export const perform_phrase_search_mode = async (params: {
     }
 
     const search_term = search_term_input.trim()
-    if (search_term.length == 0) return undefined
+    if (search_term.length === 0) return undefined
 
     const files = await params.resolve_files()
 
@@ -108,7 +108,7 @@ export const perform_phrase_search_mode = async (params: {
       continue
     }
 
-    if (matched_files.length == 0) {
+    if (matched_files.length === 0) {
       vscode.window.showInformationMessage(t('common.info.no-files-found'))
       continue
     }
@@ -130,7 +130,7 @@ export const perform_phrase_search_mode = async (params: {
         is_sub_search: params.is_sub_search
       })
 
-      if (selected_items == 'back') {
+      if (selected_items === 'back') {
         go_back_to_term = true
         break
       }

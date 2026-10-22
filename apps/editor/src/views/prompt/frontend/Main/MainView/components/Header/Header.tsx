@@ -60,7 +60,7 @@ export const Header: React.FC<Props> = (props) => {
 
         <div className={styles.header__types}>
           {props.is_landscape &&
-            props.target == 'WEB' &&
+            props.target === 'WEB' &&
             (!props.is_browser_connection_status_bar_closed ||
               (props.response_history.length > 0 &&
                 props.web_prompt_type === 'edit')) &&
@@ -108,7 +108,7 @@ export const Header: React.FC<Props> = (props) => {
               </>
             )}
           {props.is_landscape &&
-            props.target == 'CLI' &&
+            props.target === 'CLI' &&
             props.response_history.length > 0 &&
             props.cli_prompt_type === 'edit' &&
             !props.is_content_scrollable && (
@@ -137,7 +137,7 @@ export const Header: React.FC<Props> = (props) => {
               </>
             )}
           {props.is_landscape &&
-            props.target == 'API' &&
+            props.target === 'API' &&
             (props.is_api_warning_visible ||
               (props.response_history.length > 0 &&
                 props.api_prompt_type === 'edit')) &&
@@ -184,18 +184,18 @@ export const Header: React.FC<Props> = (props) => {
                 </div>
               </>
             )}
-          {props.target == 'WEB' && (
+          {props.target === 'WEB' && (
             <>
               <div className={styles.header__types__inner}>
                 <UiKeycapWrapper char={props.is_alt_pressed ? 'E' : undefined}>
                   <UiIconAccentButton
                     label={web_prompt_type_labels['edit']}
                     icon="edit-sparkle"
-                    is_active={props.web_prompt_type == 'edit'}
+                    is_active={props.web_prompt_type === 'edit'}
                     active_color="blue"
                     is_compact={
                       !props.is_landscape &&
-                      (props.web_prompt_type == 'edit'
+                      (props.web_prompt_type === 'edit'
                         ? compact_step >= 2
                         : compact_step >= 1)
                     }
@@ -206,11 +206,11 @@ export const Header: React.FC<Props> = (props) => {
                   <UiIconAccentButton
                     label={web_prompt_type_labels['ask']}
                     icon="chat-sparkle"
-                    is_active={props.web_prompt_type == 'ask'}
+                    is_active={props.web_prompt_type === 'ask'}
                     active_color="purple"
                     is_compact={
                       !props.is_landscape &&
-                      (props.web_prompt_type == 'ask'
+                      (props.web_prompt_type === 'ask'
                         ? compact_step >= 2
                         : compact_step >= 1)
                     }
@@ -220,30 +220,30 @@ export const Header: React.FC<Props> = (props) => {
               </div>
             </>
           )}
-          {props.target == 'API' && (
+          {props.target === 'API' && (
             <>
               <UiIconAccentButton
                 label={api_prompt_type_labels['edit']}
                 icon="edit-sparkle"
-                is_active={props.api_prompt_type == 'edit'}
+                is_active={props.api_prompt_type === 'edit'}
                 active_color="blue"
                 is_compact={!props.is_landscape && compact_step >= 1}
                 on_click={() => props.on_api_prompt_type_change('edit')}
               />
             </>
           )}
-          {props.target == 'CLI' && (
+          {props.target === 'CLI' && (
             <>
               <div className={styles.header__types__inner}>
                 <UiKeycapWrapper char={props.is_alt_pressed ? 'E' : undefined}>
                   <UiIconAccentButton
                     label={cli_prompt_type_labels['edit']}
                     icon="edit-sparkle"
-                    is_active={props.cli_prompt_type == 'edit'}
+                    is_active={props.cli_prompt_type === 'edit'}
                     active_color="blue"
                     is_compact={
                       !props.is_landscape &&
-                      (props.cli_prompt_type == 'edit'
+                      (props.cli_prompt_type === 'edit'
                         ? compact_step >= 2
                         : compact_step >= 1)
                     }
@@ -254,11 +254,11 @@ export const Header: React.FC<Props> = (props) => {
                   <UiIconAccentButton
                     label={cli_prompt_type_labels['ask']}
                     icon="chat-sparkle"
-                    is_active={props.cli_prompt_type == 'ask'}
+                    is_active={props.cli_prompt_type === 'ask'}
                     active_color="purple"
                     is_compact={
                       !props.is_landscape &&
-                      (props.cli_prompt_type == 'ask'
+                      (props.cli_prompt_type === 'ask'
                         ? compact_step >= 2
                         : compact_step >= 1)
                     }

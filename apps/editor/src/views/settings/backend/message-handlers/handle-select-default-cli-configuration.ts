@@ -59,38 +59,38 @@ export const handle_select_default_cli_configuration = async (
     if (selected) {
       const updated = agent_configs.map((c) => {
         const new_c = { ...c }
-        if (message.cli_feature == 'agentic-search') {
-          if (c.name == selected.cli_configuration_name) {
+        if (message.cli_feature === 'agentic-search') {
+          if (c.name === selected.cli_configuration_name) {
             new_c.isDefaultForAgenticSearch = true
           } else {
             delete new_c.isDefaultForAgenticSearch
           }
-        } else if (message.cli_feature == 'code-at-cursor') {
-          if (c.name == selected.cli_configuration_name) {
+        } else if (message.cli_feature === 'code-at-cursor') {
+          if (c.name === selected.cli_configuration_name) {
             new_c.isDefaultForCodeAtCursor = true
           } else {
             delete new_c.isDefaultForCodeAtCursor
           }
-        } else if (message.cli_feature == 'intelligent-search') {
-          if (c.name == selected.cli_configuration_name) {
+        } else if (message.cli_feature === 'intelligent-search') {
+          if (c.name === selected.cli_configuration_name) {
             new_c.isDefaultForIntelligentSearch = true
           } else {
             delete new_c.isDefaultForIntelligentSearch
           }
-        } else if (message.cli_feature == 'patch-repair') {
-          if (c.name == selected.cli_configuration_name) {
+        } else if (message.cli_feature === 'patch-repair') {
+          if (c.name === selected.cli_configuration_name) {
             new_c.isDefaultForPatchRepair = true
           } else {
             delete new_c.isDefaultForPatchRepair
           }
-        } else if (message.cli_feature == 'voice-input') {
-          if (c.name == selected.cli_configuration_name) {
+        } else if (message.cli_feature === 'voice-input') {
+          if (c.name === selected.cli_configuration_name) {
             new_c.isDefaultForVoiceInput = true
           } else {
             delete new_c.isDefaultForVoiceInput
           }
-        } else if (message.cli_feature == 'commit-message') {
-          if (c.name == selected.cli_configuration_name) {
+        } else if (message.cli_feature === 'commit-message') {
+          if (c.name === selected.cli_configuration_name) {
             new_c.isDefaultForCommitMessage = true
           } else {
             delete new_c.isDefaultForCommitMessage

@@ -36,7 +36,7 @@ export const TaskGroup: React.FC<TaskGroupProps> = (props) => {
         setList={(new_items) => {
           if (
             new_items.length !== props.items.length ||
-            new_items.every((it, index) => it.id == props.items[index].id)
+            new_items.every((it, index) => it.id === props.items[index].id)
           ) {
             return
           }

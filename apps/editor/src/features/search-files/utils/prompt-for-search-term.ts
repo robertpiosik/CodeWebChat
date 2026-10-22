@@ -14,23 +14,23 @@ export const prompt_for_search_term = async (
 
   const input_box = vscode.window.createInputBox()
   input_box.title =
-    mode == 'keywords'
-      ? keywords_target == 'filenames'
+    mode === 'keywords'
+      ? keywords_target === 'filenames'
         ? t('feature.search-files.title.filename')
         : t('feature.search-files.title.keywords')
-      : mode == 'intelligent'
+      : mode === 'intelligent'
         ? t('common.title.intelligent-search')
         : t('feature.search-files.title.phrase')
   input_box.prompt =
-    mode == 'keywords'
-      ? keywords_target == 'filenames'
+    mode === 'keywords'
+      ? keywords_target === 'filenames'
         ? t('feature.search-files.prompt.filename')
         : t('feature.search-files.prompt.keywords')
-      : mode == 'intelligent'
+      : mode === 'intelligent'
         ? t('feature.search-files.prompt.intelligent')
         : t('feature.search-files.prompt')
   input_box.placeholder =
-    mode == 'keywords'
+    mode === 'keywords'
       ? t('feature.search-files.placeholder.keywords')
       : t('common.action.search')
   input_box.value = initial_search_term
@@ -54,7 +54,7 @@ export const prompt_for_search_term = async (
         }),
         input_box.onDidAccept(() => {
           const value = input_box.value.trim()
-          if (value.length == 0) {
+          if (value.length === 0) {
             input_box.validationMessage = t(
               'feature.search-files.validation-empty'
             )

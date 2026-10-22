@@ -38,7 +38,7 @@ export const search_files_commands = (
     if (currently_selected_in_folder.length > 0 && !params.is_provided_files) {
       const selected_paths_set = new Set(params.result.selected_paths)
       const is_identical =
-        currently_selected_in_folder.length == selected_paths_set.size &&
+        currently_selected_in_folder.length === selected_paths_set.size &&
         currently_selected_in_folder.every((file) =>
           selected_paths_set.has(file)
         )
@@ -239,7 +239,7 @@ export const search_files_commands = (
           is_workspace_action: options?.is_workspace_action
         })
 
-        if (!result || result == 'back') return
+        if (!result || result === 'back') return
 
         const resolved_all_files = await get_files_lazy()
 
@@ -281,7 +281,7 @@ export const search_files_commands = (
         })
       }
 
-      if (files_to_search.length == 0) {
+      if (files_to_search.length === 0) {
         vscode.window.showInformationMessage(
           t('feature.search-files.info.no-files-selected-in-folder')
         )
@@ -300,7 +300,7 @@ export const search_files_commands = (
           folder_path
         })
 
-        if (!result || result == 'back') return
+        if (!result || result === 'back') return
 
         const resolved_all_files = await get_files_lazy()
 

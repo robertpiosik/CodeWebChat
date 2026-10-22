@@ -80,7 +80,7 @@ export const set_ranges_command = (
         placeHolder: t('command.set-ranges-command.placeholder'),
         value: current_range,
         validateInput: (value) => {
-          if (value.trim() == '') return null
+          if (value.trim() === '') return null
 
           const parts = value
             .trim()
@@ -134,7 +134,7 @@ export const set_ranges_command = (
                   }
                 )
               }
-              if (start == end) {
+              if (start === end) {
                 return t(
                   'command.set-ranges-command.validation.start-equals-end',
                   { part }
@@ -171,7 +171,7 @@ export const set_ranges_command = (
         if (file_ranges[relative_path]) {
           delete file_ranges[relative_path]
           try {
-            if (Object.keys(file_ranges).length == 0) {
+            if (Object.keys(file_ranges).length === 0) {
               await fs.unlink(ranges_file_path).catch(() => {})
             } else {
               await fs.writeFile(
@@ -222,14 +222,14 @@ export const set_ranges_command = (
               description: t(
                 'command.set-ranges-command.quick-pick.json-file-description'
               ),
-              picked: last_location != 'state'
+              picked: last_location !== 'state'
             },
             {
               label: t('common.source.workspace-state'),
               description: t(
                 'command.set-ranges-command.quick-pick.workspace-state-description'
               ),
-              picked: last_location == 'state'
+              picked: last_location === 'state'
             }
           ],
           {
@@ -239,7 +239,7 @@ export const set_ranges_command = (
 
         if (!choice) return
         save_location =
-          choice.label == t('common.source.json-file') ? 'file' : 'state'
+          choice.label === t('common.source.json-file') ? 'file' : 'state'
         await extension_context.workspaceState.update(
           LAST_RANGES_SAVE_LOCATION_STATE_KEY,
           save_location
@@ -253,7 +253,7 @@ export const set_ranges_command = (
           .filter(Boolean)
           .join(' ')
 
-        if (save_location == 'file') {
+        if (save_location === 'file') {
           file_ranges[relative_path] = formatted_range
           try {
             await fs.mkdir(path.dirname(ranges_file_path), { recursive: true })
@@ -293,7 +293,7 @@ export const set_ranges_command = (
           if (file_ranges[relative_path]) {
             delete file_ranges[relative_path]
             try {
-              if (Object.keys(file_ranges).length == 0) {
+              if (Object.keys(file_ranges).length === 0) {
                 await fs.unlink(ranges_file_path).catch(() => {})
               } else {
                 await fs.writeFile(

@@ -41,32 +41,32 @@ export const claude_agent: CodingAgent = {
   ],
   get_integrated_terminal_args: () => ['--permission-mode', 'auto'],
   parse_stream_line: (parsed, report_progress) => {
-    if (parsed.type == 'stream_event' && parsed.event) {
+    if (parsed.type === 'stream_event' && parsed.event) {
       if (
-        parsed.event.type == 'content_block_start' &&
-        parsed.event.content_block?.type == 'tool_use'
+        parsed.event.type === 'content_block_start' &&
+        parsed.event.content_block?.type === 'tool_use'
       ) {
         const tool = parsed.event.content_block
         if (tool.name) {
           report_tool_progress(tool.name, report_progress)
         }
       }
-    } else if (parsed.type == 'assistant' && parsed.message?.content) {
+    } else if (parsed.type === 'assistant' && parsed.message?.content) {
       const content = Array.isArray(parsed.message.content)
         ? parsed.message.content
         : []
 
       for (const block of content) {
-        if (block?.type == 'tool_use' && block.name) {
+        if (block?.type === 'tool_use' && block.name) {
           report_tool_progress(block.name, report_progress)
         }
       }
-    } else if (parsed.type == 'result' && parsed.result) {
+    } else if (parsed.type === 'result' && parsed.result) {
       last_action_name = ''
       action_count = 0
       return {
         output:
-          typeof parsed.result == 'string'
+          typeof parsed.result === 'string'
             ? parsed.result
             : parsed.result.text || ''
       }
@@ -75,7 +75,7 @@ export const claude_agent: CodingAgent = {
       action_count = 0
       return {
         output:
-          typeof parsed.result == 'string'
+          typeof parsed.result === 'string'
             ? parsed.result
             : parsed.result.text || ''
       }
@@ -85,12 +85,12 @@ export const claude_agent: CodingAgent = {
     last_action_name = ''
     action_count = 0
 
-    if (parsed.type == 'result' && parsed.result) {
-      return typeof parsed.result == 'string'
+    if (parsed.type === 'result' && parsed.result) {
+      return typeof parsed.result === 'string'
         ? parsed.result
         : parsed.result.text || ''
     } else if (parsed.result) {
-      return typeof parsed.result == 'string'
+      return typeof parsed.result === 'string'
         ? parsed.result
         : parsed.result.text || ''
     }

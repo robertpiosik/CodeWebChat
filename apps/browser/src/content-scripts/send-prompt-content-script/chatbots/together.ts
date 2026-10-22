@@ -10,7 +10,7 @@ export const together: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
       const check_for_element = () => {
-        if (document.activeElement?.tagName == 'TEXTAREA') {
+        if (document.activeElement?.tagName === 'TEXTAREA') {
           resolve(null)
         } else {
           setTimeout(check_for_element, 100)

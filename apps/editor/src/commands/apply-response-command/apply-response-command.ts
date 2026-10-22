@@ -145,7 +145,7 @@ export const apply_response_command = (params: {
         })
 
         const commit_message_item = response_items.find(
-          (i) => i.type == 'commit-message'
+          (i) => i.type === 'commit-message'
         ) as any
 
         if (commit_message_item) {
@@ -157,11 +157,11 @@ export const apply_response_command = (params: {
         }
 
         is_intelligent_file_search_results = response_items.some(
-          (i) => i.type == 'intelligent-file-search-results'
+          (i) => i.type === 'intelligent-file-search-results'
         )
 
         const patch_repair_items = response_items.filter(
-          (item): item is PatchRepairItem => item.type == 'patch-repair'
+          (item): item is PatchRepairItem => item.type === 'patch-repair'
         )
 
         if (patch_repair_items.length > 0) {
@@ -178,12 +178,12 @@ export const apply_response_command = (params: {
         }
 
         is_code_at_cursor = response_items.some(
-          (item) => item.type == 'code-at-cursor'
+          (item) => item.type === 'code-at-cursor'
         )
 
         if (is_code_at_cursor) {
           const item = response_items.find(
-            (i) => i.type == 'code-at-cursor'
+            (i) => i.type === 'code-at-cursor'
           ) as any
 
           await vscode.commands.executeCommand(
@@ -202,7 +202,7 @@ export const apply_response_command = (params: {
         const has_valid_blocks =
           (args?.files_with_content && args.files_with_content.length > 0) ||
           response_items.some(
-            (item) => item.type == 'file' || item.type == 'diff'
+            (item) => item.type === 'file' || item.type === 'diff'
           )
 
         if (
@@ -254,7 +254,7 @@ export const apply_response_command = (params: {
           })
           params.prompt_view_provider.preview_switch_choice_resolver = undefined
 
-          if (choice == 'Switch') {
+          if (choice === 'Switch') {
             args = { ...args, created_at: created_at_for_switch }
             resolve_fn({ accepted_files: [] })
             if (ongoing_preview_cleanup_promise) {
@@ -301,7 +301,7 @@ export const apply_response_command = (params: {
           const has_valid_blocks =
             (args?.files_with_content && args.files_with_content.length > 0) ||
             response_items.some(
-              (item) => item.type == 'file' || item.type == 'diff'
+              (item) => item.type === 'file' || item.type === 'diff'
             )
 
           if (has_valid_blocks && !is_code_at_cursor) {

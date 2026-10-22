@@ -43,8 +43,8 @@ export const map_files_to_quick_pick_items = async <
         : file_path
 
       const dir_name = path.dirname(relative_path)
-      const has_parent_folder = dir_name != '.'
-      const display_dir = dir_name == '.' ? '' : dir_name
+      const has_parent_folder = dir_name !== '.'
+      const display_dir = dir_name === '.' ? '' : dir_name
 
       let workspace_name = ''
       let final_display_dir = display_dir

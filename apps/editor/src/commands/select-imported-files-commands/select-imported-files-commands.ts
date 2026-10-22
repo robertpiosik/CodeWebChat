@@ -34,7 +34,7 @@ export const select_imported_files_commands = (
         const starting_uris =
           await workspace_provider.get_all_files_for_uri(target_uri)
 
-        if (starting_uris.length == 0) {
+        if (starting_uris.length === 0) {
           vscode.window.showInformationMessage(t('common.info.no-files-found'))
           return
         }
@@ -63,7 +63,7 @@ export const select_imported_files_commands = (
       async () => {
         const selected_files = workspace_provider.get_selected_files()
 
-        if (selected_files.length == 0) {
+        if (selected_files.length === 0) {
           vscode.window.showInformationMessage(t('common.info.no-files-found'))
           return
         }

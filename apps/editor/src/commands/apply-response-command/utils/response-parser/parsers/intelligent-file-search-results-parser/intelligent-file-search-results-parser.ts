@@ -36,7 +36,7 @@ export const parse_intelligent_file_search_results = (params: {
     workspace_files: params.workspace_files
   })
 
-  if (valid_paths.length == 0) {
+  if (valid_paths.length === 0) {
     return null
   }
 

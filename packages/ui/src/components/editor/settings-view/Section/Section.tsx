@@ -75,7 +75,7 @@ export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
     <div
       ref={(node) => {
         container_ref.current = node
-        if (typeof ref == 'function') {
+        if (typeof ref === 'function') {
           ref(node)
         } else if (ref) {
           ref.current = node

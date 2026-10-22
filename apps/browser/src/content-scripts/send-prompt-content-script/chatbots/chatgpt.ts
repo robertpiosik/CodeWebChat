@@ -29,7 +29,7 @@ export const chatgpt: Chatbot = {
           input_element.innerText = ' '
           input_element.dispatchEvent(new Event('input', { bubbles: true }))
 
-          if (input_element.innerText == ' ') {
+          if (input_element.innerText === ' ') {
             resolve(null)
             return
           }
@@ -135,7 +135,7 @@ export const chatgpt: Chatbot = {
     if (!options) return
     const supported_options = CHATBOTS['ChatGPT'].supported_options
     for (const option of options) {
-      if (option == 'temporary' && supported_options?.['temporary']) {
+      if (option === 'temporary' && supported_options?.['temporary']) {
         const button = document.querySelector(
           '[data-testid="app-shell-header-context-menu-surface"] > div:last-child > div:last-child button'
         )

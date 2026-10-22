@@ -5,7 +5,8 @@ export const create_handle_copy =
   ({ props, params }: HandlerContext) =>
   (e: React.ClipboardEvent<HTMLDivElement>) => {
     const selection = window.getSelection()
-    if (!selection || selection.rangeCount == 0 || selection.isCollapsed) return
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed)
+      return
 
     const range = selection.getRangeAt(0)
     const input_element = params.input_ref.current

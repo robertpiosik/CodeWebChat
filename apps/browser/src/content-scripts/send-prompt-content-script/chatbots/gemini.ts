@@ -44,7 +44,7 @@ export const gemini: Chatbot = {
       const target_label_lower = model_label.toLowerCase()
       if (
         trigger_text.includes(target_label_lower) &&
-        !(target_label_lower == 'flash' && trigger_text.includes('flash-lite'))
+        !(target_label_lower === 'flash' && trigger_text.includes('flash-lite'))
       ) {
         return
       }

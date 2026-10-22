@@ -93,7 +93,7 @@ export const ai_studio: Chatbot = {
     )
     const tools = settings_items.find((item) => {
       const title_element = item.querySelector('p.group-title')
-      return title_element && title_element.textContent?.trim() == 'Tools'
+      return title_element && title_element.textContent?.trim() === 'Tools'
     })
 
     if (tools && !tools.classList.contains('expanded')) {
@@ -117,9 +117,10 @@ export const ai_studio: Chatbot = {
         })
         return
       }
-      const is_checked = grounding_button.getAttribute('aria-checked') == 'true'
+      const is_checked =
+        grounding_button.getAttribute('aria-checked') === 'true'
       const should_be_checked = options.includes('grounding-with-google-search')
-      if (is_checked != should_be_checked) {
+      if (is_checked !== should_be_checked) {
         grounding_button.click()
       }
     }
@@ -178,7 +179,7 @@ export const ai_studio: Chatbot = {
 
     for (const option of options) {
       const label = option.textContent?.trim()
-      if (label == target_label) {
+      if (label === target_label) {
         option.click()
         break
       }
@@ -275,7 +276,7 @@ export const ai_studio: Chatbot = {
           const has_thumb_up =
             footer.querySelector('button[iconname="thumb_up"]') ||
             Array.from(footer.querySelectorAll('button span')).some(
-              (span) => span.textContent?.trim() == 'thumb_up'
+              (span) => span.textContent?.trim() === 'thumb_up'
             )
           if (has_thumb_up) {
             const has_been_processed = footer.hasAttribute('data-cwc-processed')
@@ -337,7 +338,7 @@ const close_panel = async () => {
     }
     close_button.click()
   } else {
-    if (sessionStorage.getItem('should-hide-panel') == 'true') {
+    if (sessionStorage.getItem('should-hide-panel') === 'true') {
       const close_button = document.querySelector(
         'ms-run-settings button[iconname="close"]'
       ) as HTMLButtonElement

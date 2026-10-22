@@ -85,7 +85,7 @@ export class WorkspaceProvider
   }
 
   public set_use_compact_token_count(use_compact: boolean) {
-    if (this.use_compact_token_count != use_compact) {
+    if (this.use_compact_token_count !== use_compact) {
       this.use_compact_token_count = use_compact
       this.refresh()
     }

@@ -14,7 +14,7 @@ export const toggle_checkpoint_pin = async (params: {
       []
     ) ?? []
   const checkpoint_to_update = checkpoints.find(
-    (c) => c.timestamp == params.timestamp
+    (c) => c.timestamp === params.timestamp
   )
   if (checkpoint_to_update) {
     checkpoint_to_update.is_pinned = !checkpoint_to_update.is_pinned

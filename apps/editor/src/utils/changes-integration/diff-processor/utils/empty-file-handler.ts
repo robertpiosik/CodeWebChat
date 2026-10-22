@@ -22,13 +22,13 @@ export const handle_empty_file = (diff_patch: string): string | null => {
       has_additions = true
     } else if (line.startsWith(' ')) {
       line_to_add = line.substring(1)
-    } else if (line == '') {
+    } else if (line === '') {
       line_to_add = ''
     }
 
     if (line_to_add !== null) {
       if (!seen_content) {
-        if (!is_addition && line_to_add.trim() == '') {
+        if (!is_addition && line_to_add.trim() === '') {
           continue
         }
         seen_content = true

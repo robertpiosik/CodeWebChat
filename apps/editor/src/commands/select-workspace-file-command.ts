@@ -17,7 +17,7 @@ export const select_workspace_file_command = (
 ) => {
   return vscode.commands.registerCommand('codeWebChat.selectFile', async () => {
     const workspace_roots = workspace_provider.get_workspace_roots()
-    if (workspace_roots.length == 0) {
+    if (workspace_roots.length === 0) {
       return
     }
 
@@ -49,7 +49,7 @@ export const select_workspace_file_command = (
           ]
 
           quick_pick.onDidTriggerButton((button) => {
-            if (button.tooltip == t('common.close')) {
+            if (button.tooltip === t('common.close')) {
               quick_pick.hide()
             }
           })
@@ -97,7 +97,7 @@ export const select_workspace_file_command = (
     })
 
     quick_pick.onDidTriggerButton((button) => {
-      if (button.tooltip == t('common.close')) {
+      if (button.tooltip === t('common.close')) {
         quick_pick.hide()
       }
     })
@@ -109,7 +109,7 @@ export const select_workspace_file_command = (
       const item = e.item
       last_interacted_path = item.full_path
 
-      if (e.button.tooltip == t('common.select-parent-folder')) {
+      if (e.button.tooltip === t('common.select-parent-folder')) {
         is_showing_folder_quick_pick = true
         quick_pick.hide()
 
@@ -146,7 +146,7 @@ export const select_workspace_file_command = (
           quick_pick.dispose()
         }
       } else if (e.button.iconPath instanceof vscode.ThemeIcon) {
-        if (e.button.iconPath.id == 'go-to-file') {
+        if (e.button.iconPath.id === 'go-to-file') {
           quick_pick.activeItems = [item]
           await vscode.commands.executeCommand(
             'vscode.open',
@@ -173,9 +173,9 @@ export const select_workspace_file_command = (
 
         const filename = path.basename(relative_path)
         let directory = path.dirname(relative_path)
-        const has_parent_folder = directory != '.'
+        const has_parent_folder = directory !== '.'
 
-        if (directory == '.') {
+        if (directory === '.') {
           directory = ''
         }
 
@@ -211,7 +211,7 @@ export const select_workspace_file_command = (
 
       items.sort((a, b) => {
         const label_diff = natural_sort(a.label, b.label)
-        if (label_diff != 0) return label_diff
+        if (label_diff !== 0) return label_diff
         return natural_sort(a.description || '', b.description || '')
       })
 

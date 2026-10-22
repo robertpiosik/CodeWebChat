@@ -38,22 +38,22 @@ const process_stream_chunk = (params: {
 
     for (const line of lines) {
       const trimmed_line = line.trim()
-      if (!trimmed_line || trimmed_line == DONE_TOKEN) continue
+      if (!trimmed_line || trimmed_line === DONE_TOKEN) continue
 
       if (trimmed_line.startsWith(DATA_PREFIX)) {
         try {
           const json_string = trimmed_line.slice(DATA_PREFIX.length).trim()
-          if (!json_string || json_string == DONE_TOKEN) continue
+          if (!json_string || json_string === DONE_TOKEN) continue
 
           const json_data = JSON.parse(json_string)
           const content = json_data.choices?.[0]?.delta?.content
           const reasoning_content =
             json_data.choices?.[0]?.delta?.reasoning_content
 
-          if (typeof content == 'string') {
+          if (typeof content === 'string') {
             new_content += content
           }
-          if (typeof reasoning_content == 'string') {
+          if (typeof reasoning_content === 'string') {
             new_reasoning_content += reasoning_content
           }
         } catch (parse_error) {
@@ -111,7 +111,7 @@ export const send_llm_message = async (params: {
 
     const current_time = Date.now()
 
-    if (stream_start_time == 0) {
+    if (stream_start_time === 0) {
       stream_start_time = current_time
       last_on_chunk_time = current_time
       return
@@ -202,7 +202,7 @@ export const send_llm_message = async (params: {
           }
 
           const trimmed_response = full_response.trimStart()
-          if (trimmed_response.length == 0) {
+          if (trimmed_response.length === 0) {
             return
           }
 
@@ -335,10 +335,10 @@ export const send_llm_message = async (params: {
                 const reasoning_content =
                   json_data.choices?.[0]?.delta?.reasoning_content
 
-                if (typeof content == 'string') {
+                if (typeof content === 'string') {
                   process_content(content)
                 }
-                if (typeof reasoning_content == 'string') {
+                if (typeof reasoning_content === 'string') {
                   api_thoughts += reasoning_content
                   handle_thinking_chunk(reasoning_content)
                 }
@@ -440,19 +440,19 @@ export const send_llm_message = async (params: {
       throw error
     }
 
-    if (axios.isAxiosError(error) && error.response?.status == 429) {
+    if (axios.isAxiosError(error) && error.response?.status === 429) {
       vscode.window.showErrorMessage(
         t('utils.send-llm-message.error.api-rate-limit-exceeded')
       )
-    } else if (axios.isAxiosError(error) && error.response?.status == 413) {
+    } else if (axios.isAxiosError(error) && error.response?.status === 413) {
       vscode.window.showErrorMessage(
         t('utils.send-llm-message.error.api-payload-too-large')
       )
-    } else if (axios.isAxiosError(error) && error.response?.status == 400) {
+    } else if (axios.isAxiosError(error) && error.response?.status === 400) {
       vscode.window.showErrorMessage(
         t('utils.send-llm-message.error.api-bad-request')
       )
-    } else if (axios.isAxiosError(error) && error.response?.status == 401) {
+    } else if (axios.isAxiosError(error) && error.response?.status === 401) {
       vscode.window.showErrorMessage(
         t('utils.send-llm-message.error.api-invalid-key')
       )

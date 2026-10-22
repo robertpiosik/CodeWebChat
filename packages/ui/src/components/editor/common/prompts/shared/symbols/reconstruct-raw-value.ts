@@ -1,9 +1,9 @@
 import { display_token_count } from '@shared/utils/display-token-count'
 
 export const reconstruct_raw_value_from_node = (node: Node): string => {
-  if (node.nodeType == Node.TEXT_NODE) {
+  if (node.nodeType === Node.TEXT_NODE) {
     return node.textContent || ''
-  } else if ((node as HTMLElement).dataset?.type == 'ghost-text') {
+  } else if ((node as HTMLElement).dataset?.type === 'ghost-text') {
     return ''
   }
 
@@ -14,33 +14,33 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
       inner_content += reconstruct_raw_value_from_node(child)
     }
 
-    if (el.dataset.type == 'file-symbol') {
+    if (el.dataset.type === 'file-symbol') {
       const path = el.dataset.path
       if (!path) return ''
       const filename = path.split('/').pop() || path
       const index = inner_content.indexOf(filename)
-      if (index != -1) {
+      if (index !== -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + filename.length)
         return `${prefix}\`${path}\`${suffix}`
       }
-    } else if (el.dataset.type == 'changes-symbol') {
+    } else if (el.dataset.type === 'changes-symbol') {
       const branch_name = el.dataset.branchName
       if (!branch_name) return ''
       const expected_text = `Diff with ${branch_name}`
       const index = inner_content.indexOf(expected_text)
-      if (index != -1) {
+      if (index !== -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
         return `${prefix}#Changes(${branch_name})${suffix}`
       }
-    } else if (el.dataset.type == 'saved-context-symbol') {
+    } else if (el.dataset.type === 'saved-context-symbol') {
       const context_type = el.dataset.contextType
       const context_name = el.dataset.contextName
       if (!context_type || !context_name) return ''
       const expected_text = `Context "${context_name}"`
       const index = inner_content.indexOf(expected_text)
-      if (index != -1) {
+      if (index !== -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
         return `${prefix}#SavedContext(${context_type} "${context_name
@@ -48,8 +48,8 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
           .replace(/"/g, '\\"')}")${suffix}`
       }
     } else if (
-      el.dataset.type == 'commit-symbol' ||
-      el.dataset.type == 'commitmessage-symbol'
+      el.dataset.type === 'commit-symbol' ||
+      el.dataset.type === 'commitmessage-symbol'
     ) {
       const repo_name = el.dataset.repoName
       const commit_hash = el.dataset.commitHash
@@ -59,17 +59,17 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
       }
       const short_hash = commit_hash.substring(0, 7)
       const index = inner_content.indexOf(short_hash)
-      if (index != -1) {
+      if (index !== -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + short_hash.length)
         const symbolName =
-          el.dataset.type == 'commit-symbol' ? 'Commit' : 'CommitMessage'
+          el.dataset.type === 'commit-symbol' ? 'Commit' : 'CommitMessage'
         return `${prefix}#${symbolName}(${repo_name}:${commit_hash} "${commit_message.replace(
           /"/g,
           '\\"'
         )}")${suffix}`
       }
-    } else if (el.dataset.type == 'pasted-lines-symbol') {
+    } else if (el.dataset.type === 'pasted-lines-symbol') {
       const path = el.dataset.path
       const start_line = el.dataset.startLine
       const start_col = el.dataset.startCol
@@ -87,30 +87,30 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
       }
 
       return `#Fragment(${path}:${start_line}:${start_col}-${end_line}:${end_col})`
-    } else if (el.dataset.type == 'skill-symbol') {
+    } else if (el.dataset.type === 'skill-symbol') {
       const agent = el.dataset.agent
       const repo = el.dataset.repo
       const skill_name = el.dataset.skillName
       if (!agent || !repo || !skill_name) return ''
 
       const index = inner_content.indexOf(skill_name)
-      if (index != -1) {
+      if (index !== -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + skill_name.length)
         return `${prefix}#Skill(${agent}:${repo}:${skill_name})${suffix}`
       }
-    } else if (el.dataset.type == 'image-symbol') {
+    } else if (el.dataset.type === 'image-symbol') {
       const hash = el.dataset.hash
       if (!hash) return ''
 
       const expected_text = `Image`
       const index = inner_content.indexOf(expected_text)
-      if (index != -1) {
+      if (index !== -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
         return `${prefix}#Image(${hash})${suffix}`
       }
-    } else if (el.dataset.type == 'pasted-text-symbol') {
+    } else if (el.dataset.type === 'pasted-text-symbol') {
       const hash = el.dataset.hash
       const token_count_str = el.dataset.tokenCount
       if (!hash || !token_count_str) return ''
@@ -118,12 +118,12 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
       const token_count = parseInt(token_count_str)
       const expected_text = `Pasted ${display_token_count(token_count)} tokens`
       const index = inner_content.indexOf(expected_text)
-      if (index != -1) {
+      if (index !== -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
         return `${prefix}#PastedText(${hash}:${token_count_str})${suffix}`
       }
-    } else if (el.dataset.type == 'website-symbol') {
+    } else if (el.dataset.type === 'website-symbol') {
       const url = el.dataset.url
       const id_and_token = el.dataset.idAndToken
       if (!url || !id_and_token) return ''
@@ -135,7 +135,7 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
       }
 
       const index = inner_content.indexOf(expected_text)
-      if (index != -1) {
+      if (index !== -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
         const title_part = title ? ` "${title}"` : ''
@@ -143,7 +143,7 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
       }
     }
 
-    if (el.dataset.role == 'tabs-container') return ''
+    if (el.dataset.role === 'tabs-container') return ''
 
     return inner_content
   }

@@ -61,7 +61,7 @@ export const replace_skill_symbol = async (params: {
         }
 
         const skills = discover_skills(agent.global_skills_dir)
-        const skill = skills.find((s) => s.name == skill_name)
+        const skill = skills.find((s) => s.name === skill_name)
 
         if (!skill) {
           Logger.warn({
@@ -90,7 +90,7 @@ export const replace_skill_symbol = async (params: {
               } else if (stats.isFile()) {
                 const lower_name = file_name.toLowerCase()
                 if (
-                  lower_name == 'readme.md' ||
+                  lower_name === 'readme.md' ||
                   lower_name.startsWith('license')
                 )
                   continue

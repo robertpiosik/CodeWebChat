@@ -53,7 +53,7 @@ export function SortableList<T extends SortableList.Item>(
           {props.items.length}{' '}
           {(() => {
             const count = props.items.length
-            if (count == 1) return props.translations.item_text
+            if (count === 1) return props.translations.item_text
 
             if (props.translations.items_text_many) {
               const last_digit = count % 10
@@ -93,8 +93,10 @@ export function SortableList<T extends SortableList.Item>(
             list={props.items}
             setList={(new_list) => {
               const has_order_changed =
-                new_list.length != props.items.length ||
-                new_list.some((item, index) => item.id != props.items[index].id)
+                new_list.length !== props.items.length ||
+                new_list.some(
+                  (item, index) => item.id !== props.items[index].id
+                )
 
               if (has_order_changed) {
                 props.on_reorder(new_list)

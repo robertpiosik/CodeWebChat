@@ -120,7 +120,7 @@ export const process_response = async (params: {
 
   if (
     params.response_items.some(
-      (item) => item.type == 'intelligent-file-search-results'
+      (item) => item.type === 'intelligent-file-search-results'
     )
   ) {
     const shared_context_state =
@@ -137,7 +137,7 @@ export const process_response = async (params: {
     }[] = []
 
     for (const item of params.response_items) {
-      if (item.type == 'intelligent-file-search-results') {
+      if (item.type === 'intelligent-file-search-results') {
         const search_results_item = item as IntelligentFileSearchResultsItem
         const all_paths_to_process = new Set<string>(
           search_results_item.file_paths
@@ -201,7 +201,7 @@ export const process_response = async (params: {
     }))
 
     const search_results_item = params.response_items.find(
-      (item) => item.type == 'intelligent-file-search-results'
+      (item) => item.type === 'intelligent-file-search-results'
     ) as IntelligentFileSearchResultsItem
 
     let resolved_folder_path: string | undefined = undefined
@@ -241,9 +241,9 @@ export const process_response = async (params: {
     })
 
     return null
-  } else if (params.response_items.some((item) => item.type == 'diff')) {
+  } else if (params.response_items.some((item) => item.type === 'diff')) {
     const patches = params.response_items.filter(
-      (item): item is DiffItem => item.type == 'diff'
+      (item): item is DiffItem => item.type === 'diff'
     )
     const rename_map = new Map<
       string,
@@ -278,7 +278,7 @@ export const process_response = async (params: {
       })
 
       return states.filter((state) => {
-        if (state.file_state == 'new') {
+        if (state.file_state === 'new') {
           const key = `${state.workspace_name || ''}:${state.file_path}`
           if (target_paths.has(key)) {
             return false
@@ -378,10 +378,10 @@ export const process_response = async (params: {
     }
   } else {
     const files = params.response_items.filter(
-      (item): item is FileItem => item.type == 'file'
+      (item): item is FileItem => item.type === 'file'
     )
 
-    if (files.length == 0) {
+    if (files.length === 0) {
       vscode.window.showWarningMessage(
         t('command.apply-response-command.error.no-valid-response')
       )
@@ -420,7 +420,7 @@ export const process_response = async (params: {
 
     params.workspace_provider.pause_file_watcher()
     try {
-      if (selected_mode_label == 'Fast replace') {
+      if (selected_mode_label === 'Fast replace') {
         const result = await handle_fast_replace({ files, on_progress })
         if (result.success && result.original_states) {
           final_original_states = result.original_states
@@ -431,7 +431,7 @@ export const process_response = async (params: {
           message: 'Fast replace handler finished.',
           data: { success: result.success }
         })
-      } else if (selected_mode_label == 'Truncated') {
+      } else if (selected_mode_label === 'Truncated') {
         const result = await handle_truncated_edit({ files, on_progress })
         const successful_states = result.original_states || []
         const failed_files = result.failed_files || []
@@ -460,7 +460,7 @@ export const process_response = async (params: {
           message: 'Truncated handler finished.',
           data: { success: result.success }
         })
-      } else if (selected_mode_label == 'Conflict markers') {
+      } else if (selected_mode_label === 'Conflict markers') {
         const result = await handle_search_replace({ files, on_progress })
 
         const successful_states = result.original_states || []

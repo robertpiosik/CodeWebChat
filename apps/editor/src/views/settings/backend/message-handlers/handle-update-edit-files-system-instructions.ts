@@ -9,7 +9,7 @@ export const handle_update_edit_files_system_instructions = async (
     config.inspect<string>('editFilesSystemInstructions')?.defaultValue || ''
   await config.update(
     'editFilesSystemInstructions',
-    message.instructions == '' || message.instructions == default_instructions
+    message.instructions === '' || message.instructions === default_instructions
       ? undefined
       : message.instructions,
     vscode.ConfigurationTarget.Global

@@ -45,7 +45,7 @@ type Props = {
 
 export const ResponsePreview: FC<Props> = (props) => {
   const [last_clicked_file_index, set_last_clicked_file_index] = useState(
-    props.items.findIndex((i) => i.type == 'file')
+    props.items.findIndex((i) => i.type === 'file')
   )
   const [expanded_text_items, set_expanded_text_items] = useState<Set<number>>(
     new Set()
@@ -92,7 +92,7 @@ export const ResponsePreview: FC<Props> = (props) => {
   }
 
   const files_in_preview = useMemo(
-    () => props.items.filter((i) => i.type == 'file') as FileInPreview[],
+    () => props.items.filter((i) => i.type === 'file') as FileInPreview[],
     [props.items]
   )
 
@@ -106,7 +106,7 @@ export const ResponsePreview: FC<Props> = (props) => {
 
   const prev_applying_count = useRef(0)
   useEffect(() => {
-    if (prev_applying_count.current > 0 && applying_files.length == 0) {
+    if (prev_applying_count.current > 0 && applying_files.length === 0) {
       set_is_fixing_all(false)
     }
     prev_applying_count.current = applying_files.length
@@ -117,7 +117,7 @@ export const ResponsePreview: FC<Props> = (props) => {
       files_in_preview.filter(
         (f) =>
           f.type === 'file' &&
-          f.diff_application_method == 'search_and_replace' &&
+          f.diff_application_method === 'search_and_replace' &&
           !f.applied_with_patch_repair &&
           !f.is_applying
       ).length,
@@ -143,7 +143,7 @@ export const ResponsePreview: FC<Props> = (props) => {
       const files_to_fix = files_in_preview
         .filter(
           (f) =>
-            f.type == 'file' && f.apply_failed && !f.applied_with_patch_repair
+            f.type === 'file' && f.apply_failed && !f.applied_with_patch_repair
         )
         .map((f) => ({
           file_path: f.file_path,
@@ -154,10 +154,10 @@ export const ResponsePreview: FC<Props> = (props) => {
   }, [error_count, is_fixing_all, has_attempted_auto_fix, files_in_preview])
 
   const get_status_text = (file: FileInPreview) => {
-    if (file.apply_status == 'waiting') return 'Waiting for server...'
-    if (file.apply_status == 'thinking') return 'Thinking...'
-    if (file.apply_status == 'receiving') return 'Receiving...'
-    if (file.apply_status == 'done') return 'Done'
+    if (file.apply_status === 'waiting') return 'Waiting for server...'
+    if (file.apply_status === 'thinking') return 'Thinking...'
+    if (file.apply_status === 'receiving') return 'Receiving...'
+    if (file.apply_status === 'done') return 'Done'
     return ''
   }
 
@@ -324,7 +324,7 @@ export const ResponsePreview: FC<Props> = (props) => {
 
         <div className={styles.list}>
           {props.items.map((item, index) => {
-            if (item.type == 'file') {
+            if (item.type === 'file') {
               const file = item
               return (
                 <FileItem
@@ -381,7 +381,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                   }
                 />
               )
-            } else if (item.type == 'inline-file') {
+            } else if (item.type === 'inline-file') {
               return (
                 <InlineFileItem
                   key={index}
@@ -393,7 +393,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                   }
                 />
               )
-            } else if (item.type == 'text') {
+            } else if (item.type === 'text') {
               return (
                 <TextItem
                   key={index}

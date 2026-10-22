@@ -290,7 +290,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 on_change={props.set_voice_instructions}
                 on_blur={props.on_voice_instructions_blur}
                 action_icon={
-                  props.voice_instructions != props.default_voice_instructions
+                  props.voice_instructions !== props.default_voice_instructions
                     ? 'discard'
                     : undefined
                 }

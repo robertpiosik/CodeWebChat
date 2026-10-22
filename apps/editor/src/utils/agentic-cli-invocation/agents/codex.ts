@@ -33,11 +33,11 @@ export const codex_agent: CodingAgent = {
     '--last'
   ],
   parse_stream_line: (parsed, report_progress) => {
-    if (parsed.type == 'item.started' && parsed.item) {
+    if (parsed.type === 'item.started' && parsed.item) {
       const item = parsed.item
       let action_name = ''
 
-      if (item.type == 'command_execution' && item.command) {
+      if (item.type === 'command_execution' && item.command) {
         const cmd = item.command
         if (
           cmd.includes('rg --files') ||
@@ -72,8 +72,8 @@ export const codex_agent: CodingAgent = {
         }
         report_progress(`${action_name}${get_progress_dots(action_count)}`)
       }
-    } else if (parsed.type == 'item.completed' && parsed.item) {
-      if (parsed.item.type == 'agent_message' && parsed.item.text) {
+    } else if (parsed.type === 'item.completed' && parsed.item) {
+      if (parsed.item.type === 'agent_message' && parsed.item.text) {
         last_action_name = ''
         action_count = 0
         return { output: parsed.item.text }
@@ -84,8 +84,8 @@ export const codex_agent: CodingAgent = {
     last_action_name = ''
     action_count = 0
     if (
-      parsed.type == 'item.completed' &&
-      parsed.item?.type == 'agent_message' &&
+      parsed.type === 'item.completed' &&
+      parsed.item?.type === 'agent_message' &&
       parsed.item.text
     ) {
       return parsed.item.text

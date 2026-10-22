@@ -19,9 +19,9 @@ export const use_invocation_counts = (params: Params) => {
   >({})
 
   const current_invocation_key =
-    params.target == 'WEB'
+    params.target === 'WEB'
       ? `${params.target}:${params.web_prompt_type}`
-      : params.target == 'API'
+      : params.target === 'API'
         ? `${params.target}:${params.api_prompt_type}`
         : `${params.target}:${params.cli_prompt_type}`
 

@@ -257,7 +257,7 @@ export const handle_skill_item = async (): Promise<
       discover_skills(agent.global_skills_dir).length > 0
   )
 
-  if (detected_agents.length == 0) {
+  if (detected_agents.length === 0) {
     vscode.window.showInformationMessage(
       t('views.shared.utils.hash-sign-quick-pick.skill-symbol.no-agents')
     )
@@ -272,13 +272,13 @@ export const handle_skill_item = async (): Promise<
       const count = discover_skills(agent.global_skills_dir).length
       return {
         label: agent.display_name,
-        description: `${count} skill${count == 1 ? '' : 's'}`
+        description: `${count} skill${count === 1 ? '' : 's'}`
       }
     })
 
     if (last_selected_agent_label) {
       const active = agent_pick.items.find(
-        (item) => item.label == last_selected_agent_label
+        (item) => item.label === last_selected_agent_label
       )
       if (active) {
         agent_pick.activeItems = [active]
@@ -333,7 +333,7 @@ export const handle_skill_item = async (): Promise<
 
     const skills = discover_skills(agent.global_skills_dir)
 
-    if (skills.length == 0) {
+    if (skills.length === 0) {
       vscode.window.showInformationMessage(
         t(
           'views.shared.utils.hash-sign-quick-pick.skill-symbol.no-skills'
@@ -424,7 +424,7 @@ export const handle_skill_item = async (): Promise<
       skill_pick.show()
     })
 
-    if (!selected_skill_item || selected_skill_item == 'back') {
+    if (!selected_skill_item || selected_skill_item === 'back') {
       continue
     }
 

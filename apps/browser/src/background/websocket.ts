@@ -7,7 +7,7 @@ let is_reconnecting = false
 let last_ping_timestamp = Date.now()
 
 browser.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName == 'local' && changes['browser-profile-name']) {
+  if (areaName === 'local' && changes['browser-profile-name']) {
     if (websocket) {
       is_reconnecting = false
       const old_ws = websocket
@@ -28,7 +28,7 @@ export const check_server_health = async (): Promise<boolean> => {
 }
 
 export const check_and_recover_connection = () => {
-  if (websocket?.readyState == WebSocket.OPEN) {
+  if (websocket?.readyState === WebSocket.OPEN) {
     if (Date.now() - last_ping_timestamp > 20000) {
       console.warn(
         'WebSocket connection is stale (no recent pings). Force reconnecting...'
@@ -40,8 +40,8 @@ export const check_and_recover_connection = () => {
 
   if (
     !is_reconnecting &&
-    websocket?.readyState != WebSocket.OPEN &&
-    websocket?.readyState != WebSocket.CONNECTING
+    websocket?.readyState !== WebSocket.OPEN &&
+    websocket?.readyState !== WebSocket.CONNECTING
   ) {
     connect_websocket()
   }
@@ -50,8 +50,8 @@ export const check_and_recover_connection = () => {
 export const connect_websocket = async (): Promise<void> => {
   if (
     is_reconnecting ||
-    websocket?.readyState == WebSocket.OPEN ||
-    websocket?.readyState == WebSocket.CONNECTING
+    websocket?.readyState === WebSocket.OPEN ||
+    websocket?.readyState === WebSocket.CONNECTING
   ) {
     return
   }
@@ -104,9 +104,9 @@ export const connect_websocket = async (): Promise<void> => {
     ws.onmessage = async (event) => {
       if (websocket !== ws) return
       const message = JSON.parse(event.data)
-      if (message.action == 'ping') {
+      if (message.action === 'ping') {
         last_ping_timestamp = Date.now()
-        if (ws.readyState == WebSocket.OPEN) {
+        if (ws.readyState === WebSocket.OPEN) {
           ws.send(JSON.stringify({ action: 'pong' }))
         }
         return
@@ -137,7 +137,7 @@ export const connect_websocket = async (): Promise<void> => {
 }
 
 export const send_message_to_server = (message: any): boolean => {
-  if (websocket?.readyState == WebSocket.OPEN) {
+  if (websocket?.readyState === WebSocket.OPEN) {
     websocket.send(JSON.stringify(message))
     return true
   }

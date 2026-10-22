@@ -12,7 +12,7 @@ export const handle_saved_context_item = async (
 ): Promise<string | 'continue' | undefined> => {
   try {
     const workspace_folders = vscode.workspace.workspaceFolders || []
-    if (workspace_folders.length == 0) {
+    if (workspace_folders.length === 0) {
       vscode.window.showWarningMessage(t('common.warning.no-workspace-root'))
       return undefined
     }
@@ -29,7 +29,7 @@ export const handle_saved_context_item = async (
       source_options.push({
         label: 'Workspace State',
         description: `${internal_contexts.length} context${
-          internal_contexts.length == 1 ? '' : 's'
+          internal_contexts.length === 1 ? '' : 's'
         }`,
         value: 'WorkspaceState'
       })
@@ -38,13 +38,13 @@ export const handle_saved_context_item = async (
       source_options.push({
         label: 'JSON File (.vscode/contexts.json)',
         description: `${file_contexts.length} context${
-          file_contexts.length == 1 ? '' : 's'
+          file_contexts.length === 1 ? '' : 's'
         }`,
         value: 'JSON'
       })
     }
 
-    if (source_options.length == 0) {
+    if (source_options.length === 0) {
       vscode.window.showInformationMessage(t('common.info.no-saved-contexts'))
       return 'continue'
     }
@@ -65,7 +65,7 @@ export const handle_saved_context_item = async (
         )
         if (last_source) {
           const active = source_options.find(
-            (item) => item.value == last_source
+            (item) => item.value === last_source
           )
           if (active) quick_pick.activeItems = [active]
         }
@@ -103,7 +103,7 @@ export const handle_saved_context_item = async (
           quick_pick.show()
         })
 
-        if (!selection || selection == 'back') return 'continue'
+        if (!selection || selection === 'back') return 'continue'
 
         await extension_context.workspaceState.update(
           LAST_SELECTED_CONTEXT_SOURCE_IN_SYMBOLS_QUICK_PICK_STATE_KEY,
@@ -118,8 +118,9 @@ export const handle_saved_context_item = async (
       if (!source) return 'continue'
 
       const contexts_to_use =
-        source == 'WorkspaceState' ? internal_contexts : file_contexts
-      const roots_map = source == 'WorkspaceState' ? internal_roots : file_roots
+        source === 'WorkspaceState' ? internal_contexts : file_contexts
+      const roots_map =
+        source === 'WorkspaceState' ? internal_roots : file_roots
 
       const is_multi_root = workspace_folders.length > 1
 
@@ -128,7 +129,7 @@ export const handle_saved_context_item = async (
       if (contexts_to_use.length > 0) {
         context_items.push({
           label:
-            source == 'WorkspaceState' ? 'recent entries' : 'entries (A-Z)',
+            source === 'WorkspaceState' ? 'recent entries' : 'entries (A-Z)',
           kind: vscode.QuickPickItemKind.Separator
         })
       }
@@ -137,7 +138,7 @@ export const handle_saved_context_item = async (
         ...contexts_to_use.map((ctx) => {
           const roots = roots_map.get(ctx.name) || []
           let description = `${ctx.paths.length} path${
-            ctx.paths.length == 1 ? '' : 's'
+            ctx.paths.length === 1 ? '' : 's'
           }`
 
           if (roots.length > 0 && (roots.length > 1 || is_multi_root)) {
@@ -194,7 +195,7 @@ export const handle_saved_context_item = async (
         quick_pick.show()
       })
 
-      if (!selected_context || selected_context == 'back') {
+      if (!selected_context || selected_context === 'back') {
         if (source_options.length > 1) {
           continue
         }

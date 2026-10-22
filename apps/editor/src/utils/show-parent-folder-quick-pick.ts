@@ -24,7 +24,7 @@ export const show_parent_folder_quick_pick = async (params: {
 
   while (
     current_dir.startsWith(workspace_root) &&
-    current_dir != workspace_root
+    current_dir !== workspace_root
   ) {
     const relative = path.relative(workspace_root, current_dir)
     folders.push({
@@ -34,7 +34,7 @@ export const show_parent_folder_quick_pick = async (params: {
     current_dir = path.dirname(current_dir)
   }
 
-  if (folders.length == 0) {
+  if (folders.length === 0) {
     vscode.window.showInformationMessage(
       t('utils.show-parent-folder-quick-pick.no-parent-folders')
     )

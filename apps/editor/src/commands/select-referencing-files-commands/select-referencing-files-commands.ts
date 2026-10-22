@@ -16,7 +16,7 @@ const handle_reference_selection = async (params: {
 }) => {
   const { matched_files, workspace_provider, extension_context } = params
 
-  if (matched_files.length == 0) {
+  if (matched_files.length === 0) {
     vscode.window.showInformationMessage(
       t('common.info.no-items-found', { items: 'references' })
     )
@@ -175,7 +175,7 @@ export const select_referencing_files_commands = (
             target_uri!
           )
 
-          if (starting_uris.length == 0) {
+          if (starting_uris.length === 0) {
             vscode.window.showInformationMessage(
               t('common.info.no-items-found', { items: 'references' })
             )
@@ -239,7 +239,7 @@ export const select_referencing_files_commands = (
         try {
           const selected_files = workspace_provider.get_selected_files()
 
-          if (selected_files.length == 0) {
+          if (selected_files.length === 0) {
             vscode.window.showInformationMessage(
               t('common.info.no-items-found', { items: 'references' })
             )

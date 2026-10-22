@@ -35,7 +35,7 @@ export const handle_search_replace = async (params: {
   try {
     if (
       !vscode.workspace.workspaceFolders ||
-      vscode.workspace.workspaceFolders.length == 0
+      vscode.workspace.workspaceFolders.length === 0
     ) {
       vscode.window.showErrorMessage(
         t('command.apply-response-command.error.no-workspace-folder')
@@ -115,7 +115,7 @@ export const handle_search_replace = async (params: {
               original_content: rename_source_content,
               segments: parse_search_replace_segments(file.content)
             })
-          } else if (file.content != '') {
+          } else if (file.content !== '') {
             new_content = file.content
           }
 
@@ -194,7 +194,7 @@ export const handle_search_replace = async (params: {
             const segments = parse_search_replace_segments(file.content)
             content_to_write = segments
               .map((s) =>
-                s.type == 'common'
+                s.type === 'common'
                   ? s.lines.join('\n')
                   : s.updated_lines.join('\n')
               )

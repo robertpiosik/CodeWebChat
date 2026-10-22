@@ -20,9 +20,9 @@ export const IconAccentButton: FC<IconAccentButton.Props> = (props) => {
         [styles['button--active']]: props.is_active,
         [styles['button--compact']]: props.is_compact,
         [styles['button--blue']]:
-          props.is_active && props.active_color == 'blue',
+          props.is_active && props.active_color === 'blue',
         [styles['button--purple']]:
-          props.is_active && props.active_color == 'purple'
+          props.is_active && props.active_color === 'purple'
       })}
       onClick={props.on_click}
       type="button"

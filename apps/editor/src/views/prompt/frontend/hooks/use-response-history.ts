@@ -15,7 +15,7 @@ export const use_response_history = (vscode: any) => {
   const handle_remove_response_history_item = (created_at?: number) => {
     if (created_at) {
       set_response_history((prev) =>
-        prev.filter((i) => i.created_at != created_at)
+        prev.filter((i) => i.created_at !== created_at)
       )
       post_message(vscode, {
         command: 'REMOVE_RESPONSE_HISTORY_ITEM',
@@ -27,9 +27,9 @@ export const use_response_history = (vscode: any) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
-      if (message.command == 'RESPONSE_HISTORY') {
+      if (message.command === 'RESPONSE_HISTORY') {
         set_response_history(message.history)
-      } else if (message.command == 'RESPONSE_PREVIEW_STARTED') {
+      } else if (message.command === 'RESPONSE_PREVIEW_STARTED') {
         if (message.created_at) {
           set_selected_history_item_created_at(message.created_at)
         }

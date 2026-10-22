@@ -45,7 +45,7 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
     }
   }, [longest_label])
 
-  const selected_option = props.options.find((opt) => opt.value == props.value)
+  const selected_option = props.options.find((opt) => opt.value === props.value)
 
   useEffect(() => {
     if (!is_open) return
@@ -70,7 +70,7 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
 
   const menu_items: DropdownMenu.Item[] = props.options.map((option) => ({
     label: option.label,
-    is_selected: option.value == props.value,
+    is_selected: option.value === props.value,
     on_click: () => {
       props.onChange(option.value)
       set_is_open(false)

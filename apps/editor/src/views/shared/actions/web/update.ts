@@ -14,7 +14,7 @@ export const update = async (params: {
   is_new?: boolean
   insertion_index?: number
 }): Promise<{ success: boolean; has_changes: boolean; new_name?: string }> => {
-  if (params.is_new && params.origin == 'cancel') {
+  if (params.is_new && params.origin === 'cancel') {
     return { success: true, has_changes: false }
   }
 
@@ -25,10 +25,10 @@ export const update = async (params: {
   let web_configuration_index = -1
   if (!params.is_new) {
     web_configuration_index = current_web_configurations.findIndex(
-      (p) => p.name == params.updating_web_configuration.name
+      (p) => p.name === params.updating_web_configuration.name
     )
 
-    if (web_configuration_index == -1 && params.origin != 'cancel') {
+    if (web_configuration_index === -1 && params.origin !== 'cancel') {
       console.error(
         `chatbot with original name "${params.updating_web_configuration.name}" not found.`
       )
@@ -49,22 +49,22 @@ export const update = async (params: {
   const a = params.updating_web_configuration
   const b = final_updated_web_configuration
   const has_changes = !(
-    a.name == b.name &&
-    a.chatbot == b.chatbot &&
-    a.model == b.model &&
-    a.reasoning_effort == b.reasoning_effort &&
-    a.system_instructions == b.system_instructions &&
-    JSON.stringify(a.options) == JSON.stringify(b.options) &&
-    a.port == b.port &&
-    a.new_url == b.new_url &&
-    a.is_pinned == b.is_pinned
+    a.name === b.name &&
+    a.chatbot === b.chatbot &&
+    a.model === b.model &&
+    a.reasoning_effort === b.reasoning_effort &&
+    a.system_instructions === b.system_instructions &&
+    JSON.stringify(a.options) === JSON.stringify(b.options) &&
+    a.port === b.port &&
+    a.new_url === b.new_url &&
+    a.is_pinned === b.is_pinned
   )
 
   if (!has_changes && !params.is_new) {
     return { success: true, has_changes: false }
   }
 
-  if (params.origin == 'cancel') {
+  if (params.origin === 'cancel') {
     const discard_button = t('common.action.discard')
     const result = await vscode.window.showWarningMessage(
       t('views.common.handlers.common.confirm-discard-unsaved-changes', {
@@ -79,7 +79,7 @@ export const update = async (params: {
       discard_button
     )
 
-    if (result != discard_button) {
+    if (result !== discard_button) {
       return { success: false, has_changes: true }
     }
 
@@ -91,7 +91,7 @@ export const update = async (params: {
   let other_names = current_web_configurations.map((c) => c.name)
   if (!params.is_new && web_configuration_index !== -1) {
     other_names = current_web_configurations
-      .filter((_, index) => index != web_configuration_index)
+      .filter((_, index) => index !== web_configuration_index)
       .map((c) => c.name)
   }
 
@@ -113,7 +113,7 @@ export const update = async (params: {
         ui_web_configuration_to_config_format(updated_ui_web_configuration)
       )
     }
-  } else if (web_configuration_index != -1) {
+  } else if (web_configuration_index !== -1) {
     updated_web_configurations[web_configuration_index] =
       ui_web_configuration_to_config_format(updated_ui_web_configuration)
   }

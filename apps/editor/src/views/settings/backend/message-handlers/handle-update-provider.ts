@@ -52,7 +52,7 @@ export const handle_update_provider = async (
       discard_button
     )
 
-    if (result != discard_button) {
+    if (result !== discard_button) {
       return
     }
 
@@ -81,9 +81,9 @@ export const handle_update_provider = async (
 
   if (!message.is_new) {
     const existing_index = updated_providers.findIndex(
-      (p) => p.name == message.original_name
+      (p) => p.name === message.original_name
     )
-    if (existing_index == -1) {
+    if (existing_index === -1) {
       vscode.window.showErrorMessage(
         t('common.error.could-not-update-item-not-found', {
           item_type: 'provider',
@@ -107,13 +107,13 @@ export const handle_update_provider = async (
     working_provider.name = generate_unique_name(
       working_provider.name,
       updated_providers
-        .filter((p) => p.name != message.original_name)
+        .filter((p) => p.name !== message.original_name)
         .map((p) => p.name)
     )
 
     updated_providers[existing_index] = working_provider
 
-    if (message.original_name != working_provider.name) {
+    if (message.original_name !== working_provider.name) {
       await providers_manager.update_provider_name_in_api_configurations({
         old_name: message.original_name!,
         new_name: working_provider.name

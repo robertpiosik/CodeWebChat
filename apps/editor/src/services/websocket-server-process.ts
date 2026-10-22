@@ -41,11 +41,13 @@ class WebSocketServer {
         const url = new URL(info.req.url, `http://localhost:${DEFAULT_PORT}`)
         const client_type = url.searchParams.get('client_type')
 
-        if (client_type == CLIENT_TYPE.BROWSER) {
+        if (client_type === CLIENT_TYPE.BROWSER) {
           const origin = info.req.headers.origin
 
           // 1. Chrome / Edge / Chromium: Strict Exact Match
-          if (origin == 'chrome-extension://ljookipcanaglfaocjbgdicfbdhhjffp') {
+          if (
+            origin === 'chrome-extension://ljookipcanaglfaocjbgdicfbdhhjffp'
+          ) {
             return cb(true)
           }
 
@@ -66,7 +68,7 @@ class WebSocketServer {
           return cb(false, 403, 'Forbidden: Invalid Origin')
         }
 
-        if (client_type == CLIENT_TYPE.EDITOR) {
+        if (client_type === CLIENT_TYPE.EDITOR) {
           // 3. Editors: Enforce the shared file token
           const auth_header = info.req.headers.authorization
           let provided_token: string | null = null
@@ -80,7 +82,7 @@ class WebSocketServer {
           } = require('../utils/shared-token')
           const expected_token = get_or_create_shared_token()
 
-          if (provided_token && provided_token == expected_token) {
+          if (provided_token && provided_token === expected_token) {
             return cb(true)
           }
           return cb(false, 401, 'Unauthorized: Invalid token')
@@ -100,7 +102,7 @@ class WebSocketServer {
   private _schedule_shutdown() {
     if (!this.shutdown_timer) {
       this.shutdown_timer = setTimeout(() => {
-        if (this.vscode_clients.size == 0) {
+        if (this.vscode_clients.size === 0) {
           this._shutdown()
         }
       }, 10000)
@@ -117,7 +119,7 @@ class WebSocketServer {
   private _create_http_server(): http.Server {
     return http.createServer((req: any, res: any) => {
       const url = new URL(req.url || '', `http://localhost:${DEFAULT_PORT}`)
-      if (url.pathname == '/health') {
+      if (url.pathname === '/health') {
         const challenge = url.searchParams.get('challenge')
         const response: any = { status: 'ok' }
 
@@ -155,14 +157,14 @@ class WebSocketServer {
     const client_type = url.searchParams.get('client_type')
 
     if (
-      client_type != CLIENT_TYPE.BROWSER &&
-      client_type != CLIENT_TYPE.EDITOR
+      client_type !== CLIENT_TYPE.BROWSER &&
+      client_type !== CLIENT_TYPE.EDITOR
     ) {
       ws.close(1008, 'Invalid client type')
       return
     }
 
-    const is_browser_client = client_type == CLIENT_TYPE.BROWSER
+    const is_browser_client = client_type === CLIENT_TYPE.BROWSER
 
     if (is_browser_client) {
       this._handle_browser_connection(ws, url)
@@ -238,7 +240,7 @@ class WebSocketServer {
       return
     }
 
-    if (!msg_data || typeof msg_data != 'object') {
+    if (!msg_data || typeof msg_data !== 'object') {
       return
     }
 
@@ -258,7 +260,7 @@ class WebSocketServer {
       return
     }
 
-    if (msg_data.action == 'initialize-chat') {
+    if (msg_data.action === 'initialize-chat') {
       if (msg_data.target_browser_id) {
         const client = this.browser_clients.get(msg_data.target_browser_id)
         if (client && client.ws.readyState === WebSocket.OPEN) {
@@ -273,10 +275,10 @@ class WebSocketServer {
           }
         }
       }
-    } else if (msg_data.action == 'apply-response') {
+    } else if (msg_data.action === 'apply-response') {
       const target_client_id = msg_data.client_id
       const target_client = this.vscode_clients.get(target_client_id)
-      if (target_client && target_client.ws.readyState == WebSocket.OPEN) {
+      if (target_client && target_client.ws.readyState === WebSocket.OPEN) {
         target_client.ws.send(msg_string)
       }
     }
@@ -315,7 +317,7 @@ class WebSocketServer {
     }
     this.connections.delete(ws)
 
-    if (this.vscode_clients.size == 0) {
+    if (this.vscode_clients.size === 0) {
       this._schedule_shutdown()
     }
   }
@@ -340,7 +342,7 @@ class WebSocketServer {
     })
 
     for (const client of this.vscode_clients.values()) {
-      if (client.ws.readyState == WebSocket.OPEN) {
+      if (client.ws.readyState === WebSocket.OPEN) {
         client.ws.send(message)
       }
     }
@@ -366,7 +368,7 @@ class WebSocketServer {
         continue
       }
       client.is_alive = false
-      if (client.ws.readyState == WebSocket.OPEN) {
+      if (client.ws.readyState === WebSocket.OPEN) {
         client.ws.send(ping_message)
       }
     }

@@ -22,7 +22,7 @@ export const print_tree = (node: TreeNode, prefix = ''): string[] => {
   const lines: string[] = []
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
-    const is_last = i == keys.length - 1
+    const is_last = i === keys.length - 1
     lines.push(`${prefix}${is_last ? '└── ' : '├── '}${key}`)
     const child_prefix = prefix + (is_last ? '    ' : '│   ')
     lines.push(...print_tree(node[key], child_prefix))

@@ -34,14 +34,14 @@ export const prompt_for_api_configuration = async (params: {
     if (default_config) {
       const default_id = get_api_configuration_id(default_config)
       selected_api_configuration = params.api_configurations.find(
-        (c) => get_api_configuration_id(c) == default_id
+        (c) => get_api_configuration_id(c) === default_id
       )
       if (selected_api_configuration) {
         skipped = true
       }
     }
 
-    if (!selected_api_configuration && params.api_configurations.length == 1) {
+    if (!selected_api_configuration && params.api_configurations.length === 1) {
       selected_api_configuration = params.api_configurations[0]
       skipped = true
     }
@@ -68,7 +68,7 @@ export const prompt_for_api_configuration = async (params: {
       show_back_button: true
     })
 
-    if (result == 'back') return 'back'
+    if (result === 'back') return 'back'
     if (!result) return 'cancel'
     selected_api_configuration = result.item
   }

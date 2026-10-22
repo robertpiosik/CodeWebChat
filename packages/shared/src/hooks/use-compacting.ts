@@ -29,11 +29,11 @@ export const use_compacting = (options?: { is_disabled?: boolean }) => {
     container.style.flexShrink = original_flex_shrink
     container.style.transition = original_transition
 
-    if (width == 0) return
+    if (width === 0) return
 
     set_thresholds((prev) => {
       const threshold = Math.ceil(width)
-      if (prev[compact_step] == threshold) return prev
+      if (prev[compact_step] === threshold) return prev
       return { ...prev, [compact_step]: threshold }
     })
   }, [compact_step, trigger_measure, is_disabled])
@@ -41,7 +41,7 @@ export const use_compacting = (options?: { is_disabled?: boolean }) => {
   useEffect(() => {
     if (is_disabled) {
       set_compact_step(0)
-      set_thresholds((prev) => (Object.keys(prev).length == 0 ? prev : {}))
+      set_thresholds((prev) => (Object.keys(prev).length === 0 ? prev : {}))
       return
     }
 
@@ -49,7 +49,7 @@ export const use_compacting = (options?: { is_disabled?: boolean }) => {
       const container = entries[0].target as HTMLElement
       const width = container.getBoundingClientRect().width
 
-      if (width == 0) return
+      if (width === 0) return
 
       if (thresholds[compact_step] === undefined) {
         set_trigger_measure((t) => t + 1)
@@ -64,7 +64,7 @@ export const use_compacting = (options?: { is_disabled?: boolean }) => {
       }
 
       if (thresholds[0] !== undefined && width < thresholds[0]) {
-        if (compact_step == 0) {
+        if (compact_step === 0) {
           set_compact_step(1)
         } else {
           if (

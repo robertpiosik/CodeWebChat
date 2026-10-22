@@ -11,7 +11,7 @@ export const open_webui: Chatbot = {
       const check_for_element = () => {
         if (
           document.querySelector('#messages-container') &&
-          document.visibilityState == 'visible'
+          document.visibilityState === 'visible'
         ) {
           resolve(null)
         } else {

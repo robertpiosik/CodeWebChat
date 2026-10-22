@@ -23,9 +23,9 @@ export const apply_search_replace_to_content = (params: {
     const next = i < segments.length - 1 ? segments[i + 1] : undefined
 
     const context_before =
-      prev && prev.type == 'common' ? prev.lines.slice(-MAX_CONTEXT_LINES) : []
+      prev && prev.type === 'common' ? prev.lines.slice(-MAX_CONTEXT_LINES) : []
     const context_after =
-      next && next.type == 'common'
+      next && next.type === 'common'
         ? next.lines.slice(0, MAX_CONTEXT_LINES)
         : []
 

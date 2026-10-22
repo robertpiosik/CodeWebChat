@@ -10,7 +10,7 @@ export const get_diff_stats = (params: {
   )
   const new_content_processed = params.new_content.replace(/\r\n/g, '\n')
 
-  if (original_content_processed == new_content_processed) {
+  if (original_content_processed === new_content_processed) {
     return { lines_added: 0, lines_removed: 0 }
   }
 

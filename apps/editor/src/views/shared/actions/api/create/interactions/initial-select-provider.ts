@@ -9,7 +9,7 @@ export const initial_select_provider = async (
 ): Promise<Provider | undefined> => {
   const providers = await providers_manager.get_providers()
 
-  if (providers.length == 0) {
+  if (providers.length === 0) {
     const open_settings_btn = t('common.open-settings')
     const selection = await vscode.window.showWarningMessage(
       t(
@@ -17,7 +17,7 @@ export const initial_select_provider = async (
       ),
       open_settings_btn
     )
-    if (selection == open_settings_btn) {
+    if (selection === open_settings_btn) {
       open_settings.api.providers()
     }
     return undefined
@@ -49,7 +49,7 @@ export const initial_select_provider = async (
     quick_pick.buttons = [close_button]
     if (last_selected_provider_name) {
       const active = provider_items.find(
-        (p) => p.label == last_selected_provider_name
+        (p) => p.label === last_selected_provider_name
       )
       if (active) quick_pick.activeItems = [active]
     }

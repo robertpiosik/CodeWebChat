@@ -12,14 +12,14 @@ export const deepseek: Chatbot = {
       document.querySelectorAll('div.ds-toggle-button')
     ).find(
       (button) =>
-        button.textContent == 'DeepThink' || button.textContent == '深度思考'
+        button.textContent === 'DeepThink' || button.textContent === '深度思考'
     ) as HTMLButtonElement
 
     const search_button = Array.from(
       document.querySelectorAll('div.ds-toggle-button')
     ).find(
       (button) =>
-        button.textContent == 'Search' || button.textContent == '联网搜索'
+        button.textContent === 'Search' || button.textContent === '联网搜索'
     ) as HTMLButtonElement
 
     if (deep_think_button) {
@@ -37,8 +37,8 @@ export const deepseek: Chatbot = {
     if (search_button) {
       const search_button_style = window.getComputedStyle(search_button)
       if (
-        search_button_style.getPropertyValue('color') != 'rgb(15, 17, 21)' &&
-        search_button_style.getPropertyValue('color') != 'rgb(249, 250, 251)'
+        search_button_style.getPropertyValue('color') !== 'rgb(15, 17, 21)' &&
+        search_button_style.getPropertyValue('color') !== 'rgb(249, 250, 251)'
       ) {
         search_button.click()
       }
@@ -50,9 +50,9 @@ export const deepseek: Chatbot = {
     if (!options) return
     const supported_options = CHATBOTS.DeepSeek.supported_options
     for (const option of options) {
-      if (option == 'deep-think' && supported_options?.['deep-think']) {
+      if (option === 'deep-think' && supported_options?.['deep-think']) {
         deep_think_button?.click()
-      } else if (option == 'search' && supported_options?.search) {
+      } else if (option === 'search' && supported_options?.search) {
         search_button?.click()
       }
     }

@@ -10,7 +10,7 @@ export const pick_chatbot = async (params: {
   const items: vscode.QuickPickItem[] = chatbots.map(([chatbot, { url }]) => ({
     label: chatbot,
     description:
-      chatbot == 'Open WebUI'
+      chatbot === 'Open WebUI'
         ? 'localhost'
         : url.replace(/^https?:\/\//, '').split('/')[0]
   }))
@@ -30,7 +30,7 @@ export const pick_chatbot = async (params: {
 
   if (params.current_chatbot_id) {
     const active_item = items.find(
-      (item) => item.label == params.current_chatbot_id
+      (item) => item.label === params.current_chatbot_id
     )
     if (active_item) {
       quick_pick.activeItems = [active_item]

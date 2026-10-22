@@ -14,7 +14,7 @@ export const build_user_content = (params: {
     const parts = text.split(/<cwc-image>([\s\S]*?)<\/cwc-image>/)
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i]
-      if (i % 2 == 0) {
+      if (i % 2 === 0) {
         if (part.length > 0) {
           parsed.push({ type: 'text', text: part.trim() })
         }
@@ -30,8 +30,8 @@ export const build_user_content = (params: {
     return parsed
   }
 
-  const is_anthropic = params.provider.base_url == PROVIDERS.Anthropic.base_url
-  const is_openai = params.provider.base_url == PROVIDERS.OpenAI.base_url
+  const is_anthropic = params.provider.base_url === PROVIDERS.Anthropic.base_url
+  const is_openai = params.provider.base_url === PROVIDERS.OpenAI.base_url
 
   if (is_anthropic || is_openai) {
     const cache_config: any = {}

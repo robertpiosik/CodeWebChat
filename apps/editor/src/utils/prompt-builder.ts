@@ -25,11 +25,11 @@ export namespace PromptBuilder {
     let result = ''
     const display_path = normalize_path(params.filepath)
 
-    if (params.status == 'created') {
+    if (params.status === 'created') {
       result += `### New file: \`${display_path}\`\n\n`
-    } else if (params.status == 'deleted') {
+    } else if (params.status === 'deleted') {
       result += `### Deleted file: \`${display_path}\`\n\n`
-    } else if (params.status == 'renamed' && params.old_filepath) {
+    } else if (params.status === 'renamed' && params.old_filepath) {
       const old_display_path = normalize_path(params.old_filepath)
       result += `### Renamed file: \`${old_display_path}\` (old) \`${display_path}\` (new)\n\n`
     } else {

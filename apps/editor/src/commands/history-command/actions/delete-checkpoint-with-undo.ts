@@ -73,7 +73,7 @@ export const delete_checkpoint_with_undo = async (params: {
     current_active_op &&
     current_active_op.timestamp === operation.timestamp
   ) {
-    if (choice == undo_action) {
+    if (choice === undo_action) {
       const current_checkpoints =
         params.extension_context.workspaceState.get<Checkpoint[]>(
           CHECKPOINTS_STATE_KEY,
@@ -102,7 +102,7 @@ export const delete_checkpoint_with_undo = async (params: {
       params.set_active_operation(null)
       return false
     }
-  } else if (choice == undo_action) {
+  } else if (choice === undo_action) {
     params.on_before_show_message?.()
     await vscode.window.showInformationMessage(
       t('command.history-command.error.could-not-undo')

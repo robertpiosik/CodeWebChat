@@ -24,7 +24,7 @@ const process_text_part_for_files = (params: {
 
   return parts
     .map((part, index) => {
-      if (index % 2 == 1) {
+      if (index % 2 === 1) {
         const file_path = part
         if (params.context_file_paths.includes(file_path)) {
           const filename = file_path.split('/').pop() || file_path
@@ -91,7 +91,7 @@ export const get_highlighted_text = (params: {
         const end_col = parseInt(fragment_match[5], 10)
 
         const line_count = Math.max(1, end_line - start_line + 1)
-        const lines_text = line_count == 1 ? 'line' : 'lines'
+        const lines_text = line_count === 1 ? 'line' : 'lines'
 
         const is_warning = !params.context_file_paths.includes(path)
 
@@ -250,7 +250,7 @@ export const get_highlighted_text = (params: {
 
     if (count > 1) {
       for (let i = 0; i < count; i++) {
-        const is_active = i == active_index
+        const is_active = i === active_index
 
         tabs_items += `<span class="${cn(pfStyles['tabs__tab'], {
           [pfStyles['tabs__tab--active']]: is_active
@@ -274,7 +274,7 @@ export const get_highlighted_text = (params: {
     result = `<span contenteditable="false">${header_html}</span>` + result
   }
 
-  if (params.text.endsWith('\n') || params.text == '') {
+  if (params.text.endsWith('\n') || params.text === '') {
     return result + '<br data-role="trailing-break">'
   }
   return result

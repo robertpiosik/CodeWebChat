@@ -88,7 +88,7 @@ export const build_cli_prompt = async (params: {
 
   let completed_tasks: string[] | undefined = undefined
 
-  if (prompt_view_provider.cli_prompt_type == 'edit') {
+  if (prompt_view_provider.cli_prompt_type === 'edit') {
     completed_tasks = processed_completed_tasks
     requirements_list.push(cli_edit_ask_requirements.exception_read_images)
     requirements_list.push(

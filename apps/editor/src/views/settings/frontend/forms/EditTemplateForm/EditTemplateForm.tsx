@@ -34,7 +34,7 @@ export const EditTemplateForm: React.FC<Props> = (props) => {
 
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
-      if (event.data.command == 'INSERT_SYMBOL') {
+      if (event.data.command === 'INSERT_SYMBOL') {
         const text = event.data.text
         if (template_ref.current) {
           const caret_pos = template_ref.current.get_caret_position()

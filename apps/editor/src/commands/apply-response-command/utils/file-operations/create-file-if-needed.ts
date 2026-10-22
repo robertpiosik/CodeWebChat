@@ -21,7 +21,7 @@ export const create_file_if_needed = async (params: {
   })
   if (
     !vscode.workspace.workspaceFolders ||
-    vscode.workspace.workspaceFolders.length == 0
+    vscode.workspace.workspaceFolders.length === 0
   ) {
     vscode.window.showErrorMessage(
       t('command.apply-response-command.error.no-workspace-folder')

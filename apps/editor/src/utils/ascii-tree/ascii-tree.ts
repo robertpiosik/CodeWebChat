@@ -15,9 +15,9 @@ export namespace AsciiTree {
       const idx1 = line.indexOf('├── ')
       const idx2 = line.indexOf('└── ')
       const idx =
-        idx1 != -1 && idx2 != -1 ? Math.min(idx1, idx2) : Math.max(idx1, idx2)
+        idx1 !== -1 && idx2 !== -1 ? Math.min(idx1, idx2) : Math.max(idx1, idx2)
 
-      if (idx != -1) {
+      if (idx !== -1) {
         const prefix = line.substring(0, idx)
         if (/^[│\s]*$/.test(prefix)) {
           let name = line.substring(idx + 4).trim()
@@ -57,9 +57,9 @@ export namespace AsciiTree {
       const idx1 = line.indexOf('├── ')
       const idx2 = line.indexOf('└── ')
       const idx =
-        idx1 != -1 && idx2 != -1 ? Math.min(idx1, idx2) : Math.max(idx1, idx2)
+        idx1 !== -1 && idx2 !== -1 ? Math.min(idx1, idx2) : Math.max(idx1, idx2)
 
-      if (idx != -1) {
+      if (idx !== -1) {
         const prefix = line.substring(0, idx)
         if (/^[│\s]*$/.test(prefix)) {
           continue

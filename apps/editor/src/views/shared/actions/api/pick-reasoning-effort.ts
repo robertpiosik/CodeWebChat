@@ -33,7 +33,7 @@ export const pick_reasoning_effort = async (params: {
   ]
 
   quick_pick.onDidTriggerButton((button) => {
-    if (button.tooltip == t('common.close')) {
+    if (button.tooltip === t('common.close')) {
       quick_pick.hide()
     }
   })

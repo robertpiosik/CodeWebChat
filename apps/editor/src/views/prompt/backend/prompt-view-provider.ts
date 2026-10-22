@@ -208,17 +208,17 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
   }
 
   get prompt_type(): WebPromptType | ApiPromptType | CliPromptType {
-    return this.target == 'WEB'
+    return this.target === 'WEB'
       ? this.web_prompt_type
-      : this.target == 'API'
+      : this.target === 'API'
         ? this.api_prompt_type
         : this.cli_prompt_type
   }
 
   get active_instructions_state(): InstructionsState {
     const type = this.prompt_type
-    if (type == 'ask') return this.ask_about_context_instructions
-    if (type == 'edit') return this.edit_files_instructions
+    if (type === 'ask') return this.ask_about_context_instructions
+    if (type === 'edit') return this.edit_files_instructions
     return this.edit_files_instructions
   }
 
@@ -462,7 +462,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
         }
       }
 
-      if (display_path != this.currently_open_file_path) {
+      if (display_path !== this.currently_open_file_path) {
         this.currently_open_file_path = display_path
         if (this.webview_view) {
           this.send_message({
@@ -659,18 +659,18 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     webview_view.webview.onDidReceiveMessage(
       async (message: FrontendMessage) => {
         try {
-          if (message.command == 'GET_HISTORY') {
+          if (message.command === 'GET_HISTORY') {
             handle_get_history(this)
-          } else if (message.command == 'GET_RESPONSE_HISTORY') {
+          } else if (message.command === 'GET_RESPONSE_HISTORY') {
             this.send_message({
               command: 'RESPONSE_HISTORY',
               history: this.response_history
             })
-          } else if (message.command == 'SAVE_HISTORY') {
+          } else if (message.command === 'SAVE_HISTORY') {
             await handle_save_history(this, message)
-          } else if (message.command == 'GET_INSTRUCTIONS') {
+          } else if (message.command === 'GET_INSTRUCTIONS') {
             handle_get_instructions(this)
-          } else if (message.command == 'SAVE_INSTRUCTIONS') {
+          } else if (message.command === 'SAVE_INSTRUCTIONS') {
             await handle_save_instructions(this, message)
             if (this._save_instructions_timeout) {
               clearTimeout(this._save_instructions_timeout)
@@ -686,110 +686,110 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
                 this.send_token_count()
               }, 500)
             }
-          } else if (message.command == 'GET_CONNECTION_STATUS') {
+          } else if (message.command === 'GET_CONNECTION_STATUS') {
             handle_get_connection_status(this)
-          } else if (message.command == 'GET_WEB_CONFIGURATIONS') {
+          } else if (message.command === 'GET_WEB_CONFIGURATIONS') {
             this.send_web_configurations_to_webview(webview_view.webview)
-          } else if (message.command == 'AUTOFILL') {
+          } else if (message.command === 'AUTOFILL') {
             await handle_autofill({
               prompt_view_provider: this,
               web_configuration_name: message.web_configuration_name,
               show_quick_pick: message.show_quick_pick
             })
-          } else if (message.command == 'PREVIEW_WEB_CONFIGURATION') {
+          } else if (message.command === 'PREVIEW_WEB_CONFIGURATION') {
             await handle_preview_web_configuration(this, message)
-          } else if (message.command == 'COPY_PROMPT') {
+          } else if (message.command === 'COPY_PROMPT') {
             await handle_copy_prompt({
               prompt_view_provider: this
             })
-          } else if (message.command == 'REQUEST_EDITOR_STATE') {
+          } else if (message.command === 'REQUEST_EDITOR_STATE') {
             handle_request_editor_state(this)
-          } else if (message.command == 'REQUEST_EDITOR_SELECTION_STATE') {
+          } else if (message.command === 'REQUEST_EDITOR_SELECTION_STATE') {
             handle_request_editor_selection_state(this)
-          } else if (message.command == 'REQUEST_CURRENTLY_OPEN_FILE_TEXT') {
+          } else if (message.command === 'REQUEST_CURRENTLY_OPEN_FILE_TEXT') {
             this.send_currently_open_file_text()
-          } else if (message.command == 'REORDER_WEB_CONFIGURATIONS') {
+          } else if (message.command === 'REORDER_WEB_CONFIGURATIONS') {
             await handle_reorder_web_configurations(message)
-          } else if (message.command == 'TOGGLE_PINNED_WEB_CONFIGURATION') {
+          } else if (message.command === 'TOGGLE_PINNED_WEB_CONFIGURATION') {
             await handle_toggle_pinned_web_configuration(message)
-          } else if (message.command == 'GET_SEND_WITH_SHIFT_ENTER') {
+          } else if (message.command === 'GET_SEND_WITH_SHIFT_ENTER') {
             this._send_send_with_shift_enter()
-          } else if (message.command == 'CREATE_WEB_CONFIGURATION') {
+          } else if (message.command === 'CREATE_WEB_CONFIGURATION') {
             await handle_create_web_configuration(this, message)
-          } else if (message.command == 'UPDATE_WEB_CONFIGURATION') {
+          } else if (message.command === 'UPDATE_WEB_CONFIGURATION') {
             await handle_update_web_configuration(this, message)
-          } else if (message.command == 'DELETE_WEB_CONFIGURATION') {
+          } else if (message.command === 'DELETE_WEB_CONFIGURATION') {
             await handle_delete_web_configuration(message)
-          } else if (message.command == 'UNDO') {
+          } else if (message.command === 'UNDO') {
             await handle_undo(this)
             this.send_token_count()
-          } else if (message.command == 'APPLY_RESPONSE_FROM_HISTORY') {
+          } else if (message.command === 'APPLY_RESPONSE_FROM_HISTORY') {
             await handle_apply_response_from_history(message)
             this.send_token_count()
-          } else if (message.command == 'EXECUTE_COMMAND') {
+          } else if (message.command === 'EXECUTE_COMMAND') {
             await vscode.commands.executeCommand(message.command_id)
-          } else if (message.command == 'MAKE_API_CALL') {
+          } else if (message.command === 'MAKE_API_CALL') {
             await handle_make_api_call(this, message)
-          } else if (message.command == 'SHOW_TEMPLATE_QUICK_PICK') {
+          } else if (message.command === 'SHOW_TEMPLATE_QUICK_PICK') {
             await handle_template_quick_pick(this)
-          } else if (message.command == 'GET_WEB_PROMPT_TYPE') {
+          } else if (message.command === 'GET_WEB_PROMPT_TYPE') {
             handle_get_web_prompt_type(this)
-          } else if (message.command == 'CANCEL_API_REQUEST') {
+          } else if (message.command === 'CANCEL_API_REQUEST') {
             if (this.api_call_abort_controller) {
               this.api_call_abort_controller.abort('Cancelled by user.')
               this.api_call_abort_controller = null
             }
-          } else if (message.command == 'GET_API_CONFIGURATIONS') {
+          } else if (message.command === 'GET_API_CONFIGURATIONS') {
             await handle_get_api_configurations(this)
-          } else if (message.command == 'REORDER_API_CONFIGURATIONS') {
+          } else if (message.command === 'REORDER_API_CONFIGURATIONS') {
             await handle_reorder_api_configurations(this, message)
-          } else if (message.command == 'TOGGLE_PINNED_API_CONFIGURATION') {
+          } else if (message.command === 'TOGGLE_PINNED_API_CONFIGURATION') {
             await handle_toggle_pinned_api_configuration(this, message)
-          } else if (message.command == 'SAVE_WEB_PROMPT_TYPE') {
+          } else if (message.command === 'SAVE_WEB_PROMPT_TYPE') {
             await handle_save_web_prompt_type(this, message.prompt_type)
-          } else if (message.command == 'GET_API_PROMPT_TYPE') {
+          } else if (message.command === 'GET_API_PROMPT_TYPE') {
             handle_get_api_prompt_type(this)
-          } else if (message.command == 'SAVE_API_PROMPT_TYPE') {
+          } else if (message.command === 'SAVE_API_PROMPT_TYPE') {
             await handle_save_api_prompt_type(this, message.prompt_type)
-          } else if (message.command == 'GET_CLI_PROMPT_TYPE') {
+          } else if (message.command === 'GET_CLI_PROMPT_TYPE') {
             handle_get_cli_prompt_type(this)
-          } else if (message.command == 'SAVE_CLI_PROMPT_TYPE') {
+          } else if (message.command === 'SAVE_CLI_PROMPT_TYPE') {
             await handle_save_cli_prompt_type(this, message.prompt_type)
-          } else if (message.command == 'INVOKE_AGENTIC_CLI') {
+          } else if (message.command === 'INVOKE_AGENTIC_CLI') {
             await handle_invoke_agentic_cli(this, message as any)
-          } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
+          } else if (message.command === 'GET_EDIT_FORMAT_INSTRUCTIONS') {
             handle_get_edit_format_instructions(this)
-          } else if (message.command == 'GET_EDIT_FORMAT') {
+          } else if (message.command === 'GET_EDIT_FORMAT') {
             handle_get_edit_format(this)
-          } else if (message.command == 'SAVE_EDIT_FORMAT') {
+          } else if (message.command === 'SAVE_EDIT_FORMAT') {
             await handle_save_edit_format(this, message)
-          } else if (message.command == 'SELECT_EDIT_FORMAT_INSTRUCTIONS') {
+          } else if (message.command === 'SELECT_EDIT_FORMAT_INSTRUCTIONS') {
             await handle_select_edit_format_instructions(this, message)
-          } else if (message.command == 'CARET_POSITION_CHANGED') {
+          } else if (message.command === 'CARET_POSITION_CHANGED') {
             this.caret_position = message.caret_position
-          } else if (message.command == 'TARGET_CHANGED') {
+          } else if (message.command === 'TARGET_CHANGED') {
             handle_target_changed(this, message)
-          } else if (message.command == 'GET_TARGET') {
+          } else if (message.command === 'GET_TARGET') {
             handle_get_target(this)
-          } else if (message.command == 'GET_VERSION') {
+          } else if (message.command === 'GET_VERSION') {
             handle_get_version(this)
-          } else if (message.command == 'SHOW_AT_SIGN_QUICK_PICK') {
+          } else if (message.command === 'SHOW_AT_SIGN_QUICK_PICK') {
             await handle_at_sign_quick_pick(this)
-          } else if (message.command == 'SHOW_HASH_SIGN_QUICK_PICK') {
+          } else if (message.command === 'SHOW_HASH_SIGN_QUICK_PICK') {
             await handle_hash_sign_quick_pick(this, this.extension_context)
-          } else if (message.command == 'GO_TO_FILE') {
+          } else if (message.command === 'GO_TO_FILE') {
             handle_go_to_file(message)
-          } else if (message.command == 'OPEN_FILE_AND_SELECT') {
+          } else if (message.command === 'OPEN_FILE_AND_SELECT') {
             handle_open_file_and_select(message)
-          } else if (message.command == 'SHOW_DIFF') {
+          } else if (message.command === 'SHOW_DIFF') {
             await handle_show_diff(message)
-          } else if (message.command == 'FOCUS_ON_FILE_IN_PREVIEW') {
+          } else if (message.command === 'FOCUS_ON_FILE_IN_PREVIEW') {
             handle_focus_on_file_in_preview(message)
-          } else if (message.command == 'TOGGLE_FILE_IN_PREVIEW') {
+          } else if (message.command === 'TOGGLE_FILE_IN_PREVIEW') {
             await handle_toggle_file_in_preview(message)
-          } else if (message.command == 'DISCARD_USER_CHANGES_IN_PREVIEW') {
+          } else if (message.command === 'DISCARD_USER_CHANGES_IN_PREVIEW') {
             await handle_discard_user_changes_in_preview(message)
-          } else if (message.command == 'PATCH_REPAIR_FILE_IN_PREVIEW') {
+          } else if (message.command === 'PATCH_REPAIR_FILE_IN_PREVIEW') {
             await handle_patch_repair({
               prompt_view_provider: this,
               files_to_fix: [
@@ -800,131 +800,133 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
               ],
               show_quick_pick: message.force_model_selection
             })
-          } else if (message.command == 'CANCEL_PATCH_REPAIR_FILE_IN_PREVIEW') {
+          } else if (
+            message.command === 'CANCEL_PATCH_REPAIR_FILE_IN_PREVIEW'
+          ) {
             handle_cancel_patch_repair_file_in_preview(this, message)
-          } else if (message.command == 'RESPONSE_PREVIEW') {
+          } else if (message.command === 'RESPONSE_PREVIEW') {
             await handle_response_preview(message)
-          } else if (message.command == 'REMOVE_RESPONSE_HISTORY_ITEM') {
+          } else if (message.command === 'REMOVE_RESPONSE_HISTORY_ITEM') {
             this.response_history = this.response_history.filter(
               (item) => item.created_at !== message.created_at
             )
-          } else if (message.command == 'GET_WORKSPACE_STATE') {
+          } else if (message.command === 'GET_WORKSPACE_STATE') {
             handle_get_workspace_state(this)
-          } else if (message.command == 'PICK_MODEL') {
+          } else if (message.command === 'PICK_MODEL') {
             await handle_pick_model(this, message)
-          } else if (message.command == 'PICK_CHATBOT') {
+          } else if (message.command === 'PICK_CHATBOT') {
             await handle_pick_chatbot(this, message)
-          } else if (message.command == 'PICK_REASONING_EFFORT') {
+          } else if (message.command === 'PICK_REASONING_EFFORT') {
             await handle_pick_reasoning_effort(this, message)
-          } else if (message.command == 'UPDATE_LAST_USED_WEB_CONFIGURATION') {
+          } else if (message.command === 'UPDATE_LAST_USED_WEB_CONFIGURATION') {
             handle_update_last_used_web_configuration({
               prompt_view_provider: this,
               web_configuration_name: message.web_configuration_name
             })
-          } else if (message.command == 'MANAGE_PROVIDERS') {
+          } else if (message.command === 'MANAGE_PROVIDERS') {
             open_settings.api.providers()
-          } else if (message.command == 'MANAGE_MODELS') {
+          } else if (message.command === 'MANAGE_MODELS') {
             open_settings.api.models()
-          } else if (message.command == 'PREVIEW_SWITCH_CHOICE') {
+          } else if (message.command === 'PREVIEW_SWITCH_CHOICE') {
             if (this.preview_switch_choice_resolver) {
               this.preview_switch_choice_resolver(message.choice)
             }
-          } else if (message.command == 'GET_TASKS') {
+          } else if (message.command === 'GET_TASKS') {
             await handle_get_tasks(this)
-          } else if (message.command == 'SAVE_TASKS') {
+          } else if (message.command === 'SAVE_TASKS') {
             await handle_save_tasks(this, message)
-          } else if (message.command == 'DELETE_TASK') {
+          } else if (message.command === 'DELETE_TASK') {
             await handle_delete_task(this, message)
-          } else if (message.command == 'PREVIEW_GENERATED_CODE') {
+          } else if (message.command === 'PREVIEW_GENERATED_CODE') {
             await handle_preview_generated_code(message)
-          } else if (message.command == 'UPDATE_FILE_PROGRESS') {
+          } else if (message.command === 'UPDATE_FILE_PROGRESS') {
             // Handle the message internally instead of invoking a command
-          } else if (message.command == 'CREATE_API_CONFIGURATION') {
+          } else if (message.command === 'CREATE_API_CONFIGURATION') {
             await handle_create_api_configuration(this, message)
-          } else if (message.command == 'UPDATE_API_CONFIGURATION') {
+          } else if (message.command === 'UPDATE_API_CONFIGURATION') {
             await handle_update_api_configuration(this, message)
-          } else if (message.command == 'PICK_PROVIDER') {
+          } else if (message.command === 'PICK_PROVIDER') {
             await handle_pick_provider(this, message)
-          } else if (message.command == 'PICK_API_MODEL') {
+          } else if (message.command === 'PICK_API_MODEL') {
             await handle_pick_api_model(this, message)
-          } else if (message.command == 'PICK_API_REASONING_EFFORT') {
+          } else if (message.command === 'PICK_API_REASONING_EFFORT') {
             await handle_pick_api_reasoning_effort(this, message)
-          } else if (message.command == 'DELETE_API_CONFIGURATION') {
+          } else if (message.command === 'DELETE_API_CONFIGURATION') {
             await handle_delete_api_configuration(this, message)
-          } else if (message.command == 'REQUEST_CAN_UNDO') {
+          } else if (message.command === 'REQUEST_CAN_UNDO') {
             handle_request_can_undo(this)
-          } else if (message.command == 'FIX_ALL_FAILED_FILES') {
+          } else if (message.command === 'FIX_ALL_FAILED_FILES') {
             await handle_patch_repair({
               prompt_view_provider: this,
               files_to_fix: message.files,
               is_auto_run: message.is_auto_run
             })
-          } else if (message.command == 'SAVE_PROMPT_IMAGE') {
+          } else if (message.command === 'SAVE_PROMPT_IMAGE') {
             await handle_save_prompt_image(this, message)
-          } else if (message.command == 'OPEN_PROMPT_IMAGE') {
+          } else if (message.command === 'OPEN_PROMPT_IMAGE') {
             await handle_open_prompt_image(message)
-          } else if (message.command == 'SAVE_PROMPT_PASTED_TEXT') {
+          } else if (message.command === 'SAVE_PROMPT_PASTED_TEXT') {
             await handle_save_prompt_pasted_text(this, message)
-          } else if (message.command == 'OPEN_PROMPT_PASTED_TEXT') {
+          } else if (message.command === 'OPEN_PROMPT_PASTED_TEXT') {
             await handle_open_prompt_pasted_text(this, message)
-          } else if (message.command == 'PASTE_URL') {
+          } else if (message.command === 'PASTE_URL') {
             await handle_paste_url(this, message)
-          } else if (message.command == 'OPEN_WEBSITE') {
+          } else if (message.command === 'OPEN_WEBSITE') {
             await handle_open_website(this, message)
-          } else if (message.command == 'SET_RECORDING_STATE') {
+          } else if (message.command === 'SET_RECORDING_STATE') {
             await handle_voice_input(this, message)
-          } else if (message.command == 'GET_SETUP_PROGRESS') {
+          } else if (message.command === 'GET_SETUP_PROGRESS') {
             await this.send_setup_progress()
-          } else if (message.command == 'REQUEST_RETURN_HOME') {
+          } else if (message.command === 'REQUEST_RETURN_HOME') {
             await handle_request_return_home(this)
-          } else if (message.command == 'GET_VOICE_INPUT_PUSH_TO_TALK') {
+          } else if (message.command === 'GET_VOICE_INPUT_PUSH_TO_TALK') {
             this._send_voice_input_push_to_talk()
-          } else if (message.command == 'GET_IS_MODERN_UI') {
+          } else if (message.command === 'GET_IS_MODERN_UI') {
             this._send_is_modern_ui()
-          } else if (message.command == 'PICK_TASKS_WORKSPACE') {
+          } else if (message.command === 'PICK_TASKS_WORKSPACE') {
             await handle_pick_tasks_workspace(this, message)
-          } else if (message.command == 'GET_TOKEN_COUNT') {
+          } else if (message.command === 'GET_TOKEN_COUNT') {
             this.send_token_count()
-          } else if (message.command == 'PREVIEW_PROMPT') {
+          } else if (message.command === 'PREVIEW_PROMPT') {
             await handle_preview_prompt({
               prompt_view_provider: this
             })
-          } else if (message.command == 'INSTALL_BROWSER_EXTENSION') {
+          } else if (message.command === 'INSTALL_BROWSER_EXTENSION') {
             await handle_install_browser_extension()
-          } else if (message.command == 'PREVIEW_CHANGES_SYMBOL') {
+          } else if (message.command === 'PREVIEW_CHANGES_SYMBOL') {
             await handle_preview_changes_symbol(message)
-          } else if (message.command == 'PREVIEW_COMMIT_SYMBOL') {
+          } else if (message.command === 'PREVIEW_COMMIT_SYMBOL') {
             await handle_preview_commit_symbol(message)
-          } else if (message.command == 'PREVIEW_SKILL_SYMBOL') {
+          } else if (message.command === 'PREVIEW_SKILL_SYMBOL') {
             await handle_preview_skill_symbol(message)
-          } else if (message.command == 'PREVIEW_SAVED_CONTEXT_SYMBOL') {
+          } else if (message.command === 'PREVIEW_SAVED_CONTEXT_SYMBOL') {
             await handle_preview_saved_context_symbol({
               prompt_view_provider: this,
               message
             })
-          } else if (message.command == 'AGENTIC_SEARCH') {
+          } else if (message.command === 'AGENTIC_SEARCH') {
             await handle_agentic_search(this)
-          } else if (message.command == 'GET_CLI_CONFIGURATIONS') {
+          } else if (message.command === 'GET_CLI_CONFIGURATIONS') {
             this.send_cli_configurations_to_webview(webview_view.webview)
-          } else if (message.command == 'CREATE_CLI_CONFIGURATION') {
+          } else if (message.command === 'CREATE_CLI_CONFIGURATION') {
             await handle_create_cli_configuration(this, message)
-          } else if (message.command == 'UPDATE_CLI_CONFIGURATION') {
+          } else if (message.command === 'UPDATE_CLI_CONFIGURATION') {
             await handle_update_cli_configuration(this, message)
-          } else if (message.command == 'DELETE_CLI_CONFIGURATION') {
+          } else if (message.command === 'DELETE_CLI_CONFIGURATION') {
             await handle_delete_cli_configuration(message)
-          } else if (message.command == 'REORDER_CLI_CONFIGURATIONS') {
+          } else if (message.command === 'REORDER_CLI_CONFIGURATIONS') {
             await handle_reorder_cli_configurations(message)
-          } else if (message.command == 'TOGGLE_PINNED_CLI_CONFIGURATION') {
+          } else if (message.command === 'TOGGLE_PINNED_CLI_CONFIGURATION') {
             await handle_toggle_pinned_cli_configuration(message)
-          } else if (message.command == 'PICK_AGENT') {
+          } else if (message.command === 'PICK_AGENT') {
             await handle_pick_agent(this, message)
-          } else if (message.command == 'PICK_EXAMPLE_FLAGS') {
+          } else if (message.command === 'PICK_EXAMPLE_FLAGS') {
             await handle_pick_example_flags(this, message)
-          } else if (message.command == 'GET_COMPLETED_TASKS') {
+          } else if (message.command === 'GET_COMPLETED_TASKS') {
             handle_get_completed_tasks(this)
-          } else if (message.command == 'SAVE_COMPLETED_TASKS') {
+          } else if (message.command === 'SAVE_COMPLETED_TASKS') {
             await handle_save_completed_tasks(this)
-          } else if (message.command == 'CLEAR_COMPLETED_TASKS') {
+          } else if (message.command === 'CLEAR_COMPLETED_TASKS') {
             await handle_clear_completed_tasks(this)
           }
         } catch (error) {
@@ -968,7 +970,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             this.extension_context.workspaceState.get<string>(key) ??
             this.extension_context.globalState.get<string>(key)
           if (last_selected) {
-            if (cli_configurations_ui.some((p) => p.name == last_selected)) {
+            if (cli_configurations_ui.some((p) => p.name === last_selected)) {
               selected_name = last_selected
             }
           }
@@ -996,7 +998,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           if (
             !is_user_provided_supported &&
             !is_model_predefined &&
-            config.chatbot != 'OpenRouter'
+            config.chatbot !== 'OpenRouter'
           ) {
             model = undefined
           }
@@ -1017,7 +1019,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             this.extension_context.workspaceState.get<string>(key) ??
             this.extension_context.globalState.get<string>(key)
           if (last_selected) {
-            if (web_configurations_ui.some((p) => p.name == last_selected)) {
+            if (web_configurations_ui.some((p) => p.name === last_selected)) {
               selected_name = last_selected
             }
           }

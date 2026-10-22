@@ -47,9 +47,9 @@ const restore_duplicated_workspace_context = async (
       ].sort()
 
       const are_workspaces_the_same =
-        sorted_current_folders.length == sorted_saved_folders.length &&
+        sorted_current_folders.length === sorted_saved_folders.length &&
         sorted_current_folders.every(
-          (value, index) => value == sorted_saved_folders[index]
+          (value, index) => value === sorted_saved_folders[index]
         )
       if (are_workspaces_the_same) {
         await extension_context.workspaceState.update(

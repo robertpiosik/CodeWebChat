@@ -26,7 +26,7 @@ export const handle_get_web_configurations = async (
           if (
             !is_user_provided_supported &&
             !is_model_predefined &&
-            config.chatbot != 'OpenRouter'
+            config.chatbot !== 'OpenRouter'
           ) {
             model = undefined
           }

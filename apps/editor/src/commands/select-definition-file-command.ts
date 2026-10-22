@@ -32,7 +32,7 @@ export const select_definition_file_command = (
             if (!result) return null
 
             if (Array.isArray(result)) {
-              if (result.length == 0) return null
+              if (result.length === 0) return null
               const first = result[0]
               return 'targetUri' in first ? first.targetUri : first.uri
             } else {

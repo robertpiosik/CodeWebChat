@@ -18,7 +18,7 @@ export const create_handle_input_change =
     const caret_position = get_caret_position_from_div(currentTarget)
     const char_before_caret = new_display_value.charAt(caret_position - 1)
 
-    refs.has_modified_current_entry_ref.current = new_raw_value != ''
+    refs.has_modified_current_entry_ref.current = new_raw_value !== ''
     utils.update_value(new_raw_value)
 
     const native_event = e.nativeEvent as unknown as { inputType?: string }
@@ -27,8 +27,8 @@ export const create_handle_input_change =
       return
     }
 
-    if (char_before_caret == '@') {
-      const is_at_start = caret_position == 1
+    if (char_before_caret === '@') {
+      const is_at_start = caret_position === 1
       let is_after_whitespace = false
       if (caret_position > 1) {
         const char_before_at = new_display_value.charAt(caret_position - 2)
@@ -38,8 +38,8 @@ export const create_handle_input_change =
       if (is_at_start || is_after_whitespace) {
         props.on_at_sign_click()
       }
-    } else if (char_before_caret == '#') {
-      const is_at_start = caret_position == 1
+    } else if (char_before_caret === '#') {
+      const is_at_start = caret_position === 1
       let is_after_whitespace = false
       if (caret_position > 1) {
         const char_before_hash = new_display_value.charAt(caret_position - 2)
@@ -49,8 +49,8 @@ export const create_handle_input_change =
       if (is_at_start || is_after_whitespace) {
         props.on_hash_sign_click()
       }
-    } else if (char_before_caret == '/') {
-      const is_at_start = caret_position == 1
+    } else if (char_before_caret === '/') {
+      const is_at_start = caret_position === 1
       let is_after_whitespace = false
       if (caret_position > 1) {
         const char_before_slash = new_display_value.charAt(caret_position - 2)

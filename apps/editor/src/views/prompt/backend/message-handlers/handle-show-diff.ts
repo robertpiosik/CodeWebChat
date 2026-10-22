@@ -22,7 +22,7 @@ export const handle_show_diff = async (
 
   let target_workspace: vscode.WorkspaceFolder | undefined
 
-  if (workspace_folders.length == 1) {
+  if (workspace_folders.length === 1) {
     target_workspace = workspace_folders[0]
   } else {
     for (const folder of workspace_folders) {

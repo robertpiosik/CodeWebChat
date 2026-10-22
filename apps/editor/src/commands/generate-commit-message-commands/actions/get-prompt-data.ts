@@ -25,13 +25,13 @@ export const get_prompt_data = async (params: {
   await vscode.workspace.saveAll()
   await params.repository.status()
   const current_empty_stage =
-    (params.repository.state.indexChanges || []).length == 0
+    (params.repository.state.indexChanges || []).length === 0
   const was_empty_stage = current_empty_stage || !!params.files_staged_by_action
   const working_tree_changes = params.repository.state.workingTreeChanges || []
   const is_single_change =
     params.is_single_change_flow !== undefined
       ? params.is_single_change_flow
-      : current_empty_stage && working_tree_changes.length == 1
+      : current_empty_stage && working_tree_changes.length === 1
   const diff = await prepare_staged_changes({
     repository: params.repository,
     stage_all_if_none_staged: params.stage_all_if_none_staged,
@@ -43,7 +43,7 @@ export const get_prompt_data = async (params: {
   if (!diff) return null
 
   const diff_file_paths: string[] = []
-  const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
+  const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() !== '')
   for (const file_diff_content of file_diffs) {
     const full_file_diff = 'diff --git ' + file_diff_content
     const lines = full_file_diff.split('\n')
@@ -58,9 +58,9 @@ export const get_prompt_data = async (params: {
       : undefined
 
     let file_path: string | undefined
-    if (new_path && new_path != '/dev/null') {
+    if (new_path && new_path !== '/dev/null') {
       file_path = new_path
-    } else if (old_path && old_path != '/dev/null') {
+    } else if (old_path && old_path !== '/dev/null') {
       file_path = old_path
     } else {
       const match = lines[0]?.match(/^diff --git a\/(.*) b\/(.*)$/)

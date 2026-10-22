@@ -8,7 +8,7 @@ const update_task_in_tree = (params: {
   updated_task: Task
 }): Task[] => {
   return params.tasks.map((t) => {
-    if (t.created_at == params.updated_task.created_at) {
+    if (t.created_at === params.updated_task.created_at) {
       return params.updated_task
     }
     if (t.children) {
@@ -30,7 +30,7 @@ const add_subtask_to_tree = (params: {
   new_task: Task
 }): Task[] => {
   return params.tasks.map((t) => {
-    if (t.created_at == params.parent_task.created_at) {
+    if (t.created_at === params.parent_task.created_at) {
       return {
         ...t,
         children: [...(t.children || []), params.new_task],
@@ -74,7 +74,7 @@ export const use_tasks = (vscode: any) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
-      if (message.command == 'TASKS') {
+      if (message.command === 'TASKS') {
         set_tasks(message.tasks)
       }
     }

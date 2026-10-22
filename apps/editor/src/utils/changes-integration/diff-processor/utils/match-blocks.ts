@@ -8,7 +8,7 @@ export const match_blocks = (params: {
   for (let i = 0; i < params.search_replace_blocks.length; i++) {
     const block = params.search_replace_blocks[i]
 
-    if (block.search_lines.length == 0 && previous_found_index == 0) {
+    if (block.search_lines.length === 0 && previous_found_index === 0) {
       block.search_block_start_index = -1
       continue
     }
@@ -23,21 +23,21 @@ export const match_blocks = (params: {
 
     let max_trim_top = 0
     for (let k = 0; k < safe_trim_indices.length; k++) {
-      if (safe_trim_indices[k] == k) {
+      if (safe_trim_indices[k] === k) {
         max_trim_top = k + 1
       } else {
         break
       }
     }
 
-    if (max_trim_top > 0 && safe_trim_indices.length == max_trim_top) {
+    if (max_trim_top > 0 && safe_trim_indices.length === max_trim_top) {
       if (
         max_trim_top < block.replace_lines.length &&
         block.replace_lines[max_trim_top].search_index === null
       ) {
         let has_deletion = true
         for (let r = max_trim_top + 1; r < block.replace_lines.length; r++) {
-          if (block.replace_lines[r].search_index == max_trim_top) {
+          if (block.replace_lines[r].search_index === max_trim_top) {
             has_deletion = false
             break
           }
@@ -59,7 +59,7 @@ export const match_blocks = (params: {
     // Pass 1: Strict Match
     for (let trim_cnt = 0; trim_cnt <= max_trim_top; trim_cnt++) {
       const current_search_lines = block.search_lines.slice(trim_cnt)
-      if (current_search_lines.length == 0) continue
+      if (current_search_lines.length === 0) continue
 
       for (
         let j = previous_found_index;
@@ -79,7 +79,7 @@ export const match_blocks = (params: {
           const o_val =
             params.original_code_lines_normalized[original_ptr].value
 
-          if (s_val == o_val) {
+          if (s_val === o_val) {
             current_search_to_original.set(
               search_ptr + trim_cnt,
               params.original_code_lines_normalized[original_ptr].key
@@ -89,16 +89,16 @@ export const match_blocks = (params: {
             )
             search_ptr++
             original_ptr++
-          } else if (o_val == '~nnn') {
+          } else if (o_val === '~nnn') {
             original_ptr++
-          } else if (s_val == '~nnn') {
+          } else if (s_val === '~nnn') {
             search_ptr++
           } else {
             break
           }
         }
 
-        if (search_ptr == current_search_lines.length) {
+        if (search_ptr === current_search_lines.length) {
           matched_info = {
             start_index:
               matched_indices.length > 0
@@ -127,7 +127,7 @@ export const match_blocks = (params: {
     if (!found) {
       for (let trim_cnt = 0; trim_cnt <= max_trim_top; trim_cnt++) {
         const current_search_lines = block.search_lines.slice(trim_cnt)
-        if (current_search_lines.length == 0) continue
+        if (current_search_lines.length === 0) continue
 
         for (
           let j = previous_found_index;
@@ -148,7 +148,7 @@ export const match_blocks = (params: {
             const o_val =
               params.original_code_lines_normalized[original_ptr].value
 
-            if (s_val == o_val) {
+            if (s_val === o_val) {
               current_search_to_original.set(
                 search_ptr + trim_cnt,
                 params.original_code_lines_normalized[original_ptr].key
@@ -158,9 +158,9 @@ export const match_blocks = (params: {
               )
               search_ptr++
               original_ptr++
-            } else if (o_val == '~nnn') {
+            } else if (o_val === '~nnn') {
               original_ptr++
-            } else if (s_val == '~nnn') {
+            } else if (s_val === '~nnn') {
               search_ptr++
             } else {
               // Loose gap skipping (look ahead in original code up to 50 lines for the missing match)
@@ -174,7 +174,7 @@ export const match_blocks = (params: {
               ) {
                 if (
                   params.original_code_lines_normalized[original_ptr + k]
-                    .value == s_val
+                    .value === s_val
                 ) {
                   found_ahead = true
                   original_ptr += k
@@ -188,7 +188,7 @@ export const match_blocks = (params: {
             }
           }
 
-          if (!match_failed && search_ptr == current_search_lines.length) {
+          if (!match_failed && search_ptr === current_search_lines.length) {
             matched_info = {
               start_index:
                 matched_indices.length > 0
@@ -230,8 +230,8 @@ export const match_blocks = (params: {
         (l) => l.search_index === null
       )
       const is_noop =
-        block.search_lines.length == block.after_search_lines.length &&
-        block.search_lines.every((v, i) => v == block.after_search_lines[i])
+        block.search_lines.length === block.after_search_lines.length &&
+        block.search_lines.every((v, i) => v === block.after_search_lines[i])
 
       if (has_additions && block.after_search_lines.length > 0 && !is_noop) {
         const check_start = Math.max(
@@ -255,12 +255,12 @@ export const match_blocks = (params: {
             const a_val = block.after_search_lines[after_ptr]
             const o_val = params.original_code_lines_normalized[orig_ptr].value
 
-            if (a_val == o_val) {
+            if (a_val === o_val) {
               after_ptr++
               orig_ptr++
-            } else if (o_val == '~nnn') {
+            } else if (o_val === '~nnn') {
               orig_ptr++
-            } else if (a_val == '~nnn') {
+            } else if (a_val === '~nnn') {
               after_ptr++
             } else {
               break

@@ -118,7 +118,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
   const handle_option_toggle = (option: string) => {
     set_options((prev) =>
       prev.includes(option)
-        ? prev.filter((o) => o != option)
+        ? prev.filter((o) => o !== option)
         : [...prev, option]
     )
   }
@@ -126,11 +126,11 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent) => {
       const message = event.data as BackendMessage
-      if (message.command == 'NEWLY_PICKED_MODEL') {
+      if (message.command === 'NEWLY_PICKED_MODEL') {
         set_model(message.model_id)
-      } else if (message.command == 'NEWLY_PICKED_CHATBOT') {
+      } else if (message.command === 'NEWLY_PICKED_CHATBOT') {
         handle_chatbot_change(message.chatbot_id as keyof typeof CHATBOTS)
-      } else if (message.command == 'NEWLY_PICKED_REASONING_EFFORT') {
+      } else if (message.command === 'NEWLY_PICKED_REASONING_EFFORT') {
         set_reasoning_effort(message.effort)
       }
     }
@@ -171,7 +171,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
             />
           </UiField>
 
-          {(Object.keys(models).length > 0 || chatbot == 'OpenRouter') && (
+          {(Object.keys(models).length > 0 || chatbot === 'OpenRouter') && (
             <UiField
               label={t('edit-web-configuration-form.model')}
               html_for="model"
@@ -222,7 +222,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
               label={t('edit-web-configuration-form.reasoning-effort')}
               html_for="reasoning-effort"
               info={
-                chatbot == 'OpenRouter'
+                chatbot === 'OpenRouter'
                   ? `${t('common.reasoning-effort-info')} ${t('edit-web-configuration-form.reasoning-effort.requires-reasoning-model')}`
                   : t('common.reasoning-effort-info')
               }
@@ -275,7 +275,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
               label={t('edit-web-configuration-form.port')}
               html_for="port"
               info={
-                chatbot == 'Open WebUI' && (
+                chatbot === 'Open WebUI' && (
                   <Translation id="edit-web-configuration-form.port.info" />
                 )
               }
@@ -291,7 +291,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
                 placeholder={t('edit-web-configuration-form.port.placeholder')}
                 on_key_down={(e) =>
                   !/[0-9]/.test(e.key) &&
-                  e.key != 'Backspace' &&
+                  e.key !== 'Backspace' &&
                   e.preventDefault()
                 }
               />

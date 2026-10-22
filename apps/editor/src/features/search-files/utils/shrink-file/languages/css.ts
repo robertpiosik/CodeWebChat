@@ -14,7 +14,7 @@ export const shrink_css = (content: string): string => {
 
       if (is_in_block_comment) {
         processed_line += char
-        if (char == '*' && next_char == '/') {
+        if (char === '*' && next_char === '/') {
           is_in_block_comment = false
           processed_line += next_char
           i += 2
@@ -25,7 +25,7 @@ export const shrink_css = (content: string): string => {
       }
 
       if (is_in_string) {
-        if (char == '\\') {
+        if (char === '\\') {
           processed_line += char + (next_char || '')
           i += 2
           continue
@@ -38,19 +38,19 @@ export const shrink_css = (content: string): string => {
         continue
       }
 
-      if (char == '"' || char === "'") {
+      if (char === '"' || char === "'") {
         is_in_string = char
         processed_line += char
         i++
         continue
       }
 
-      if (char == '/' && next_char == '/') {
+      if (char === '/' && next_char === '/') {
         processed_line += line.substring(i)
         break
       }
 
-      if (char == '/' && next_char == '*') {
+      if (char === '/' && next_char === '*') {
         is_in_block_comment = true
         processed_line += '/*'
         i += 2

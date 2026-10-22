@@ -25,22 +25,22 @@ const process_collected_patch_lines = (params: {
   lines = lines.filter((l) => l.length > 0)
 
   const joined_patch_text_for_checks = lines.join('\n')
-  if (joined_patch_text_for_checks.trim() == '') return null
+  if (joined_patch_text_for_checks.trim() === '') return null
 
   const { from_path, to_path } = extract_paths_from_lines(lines)
 
-  const is_new_file = from_path == '/dev/null'
-  const is_deleted_file = to_path == '/dev/null'
+  const is_new_file = from_path === '/dev/null'
+  const is_deleted_file = to_path === '/dev/null'
   const is_rename =
     from_path &&
     to_path &&
-    from_path != to_path &&
+    from_path !== to_path &&
     !is_new_file &&
     !is_deleted_file
 
-  const file_path = from_path && from_path != '/dev/null' ? from_path : to_path
+  const file_path = from_path && from_path !== '/dev/null' ? from_path : to_path
 
-  if (!file_path || file_path == '/dev/null') {
+  if (!file_path || file_path === '/dev/null') {
     Logger.info({
       function_name: 'process_collected_patch_lines',
       message: 'Could not extract file path from collected patch lines.',
@@ -95,7 +95,7 @@ const process_collected_patch_lines = (params: {
         is_single_root_folder_workspace: params.is_single_root
       })
     patch.new_file_path = new_relative
-    if (new_workspace && new_workspace != workspace_name) {
+    if (new_workspace && new_workspace !== workspace_name) {
       patch.new_workspace_name = new_workspace
     }
   }
@@ -108,7 +108,7 @@ const convert_code_block_to_new_file_diff = (params: {
   is_single_root: boolean
   file_path_hint?: string
 }): DiffItem | null => {
-  if (params.lines.length == 0 && !params.file_path_hint) {
+  if (params.lines.length === 0 && !params.file_path_hint) {
     return null
   }
 
@@ -140,8 +140,8 @@ const convert_code_block_to_new_file_diff = (params: {
     }
 
     if (
-      file_tag_start != -1 &&
-      file_tag_end != -1 &&
+      file_tag_start !== -1 &&
+      file_tag_end !== -1 &&
       file_tag_end > file_tag_start
     ) {
       content_lines = params.lines.slice(file_tag_start + 1, file_tag_end)
@@ -159,7 +159,7 @@ const convert_code_block_to_new_file_diff = (params: {
       ) {
         const { from_path, to_path } = extract_paths_from_lines([line])
         const potential_path = to_path || from_path
-        if (potential_path && potential_path != '/dev/null') {
+        if (potential_path && potential_path !== '/dev/null') {
           file_path = normalize_path(potential_path)
           break
         }
@@ -172,7 +172,7 @@ const convert_code_block_to_new_file_diff = (params: {
     file_path = params.file_path_hint
   }
 
-  if (file_path && content_lines.length == 0) {
+  if (file_path && content_lines.length === 0) {
     content_lines = params.lines
   }
 
@@ -180,7 +180,7 @@ const convert_code_block_to_new_file_diff = (params: {
     return null
   }
 
-  const first_real_content_line = content_lines.find((l) => l.trim() != '')
+  const first_real_content_line = content_lines.find((l) => l.trim() !== '')
   if (
     first_real_content_line &&
     (first_real_content_line
@@ -252,7 +252,7 @@ const process_text_for_file_operations = (params: {
 
   for (const line of params.lines) {
     const trimmed_line = line.trim()
-    if (trimmed_line == '<files>' || trimmed_line == '</files>') {
+    if (trimmed_line === '<files>' || trimmed_line === '</files>') {
       continue
     }
     const deleted_match = trimmed_line.match(deleted_file_header_regex)
@@ -307,7 +307,7 @@ const process_text_for_file_operations = (params: {
       }
       if (
         new_info.workspace_name &&
-        new_info.workspace_name != old_info.workspace_name
+        new_info.workspace_name !== old_info.workspace_name
       ) {
         patch.new_workspace_name = new_info.workspace_name
       }
@@ -346,15 +346,15 @@ const extract_all_code_block_patches = (params: {
 
     if (
       stack.length > 0 &&
-      (stack[stack.length - 1].type == 'diff' ||
-        stack[stack.length - 1].type == 'patch')
+      (stack[stack.length - 1].type === 'diff' ||
+        stack[stack.length - 1].type === 'patch')
     ) {
       if (line.match(/^[+\- ]/)) {
         continue
       }
     }
 
-    if (lang == '' && stack.length > 0 && trimmed_line == '```') {
+    if (lang === '' && stack.length > 0 && trimmed_line === '```') {
       const open_block = stack.pop()!
       code_blocks.push({
         start: open_block.start,
@@ -430,7 +430,7 @@ const extract_all_code_block_patches = (params: {
 
   for (let i = 0; i < code_blocks.length; i++) {
     const block = code_blocks[i]
-    if (block.type == 'diff' || block.type == 'patch') {
+    if (block.type === 'diff' || block.type === 'patch') {
       let file_path_hint: string | undefined
       let is_new_file_from_hint = false
       if (i > 0) {
@@ -439,8 +439,8 @@ const extract_all_code_block_patches = (params: {
           code_blocks[i - 1].end
         )
         const xml_path_regex = /<[\w-]+\s+path=["']([^"']+)["']([^>]*)>/
-        const non_empty_lines = prev_block_lines.filter((l) => l.trim() != '')
-        if (non_empty_lines.length == 1) {
+        const non_empty_lines = prev_block_lines.filter((l) => l.trim() !== '')
+        if (non_empty_lines.length === 1) {
           const match = non_empty_lines[0].match(xml_path_regex)
           if (match && match[1]) {
             file_path_hint = match[1]
@@ -486,11 +486,11 @@ const extract_all_code_block_patches = (params: {
   for (let i = 0; i < code_blocks.length; i++) {
     const block = code_blocks[i]
     const block_lines =
-      block.type == 'xml_file'
+      block.type === 'xml_file'
         ? lines.slice(block.start, block.end + 1)
         : lines.slice(block.start + 1, block.end)
 
-    if (block.type == 'diff' || block.type == 'patch') {
+    if (block.type === 'diff' || block.type === 'patch') {
       const text_before_lines = lines.slice(last_block_end + 1, block.start)
       const preceding_items = process_text_for_file_operations({
         lines: text_before_lines,
@@ -502,7 +502,7 @@ const extract_all_code_block_patches = (params: {
 
       if (patches.length > 0) {
         const last_item = items.length > 0 ? items[items.length - 1] : undefined
-        if (last_item && last_item.type == 'text') {
+        if (last_item && last_item.type === 'text') {
           remove_path_line_from_text_block({
             text_item: last_item,
             target_file_path: patches[0].file_path,
@@ -520,10 +520,10 @@ const extract_all_code_block_patches = (params: {
     } else {
       if (i < code_blocks.length - 1) {
         const next_block = code_blocks[i + 1]
-        if (next_block.type == 'diff' || next_block.type == 'patch') {
+        if (next_block.type === 'diff' || next_block.type === 'patch') {
           const xml_path_regex = /<[\w-]+\s+path=["']([^"']+)["']/
-          const non_empty_lines = block_lines.filter((l) => l.trim() != '')
-          if (non_empty_lines.length == 1) {
+          const non_empty_lines = block_lines.filter((l) => l.trim() !== '')
+          if (non_empty_lines.length === 1) {
             const match = non_empty_lines[0].match(xml_path_regex)
             if (match && match[1]) {
               const text_before_lines = lines.slice(
@@ -565,7 +565,7 @@ const extract_all_code_block_patches = (params: {
         )
 
         const last_item = items.length > 0 ? items[items.length - 1] : undefined
-        if (last_item && last_item.type == 'text') {
+        if (last_item && last_item.type === 'text') {
           remove_path_line_from_text_block({
             text_item: last_item,
             target_file_path: patch.file_path,
@@ -593,7 +593,7 @@ const extract_all_code_block_patches = (params: {
 
         const content = block_lines.join('\n')
         // Treated as an inline file (code snippet) since it's not a diff or a new file with a path
-        if (content.trim() != '') {
+        if (content.trim() !== '') {
           items.push({
             type: 'inline-file',
             content,
@@ -617,7 +617,7 @@ const extract_all_code_block_patches = (params: {
 
   if (items.length > 0) {
     const last_item = items[items.length - 1]
-    if (last_item.type == 'text' && last_item.content.trim() == '```') {
+    if (last_item.type === 'text' && last_item.content.trim() === '```') {
       items.pop()
     }
   }
@@ -690,7 +690,7 @@ const merge_diffs_per_file = (items: DiffParserItem[]): DiffParserItem[] => {
   const file_diff_map = new Map<string, DiffItem>()
 
   for (const item of items) {
-    if (item.type == 'diff') {
+    if (item.type === 'diff') {
       const file_key = `${item.workspace_name || ''}:${item.file_path}`
       if (file_diff_map.has(file_key)) {
         const existing_diff = file_diff_map.get(file_key)!
@@ -705,7 +705,7 @@ const merge_diffs_per_file = (items: DiffParserItem[]): DiffParserItem[] => {
         )
 
         const existing_is_new_file = existing_lines.some(
-          (l) => l == '--- /dev/null'
+          (l) => l === '--- /dev/null'
         )
         const incoming_is_modification =
           !item.content.includes('--- /dev/null') && item.content.includes('@@')
@@ -719,17 +719,17 @@ const merge_diffs_per_file = (items: DiffParserItem[]): DiffParserItem[] => {
           const new_lines = item.content.replace(/\n$/, '').split('\n')
 
           let start_idx = new_lines.findIndex((l) => l.startsWith('@@'))
-          if (start_idx == -1) {
+          if (start_idx === -1) {
             start_idx = new_lines.findIndex(
               (l) =>
                 !l.startsWith('--- ') &&
                 !l.startsWith('+++ ') &&
                 !l.startsWith('diff --git') &&
-                l.trim() != ''
+                l.trim() !== ''
             )
           }
 
-          if (start_idx != -1) {
+          if (start_idx !== -1) {
             const content_to_add = new_lines.slice(start_idx).join('\n') + '\n'
             existing_diff.content = existing_diff.content.endsWith('\n')
               ? existing_diff.content + content_to_add
@@ -737,10 +737,10 @@ const merge_diffs_per_file = (items: DiffParserItem[]): DiffParserItem[] => {
           }
         }
 
-        if (result.length > 0 && result[result.length - 1].type == 'text') {
+        if (result.length > 0 && result[result.length - 1].type === 'text') {
           const orphaned_text = result.pop() as TextItem
           const diff_index = result.indexOf(existing_diff)
-          if (diff_index > 0 && result[diff_index - 1].type == 'text') {
+          if (diff_index > 0 && result[diff_index - 1].type === 'text') {
             ;(result[diff_index - 1] as TextItem).content +=
               '\n' + orphaned_text.content
           } else {
@@ -820,13 +820,13 @@ const build_patch_content = (params: {
       const is_new_file_based_on_empty =
         formatted_body_lines.length > 0 &&
         formatted_body_lines.some((line) => line.startsWith('+')) &&
-        formatted_body_lines.some((line) => line.trim() == '-') &&
+        formatted_body_lines.some((line) => line.trim() === '-') &&
         formatted_body_lines.every(
           (line) =>
             line.startsWith('+') ||
             line.startsWith('@@') ||
-            line.trim() == '-' ||
-            line == '\\ No newline at end of file'
+            line.trim() === '-' ||
+            line === '\\ No newline at end of file'
         ) &&
         formatted_body_lines.some(
           (line) => line.startsWith('@@ -1') || line.startsWith('@@ -0')
@@ -866,7 +866,7 @@ const build_patch_content = (params: {
         const is_new_file_content =
           content_lines.length > 0 &&
           content_lines.every(
-            (line) => line.startsWith('+') || line.trim() == ''
+            (line) => line.startsWith('+') || line.trim() === ''
           )
 
         if (is_new_file_content) {
@@ -892,7 +892,7 @@ const build_patch_content = (params: {
       line.startsWith('@@')
     )
 
-    if (content_start_index == -1) {
+    if (content_start_index === -1) {
       Logger.info({
         function_name: 'build_patch_content',
         message:
@@ -909,7 +909,7 @@ const build_patch_content = (params: {
       const content_lines = params.lines
       const is_new_file =
         content_lines.length > 0 &&
-        content_lines.every((l) => l.startsWith('+') || l.trim() == '')
+        content_lines.every((l) => l.startsWith('+') || l.trim() === '')
 
       let body = params.lines.join('\n')
       if (is_new_file) {

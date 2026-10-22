@@ -48,7 +48,7 @@ export const grok: Chatbot = {
       for (const item of menu_items) {
         const text = item.textContent?.trim().toLowerCase()
         if (text && text.includes(target_label_lower)) {
-          const is_checked = item.getAttribute('aria-checked') == 'true'
+          const is_checked = item.getAttribute('aria-checked') === 'true'
           if (!is_checked) {
             ;(item as HTMLElement).click()
           }
@@ -70,7 +70,7 @@ export const grok: Chatbot = {
     if (!options) return
     const supported_options = CHATBOTS['Grok'].supported_options
     for (const option of options) {
-      if (option == 'private' && supported_options?.['private']) {
+      if (option === 'private' && supported_options?.['private']) {
         const private_link = document.querySelector(
           'a[href="/c#private"]'
         ) as HTMLAnchorElement

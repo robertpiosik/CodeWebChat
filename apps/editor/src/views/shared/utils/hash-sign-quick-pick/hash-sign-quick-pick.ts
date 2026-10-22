@@ -54,10 +54,10 @@ export const hash_sign_quick_pick = async (params: {
       }
     ] as vscode.QuickPickItem[]
   ).filter((item) => {
-    if (params.exclude?.includes('changes') && item.label == changes_label) {
+    if (params.exclude?.includes('changes') && item.label === changes_label) {
       return false
     }
-    if (params.exclude?.includes('commit') && item.label == commit_label) {
+    if (params.exclude?.includes('commit') && item.label === commit_label) {
       return false
     }
     if (
@@ -66,7 +66,7 @@ export const hash_sign_quick_pick = async (params: {
     ) {
       return false
     }
-    if (params.exclude?.includes('skill') && item.label == skill_label) {
+    if (params.exclude?.includes('skill') && item.label === skill_label) {
       return false
     }
     return true
@@ -77,7 +77,7 @@ export const hash_sign_quick_pick = async (params: {
       LAST_SELECTED_SYMBOL_STATE_KEY
     )
   let last_selected_item: vscode.QuickPickItem | undefined = items.find(
-    (item) => item.label == last_selected_symbol
+    (item) => item.label === last_selected_symbol
   )
 
   while (true) {
@@ -161,7 +161,7 @@ export const hash_sign_quick_pick = async (params: {
         continue
     }
 
-    if (result == 'continue') {
+    if (result === 'continue') {
       continue
     }
 

@@ -8,26 +8,26 @@ export const handle_set_default_web_configuration = async (
   const web_configs = config.get<any[]>('chatbots', []) || []
   const updated = web_configs.map((c) => {
     const new_c = { ...c }
-    if (message.web_feature == 'code-at-cursor') {
-      if (c.name == message.web_configuration_name) {
+    if (message.web_feature === 'code-at-cursor') {
+      if (c.name === message.web_configuration_name) {
         new_c.isDefaultForCodeAtCursor = true
       } else {
         delete new_c.isDefaultForCodeAtCursor
       }
-    } else if (message.web_feature == 'patch-repair') {
-      if (c.name == message.web_configuration_name) {
+    } else if (message.web_feature === 'patch-repair') {
+      if (c.name === message.web_configuration_name) {
         new_c.isDefaultForPatchRepair = true
       } else {
         delete new_c.isDefaultForPatchRepair
       }
-    } else if (message.web_feature == 'intelligent-search') {
-      if (c.name == message.web_configuration_name) {
+    } else if (message.web_feature === 'intelligent-search') {
+      if (c.name === message.web_configuration_name) {
         new_c.isDefaultForIntelligentSearch = true
       } else {
         delete new_c.isDefaultForIntelligentSearch
       }
-    } else if (message.web_feature == 'commit-message') {
-      if (c.name == message.web_configuration_name) {
+    } else if (message.web_feature === 'commit-message') {
+      if (c.name === message.web_configuration_name) {
         new_c.isDefaultForCommitMessage = true
       } else {
         delete new_c.isDefaultForCommitMessage

@@ -16,7 +16,7 @@ export const ask_for_new_context_name = async (
     disposables.push(
       input_box.onDidAccept(() => {
         const value = input_box.value.trim()
-        if (value.length == 0) {
+        if (value.length === 0) {
           input_box.validationMessage = t(
             'feature.context-restoration.ask-name.empty'
           )

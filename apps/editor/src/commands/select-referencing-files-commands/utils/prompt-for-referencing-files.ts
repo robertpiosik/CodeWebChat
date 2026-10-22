@@ -40,8 +40,8 @@ export const prompt_for_referencing_files = async (params: {
         : file_path
 
       const dir_name = path.dirname(relative_path)
-      const has_parent_folder = dir_name != '.'
-      const display_dir = dir_name == '.' ? '' : dir_name
+      const has_parent_folder = dir_name !== '.'
+      const display_dir = dir_name === '.' ? '' : dir_name
 
       const token_count =
         await params.workspace_provider.calculate_file_tokens(file_path)
@@ -131,7 +131,7 @@ export const prompt_for_referencing_files = async (params: {
           quick_pick.hide()
         } else if (button === search_button) {
           current_selected_items = [...quick_pick.selectedItems]
-          if (current_selected_items.length == 0) {
+          if (current_selected_items.length === 0) {
             vscode.window.showInformationMessage(
               t('common.info.select-files-to-search')
             )

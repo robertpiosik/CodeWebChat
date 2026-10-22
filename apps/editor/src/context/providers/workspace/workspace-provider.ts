@@ -187,7 +187,7 @@ export class WorkspaceProvider
   get_export_state() {
     return {
       selected_files: Array.from(this._checked_items.entries())
-        .filter(([, state]) => state == vscode.TreeItemCheckboxState.Checked)
+        .filter(([, state]) => state === vscode.TreeItemCheckboxState.Checked)
         .map(([path]) => path),
       selected_timestamps: Object.fromEntries(this._selected_timestamps)
     }
@@ -250,7 +250,7 @@ export class WorkspaceProvider
       while (workspace_root && dir_path.startsWith(workspace_root)) {
         this._update_parent_state(dir_path)
         const next_dir_path = path.dirname(dir_path)
-        if (next_dir_path == dir_path) break
+        if (next_dir_path === dir_path) break
         dir_path = next_dir_path
       }
     }
@@ -442,7 +442,7 @@ export class WorkspaceProvider
       while (parent_dir.startsWith(workspace_root)) {
         this._update_parent_state(parent_dir)
         const next_parent = path.dirname(parent_dir)
-        if (next_parent == parent_dir) break
+        if (next_parent === parent_dir) break
         parent_dir = next_parent
       }
 
@@ -511,7 +511,7 @@ export class WorkspaceProvider
       this._token_calculator.invalidate_directory_selected_count(dir_path)
       await this._update_parent_state(dir_path)
       const next_dir_path = path.dirname(dir_path)
-      if (next_dir_path == dir_path) break
+      if (next_dir_path === dir_path) break
       dir_path = next_dir_path
     }
 
@@ -521,7 +521,7 @@ export class WorkspaceProvider
     while (dir_path2.startsWith(workspace_root)) {
       this._token_calculator.invalidate_directory_counts(dir_path2)
       const next_dir_path2 = path.dirname(dir_path2)
-      if (next_dir_path2 == dir_path2) break
+      if (next_dir_path2 === dir_path2) break
       dir_path2 = next_dir_path2
     }
 
@@ -615,7 +615,7 @@ export class WorkspaceProvider
     }
     const trimmed_description = display_description.trim()
     element.description =
-      trimmed_description == '' ? undefined : trimmed_description
+      trimmed_description === '' ? undefined : trimmed_description
 
     return element
   }
@@ -643,11 +643,11 @@ export class WorkspaceProvider
       return this._get_files_and_directories(dir_path, false)
     }
 
-    if (this._workspace_roots.length == 0) {
+    if (this._workspace_roots.length === 0) {
       return []
     }
 
-    if (this._workspace_roots.length == 1) {
+    if (this._workspace_roots.length === 1) {
       const single_root = this._workspace_roots[0]
       if (!fs.existsSync(single_root)) {
         return []
@@ -680,7 +680,7 @@ export class WorkspaceProvider
       return this._get_files_and_directories(dir_path, true)
     }
 
-    if (this._workspace_roots.length == 1) {
+    if (this._workspace_roots.length === 1) {
       if (!fs.existsSync(this._workspace_roots[0])) {
         return []
       }
@@ -769,7 +769,7 @@ export class WorkspaceProvider
           this._file_ranges.set(absolutePath, range)
         }
       } catch (e) {
-        if ((e as NodeJS.ErrnoException).code != 'ENOENT') {
+        if ((e as NodeJS.ErrnoException).code !== 'ENOENT') {
           console.error(`Error loading ranges from ${ranges_file_path}`, e)
         }
       }
@@ -790,7 +790,7 @@ export class WorkspaceProvider
   }
 
   private _resolve_state_path(key: string): string | undefined {
-    if (this._workspace_roots.length == 1) {
+    if (this._workspace_roots.length === 1) {
       return path.join(this._workspace_roots[0], key)
     }
 
@@ -840,7 +840,7 @@ export class WorkspaceProvider
       }
     }
 
-    if (included_lines.size == 0) {
+    if (included_lines.size === 0) {
       return ''
     }
 
@@ -909,7 +909,7 @@ export class WorkspaceProvider
             this._partially_selected_dirs.has(full_path)
 
           if (
-            state != vscode.TreeItemCheckboxState.Checked &&
+            state !== vscode.TreeItemCheckboxState.Checked &&
             !(entry.isDirectory() && is_partially_selected)
           ) {
             continue
@@ -937,7 +937,7 @@ export class WorkspaceProvider
           const parent_path = path.dirname(full_path)
           const parent_checkbox_state = this._checked_items.get(parent_path)
           if (
-            parent_checkbox_state == vscode.TreeItemCheckboxState.Checked &&
+            parent_checkbox_state === vscode.TreeItemCheckboxState.Checked &&
             !is_ignored
           ) {
             checkbox_state = vscode.TreeItemCheckboxState.Checked
@@ -1033,7 +1033,7 @@ export class WorkspaceProvider
       this._token_calculator.invalidate_directory_selected_count(dir_path)
       await this._update_parent_state(dir_path)
       const next_dir_path = path.dirname(dir_path)
-      if (next_dir_path == dir_path) break
+      if (next_dir_path === dir_path) break
       dir_path = next_dir_path
     }
 
@@ -1110,12 +1110,12 @@ export class WorkspaceProvider
         const is_dir_partially_selected =
           entry.isDirectory() && this._partially_selected_dirs.has(sibling_path)
 
-        if (state != vscode.TreeItemCheckboxState.Checked) {
+        if (state !== vscode.TreeItemCheckboxState.Checked) {
           all_checked = false
         }
 
         if (
-          state == vscode.TreeItemCheckboxState.Checked ||
+          state === vscode.TreeItemCheckboxState.Checked ||
           is_dir_partially_selected
         ) {
           any_checked = true
@@ -1179,7 +1179,7 @@ export class WorkspaceProvider
         return
       }
 
-      if (state == vscode.TreeItemCheckboxState.Checked) {
+      if (state === vscode.TreeItemCheckboxState.Checked) {
         this._partially_selected_dirs.delete(dir_path)
       }
 
@@ -1245,7 +1245,7 @@ export class WorkspaceProvider
     return Array.from(this._checked_items.entries())
       .filter(
         ([file_path, state]) =>
-          state == vscode.TreeItemCheckboxState.Checked &&
+          state === vscode.TreeItemCheckboxState.Checked &&
           fs.existsSync(file_path) &&
           fs.lstatSync(file_path).isFile() &&
           (() => {
@@ -1260,7 +1260,7 @@ export class WorkspaceProvider
 
   get_all_selected_paths(): string[] {
     return Array.from(this._checked_items.entries())
-      .filter(([, state]) => state == vscode.TreeItemCheckboxState.Checked)
+      .filter(([, state]) => state === vscode.TreeItemCheckboxState.Checked)
       .map(([path]) => path)
   }
 
@@ -1330,7 +1330,7 @@ export class WorkspaceProvider
       while (workspace_root && dir_path.startsWith(workspace_root)) {
         await this._update_parent_state(dir_path)
         const next_dir_path = path.dirname(dir_path)
-        if (next_dir_path == dir_path) break
+        if (next_dir_path === dir_path) break
         dir_path = next_dir_path
       }
     }
@@ -1356,7 +1356,7 @@ export class WorkspaceProvider
         for (const entry of entries) {
           if (entry.isSymbolicLink()) continue
 
-          if (entry.name == '.git' || entry.name == 'node_modules') continue
+          if (entry.name === '.git' || entry.name === 'node_modules') continue
 
           const full_path = path.join(dir_path, entry.name)
 
@@ -1396,7 +1396,7 @@ export class WorkspaceProvider
           .map((rule) => rule.trim())
           .filter((rule) => rule && !rule.startsWith('#'))
           .map((rule) =>
-            relative_gitignore_path == ''
+            relative_gitignore_path === ''
               ? rule
               : `${relative_gitignore_path}${
                   rule.startsWith('/') ? rule : `/${rule}`
@@ -1419,11 +1419,11 @@ export class WorkspaceProvider
   }
 
   is_excluded(relative_path: string): boolean {
-    if (!relative_path || relative_path.trim() == '') {
+    if (!relative_path || relative_path.trim() === '') {
       return false
     }
 
-    if (relative_path.split(path.sep).some((part) => part == '.git')) {
+    if (relative_path.split(path.sep).some((part) => part === '.git')) {
       return true
     }
 
@@ -1461,14 +1461,14 @@ export class WorkspaceProvider
     const workspace_root = this.get_workspace_root_for_file(file_path)
     if (!workspace_root) {
       const basename = path.basename(file_path)
-      if (!basename || basename.trim() == '') return false
+      if (!basename || basename.trim() === '') return false
       if (this._user_allow_patterns.ignores(basename)) {
         return false
       }
       return this._user_ignore_patterns.ignores(basename)
     }
     const relative_path = path.relative(workspace_root, file_path)
-    if (!relative_path || relative_path.trim() == '') return false
+    if (!relative_path || relative_path.trim() === '') return false
     if (this._user_allow_patterns.ignores(relative_path)) {
       return false
     }

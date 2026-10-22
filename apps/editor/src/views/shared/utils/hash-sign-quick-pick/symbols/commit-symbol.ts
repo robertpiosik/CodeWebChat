@@ -16,7 +16,7 @@ export const handle_commit_item = async (
 ): Promise<'continue' | undefined> => {
   try {
     const workspace_folders = vscode.workspace.workspaceFolders
-    if (!workspace_folders || workspace_folders.length == 0) {
+    if (!workspace_folders || workspace_folders.length === 0) {
       vscode.window.showWarningMessage(
         t('common.warning.no-workspace-folders-found')
       )
@@ -36,7 +36,7 @@ export const handle_commit_item = async (
       }
     }
 
-    if (git_folders.length == 0) {
+    if (git_folders.length === 0) {
       vscode.window.showWarningMessage(
         t('common.warning.no-git-repository-found')
       )
@@ -46,7 +46,7 @@ export const handle_commit_item = async (
     while (true) {
       let selected_folder: vscode.WorkspaceFolder | undefined
 
-      if (git_folders.length == 1) {
+      if (git_folders.length === 1) {
         selected_folder = git_folders[0]
       } else {
         const folder_items = git_folders.map((folder) => ({
@@ -97,7 +97,7 @@ export const handle_commit_item = async (
           quick_pick.show()
         })
 
-        if (!picked_folder || picked_folder == 'back') return 'continue'
+        if (!picked_folder || picked_folder === 'back') return 'continue'
 
         await extension_context.workspaceState.update(
           LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY,
@@ -200,7 +200,7 @@ export const handle_commit_item = async (
           quick_pick.show()
         })
 
-        if (!selected_commit || selected_commit == 'back') {
+        if (!selected_commit || selected_commit === 'back') {
           if (git_folders.length > 1) {
             go_back_to_folders = true
             break
@@ -309,7 +309,7 @@ export const handle_commit_item = async (
           action_quick_pick.show()
         })
 
-        if (!selected_action || selected_action == 'back') {
+        if (!selected_action || selected_action === 'back') {
           continue
         }
 

@@ -32,7 +32,7 @@ export const handle_fast_replace = async (params: {
 
     if (
       !vscode.workspace.workspaceFolders ||
-      vscode.workspace.workspaceFolders.length == 0
+      vscode.workspace.workspaceFolders.length === 0
     ) {
       vscode.window.showErrorMessage(
         t('command.apply-response-command.error.no-workspace-folder')
@@ -86,7 +86,7 @@ export const handle_fast_replace = async (params: {
         data: unsafe_files
       })
 
-      if (safe_files.length == 0) {
+      if (safe_files.length === 0) {
         return { success: false }
       }
     }
@@ -138,7 +138,7 @@ export const handle_fast_replace = async (params: {
       ) {
         try {
           let new_content = file.content
-          if (new_content == '') {
+          if (new_content === '') {
             new_content = rename_source_content
           }
 

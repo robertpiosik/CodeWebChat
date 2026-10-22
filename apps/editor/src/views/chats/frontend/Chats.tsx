@@ -49,7 +49,7 @@ export const Chats = () => {
           delete new_state[message.id]
           return new_state
         })
-      } else if (message.command == 'CHATS') {
+      } else if (message.command === 'CHATS') {
         set_chats(message.chats)
       }
     }

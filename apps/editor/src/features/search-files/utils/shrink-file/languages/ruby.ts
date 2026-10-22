@@ -23,7 +23,7 @@ export const shrink_ruby = (content: string): string => {
       const char = line[i]
 
       if (in_string) {
-        if (char == '\\') {
+        if (char === '\\') {
           processed_line += char + (line[i + 1] || '')
           code_part += char + (line[i + 1] || '')
           i += 2
@@ -40,14 +40,14 @@ export const shrink_ruby = (content: string): string => {
         code_part += char
         i++
       } else {
-        if (char == '"' || char === "'") {
+        if (char === '"' || char === "'") {
           in_string = char
           processed_line += char
           code_part += char
           i++
           continue
         }
-        if (char == '#') {
+        if (char === '#') {
           processed_line += line.substring(i)
           break
         }

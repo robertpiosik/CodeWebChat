@@ -30,7 +30,7 @@ export const replace_saved_context_symbol = async (params: {
 
   for (let i = 0; i < result_instructions.length; i++) {
     const matches = [...result_instructions[i].matchAll(regex)]
-    if (matches.length == 0) {
+    if (matches.length === 0) {
       continue
     }
 

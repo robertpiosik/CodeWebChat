@@ -23,7 +23,7 @@ let is_finished_responding = false
 const CHAT_INITIALIZATION_TIMEOUT = 5000
 
 export const handle_messages = (message: WebSocketMessage) => {
-  if (message.action == 'initialize-chat') {
+  if (message.action === 'initialize-chat') {
     handle_initialize_chat_message(message as InitializeChatMessage)
   }
 }
@@ -34,7 +34,7 @@ const check_browser_focus = async (): Promise<boolean> => {
 }
 
 const process_next_chat = async () => {
-  if (chat_queue.length == 0 || !is_processing) {
+  if (chat_queue.length === 0 || !is_processing) {
     is_processing = false
     return
   }
@@ -80,7 +80,7 @@ const process_next_chat = async () => {
 
   let target_url = ''
   // OpenRouter is a special case—model handling via search params
-  if (current_chat_message.url == 'https://openrouter.ai/chat') {
+  if (current_chat_message.url === 'https://openrouter.ai/chat') {
     // https://openrouter.ai/chat?models=openrouter/quasar-alpha
     const search_params = new URLSearchParams()
     if (current_chat_message.model) {
@@ -179,16 +179,16 @@ export const setup_message_listeners = () => {
   browser.runtime.onMessage.addListener(
     (message: any, sender: any, _: any): any => {
       if (is_message(message)) {
-        if (message.action == 'chat-initialized') {
+        if (message.action === 'chat-initialized') {
           handle_chat_initialized()
-        } else if (message.action == 'apply-response') {
+        } else if (message.action === 'apply-response') {
           send_message_to_server({
             action: 'apply-response',
             client_id: message.client_id,
             raw_instructions: message.raw_instructions
           } as ApplyResponseMessage)
-        } else if (message.action == 'finished-responding') {
-          if (sender.tab?.id && sender.tab.id == last_opened_tab_id) {
+        } else if (message.action === 'finished-responding') {
+          if (sender.tab?.id && sender.tab.id === last_opened_tab_id) {
             is_finished_responding = true
           }
         }

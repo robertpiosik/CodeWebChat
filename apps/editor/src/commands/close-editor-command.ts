@@ -10,7 +10,7 @@ export const close_editor_command = () => {
           group.tabs.filter(
             (tab) =>
               tab.input instanceof vscode.TabInputText &&
-              tab.input.uri.toString() == item.resourceUri.toString()
+              tab.input.uri.toString() === item.resourceUri.toString()
           )
         )
 

@@ -50,16 +50,16 @@ export const restore_tab_groups = async (
     }
 
     const are_states_equal =
-      current_editors.length == saved_state.editors.length &&
+      current_editors.length === saved_state.editors.length &&
       current_editors.every((editor) =>
-        saved_state.editors.some((saved) => saved.uri == editor.uri)
+        saved_state.editors.some((saved) => saved.uri === editor.uri)
       )
 
     if (are_states_equal) {
       if (saved_state.active_editor_uri) {
         const current_active_uri =
           vscode.window.activeTextEditor?.document.uri.toString()
-        if (current_active_uri != saved_state.active_editor_uri) {
+        if (current_active_uri !== saved_state.active_editor_uri) {
           try {
             const active_uri = vscode.Uri.parse(saved_state.active_editor_uri)
             await vscode.window.showTextDocument(active_uri, {
@@ -81,7 +81,7 @@ export const restore_tab_groups = async (
             const uri = tab.input.uri.toString()
             const is_saved = saved_state.editors.some(
               (saved) =>
-                saved.uri == uri && saved.view_column == tab_group.viewColumn
+                saved.uri === uri && saved.view_column === tab_group.viewColumn
             )
             if (!is_saved) {
               tabs_to_close.push(tab)

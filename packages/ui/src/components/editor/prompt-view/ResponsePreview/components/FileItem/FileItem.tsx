@@ -29,10 +29,10 @@ type FileMessage =
 const get_file_message = (file: FileInPreview): FileMessage | null => {
   if (file.is_applying) {
     let text = 'Applying...'
-    if (file.apply_status == 'waiting') text = 'Waiting for server...'
-    else if (file.apply_status == 'thinking') text = 'Thinking...'
-    else if (file.apply_status == 'receiving') text = 'Receiving...'
-    else if (file.apply_status == 'done') text = 'Done'
+    if (file.apply_status === 'waiting') text = 'Waiting for server...'
+    else if (file.apply_status === 'thinking') text = 'Thinking...'
+    else if (file.apply_status === 'receiving') text = 'Receiving...'
+    else if (file.apply_status === 'done') text = 'Done'
 
     return {
       type: 'loading',
@@ -48,7 +48,7 @@ const get_file_message = (file: FileInPreview): FileMessage | null => {
       type: 'error',
       text: 'Failed to apply changes'
     }
-  } else if (file.diff_application_method == 'search_and_replace') {
+  } else if (file.diff_application_method === 'search_and_replace') {
     return {
       type: 'warning',
       text: 'Applied with fallback method'
@@ -87,7 +87,7 @@ export const FileItem: FC<Props> = (props) => {
     if (!props.file.is_applying) return null
 
     let status_text = ''
-    if (props.file.apply_status == 'receiving') {
+    if (props.file.apply_status === 'receiving') {
       const tps = props.file.apply_tokens_per_second
       if (tps) status_text = `${tps} tok/s`
     }
@@ -96,7 +96,7 @@ export const FileItem: FC<Props> = (props) => {
       <div className={styles.progress}>
         {status_text && <span>{status_text}</span>}
         <span>{elapsed_seconds.toFixed(1)}s</span>
-        {props.file.apply_status != 'done' && (
+        {props.file.apply_status !== 'done' && (
           <div
             className={styles.progress__cancel}
             onClick={(e) => {
@@ -113,11 +113,11 @@ export const FileItem: FC<Props> = (props) => {
   }
 
   const progress =
-    props.file.apply_status == 'receiving'
+    props.file.apply_status === 'receiving'
       ? (props.file.apply_progress ?? 0)
       : 0
   const container_style =
-    props.file.apply_status == 'receiving'
+    props.file.apply_status === 'receiving'
       ? {
           backgroundImage: `linear-gradient(to right, var(--cwc-bg-secondary) ${progress}%, transparent ${progress}%)`
         }
@@ -128,10 +128,10 @@ export const FileItem: FC<Props> = (props) => {
       <div
         className={cn(styles.file, {
           [styles['file--selected']]: props.is_selected,
-          [styles['file--deleted']]: props.file.file_state == 'deleted'
+          [styles['file--deleted']]: props.file.file_state === 'deleted'
         })}
         onClick={
-          props.file.file_state == 'deleted' ? undefined : props.on_click
+          props.file.file_state === 'deleted' ? undefined : props.on_click
         }
         style={container_style}
         role="button"
@@ -147,9 +147,9 @@ export const FileItem: FC<Props> = (props) => {
           <div
             className={cn(styles['file__left__label'], {
               [styles['file__left__label--new']]:
-                props.file.file_state == 'new',
+                props.file.file_state === 'new',
               [styles['file__left__label--deleted']]:
-                props.file.file_state == 'deleted'
+                props.file.file_state === 'deleted'
             })}
           >
             <span>{file_name}</span>
@@ -168,19 +168,19 @@ export const FileItem: FC<Props> = (props) => {
           ) : (
             <>
               <div className={styles['file__line-numbers']}>
-                {props.file.file_state != 'deleted' &&
+                {props.file.file_state !== 'deleted' &&
                   !(
-                    props.file.file_state == 'new' &&
-                    props.file.lines_added == 0
+                    props.file.file_state === 'new' &&
+                    props.file.lines_added === 0
                   ) && (
                     <span className={styles['file__line-numbers__added']}>
                       +{props.file.lines_added}
                     </span>
                   )}
-                {props.file.file_state != 'new' &&
+                {props.file.file_state !== 'new' &&
                   !(
-                    props.file.file_state == 'deleted' &&
-                    props.file.lines_removed == 0
+                    props.file.file_state === 'deleted' &&
+                    props.file.lines_removed === 0
                   ) && (
                     <span className={styles['file__line-numbers__removed']}>
                       -{props.file.lines_removed}
@@ -190,7 +190,7 @@ export const FileItem: FC<Props> = (props) => {
               <div className={styles['file__actions']}>
                 {props.file.content !== undefined &&
                   props.file.proposed_content !== undefined &&
-                  props.file.content != props.file.proposed_content && (
+                  props.file.content !== props.file.proposed_content && (
                     <IconButton
                       codicon_icon="discard"
                       title="Discard user changes"
@@ -210,8 +210,8 @@ export const FileItem: FC<Props> = (props) => {
                     }}
                   />
                 )}
-                {props.file.file_state != 'new' &&
-                  props.file.file_state != 'deleted' &&
+                {props.file.file_state !== 'new' &&
+                  props.file.file_state !== 'deleted' &&
                   !props.file.added_in_preview && (
                     <IconButton
                       codicon_icon="sparkle"
@@ -224,7 +224,7 @@ export const FileItem: FC<Props> = (props) => {
                       }}
                     />
                   )}
-                {props.file.file_state != 'deleted' && (
+                {props.file.file_state !== 'deleted' && (
                   <IconButton
                     codicon_icon="go-to-file"
                     title="Go to file"
@@ -246,16 +246,16 @@ export const FileItem: FC<Props> = (props) => {
           let status_bar_icon = ''
           let status_bar_icon_spin = false
 
-          if (message_obj.type == 'success') {
+          if (message_obj.type === 'success') {
             status_bar_theme = 'success'
             status_bar_icon = 'codicon-check'
-          } else if (message_obj.type == 'error') {
+          } else if (message_obj.type === 'error') {
             status_bar_theme = 'error'
             status_bar_icon = 'codicon-error'
-          } else if (message_obj.type == 'warning') {
+          } else if (message_obj.type === 'warning') {
             status_bar_theme = 'warning'
             status_bar_icon = 'codicon-warning'
-          } else if (message_obj.type == 'loading') {
+          } else if (message_obj.type === 'loading') {
             status_bar_theme = 'default'
             status_bar_icon = 'codicon-loading'
             status_bar_icon_spin = true

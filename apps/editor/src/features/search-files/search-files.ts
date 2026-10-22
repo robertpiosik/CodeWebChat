@@ -68,7 +68,7 @@ export const search_files = async (params: {
         params.show_back_button
       )
 
-      if (mode_result == 'back') return 'back'
+      if (mode_result === 'back') return 'back'
       if (!mode_result) return undefined
 
       initial_search_mode = mode_result
@@ -95,11 +95,11 @@ export const search_files = async (params: {
         get_file_content: params.get_file_content
       }
 
-      if (search_mode == 'phrase') {
+      if (search_mode === 'phrase') {
         flow_result = await perform_phrase_search_mode(flow_params)
-      } else if (search_mode == 'keywords') {
+      } else if (search_mode === 'keywords') {
         flow_result = await perform_keywords_search_mode(flow_params)
-      } else if (search_mode == 'intelligent') {
+      } else if (search_mode === 'intelligent') {
         let files = await resolve_files()
         let is_search_in_selected = params.is_search_in_selected
 

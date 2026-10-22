@@ -7,7 +7,7 @@ export const handle_delete_chat = (
   message: DeleteChatMessage
 ) => {
   chats_view_provider.chats = chats_view_provider.chats.filter(
-    (c) => c.timestamp != message.timestamp
+    (c) => c.timestamp !== message.timestamp
   )
   chats_view_provider.extension_context.workspaceState.update(
     CHATS_VIEW_CHAT_HISTORY_STATE_KEY,

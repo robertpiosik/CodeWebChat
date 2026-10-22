@@ -197,5 +197,5 @@ export const verify_model = async (params: {
     { modal: true, detail },
     use_anyway
   )
-  return choice == use_anyway
+  return choice === use_anyway
 }

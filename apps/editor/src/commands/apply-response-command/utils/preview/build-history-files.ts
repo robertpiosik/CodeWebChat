@@ -67,17 +67,17 @@ export const build_history_files = async (params: {
     total_lines_removed += diff_stats.lines_removed
 
     const is_deleted =
-      state.file_state != 'new' &&
+      state.file_state !== 'new' &&
       !is_rename &&
       !file_exists &&
-      state.content != ''
+      state.content !== ''
 
     files_for_history.push({
       type: 'file',
       file_path: state.file_path,
       workspace_name: state.workspace_name,
       file_state:
-        state.file_state == 'new' || is_rename
+        state.file_state === 'new' || is_rename
           ? 'new'
           : is_deleted
             ? 'deleted'

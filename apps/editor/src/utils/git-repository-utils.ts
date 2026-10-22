@@ -41,7 +41,7 @@ const get_all_git_repositories = (): GitRepository[] | null => {
   const git_api = git_extension.exports.getAPI(1)
   const repositories: GitRepository[] = git_api.repositories
 
-  if (!repositories || repositories.length == 0) {
+  if (!repositories || repositories.length === 0) {
     vscode.window.showWarningMessage(
       t('common.warning.no-git-repository-found')
     )
@@ -66,7 +66,7 @@ export const get_git_repository = async (
     }
   }
 
-  if (repositories.length == 1) {
+  if (repositories.length === 1) {
     return repositories[0]
   }
 
@@ -140,7 +140,7 @@ export const get_repository_for_commit = async (
     }
   }
 
-  if (repositories.length == 1) {
+  if (repositories.length === 1) {
     return repositories[0]
   }
 
@@ -150,14 +150,14 @@ export const get_repository_for_commit = async (
       repo.state.workingTreeChanges.length > 0
   )
 
-  if (repositories_with_changes.length == 0) {
+  if (repositories_with_changes.length === 0) {
     vscode.window.showInformationMessage(
       t('utils.git-repository-utils.nothing-to-commit')
     )
     return null
   }
 
-  if (repositories_with_changes.length == 1) {
+  if (repositories_with_changes.length === 1) {
     return repositories_with_changes[0]
   }
 
@@ -228,7 +228,7 @@ export const prepare_staged_changes = async (params: {
   const staged_changes = params.repository.state.indexChanges || []
 
   if (
-    staged_changes.length == 0 &&
+    staged_changes.length === 0 &&
     params.repository.state.workingTreeChanges.length > 0
   ) {
     let files_to_stage: string[] = []
@@ -237,7 +237,7 @@ export const prepare_staged_changes = async (params: {
       files_to_stage = params.repository.state.workingTreeChanges.map(
         (change: any) => change.uri.fsPath
       )
-    } else if (params.repository.state.workingTreeChanges.length == 1) {
+    } else if (params.repository.state.workingTreeChanges.length === 1) {
       files_to_stage = [
         params.repository.state.workingTreeChanges[0].uri.fsPath
       ]
@@ -271,7 +271,7 @@ export const prepare_staged_changes = async (params: {
           let full_content = ''
 
           try {
-            if (change.status == 7) {
+            if (change.status === 7) {
               // UNTRACKED
               status = 'created'
               const content = await vscode.workspace.fs.readFile(change.uri)
@@ -372,7 +372,7 @@ export const prepare_staged_changes = async (params: {
             const tokens_str = display_token_count(token_count)
             description_parts.push(tokens_str)
           }
-          if (dir_name != '.') description_parts.push(dir_name)
+          if (dir_name !== '.') description_parts.push(dir_name)
 
           return {
             label: path.basename(relative_path),
@@ -432,16 +432,16 @@ export const prepare_staged_changes = async (params: {
                 : [close_button]
 
             quick_pick.onDidTriggerButton((button) => {
-              if (button.tooltip == t('common.close')) {
+              if (button.tooltip === t('common.close')) {
                 resolve(undefined)
                 quick_pick.hide()
               } else if (
-                button.tooltip == t('common.search-in-selected-results')
+                button.tooltip === t('common.search-in-selected-results')
               ) {
                 current_selected_fs_paths = Array.from(
                   quick_pick.selectedItems
                 ).map((i: any) => i.fsPath)
-                if (current_selected_fs_paths.length == 0) {
+                if (current_selected_fs_paths.length === 0) {
                   vscode.window.showInformationMessage(
                     t('common.info.select-files-to-search')
                   )
@@ -453,10 +453,12 @@ export const prepare_staged_changes = async (params: {
             })
 
             quick_pick.onDidTriggerItemButton(async (event) => {
-              if (event.button.tooltip == t('common.go-to-file')) {
+              if (event.button.tooltip === t('common.go-to-file')) {
                 const uri = vscode.Uri.file(event.item.fsPath)
                 vscode.window.showTextDocument(uri, { preview: true })
-              } else if (event.button.tooltip == t('common.action.show-diff')) {
+              } else if (
+                event.button.tooltip === t('common.action.show-diff')
+              ) {
                 const uri = vscode.Uri.file(event.item.fsPath)
                 await vscode.commands.executeCommand('git.openChange', uri)
               }
@@ -539,7 +541,7 @@ export const prepare_staged_changes = async (params: {
     cwd: params.repository.rootUri.fsPath
   }).toString()
 
-  if (!diff || diff.length == 0) {
+  if (!diff || diff.length === 0) {
     vscode.window.showInformationMessage(
       t('utils.git-repository-utils.nothing-to-commit')
     )

@@ -141,7 +141,7 @@ export namespace FilesCollector {
       const timestamp_bucket_a = Math.floor(a.timestamp / 20)
       const timestamp_bucket_b = Math.floor(b.timestamp / 20)
       const bucket_diff = timestamp_bucket_a - timestamp_bucket_b
-      if (bucket_diff != 0) {
+      if (bucket_diff !== 0) {
         return bucket_diff
       }
       // If timestamps are within the same 20-second bucket, use natural sort on paths

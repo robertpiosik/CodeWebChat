@@ -18,7 +18,7 @@ export const create_handle_key_down = (
   ) => {
     const active_history = props.chat_history
 
-    if (active_history.length == 0) return
+    if (active_history.length === 0) return
 
     e.preventDefault()
 
@@ -27,18 +27,18 @@ export const create_handle_key_down = (
       utils.update_value(value, value.length)
     }
 
-    if (e.key == 'ArrowUp') {
+    if (e.key === 'ArrowUp') {
       if (state.history_index < active_history.length - 1) {
         const new_index = state.history_index + 1
         state.set_history_index(new_index)
         update_and_set_caret(active_history[new_index])
       }
-    } else if (e.key == 'ArrowDown') {
+    } else if (e.key === 'ArrowDown') {
       if (state.history_index > 0) {
         const new_index = state.history_index - 1
         state.set_history_index(new_index)
         update_and_set_caret(active_history[new_index])
-      } else if (state.history_index == 0) {
+      } else if (state.history_index === 0) {
         state.set_history_index(-1)
         update_and_set_caret('')
       }
@@ -75,8 +75,8 @@ export const create_handle_key_down = (
 
       if (
         (current_raw_pos >= 2 &&
-          value.substring(current_raw_pos - 2, current_raw_pos) == '  ') ||
-        (current_raw_pos == 1 && value.charAt(0) == ' ')
+          value.substring(current_raw_pos - 2, current_raw_pos) === '  ') ||
+        (current_raw_pos === 1 && value.charAt(0) === ' ')
       ) {
         const new_value =
           value.substring(0, current_raw_pos - 1) +
@@ -88,7 +88,7 @@ export const create_handle_key_down = (
         ])
         state.set_redo_stack([])
         refs.props_ref.current.on_change(new_value)
-        refs.has_modified_current_entry_ref.current = new_value != ''
+        refs.has_modified_current_entry_ref.current = new_value !== ''
         set_caret_position_after_change({
           input_ref: params.input_ref,
           new_raw_cursor_pos: current_raw_pos - 1,
@@ -101,12 +101,12 @@ export const create_handle_key_down = (
   }
 
   const handle_copy_key = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (props.target != 'WEB') {
+    if (props.target !== 'WEB') {
       return false
     }
 
     const selection = window.getSelection()
-    if (!selection || selection.rangeCount == 0 || selection.isCollapsed) {
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
       e.preventDefault()
       props.on_copy()
       return true
@@ -126,7 +126,7 @@ export const create_handle_key_down = (
   ) => {
     e.preventDefault()
     const raw_pos = refs.raw_caret_pos_ref.current
-    if (raw_pos == 0) return
+    if (raw_pos === 0) return
 
     const { value, selected_files = [] } = props
     let i = raw_pos - 1
@@ -161,7 +161,7 @@ export const create_handle_key_down = (
       const is_word_char = /\w/.test(value[i])
       while (i >= 0) {
         const current_is_word = /\w/.test(value[i])
-        if (/\s/.test(value[i]) || current_is_word != is_word_char) {
+        if (/\s/.test(value[i]) || current_is_word !== is_word_char) {
           break
         }
         i--
@@ -183,7 +183,7 @@ export const create_handle_key_down = (
     e.preventDefault()
     const { value, selected_files = [] } = props
     const raw_pos = refs.raw_caret_pos_ref.current
-    if (raw_pos == value.length) return
+    if (raw_pos === value.length) return
 
     let i = raw_pos
 
@@ -356,11 +356,11 @@ export const create_handle_key_down = (
 
       if (
         backticks_count > 0 &&
-        backticks_count % 2 == 0 &&
+        backticks_count % 2 === 0 &&
         text_before.endsWith('`')
       ) {
         const start_pos = text_before.lastIndexOf('`', raw_pos - 2)
-        if (start_pos != -1) {
+        if (start_pos !== -1) {
           e.preventDefault()
           const new_value =
             props.value.substring(0, start_pos) + props.value.substring(raw_pos)
@@ -375,7 +375,7 @@ export const create_handle_key_down = (
     if (e.ctrlKey || e.metaKey) {
       e.preventDefault()
       const raw_pos = refs.raw_caret_pos_ref.current
-      if (raw_pos == 0) return
+      if (raw_pos === 0) return
 
       const value = props.value
       let i = raw_pos - 1
@@ -398,7 +398,7 @@ export const create_handle_key_down = (
       const new_start_pos = i + 1
       const new_value =
         value.substring(0, new_start_pos) + value.substring(raw_pos)
-      refs.has_modified_current_entry_ref.current = new_value != ''
+      refs.has_modified_current_entry_ref.current = new_value !== ''
       utils.update_value(new_value, new_start_pos)
       return
     }
@@ -468,75 +468,78 @@ export const create_handle_key_down = (
   return (e: React.KeyboardEvent<HTMLDivElement>) => {
     const { key, shiftKey } = e
 
-    if (key != ' ' && refs.space_timeout_ref.current) {
+    if (key !== ' ' && refs.space_timeout_ref.current) {
       clearTimeout(refs.space_timeout_ref.current)
       refs.space_timeout_ref.current = null
     }
 
-    if ((e.ctrlKey || e.metaKey) && shiftKey && e.code == 'Space') {
+    if ((e.ctrlKey || e.metaKey) && shiftKey && e.code === 'Space') {
       handle_record_toggle_key(e)
       return
     }
 
-    if (key == ' ' && !e.ctrlKey && !e.metaKey && !e.altKey && !shiftKey) {
+    if (key === ' ' && !e.ctrlKey && !e.metaKey && !e.altKey && !shiftKey) {
       if (handle_space_key(e)) return
     }
 
-    if ((e.ctrlKey || e.metaKey) && !shiftKey && key.toLowerCase() == 'c') {
+    if ((e.ctrlKey || e.metaKey) && !shiftKey && key.toLowerCase() === 'c') {
       if (handle_copy_key(e)) return
     }
 
-    if ((e.ctrlKey || e.metaKey) && shiftKey && key.toLowerCase() == 'v') {
+    if ((e.ctrlKey || e.metaKey) && shiftKey && key.toLowerCase() === 'v') {
       handle_paste_key(e)
       return
     }
 
     if ((e.ctrlKey || e.metaKey) && !shiftKey) {
-      if (key == 'ArrowLeft') {
+      if (key === 'ArrowLeft') {
         handle_word_jump_left_key(e)
         return
       }
 
-      if (key == 'ArrowRight') {
+      if (key === 'ArrowRight') {
         handle_word_jump_right_key(e)
         return
       }
     }
 
-    if ((e.ctrlKey || e.metaKey) && !shiftKey && key.toLowerCase() == 'z') {
+    if ((e.ctrlKey || e.metaKey) && !shiftKey && key.toLowerCase() === 'z') {
       handle_undo_key(e)
       return
     }
 
     if (
-      ((e.ctrlKey || e.metaKey) && key.toLowerCase() == 'y') ||
-      ((e.ctrlKey || e.metaKey) && shiftKey && key.toLowerCase() == 'z')
+      ((e.ctrlKey || e.metaKey) && key.toLowerCase() === 'y') ||
+      ((e.ctrlKey || e.metaKey) && shiftKey && key.toLowerCase() === 'z')
     ) {
       handle_redo_key(e)
       return
     }
 
-    if (key == 'Tab' && !shiftKey) {
+    if (key === 'Tab' && !shiftKey) {
       handle_tab_key(e)
       return
     }
 
-    if (key == 'Backspace') {
+    if (key === 'Backspace') {
       handle_backspace_action(e)
       return
     }
 
-    if (key == 'Enter') {
+    if (key === 'Enter') {
       handle_enter_key(e)
       return
     }
 
-    if ((key == 'ArrowUp' || key == 'ArrowDown') && state.is_history_enabled) {
+    if (
+      (key === 'ArrowUp' || key === 'ArrowDown') &&
+      state.is_history_enabled
+    ) {
       handle_history_navigation(e)
       return
     }
 
-    if (key == 'Escape') {
+    if (key === 'Escape') {
       if (e.altKey) return
       handle_escape_key()
       return

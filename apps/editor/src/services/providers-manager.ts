@@ -67,7 +67,7 @@ export class ProvidersManager {
 
       this._providers = provider_configs.map((provider_config) => {
         const provider_with_key = saved_providers_with_keys.find(
-          (p) => p.name == provider_config.name
+          (p) => p.name === provider_config.name
         )
         const provider: Provider = {
           name: provider_config.name,
@@ -125,7 +125,7 @@ export class ProvidersManager {
 
   async get_provider(name: string): Promise<Provider | undefined> {
     await this._load_promise
-    return this._providers.find((provider) => provider.name == name)
+    return this._providers.find((provider) => provider.name === name)
   }
 
   private _validate_api_configuration(
@@ -134,7 +134,7 @@ export class ProvidersManager {
     if (!api_configuration) return undefined
 
     const provider = this._providers.find(
-      (p) => p.name == api_configuration.provider_name
+      (p) => p.name === api_configuration.provider_name
     )
 
     if (!provider) {
@@ -375,7 +375,7 @@ export class ProvidersManager {
 
     const configs = config.get<{ providerName: string }[]>('models', [])
     const updated_configs = configs.map((c) => {
-      if (c.providerName == old_name) {
+      if (c.providerName === old_name) {
         return { ...c, providerName: new_name }
       }
       return c

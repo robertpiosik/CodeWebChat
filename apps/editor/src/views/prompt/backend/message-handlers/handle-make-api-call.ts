@@ -95,7 +95,7 @@ export const handle_make_api_call = async (
     let user_content = ''
     let completed_tasks: string[] | undefined = undefined
 
-    if (prompt_type == 'edit') {
+    if (prompt_type === 'edit') {
       edit_format = prompt_view_provider.edit_format
       completed_tasks = processed_completed_tasks
       const output_formatting = {
@@ -140,7 +140,7 @@ export const handle_make_api_call = async (
       model: api_configuration.model
     }
 
-    const is_openai = provider.base_url == PROVIDERS.OpenAI.base_url
+    const is_openai = provider.base_url === PROVIDERS.OpenAI.base_url
     if (is_openai) {
       body.prompt_cache_options = { mode: 'explicit' }
       if (provider.extended_cache) {
@@ -177,7 +177,7 @@ export const handle_make_api_call = async (
           reasoning_effort: api_configuration.reasoning_effort
         }
 
-        if (prompt_type == 'edit') {
+        if (prompt_type === 'edit') {
           vscode.commands.executeCommand('codeWebChat.applyResponse', {
             response: result.response,
             raw_instructions: current_instructions,

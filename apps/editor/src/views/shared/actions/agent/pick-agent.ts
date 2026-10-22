@@ -26,7 +26,7 @@ export const pick_agent = async (params: {
 
   if (params.current_agent_id) {
     const active_item = items.find(
-      (item) => item.label == params.current_agent_id
+      (item) => item.label === params.current_agent_id
     )
     if (active_item) {
       quick_pick.activeItems = [active_item]

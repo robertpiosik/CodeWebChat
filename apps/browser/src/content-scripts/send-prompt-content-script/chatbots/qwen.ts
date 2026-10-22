@@ -72,7 +72,7 @@ export const qwen: Chatbot = {
     if (!options) return
     const supported_options = CHATBOTS['Qwen'].supported_options
     for (const option of options) {
-      if (option == 'temporary' && supported_options?.['temporary']) {
+      if (option === 'temporary' && supported_options?.['temporary']) {
         const temporary_button = document.querySelector(
           '.temporary-chat-entry'
         ) as HTMLButtonElement

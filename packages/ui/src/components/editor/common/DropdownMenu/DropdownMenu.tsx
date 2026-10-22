@@ -59,7 +59,7 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
 
       const viewport_height = window.innerHeight
       const is_modern_ui =
-        document.documentElement.getAttribute('data-modern-ui') == 'true'
+        document.documentElement.getAttribute('data-modern-ui') === 'true'
 
       if (is_modern_ui) {
         if (top + dropdown_rect.height > viewport_height) {
@@ -164,7 +164,7 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
             top_shadow
             bottom_shadow
             max_height={
-              typeof props.max_height == 'number'
+              typeof props.max_height === 'number'
                 ? `${props.max_height}px`
                 : props.max_height
             }

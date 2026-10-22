@@ -23,7 +23,7 @@ export const shrink_python = (content: string): string => {
       const char = line[i]
 
       if (in_string) {
-        if (char == '\\') {
+        if (char === '\\') {
           processed_line += char + (line[i + 1] || '')
           code_part += char + (line[i + 1] || '')
           i += 2
@@ -31,7 +31,7 @@ export const shrink_python = (content: string): string => {
         }
         if (
           char === in_string[0] &&
-          (in_string.length == 1 ||
+          (in_string.length === 1 ||
             line.substring(i, i + in_string.length) === in_string)
         ) {
           processed_line += in_string
@@ -44,7 +44,7 @@ export const shrink_python = (content: string): string => {
         code_part += char
         i++
       } else {
-        if (char == '"' || char === "'") {
+        if (char === '"' || char === "'") {
           const is_triple = line.substring(i, i + 3) === char.repeat(3)
           in_string = is_triple ? char.repeat(3) : char
           processed_line += in_string
@@ -52,7 +52,7 @@ export const shrink_python = (content: string): string => {
           i += in_string.length
           continue
         }
-        if (char == '#') {
+        if (char === '#') {
           processed_line += line.substring(i)
           break
         }

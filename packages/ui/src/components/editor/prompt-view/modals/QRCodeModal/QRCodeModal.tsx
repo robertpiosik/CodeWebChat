@@ -13,7 +13,7 @@ export const QRCodeModal: React.FC<Props> = (props) => {
   return (
     <div
       onKeyDown={(e) => {
-        if (e.key == 'Escape') {
+        if (e.key === 'Escape') {
           e.stopPropagation()
           props.on_close()
         }

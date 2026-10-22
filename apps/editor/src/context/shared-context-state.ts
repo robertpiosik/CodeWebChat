@@ -68,7 +68,7 @@ export class SharedContextState {
   }
 
   async undo() {
-    if (this._undo_stack.length == 0) return
+    if (this._undo_stack.length === 0) return
 
     const current_state = {
       files: Array.from(this._selected_files).sort()
@@ -84,7 +84,7 @@ export class SharedContextState {
   }
 
   async redo() {
-    if (this._redo_stack.length == 0) return
+    if (this._redo_stack.length === 0) return
 
     const current_state = {
       files: Array.from(this._selected_files).sort()
@@ -129,7 +129,7 @@ export class SharedContextState {
       const open_editor_uris = this.get_open_editor_uris()
       const open_editor_paths = open_editor_uris.map((uri) => uri.fsPath)
 
-      if (this._synchronizing_provider == 'workspace') {
+      if (this._synchronizing_provider === 'workspace') {
         for (const file of open_editor_paths) {
           const is_selected_in_workspace =
             this.is_file_selected_in_workspace(file)
@@ -152,7 +152,7 @@ export class SharedContextState {
             }
           }
         }
-      } else if (this._synchronizing_provider == 'openEditors') {
+      } else if (this._synchronizing_provider === 'openEditors') {
         const open_editor_paths_set = new Set(open_editor_paths)
 
         const preserved_workspace_selected_files =

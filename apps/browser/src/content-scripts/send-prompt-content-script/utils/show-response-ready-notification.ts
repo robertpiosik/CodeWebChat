@@ -7,11 +7,11 @@ export const show_response_ready_notification = async (params: {
 
   let permission = Notification.permission
 
-  if (permission == 'default') {
+  if (permission === 'default') {
     permission = await Notification.requestPermission()
   }
 
-  if (permission == 'granted') {
+  if (permission === 'granted') {
     const notification = new Notification(
       `CWC - ${params.chatbot_name} finished responding`,
       {

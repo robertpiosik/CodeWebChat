@@ -23,7 +23,7 @@ export const rename_command = () => {
         value: current_name
       })
 
-      if (!new_name || new_name == current_name) {
+      if (!new_name || new_name === current_name) {
         return
       }
 

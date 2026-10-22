@@ -23,7 +23,7 @@ export const handle_restore_preview = async (
 
   if (
     !vscode.workspace.workspaceFolders ||
-    vscode.workspace.workspaceFolders.length == 0
+    vscode.workspace.workspaceFolders.length === 0
   ) {
     vscode.window.showErrorMessage(
       t('command.apply-response-command.error.no-workspace-folder')
@@ -79,7 +79,7 @@ export const handle_restore_preview = async (
       content: original_content,
       workspace_name: file.workspace_name,
       file_state:
-        file.file_state == 'deleted'
+        file.file_state === 'deleted'
           ? 'deleted'
           : !file_exists
             ? 'new'
@@ -89,7 +89,7 @@ export const handle_restore_preview = async (
     })
 
     if (file.is_checked !== false) {
-      if (file.file_state == 'deleted') {
+      if (file.file_state === 'deleted') {
         if (file_exists) {
           try {
             const tabs_to_close: vscode.Tab[] = []

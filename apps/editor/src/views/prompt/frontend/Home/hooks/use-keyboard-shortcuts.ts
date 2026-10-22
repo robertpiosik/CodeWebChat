@@ -21,12 +21,12 @@ export const use_keyboard_shortcuts = (params: {
     }
 
     const handle_key_down = (event: KeyboardEvent) => {
-      if (event.code == 'AltLeft') {
+      if (event.code === 'AltLeft') {
         left_alt_pressed_ref.current = true
       }
 
       if (
-        event.code == 'AltLeft' &&
+        event.code === 'AltLeft' &&
         !event.shiftKey &&
         !event.ctrlKey &&
         !event.metaKey
@@ -49,13 +49,13 @@ export const use_keyboard_shortcuts = (params: {
         !event.metaKey &&
         !event.ctrlKey
       ) {
-        if (event.code == 'Digit1' || event.code == 'Numpad1') {
+        if (event.code === 'Digit1' || event.code === 'Numpad1') {
           event.preventDefault()
           params.on_chatbots_click()
-        } else if (event.code == 'Digit2' || event.code == 'Numpad2') {
+        } else if (event.code === 'Digit2' || event.code === 'Numpad2') {
           event.preventDefault()
           params.on_api_calls_click()
-        } else if (event.code == 'Digit3' || event.code == 'Numpad3') {
+        } else if (event.code === 'Digit3' || event.code === 'Numpad3') {
           event.preventDefault()
           params.on_cli_calls_click()
         }
@@ -63,13 +63,13 @@ export const use_keyboard_shortcuts = (params: {
     }
 
     const handle_key_up = (event: KeyboardEvent) => {
-      if (event.code == 'AltLeft') {
+      if (event.code === 'AltLeft') {
         left_alt_pressed_ref.current = false
       }
 
       if (!event.altKey) {
         alt_interrupted_ref.current = false
-      } else if (event.code != 'AltLeft') {
+      } else if (event.code !== 'AltLeft') {
         alt_interrupted_ref.current = true
       }
       update_alt_pressed(

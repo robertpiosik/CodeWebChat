@@ -9,7 +9,7 @@ export const flush_text_block = (params: {
   }
 
   const content =
-    params.results.length == 0
+    params.results.length === 0
       ? params.text_block.trim()
       : params.text_block.trimEnd()
 

@@ -20,7 +20,7 @@ export const sync_workspace_from_dir = async (params: {
 
       if (
         source_folders.has(folder_key) &&
-        source_folders.get(folder_key) == vscode.FileType.Directory
+        source_folders.get(folder_key) === vscode.FileType.Directory
       ) {
         const source_folder_uri = vscode.Uri.joinPath(
           params.source_dir_uri,

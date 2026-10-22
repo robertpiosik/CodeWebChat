@@ -17,7 +17,7 @@ export const handle_toggle_pinned_api_configuration = async (
   const api_configurations = await providers_manager.get_api_configurations()
 
   const api_configuration = api_configurations.find(
-    (c) => get_api_configuration_id(c) == api_configuration_id
+    (c) => get_api_configuration_id(c) === api_configuration_id
   )
   if (!api_configuration) return
 

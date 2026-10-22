@@ -68,11 +68,11 @@ export class ChatsViewProvider implements vscode.WebviewViewProvider {
     }
 
     webview_view.webview.onDidReceiveMessage((message: FrontendMessage) => {
-      if (message.command == 'CANCEL_PROMPT_VIEW_API_CALLS_MANAGER_REQUEST') {
+      if (message.command === 'CANCEL_PROMPT_VIEW_API_CALLS_MANAGER_REQUEST') {
         this.prompt_view_api_calls_manager.cancel_api_call(message.id)
-      } else if (message.command == 'GET_CHATS') {
+      } else if (message.command === 'GET_CHATS') {
         handle_get_chats(this)
-      } else if (message.command == 'DELETE_CHAT') {
+      } else if (message.command === 'DELETE_CHAT') {
         handle_delete_chat(this, message)
       }
     })

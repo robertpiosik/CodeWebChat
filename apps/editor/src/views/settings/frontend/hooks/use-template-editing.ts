@@ -19,14 +19,14 @@ export const use_template_editing = (
 
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
-      if (event.data.command == 'START_TEMPLATE_CREATION') {
+      if (event.data.command === 'START_TEMPLATE_CREATION') {
         set_updating_template({
           key: event.data.templates_key,
           insertion_index: event.data.insertion_index,
           template: event.data.template
         })
         set_updated_template(event.data.template)
-      } else if (event.data.command == 'TEMPLATE_EDIT_CANCELLED') {
+      } else if (event.data.command === 'TEMPLATE_EDIT_CANCELLED') {
         set_updating_template(null)
         set_updated_template(null)
       }
@@ -43,7 +43,7 @@ export const use_template_editing = (
       const b_name = (b.name || '').trim()
       const a_template = a.template.trim()
       const b_template = b.template.trim()
-      const has_changes = a_name != b_name || a_template !== b_template
+      const has_changes = a_name !== b_name || a_template !== b_template
 
       if (has_changes) {
         post_message(vscode, { command: 'CANCEL_TEMPLATE_EDIT' })

@@ -58,7 +58,7 @@ export const copy_markdown_commands = (
         if (!open_editors_provider) return
         const selected_files = open_editors_provider.get_selected_files()
 
-        if (selected_files.length == 0) {
+        if (selected_files.length === 0) {
           vscode.window.showWarningMessage(
             t('command.copy-markdown-command.warning.no-open-editors')
           )
@@ -122,7 +122,7 @@ export const copy_markdown_commands = (
           }
         }
 
-        if (context_text == '') return
+        if (context_text === '') return
 
         context_text =
           PromptBuilder.build_prompt({

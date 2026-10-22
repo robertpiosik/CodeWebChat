@@ -71,7 +71,7 @@ export class PromptViewApiCallsManager {
       }
     }
 
-    if (!previous_waiting || previous_waiting.body_hash != body_hash) {
+    if (!previous_waiting || previous_waiting.body_hash !== body_hash) {
       this.waiting_chain.set(params.base_url, {
         promise: current_promise,
         resolve: resolve_current,
@@ -92,7 +92,7 @@ export class PromptViewApiCallsManager {
 
         try {
           const is_queued =
-            previous_waiting && previous_waiting.body_hash == body_hash
+            previous_waiting && previous_waiting.body_hash === body_hash
 
           const queued_msg = t(
             'service.prompt-view-api-calls-manager.progress.queued'

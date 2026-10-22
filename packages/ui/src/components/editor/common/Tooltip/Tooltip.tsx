@@ -27,13 +27,13 @@ export const Tooltip: React.FC<Props> = (params) => {
   return (
     <div
       className={cn(styles.tooltip, {
-        [styles['tooltip--align-left']]: params.align == 'left',
-        [styles['tooltip--align-right']]: params.align == 'right',
+        [styles['tooltip--align-left']]: params.align === 'left',
+        [styles['tooltip--align-right']]: params.align === 'right',
         [styles['tooltip--align-center']]:
-          (params.align || 'center') == 'center',
-        [styles['tooltip--position-top']]: (params.position || 'top') == 'top',
-        [styles['tooltip--position-bottom']]: params.position == 'bottom',
-        [styles['tooltip--position-right']]: params.position == 'right',
+          (params.align || 'center') === 'center',
+        [styles['tooltip--position-top']]: (params.position || 'top') === 'top',
+        [styles['tooltip--position-bottom']]: params.position === 'bottom',
+        [styles['tooltip--position-right']]: params.position === 'right',
         [styles['tooltip--warning']]: params.is_warning
       })}
       style={Object.keys(style).length > 0 ? style : undefined}

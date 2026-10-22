@@ -43,9 +43,9 @@ export const EditCliConfigurationForm: React.FC<Props> = (props) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent) => {
       const message = event.data as BackendMessage
-      if (message.command == 'NEWLY_PICKED_AGENT') {
+      if (message.command === 'NEWLY_PICKED_AGENT') {
         set_agent(message.agent_id)
-      } else if (message.command == 'NEWLY_PICKED_EXAMPLE_FLAG') {
+      } else if (message.command === 'NEWLY_PICKED_EXAMPLE_FLAG') {
         set_flags(message.flag)
       }
     }

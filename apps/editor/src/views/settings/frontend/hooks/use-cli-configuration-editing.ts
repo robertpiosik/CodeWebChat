@@ -49,12 +49,12 @@ export const use_cli_configuration_editing = (vscode: any) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
-      if (message.command == 'CLI_CONFIGURATION_UPDATED') {
+      if (message.command === 'CLI_CONFIGURATION_UPDATED') {
         set_updating_cli_configuration(undefined)
         set_updated_cli_configuration(undefined)
         set_is_new_cli_configuration(false)
         set_cli_configuration_insertion_index(undefined)
-      } else if (message.command == 'START_CLI_CONFIGURATION_CREATION') {
+      } else if (message.command === 'START_CLI_CONFIGURATION_CREATION') {
         const msg = message as any
         set_updating_cli_configuration(msg.cli_configuration)
         set_updated_cli_configuration(msg.cli_configuration)

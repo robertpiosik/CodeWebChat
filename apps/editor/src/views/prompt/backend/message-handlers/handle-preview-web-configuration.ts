@@ -34,7 +34,7 @@ export const handle_preview_web_configuration = async (
   let output_formatting: string | undefined = undefined
   let completed_tasks: string[] | undefined = undefined
   const user_instructions = processed_instructions
-  if (prompt_view_provider.web_prompt_type == 'edit') {
+  if (prompt_view_provider.web_prompt_type === 'edit') {
     completed_tasks = processed_completed_tasks
     output_formatting = {
       whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
@@ -71,7 +71,7 @@ export const handle_preview_web_configuration = async (
         instruction: text_to_send,
         web_configuration: web_configuration_for_preview,
         inject_apply_response_button:
-          prompt_view_provider.web_prompt_type == 'edit',
+          prompt_view_provider.web_prompt_type === 'edit',
         raw_instructions: current_instructions
       }
     )

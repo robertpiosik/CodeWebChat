@@ -10,7 +10,7 @@ export const normalize_original_code = (params: {
   for (let i = 0; i < params.original_code_lines.length; i++) {
     let line = params.original_code_lines[i]
 
-    if (line.trim() == '') {
+    if (line.trim() === '') {
       line = '~nnn'
     }
 
@@ -55,11 +55,11 @@ export const normalize_patch_lines = (params: {
       continue
     }
 
-    if (line.trim() == '') {
+    if (line.trim() === '') {
       line = '~nnn'
-    } else if (line.trim() == '+') {
+    } else if (line.trim() === '+') {
       line = '+~nnn'
-    } else if (line.trim() == '-') {
+    } else if (line.trim() === '-') {
       line = '-~nnn'
     }
 

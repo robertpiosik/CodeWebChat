@@ -48,7 +48,7 @@ const select_parent_folder = async (
     current_dir = path.dirname(current_dir)
   }
 
-  if (folders.length == 0) {
+  if (folders.length === 0) {
     vscode.window.showInformationMessage('No parent folders found.')
     return undefined
   }
@@ -121,16 +121,16 @@ const browse_all_files = async (
 
       return {
         label: filename,
-        description: dir_path == '.' ? '' : dir_path,
+        description: dir_path === '.' ? '' : dir_path,
         full_path: normalized_path,
         absolute_path: p,
-        buttons: dir_path == '.' ? [] : [FOLDER_BUTTON]
+        buttons: dir_path === '.' ? [] : [FOLDER_BUTTON]
       }
     })
 
     items.sort((a, b) => {
       const label_diff = natural_sort(a.label, b.label)
-      if (label_diff != 0) return label_diff
+      if (label_diff !== 0) return label_diff
       return natural_sort(a.description || '', b.description || '')
     })
 
@@ -206,14 +206,14 @@ const at_sign_quick_pick = async (params: {
 
   const selected_paths = params.workspace_provider.get_all_selected_paths()
 
-  if (selected_paths.length == 0) {
+  if (selected_paths.length === 0) {
     const browsed_item = await browse_all_files(
       params.workspace_provider,
       workspace_roots,
       format_path,
       false
     )
-    if (browsed_item && browsed_item != 'back') {
+    if (browsed_item && browsed_item !== 'back') {
       if (!browsed_item.is_folder) {
         await add_to_context_if_needed(
           params.workspace_provider,
@@ -243,10 +243,10 @@ const at_sign_quick_pick = async (params: {
 
         return {
           label: filename,
-          description: dir_path == '.' ? '' : dir_path,
+          description: dir_path === '.' ? '' : dir_path,
           full_path: normalized_path,
           absolute_path: p,
-          buttons: dir_path == '.' ? [] : [FOLDER_BUTTON]
+          buttons: dir_path === '.' ? [] : [FOLDER_BUTTON]
         }
       })
 
@@ -345,14 +345,14 @@ const at_sign_quick_pick = async (params: {
       break
     }
 
-    if (choice.full_path == 'BROWSE_ALL_FILES') {
+    if (choice.full_path === 'BROWSE_ALL_FILES') {
       const browsed_item = await browse_all_files(
         params.workspace_provider,
         workspace_roots,
         format_path,
         true
       )
-      if (browsed_item == 'back') {
+      if (browsed_item === 'back') {
         continue // Go back to the main quick pick
       } else if (browsed_item) {
         selected_path_item = browsed_item

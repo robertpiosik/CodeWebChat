@@ -65,8 +65,8 @@ export const build_changes_markdown = (params: {
   // Split diff into per-file sections. Each section starts with 'diff --git '.
   const file_diffs = params.diff
     .split(/^diff --git /m)
-    .filter((d) => d.trim() != '')
-  if (file_diffs.length == 0) {
+    .filter((d) => d.trim() !== '')
+  if (file_diffs.length === 0) {
     return ''
   }
 
@@ -87,9 +87,9 @@ export const build_changes_markdown = (params: {
 
     let file_path: string | undefined
 
-    if (new_path && new_path != '/dev/null') {
+    if (new_path && new_path !== '/dev/null') {
       file_path = new_path
-    } else if (old_path && old_path != '/dev/null') {
+    } else if (old_path && old_path !== '/dev/null') {
       file_path = old_path
     }
 
@@ -133,7 +133,7 @@ export const replace_changes_symbol = async (params: {
   for (let i = 0; i < result_instructions.length; i++) {
     const matches = [...result_instructions[i].matchAll(regex)]
 
-    if (matches.length == 0) {
+    if (matches.length === 0) {
       continue
     }
 
@@ -193,7 +193,7 @@ export const replace_changes_symbol = async (params: {
         }
 
         const target_folder = workspace_folders.find(
-          (folder) => folder.name == folder_name
+          (folder) => folder.name === folder_name
         )
         if (!target_folder) {
           vscode.window.showWarningMessage(
@@ -247,7 +247,7 @@ export const replace_changes_symbol = async (params: {
             .trim()
 
           let diff_base: string
-          if (current_branch == branch_name) {
+          if (current_branch === branch_name) {
             diff_base = execFileSync(
               'git',
               ['merge-base', 'HEAD', branch_name],
@@ -264,7 +264,7 @@ export const replace_changes_symbol = async (params: {
             cwd: target_folder.uri.fsPath
           }).toString()
 
-          if (!diff || diff.length == 0) {
+          if (!diff || diff.length === 0) {
             vscode.window.showInformationMessage(
               t(
                 'views.prompt.utils.symbols.git.replace-git-symbols.no-changes-found-between-branches-in-folder',
@@ -417,7 +417,7 @@ export const replace_changes_symbol = async (params: {
             .trim()
 
           let diff_base: string
-          if (current_branch == branch_name) {
+          if (current_branch === branch_name) {
             diff_base = execFileSync(
               'git',
               ['merge-base', 'HEAD', branch_name],
@@ -434,7 +434,7 @@ export const replace_changes_symbol = async (params: {
             cwd: repository.rootUri.fsPath
           }).toString()
 
-          if (!diff || diff.length == 0) {
+          if (!diff || diff.length === 0) {
             vscode.window.showInformationMessage(
               t(
                 'views.prompt.utils.symbols.git.replace-git-symbols.no-changes-found-between-branches',
@@ -508,9 +508,9 @@ export const build_commit_changes_markdown = (params: {
 }): string => {
   const file_diffs = params.diff
     .split(/^diff --git /m)
-    .filter((d) => d.trim() != '')
+    .filter((d) => d.trim() !== '')
 
-  if (file_diffs.length == 0) {
+  if (file_diffs.length === 0) {
     return ''
   }
 
@@ -531,9 +531,9 @@ export const build_commit_changes_markdown = (params: {
 
     let file_path: string | undefined
 
-    if (new_path && new_path != '/dev/null') {
+    if (new_path && new_path !== '/dev/null') {
       file_path = new_path
-    } else if (old_path && old_path != '/dev/null') {
+    } else if (old_path && old_path !== '/dev/null') {
       file_path = old_path
     }
 
@@ -676,7 +676,7 @@ export const replace_commit_symbol = async (params: {
             encoding: 'utf-8'
           }).toString()
 
-          if (!diff || diff.length == 0) {
+          if (!diff || diff.length === 0) {
             vscode.window.showInformationMessage(
               t(
                 'views.prompt.handlers.utils.symbols.git.replace-git-symbols.commit-seems-empty',

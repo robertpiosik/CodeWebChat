@@ -34,10 +34,10 @@ export const extract_paths_from_bullet_list = (params: {
     if (!p || p === '.' || p === '..') continue
 
     let idx = params.text.indexOf(original_p)
-    if (idx == -1) {
+    if (idx === -1) {
       idx = params.text.indexOf(p)
     }
-    const safe_idx = idx != -1 ? idx : Infinity
+    const safe_idx = idx !== -1 ? idx : Infinity
 
     for (const file of params.workspace_files) {
       if (file === p || file.endsWith('/' + p)) {
@@ -50,7 +50,7 @@ export const extract_paths_from_bullet_list = (params: {
   return Array.from(matched_files_with_index.keys()).sort((a, b) => {
     const idx_a = matched_files_with_index.get(a) ?? Infinity
     const idx_b = matched_files_with_index.get(b) ?? Infinity
-    if (idx_a == idx_b) {
+    if (idx_a === idx_b) {
       return a.localeCompare(b)
     }
     return idx_a - idx_b

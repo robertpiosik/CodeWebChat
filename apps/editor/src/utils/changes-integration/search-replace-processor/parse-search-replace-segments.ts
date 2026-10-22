@@ -18,8 +18,8 @@ export const parse_search_replace_segments = (content: string): Segment[] => {
 
   for (const line of lines) {
     const trimmed = line.trim()
-    if (trimmed == '<<<<<<<' || trimmed.startsWith('<<<<<<< ')) {
-      if (state == 'NORMAL') {
+    if (trimmed === '<<<<<<<' || trimmed.startsWith('<<<<<<< ')) {
+      if (state === 'NORMAL') {
         if (current_lines.length > 0) {
           segments.push({ type: 'common', lines: [...current_lines] })
           current_lines = []
@@ -28,16 +28,16 @@ export const parse_search_replace_segments = (content: string): Segment[] => {
         original_buffer = []
         updated_buffer = []
       } else {
-        if (state == 'ORIGINAL') original_buffer.push(line)
-        if (state == 'UPDATED') updated_buffer.push(line)
+        if (state === 'ORIGINAL') original_buffer.push(line)
+        if (state === 'UPDATED') updated_buffer.push(line)
       }
       continue
     }
 
-    if (trimmed == '=======' || trimmed.startsWith('======= ')) {
-      if (state == 'ORIGINAL') {
+    if (trimmed === '=======' || trimmed.startsWith('======= ')) {
+      if (state === 'ORIGINAL') {
         state = 'UPDATED'
-      } else if (state == 'NORMAL') {
+      } else if (state === 'NORMAL') {
         current_lines.push(line)
       } else {
         updated_buffer.push(line)
@@ -45,12 +45,12 @@ export const parse_search_replace_segments = (content: string): Segment[] => {
       continue
     }
 
-    if (trimmed == '>>>>>>>' || trimmed.startsWith('>>>>>>> ')) {
-      if (state == 'UPDATED' || state == 'ORIGINAL') {
+    if (trimmed === '>>>>>>>' || trimmed.startsWith('>>>>>>> ')) {
+      if (state === 'UPDATED' || state === 'ORIGINAL') {
         segments.push({
           type: 'search_replace',
           original_lines: original_buffer,
-          updated_lines: state == 'UPDATED' ? updated_buffer : []
+          updated_lines: state === 'UPDATED' ? updated_buffer : []
         })
         state = 'NORMAL'
         original_buffer = []
@@ -61,11 +61,11 @@ export const parse_search_replace_segments = (content: string): Segment[] => {
       continue
     }
 
-    if (state == 'NORMAL') {
+    if (state === 'NORMAL') {
       current_lines.push(line)
-    } else if (state == 'ORIGINAL') {
+    } else if (state === 'ORIGINAL') {
       original_buffer.push(line)
-    } else if (state == 'UPDATED') {
+    } else if (state === 'UPDATED') {
       updated_buffer.push(line)
     }
   }

@@ -32,7 +32,7 @@ export const process_truncations = (
   for (let i = 0; i < blocks.length; i++) {
     const block = blocks[i]
 
-    if (block.type == 'code') {
+    if (block.type === 'code') {
       output_lines.push(...block.lines)
 
       const search_window_size = 10

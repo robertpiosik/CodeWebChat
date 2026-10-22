@@ -40,7 +40,7 @@ export const TargetButton: React.FC<Props> = (props) => {
                 className={styles['button__label-char']}
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
-                {char == ' ' ? '\u00A0' : char}
+                {char === ' ' ? '\u00A0' : char}
               </span>
             ))}
           </div>

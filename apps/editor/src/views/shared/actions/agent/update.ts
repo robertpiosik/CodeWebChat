@@ -14,7 +14,7 @@ export const update = async (params: {
   is_new?: boolean
   insertion_index?: number
 }): Promise<{ success: boolean; has_changes: boolean; new_name?: string }> => {
-  if (params.is_new && params.origin == 'cancel') {
+  if (params.is_new && params.origin === 'cancel') {
     return { success: true, has_changes: false }
   }
 
@@ -25,10 +25,10 @@ export const update = async (params: {
   let cli_configuration_index = -1
   if (!params.is_new) {
     cli_configuration_index = current_cli_configurations.findIndex(
-      (p) => p.name == params.updating_cli_configuration.name
+      (p) => p.name === params.updating_cli_configuration.name
     )
 
-    if (cli_configuration_index == -1 && params.origin != 'cancel') {
+    if (cli_configuration_index === -1 && params.origin !== 'cancel') {
       console.error(
         `agent with original name "${params.updating_cli_configuration.name}" not found.`
       )
@@ -49,17 +49,17 @@ export const update = async (params: {
   const a = params.updating_cli_configuration
   const b = final_updated_cli_configuration
   const has_changes = !(
-    a.name == b.name &&
-    a.agent == b.agent &&
-    a.flags == b.flags &&
-    a.is_pinned == b.is_pinned
+    a.name === b.name &&
+    a.agent === b.agent &&
+    a.flags === b.flags &&
+    a.is_pinned === b.is_pinned
   )
 
   if (!has_changes && !params.is_new) {
     return { success: true, has_changes: false }
   }
 
-  if (params.origin == 'cancel') {
+  if (params.origin === 'cancel') {
     const discard_button = t('common.action.discard')
     const result = await vscode.window.showWarningMessage(
       t('views.common.handlers.common.confirm-discard-unsaved-changes', {
@@ -74,7 +74,7 @@ export const update = async (params: {
       discard_button
     )
 
-    if (result != discard_button) {
+    if (result !== discard_button) {
       return { success: false, has_changes: true }
     }
 
@@ -86,7 +86,7 @@ export const update = async (params: {
   let other_names = current_cli_configurations.map((c) => c.name)
   if (!params.is_new && cli_configuration_index !== -1) {
     other_names = current_cli_configurations
-      .filter((_, index) => index != cli_configuration_index)
+      .filter((_, index) => index !== cli_configuration_index)
       .map((c) => c.name)
   }
 
@@ -108,7 +108,7 @@ export const update = async (params: {
         ui_cli_configuration_to_config_format(updated_ui_cli_configuration)
       )
     }
-  } else if (cli_configuration_index != -1) {
+  } else if (cli_configuration_index !== -1) {
     updated_cli_configurations[cli_configuration_index] = {
       ...updated_cli_configurations[cli_configuration_index],
       ...ui_cli_configuration_to_config_format(updated_ui_cli_configuration)

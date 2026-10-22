@@ -19,8 +19,8 @@ const create_turndown_service = () => {
   turndown_service.addRule('fencedCodeBlock', {
     filter: (node: any, options: any) => {
       return (
-        options.codeBlockStyle == 'fenced' &&
-        node.nodeName == 'PRE' &&
+        options.codeBlockStyle === 'fenced' &&
+        node.nodeName === 'PRE' &&
         node.querySelector('code')
       )
     },
@@ -45,7 +45,7 @@ const create_turndown_service = () => {
   turndown_service.addRule('multiplemath', {
     filter(node) {
       return (
-        node.nodeName == 'SPAN' &&
+        node.nodeName === 'SPAN' &&
         (node as HTMLElement).classList.contains('katex-display')
       )
     },
@@ -60,14 +60,14 @@ const create_turndown_service = () => {
   turndown_service.addRule('multiplemath', {
     filter(node) {
       return (
-        node.nodeName == 'SPAN' &&
+        node.nodeName === 'SPAN' &&
         (node as HTMLElement).classList.contains('katex')
       )
     },
     replacement(_, node) {
       const is_block =
-        node.parentNode?.nodeName == 'P' &&
-        node.parentNode.childNodes.length == 1
+        node.parentNode?.nodeName === 'P' &&
+        node.parentNode.childNodes.length === 1
       const annotation = (node as HTMLElement).querySelector(
         'annotation'
       )?.textContent
@@ -100,7 +100,7 @@ export const fetch_website = async (
       signal: abort_signal
     })
 
-    if (response.status == 200 && typeof response.data == 'string') {
+    if (response.status === 200 && typeof response.data === 'string') {
       const html = response.data
       const window = new JSDOM('').window
       const DOMPurify = createDOMPurify(window as any)
@@ -134,8 +134,8 @@ export const fetch_website = async (
         let current: Element = pre
         while (
           current.parentElement &&
-          current.parentElement.tagName == 'DIV' &&
-          current.parentElement.textContent?.trim() == pre.textContent?.trim()
+          current.parentElement.tagName === 'DIV' &&
+          current.parentElement.textContent?.trim() === pre.textContent?.trim()
         ) {
           current = current.parentElement
         }

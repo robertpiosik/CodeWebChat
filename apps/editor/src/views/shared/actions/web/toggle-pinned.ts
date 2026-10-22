@@ -7,7 +7,7 @@ export const toggle_pinned = async (params: {
   const current_configs = config.get<any[]>('chatbots', []) || []
 
   const updated_configs = current_configs.map((c) => {
-    if (c.name == params.web_configuration_name) {
+    if (c.name === params.web_configuration_name) {
       return { ...c, isPinned: !c.isPinned }
     }
     return c

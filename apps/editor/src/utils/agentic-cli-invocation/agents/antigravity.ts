@@ -22,11 +22,11 @@ export const antigravity_agent: CodingAgent = {
   get_integrated_terminal_args: () => [],
   get_post_integrated_terminal_args: () => ['--continue'],
   parse_stream_line: (parsed, report_progress) => {
-    if (parsed.event == 'step_update' && parsed.step_update) {
+    if (parsed.event === 'step_update' && parsed.step_update) {
       const step = parsed.step_update
       let action_name = ''
 
-      if (step.step_type == 'tool') {
+      if (step.step_type === 'tool') {
         if (step.tool_name) {
           action_name = step.tool_name.replace(/_/g, ' ')
         }
@@ -44,7 +44,7 @@ export const antigravity_agent: CodingAgent = {
         }
         report_progress(`${action_name}${get_progress_dots(action_count)}`)
       }
-    } else if (parsed.event == 'result' && parsed.result) {
+    } else if (parsed.event === 'result' && parsed.result) {
       last_action_name = ''
       action_count = 0
       return { output: parsed.result.response || '' }
@@ -53,7 +53,7 @@ export const antigravity_agent: CodingAgent = {
   parse_final_output: (parsed, current_output) => {
     last_action_name = ''
     action_count = 0
-    if (parsed.event == 'result' && parsed.result) {
+    if (parsed.event === 'result' && parsed.result) {
       return parsed.result.response || ''
     } else if (parsed.response) {
       return parsed.response || ''

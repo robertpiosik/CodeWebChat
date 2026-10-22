@@ -134,7 +134,7 @@ export const use_scroll_to = (params: {
 
         let extra_offset = 0
         const is_subsection = nav_items_config
-          .find((i) => i.id == item_id)
+          .find((i) => i.id === item_id)
           ?.id.includes(':group:')
         if (is_subsection) {
           extra_offset = -SECTION_HEADER_HEIGHT

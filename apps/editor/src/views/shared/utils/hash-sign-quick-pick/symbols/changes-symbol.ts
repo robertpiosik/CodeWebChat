@@ -14,7 +14,7 @@ export const handle_changes_item = async (
 ): Promise<string | 'continue' | undefined> => {
   try {
     const workspace_folders = vscode.workspace.workspaceFolders
-    if (!workspace_folders || workspace_folders.length == 0) {
+    if (!workspace_folders || workspace_folders.length === 0) {
       vscode.window.showWarningMessage(
         t('common.warning.no-workspace-folders-found')
       )
@@ -64,7 +64,7 @@ export const handle_changes_item = async (
         | { folder: vscode.WorkspaceFolder; branches: string[] }
         | undefined
 
-      if (workspace_with_branches.length == 1) {
+      if (workspace_with_branches.length === 1) {
         selected_workspace = workspace_with_branches[0]
       } else {
         const folder_items = workspace_with_branches.map((w) => ({
@@ -131,7 +131,7 @@ export const handle_changes_item = async (
         return 'continue'
       }
 
-      if (selected_workspace.branches.length == 0) {
+      if (selected_workspace.branches.length === 0) {
         vscode.window.showInformationMessage(
           t('common.info.no-other-branches-to-compare')
         )

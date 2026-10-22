@@ -29,7 +29,7 @@ export const search_files_by_keywords = async (params: {
   const positive_regexes = positive_keywords.map((k) => create_search_regex(k))
   const negative_regexes = negative_keywords.map((k) => create_search_regex(k))
 
-  if (positive_regexes.length == 0 && negative_regexes.length == 0) return []
+  if (positive_regexes.length === 0 && negative_regexes.length === 0) return []
 
   let processed = 0
   for (const file_path of params.files) {
@@ -49,7 +49,7 @@ export const search_files_by_keywords = async (params: {
         continue
       }
 
-      if (params.keywords_target == 'filenames') {
+      if (params.keywords_target === 'filenames') {
         if (
           check_matches_condition({
             text: file_name,
@@ -70,7 +70,7 @@ export const search_files_by_keywords = async (params: {
       }
 
       if (content !== undefined) {
-        if (params.keywords_target == 'both') {
+        if (params.keywords_target === 'both') {
           text_to_check = file_name + '\n' + content
         } else {
           text_to_check = content
@@ -79,7 +79,7 @@ export const search_files_by_keywords = async (params: {
         const stats = await fs.promises.stat(file_path)
 
         if (stats.size > 1024 * 1024) {
-          if (params.keywords_target == 'both') {
+          if (params.keywords_target === 'both') {
             text_to_check = file_name
           } else {
             continue
@@ -89,14 +89,14 @@ export const search_files_by_keywords = async (params: {
           const is_binary = buffer.includes(0)
 
           if (is_binary) {
-            if (params.keywords_target == 'both') {
+            if (params.keywords_target === 'both') {
               text_to_check = file_name
             } else {
               continue
             }
           } else {
             content = buffer.toString('utf-8')
-            if (params.keywords_target == 'both') {
+            if (params.keywords_target === 'both') {
               text_to_check = file_name + '\n' + content
             } else {
               text_to_check = content

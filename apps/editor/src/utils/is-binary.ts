@@ -70,7 +70,7 @@ export const is_binary_file = (
   buffer?: Uint8Array
 ): boolean => {
   const base = path.basename(file_path).toLowerCase()
-  if (base == '.ds_store') return true
+  if (base === '.ds_store') return true
 
   const ext = path.extname(file_path).toLowerCase()
   if (BINARY_EXTENSIONS.has(ext)) {
@@ -84,11 +84,14 @@ export const is_binary_file = (
 
   for (let i = 0; i < len; i++) {
     const byte = buffer[i]
-    if (byte == 0) {
+    if (byte === 0) {
       return true
     }
 
-    if ((byte < 32 && byte != 9 && byte != 10 && byte != 13) || byte == 127) {
+    if (
+      (byte < 32 && byte !== 9 && byte !== 10 && byte !== 13) ||
+      byte === 127
+    ) {
       non_printable++
     }
   }

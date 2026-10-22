@@ -124,7 +124,7 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
     is_visually_checked: boolean
     depth: number
   }) => {
-    const is_editing = editing_timestamp == params.task.created_at
+    const is_editing = editing_timestamp === params.task.created_at
     const has_children = params.task.children && params.task.children.length > 0
 
     const checked_children_count = has_children
@@ -209,11 +209,11 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
               {params.task.text && (
                 <IconButton
                   codicon_icon={
-                    copied_timestamp == params.task.created_at
+                    copied_timestamp === params.task.created_at
                       ? 'check'
                       : 'copy'
                   }
-                  disabled={copied_timestamp == params.task.created_at}
+                  disabled={copied_timestamp === params.task.created_at}
                   on_mouse_down={
                     is_editing ? (e) => e.preventDefault() : undefined
                   }
@@ -256,10 +256,10 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
                 handle_stop_editing(params.task)
               }}
               on_key_down={(e) => {
-                if (e.key == 'Escape') {
+                if (e.key === 'Escape') {
                   e.preventDefault()
                   handle_cancel_edit(params.task)
-                } else if (e.key == 'Enter' && !e.shiftKey) {
+                } else if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault()
                 }
               }}

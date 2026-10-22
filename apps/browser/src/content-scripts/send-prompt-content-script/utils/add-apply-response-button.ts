@@ -106,7 +106,7 @@ export function observe_for_responses(params: {
     }
 
     const all_footers = document.querySelectorAll(params.footer_selector)
-    if (all_footers.length == 0) {
+    if (all_footers.length === 0) {
       return
     }
 

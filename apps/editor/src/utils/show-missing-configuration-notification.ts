@@ -7,7 +7,7 @@ export const show_incomplete_setup_warning = async (
 ): Promise<void> => {
   const open_settings_label = t('common.open-settings')
   const result = await vscode.window.showWarningMessage(
-    type == 'api'
+    type === 'api'
       ? t(
           'utils.show-missing-configuration-notification.warning.setup-incomplete'
         )
@@ -15,12 +15,12 @@ export const show_incomplete_setup_warning = async (
     open_settings_label
   )
 
-  if (result == open_settings_label) {
-    if (type == 'api') {
+  if (result === open_settings_label) {
+    if (type === 'api') {
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const providers = config.get<any[]>('providers', [])
 
-      if (providers.length == 0) {
+      if (providers.length === 0) {
         open_settings.api.providers()
       } else {
         open_settings.api.models()

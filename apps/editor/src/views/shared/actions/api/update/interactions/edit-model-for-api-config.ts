@@ -175,7 +175,7 @@ export const edit_model_for_api_configuration = async (params: {
     })
     if (
       error instanceof Error &&
-      error.message == MODELS_ROUTE_NOT_FOUND_ERROR
+      error.message === MODELS_ROUTE_NOT_FOUND_ERROR
     ) {
       vscode.window.showInformationMessage(
         t(

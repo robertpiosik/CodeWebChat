@@ -1,11 +1,11 @@
 export const is_valid_git_branch_name = (name: string): boolean => {
-  if (!name || name == '@' || name.startsWith('-')) {
+  if (!name || name === '@' || name.startsWith('-')) {
     return false
   }
 
   const has_control_char = [...name].some((char) => {
     const code = char.charCodeAt(0)
-    return code <= 0x20 || code == 0x7f
+    return code <= 0x20 || code === 0x7f
   })
   if (has_control_char || /[~^:?*[\\]/.test(name)) {
     return false

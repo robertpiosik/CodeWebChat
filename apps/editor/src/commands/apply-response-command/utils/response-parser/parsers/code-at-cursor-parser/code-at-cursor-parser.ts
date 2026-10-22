@@ -49,11 +49,11 @@ export const parse_code_at_cursor = (params: {
     }
   }
 
-  if (code_block_start_index == -1) {
+  if (code_block_start_index === -1) {
     return null
   }
 
-  if (code_block_end_index == -1) {
+  if (code_block_end_index === -1) {
     code_block_end_index = lines.length - 1
   }
 
@@ -61,7 +61,7 @@ export const parse_code_at_cursor = (params: {
   let completion_info = null
 
   for (let k = code_block_start_index - 1; k >= 0; k--) {
-    if (lines[k].trim() == '') continue
+    if (lines[k].trim() === '') continue
     const info = extract_path_and_position(lines[k])
     if (info) {
       header_index = k

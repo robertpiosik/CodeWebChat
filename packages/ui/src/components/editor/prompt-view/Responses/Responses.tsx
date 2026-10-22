@@ -26,7 +26,7 @@ export const Responses: React.FC<Props> = (props) => {
   use_periodic_re_render(60 * 1000)
   use_dayjs_locale()
 
-  if (props.response_history.length == 0) {
+  if (props.response_history.length === 0) {
     return null
   }
 
@@ -38,7 +38,7 @@ export const Responses: React.FC<Props> = (props) => {
           className={cn(styles['responses__item'], {
             [styles['responses__item--selected']]:
               props.response_history.length > 1 &&
-              props.selected_history_item_created_at == item.created_at
+              props.selected_history_item_created_at === item.created_at
           })}
           title={item.raw_instructions}
         >
@@ -51,7 +51,7 @@ export const Responses: React.FC<Props> = (props) => {
               props.on_selected_history_item_change(item.created_at)
             }}
             onKeyDown={(e) => {
-              if (e.key == 'Enter') {
+              if (e.key === 'Enter') {
                 e.preventDefault()
                 props.on_response_history_item_click(item)
                 props.on_selected_history_item_change(item.created_at)

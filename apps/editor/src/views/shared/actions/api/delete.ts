@@ -34,7 +34,7 @@ export const remove = async (params: {
     delete_button
   )
 
-  if (confirmation != delete_button) {
+  if (confirmation !== delete_button) {
     return
   }
 

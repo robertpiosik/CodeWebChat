@@ -3,7 +3,7 @@ export const find_line_sequence = (params: {
   sequence: string[]
   start_idx: number
 }): number => {
-  if (params.sequence.length == 0) return -1
+  if (params.sequence.length === 0) return -1
   if (params.start_idx >= params.lines.length) return -1
 
   for (

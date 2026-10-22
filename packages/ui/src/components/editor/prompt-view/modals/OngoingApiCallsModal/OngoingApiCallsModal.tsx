@@ -32,7 +32,7 @@ export const OngoingApiCallsModal: React.FC<Props> = (props) => {
     <div
       className={styles.overlay}
       onKeyDown={(e) => {
-        if (e.key == 'Escape') {
+        if (e.key === 'Escape') {
           e.stopPropagation()
         }
       }}

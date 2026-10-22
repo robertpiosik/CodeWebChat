@@ -157,7 +157,7 @@ export const perform_code_at_cursor = async (params: {
           )
 
         const active_item = last_action_id
-          ? quick_pick.items.find((i) => i.id == last_action_id)
+          ? quick_pick.items.find((i) => i.id === last_action_id)
           : undefined
 
         if (active_item) {
@@ -247,7 +247,7 @@ export const perform_code_at_cursor = async (params: {
     exclude_paths: [active_file_path_fs]
   })
 
-  if (action == 'copy' || action == 'autofill') {
+  if (action === 'copy' || action === 'autofill') {
     const chatbot_instructions = code_at_cursor_output_formatting_for_chatbots({
       file_path: active_file_path,
       row,
@@ -287,7 +287,7 @@ export const perform_code_at_cursor = async (params: {
         (c) => c.chatbot
       )
 
-      if (valid_web_configurations.length == 0) {
+      if (valid_web_configurations.length === 0) {
         show_incomplete_setup_warning('web')
         return
       }
@@ -300,7 +300,7 @@ export const perform_code_at_cursor = async (params: {
 
       if (default_web_config) {
         selected_web_configuration_name = default_web_config.name
-      } else if (valid_web_configurations.length == 1) {
+      } else if (valid_web_configurations.length === 1) {
         selected_web_configuration_name = valid_web_configurations[0].name
       } else {
         const recents_key =
@@ -350,7 +350,7 @@ export const perform_code_at_cursor = async (params: {
     }
   }
 
-  if (action == 'invoke-agent') {
+  if (action === 'invoke-agent') {
     const { full_prompt: cli_prompt } = PromptBuilder.build_prompt({
       files_context_part1: collected.other_files,
       files_context_part2: collected.recent_files,
@@ -543,7 +543,7 @@ export const perform_code_at_cursor = async (params: {
       model: code_at_cursor_api_configuration.model
     }
 
-    const is_openai = provider.base_url == PROVIDERS.OpenAI.base_url
+    const is_openai = provider.base_url === PROVIDERS.OpenAI.base_url
     if (is_openai) {
       body.prompt_cache_options = { mode: 'explicit' }
       if (provider.extended_cache) {
@@ -656,7 +656,8 @@ export const perform_code_at_cursor = async (params: {
     } catch (err: any) {
       if (axios.isCancel(err)) {
         if (
-          err.message == t('command.code-at-cursor-command.cancel.cursor-moved')
+          err.message ===
+          t('command.code-at-cursor-command.cancel.cursor-moved')
         ) {
           break
         }

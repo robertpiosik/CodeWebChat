@@ -22,15 +22,15 @@ export const use_editor_sync = (vscode: any) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
-      if (message.command == 'EDITOR_STATE_CHANGED') {
+      if (message.command === 'EDITOR_STATE_CHANGED') {
         set_currently_open_file_path(message.currently_open_file_path)
-      } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
+      } else if (message.command === 'EDITOR_SELECTION_CHANGED') {
         set_current_selection(message.current_selection)
-      } else if (message.command == 'TOKEN_COUNT_UPDATED') {
+      } else if (message.command === 'TOKEN_COUNT_UPDATED') {
         set_selected_files(message.selected_files)
-      } else if (message.command == 'CURRENTLY_OPEN_FILE_TEXT') {
+      } else if (message.command === 'CURRENTLY_OPEN_FILE_TEXT') {
         set_currently_open_file_text(message.text)
-      } else if (message.command == 'WORKSPACE_STATE') {
+      } else if (message.command === 'WORKSPACE_STATE') {
         set_workspace_folder_count(message.folder_count)
       }
     }

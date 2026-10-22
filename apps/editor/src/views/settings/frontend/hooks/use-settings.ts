@@ -112,50 +112,50 @@ export const use_settings = (vscode: any) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
-      if (message.command == 'PROVIDERS') {
+      if (message.command === 'PROVIDERS') {
         set_providers(message.providers)
-      } else if (message.command == 'API_CONFIGURATIONS') {
+      } else if (message.command === 'API_CONFIGURATIONS') {
         set_api_configurations(message.api_configurations)
         set_defaults(message.defaults)
-      } else if (message.command == 'WEB_CONFIGURATIONS') {
+      } else if (message.command === 'WEB_CONFIGURATIONS') {
         set_web_configurations(message.web_configurations)
         set_web_defaults(message.defaults || {})
-      } else if (message.command == 'CLI_CONFIGURATIONS') {
+      } else if (message.command === 'CLI_CONFIGURATIONS') {
         set_cli_configurations(message.cli_configurations)
         set_agent_defaults(message.defaults || {})
-      } else if (message.command == 'EDIT_FILES_SYSTEM_INSTRUCTIONS') {
+      } else if (message.command === 'EDIT_FILES_SYSTEM_INSTRUCTIONS') {
         set_edit_files_system_instructions(message.instructions)
         set_default_edit_files_system_instructions(message.default_instructions)
-      } else if (message.command == 'COMMIT_MESSAGE_INSTRUCTIONS') {
+      } else if (message.command === 'COMMIT_MESSAGE_INSTRUCTIONS') {
         set_commit_message_instructions(message.instructions)
         set_default_commit_message_instructions(message.default_instructions)
-      } else if (message.command == 'VOICE_INPUT_INSTRUCTIONS') {
+      } else if (message.command === 'VOICE_INPUT_INSTRUCTIONS') {
         set_voice_input_instructions(message.instructions)
         set_default_voice_input_instructions(message.default_instructions)
-      } else if (message.command == 'AGENTIC_SEARCH_INSTRUCTIONS') {
+      } else if (message.command === 'AGENTIC_SEARCH_INSTRUCTIONS') {
         set_agentic_search_instructions(message.instructions)
         set_default_agentic_search_instructions(message.default_instructions)
-      } else if (message.command == 'AGENTIC_SEARCH_INVOCATION_COUNT') {
+      } else if (message.command === 'AGENTIC_SEARCH_INVOCATION_COUNT') {
         set_agentic_search_invocation_count(message.count)
-      } else if (message.command == 'ATTACH_ASCII_TREE_OF_CONTEXT') {
+      } else if (message.command === 'ATTACH_ASCII_TREE_OF_CONTEXT') {
         set_attach_ascii_tree_of_context(message.value)
       } else if (
-        message.command == 'USE_CONTEXT_FILES_IN_COMMIT_MESSAGE_PROMPT'
+        message.command === 'USE_CONTEXT_FILES_IN_COMMIT_MESSAGE_PROMPT'
       ) {
         set_use_context_files_in_commit_message_prompt(message.value)
       } else if (
-        message.command == 'SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
+        message.command === 'SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
       ) {
         set_select_all_prompts_in_commit_messages_by_default(message.enabled)
-      } else if (message.command == 'GEMINI_USER_ID') {
+      } else if (message.command === 'GEMINI_USER_ID') {
         set_gemini_user_id(message.geminiUserId)
-      } else if (message.command == 'AI_STUDIO_USER_ID') {
+      } else if (message.command === 'AI_STUDIO_USER_ID') {
         set_ai_studio_user_id(message.aiStudioUserId)
-      } else if (message.command == 'SEND_WITH_SHIFT_ENTER') {
+      } else if (message.command === 'SEND_WITH_SHIFT_ENTER') {
         set_send_with_shift_enter(message.enabled)
-      } else if (message.command == 'IS_MODERN_UI') {
+      } else if (message.command === 'IS_MODERN_UI') {
         set_is_modern_ui(message.is_modern_ui)
-      } else if (message.command == 'TEMPLATES') {
+      } else if (message.command === 'TEMPLATES') {
         set_templates(message.templates)
       }
     }

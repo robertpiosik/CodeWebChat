@@ -16,11 +16,11 @@ export const use_provider_editing = (vscode: any) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent) => {
       const message = event.data
-      if (message.command == 'START_PROVIDER_CREATION') {
+      if (message.command === 'START_PROVIDER_CREATION') {
         set_is_new_provider(true)
         set_updating_provider({ provider: message.provider })
         set_provider_insertion_index(message.insertion_index)
-      } else if (message.command == 'PROVIDER_UPDATED') {
+      } else if (message.command === 'PROVIDER_UPDATED') {
         set_updating_provider(null)
         set_updated_provider(null)
         set_is_new_provider(false)

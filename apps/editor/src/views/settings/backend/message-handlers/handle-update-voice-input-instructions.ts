@@ -9,7 +9,7 @@ export const handle_update_voice_input_instructions = async (
     config.inspect<string>('voiceInputInstructions')?.defaultValue || ''
   await config.update(
     'voiceInputInstructions',
-    message.instructions == '' || message.instructions == default_instructions
+    message.instructions === '' || message.instructions === default_instructions
       ? undefined
       : message.instructions,
     vscode.ConfigurationTarget.Global

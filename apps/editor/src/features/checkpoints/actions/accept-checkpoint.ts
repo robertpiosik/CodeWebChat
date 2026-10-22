@@ -16,9 +16,9 @@ export const accept_checkpoint = async (params: {
       []
     ) ?? []
   const checkpoint_index = checkpoints.findIndex(
-    (c) => c.timestamp == params.checkpoint.timestamp
+    (c) => c.timestamp === params.checkpoint.timestamp
   )
-  if (checkpoint_index != -1) {
+  if (checkpoint_index !== -1) {
     const checkpoint_to_update = checkpoints[checkpoint_index]
     const old_timestamp = checkpoint_to_update.timestamp
     const new_timestamp = Date.now()

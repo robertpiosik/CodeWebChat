@@ -28,7 +28,7 @@ export const prompt_for_keywords_target = async (
     }
   ]
 
-  const active_item = items.find((i) => i.target == last_target) || items[0]
+  const active_item = items.find((i) => i.target === last_target) || items[0]
 
   const close_button = {
     iconPath: new vscode.ThemeIcon('close'),

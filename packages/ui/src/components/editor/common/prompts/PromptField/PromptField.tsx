@@ -415,10 +415,10 @@ export const PromptField: React.FC<PromptField.Props> = (props) => {
                 }}
                 onKeyDown={(e) => {
                   if (
-                    e.key == 'ArrowRight' ||
-                    e.key == 'ArrowLeft' ||
-                    e.key == 'ArrowUp' ||
-                    e.key == 'ArrowDown'
+                    e.key === 'ArrowRight' ||
+                    e.key === 'ArrowLeft' ||
+                    e.key === 'ArrowUp' ||
+                    e.key === 'ArrowDown'
                   ) {
                     set_should_show_ghost_text(false)
                     const ghost_text_node = input_ref.current?.querySelector(

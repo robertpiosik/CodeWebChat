@@ -161,7 +161,7 @@ const initialize_chat = async (params: { message: string; chat: Chat }) => {
 
   await new Promise<void>((resolve) => {
     const handle_key_press = (e: KeyboardEvent) => {
-      if (e.key == 'Enter') {
+      if (e.key === 'Enter') {
         document.removeEventListener('keydown', handle_key_press)
         resolve()
       }
@@ -218,7 +218,7 @@ const main = async () => {
 
     try {
       const target_url = new URL(current_chat.url)
-      if (window.location.origin != target_url.origin) {
+      if (window.location.origin !== target_url.origin) {
         console.warn(
           'Origin mismatch: preventing prompt injection on incorrect domain.'
         )
@@ -284,7 +284,7 @@ window.addEventListener('hashchange', () => {
   }
 })
 
-if (document.readyState == 'loading') {
+if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', main)
 } else {
   main()

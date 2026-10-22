@@ -37,8 +37,8 @@ export const handle_patch_repair = async (params: {
         if (original_states) {
           const state = original_states.find(
             (s) =>
-              s.file_path == patch_item.file_path &&
-              s.workspace_name == patch_item.workspace_name
+              s.file_path === patch_item.file_path &&
+              s.workspace_name === patch_item.workspace_name
           )
           if (state?.file_path_to_restore) {
             const old_workspace_root = resolve_workspace_root({

@@ -85,7 +85,7 @@ export const Scrollable = forwardRef<any, Props>((props, ref) => {
     const scroll_element = simplebar_instance.getScrollElement()
     if (!scroll_element) return
 
-    if (typeof props.initial_scroll_top == 'number') {
+    if (typeof props.initial_scroll_top === 'number') {
       requestAnimationFrame(() => {
         scroll_element.scrollTop = props.initial_scroll_top
       })

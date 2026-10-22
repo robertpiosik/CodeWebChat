@@ -28,11 +28,11 @@ const next_config = {
   },
   poweredByHeader: false,
   reactStrictMode: false,
-  trailingSlash: process.env.TRAILING_SLASH == 'true',
+  trailingSlash: process.env.TRAILING_SLASH === 'true',
   webpack(config, { dev }) {
     if (!dev) {
       const rules = config.module.rules
-        .find((rule) => typeof rule.oneOf == 'object')
+        .find((rule) => typeof rule.oneOf === 'object')
         .oneOf.filter((rule) => Array.isArray(rule.use))
 
       rules.forEach((rule) => {

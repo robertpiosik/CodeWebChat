@@ -151,7 +151,7 @@ export const show_search_results_quick_pick = async (params: {
           .map((item) => item.file_path)
           .filter((p): p is string => p !== undefined)
 
-        if (selected.length == 0) {
+        if (selected.length === 0) {
           vscode.window.showInformationMessage(
             t('common.info.select-files-to-search')
           )
@@ -203,7 +203,7 @@ export const show_search_results_quick_pick = async (params: {
           const doc = await vscode.workspace.openTextDocument(e.item.file_path)
 
           let selection: vscode.Range | undefined
-          if (params.search_mode == 'phrase' && params.search_term) {
+          if (params.search_mode === 'phrase' && params.search_term) {
             const text = doc.getText()
             const regexes = [create_search_regex(params.search_term)]
 

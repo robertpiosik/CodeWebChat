@@ -14,7 +14,7 @@ export const apply_diff = (params: {
 }): string => {
   const original_code_normalized = params.original_code.replace(/\r\n/g, '\n')
 
-  if (original_code_normalized.trim() == '') {
+  if (original_code_normalized.trim() === '') {
     const empty_file_result = handle_empty_file(params.diff_patch)
     if (empty_file_result !== null) {
       return empty_file_result
@@ -46,7 +46,7 @@ export const apply_diff = (params: {
   })
 
   const invalid_blocks = search_replace_blocks.filter(
-    (block) => block.search_block_start_index == -2
+    (block) => block.search_block_start_index === -2
   )
 
   if (invalid_blocks.length > 0) {

@@ -31,9 +31,9 @@ export const file_blocks_parser = (params: {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
 
-    if (state == 'TEXT') {
+    if (state === 'TEXT') {
       const backtick_index = line.indexOf('```')
-      if (backtick_index != -1) {
+      if (backtick_index !== -1) {
         const before_backticks = line.substring(0, backtick_index)
 
         current_block_mode = 'overwrite'
@@ -236,7 +236,7 @@ export const file_blocks_parser = (params: {
                   } else {
                     let all_intermediate_lines_empty = true
                     for (let k = i + 1; k < j; k++) {
-                      if (lines[k].trim() != '') {
+                      if (lines[k].trim() !== '') {
                         all_intermediate_lines_empty = false
                         break
                       }
@@ -322,14 +322,14 @@ export const file_blocks_parser = (params: {
           current_text_block += line + '\n'
         }
       }
-    } else if (state == 'CONTENT') {
+    } else if (state === 'CONTENT') {
       const trimmed_line = line.trim()
 
-      if (trimmed_line.startsWith('```') && trimmed_line != '```') {
+      if (trimmed_line.startsWith('```') && trimmed_line !== '```') {
         if (
-          backtick_nesting_level == 1 &&
+          backtick_nesting_level === 1 &&
           current_file_name &&
-          current_content.trim() == ''
+          current_content.trim() === ''
         ) {
           state = 'TEXT'
           last_seen_file_path_comment = current_file_name
@@ -342,17 +342,17 @@ export const file_blocks_parser = (params: {
 
         backtick_nesting_level++
         if (
-          (current_language == 'markdown' || current_language == 'md') &&
+          (current_language === 'markdown' || current_language === 'md') &&
           backtick_nesting_level > 1
         ) {
           is_markdown_container_block = true
         }
       } else if (
-        trimmed_line == '```' &&
-        backtick_nesting_level == 1 &&
-        current_content.trim() == '' &&
+        trimmed_line === '```' &&
+        backtick_nesting_level === 1 &&
+        current_content.trim() === '' &&
         i > 0 &&
-        lines[i - 1].trim() != '' &&
+        lines[i - 1].trim() !== '' &&
         lines[i - 1].trim().startsWith('```') &&
         (() => {
           for (let j = i + 1; j < lines.length; j++) {
@@ -364,13 +364,15 @@ export const file_blocks_parser = (params: {
       ) {
         backtick_nesting_level++
       } else if (
-        trimmed_line == '```' &&
-        backtick_nesting_level == 1 &&
-        (current_language == 'markdown' || current_language == 'md') &&
+        trimmed_line === '```' &&
+        backtick_nesting_level === 1 &&
+        (current_language === 'markdown' || current_language === 'md') &&
         !last_seen_file_path_was_header &&
-        ((current_content.trim() == '' && i > 0 && lines[i - 1].trim() != '') ||
+        ((current_content.trim() === '' &&
+          i > 0 &&
+          lines[i - 1].trim() !== '') ||
           (i > 0 &&
-            (lines[i - 1].trim() == '' ||
+            (lines[i - 1].trim() === '' ||
               (current_file_name.endsWith('.md') &&
                 lines[i - 1].trim().endsWith('```'))))) &&
         (() => {
@@ -386,12 +388,12 @@ export const file_blocks_parser = (params: {
       } else if (trimmed_line.endsWith('```')) {
         let should_close = true
         if (
-          trimmed_line == '```' &&
-          backtick_nesting_level == 1 &&
+          trimmed_line === '```' &&
+          backtick_nesting_level === 1 &&
           current_file_name &&
-          current_content.trim() == '' &&
+          current_content.trim() === '' &&
           i + 1 < lines.length &&
-          lines[i + 1].trim() != '' &&
+          lines[i + 1].trim() !== '' &&
           !lines[i + 1].trim().startsWith('```')
         ) {
           should_close = false
@@ -411,7 +413,7 @@ export const file_blocks_parser = (params: {
           content_on_closing_line = line.substring(0, last_backticks_index)
         }
 
-        if (content_on_closing_line.trim() != '') {
+        if (content_on_closing_line.trim() !== '') {
           if (current_content) {
             current_content += '\n' + content_on_closing_line
           } else {
@@ -423,7 +425,7 @@ export const file_blocks_parser = (params: {
 
         const cleaned_content = current_content
 
-        if (current_block_mode == 'append' && current_file_name) {
+        if (current_block_mode === 'append' && current_file_name) {
           const file_key = `${current_workspace_name || ''}:${current_file_name}`
           const existing_file = file_ref_map.get(file_key)
           if (
@@ -466,12 +468,12 @@ export const file_blocks_parser = (params: {
         current_file_name = ''
         current_content = ''
         current_workspace_name = undefined
-        if (last_backticks_index != -1) {
+        if (last_backticks_index !== -1) {
           current_text_block = line.substring(last_backticks_index + 3)
         }
       } else {
         const lang_is_markdown =
-          current_language == 'markdown' || current_language == 'md'
+          current_language === 'markdown' || current_language === 'md'
 
         const is_markdown_file = current_file_name.endsWith('.md')
 
@@ -501,7 +503,7 @@ export const file_blocks_parser = (params: {
     }
   }
 
-  if (state == 'CONTENT' && current_file_name) {
+  if (state === 'CONTENT' && current_file_name) {
     create_or_update_file_item({
       file_name: current_file_name,
       content: current_content,
@@ -512,7 +514,7 @@ export const file_blocks_parser = (params: {
       renamed_from: renamed_from_path,
       renamed_from_workspace
     })
-  } else if (state == 'TEXT' && current_text_block.trim()) {
+  } else if (state === 'TEXT' && current_text_block.trim()) {
     renamed_from_path = undefined
     renamed_from_workspace = undefined
     flush_text_block({
@@ -525,7 +527,7 @@ export const file_blocks_parser = (params: {
   for (const result of results) {
     if (merged_results.length > 0) {
       const last = merged_results[merged_results.length - 1]
-      if (last.type == 'text' && result.type == 'text') {
+      if (last.type === 'text' && result.type === 'text') {
         last.content += '\n' + result.content
         continue
       }
@@ -534,7 +536,7 @@ export const file_blocks_parser = (params: {
   }
 
   for (const result of merged_results) {
-    if (result.type == 'text') {
+    if (result.type === 'text') {
       result.content = result.content.trim()
     }
   }

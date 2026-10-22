@@ -48,7 +48,7 @@ export const doubao: Chatbot = {
       return
     }
     const menu_items = portal.querySelectorAll('li[role="menuitem"]')
-    if (menu_items.length == 0) {
+    if (menu_items.length === 0) {
       report_initialization_error({
         function_name: 'doubao.set_options',
         log_message: 'Options menu items not found'
@@ -61,7 +61,7 @@ export const doubao: Chatbot = {
     await new Promise((r) => requestAnimationFrame(r))
     const supported_options = CHATBOTS['Doubao'].supported_options
     for (const option of options) {
-      if (option == 'deep-thinking' && supported_options?.['deep-thinking']) {
+      if (option === 'deep-thinking' && supported_options?.['deep-thinking']) {
         const deep_thinking_button_2 = document.querySelector(
           'div[data-testid="chat_input"] input[data-testid="upload-file-input"] + button'
         ) as HTMLButtonElement

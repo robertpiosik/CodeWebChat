@@ -5,9 +5,9 @@ export const apply_reasoning_effort = (params: {
   provider: Provider
   reasoning_effort?: ApiConfiguration['reasoning_effort']
 }) => {
-  if (params.provider.base_url == 'https://openrouter.ai/api/v1') {
+  if (params.provider.base_url === 'https://openrouter.ai/api/v1') {
     if (params.reasoning_effort) {
-      if (params.reasoning_effort == 'none') {
+      if (params.reasoning_effort === 'none') {
         params.body.reasoning = { enabled: false }
       } else {
         params.body.reasoning = { effort: params.reasoning_effort }

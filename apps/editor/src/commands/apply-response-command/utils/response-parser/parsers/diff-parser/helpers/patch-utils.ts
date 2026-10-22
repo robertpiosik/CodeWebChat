@@ -19,7 +19,7 @@ export const normalize_header_line = (params: {
       }).relative_path
     }
 
-    if (path_part == '/dev/null') {
+    if (path_part === '/dev/null') {
       return '--- /dev/null'
     }
     return `--- a/${path_part}`
@@ -36,7 +36,7 @@ export const normalize_header_line = (params: {
         is_single_root_folder_workspace: params.is_single_root
       }).relative_path
     }
-    if (path_part == '/dev/null') {
+    if (path_part === '/dev/null') {
       return '+++ /dev/null'
     }
     return `+++ b/${path_part}`
@@ -100,7 +100,7 @@ export const format_hunk_headers = (lines: string[]): string[] => {
   const formatted_lines: string[] = []
   for (const line of lines) {
     const hunk_match = line.match(/^(@@ -\d+(?:,\d+)? \+\d+(?:,\d+)? @@)(.*)$/)
-    if (hunk_match && hunk_match[2].trim() != '') {
+    if (hunk_match && hunk_match[2].trim() !== '') {
       formatted_lines.push(hunk_match[1])
       if (hunk_match[2].length > 0) {
         formatted_lines.push(hunk_match[2])

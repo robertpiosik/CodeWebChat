@@ -42,7 +42,7 @@ export const ProgressModal: React.FC<Props> = (props) => {
   return is_visible ? (
     <div
       onKeyDown={(e) => {
-        if (e.key == 'Escape') {
+        if (e.key === 'Escape') {
           e.stopPropagation()
           props.on_cancel?.()
         }

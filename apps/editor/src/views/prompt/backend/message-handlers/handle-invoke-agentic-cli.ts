@@ -24,7 +24,7 @@ export const handle_invoke_agentic_cli = async (
   }
 
   if (
-    prompt_view_provider.cli_prompt_type == 'edit' &&
+    prompt_view_provider.cli_prompt_type === 'edit' &&
     !prompt_view_provider.workspace_provider.get_selected_files().length
   ) {
     vscode.window.showWarningMessage(
@@ -46,9 +46,10 @@ export const handle_invoke_agentic_cli = async (
     last_selected_workspace_state_key:
       LAST_SELECTED_WORKSPACE_IN_AGENTIC_CLI_STATE_KEY,
     isolate_in_temp_dir: true,
-    copy_selected_files: prompt_type == 'edit',
-    generate_diff_for_temp_dir: prompt_type == 'edit',
-    execution_mode: prompt_type == 'edit' ? 'headless' : 'interactive-terminal',
+    copy_selected_files: prompt_type === 'edit',
+    generate_diff_for_temp_dir: prompt_type === 'edit',
+    execution_mode:
+      prompt_type === 'edit' ? 'headless' : 'interactive-terminal',
     cli_configuration_name: message.cli_configuration_name,
     use_quick_pick: message.use_quick_pick,
     on_agent_selected: (name: string) => {
@@ -74,7 +75,7 @@ export const handle_invoke_agentic_cli = async (
 
   if (
     agent_output !== undefined &&
-    prompt_view_provider.cli_prompt_type == 'edit'
+    prompt_view_provider.cli_prompt_type === 'edit'
   ) {
     if (!agent_output.trim()) {
       show_agentic_cli_output_channel()

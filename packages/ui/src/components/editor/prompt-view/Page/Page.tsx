@@ -13,7 +13,7 @@ type Props = {
 export const Page: React.FC<Props> = (props) => {
   useEffect(() => {
     const handle_mouse_up = (event: MouseEvent) => {
-      if (event.button == 3 && props.on_back_click) {
+      if (event.button === 3 && props.on_back_click) {
         props.on_back_click()
       }
     }

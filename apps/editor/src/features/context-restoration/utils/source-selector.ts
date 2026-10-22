@@ -25,9 +25,9 @@ export const select_context_source = async (params: {
   }
 
   if (
-    params.mode == 'restore' &&
-    internal_contexts.length == 0 &&
-    file_contexts_count == 0
+    params.mode === 'restore' &&
+    internal_contexts.length === 0 &&
+    file_contexts_count === 0
   ) {
     vscode.window.showInformationMessage(t('common.info.no-saved-contexts'))
     return { source: undefined, skipped_menu: false }
@@ -41,7 +41,7 @@ export const select_context_source = async (params: {
     main_quick_pick_options.push({
       label: t('common.source.workspace-state'),
       description: `${internal_contexts.length} ${
-        internal_contexts.length == 1 ? 'entry' : 'entries'
+        internal_contexts.length === 1 ? 'entry' : 'entries'
       }`,
       value: 'internal'
     })
@@ -56,7 +56,7 @@ export const select_context_source = async (params: {
     main_quick_pick_options.push({
       label: t('common.source.json-file'),
       description: `${file_contexts_count} ${
-        file_contexts_count == 1 ? 'entry' : 'entries'
+        file_contexts_count === 1 ? 'entry' : 'entries'
       }`,
       value: 'file',
       buttons: [open_file_button]
@@ -102,10 +102,10 @@ export const select_context_source = async (params: {
       main_quick_pick.onDidTriggerItemButton(async (e) => {
         if (e.button === open_file_button) {
           const workspace_folders = vscode.workspace.workspaceFolders
-          if (!workspace_folders || workspace_folders.length == 0) return
+          if (!workspace_folders || workspace_folders.length === 0) return
 
           let file_path: string | undefined
-          if (workspace_folders.length == 1) {
+          if (workspace_folders.length === 1) {
             file_path = get_contexts_file_path(workspace_folders[0].uri.fsPath)
           } else {
             const picked = await vscode.window.showQuickPick(

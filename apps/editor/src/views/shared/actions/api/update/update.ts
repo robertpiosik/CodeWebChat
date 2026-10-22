@@ -23,10 +23,11 @@ export const update = async (params: {
   let api_configuration_index = -1
   if (!params.is_new) {
     api_configuration_index = api_configurations.findIndex(
-      (p) => get_api_configuration_id(p) == params.updating_api_configuration.id
+      (p) =>
+        get_api_configuration_id(p) === params.updating_api_configuration.id
     )
 
-    if (api_configuration_index == -1 && params.origin != 'cancel') {
+    if (api_configuration_index === -1 && params.origin !== 'cancel') {
       vscode.window.showErrorMessage(
         t('common.error.could-not-update-item-not-found', {
           item_type: 'API configuration',
@@ -47,7 +48,7 @@ export const update = async (params: {
     return { success: true, has_changes: false }
   }
 
-  if (params.origin == 'cancel') {
+  if (params.origin === 'cancel') {
     const discard_button = 'Discard'
     const result = await vscode.window.showWarningMessage(
       t('views.common.handlers.common.confirm-discard-unsaved-changes', {
@@ -62,7 +63,7 @@ export const update = async (params: {
       discard_button
     )
 
-    if (result != discard_button) {
+    if (result !== discard_button) {
       return { success: false, has_changes: true }
     }
 
@@ -83,7 +84,7 @@ export const update = async (params: {
 
   const is_duplicate = params.is_new
     ? api_configurations.some((c) => get_api_configuration_id(c) === new_id)
-    : new_id != params.updating_api_configuration.id &&
+    : new_id !== params.updating_api_configuration.id &&
       api_configurations.some((c) => get_api_configuration_id(c) === new_id)
 
   if (is_duplicate) {
@@ -94,7 +95,7 @@ export const update = async (params: {
       discard_button
     )
 
-    if (result == discard_button) {
+    if (result === discard_button) {
       return { success: true, has_changes: false }
     }
 
@@ -114,19 +115,19 @@ export const update = async (params: {
   await providers_manager.save_api_configurations(api_configurations)
 
   if (params.is_new && params.api_feature) {
-    if (params.api_feature == 'code-at-cursor') {
+    if (params.api_feature === 'code-at-cursor') {
       await providers_manager.set_default_code_at_cursor_api_configuration(
         new_config as any
       )
-    } else if (params.api_feature == 'patch-repair') {
+    } else if (params.api_feature === 'patch-repair') {
       await providers_manager.set_default_patch_repair_api_configuration(
         new_config as any
       )
-    } else if (params.api_feature == 'voice-input') {
+    } else if (params.api_feature === 'voice-input') {
       await providers_manager.set_default_voice_input_api_configuration(
         new_config as any
       )
-    } else if (params.api_feature == 'commit-message') {
+    } else if (params.api_feature === 'commit-message') {
       await providers_manager.set_default_commit_message_api_configuration(
         new_config as any
       )

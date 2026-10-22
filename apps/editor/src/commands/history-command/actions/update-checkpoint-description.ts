@@ -15,7 +15,7 @@ export const update_checkpoint_description = async (params: {
       []
     ) ?? []
   const checkpoint_to_update = checkpoints.find(
-    (c) => c.timestamp == params.timestamp
+    (c) => c.timestamp === params.timestamp
   )
   if (checkpoint_to_update) {
     checkpoint_to_update.description = params.description

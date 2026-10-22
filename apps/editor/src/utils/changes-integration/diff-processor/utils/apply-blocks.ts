@@ -8,7 +8,7 @@ export const apply_blocks = (params: {
 
   for (const block of params.valid_blocks) {
     const start_index =
-      block.search_block_start_index == -1 ? 0 : block.search_block_start_index
+      block.search_block_start_index === -1 ? 0 : block.search_block_start_index
     const replacement_content: string[] = []
     let last_original_idx = start_index - 1
 
@@ -24,9 +24,9 @@ export const apply_blocks = (params: {
       const line = block.replace_lines[i]
       const is_last_replace_line = i === block.replace_lines.length - 1
 
-      if (line.search_index != null) {
+      if (line.search_index !== null) {
         const original_idx = block.search_to_original_map.get(line.search_index)
-        if (original_idx != undefined) {
+        if (original_idx !== undefined) {
           for (let skip = last_original_idx + 1; skip < original_idx; skip++) {
             if (!matched_original_indices.has(skip)) {
               replacement_content.push(params.original_code_lines[skip])
@@ -45,14 +45,11 @@ export const apply_blocks = (params: {
         }
       } else {
         let target_original_idx = last_original_idx
-        if (
-          line.insert_after_search_index != null &&
-          line.insert_after_search_index >= 0
-        ) {
+        if (line.insert_after_search_index >= 0) {
           const mapped_idx = block.search_to_original_map.get(
             line.insert_after_search_index
           )
-          if (mapped_idx != undefined) {
+          if (mapped_idx !== undefined) {
             target_original_idx = mapped_idx
           }
         }

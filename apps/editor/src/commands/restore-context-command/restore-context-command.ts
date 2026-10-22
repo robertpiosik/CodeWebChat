@@ -28,14 +28,14 @@ export const restore_context_command = (params: {
 
         let action_result: 'back' | void = undefined
 
-        if (source == 'internal') {
+        if (source === 'internal') {
           action_result = await restore_from_workspace_state({
             workspace_provider: params.workspace_provider,
             extension_context: params.extension_context,
             on_context_selected: params.on_context_selected,
             show_back_button: !skipped_menu
           })
-        } else if (source == 'file') {
+        } else if (source === 'file') {
           action_result = await restore_from_json_file({
             workspace_provider: params.workspace_provider,
             extension_context: params.extension_context,
@@ -44,7 +44,7 @@ export const restore_context_command = (params: {
           })
         }
 
-        if (action_result == 'back') {
+        if (action_result === 'back') {
           if (skipped_menu) {
             return
           }

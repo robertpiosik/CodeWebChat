@@ -3,12 +3,12 @@ export const cleanup_api_response = (params: { content: string }): string => {
 
   if (content.startsWith('<think>')) {
     const end_index = content.indexOf('</think>')
-    if (end_index != -1) {
+    if (end_index !== -1) {
       content = content.substring(end_index + '</think>'.length).trim()
     }
   } else if (content.startsWith('<thought>')) {
     const end_index = content.indexOf('</thought>')
-    if (end_index != -1) {
+    if (end_index !== -1) {
       content = content.substring(end_index + '</thought>'.length).trim()
     }
   }
@@ -38,7 +38,7 @@ export const cleanup_api_response = (params: { content: string }): string => {
 
   for (const pattern of opening_patterns) {
     const match = content.match(pattern)
-    if (match && match.index == 0) {
+    if (match && match.index === 0) {
       content = content.substring(match[0].length)
       break
     }
@@ -56,7 +56,7 @@ export const cleanup_api_response = (params: { content: string }): string => {
     if (
       match &&
       match.index !== undefined &&
-      match.index + match[0].length == content.length
+      match.index + match[0].length === content.length
     ) {
       content = content.substring(0, match.index)
       break

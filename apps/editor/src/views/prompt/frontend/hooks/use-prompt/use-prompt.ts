@@ -156,43 +156,43 @@ export const use_prompt = (vscode: any) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
-      if (message.command == 'CONNECTION_STATUS') {
+      if (message.command === 'CONNECTION_STATUS') {
         set_is_connected(message.connected)
-      } else if (message.command == 'VERSION') {
+      } else if (message.command === 'VERSION') {
         set_version(message.version)
-      } else if (message.command == 'TARGET') {
+      } else if (message.command === 'TARGET') {
         set_target(message.target)
-      } else if (message.command == 'WEB_PROMPT_TYPE') {
+      } else if (message.command === 'WEB_PROMPT_TYPE') {
         set_web_mode(message.prompt_type)
-      } else if (message.command == 'API_PROMPT_TYPE') {
+      } else if (message.command === 'API_PROMPT_TYPE') {
         set_api_mode(message.prompt_type)
-      } else if (message.command == 'CLI_PROMPT_TYPE') {
+      } else if (message.command === 'CLI_PROMPT_TYPE') {
         set_cli_mode(message.prompt_type)
-      } else if (message.command == 'SEND_WITH_SHIFT_ENTER') {
+      } else if (message.command === 'SEND_WITH_SHIFT_ENTER') {
         set_send_with_shift_enter(message.enabled)
-      } else if (message.command == 'FOCUS_PROMPT_FIELD') {
+      } else if (message.command === 'FOCUS_PROMPT_FIELD') {
         set_chat_input_focus_key((k) => k + 1)
       } else if (
-        message.command == 'RESET_APPLY_BUTTON_TEMPORARY_DISABLED_STATE'
+        message.command === 'RESET_APPLY_BUTTON_TEMPORARY_DISABLED_STATE'
       ) {
         set_apply_button_enabling_trigger_count((c) => c + 1)
-      } else if (message.command == 'CAN_UNDO_CHANGED') {
+      } else if (message.command === 'CAN_UNDO_CHANGED') {
         set_can_undo(message.can_undo)
-      } else if (message.command == 'RECORDING_STATE') {
+      } else if (message.command === 'RECORDING_STATE') {
         set_is_recording(message.is_recording)
-      } else if (message.command == 'SETUP_PROGRESS') {
+      } else if (message.command === 'SETUP_PROGRESS') {
         set_setup_progress(message.setup_progress)
-      } else if (message.command == 'RETURN_HOME') {
+      } else if (message.command === 'RETURN_HOME') {
         set_active_view('home')
-      } else if (message.command == 'VOICE_INPUT_PUSH_TO_TALK') {
+      } else if (message.command === 'VOICE_INPUT_PUSH_TO_TALK') {
         set_voice_input_push_to_talk(message.enabled)
-      } else if (message.command == 'TOKEN_COUNT_UPDATED') {
+      } else if (message.command === 'TOKEN_COUNT_UPDATED') {
         set_selected_files_token_count(message.selected_files_token_count)
         set_edit_instructions_token_count(message.edit_instructions_token_count)
         set_ask_instructions_token_count(message.ask_instructions_token_count)
-      } else if (message.command == 'IS_MODERN_UI') {
+      } else if (message.command === 'IS_MODERN_UI') {
         set_is_modern_ui(message.is_modern_ui)
-      } else if (message.command == 'API_CONFIGURATIONS') {
+      } else if (message.command === 'API_CONFIGURATIONS') {
         set_api_configurations((message as any).configurations)
       }
     }
@@ -267,17 +267,18 @@ export const use_prompt = (vscode: any) => {
     new_target: Target,
     sync_prompt_type?: boolean
   ) => {
-    if (target == new_target) return
+    if (target === new_target) return
 
     if (sync_prompt_type) {
-      if ((new_target == 'API' || new_target == 'CLI') && web_prompt_type) {
-        if (web_prompt_type == 'edit') {
-          if (new_target == 'API')
+      if ((new_target === 'API' || new_target === 'CLI') && web_prompt_type) {
+        if (web_prompt_type === 'edit') {
+          if (new_target === 'API')
             handle_api_prompt_type_change(web_prompt_type, true)
           else handle_cli_prompt_type_change(web_prompt_type, true)
         }
-      } else if (new_target == 'WEB' && (api_prompt_type || cli_prompt_type)) {
-        const type_to_sync = target == 'API' ? api_prompt_type : cli_prompt_type
+      } else if (new_target === 'WEB' && (api_prompt_type || cli_prompt_type)) {
+        const type_to_sync =
+          target === 'API' ? api_prompt_type : cli_prompt_type
         if (type_to_sync)
           handle_web_prompt_type_change(type_to_sync as any, true)
       }

@@ -42,7 +42,7 @@ export const agentic_search = async (params: {
 
   const roots = params.workspace_provider.get_workspace_roots()
 
-  if (roots.length == 0) {
+  if (roots.length === 0) {
     return undefined
   }
 
@@ -88,7 +88,7 @@ export const agentic_search = async (params: {
           }
           first_run = false
 
-          if (query.trim() == '') {
+          if (query.trim() === '') {
             continue
           }
 
@@ -129,7 +129,7 @@ export const agentic_search = async (params: {
 
     const { agent_output, selected_root } = result
 
-    if (agent_output.trim() == '') {
+    if (agent_output.trim() === '') {
       vscode.window.showInformationMessage(
         t('common.info.no-items-found', { items: 'files' })
       )

@@ -70,7 +70,7 @@ export const remove_path_line_from_text_block = (params: {
 
   for (let i = content_lines.length - 1; i >= 0; i--) {
     const line = content_lines[i].trim()
-    if (line == '') continue
+    if (line === '') continue
 
     const extracted = extract_path_from_potential_string(line)
 
@@ -80,9 +80,9 @@ export const remove_path_line_from_text_block = (params: {
         is_single_root_folder_workspace: params.is_single_root
       })
       if (
-        relative_path == params.target_file_path ||
+        relative_path === params.target_file_path ||
         (params.target_new_file_path &&
-          relative_path == params.target_new_file_path)
+          relative_path === params.target_new_file_path)
       ) {
         if (line.startsWith('###')) {
           path_line_index = i
@@ -100,9 +100,9 @@ export const remove_path_line_from_text_block = (params: {
     const collapsed_lines: string[] = []
     for (const line of new_content_lines) {
       if (
-        line.trim() == '' &&
+        line.trim() === '' &&
         collapsed_lines.length > 0 &&
-        collapsed_lines[collapsed_lines.length - 1].trim() == ''
+        collapsed_lines[collapsed_lines.length - 1].trim() === ''
       ) {
         continue
       }

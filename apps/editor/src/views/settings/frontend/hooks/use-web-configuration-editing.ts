@@ -49,12 +49,12 @@ export const use_web_configuration_editing = (vscode: any) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
-      if (message.command == 'WEB_CONFIGURATION_UPDATED') {
+      if (message.command === 'WEB_CONFIGURATION_UPDATED') {
         set_updating_web_configuration(undefined)
         set_updated_web_configuration(undefined)
         set_is_new_web_configuration(false)
         set_web_configuration_insertion_index(undefined)
-      } else if (message.command == 'START_WEB_CONFIGURATION_CREATION') {
+      } else if (message.command === 'START_WEB_CONFIGURATION_CREATION') {
         const msg = message as any
         set_updating_web_configuration(msg.web_configuration)
         set_updated_web_configuration(msg.web_configuration)

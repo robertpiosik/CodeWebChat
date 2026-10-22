@@ -73,7 +73,7 @@ export const perform_keywords_search_mode = async (params: {
     }
 
     const search_term = search_term_input.trim()
-    if (search_term.length == 0) return undefined
+    if (search_term.length === 0) return undefined
 
     let go_back_to_term = false
 
@@ -84,7 +84,7 @@ export const perform_keywords_search_mode = async (params: {
         >(LAST_SEARCH_FILES_KEYWORDS_TARGET_STATE_KEY) || 'contents'
 
       const target_result = await prompt_for_keywords_target(last_target)
-      if (target_result == 'back') {
+      if (target_result === 'back') {
         go_back_to_term = true
         break
       }
@@ -101,7 +101,7 @@ export const perform_keywords_search_mode = async (params: {
       while (true) {
         const keywords = (
           search_term.match(/(?:-?"[^"]*")|(?:-?[^\s,]+)/g) || []
-        ).filter((k) => k.length > 0 && k != '-' && k != '""' && k != '-""')
+        ).filter((k) => k.length > 0 && k !== '-' && k !== '""' && k !== '-""')
 
         const positive_keywords = keywords.filter((k) => !k.startsWith('-'))
 
@@ -109,7 +109,7 @@ export const perform_keywords_search_mode = async (params: {
 
         if (positive_keywords.length > 1) {
           const match_mode_key =
-            keywords_target == 'filenames'
+            keywords_target === 'filenames'
               ? LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY
               : LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY
 
@@ -121,7 +121,7 @@ export const perform_keywords_search_mode = async (params: {
           const match_mode_result =
             await prompt_for_keywords_match_mode(last_match_mode)
 
-          if (match_mode_result == 'back') {
+          if (match_mode_result === 'back') {
             go_back_to_target = true
             break
           }
@@ -140,7 +140,7 @@ export const perform_keywords_search_mode = async (params: {
         let matched_files: string[] = []
 
         const is_fast_search =
-          keywords_target == 'filenames' || files.length < 100
+          keywords_target === 'filenames' || files.length < 100
 
         if (is_fast_search) {
           matched_files = await search_files_by_keywords({
@@ -182,7 +182,7 @@ export const perform_keywords_search_mode = async (params: {
           continue
         }
 
-        if (matched_files.length == 0) {
+        if (matched_files.length === 0) {
           vscode.window.showInformationMessage(t('common.info.no-files-found'))
           if (positive_keywords.length <= 1) {
             go_back_to_target = true
@@ -209,7 +209,7 @@ export const perform_keywords_search_mode = async (params: {
             is_sub_search: params.is_sub_search
           })
 
-          if (selected_items == 'back') {
+          if (selected_items === 'back') {
             go_back_to_match_mode = true
             break
           }

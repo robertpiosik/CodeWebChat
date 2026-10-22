@@ -54,7 +54,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         key={configuration.id}
         className={cn(styles.configurations__item, {
           [styles['configurations__item--highlighted']]:
-            active_configuration_id == configuration.id
+            active_configuration_id === configuration.id
         })}
         onClick={() => props.on_configuration_click(configuration.id)}
         role="button"
@@ -147,14 +147,14 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
                 render_configuration_item(
                   i,
                   true,
-                  props.configurations.findIndex((c) => c.id == i.id)
+                  props.configurations.findIndex((c) => c.id === i.id)
                 )
               )}
             </div>
             <div className={styles.separator} />
           </>
         )}
-        {props.configurations.length == 0 && (
+        {props.configurations.length === 0 && (
           <div className={styles.empty}>
             <div className={styles['landscape-placeholder']}>
               {props.empty_landscape_placeholder_above}
@@ -173,9 +173,9 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
             list={props.configurations}
             setList={(new_state) => {
               const has_order_changed =
-                new_state.length != props.configurations.length ||
+                new_state.length !== props.configurations.length ||
                 new_state.some(
-                  (item, index) => item.id != props.configurations[index].id
+                  (item, index) => item.id !== props.configurations[index].id
                 )
 
               if (has_order_changed) {

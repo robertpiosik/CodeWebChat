@@ -13,7 +13,7 @@ export const save_context_command = (params: {
     'codeWebChat.saveContext',
     async () => {
       const selected_files = params.workspace_provider.get_selected_files()
-      if (selected_files.length == 0) {
+      if (selected_files.length === 0) {
         vscode.window.showInformationMessage(
           t('command.save-context-command.nothing-in-context-to-save')
         )
@@ -35,19 +35,19 @@ export const save_context_command = (params: {
 
         let action_result: 'back' | void = undefined
 
-        if (source == 'internal') {
+        if (source === 'internal') {
           action_result = await save_to_workspace_state({
             workspace_provider: params.workspace_provider,
             extension_context: params.extension_context
           })
-        } else if (source == 'file') {
+        } else if (source === 'file') {
           action_result = await save_to_json_file({
             workspace_provider: params.workspace_provider,
             extension_context: params.extension_context
           })
         }
 
-        if (action_result == 'back') {
+        if (action_result === 'back') {
           show_main_menu = true
         }
       }

@@ -17,7 +17,7 @@ export const replace_image_symbol = async (params: {
 
       const matches = Array.from(instruction.matchAll(regex))
 
-      if (matches.length == 0) {
+      if (matches.length === 0) {
         return instruction
       }
 

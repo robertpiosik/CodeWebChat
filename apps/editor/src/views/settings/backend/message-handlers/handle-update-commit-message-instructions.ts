@@ -9,7 +9,7 @@ export const handle_update_commit_message_instructions = async (
     config.inspect<string>('commitMessageInstructions')?.defaultValue || ''
   await config.update(
     'commitMessageInstructions',
-    message.instructions == '' || message.instructions == default_instructions
+    message.instructions === '' || message.instructions === default_instructions
       ? undefined
       : message.instructions,
     vscode.ConfigurationTarget.Global

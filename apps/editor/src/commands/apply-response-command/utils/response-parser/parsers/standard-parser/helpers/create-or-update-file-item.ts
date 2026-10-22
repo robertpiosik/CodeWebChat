@@ -23,14 +23,14 @@ export const create_or_update_file_item = (params: {
   if (params.file_ref_map.has(file_key)) {
     const existing_file = params.file_ref_map.get(file_key)!
 
-    if (params.mode == 'append') {
+    if (params.mode === 'append') {
       existing_file.content = existing_file.content + '\n' + processed_content
 
       const file_index = params.results.indexOf(existing_file)
       if (file_index >= 0) {
         const text_indices: number[] = []
         for (let i = file_index + 1; i < params.results.length; i++) {
-          if (params.results[i].type == 'text') {
+          if (params.results[i].type === 'text') {
             text_indices.push(i)
           }
         }
@@ -49,7 +49,7 @@ export const create_or_update_file_item = (params: {
             const updated_file_index = params.results.indexOf(existing_file)
             if (
               updated_file_index > 0 &&
-              params.results[updated_file_index - 1].type == 'text'
+              params.results[updated_file_index - 1].type === 'text'
             ) {
               const prev_text = params.results[
                 updated_file_index - 1

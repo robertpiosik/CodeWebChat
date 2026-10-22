@@ -24,7 +24,7 @@ export const undo_files = async (params: {
   try {
     if (
       !vscode.workspace.workspaceFolders ||
-      vscode.workspace.workspaceFolders.length == 0
+      vscode.workspace.workspaceFolders.length === 0
     ) {
       vscode.window.showErrorMessage(
         t('command.apply-response-command.error.no-workspace-folder')
@@ -60,7 +60,7 @@ export const undo_files = async (params: {
       }
       let file_uri = vscode.Uri.file(safe_path)
 
-      if (state.file_state == 'new' && !state.file_path_to_restore) {
+      if (state.file_state === 'new' && !state.file_path_to_restore) {
         if (await uri_exists(file_uri)) {
           const text_editors = vscode.window.visibleTextEditors.filter(
             (editor) => editor.document.uri.toString() === file_uri.toString()
@@ -181,7 +181,7 @@ export const undo_files = async (params: {
           try {
             const editor = !file_was_relocated
               ? vscode.window.visibleTextEditors.find(
-                  (e) => e.document.uri.fsPath == safe_path
+                  (e) => e.document.uri.fsPath === safe_path
                 )
               : undefined
             if (editor) {

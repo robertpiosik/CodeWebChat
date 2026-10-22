@@ -46,21 +46,21 @@ export const use_instructions = (
       })
     }
 
-    if (prompt_type == 'ask') {
+    if (prompt_type === 'ask') {
       update_state(
         ask_about_context_instructions,
         set_ask_about_context_instructions
       )
-    } else if (prompt_type == 'edit') {
+    } else if (prompt_type === 'edit') {
       update_state(edit_files_instructions, set_edit_files_instructions)
     }
   }
 
   const handle_tab_change = (index: number) => {
     const prompt_type = (
-      target == 'WEB'
+      target === 'WEB'
         ? web_prompt_type
-        : target == 'API'
+        : target === 'API'
           ? api_prompt_type
           : cli_prompt_type
     ) as any
@@ -80,18 +80,18 @@ export const use_instructions = (
       })
     }
 
-    if (prompt_type == 'ask') {
+    if (prompt_type === 'ask') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
-    } else if (prompt_type == 'edit') {
+    } else if (prompt_type === 'edit') {
       update(edit_files_instructions, set_edit_files_instructions)
     }
   }
 
   const handle_new_tab = () => {
     const prompt_type = (
-      target == 'WEB'
+      target === 'WEB'
         ? web_prompt_type
-        : target == 'API'
+        : target === 'API'
           ? api_prompt_type
           : cli_prompt_type
     ) as any
@@ -114,18 +114,18 @@ export const use_instructions = (
       })
     }
 
-    if (prompt_type == 'ask') {
+    if (prompt_type === 'ask') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
-    } else if (prompt_type == 'edit') {
+    } else if (prompt_type === 'edit') {
       update(edit_files_instructions, set_edit_files_instructions)
     }
   }
 
   const handle_tab_delete = (index: number) => {
     const prompt_type = (
-      target == 'WEB'
+      target === 'WEB'
         ? web_prompt_type
-        : target == 'API'
+        : target === 'API'
           ? api_prompt_type
           : cli_prompt_type
     ) as any
@@ -137,7 +137,7 @@ export const use_instructions = (
     ) => {
       if (!state || state.instructions.length <= 1) return
 
-      const new_instructions = state.instructions.filter((_, i) => i != index)
+      const new_instructions = state.instructions.filter((_, i) => i !== index)
       let new_active_index = state.active_index
 
       if (index <= state.active_index) {
@@ -156,18 +156,18 @@ export const use_instructions = (
       })
     }
 
-    if (prompt_type == 'ask') {
+    if (prompt_type === 'ask') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
-    } else if (prompt_type == 'edit') {
+    } else if (prompt_type === 'edit') {
       update(edit_files_instructions, set_edit_files_instructions)
     }
   }
 
   const handle_tabs_reorder = (new_order: number[]) => {
     const prompt_type = (
-      target == 'WEB'
+      target === 'WEB'
         ? web_prompt_type
-        : target == 'API'
+        : target === 'API'
           ? api_prompt_type
           : cli_prompt_type
     ) as any
@@ -194,9 +194,9 @@ export const use_instructions = (
       })
     }
 
-    if (prompt_type == 'ask') {
+    if (prompt_type === 'ask') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
-    } else if (prompt_type == 'edit') {
+    } else if (prompt_type === 'edit') {
       update(edit_files_instructions, set_edit_files_instructions)
     }
   }
@@ -204,7 +204,7 @@ export const use_instructions = (
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
-      if (message.command == 'INSTRUCTIONS') {
+      if (message.command === 'INSTRUCTIONS') {
         set_ask_about_context_instructions(message.ask_about_context)
         set_edit_files_instructions(message.edit_files)
       }

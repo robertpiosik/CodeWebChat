@@ -116,7 +116,7 @@ export const Settings = () => {
 
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
-      if (event.data.command == 'SHOW_SECTION') {
+      if (event.data.command === 'SHOW_SECTION') {
         set_scroll_to_section_on_load(event.data.section as NavItem)
       } else if (event.data.command === 'DEFAULT_OPTION_FOR_VOICE_INPUT') {
         set_default_option_for_voice_input(event.data.value)
@@ -226,7 +226,7 @@ export const Settings = () => {
         on_delete_provider={settings_hook.handle_delete_provider}
         on_edit_provider={(provider_name) => {
           const provider = settings_hook.providers?.find(
-            (p) => p.name == provider_name
+            (p) => p.name === provider_name
           )
           if (provider) {
             set_updating_provider({
@@ -248,7 +248,7 @@ export const Settings = () => {
         on_add_api_configuration={settings_hook.handle_add_api_configuration}
         on_edit_api_configuration={(id) => {
           const config = settings_hook.api_configurations?.find(
-            (c) => c.id == id
+            (c) => c.id === id
           )
           if (config) set_updating_api_configuration(config)
         }}
@@ -266,7 +266,7 @@ export const Settings = () => {
         on_add_web_configuration={settings_hook.handle_add_web_configuration}
         on_edit_web_configuration={(id) => {
           const config = settings_hook.web_configurations?.find(
-            (c) => c.name == id
+            (c) => c.name === id
           )
           if (config) {
             set_updating_web_configuration(config)

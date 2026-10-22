@@ -5,13 +5,13 @@ export const get_incremented_description = (
   description: string | undefined,
   checkpoints: Checkpoint[]
 ): string | undefined => {
-  if (checkpoints.length == 0) {
+  if (checkpoints.length === 0) {
     return description
   }
 
   const most_recent = checkpoints[0]
 
-  if (most_recent.trigger != trigger) {
+  if (most_recent.trigger !== trigger) {
     return description
   }
 
@@ -36,7 +36,7 @@ export const get_incremented_description = (
 
   if (current_matches) {
     const next_counter = counter + 1
-    if (normalized_desc == '') {
+    if (normalized_desc === '') {
       return `(${next_counter})`
     }
     return `(${next_counter}) ${normalized_desc}`

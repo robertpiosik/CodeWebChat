@@ -59,7 +59,7 @@ export const create = async (params: {
     if (!position_quick_pick) return undefined
 
     insertion_index =
-      position_quick_pick == t('common.placement-above')
+      position_quick_pick === t('common.placement-above')
         ? params.reference_index
         : params.reference_index + 1
   }
@@ -71,7 +71,7 @@ export const create = async (params: {
         ([chatbot, { url }]) => ({
           label: chatbot,
           description:
-            chatbot == 'Open WebUI'
+            chatbot === 'Open WebUI'
               ? 'localhost'
               : url.replace(/^https?:\/\//, '').split('/')[0]
         })

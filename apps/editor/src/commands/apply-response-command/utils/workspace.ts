@@ -8,7 +8,7 @@ export const get_workspace_map_and_default = (): {
   const workspace_map = new Map<string, string>()
   const folders = vscode.workspace.workspaceFolders
 
-  if (!folders || folders.length == 0) {
+  if (!folders || folders.length === 0) {
     return { workspace_map, default_workspace: '' }
   }
 

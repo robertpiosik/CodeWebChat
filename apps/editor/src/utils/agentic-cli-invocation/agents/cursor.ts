@@ -18,8 +18,8 @@ export const cursor_agent: CodingAgent = {
   get_integrated_terminal_args: () => ['--force'],
   get_post_integrated_terminal_args: () => ['--continue', '--trust'],
   parse_stream_line: (parsed, report_progress) => {
-    if (parsed.type == 'tool_call') {
-      if (parsed.subtype == 'started' || !parsed.subtype) {
+    if (parsed.type === 'tool_call') {
+      if (parsed.subtype === 'started' || !parsed.subtype) {
         const tool_call = parsed.tool_call
         if (tool_call) {
           let action_name = ''
@@ -43,12 +43,12 @@ export const cursor_agent: CodingAgent = {
           }
         }
       }
-    } else if (parsed.type == 'result' && parsed.result) {
+    } else if (parsed.type === 'result' && parsed.result) {
       last_action_name = ''
       action_count = 0
       return {
         output:
-          typeof parsed.result == 'string'
+          typeof parsed.result === 'string'
             ? parsed.result
             : parsed.result.text || parsed.result.response || ''
       }
@@ -57,11 +57,11 @@ export const cursor_agent: CodingAgent = {
       action_count = 0
       return {
         output:
-          typeof parsed.result == 'string'
+          typeof parsed.result === 'string'
             ? parsed.result
             : parsed.result.text || parsed.result.response || ''
       }
-    } else if (parsed.type == 'assistant' && parsed.message) {
+    } else if (parsed.type === 'assistant' && parsed.message) {
       const is_delta = parsed.timestamp_ms && !parsed.model_call_id
       if (!is_delta) {
         last_action_name = ''
@@ -86,15 +86,15 @@ export const cursor_agent: CodingAgent = {
   parse_final_output: (parsed, current_output) => {
     last_action_name = ''
     action_count = 0
-    if (parsed.type == 'result' && parsed.result) {
-      return typeof parsed.result == 'string'
+    if (parsed.type === 'result' && parsed.result) {
+      return typeof parsed.result === 'string'
         ? parsed.result
         : parsed.result.text || parsed.result.response || ''
     } else if (parsed.result) {
-      return typeof parsed.result == 'string'
+      return typeof parsed.result === 'string'
         ? parsed.result
         : parsed.result.text || parsed.result.response || ''
-    } else if (parsed.type == 'assistant' && parsed.message) {
+    } else if (parsed.type === 'assistant' && parsed.message) {
       if (Array.isArray(parsed.message.content)) {
         return (
           parsed.message.content

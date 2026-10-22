@@ -31,4 +31,4 @@
 +
      let system_instructions_xml = ''
  
-     if (panel_provider.web_prompt_type == 'edit-context') {
+     if (panel_provider.web_prompt_type === 'edit-context') {

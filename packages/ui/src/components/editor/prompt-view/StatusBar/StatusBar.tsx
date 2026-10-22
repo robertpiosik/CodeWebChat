@@ -59,7 +59,7 @@ export const StatusBar: React.FC<Props> = (props) => {
       {props.actions && props.actions.length > 0 && (
         <div className={styles.actions}>
           {props.actions.map((action, index) => {
-            const is_last = index == props.actions!.length - 1
+            const is_last = index === props.actions!.length - 1
             const has_label = !!action.label
 
             const content = (
@@ -74,7 +74,7 @@ export const StatusBar: React.FC<Props> = (props) => {
                 onMouseEnter={() => set_hovered_action(action.id)}
                 onMouseLeave={() => set_hovered_action(null)}
               >
-                {hovered_action == action.id && action.tooltip && (
+                {hovered_action === action.id && action.tooltip && (
                   <Tooltip
                     message={action.tooltip}
                     position="top"

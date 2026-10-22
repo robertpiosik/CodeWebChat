@@ -46,11 +46,11 @@ export const use_handlers = (
 
   useEffect(() => {
     const handle_key_down = (e: KeyboardEvent) => {
-      if (e.key == 'Shift') is_shift_pressed_ref.current = true
+      if (e.key === 'Shift') is_shift_pressed_ref.current = true
     }
     const handle_key_up = (e: KeyboardEvent) => {
-      if (e.key == 'Shift') is_shift_pressed_ref.current = false
-      if (e.key == ' ') {
+      if (e.key === 'Shift') is_shift_pressed_ref.current = false
+      if (e.key === ' ') {
         if (space_timeout_ref.current) {
           clearTimeout(space_timeout_ref.current)
           space_timeout_ref.current = null
@@ -107,7 +107,7 @@ export const use_handlers = (
         props.on_caret_position_change(raw_pos)
 
         const is_at_end =
-          raw_pos == props.value.length && !!selection?.isCollapsed
+          raw_pos === props.value.length && !!selection?.isCollapsed
 
         const is_history_check_enabled =
           is_at_end && !has_modified_current_entry_ref.current
@@ -230,7 +230,7 @@ export const use_handlers = (
       context_file_paths: props.selected_files ?? [],
       input_ref: params.input_ref,
       on_delete: (new_value, new_caret_pos) => {
-        has_modified_current_entry_ref.current = new_value != ''
+        has_modified_current_entry_ref.current = new_value !== ''
         update_value(new_value, new_caret_pos)
       }
     })

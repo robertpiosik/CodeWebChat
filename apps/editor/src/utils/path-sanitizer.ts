@@ -18,7 +18,7 @@ export const sanitize_file_name = (name: string): string => {
   if (
     segments.some((seg) => {
       const normalized = seg.replace(/[\s.]+$/, '').toLowerCase()
-      return normalized == '.git'
+      return normalized === '.git'
     })
   ) {
     return ''
@@ -64,7 +64,7 @@ export const create_safe_path = (
       const real_path_segments = real_path.split(/[/\\]/)
       if (
         real_path_segments.some(
-          (seg) => seg.replace(/[\s.]+$/, '').toLowerCase() == '.git'
+          (seg) => seg.replace(/[\s.]+$/, '').toLowerCase() === '.git'
         )
       ) {
         return null

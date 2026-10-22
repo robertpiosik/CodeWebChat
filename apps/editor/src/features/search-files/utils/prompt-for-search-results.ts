@@ -37,11 +37,11 @@ export const prompt_for_search_results = async (params: {
       : [])
 
   const base_title =
-    params.search_mode == 'keywords'
-      ? params.keywords_target == 'filenames'
+    params.search_mode === 'keywords'
+      ? params.keywords_target === 'filenames'
         ? t('feature.search-files.results.filename')
         : t('feature.search-files.results.keywords')
-      : params.search_mode == 'intelligent'
+      : params.search_mode === 'intelligent'
         ? t('feature.search-files.results.intelligent')
         : t('feature.search-files.results.phrase')
 

@@ -17,10 +17,10 @@ export const flatten_contexts = (params: {
   const parent_name_resolved = params.parent_name || ''
 
   for (const item of params.items) {
-    if (typeof item != 'object' || item === null) continue
+    if (typeof item !== 'object' || item === null) continue
 
     const name = item.name
-    if (typeof name != 'string' || !name) continue
+    if (typeof name !== 'string' || !name) continue
 
     const current_name = parent_name_resolved
       ? `${parent_name_resolved}/${name}`
@@ -28,7 +28,7 @@ export const flatten_contexts = (params: {
 
     if (
       Array.isArray(item.paths) &&
-      item.paths.every((p: any) => typeof p == 'string')
+      item.paths.every((p: any) => typeof p === 'string')
     ) {
       result.push({
         name: current_name,
@@ -98,7 +98,7 @@ export const save_contexts_to_file = async (params: {
       fs.mkdirSync(dir_path, { recursive: true })
     }
 
-    if (params.contexts.length == 0) {
+    if (params.contexts.length === 0) {
       if (fs.existsSync(params.file_path)) {
         fs.unlinkSync(params.file_path)
       }

@@ -28,7 +28,7 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
   useEffect(() => {
     const handle_key_down = (e: KeyboardEvent) => {
       if (props.are_keyboard_shortcuts_disabled) return
-      if (e.code == 'AltLeft') {
+      if (e.code === 'AltLeft') {
         left_alt_pressed_ref.current = true
       }
 
@@ -40,17 +40,17 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
         !e.ctrlKey &&
         !e.metaKey
       ) {
-        if (e.code == 'Digit1') {
+        if (e.code === 'Digit1') {
           e.preventDefault()
           props.on_target_change?.('WEB')
           return
         }
-        if (e.code == 'Digit2') {
+        if (e.code === 'Digit2') {
           e.preventDefault()
           props.on_target_change?.('API')
           return
         }
-        if (e.code == 'Digit3') {
+        if (e.code === 'Digit3') {
           e.preventDefault()
           props.on_target_change?.('CLI')
           return
@@ -74,7 +74,7 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
         }
       }
 
-      if (e.code == 'AltLeft' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
+      if (e.code === 'AltLeft' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
         if (!alt_interrupted_ref.current) {
           update_alt_pressed(true)
         }
@@ -98,12 +98,12 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
       }
     }
     const handle_key_up = (e: KeyboardEvent) => {
-      if (e.code == 'AltLeft') {
+      if (e.code === 'AltLeft') {
         left_alt_pressed_ref.current = false
       }
       if (!e.altKey) {
         alt_interrupted_ref.current = false
-      } else if (e.code != 'AltLeft') {
+      } else if (e.code !== 'AltLeft') {
         alt_interrupted_ref.current = true
       }
       update_alt_pressed(
@@ -149,7 +149,7 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
           e.stopPropagation()
           props.on_tab_change(index)
           return
-        } else if (index == props.tabs_count) {
+        } else if (index === props.tabs_count) {
           e.preventDefault()
           e.stopPropagation()
           props.on_new_tab()
@@ -158,7 +158,7 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
       }
     }
 
-    if (e.key == 'Escape' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    if (e.key === 'Escape' && !e.ctrlKey && !e.metaKey && !e.altKey) {
       if (props.is_recording) {
         props.on_recording_finished()
       }
@@ -166,19 +166,19 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
       return
     }
     if (
-      e.key == 'c' &&
+      e.key === 'c' &&
       e.altKey &&
       left_alt_pressed_ref.current &&
       (e.ctrlKey || e.metaKey)
     ) {
-      if (props.on_copy && props.target == 'WEB') {
+      if (props.on_copy && props.target === 'WEB') {
         e.stopPropagation()
         e.preventDefault()
         props.on_copy()
       }
     }
     if (
-      e.code == 'KeyC' &&
+      e.code === 'KeyC' &&
       e.altKey &&
       left_alt_pressed_ref.current &&
       !e.ctrlKey &&
@@ -192,7 +192,7 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
       }
     }
     if (
-      e.code == 'KeyX' &&
+      e.code === 'KeyX' &&
       e.altKey &&
       left_alt_pressed_ref.current &&
       !e.ctrlKey &&

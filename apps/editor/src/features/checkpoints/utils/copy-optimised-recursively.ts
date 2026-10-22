@@ -27,7 +27,7 @@ const directory_contains_ignored = async (
       return true
     }
 
-    if (entry_stat.type == vscode.FileType.Directory) {
+    if (entry_stat.type === vscode.FileType.Directory) {
       if (
         await directory_contains_ignored(
           entry_uri,
@@ -63,7 +63,7 @@ export const copy_optimised_recursively = async (
     return
   }
 
-  if (source_stat.type == vscode.FileType.Directory) {
+  if (source_stat.type === vscode.FileType.Directory) {
     if (
       !(await directory_contains_ignored(
         source_uri,
@@ -88,7 +88,7 @@ export const copy_optimised_recursively = async (
         workspace_provider
       )
     }
-  } else if (source_stat.type == vscode.FileType.File) {
+  } else if (source_stat.type === vscode.FileType.File) {
     await fs.copyFile(source_uri.fsPath, dest_uri.fsPath)
   }
 }

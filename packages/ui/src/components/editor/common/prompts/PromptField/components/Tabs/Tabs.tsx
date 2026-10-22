@@ -67,7 +67,7 @@ export const Tabs = forwardRef<TabsRef, Props>((props, ref) => {
         filter={`.${styles['tabs__tab--new']}, .${styles['tabs__tab--close']}`}
       >
         {tab_items.map((item, i) => {
-          const is_active = i == props.active_tab_index
+          const is_active = i === props.active_tab_index
           return (
             <div
               key={item.id}
@@ -89,7 +89,7 @@ export const Tabs = forwardRef<TabsRef, Props>((props, ref) => {
           onMouseEnter={() => set_hovered_tab('new')}
           onMouseLeave={() => set_hovered_tab(null)}
         >
-          {hovered_tab == 'new' && props.translations && (
+          {hovered_tab === 'new' && props.translations && (
             <Tooltip
               message={props.translations.new_tab}
               position="bottom"
@@ -107,10 +107,10 @@ export const Tabs = forwardRef<TabsRef, Props>((props, ref) => {
           onMouseEnter={() => set_hovered_tab('close')}
           onMouseLeave={() => set_hovered_tab(null)}
         >
-          {hovered_tab == 'close' && props.translations && (
+          {hovered_tab === 'close' && props.translations && (
             <Tooltip
               message={
-                props.has_text || props.tabs_count == 1
+                props.has_text || props.tabs_count === 1
                   ? props.translations.clear_tab
                   : props.translations.close_tab
               }

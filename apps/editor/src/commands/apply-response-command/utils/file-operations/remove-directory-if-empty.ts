@@ -13,7 +13,7 @@ export const remove_directory_if_empty = async (params: {
   if (
     !normalized_dir ||
     !normalized_dir.startsWith(normalized_root) ||
-    normalized_dir == normalized_root
+    normalized_dir === normalized_root
   ) {
     return
   }
@@ -24,7 +24,7 @@ export const remove_directory_if_empty = async (params: {
       const stat = await vscode.workspace.fs.stat(dir_uri)
       if (stat.type === vscode.FileType.Directory) {
         const files = await vscode.workspace.fs.readDirectory(dir_uri)
-        if (files.length == 0) {
+        if (files.length === 0) {
           await vscode.workspace.fs.delete(dir_uri)
           Logger.info({
             function_name: 'remove_directory_if_empty',

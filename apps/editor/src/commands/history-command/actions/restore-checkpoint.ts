@@ -53,7 +53,7 @@ export const restore_checkpoint = async (params: {
     params.workspace_provider.pause_file_watcher()
     try {
       if (
-        params.checkpoint.trigger == 'response-accepted' &&
+        params.checkpoint.trigger === 'response-accepted' &&
         params.checkpoint.description
       ) {
         CommitMessageDetails.remove({
@@ -102,7 +102,7 @@ export const restore_checkpoint = async (params: {
           const checkpoints = await get_checkpoints(params.extension_context)
           if (
             checkpoints.length > 0 &&
-            checkpoints[0].trigger != 'before-checkpoint-restored'
+            checkpoints[0].trigger !== 'before-checkpoint-restored'
           ) {
             await create_checkpoint({
               workspace_provider: params.workspace_provider,
@@ -179,7 +179,7 @@ export const restore_checkpoint = async (params: {
               const current_git_info = await get_git_info(folder)
               if (
                 current_git_info &&
-                current_git_info.commit_hash == git_info.commit_hash
+                current_git_info.commit_hash === git_info.commit_hash
               ) {
                 try {
                   execFileSync('git', ['restore', '.'], {
@@ -540,7 +540,7 @@ export const restore_checkpoint = async (params: {
         )
 
         if (
-          params.checkpoint.trigger == 'response-accepted' &&
+          params.checkpoint.trigger === 'response-accepted' &&
           params.checkpoint.response_preview_item_created_at &&
           params.checkpoint.response_history
         ) {
@@ -616,7 +616,7 @@ export const restore_checkpoint = async (params: {
       message,
       action_label
     )
-    if (action == action_label) {
+    if (action === action_label) {
       await restore_checkpoint({
         checkpoint: temp_check,
         workspace_provider: params.workspace_provider,

@@ -65,9 +65,11 @@ const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
 export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const { t } = use_translation()
 
-  const has_gemini = props.web_configurations.some((c) => c.chatbot == 'Gemini')
+  const has_gemini = props.web_configurations.some(
+    (c) => c.chatbot === 'Gemini'
+  )
   const has_ai_studio = props.web_configurations.some(
-    (c) => c.chatbot == 'AI Studio'
+    (c) => c.chatbot === 'AI Studio'
   )
 
   const [gemini_user_id_str, set_gemini_user_id_str] = useState('')
@@ -90,7 +92,7 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
   }, [props.ai_studio_user_id])
 
   const handle_gemini_user_id_blur = () => {
-    if (gemini_user_id_str == '') {
+    if (gemini_user_id_str === '') {
       props.on_gemini_user_id_change(null)
       return
     }
@@ -99,7 +101,7 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
   }
 
   const handle_ai_studio_user_id_blur = () => {
-    if (ai_studio_user_id_str == '') {
+    if (ai_studio_user_id_str === '') {
       props.on_ai_studio_user_id_change(null)
       return
     }

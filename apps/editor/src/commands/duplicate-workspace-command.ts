@@ -25,7 +25,7 @@ export const duplicate_workspace_command = (
         for (const tab of tab_group.tabs) {
           if (
             tab.input instanceof vscode.TabInputText &&
-            tab.input.uri.scheme == 'file'
+            tab.input.uri.scheme === 'file'
           ) {
             open_editors.push({
               path: tab.input.uri.fsPath,

@@ -234,13 +234,13 @@ export class WebSocketManager {
           data: { action: message.action }
         })
 
-        if (message.action == 'client-id-assignment') {
+        if (message.action === 'client-id-assignment') {
           this.client_id = message.client_id
-        } else if (message.action == 'browser-connection-status') {
+        } else if (message.action === 'browser-connection-status') {
           this.connected_browsers = message.connected_browsers
           this.has_connected_browsers = this.connected_browsers.length > 0
           this._on_connection_status_change.fire(this.has_connected_browsers)
-        } else if (message.action == 'apply-response') {
+        } else if (message.action === 'apply-response') {
           const apply_msg = message as ApplyResponseMessage
           vscode.commands.executeCommand('codeWebChat.applyResponse', {
             raw_instructions: apply_msg.raw_instructions
@@ -308,11 +308,11 @@ export class WebSocketManager {
   }
 
   private async _select_browser(): Promise<string | undefined> {
-    if (this.connected_browsers.length == 0) {
+    if (this.connected_browsers.length === 0) {
       return undefined
     }
 
-    if (this.connected_browsers.length == 1) {
+    if (this.connected_browsers.length === 1) {
       const id = this.connected_browsers[0].id
       await this.extension_context.workspaceState.update(
         LAST_SELECTED_BROWSER_ID_STATE_KEY,
@@ -431,7 +431,7 @@ export class WebSocketManager {
     }
 
     const web_configuration = web_configurations.find(
-      (p) => p.name == params.web_configuration_name
+      (p) => p.name === params.web_configuration_name
     )
     if (!web_configuration) {
       return false
@@ -439,7 +439,7 @@ export class WebSocketManager {
 
     const chatbot = CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]
     let url: string
-    if (web_configuration.chatbot == 'AI Studio') {
+    if (web_configuration.chatbot === 'AI Studio') {
       let base_url = chatbot.url
       if (ai_studio_user_id !== null && ai_studio_user_id !== undefined) {
         base_url = base_url.replace(
@@ -452,25 +452,25 @@ export class WebSocketManager {
       } else {
         url = base_url
       }
-    } else if (web_configuration.chatbot == 'Open WebUI') {
+    } else if (web_configuration.chatbot === 'Open WebUI') {
       if (web_configuration.port) {
         url = `http://localhost:${web_configuration.port}/`
       } else {
         url = 'http://openwebui/'
       }
-    } else if (web_configuration.chatbot == 'Arena') {
+    } else if (web_configuration.chatbot === 'Arena') {
       if (web_configuration.model) {
         url = `https://arena.ai/?mode=direct&model=${web_configuration.model}`
       } else {
         url = chatbot.url
       }
-    } else if (web_configuration.chatbot == 'Gemini' && gemini_user_id) {
+    } else if (web_configuration.chatbot === 'Gemini' && gemini_user_id) {
       url = `https://gemini.google.com/u/${gemini_user_id}/app`
     } else if (chatbot.supports_url_override && web_configuration.newUrl) {
       try {
         const original_domain = new URL(chatbot.url).hostname
         const new_domain = new URL(web_configuration.newUrl).hostname
-        if (original_domain == new_domain) {
+        if (original_domain === new_domain) {
           url = web_configuration.newUrl
         } else {
           url = chatbot.url
@@ -543,7 +543,7 @@ export class WebSocketManager {
     const chatbot =
       CHATBOTS[params.web_configuration.chatbot as keyof typeof CHATBOTS]
     let url: string
-    if (params.web_configuration.chatbot == 'AI Studio') {
+    if (params.web_configuration.chatbot === 'AI Studio') {
       let base_url = chatbot.url
       if (ai_studio_user_id !== null && ai_studio_user_id !== undefined) {
         base_url = base_url.replace(
@@ -556,20 +556,20 @@ export class WebSocketManager {
       } else {
         url = base_url
       }
-    } else if (params.web_configuration.chatbot == 'Open WebUI') {
+    } else if (params.web_configuration.chatbot === 'Open WebUI') {
       if (params.web_configuration.port) {
         url = `http://localhost:${params.web_configuration.port}/`
       } else {
         url = 'http://openwebui/'
       }
-    } else if (params.web_configuration.chatbot == 'Arena') {
+    } else if (params.web_configuration.chatbot === 'Arena') {
       if (params.web_configuration.model) {
         url = `https://arena.ai/?mode=direct&model=${params.web_configuration.model}`
       } else {
         url = chatbot.url
       }
     } else if (
-      params.web_configuration.chatbot == 'Gemini' &&
+      params.web_configuration.chatbot === 'Gemini' &&
       gemini_user_number !== undefined &&
       gemini_user_number !== null
     ) {
@@ -581,7 +581,7 @@ export class WebSocketManager {
       try {
         const original_domain = new URL(chatbot.url).hostname
         const new_domain = new URL(params.web_configuration.new_url).hostname
-        if (original_domain == new_domain) {
+        if (original_domain === new_domain) {
           url = params.web_configuration.new_url
         } else {
           url = chatbot.url

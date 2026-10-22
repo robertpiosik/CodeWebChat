@@ -47,7 +47,7 @@ export const invoke_agentic_cli = async (params: {
 > => {
   const roots = params.workspace_provider.get_workspace_roots()
 
-  if (roots.length == 0) {
+  if (roots.length === 0) {
     return undefined
   }
 
@@ -159,7 +159,7 @@ export const invoke_agentic_cli = async (params: {
 
         for (const agent_config of current_agents_config) {
           const agent_info = CLI_AGENTS.find(
-            (a) => a.label == agent_config.agent
+            (a) => a.label === agent_config.agent
           )
           if (!agent_info) continue
 
@@ -204,7 +204,7 @@ export const invoke_agentic_cli = async (params: {
 
       if (last_used) {
         const active_item = agent_quick_pick.items.find(
-          (i) => i.config_name == last_used
+          (i) => i.config_name === last_used
         )
         if (active_item) {
           agent_quick_pick.activeItems = [active_item]
@@ -411,7 +411,7 @@ export const invoke_agentic_cli = async (params: {
 
         selected_root = temp_dir_path
       } else {
-        if (roots.length == 1) {
+        if (roots.length === 1) {
           selected_root = roots[0]
         } else {
           const picks = roots.map((root) => ({
@@ -425,7 +425,7 @@ export const invoke_agentic_cli = async (params: {
               params.last_selected_workspace_state_key
             )
           const active_item =
-            picks.find((p) => p.root == last_selected_root) || picks[0]
+            picks.find((p) => p.root === last_selected_root) || picks[0]
 
           const quick_pick = vscode.window.createQuickPick<
             vscode.QuickPickItem & { root: string }
@@ -479,7 +479,7 @@ export const invoke_agentic_cli = async (params: {
             }
           )
 
-          if (res == 'back') {
+          if (res === 'back') {
             go_back_to_agent = true
             show_quick_pick = true
             current_agent_config_name = undefined
@@ -498,7 +498,7 @@ export const invoke_agentic_cli = async (params: {
         }
       }
 
-      const agent_info = CLI_AGENTS.find((a) => a.cmd == selected_agent_cmd)
+      const agent_info = CLI_AGENTS.find((a) => a.cmd === selected_agent_cmd)
       if (!agent_info) break
 
       const executable = agent_info.cmd
@@ -563,7 +563,7 @@ export const invoke_agentic_cli = async (params: {
         let args = [...base_args, ...custom_args]
 
         const quote_arg = (arg: string) => {
-          if (os.platform() == 'win32') {
+          if (os.platform() === 'win32') {
             return `"${arg.replace(/"/g, '""')}"`
           } else {
             return `'${arg.replace(/'/g, "'\\''")}'`
@@ -577,7 +577,7 @@ export const invoke_agentic_cli = async (params: {
           command = command_args
         } else {
           const command_args = [executable, ...args.map(quote_arg)].join(' ')
-          if (os.platform() == 'win32') {
+          if (os.platform() === 'win32') {
             command = `type "${temp_prompt_path}" | ${command_args}`
           } else {
             command = `cat '${temp_prompt_path}' | ${command_args}`

@@ -41,7 +41,7 @@ export const preview = async (params: {
     return null
   }
 
-  if (!params.original_states || params.original_states.length == 0) {
+  if (!params.original_states || params.original_states.length === 0) {
     return null
   }
 
@@ -79,18 +79,18 @@ export const preview = async (params: {
       }
 
       for (const item of response_items) {
-        if (item.type == 'text') {
+        if (item.type === 'text') {
           items_for_preview.push({ type: 'text', content: item.content })
-        } else if (item.type == 'inline-file') {
+        } else if (item.type === 'inline-file') {
           items_for_preview.push({
             type: 'inline-file',
             content: item.content,
             language: item.language
           })
         } else if (
-          item.type == 'file' ||
-          item.type == 'diff' ||
-          item.type == 'code-at-cursor'
+          item.type === 'file' ||
+          item.type === 'diff' ||
+          item.type === 'code-at-cursor'
         ) {
           const key = is_single_root_folder_workspace
             ? item.file_path
@@ -100,7 +100,7 @@ export const preview = async (params: {
             items_for_preview.push(prepared_file.previewable_file)
             prepared_files_map.delete(key)
           }
-          if (item.type == 'diff' && item.new_file_path) {
+          if (item.type === 'diff' && item.new_file_path) {
             const new_key = is_single_root_folder_workspace
               ? item.new_file_path
               : `${item.workspace_name || ''}:${item.new_file_path}`
@@ -132,7 +132,7 @@ export const preview = async (params: {
       })
     }
 
-    if (prepared_files.length == 0) {
+    if (prepared_files.length === 0) {
       return null
     }
 
@@ -157,7 +157,7 @@ export const preview = async (params: {
     while (current_index >= 0 && current_index < preview_items.length) {
       const preview_item = preview_items[current_index]
 
-      if (preview_item.status != 'pending') {
+      if (preview_item.status !== 'pending') {
         current_index++
         continue
       }
@@ -212,8 +212,8 @@ export const preview = async (params: {
           .map((item) => {
             return params.original_states.find(
               (state) =>
-                state.file_path == item.previewable_file.file_path &&
-                state.workspace_name == item.previewable_file.workspace_name
+                state.file_path === item.previewable_file.file_path &&
+                state.workspace_name === item.previewable_file.workspace_name
             )
           })
           .filter((state): state is OriginalFileState => state !== undefined)
@@ -253,8 +253,8 @@ export const preview = async (params: {
               jump_target.workspace_name
         )
 
-        if (new_index != -1) {
-          if (preview_items[new_index].status != 'pending') {
+        if (new_index !== -1) {
+          if (preview_items[new_index].status !== 'pending') {
             preview_items[new_index].status = 'pending'
           }
           current_index = new_index
@@ -266,18 +266,18 @@ export const preview = async (params: {
     }
 
     const accepted_files = preview_items
-      .filter((item) => item.status == 'accepted')
+      .filter((item) => item.status === 'accepted')
       .map((item) => item.file.previewable_file)
 
     const rejected_items = preview_items.filter(
-      (item) => item.status == 'rejected'
+      (item) => item.status === 'rejected'
     )
     const rejected_states = rejected_items
       .map((item) => {
         return params.original_states.find(
           (state) =>
-            state.file_path == item.file.previewable_file.file_path &&
-            state.workspace_name == item.file.previewable_file.workspace_name
+            state.file_path === item.file.previewable_file.file_path &&
+            state.workspace_name === item.file.previewable_file.workspace_name
         )
       })
       .filter((state): state is OriginalFileState => state !== undefined)

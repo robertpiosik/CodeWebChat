@@ -16,7 +16,7 @@ export const handle_select_default_api_configuration = async (
   const providers_manager = new ProvidersManager(provider.extension_context)
   const api_configurations = await providers_manager.get_api_configurations()
 
-  if (api_configurations.length == 0) {
+  if (api_configurations.length === 0) {
     return
   }
 
@@ -59,9 +59,9 @@ export const handle_select_default_api_configuration = async (
     quick_pick.hide()
 
     if (selected) {
-      if (message.api_feature == 'voice-input') {
+      if (message.api_feature === 'voice-input') {
         const api_configuration = api_configurations.find(
-          (c) => get_api_configuration_id(c) == selected.api_configuration_id
+          (c) => get_api_configuration_id(c) === selected.api_configuration_id
         )
         if (api_configuration) {
           const provider_inst = await providers_manager.get_provider(

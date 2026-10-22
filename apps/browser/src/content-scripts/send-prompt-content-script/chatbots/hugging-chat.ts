@@ -98,7 +98,7 @@ export const hugging_chat: Chatbot = {
       return
     }
 
-    if (model_picker_button.textContent.trim() == `Model: ${model}`) {
+    if (model_picker_button.textContent.trim() === `Model: ${model}`) {
       return
     }
 

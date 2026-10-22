@@ -33,7 +33,7 @@ export const select_modified_files_command = (
           return
         }
 
-        if (git_api.repositories.length == 0) {
+        if (git_api.repositories.length === 0) {
           vscode.window.showInformationMessage(
             t('common.warning.no-git-repository-found')
           )
@@ -55,7 +55,7 @@ export const select_modified_files_command = (
           }
         })
 
-        if (existing_modified_files.length == 0) {
+        if (existing_modified_files.length === 0) {
           vscode.window.showInformationMessage(
             t('common.info.no-items-found', { items: 'modified files' })
           )
@@ -90,7 +90,7 @@ export const select_modified_files_command = (
                 file_path
               )
               const dir_name = path.dirname(relative_path)
-              const display_dir = dir_name == '.' ? '' : dir_name
+              const display_dir = dir_name === '.' ? '' : dir_name
 
               return {
                 label: path.basename(file_path),
@@ -184,10 +184,10 @@ export const select_modified_files_command = (
             })
 
             quick_pick.onDidTriggerItemButton(async (e) => {
-              if (e.button.tooltip == t('common.go-to-file')) {
+              if (e.button.tooltip === t('common.go-to-file')) {
                 const uri = vscode.Uri.file(e.item.file_path)
                 vscode.window.showTextDocument(uri, { preview: true })
-              } else if (e.button.tooltip == t('common.action.show-diff')) {
+              } else if (e.button.tooltip === t('common.action.show-diff')) {
                 const uri = vscode.Uri.file(e.item.file_path)
                 await vscode.commands.executeCommand('git.openChange', uri)
               }
@@ -248,7 +248,7 @@ export const select_modified_files_command = (
           if (currently_selected.length > 0) {
             const selected_paths_set = new Set(selected_paths)
             const is_identical =
-              currently_selected.length == selected_paths_set.size &&
+              currently_selected.length === selected_paths_set.size &&
               currently_selected.every((file) => selected_paths_set.has(file))
 
             if (is_identical) {
@@ -265,7 +265,7 @@ export const select_modified_files_command = (
 
           Logger.info({
             message: `Selected ${selected_paths.length} modified file${
-              selected_paths.length == 1 ? '' : 's'
+              selected_paths.length === 1 ? '' : 's'
             }.`,
             data: { paths: selected_paths }
           })

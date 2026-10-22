@@ -176,7 +176,7 @@ export const Prompt = () => {
     return null
   }
 
-  if (workspace_folder_count == 0) {
+  if (workspace_folder_count === 0) {
     return (
       <div
         style={{
@@ -190,13 +190,13 @@ export const Prompt = () => {
 
   const get_current_instructions_state = () => {
     const prompt_type =
-      target == 'WEB'
+      target === 'WEB'
         ? web_prompt_type
-        : target == 'API'
+        : target === 'API'
           ? api_prompt_type
           : cli_prompt_type
-    if (prompt_type == 'ask') return ask_about_context_instructions
-    if (prompt_type == 'edit') return edit_files_instructions
+    if (prompt_type === 'ask') return ask_about_context_instructions
+    if (prompt_type === 'edit') return edit_files_instructions
     return undefined
   }
 
@@ -278,7 +278,7 @@ export const Prompt = () => {
           <Layout on_history_click={handle_history_click}>
             <div
               className={cn(styles.content, {
-                [styles['content--hidden']]: active_view != 'main'
+                [styles['content--hidden']]: active_view !== 'main'
               })}
             >
               <Main
@@ -290,7 +290,7 @@ export const Prompt = () => {
                   !!updating_api_configuration ||
                   !!updating_cli_configuration ||
                   !!items_in_preview ||
-                  active_view == 'home'
+                  active_view === 'home'
                 }
                 vscode={vscode}
                 on_web_configuration_edit={(web_configuration) => {
@@ -393,12 +393,12 @@ export const Prompt = () => {
             </div>
             <div
               className={cn(styles.content, {
-                [styles['content--hidden']]: active_view != 'home'
+                [styles['content--hidden']]: active_view !== 'home'
               })}
             >
               <Home
                 vscode={vscode}
-                is_active={active_view == 'home'}
+                is_active={active_view === 'home'}
                 is_connected={is_connected}
                 web_prompt_type={web_prompt_type}
                 api_prompt_type={api_prompt_type}
@@ -450,7 +450,7 @@ export const Prompt = () => {
                   on_click={handle_preview_web_configuration}
                   disabled={
                     !is_connected ||
-                    (web_prompt_type == 'edit' && selected_files.length == 0)
+                    (web_prompt_type === 'edit' && selected_files.length === 0)
                   }
                 >
                   Preview
@@ -607,7 +607,7 @@ export const Prompt = () => {
                     if (preview_item_created_at) {
                       set_response_history((prev) =>
                         prev.filter(
-                          (i) => i.created_at != preview_item_created_at
+                          (i) => i.created_at !== preview_item_created_at
                         )
                       )
                     }
@@ -620,7 +620,7 @@ export const Prompt = () => {
                   }}
                   on_accept={() => {
                     const accepted_files = items_in_preview.filter(
-                      (f) => f.type == 'file' && f.is_checked
+                      (f) => f.type === 'file' && f.is_checked
                     ) as any
                     set_response_history([])
                     set_selected_history_item_created_at(undefined)
@@ -632,10 +632,10 @@ export const Prompt = () => {
                   }}
                   is_accept_disabled={
                     items_in_preview.filter(
-                      (f) => f.type == 'file' && f.is_checked
-                    ).length == 0 ||
+                      (f) => f.type === 'file' && f.is_checked
+                    ).length === 0 ||
                     items_in_preview.some(
-                      (f) => f.type == 'file' && f.is_applying
+                      (f) => f.type === 'file' && f.is_applying
                     )
                   }
                 />
@@ -662,9 +662,9 @@ export const Prompt = () => {
                 on_toggle_file={(file) => {
                   set_items_in_preview((current_items) =>
                     current_items?.map((f) =>
-                      f.type == 'file' &&
-                      f.file_path == file.file_path &&
-                      f.workspace_name == file.workspace_name
+                      f.type === 'file' &&
+                      f.file_path === file.file_path &&
+                      f.workspace_name === file.workspace_name
                         ? { ...f, is_checked: file.is_checked }
                         : f
                     )

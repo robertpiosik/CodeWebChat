@@ -83,7 +83,7 @@ export const perform_intelligent_search_mode = async (params: {
     if (!result.value) return undefined
 
     const search_term = result.value.trim()
-    if (search_term.length == 0) return undefined
+    if (search_term.length === 0) return undefined
 
     local_queries[LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY] = search_term
     if (!params.show_back_button) {
@@ -103,7 +103,7 @@ export const perform_intelligent_search_mode = async (params: {
 
     while (true) {
       let shrink_result: boolean | 'back' | 'cancel' = false
-      const skip_shrink = analysis.full_tokens == analysis.shrink_tokens
+      const skip_shrink = analysis.full_tokens === analysis.shrink_tokens
 
       if (!skip_shrink) {
         const should_shrink =
@@ -117,11 +117,11 @@ export const perform_intelligent_search_mode = async (params: {
           shrink_tokens: analysis.shrink_tokens
         })
 
-        if (shrink_result == 'back') {
+        if (shrink_result === 'back') {
           go_back_to_term = true
           break
         }
-        if (shrink_result == 'cancel') return undefined
+        if (shrink_result === 'cancel') return undefined
 
         await params.extension_context.workspaceState.update(
           LAST_INTELLIGENT_FILE_SEARCH_SHRINK_STATE_KEY,
@@ -172,7 +172,7 @@ export const perform_intelligent_search_mode = async (params: {
               )
 
             const active_item = last_action_id
-              ? quick_pick.items.find((i) => i.id == last_action_id)
+              ? quick_pick.items.find((i) => i.id === last_action_id)
               : undefined
 
             if (active_item) {
@@ -224,7 +224,7 @@ export const perform_intelligent_search_mode = async (params: {
           }
         )
 
-        if (action == 'back') {
+        if (action === 'back') {
           if (skip_shrink) {
             go_back_to_term = true
           } else {
@@ -241,7 +241,7 @@ export const perform_intelligent_search_mode = async (params: {
 
         let go_back_to_action = false
 
-        if (action == 'copy' || action == 'autofill') {
+        if (action === 'copy' || action === 'autofill') {
           let md_files = ''
           for (const file of analysis.files_data) {
             const content_to_use = shrink_result
@@ -295,7 +295,7 @@ export const perform_intelligent_search_mode = async (params: {
 
           const chatbot_prompt = `# Files\n\n${md_files}# Task\n\n${base_instructions}\n\n# Output formatting\n\n${format_instructions}\n\n# Query\n\n${search_term}`
 
-          if (action == 'copy') {
+          if (action === 'copy') {
             await vscode.env.clipboard.writeText(chatbot_prompt)
             const token_count = shrink_result
               ? analysis.shrink_tokens
@@ -309,7 +309,7 @@ export const perform_intelligent_search_mode = async (params: {
             return undefined
           }
 
-          if (action == 'autofill') {
+          if (action === 'autofill') {
             const all_web_configurations = config.get<
               ConfigWebConfigurationFormat[]
             >('chatbots', [])
@@ -317,7 +317,7 @@ export const perform_intelligent_search_mode = async (params: {
               (c) => c.chatbot
             )
 
-            if (valid_web_configurations.length == 0) {
+            if (valid_web_configurations.length === 0) {
               show_incomplete_setup_warning('web')
               go_back_to_action = true
               continue
@@ -331,7 +331,7 @@ export const perform_intelligent_search_mode = async (params: {
 
             if (default_web_config) {
               selected_web_configuration_name = default_web_config.name
-            } else if (valid_web_configurations.length == 1) {
+            } else if (valid_web_configurations.length === 1) {
               selected_web_configuration_name = valid_web_configurations[0].name
             } else {
               const recents_key = get_last_used_web_configuration_key(
@@ -350,7 +350,7 @@ export const perform_intelligent_search_mode = async (params: {
                 show_back_button: true
               })
 
-              if (result == 'back') {
+              if (result === 'back') {
                 go_back_to_action = true
                 continue
               } else if (!result) {
@@ -394,7 +394,7 @@ export const perform_intelligent_search_mode = async (params: {
           | 'error'
           | undefined = undefined
 
-        if (action == 'invoke-agent') {
+        if (action === 'invoke-agent') {
           let md_files = ''
           for (const file of analysis.files_data) {
             const content_to_use = shrink_result
@@ -441,10 +441,10 @@ export const perform_intelligent_search_mode = async (params: {
           })
 
           api_result =
-            extracted_files.length == 0 ? 'error_no_files' : extracted_files
+            extracted_files.length === 0 ? 'error_no_files' : extracted_files
         }
 
-        if (action == 'make-api') {
+        if (action === 'make-api') {
           if (!has_api_configurations) {
             show_incomplete_setup_warning('api')
             go_back_to_action = true
@@ -469,11 +469,11 @@ export const perform_intelligent_search_mode = async (params: {
 
             show_quick_pick = false
 
-            if (api_configuration_result == 'back') {
+            if (api_configuration_result === 'back') {
               go_back_to_action = true
               break
             }
-            if (api_configuration_result == 'cancel') return undefined
+            if (api_configuration_result === 'cancel') return undefined
 
             const { api_configuration: selected_api_configuration, provider } =
               api_configuration_result
@@ -486,7 +486,7 @@ export const perform_intelligent_search_mode = async (params: {
               selected_api_configuration
             )
 
-            if (api_result == 'error') {
+            if (api_result === 'error') {
               show_quick_pick = true
               continue
             }
@@ -498,8 +498,8 @@ export const perform_intelligent_search_mode = async (params: {
           continue
         }
 
-        if (api_result == 'cancel') return undefined
-        if (api_result == 'error_no_files') {
+        if (api_result === 'cancel') return undefined
+        if (api_result === 'error_no_files') {
           vscode.window.showWarningMessage(t('common.info.no-files-found'))
           go_back_to_term = true
           break
@@ -522,11 +522,11 @@ export const perform_intelligent_search_mode = async (params: {
               is_sub_search: params.is_sub_search
             })
 
-            if (apply_result == 'back') {
+            if (apply_result === 'back') {
               go_back_to_term_from_results = true
               break
             }
-            if (apply_result == 'cancel') {
+            if (apply_result === 'cancel') {
               return undefined
             }
 

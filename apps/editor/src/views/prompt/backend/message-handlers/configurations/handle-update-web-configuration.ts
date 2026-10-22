@@ -22,7 +22,7 @@ export const handle_update_web_configuration = async (
       discard_button
     )
 
-    if (result != discard_button) {
+    if (result !== discard_button) {
       return
     }
   }

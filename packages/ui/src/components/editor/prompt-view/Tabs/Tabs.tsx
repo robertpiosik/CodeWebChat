@@ -23,7 +23,7 @@ export const Tabs = forwardRef<HTMLDivElement, Tabs.Props>((props, ref) => {
           <button
             key={tab.id}
             className={cn(styles.tabs__tab, {
-              [styles['tabs__tab--active']]: tab.id == props.active_tab
+              [styles['tabs__tab--active']]: tab.id === props.active_tab
             })}
             onClick={() => props.on_tab_change(tab.id)}
           >

@@ -15,7 +15,7 @@ export const replace_website_symbol = async (params: {
         /#Website\([^ ]+ ([a-fA-F0-9]+)(?::\d+)?(?: "((?:\\.|[^"\\])*)")?\)/g
       const matches = Array.from(instruction.matchAll(regex))
 
-      if (matches.length == 0) {
+      if (matches.length === 0) {
         return instruction
       }
 

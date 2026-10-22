@@ -129,8 +129,8 @@ export const sync_directory = async (params: {
 
     const source_stat = await vscode.workspace.fs.stat(source_uri)
 
-    if (type == vscode.FileType.Directory) {
-      if (dest_stat?.type == vscode.FileType.Directory) {
+    if (type === vscode.FileType.Directory) {
+      if (dest_stat?.type === vscode.FileType.Directory) {
         await sync_directory({
           ...params,
           source_dir: source_uri,
@@ -150,9 +150,9 @@ export const sync_directory = async (params: {
           params.progress.report({ increment: params._increment })
         }
       }
-    } else if (type == vscode.FileType.File) {
-      if (dest_stat?.type == vscode.FileType.File) {
-        if (source_stat.mtime != dest_stat.mtime) {
+    } else if (type === vscode.FileType.File) {
+      if (dest_stat?.type === vscode.FileType.File) {
+        if (source_stat.mtime !== dest_stat.mtime) {
           await vscode.workspace.fs.copy(source_uri, dest_uri, {
             overwrite: true
           })

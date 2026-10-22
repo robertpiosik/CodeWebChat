@@ -239,10 +239,10 @@ export const Home: React.FC<Props> = (props) => {
     useState('')
 
   const get_has_warning = (id: NavItem): boolean => {
-    if (id == 'section:api:group:providers') {
-      return props.providers.length == 0
-    } else if (id == 'section:api:group:models') {
-      return props.api_configurations.length == 0
+    if (id === 'section:api:group:providers') {
+      return props.providers.length === 0
+    } else if (id === 'section:api:group:models') {
+      return props.api_configurations.length === 0
     } else {
       return false
     }
@@ -368,7 +368,7 @@ export const Home: React.FC<Props> = (props) => {
           on_voice_instructions_blur={() => {
             props.on_voice_input_instructions_change(voice_instructions)
             if (
-              voice_instructions == '' &&
+              voice_instructions === '' &&
               props.voice_input_instructions ==
                 props.default_voice_input_instructions
             ) {
@@ -389,7 +389,7 @@ export const Home: React.FC<Props> = (props) => {
               agentic_search_instructions
             )
             if (
-              agentic_search_instructions == '' &&
+              agentic_search_instructions === '' &&
               props.agentic_search_instructions ==
                 props.default_agentic_search_instructions
             ) {
@@ -420,7 +420,7 @@ export const Home: React.FC<Props> = (props) => {
           on_commit_instructions_blur={() => {
             props.on_commit_instructions_change(commit_instructions)
             if (
-              commit_instructions == '' &&
+              commit_instructions === '' &&
               props.commit_message_instructions ==
                 props.default_commit_message_instructions
             ) {
@@ -500,7 +500,7 @@ export const Home: React.FC<Props> = (props) => {
               edit_files_instructions
             )
             if (
-              edit_files_instructions == '' &&
+              edit_files_instructions === '' &&
               props.edit_files_system_instructions ==
                 props.default_edit_files_system_instructions
             ) {

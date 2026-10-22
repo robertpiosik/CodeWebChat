@@ -70,7 +70,7 @@ export const handle_autofill = async (params: {
   })
 
   if (
-    params.prompt_view_provider.web_prompt_type == 'edit' &&
+    params.prompt_view_provider.web_prompt_type === 'edit' &&
     !collected_files
   ) {
     vscode.window.showWarningMessage(
@@ -82,7 +82,7 @@ export const handle_autofill = async (params: {
   let output_formatting: string | undefined = undefined
   let completed_tasks: string[] | undefined = undefined
   const user_instructions = processed_instructions
-  if (params.prompt_view_provider.web_prompt_type == 'edit') {
+  if (params.prompt_view_provider.web_prompt_type === 'edit') {
     completed_tasks = processed_completed_tasks
     output_formatting = {
       whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
@@ -102,7 +102,7 @@ export const handle_autofill = async (params: {
   })
 
   const prompt_type = params.prompt_view_provider.web_prompt_type
-  const inject_apply_response_button = prompt_type == 'edit'
+  const inject_apply_response_button = prompt_type === 'edit'
 
   sent =
     await params.prompt_view_provider.websocket_server_instance.initialize_chat(
@@ -143,7 +143,7 @@ const show_web_configuration_quick_pick = async (params: {
     (c) => c.chatbot && Object.keys(CHATBOTS).includes(c.chatbot)
   )
 
-  if (valid_web_configurations.length == 0) {
+  if (valid_web_configurations.length === 0) {
     return
   }
 
@@ -194,14 +194,14 @@ const resolve_web_configuration = async (params: {
     (c) => c.chatbot && Object.keys(CHATBOTS).includes(c.chatbot)
   )
 
-  if (valid_web_configurations.length == 0) {
+  if (valid_web_configurations.length === 0) {
     show_incomplete_setup_warning('web')
     return { web_configuration_name: undefined }
   }
 
   if (params.web_configuration_name !== undefined) {
     const web_configuration = all_web_configurations.find(
-      (p) => p.name == params.web_configuration_name
+      (p) => p.name === params.web_configuration_name
     )
     if (web_configuration) {
       return { web_configuration_name: params.web_configuration_name }
@@ -216,7 +216,7 @@ const resolve_web_configuration = async (params: {
 
     if (last_selected_name) {
       const item = all_web_configurations.find(
-        (p) => p.name == last_selected_name
+        (p) => p.name === last_selected_name
       )
       if (item) {
         if (item.chatbot && Object.keys(CHATBOTS).includes(item.chatbot)) {
@@ -225,7 +225,7 @@ const resolve_web_configuration = async (params: {
       }
     }
 
-    if (valid_web_configurations.length == 1) {
+    if (valid_web_configurations.length === 1) {
       const web_configuration = valid_web_configurations[0]
       return { web_configuration_name: web_configuration.name }
     }

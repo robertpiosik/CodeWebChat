@@ -198,9 +198,9 @@ export const Main: React.FC<Props> = (props) => {
   }, [])
 
   const current_prompt_type =
-    props.target == 'WEB'
+    props.target === 'WEB'
       ? props.web_prompt_type
-      : props.target == 'API'
+      : props.target === 'API'
         ? props.api_prompt_type
         : props.cli_prompt_type
 
@@ -215,10 +215,10 @@ export const Main: React.FC<Props> = (props) => {
     let history: string[] | undefined
     let set_history: React.Dispatch<React.SetStateAction<string[] | undefined>>
 
-    if (current_prompt_type == 'ask') {
+    if (current_prompt_type === 'ask') {
       history = ask_about_files_history
       set_history = set_ask_about_files_history
-    } else if (current_prompt_type == 'edit') {
+    } else if (current_prompt_type === 'edit') {
       history = edit_files_history
       set_history = set_edit_files_history
     } else {
@@ -226,7 +226,7 @@ export const Main: React.FC<Props> = (props) => {
     }
 
     const is_duplicate =
-      history && history.length > 0 && history[0] == trimmed_instruction
+      history && history.length > 0 && history[0] === trimmed_instruction
 
     if (!is_duplicate) {
       const new_history = [trimmed_instruction, ...(history || [])].slice(
@@ -246,7 +246,7 @@ export const Main: React.FC<Props> = (props) => {
   const handle_toggle_web_configuration_pinned = (name: string) => {
     if (web_configurations) {
       const updated_web_configurations = web_configurations.map((p) =>
-        p.name == name ? { ...p, is_pinned: !p.is_pinned } : p
+        p.name === name ? { ...p, is_pinned: !p.is_pinned } : p
       )
 
       set_web_configurations(updated_web_configurations)
@@ -324,11 +324,11 @@ export const Main: React.FC<Props> = (props) => {
     if (props.api_configurations) {
       const reordered_api_configs = reordered_configs
         .map((ui_config) => {
-          return props.api_configurations!.find((c) => c.id == ui_config.id)!
+          return props.api_configurations!.find((c) => c.id === ui_config.id)!
         })
         .filter(Boolean)
 
-      if (reordered_api_configs.length != props.api_configurations.length) {
+      if (reordered_api_configs.length !== props.api_configurations.length) {
         return
       }
 
@@ -342,7 +342,7 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_edit_api_configuration = (id: string) => {
-    const config = props.api_configurations?.find((c) => c.id == id)
+    const config = props.api_configurations?.find((c) => c.id === id)
     if (config) props.on_api_configuration_edit(config)
   }
 
@@ -385,7 +385,7 @@ export const Main: React.FC<Props> = (props) => {
 
   const handle_web_configuration_edit = (name: string) => {
     const web_configuration = web_configurations?.find(
-      (config) => config.name == name
+      (config) => config.name === name
     )
     if (web_configuration) props.on_web_configuration_edit(web_configuration)
   }
@@ -422,7 +422,7 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_edit_cli_configuration = (name: string) => {
-    const config = cli_configurations?.find((c) => c.name == name)
+    const config = cli_configurations?.find((c) => c.name === name)
     if (config && props.on_cli_configuration_edit) {
       props.on_cli_configuration_edit(config)
     }
@@ -438,7 +438,7 @@ export const Main: React.FC<Props> = (props) => {
   const handle_toggle_pinned_cli_configuration = (name: string) => {
     if (cli_configurations) {
       const updated_cli_configurations = cli_configurations.map((p) =>
-        p.name == name ? { ...p, is_pinned: !p.is_pinned } : p
+        p.name === name ? { ...p, is_pinned: !p.is_pinned } : p
       )
 
       set_cli_configurations(updated_cli_configurations)
@@ -483,8 +483,8 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const get_current_instructions = () => {
-    if (current_prompt_type == 'ask') return props.ask_instructions
-    if (current_prompt_type == 'edit') return props.edit_instructions
+    if (current_prompt_type === 'ask') return props.ask_instructions
+    if (current_prompt_type === 'edit') return props.edit_instructions
     return ''
   }
 
@@ -584,9 +584,9 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const instructions =
-    current_prompt_type == 'ask'
+    current_prompt_type === 'ask'
       ? props.ask_instructions
-      : current_prompt_type == 'edit'
+      : current_prompt_type === 'edit'
         ? props.edit_instructions
         : ''
 
@@ -595,9 +595,9 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   let current_history: string[] | undefined
-  if (current_prompt_type == 'ask') {
+  if (current_prompt_type === 'ask') {
     current_history = ask_about_files_history
-  } else if (current_prompt_type == 'edit') {
+  } else if (current_prompt_type === 'edit') {
     current_history = edit_files_history
   }
 

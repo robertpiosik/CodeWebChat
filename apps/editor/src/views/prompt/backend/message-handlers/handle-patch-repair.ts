@@ -57,11 +57,12 @@ export const handle_patch_repair = async (params: {
 
   const failed_files = original_states.filter((s) =>
     params.files_to_fix.some(
-      (f) => f.file_path == s.file_path && f.workspace_name == s.workspace_name
+      (f) =>
+        f.file_path === s.file_path && f.workspace_name === s.workspace_name
     )
   )
 
-  if (failed_files.length == 0) {
+  if (failed_files.length === 0) {
     return
   }
 
@@ -80,19 +81,19 @@ export const handle_patch_repair = async (params: {
   const files_to_process = failed_files
     .map((file_state) => {
       const relevant_item = parsed_response.find((item) => {
-        if (item.type == 'file' || item.type == 'code-at-cursor') {
+        if (item.type === 'file' || item.type === 'code-at-cursor') {
           return (
-            item.file_path == file_state.file_path &&
+            item.file_path === file_state.file_path &&
             (!item.workspace_name ||
-              item.workspace_name == file_state.workspace_name)
+              item.workspace_name === file_state.workspace_name)
           )
         }
-        if (item.type == 'diff') {
+        if (item.type === 'diff') {
           return (
-            (item.file_path == file_state.file_path ||
-              item.new_file_path == file_state.file_path) &&
+            (item.file_path === file_state.file_path ||
+              item.new_file_path === file_state.file_path) &&
             (!item.workspace_name ||
-              item.workspace_name == file_state.workspace_name)
+              item.workspace_name === file_state.workspace_name)
           )
         }
         return false
@@ -101,9 +102,9 @@ export const handle_patch_repair = async (params: {
       let instructions = ''
       if (
         relevant_item &&
-        (relevant_item.type == 'file' ||
-          relevant_item.type == 'diff' ||
-          relevant_item.type == 'code-at-cursor')
+        (relevant_item.type === 'file' ||
+          relevant_item.type === 'diff' ||
+          relevant_item.type === 'code-at-cursor')
       ) {
         instructions = relevant_item.content
       }
@@ -111,7 +112,7 @@ export const handle_patch_repair = async (params: {
       let workspace_root = default_workspace_path!
       if (file_state.workspace_name) {
         const folder = vscode.workspace.workspaceFolders?.find(
-          (f) => f.name == file_state.workspace_name
+          (f) => f.name === file_state.workspace_name
         )
         if (folder) workspace_root = folder.uri.fsPath
       }
@@ -194,7 +195,7 @@ export const handle_patch_repair = async (params: {
         )
 
       const active_item = last_action_id
-        ? quick_pick.items.find((i) => i.id == last_action_id)
+        ? quick_pick.items.find((i) => i.id === last_action_id)
         : undefined
 
       if (active_item) {
@@ -228,7 +229,7 @@ export const handle_patch_repair = async (params: {
 
     if (!action) return
 
-    if (action != 'apply-from-clipboard') {
+    if (action !== 'apply-from-clipboard') {
       params.prompt_view_provider.extension_context.workspaceState.update(
         LAST_USED_PATCH_REPAIR_ACTION_STATE_KEY,
         action
@@ -240,12 +241,12 @@ export const handle_patch_repair = async (params: {
     }
   }
 
-  if (action == 'apply-from-clipboard') {
+  if (action === 'apply-from-clipboard') {
     await vscode.commands.executeCommand('codeWebChat.applyResponse')
     return
   }
 
-  if (action == 'invoke-agent') {
+  if (action === 'invoke-agent') {
     let cli_prompt = ''
     for (const item of files_to_process) {
       const backticks = item.file_state.content.includes('```') ? '````' : '```'
@@ -287,7 +288,7 @@ export const handle_patch_repair = async (params: {
     return
   }
 
-  if (action == 'copy') {
+  if (action === 'copy') {
     let chatbot_prompt = ''
     for (const item of files_to_process) {
       const backticks = item.file_state.content.includes('```') ? '````' : '```'
@@ -308,7 +309,7 @@ export const handle_patch_repair = async (params: {
     return
   }
 
-  if (action == 'autofill') {
+  if (action === 'autofill') {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>(
       'chatbots',
@@ -318,7 +319,7 @@ export const handle_patch_repair = async (params: {
       (c) => c.chatbot
     )
 
-    if (valid_web_configurations.length == 0) {
+    if (valid_web_configurations.length === 0) {
       show_incomplete_setup_warning('web')
       return
     }
@@ -331,7 +332,7 @@ export const handle_patch_repair = async (params: {
 
     if (default_web_config) {
       selected_web_configuration_name = default_web_config.name
-    } else if (valid_web_configurations.length == 1) {
+    } else if (valid_web_configurations.length === 1) {
       selected_web_configuration_name = valid_web_configurations[0].name
     } else {
       const recents_key = get_last_used_web_configuration_key('patch-repair')
@@ -350,7 +351,7 @@ export const handle_patch_repair = async (params: {
         show_back_button: false
       })
 
-      if (!result || result == 'back') {
+      if (!result || result === 'back') {
         return
       }
       selected_web_configuration_name = result.item.name
@@ -526,7 +527,7 @@ export const handle_patch_repair = async (params: {
                 file_state.restore_workspace_name ?? workspace_name
               if (old_workspace_name) {
                 const folder = vscode.workspace.workspaceFolders?.find(
-                  (f) => f.name == old_workspace_name
+                  (f) => f.name === old_workspace_name
                 )
                 if (folder) old_workspace_root = folder.uri.fsPath
               }
@@ -556,10 +557,10 @@ export const handle_patch_repair = async (params: {
           const error_msg = get_error_message(error)
           if (
             !axios.isCancel(error) &&
-            error_msg != 'User cancelled the operation' &&
+            error_msg !== 'User cancelled the operation' &&
             error_msg !=
               'Batch operation failed, triggering configuration selection.' &&
-            error_msg != 'Preview finished.'
+            error_msg !== 'Preview finished.'
           ) {
             Logger.error({
               function_name: 'handle_patch_repair',
@@ -578,8 +579,8 @@ export const handle_patch_repair = async (params: {
           }
 
           if (
-            error_msg != 'Preview finished.' &&
-            error_msg != 'User cancelled the operation'
+            error_msg !== 'Preview finished.' &&
+            error_msg !== 'User cancelled the operation'
           ) {
             batch_abort_controllers.forEach((controller) => {
               controller.abort(
@@ -613,8 +614,8 @@ export const handle_patch_repair = async (params: {
   } catch (error) {
     const error_msg = get_error_message(error)
     if (
-      error_msg == 'Preview finished.' ||
-      error_msg == 'User cancelled the operation'
+      error_msg === 'Preview finished.' ||
+      error_msg === 'User cancelled the operation'
     ) {
       return
     }

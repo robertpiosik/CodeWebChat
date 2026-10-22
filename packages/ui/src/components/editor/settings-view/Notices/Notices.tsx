@@ -21,19 +21,19 @@ export const Notices: React.FC<Props> = (props) => {
         <div
           key={index}
           className={cn(styles.container, {
-            [styles['container--info']]: notice.type == 'info',
-            [styles['container--warning']]: notice.type == 'warning'
+            [styles['container--info']]: notice.type === 'info',
+            [styles['container--warning']]: notice.type === 'warning'
           })}
         >
           <div
             className={cn(styles.left, {
-              [styles['left--warning']]: notice.type == 'warning'
+              [styles['left--warning']]: notice.type === 'warning'
             })}
           >
             <span
               className={cn(
                 'codicon',
-                notice.type == 'info' ? 'codicon-info' : 'codicon-warning'
+                notice.type === 'info' ? 'codicon-info' : 'codicon-warning'
               )}
             />
             <span>{notice.message}</span>

@@ -21,7 +21,7 @@ export const handle_cancel_template_edit = async (
     discard_button
   )
 
-  if (result != discard_button) {
+  if (result !== discard_button) {
     return
   }
 

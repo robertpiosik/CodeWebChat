@@ -7,7 +7,7 @@ export const toggle_pinned = async (params: {
   const current_configs = config.get<any[]>('agents', []) || []
 
   const updated_configs = current_configs.map((c) => {
-    if (c.name == params.cli_configuration_name) {
+    if (c.name === params.cli_configuration_name) {
       return { ...c, isPinned: !c.isPinned }
     }
     return c

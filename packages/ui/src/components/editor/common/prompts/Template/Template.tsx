@@ -125,8 +125,8 @@ export const Template = forwardRef<TemplateHandle, TemplateProps>(
       const caret_position = get_caret_position_from_div(currentTarget)
       const char_before_caret = new_display_value.charAt(caret_position - 1)
 
-      if (char_before_caret == '#') {
-        const is_at_start = caret_position == 1
+      if (char_before_caret === '#') {
+        const is_at_start = caret_position === 1
         let is_after_whitespace = false
         if (caret_position > 1) {
           const char_before_hash = new_display_value.charAt(caret_position - 2)

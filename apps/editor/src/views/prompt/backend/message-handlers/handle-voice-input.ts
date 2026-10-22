@@ -77,20 +77,20 @@ const start_recording = (prompt_view_provider: PromptViewProvider) => {
     )
 
     prompt_view_provider.recording_process.on('error', (error) => {
-      if ((error as NodeJS.ErrnoException).code == 'ENOENT') {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
         let error_message = t(
           'views.prompt.handlers.handle-voice-input.error.sox-missing'
         )
 
-        if (process.platform == 'darwin') {
+        if (process.platform === 'darwin') {
           error_message = t(
             'views.prompt.handlers.handle-voice-input.error.sox-missing.mac'
           )
-        } else if (process.platform == 'linux') {
+        } else if (process.platform === 'linux') {
           error_message = t(
             'views.prompt.handlers.handle-voice-input.error.sox-missing.linux'
           )
-        } else if (process.platform == 'win32') {
+        } else if (process.platform === 'win32') {
           error_message = t(
             'views.prompt.handlers.handle-voice-input.error.sox-missing.windows'
           )
@@ -187,10 +187,10 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
       )
     let show_action_quick_pick = true
 
-    if (default_option == 'send-request') {
+    if (default_option === 'send-request') {
       current_action = 'send-request'
       show_action_quick_pick = false
-    } else if (default_option == 'invoke-agent') {
+    } else if (default_option === 'invoke-agent') {
       current_action = 'invoke-agent'
       show_action_quick_pick = false
     }
@@ -282,7 +282,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
         }
       }
 
-      if (current_action == 'invoke-agent') {
+      if (current_action === 'invoke-agent') {
         const temp_audio_path = path.join(
           os.tmpdir(),
           `cwc-voice-input-${Date.now()}.wav`
@@ -325,7 +325,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
         }
 
         const text = invoke_cli_result.agent_output
-        if (text.trim().toUpperCase() == 'INAUDIBLE') {
+        if (text.trim().toUpperCase() === 'INAUDIBLE') {
           prompt_view_provider.send_message({
             command: 'SHOW_AUTO_CLOSING_MODAL',
             title: t(
@@ -336,7 +336,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
           prompt_view_provider.add_text_at_cursor_position(text)
         }
         break
-      } else if (current_action == 'send-request') {
+      } else if (current_action === 'send-request') {
         let show_quick_pick = false
 
         while (true) {
@@ -411,7 +411,7 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
             })
 
             if (result?.response) {
-              if (result.response.trim().toUpperCase() == 'INAUDIBLE') {
+              if (result.response.trim().toUpperCase() === 'INAUDIBLE') {
                 prompt_view_provider.send_message({
                   command: 'SHOW_AUTO_CLOSING_MODAL',
                   title: t(
@@ -460,7 +460,7 @@ export const handle_voice_input = async (
   prompt_view_provider: PromptViewProvider,
   message: SetRecordingStateMessage
 ) => {
-  if (prompt_view_provider.is_recording == message.is_recording) {
+  if (prompt_view_provider.is_recording === message.is_recording) {
     return
   }
 
@@ -473,7 +473,7 @@ export const handle_voice_input = async (
     const config_codeWebChat = vscode.workspace.getConfiguration('codeWebChat')
     const agent_configs = config_codeWebChat.get<any[]>('agents', []) || []
 
-    if (api_configurations.length == 0 && agent_configs.length == 0) {
+    if (api_configurations.length === 0 && agent_configs.length === 0) {
       show_incomplete_setup_warning('api')
       prompt_view_provider.send_message({
         command: 'RECORDING_STATE',

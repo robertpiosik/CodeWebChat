@@ -36,7 +36,7 @@ export const Input: React.FC<Props> = (props) => {
   }
 
   const handle_key_down = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key == 'Enter') {
+    if (e.key === 'Enter') {
       e.preventDefault()
       e.currentTarget.blur()
     }

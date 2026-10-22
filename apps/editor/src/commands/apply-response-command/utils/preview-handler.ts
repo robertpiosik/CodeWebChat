@@ -49,7 +49,7 @@ export const preview_handler = async (params: {
       workspace_provider: params.workspace_provider
     })
 
-    if (preview_result === null || preview_result.accepted_files.length == 0) {
+    if (preview_result === null || preview_result.accepted_files.length === 0) {
       if (preview_result?.created_at) {
         const history = params.prompt_view_provider.response_history
         const new_history = history.filter(
@@ -116,8 +116,8 @@ export const preview_handler = async (params: {
     const accepted_states = params.original_states.filter((state) =>
       preview_result.accepted_files.some(
         (accepted) =>
-          accepted.file_path == state.file_path &&
-          accepted.workspace_name == state.workspace_name
+          accepted.file_path === state.file_path &&
+          accepted.workspace_name === state.workspace_name
       )
     )
 

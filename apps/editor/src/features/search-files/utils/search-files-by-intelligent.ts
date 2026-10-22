@@ -49,7 +49,7 @@ export const search_files_by_intelligent = async (
     model: selected_config.model
   }
 
-  const is_openai = provider.base_url == PROVIDERS.OpenAI.base_url
+  const is_openai = provider.base_url === PROVIDERS.OpenAI.base_url
   if (is_openai) {
     body.prompt_cache_options = { mode: 'explicit' }
   }
@@ -94,7 +94,7 @@ export const search_files_by_intelligent = async (
         text: completion_result.response,
         workspace_files: files_data.map((f) => f.display_path)
       })
-      return extracted_files.length == 0 ? 'error_no_files' : extracted_files
+      return extracted_files.length === 0 ? 'error_no_files' : extracted_files
     }
     return 'error'
   } catch (error) {

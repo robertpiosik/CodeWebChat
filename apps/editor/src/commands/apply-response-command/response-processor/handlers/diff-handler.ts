@@ -79,7 +79,7 @@ const parse_patch_header = (
   for (const line of lines) {
     if (line.startsWith('---')) {
       from_found = true
-      if (line == '--- /dev/null') {
+      if (line === '--- /dev/null') {
         is_new = true
       } else {
         const from_match = line.match(/^--- a\/(.+)$/)
@@ -89,7 +89,7 @@ const parse_patch_header = (
       }
     } else if (line.startsWith('+++')) {
       to_found = true
-      if (line == '+++ /dev/null') {
+      if (line === '+++ /dev/null') {
         is_deleted = true
       } else {
         const match = line.match(/^\+\+\+ b\/(.+)$/)
@@ -109,7 +109,7 @@ const parse_patch_header = (
     !is_new &&
     from_path &&
     to_path &&
-    from_path == to_path &&
+    from_path === to_path &&
     workspace_path
   ) {
     const safe_path = create_safe_path(workspace_path, to_path)
@@ -120,11 +120,11 @@ const parse_patch_header = (
 
   // Check if it's a rename-only diff.
   // This is indicated by IDENTICAL from/to paths and no content hunks.
-  if (from_path && to_path && from_path == to_path) {
+  if (from_path && to_path && from_path === to_path) {
     const header_end_index = lines.findIndex((line) => line.startsWith('+++'))
-    if (header_end_index != -1) {
+    if (header_end_index !== -1) {
       const remaining_content = lines.slice(header_end_index + 1).join('\n')
-      if (remaining_content.trim() == '') {
+      if (remaining_content.trim() === '') {
         is_renaming = true
       }
     }
@@ -248,7 +248,7 @@ const close_files_in_all_editor_groups = async (
     const uri = (tab.input as any).uri
     if (tab.isDirty) {
       const document = vscode.workspace.textDocuments.find(
-        (doc) => doc.uri.fsPath == uri.fsPath
+        (doc) => doc.uri.fsPath === uri.fsPath
       )
       if (document) await document.save()
     }
@@ -319,7 +319,7 @@ const handle_new_file_patch = async (
     patch_content,
     fallback_patch
   )
-  if (file_paths.length != 1) {
+  if (file_paths.length !== 1) {
     Logger.error({
       function_name: 'handle_new_file_patch',
       message: 'New file patch is expected to contain exactly one file path.',
@@ -401,7 +401,7 @@ const handle_deleted_file_patch = async (
     patch_content,
     fallback_patch
   )
-  if (file_paths.length != 1) {
+  if (file_paths.length !== 1) {
     Logger.error({
       function_name: 'handle_deleted_file_patch',
       message:
@@ -606,11 +606,11 @@ export const apply_git_patch = async (
         data: { error: last_error }
       })
       try {
-        if (file_paths.length == 0) {
+        if (file_paths.length === 0) {
           throw new Error('No file paths could be extracted from patch')
         }
         const file_path_safe = create_safe_path(workspace_path, file_paths[0])
-        if (file_path_safe == null) throw new Error('File path is null')
+        if (file_path_safe === null) throw new Error('File path is null')
 
         const use_strict_whitespace = is_indentation_based_file(file_path_safe)
 
@@ -643,7 +643,7 @@ export const apply_git_patch = async (
           if (
             applied_content &&
             file_paths.length > 0 &&
-            state.file_path == file_paths[0]
+            state.file_path === file_paths[0]
           ) {
             state.proposed_content = applied_content
             continue

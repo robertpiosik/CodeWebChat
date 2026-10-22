@@ -9,7 +9,7 @@ export const remove = async (params: { name: string }): Promise<void> => {
     config.get<ConfigAgentConfigurationFormat[]>('agents', []) || []
 
   const index = current_cli_configurations.findIndex(
-    (c) => c.name == params.name
+    (c) => c.name === params.name
   )
 
   if (index < 0 || index >= current_cli_configurations.length) {
@@ -38,7 +38,7 @@ export const remove = async (params: { name: string }): Promise<void> => {
     delete_button
   )
 
-  if (result != delete_button) {
+  if (result !== delete_button) {
     return
   }
 

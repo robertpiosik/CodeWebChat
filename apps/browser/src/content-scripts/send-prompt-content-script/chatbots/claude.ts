@@ -18,7 +18,7 @@ export const claude: Chatbot = {
           input_element.innerText = ' '
           input_element.dispatchEvent(new Event('input', { bubbles: true }))
 
-          if (input_element.innerText == ' ') {
+          if (input_element.innerText === ' ') {
             resolve(null)
             return
           }

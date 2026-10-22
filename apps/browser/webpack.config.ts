@@ -7,7 +7,7 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import 'webpack-dev-server'
 
 const config = (_: any, argv: Record<string, any>): webpack.Configuration => {
-  const is_production = argv.mode == 'production'
+  const is_production = argv.mode === 'production'
 
   const plugins: webpack.WebpackPluginInstance[] = [
     new MiniCssExtractPlugin({

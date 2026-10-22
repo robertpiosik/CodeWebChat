@@ -73,11 +73,11 @@ export const prepare_files_from_original_states = async (params: {
       new_content: new_content_for_diff
     })
     const is_deleted =
-      state.file_state == 'deleted' ||
-      (state.file_state != 'new' &&
+      state.file_state === 'deleted' ||
+      (state.file_state !== 'new' &&
         !state.file_path_to_restore &&
         !file_exists &&
-        state.content != '')
+        state.content !== '')
 
     const previewable_file: PreviewableFile = {
       type: 'file',
@@ -86,7 +86,7 @@ export const prepare_files_from_original_states = async (params: {
       workspace_name: state.workspace_name,
       file_state: is_deleted
         ? 'deleted'
-        : state.file_state == 'new' || !!state.file_path_to_restore
+        : state.file_state === 'new' || !!state.file_path_to_restore
           ? 'new'
           : undefined,
       lines_added: diff_stats.lines_added,
@@ -107,7 +107,7 @@ export const prepare_files_from_original_states = async (params: {
       sanitized_path: sanitized_file_path,
       original_content: original_content_for_diff,
       original_uri,
-      file_exists: state.file_state != 'new'
+      file_exists: state.file_state !== 'new'
     })
 
     if (state.file_path_to_restore) {

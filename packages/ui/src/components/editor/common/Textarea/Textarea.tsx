@@ -53,7 +53,7 @@ export const Textarea = React.forwardRef<HTMLDivElement, Props>(
     const set_ref = React.useCallback(
       (node: HTMLDivElement | null) => {
         internal_ref.current = node
-        if (typeof ref == 'function') {
+        if (typeof ref === 'function') {
           ref(node)
         } else if (ref) {
           ref.current = node
@@ -101,7 +101,7 @@ export const Textarea = React.forwardRef<HTMLDivElement, Props>(
       if (
         (e.ctrlKey || e.metaKey) &&
         !e.shiftKey &&
-        e.key.toLowerCase() == 'z'
+        e.key.toLowerCase() === 'z'
       ) {
         e.preventDefault()
         if (undo_stack.length > 0) {
@@ -125,8 +125,8 @@ export const Textarea = React.forwardRef<HTMLDivElement, Props>(
       }
 
       if (
-        ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() == 'y') ||
-        ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() == 'z')
+        ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') ||
+        ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'z')
       ) {
         e.preventDefault()
         if (redo_stack.length > 0) {
@@ -150,8 +150,8 @@ export const Textarea = React.forwardRef<HTMLDivElement, Props>(
       }
 
       if (
-        (e.key == 'Escape' ||
-          (e.key == 'Enter' && (props.blur_on_enter ?? true))) &&
+        (e.key === 'Escape' ||
+          (e.key === 'Enter' && (props.blur_on_enter ?? true))) &&
         !e.shiftKey
       ) {
         e.preventDefault()

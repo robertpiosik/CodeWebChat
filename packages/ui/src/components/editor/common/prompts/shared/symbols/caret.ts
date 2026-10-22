@@ -1,6 +1,6 @@
 export const get_caret_position_from_div = (element: HTMLElement): number => {
   const selection = window.getSelection()
-  if (!selection || selection.rangeCount == 0) {
+  if (!selection || selection.rangeCount === 0) {
     return 0
   }
   const range = selection.getRangeAt(0)
@@ -25,7 +25,7 @@ export const set_caret_position_for_div = (
 
     const find = (node: Node) => {
       if (found) return
-      if (node.nodeType == Node.TEXT_NODE) {
+      if (node.nodeType === Node.TEXT_NODE) {
         const text_node = node as Text
         const next_char_count = char_count + text_node.length
         if (pos >= char_count && pos <= next_char_count) {
@@ -37,8 +37,8 @@ export const set_caret_position_for_div = (
         }
       } else {
         if (
-          node.nodeType == Node.ELEMENT_NODE &&
-          (node as HTMLElement).getAttribute('contenteditable') == 'false'
+          node.nodeType === Node.ELEMENT_NODE &&
+          (node as HTMLElement).getAttribute('contenteditable') === 'false'
         ) {
           const text_len = node.textContent?.length ?? 0
           const next_char_count = char_count + text_len

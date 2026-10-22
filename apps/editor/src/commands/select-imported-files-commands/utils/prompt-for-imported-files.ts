@@ -128,8 +128,8 @@ export const prompt_for_imported_files = async (params: {
           workspace_provider.get_workspace_root_for_file(file_path)!
         const relative_path = path.relative(workspace_root, file_path)
         const dir_name = path.dirname(relative_path)
-        const has_parent_folder = dir_name != '.'
-        let display_dir = dir_name == '.' ? '' : dir_name
+        const has_parent_folder = dir_name !== '.'
+        let display_dir = dir_name === '.' ? '' : dir_name
 
         if (workspace_provider.get_workspace_roots().length > 1) {
           const workspace_name =
@@ -180,7 +180,7 @@ export const prompt_for_imported_files = async (params: {
       vscode.Uri.parse(u)
     )
 
-    if (valid_immediate.length == 0 && valid_recursive.length == 0) {
+    if (valid_immediate.length === 0 && valid_recursive.length === 0) {
       vscode.window.showInformationMessage(
         t('common.info.no-items-found', { items: 'imports' })
       )
@@ -285,7 +285,7 @@ export const prompt_for_imported_files = async (params: {
           quick_pick.hide()
         } else if (button === search_button) {
           current_selected_items = [...quick_pick.selectedItems]
-          if (current_selected_items.length == 0) {
+          if (current_selected_items.length === 0) {
             vscode.window.showInformationMessage(
               t('common.info.select-files-to-search')
             )
@@ -338,15 +338,15 @@ export const prompt_for_imported_files = async (params: {
           is_showing_folder_quick_pick = false
 
           if (
-            result == 'added' ||
-            result == 'back' ||
-            result == 'no_folders' ||
-            result == 'no_workspace_root'
+            result === 'added' ||
+            result === 'back' ||
+            result === 'no_folders' ||
+            result === 'no_workspace_root'
           ) {
             const current_items = quick_pick.items
             let current_selected = quick_pick.selectedItems
 
-            if (result == 'added') {
+            if (result === 'added') {
               const selectred_files = workspace_provider.get_selected_files()
               current_selected = current_items.filter(
                 (item) =>
@@ -446,7 +446,7 @@ export const prompt_for_imported_files = async (params: {
       continue
     }
 
-    if (selected_items == 'search') {
+    if (selected_items === 'search') {
       const selected_uris = current_selected_items
         .filter((i) => i.uri)
         .map((i) => i.uri!.fsPath)
@@ -458,7 +458,7 @@ export const prompt_for_imported_files = async (params: {
         show_back_button: true
       })
 
-      if (search_result == 'back') {
+      if (search_result === 'back') {
         continue
       }
 

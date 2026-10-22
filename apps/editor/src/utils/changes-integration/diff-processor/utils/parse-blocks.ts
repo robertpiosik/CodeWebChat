@@ -16,7 +16,7 @@ export const parse_patch_blocks = (params: {
   const push_block = () => {
     while (
       search_chunks.length > 0 &&
-      search_chunks[search_chunks.length - 1] == '~nnn' &&
+      search_chunks[search_chunks.length - 1] === '~nnn' &&
       replace_chunks.length > 0 &&
       replace_chunks[replace_chunks.length - 1].search_index ===
         search_chunks.length - 1
@@ -25,7 +25,7 @@ export const parse_patch_blocks = (params: {
       replace_chunks.pop()
       if (
         after_search_chunks.length > 0 &&
-        after_search_chunks[after_search_chunks.length - 1] == '~nnn'
+        after_search_chunks[after_search_chunks.length - 1] === '~nnn'
       ) {
         after_search_chunks.pop()
       }

@@ -19,7 +19,7 @@ firefox_manifest.browser_action = firefox_manifest.action
 delete firefox_manifest.action
 
 firefox_manifest.permissions = firefox_manifest.permissions.filter(
-  (p: string) => p != 'alarms'
+  (p: string) => p !== 'alarms'
 )
 
 firefox_manifest.permissions.push('contextualIdentities')

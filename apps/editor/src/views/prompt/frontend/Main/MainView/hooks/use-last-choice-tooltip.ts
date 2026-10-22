@@ -15,13 +15,13 @@ export const use_last_choice_tooltip = (params: {
   cli_configurations?: CliConfiguration[]
 }): { name: string; details?: string } | undefined => {
   return useMemo(() => {
-    if (params.target == 'WEB') {
+    if (params.target === 'WEB') {
       if (params.selected_web_configuration_name) {
-        if (params.selected_web_configuration_name == 'Ungrouped') {
+        if (params.selected_web_configuration_name === 'Ungrouped') {
           return { name: 'Ungrouped' }
         } else {
           const web_configuration = params.web_configurations.find(
-            (p) => p.name == params.selected_web_configuration_name
+            (p) => p.name === params.selected_web_configuration_name
           )
           if (web_configuration) {
             const is_unnamed =
@@ -83,10 +83,10 @@ export const use_last_choice_tooltip = (params: {
           }
         }
       }
-    } else if (params.target == 'API') {
+    } else if (params.target === 'API') {
       if (params.selected_api_configuration_id !== undefined) {
         const configuration = params.api_configurations.find(
-          (c) => c.id == params.selected_api_configuration_id
+          (c) => c.id === params.selected_api_configuration_id
         )
         if (configuration) {
           const description_parts = [configuration.provider_name]
@@ -97,10 +97,10 @@ export const use_last_choice_tooltip = (params: {
           return { name: configuration.model, details: description }
         }
       }
-    } else if (params.target == 'CLI') {
+    } else if (params.target === 'CLI') {
       if (params.selected_cli_configuration_name && params.cli_configurations) {
         const configuration = params.cli_configurations.find(
-          (c) => c.name == params.selected_cli_configuration_name
+          (c) => c.name === params.selected_cli_configuration_name
         )
         if (configuration) {
           const is_unnamed = /^\(\d+\)$/.test(configuration.name.trim())

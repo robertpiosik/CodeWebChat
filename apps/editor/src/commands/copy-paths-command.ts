@@ -31,9 +31,9 @@ const format_paths = (files: string[], format: Format) => {
     return normalize_path(display_path)
   })
 
-  if (format == 'ascii-tree') {
+  if (format === 'ascii-tree') {
     return AsciiTree.generate(display_paths)
-  } else if (format == 'comma-separated') {
+  } else if (format === 'comma-separated') {
     return display_paths.map((display_path) => `\`${display_path}\``).join(', ')
   }
 
@@ -129,7 +129,7 @@ export const copy_paths_commands = (
     vscode.commands.registerCommand('codeWebChat.copyPaths', async () => {
       const selected_files = workspace_provider.get_selected_files()
 
-      if (selected_files.length == 0) {
+      if (selected_files.length === 0) {
         vscode.window.showWarningMessage(
           t('command.search-files-command.warning.no-files-selected')
         )
@@ -152,7 +152,7 @@ export const copy_paths_commands = (
         if (!open_editors_provider) return
         const selected_files = open_editors_provider.get_selected_files()
 
-        if (selected_files.length == 0) {
+        if (selected_files.length === 0) {
           vscode.window.showWarningMessage(
             t('command.search-files-command.warning.no-files-selected')
           )

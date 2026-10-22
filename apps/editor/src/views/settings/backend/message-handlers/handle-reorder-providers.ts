@@ -13,7 +13,7 @@ export const handle_reorder_providers = async (
 
   const reordered_providers = reordered_names
     .map((name) => {
-      const found = current_providers.find((p) => p.name == name)
+      const found = current_providers.find((p) => p.name === name)
       if (!found) {
         console.error(`Provider with name ${name} not found during reorder.`)
         return null
@@ -22,7 +22,7 @@ export const handle_reorder_providers = async (
     })
     .filter((p): p is Provider => p !== null)
 
-  if (reordered_providers.length == current_providers.length) {
+  if (reordered_providers.length === current_providers.length) {
     await providers_manager.save_providers(reordered_providers)
   }
 }

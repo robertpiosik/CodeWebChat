@@ -95,7 +95,7 @@ export namespace CommitMessageDetails {
 
     const existing = all_prompts[params.workspace_root].find((p) => {
       if (!is_prompt_empty_or_only_symbols({ prompt: simplified_prompt })) {
-        return p.prompt == simplified_prompt
+        return p.prompt === simplified_prompt
       }
       return (
         is_prompt_empty_or_only_symbols({ prompt: p.prompt }) &&
@@ -136,14 +136,14 @@ export namespace CommitMessageDetails {
     for (const root in all_prompts) {
       const initial_count = all_prompts[root].length
       all_prompts[root] = all_prompts[root].filter(
-        (p) => p.prompt != simplified_prompt
+        (p) => p.prompt !== simplified_prompt
       )
 
-      if (all_prompts[root].length != initial_count) {
+      if (all_prompts[root].length !== initial_count) {
         changed = true
       }
 
-      if (all_prompts[root].length == 0) {
+      if (all_prompts[root].length === 0) {
         delete all_prompts[root]
       }
     }
@@ -182,7 +182,7 @@ export namespace CommitMessageDetails {
             const rel_path = path.isAbsolute(f)
               ? normalize_path(path.relative(root, f))
               : normalize_path(f)
-            return rel_path != normalized_path
+            return rel_path !== normalized_path
           }
 
           const filtered_files = p.files.filter(filter_fn)
@@ -191,8 +191,8 @@ export namespace CommitMessageDetails {
           )
 
           if (
-            filtered_files.length != p.files.length ||
-            filtered_selected_files.length != (p.selected_files || []).length
+            filtered_files.length !== p.files.length ||
+            filtered_selected_files.length !== (p.selected_files || []).length
           ) {
             changed = true
             return {
@@ -209,7 +209,7 @@ export namespace CommitMessageDetails {
         changed = true
       }
 
-      if (all_prompts[root].length == 0) {
+      if (all_prompts[root].length === 0) {
         delete all_prompts[root]
       }
     }
@@ -258,8 +258,8 @@ export namespace CommitMessageDetails {
         )
 
         if (
-          filtered_files.length != p.files.length ||
-          filtered_selected_files.length != (p.selected_files || []).length
+          filtered_files.length !== p.files.length ||
+          filtered_selected_files.length !== (p.selected_files || []).length
         ) {
           changed = true
           return {
@@ -272,7 +272,7 @@ export namespace CommitMessageDetails {
       })
       .filter((p) => p.files.length > 0)
 
-    if (all_prompts[params.workspace_root].length == 0) {
+    if (all_prompts[params.workspace_root].length === 0) {
       delete all_prompts[params.workspace_root]
     }
 

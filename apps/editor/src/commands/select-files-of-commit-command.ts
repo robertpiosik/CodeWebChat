@@ -141,7 +141,7 @@ export const select_files_of_commit_command = (
             quick_pick.show()
           })
 
-          if (selected_commit == 'back' || !selected_commit) {
+          if (selected_commit === 'back' || !selected_commit) {
             return
           }
 
@@ -152,7 +152,7 @@ export const select_files_of_commit_command = (
             let is_ahead_of_branch = false
             let branch_name = ''
 
-            if (selected_commit.hash == 'ahead-of-branch') {
+            if (selected_commit.hash === 'ahead-of-branch') {
               let branches_output: string = ''
               try {
                 branches_output = execFileSync(
@@ -523,15 +523,15 @@ export const select_files_of_commit_command = (
                       is_showing_folder_quick_pick = false
 
                       if (
-                        result == 'added' ||
-                        result == 'back' ||
-                        result == 'no_folders' ||
-                        result == 'no_workspace_root'
+                        result === 'added' ||
+                        result === 'back' ||
+                        result === 'no_folders' ||
+                        result === 'no_workspace_root'
                       ) {
                         const current_items = quick_pick_files.items
                         let current_selected = quick_pick_files.selectedItems
 
-                        if (result == 'added') {
+                        if (result === 'added') {
                           const selected_files =
                             workspace_provider.get_selected_files()
                           current_selected = current_items.filter(

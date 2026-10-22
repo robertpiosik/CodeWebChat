@@ -87,7 +87,7 @@ export const openrouter: Chatbot = {
     const custom_system_instructions_button = Array.from(
       document.querySelectorAll('div[role="dialog"] button')
     ).find(
-      (button) => button.textContent?.trim() == 'Custom'
+      (button) => button.textContent?.trim() === 'Custom'
     ) as HTMLButtonElement
     if (!custom_system_instructions_button) {
       report_initialization_error({

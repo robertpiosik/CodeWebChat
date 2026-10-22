@@ -13,7 +13,7 @@ export const use_has_scrolled_past_target_button = (is_active: boolean) => {
 
       const m_height = target_ref.current?.offsetHeight || 0
 
-      if (m_height == 0) return
+      if (m_height === 0) return
 
       if (!has_scrolled_past_target_button) {
         normal_height.current = m_height

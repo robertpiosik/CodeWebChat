@@ -58,7 +58,7 @@ export const handle_delete_task = async (
     t('common.undo')
   )
 
-  if (selection == t('common.undo')) {
+  if (selection === t('common.undo')) {
     all_data = TasksUtils.load_all(prompt_view_provider.extension_context)
     const current_root_tasks = all_data[message.root] || []
 

@@ -48,7 +48,7 @@ export const history_command = (params: {
 
       if (
         !vscode.workspace.workspaceFolders ||
-        vscode.workspace.workspaceFolders.length == 0
+        vscode.workspace.workspaceFolders.length === 0
       ) {
         vscode.window.showErrorMessage(
           t('command.history-command.error.checkpoints-only-in-workspace')
@@ -80,7 +80,7 @@ export const history_command = (params: {
 
       if (
         !vscode.workspace.workspaceFolders ||
-        vscode.workspace.workspaceFolders.length == 0
+        vscode.workspace.workspaceFolders.length === 0
       ) {
         vscode.window.showErrorMessage(
           t('command.history-command.error.checkpoints-only-in-workspace')
@@ -124,7 +124,7 @@ export const history_command = (params: {
           }
 
           const visible_checkpoints = checkpoints.filter(
-            (c) => c.trigger != 'temporary'
+            (c) => c.trigger !== 'temporary'
           )
 
           if (visible_checkpoints.length > 0 || temp_checkpoint_is_valid) {
@@ -156,7 +156,7 @@ export const history_command = (params: {
                     ? t('command.history-command.unpin')
                     : t('command.history-command.pin')
                 },
-                ...(c.trigger == 'manual'
+                ...(c.trigger === 'manual'
                   ? [
                       {
                         iconPath: new vscode.ThemeIcon('edit'),
@@ -260,7 +260,7 @@ export const history_command = (params: {
           const selected = quick_pick.selectedItems[0]
           if (!selected) return
 
-          if (selected.id == 'add-new') {
+          if (selected.id === 'add-new') {
             quick_pick.hide()
             const checkpoint = await create_checkpoint({
               workspace_provider: params.workspace_provider,
@@ -272,7 +272,7 @@ export const history_command = (params: {
                 highlight_checkpoint: checkpoint
               })
             }
-          } else if (selected.id == 'revert-last') {
+          } else if (selected.id === 'revert-last') {
             quick_pick.hide()
             const temp_checkpoint =
               params.extension_context.workspaceState.get<Checkpoint>(
@@ -344,7 +344,9 @@ export const history_command = (params: {
               t('command.history-command.clear-all-button')
             )
 
-            if (confirmation == t('command.history-command.clear-all-button')) {
+            if (
+              confirmation === t('command.history-command.clear-all-button')
+            ) {
               active_delete_operation = null
               await clear_all_checkpoints(params.extension_context)
               vscode.window.showInformationMessage(
@@ -365,8 +367,8 @@ export const history_command = (params: {
           if (!item.checkpoint) return
 
           if (
-            e.button.tooltip == t('command.history-command.pin') ||
-            e.button.tooltip == t('command.history-command.unpin')
+            e.button.tooltip === t('command.history-command.pin') ||
+            e.button.tooltip === t('command.history-command.unpin')
           ) {
             await toggle_checkpoint_pin({
               extension_context: params.extension_context,
@@ -387,7 +389,7 @@ export const history_command = (params: {
           }
 
           if (
-            e.button.tooltip == t('command.history-command.edit-description')
+            e.button.tooltip === t('command.history-command.edit-description')
           ) {
             notification_count++
             const new_description = await vscode.window.showInputBox({
@@ -425,7 +427,7 @@ export const history_command = (params: {
             return
           }
 
-          if (e.button.tooltip == t('common.delete')) {
+          if (e.button.tooltip === t('common.delete')) {
             const was_restored = await delete_checkpoint_with_undo({
               extension_context: params.extension_context,
               checkpoint: item.checkpoint,

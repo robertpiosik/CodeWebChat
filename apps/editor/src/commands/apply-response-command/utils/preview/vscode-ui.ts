@@ -65,7 +65,7 @@ const scroll_to_first_changed_line = (params: {
   const active_editor = vscode.window.activeTextEditor
   if (
     active_editor &&
-    active_editor.document.uri.toString() == params.right_doc_uri.toString()
+    active_editor.document.uri.toString() === params.right_doc_uri.toString()
   ) {
     const line = Math.min(
       first_changed_line,
@@ -88,7 +88,7 @@ export const show_diff_with_actions = async (
 
   const title = path.basename(prepared_file.previewable_file.file_path)
 
-  if (prepared_file.previewable_file.file_state != 'deleted') {
+  if (prepared_file.previewable_file.file_state !== 'deleted') {
     await vscode.commands.executeCommand(
       'vscode.diff',
       left_doc_uri,

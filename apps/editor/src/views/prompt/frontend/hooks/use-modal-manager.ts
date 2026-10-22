@@ -27,23 +27,23 @@ export const use_modal_manager = () => {
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
-      if (message.command == 'SHOW_PROGRESS') {
+      if (message.command === 'SHOW_PROGRESS') {
         set_progress_state({
           title: message.title,
           subtitle: message.subtitle,
           progress: message.progress,
           cancellable: message.cancellable ?? false
         })
-      } else if (message.command == 'HIDE_PROGRESS') {
+      } else if (message.command === 'HIDE_PROGRESS') {
         set_progress_state(undefined)
-      } else if (message.command == 'SHOW_AUTO_CLOSING_MODAL') {
+      } else if (message.command === 'SHOW_AUTO_CLOSING_MODAL') {
         set_auto_closing_modal_data({
           title: message.title,
           non_dismissable: message.non_dismissable
         })
-      } else if (message.command == 'SHOW_PREVIEW_ONGOING_MODAL') {
+      } else if (message.command === 'SHOW_PREVIEW_ONGOING_MODAL') {
         set_is_preview_ongoing_modal_visible(true)
-      } else if (message.command == 'RESPONSE_PREVIEW_STARTED') {
+      } else if (message.command === 'RESPONSE_PREVIEW_STARTED') {
         set_progress_state(undefined)
       }
     }

@@ -27,7 +27,7 @@ export const shrink_jsx = (content: string): string => {
         if (!current_skipped && use_effect_start_depth === -1) {
           processed_line += char
         }
-        if (char == '*' && next_char == '/') {
+        if (char === '*' && next_char === '/') {
           is_in_block_comment = false
           if (!current_skipped && use_effect_start_depth === -1) {
             processed_line += next_char
@@ -40,7 +40,7 @@ export const shrink_jsx = (content: string): string => {
       }
 
       if (is_in_string) {
-        if (char == '\\') {
+        if (char === '\\') {
           if (
             jsx_tag_state !== 'attributes' &&
             !current_skipped &&
@@ -67,7 +67,7 @@ export const shrink_jsx = (content: string): string => {
         continue
       }
 
-      if (char == '"' || char === "'" || char == '`') {
+      if (char === '"' || char === "'" || char === '`') {
         is_in_string = char
         if (
           jsx_tag_state !== 'attributes' &&
@@ -81,14 +81,14 @@ export const shrink_jsx = (content: string): string => {
         continue
       }
 
-      if (char == '/' && next_char == '/') {
+      if (char === '/' && next_char === '/') {
         if (!current_skipped && use_effect_start_depth === -1) {
           processed_line += line.substring(i)
         }
         break
       }
 
-      if (char == '/' && next_char == '*') {
+      if (char === '/' && next_char === '*') {
         is_in_block_comment = true
         if (!current_skipped && use_effect_start_depth === -1) {
           processed_line += '/*'
@@ -178,7 +178,7 @@ export const shrink_jsx = (content: string): string => {
         global_paren_depth--
       }
 
-      if (char == '{') {
+      if (char === '{') {
         const is_keeper =
           /(^|\s)(class|interface|enum|namespace|type)(\s|$)/.test(
             last_code_buffer
@@ -205,7 +205,7 @@ export const shrink_jsx = (content: string): string => {
         last_code_buffer += '{'
         i++
         continue
-      } else if (char == '}') {
+      } else if (char === '}') {
         let parent_skipped =
           block_stack.length > 1
             ? block_stack[block_stack.length - 2].is_skipped
@@ -244,13 +244,13 @@ export const shrink_jsx = (content: string): string => {
         if (/(^|\W)return$/.test(last_code_buffer) && /\W/.test(char)) {
           block_stack[block_stack.length - 1].is_skipped = false
           const prefix =
-            processed_line.length == 0 ? line.match(/^\s*/)?.[0] || '' : ''
+            processed_line.length === 0 ? line.match(/^\s*/)?.[0] || '' : ''
           processed_line += prefix + 'return'
         }
       }
 
       if (
-        (block_stack.length == 0 ||
+        (block_stack.length === 0 ||
           !block_stack[block_stack.length - 1].is_skipped) &&
         use_effect_start_depth === -1
       ) {

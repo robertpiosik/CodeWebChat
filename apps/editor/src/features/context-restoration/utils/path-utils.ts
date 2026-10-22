@@ -119,7 +119,7 @@ export const condense_paths = (params: {
   const all_dirs_set = new Set<string>()
   for (const dir of dir_to_children.keys()) {
     let current_dir = dir
-    while (current_dir != '.' && current_dir != '/') {
+    while (current_dir !== '.' && current_dir !== '/') {
       all_dirs_set.add(current_dir)
       current_dir = path.dirname(current_dir)
     }
@@ -131,7 +131,7 @@ export const condense_paths = (params: {
   )
 
   for (const dir of directories) {
-    if (dir == '.') continue
+    if (dir === '.') continue
 
     if (
       are_all_files_selected({

@@ -33,7 +33,7 @@ export const process_conflict_markers = (content: string): string => {
           const parts: string[][] = []
           let currentPart: string[] = []
           for (const l of blockLines) {
-            if (l.trim() == '...') {
+            if (l.trim() === '...') {
               parts.push(currentPart)
               currentPart = []
             } else {

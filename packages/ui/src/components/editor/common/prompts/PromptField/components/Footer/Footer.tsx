@@ -80,7 +80,7 @@ export const Footer: React.FC<Props> = (props) => {
   }, [is_target_dropdown_open])
 
   const primary_dropdown_items =
-    (props.props.target == 'API' || props.props.target == 'CLI') &&
+    (props.props.target === 'API' || props.props.target === 'CLI') &&
     !props.props.value
       ? []
       : [
@@ -103,7 +103,7 @@ export const Footer: React.FC<Props> = (props) => {
             shortcut: props.is_mac ? '⌘↩' : 'Ctrl+Enter',
             on_click: props.handle_select_click
           },
-          ...(props.props.target == 'WEB'
+          ...(props.props.target === 'WEB'
             ? [
                 {
                   label: props.props.translations.copy_prompt,
@@ -136,7 +136,7 @@ export const Footer: React.FC<Props> = (props) => {
         ]
 
   const disconnected_dropdown_items =
-    (props.props.target == 'API' || props.props.target == 'CLI') &&
+    (props.props.target === 'API' || props.props.target === 'CLI') &&
     !props.props.value
       ? []
       : [
@@ -190,21 +190,21 @@ export const Footer: React.FC<Props> = (props) => {
         }
       }}
     >
-      {hovered_left_action == 'at' && (
+      {hovered_left_action === 'at' && (
         <Tooltip
           message={props.props.translations.reference_file}
           align="left"
           offset={9}
         />
       )}
-      {hovered_left_action == 'hash' && (
+      {hovered_left_action === 'hash' && (
         <Tooltip
           message={props.props.translations.insert_symbol}
           align="left"
           offset={28}
         />
       )}
-      {hovered_left_action == 'slash' && (
+      {hovered_left_action === 'slash' && (
         <Tooltip
           message={props.props.translations.use_template}
           align="left"
@@ -307,7 +307,7 @@ export const Footer: React.FC<Props> = (props) => {
               {props.is_alt_pressed ? (
                 <span className={styles['footer__right__edit-format__keycaps']}>
                   <KeycapWrapper
-                    char={props.props.edit_format != 'whole' ? 'W' : undefined}
+                    char={props.props.edit_format !== 'whole' ? 'W' : undefined}
                   >
                     <span
                       className={cn(
@@ -315,12 +315,12 @@ export const Footer: React.FC<Props> = (props) => {
                         {
                           [styles[
                             'footer__right__edit-format__keycap--active'
-                          ]]: props.props.edit_format == 'whole'
+                          ]]: props.props.edit_format === 'whole'
                         }
                       )}
                       style={{
                         visibility:
-                          props.props.edit_format != 'whole'
+                          props.props.edit_format !== 'whole'
                             ? 'hidden'
                             : undefined
                       }}
@@ -330,7 +330,7 @@ export const Footer: React.FC<Props> = (props) => {
                   </KeycapWrapper>
                   <KeycapWrapper
                     char={
-                      props.props.edit_format != 'search-replace'
+                      props.props.edit_format !== 'search-replace'
                         ? 'S'
                         : undefined
                     }
@@ -341,12 +341,12 @@ export const Footer: React.FC<Props> = (props) => {
                         {
                           [styles[
                             'footer__right__edit-format__keycap--active'
-                          ]]: props.props.edit_format == 'search-replace'
+                          ]]: props.props.edit_format === 'search-replace'
                         }
                       )}
                       style={{
                         visibility:
-                          props.props.edit_format != 'search-replace'
+                          props.props.edit_format !== 'search-replace'
                             ? 'hidden'
                             : undefined
                       }}
@@ -355,7 +355,7 @@ export const Footer: React.FC<Props> = (props) => {
                     </span>
                   </KeycapWrapper>
                   <KeycapWrapper
-                    char={props.props.edit_format != 'diff' ? 'D' : undefined}
+                    char={props.props.edit_format !== 'diff' ? 'D' : undefined}
                   >
                     <span
                       className={cn(
@@ -363,12 +363,12 @@ export const Footer: React.FC<Props> = (props) => {
                         {
                           [styles[
                             'footer__right__edit-format__keycap--active'
-                          ]]: props.props.edit_format == 'diff'
+                          ]]: props.props.edit_format === 'diff'
                         }
                       )}
                       style={{
                         visibility:
-                          props.props.edit_format != 'diff'
+                          props.props.edit_format !== 'diff'
                             ? 'hidden'
                             : undefined
                       }}
@@ -378,7 +378,7 @@ export const Footer: React.FC<Props> = (props) => {
                   </KeycapWrapper>
                   <KeycapWrapper
                     char={
-                      props.props.edit_format != 'truncated' ? 'T' : undefined
+                      props.props.edit_format !== 'truncated' ? 'T' : undefined
                     }
                   >
                     <span
@@ -387,12 +387,12 @@ export const Footer: React.FC<Props> = (props) => {
                         {
                           [styles[
                             'footer__right__edit-format__keycap--active'
-                          ]]: props.props.edit_format == 'truncated'
+                          ]]: props.props.edit_format === 'truncated'
                         }
                       )}
                       style={{
                         visibility:
-                          props.props.edit_format != 'truncated'
+                          props.props.edit_format !== 'truncated'
                             ? 'hidden'
                             : undefined
                       }}
@@ -445,9 +445,9 @@ export const Footer: React.FC<Props> = (props) => {
                           props.props.on_target_change!(t)
                           set_is_target_dropdown_open(false)
                         }}
-                        disabled={t == props.props.target}
+                        disabled={t === props.props.target}
                       >
-                        {props.is_alt_pressed && t != props.props.target ? (
+                        {props.is_alt_pressed && t !== props.props.target ? (
                           <KeycapWrapper char={(idx + 1).toString()}>
                             <span>{t}</span>
                           </KeycapWrapper>
@@ -474,9 +474,9 @@ export const Footer: React.FC<Props> = (props) => {
                 }}
               >
                 <span className={styles['footer__right__target-switch__label']}>
-                  {props.props.target == 'WEB'
+                  {props.props.target === 'WEB'
                     ? 'WEB'
-                    : props.props.target == 'API'
+                    : props.props.target === 'API'
                       ? 'API'
                       : 'CLI'}
                 </span>

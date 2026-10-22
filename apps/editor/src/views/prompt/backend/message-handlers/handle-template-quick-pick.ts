@@ -14,7 +14,7 @@ export const handle_template_quick_pick = async (
   prompt_view_provider: PromptViewProvider
 ): Promise<void> => {
   const prompt_type: WebPromptType | ApiPromptType | undefined =
-    prompt_view_provider.target == 'WEB'
+    prompt_view_provider.target === 'WEB'
       ? prompt_view_provider.web_prompt_type
       : prompt_view_provider.api_prompt_type
 
@@ -43,7 +43,7 @@ export const handle_template_quick_pick = async (
       t('common.info.no-items-created-yet', { items: 'templates' }),
       t('common.open-settings')
     )
-    if (selection == t('common.open-settings')) {
+    if (selection === t('common.open-settings')) {
       open_settings.general.prompt()
     }
     return
@@ -115,7 +115,7 @@ export const handle_template_quick_pick = async (
       if (
         'template' in selected_template &&
         selected_template.template &&
-        typeof selected_template.index == 'number'
+        typeof selected_template.index === 'number'
       ) {
         prompt_view_provider.extension_context.workspaceState.update(
           recents_key,

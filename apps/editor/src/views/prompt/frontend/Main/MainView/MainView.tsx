@@ -185,38 +185,38 @@ export const MainView: React.FC<Props> = (props) => {
   const [is_content_scrollable, set_is_content_scrollable] = useState(false)
 
   const is_edit_prompt_type =
-    (props.target == 'WEB'
+    (props.target === 'WEB'
       ? props.web_prompt_type
-      : props.target == 'API'
+      : props.target === 'API'
         ? props.api_prompt_type
-        : props.cli_prompt_type) == 'edit'
+        : props.cli_prompt_type) === 'edit'
 
   const show_edit_format_selector =
-    (props.target == 'WEB' && props.web_prompt_type == 'edit') ||
-    (props.target == 'API' && props.api_prompt_type == 'edit')
+    (props.target === 'WEB' && props.web_prompt_type === 'edit') ||
+    (props.target === 'API' && props.api_prompt_type === 'edit')
 
   const handle_input_change = (value: string) => {
     props.set_instructions(value)
   }
 
   const handle_submit = async () => {
-    if (props.target == 'WEB') {
+    if (props.target === 'WEB') {
       props.initialize_chats({})
-    } else if (props.target == 'API') {
+    } else if (props.target === 'API') {
       props.on_make_api_call(false)
-    } else if (props.target == 'CLI') {
+    } else if (props.target === 'CLI') {
       props.on_invoke_agentic_cli(false)
     }
   }
 
   const handle_submit_with_control = async () => {
-    if (props.target == 'WEB') {
+    if (props.target === 'WEB') {
       props.initialize_chats({
         show_quick_pick: true
       })
-    } else if (props.target == 'API') {
+    } else if (props.target === 'API') {
       props.on_make_api_call(true)
-    } else if (props.target == 'CLI') {
+    } else if (props.target === 'CLI') {
       props.on_invoke_agentic_cli(true)
     }
   }
@@ -332,9 +332,10 @@ export const MainView: React.FC<Props> = (props) => {
     })
 
   const is_api_warning_visible =
-    props.target == 'API' &&
+    props.target === 'API' &&
     !!props.setup_progress &&
-    (!props.setup_progress.has_provider || props.api_configurations.length == 0)
+    (!props.setup_progress.has_provider ||
+      props.api_configurations.length === 0)
 
   const header = (
     <Header
@@ -360,15 +361,15 @@ export const MainView: React.FC<Props> = (props) => {
       token_count={props.selected_files_token_count}
       files_count={props.selected_files.length}
       theme={
-        props.target == 'WEB'
-          ? props.web_prompt_type == 'edit'
+        props.target === 'WEB'
+          ? props.web_prompt_type === 'edit'
             ? 'blue'
             : 'purple'
-          : props.target == 'API'
-            ? props.api_prompt_type == 'edit'
+          : props.target === 'API'
+            ? props.api_prompt_type === 'edit'
               ? 'blue'
               : 'purple'
-            : props.cli_prompt_type == 'edit'
+            : props.cli_prompt_type === 'edit'
               ? 'blue'
               : 'purple'
       }
@@ -389,7 +390,7 @@ export const MainView: React.FC<Props> = (props) => {
     <>
       <UiSpacer height={is_landscape ? 6 : 2} />
       <BrowserConnectionStatus
-        is_visible={props.target == 'WEB'}
+        is_visible={props.target === 'WEB'}
         is_connected={props.is_connected}
         is_closed={browser_connection.is_closed}
         on_close={browser_connection.handle_close}
@@ -447,7 +448,7 @@ export const MainView: React.FC<Props> = (props) => {
       <div className={styles.prompt}>
         <UiPromptField
           is_copy_only={
-            props.target == 'WEB' &&
+            props.target === 'WEB' &&
             (!props.is_connected || !props.web_configurations.length)
           }
           value={props.instructions}
@@ -459,7 +460,7 @@ export const MainView: React.FC<Props> = (props) => {
           on_at_sign_click={props.on_at_sign_click}
           on_hash_sign_click={props.on_hash_sign_click}
           on_slash_click={props.on_slash_click}
-          is_web_target={props.target == 'WEB'}
+          is_web_target={props.target === 'WEB'}
           is_connected={props.is_connected}
           current_selection={props.current_selection}
           send_with_shift_enter={props.send_with_shift_enter}
@@ -485,15 +486,15 @@ export const MainView: React.FC<Props> = (props) => {
           target={props.target}
           on_target_change={(target) => props.on_target_change(target)}
           active_border_color={
-            props.target == 'WEB'
-              ? props.web_prompt_type == 'edit'
+            props.target === 'WEB'
+              ? props.web_prompt_type === 'edit'
                 ? 'blue'
                 : 'purple'
-              : props.target == 'API'
-                ? props.api_prompt_type == 'edit'
+              : props.target === 'API'
+                ? props.api_prompt_type === 'edit'
                   ? 'blue'
                   : 'purple'
-                : props.cli_prompt_type == 'edit'
+                : props.cli_prompt_type === 'edit'
                   ? 'blue'
                   : 'purple'
           }
@@ -573,7 +574,7 @@ export const MainView: React.FC<Props> = (props) => {
 
   const configurations_placeholder_above = (
     <>
-      {props.target == 'WEB' && (
+      {props.target === 'WEB' && (
         <>
           {!browser_connection.is_closed && (
             <>
@@ -608,7 +609,7 @@ export const MainView: React.FC<Props> = (props) => {
             )}
         </>
       )}
-      {props.target == 'API' && (
+      {props.target === 'API' && (
         <>
           {is_api_warning_visible && (
             <>
@@ -643,7 +644,7 @@ export const MainView: React.FC<Props> = (props) => {
             )}
         </>
       )}
-      {props.target == 'CLI' && (
+      {props.target === 'CLI' && (
         <>
           {props.response_history.length > 0 &&
             props.cli_prompt_type === 'edit' && (
@@ -665,7 +666,7 @@ export const MainView: React.FC<Props> = (props) => {
 
   const configurations_placeholder_below = (
     <>
-      {props.target == 'WEB' && !browser_connection.is_closed && (
+      {props.target === 'WEB' && !browser_connection.is_closed && (
         <div style={{ visibility: 'hidden', pointerEvents: 'none' }}>
           {prompt_attachments}
         </div>
@@ -675,7 +676,7 @@ export const MainView: React.FC<Props> = (props) => {
 
   const configurations_section = (
     <>
-      {props.target == 'WEB' && (
+      {props.target === 'WEB' && (
         <UiConfigurations
           configurations={web_configurations}
           empty_landscape_placeholder_above={configurations_placeholder_above}
@@ -692,7 +693,7 @@ export const MainView: React.FC<Props> = (props) => {
           on_reorder={(reordered) => {
             const new_web_configurations = reordered.map((c) => {
               return props.web_configurations.find(
-                (p, i) => (p.name ?? `unnamed-${i}`) == c.id
+                (p, i) => (p.name ?? `unnamed-${i}`) === c.id
               )!
             })
             props.on_web_configurations_reorder(new_web_configurations)
@@ -716,7 +717,7 @@ export const MainView: React.FC<Props> = (props) => {
         />
       )}
 
-      {props.target == 'API' && (
+      {props.target === 'API' && (
         <UiConfigurations
           configurations={api_configurations_ui}
           on_configuration_click={props.on_api_configuration_click}
@@ -742,7 +743,7 @@ export const MainView: React.FC<Props> = (props) => {
         />
       )}
 
-      {props.target == 'CLI' && (
+      {props.target === 'CLI' && (
         <UiConfigurations
           configurations={cli_configurations_ui}
           empty_landscape_placeholder_above={configurations_placeholder_above}
@@ -755,7 +756,7 @@ export const MainView: React.FC<Props> = (props) => {
           on_edit={(id) => props.on_edit_cli_configuration(id)}
           on_reorder={(reordered) => {
             const new_cli_configurations = reordered.map((c) => {
-              return props.cli_configurations.find((p) => p.name == c.id)!
+              return props.cli_configurations.find((p) => p.name === c.id)!
             })
             props.on_cli_configurations_reorder(new_cli_configurations)
           }}

@@ -23,13 +23,13 @@ export const handle_delete_provider = async (
     t('common.delete')
   )
 
-  if (confirmation != t('common.delete')) {
+  if (confirmation !== t('common.delete')) {
     return
   }
 
   const original_providers = await providers_manager.get_providers()
   const deleted_provider_index = original_providers.findIndex(
-    (p) => p.name == provider_name_to_delete
+    (p) => p.name === provider_name_to_delete
   )
 
   if (deleted_provider_index === -1) {
@@ -39,7 +39,7 @@ export const handle_delete_provider = async (
   const deleted_provider = original_providers[deleted_provider_index]
 
   const updated_providers = original_providers.filter(
-    (p) => p.name != provider_name_to_delete
+    (p) => p.name !== provider_name_to_delete
   )
   await providers_manager.save_providers(updated_providers)
 

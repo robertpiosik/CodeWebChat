@@ -15,7 +15,8 @@ export const delete_command = () => {
 
       try {
         const stats = await vscode.workspace.fs.stat(uri)
-        const item_type = stats.type == vscode.FileType.File ? 'file' : 'folder'
+        const item_type =
+          stats.type === vscode.FileType.File ? 'file' : 'folder'
 
         const delete_button = t('common.delete')
         const result = await vscode.window.showWarningMessage(
@@ -24,13 +25,13 @@ export const delete_command = () => {
           delete_button
         )
 
-        if (result != delete_button) {
+        if (result !== delete_button) {
           return
         }
 
         const open_documents = vscode.workspace.textDocuments
         const document_to_close = open_documents.find(
-          (doc) => doc.uri.fsPath == path
+          (doc) => doc.uri.fsPath === path
         )
 
         if (document_to_close) {

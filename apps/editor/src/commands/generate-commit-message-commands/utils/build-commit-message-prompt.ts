@@ -27,7 +27,7 @@ export const build_commit_message_prompt = async (
     config.inspect<string>('commitMessageInstructions')?.defaultValue ||
     ''
 
-  const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
+  const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() !== '')
 
   let changes_content = ''
   let context_content = ''
@@ -51,9 +51,9 @@ export const build_commit_message_prompt = async (
     let is_deleted = false
     const is_binary = lines.some((l) => l.startsWith('Binary files '))
 
-    if (new_path && new_path != '/dev/null') {
+    if (new_path && new_path !== '/dev/null') {
       file_path = new_path
-    } else if (old_path && old_path != '/dev/null') {
+    } else if (old_path && old_path !== '/dev/null') {
       file_path = old_path
       is_deleted = true
       // Shorten diff of a deleted file
@@ -86,7 +86,7 @@ export const build_commit_message_prompt = async (
       }
 
       let old_path_attr: string | undefined
-      if (status == 'renamed') {
+      if (status === 'renamed') {
         if (rename_from_line) {
           old_path_attr = rename_from_line
             .substring('rename from '.length)
@@ -110,22 +110,22 @@ export const build_commit_message_prompt = async (
       }
 
       if (is_binary) {
-        if (status == 'created')
+        if (status === 'created')
           final_diff_content = DIFF_PLACEHOLDERS.BINARY_FILE_CREATED
-        else if (status == 'deleted')
+        else if (status === 'deleted')
           final_diff_content = DIFF_PLACEHOLDERS.BINARY_FILE_DELETED
         else final_diff_content = DIFF_PLACEHOLDERS.BINARY_FILE_MODIFIED
       } else if (is_ignored) {
-        if (status == 'created')
+        if (status === 'created')
           final_diff_content = DIFF_PLACEHOLDERS.FILE_CREATED
-        else if (status == 'deleted')
+        else if (status === 'deleted')
           final_diff_content = DIFF_PLACEHOLDERS.FILE_DELETED
-        else if (status == 'renamed')
+        else if (status === 'renamed')
           final_diff_content = DIFF_PLACEHOLDERS.FILE_RENAMED
         else final_diff_content = DIFF_PLACEHOLDERS.FILE_MODIFIED
       } else {
         const hunk_start_index = final_diff_content.indexOf('\n@@ ')
-        if (hunk_start_index != -1) {
+        if (hunk_start_index !== -1) {
           final_diff_content = final_diff_content.substring(
             hunk_start_index + 1
           )

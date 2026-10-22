@@ -51,7 +51,7 @@ export const intelligent_file_search_format_for_prompt_view = (
   metadata?: string,
   folder_path?: string
 ) => {
-  const prefix = folder_path && folder_path != '.' ? `${folder_path}/` : ''
+  const prefix = folder_path && folder_path !== '.' ? `${folder_path}/` : ''
   return `Your response must begin with "**Intelligent file search results${
     metadata || ''
   }:**", then a bulleted list of file paths, followed by a brief explanation. Example:

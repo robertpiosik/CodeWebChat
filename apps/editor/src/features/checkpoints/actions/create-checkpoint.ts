@@ -81,7 +81,7 @@ export const create_checkpoint = async (params: {
     )
 
     if (
-      trigger != 'manual' &&
+      trigger !== 'manual' &&
       folder_git_statuses.some((has_git) => !has_git)
     ) {
       return undefined
@@ -212,7 +212,7 @@ export const create_checkpoint = async (params: {
         completed_tasks: [...params.prompt_view_provider.completed_tasks]
       }
 
-      if (trigger == 'manual' && !response_preview_promise_resolve) {
+      if (trigger === 'manual' && !response_preview_promise_resolve) {
         checkpoint_object.response_history = [
           ...params.prompt_view_provider.response_history
         ]

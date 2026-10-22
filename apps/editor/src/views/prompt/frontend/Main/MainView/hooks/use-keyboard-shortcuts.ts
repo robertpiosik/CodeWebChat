@@ -27,12 +27,12 @@ export const use_keyboard_shortcuts = (params: {
 
   useEffect(() => {
     const handle_key_down = (event: KeyboardEvent) => {
-      if (event.code == 'AltLeft') {
+      if (event.code === 'AltLeft') {
         left_alt_pressed_ref.current = true
       }
 
       if (
-        event.code == 'AltLeft' &&
+        event.code === 'AltLeft' &&
         !event.shiftKey &&
         !event.ctrlKey &&
         !event.metaKey
@@ -51,7 +51,7 @@ export const use_keyboard_shortcuts = (params: {
       if (params.is_disabled) return
 
       if (
-        event.key == 'Escape' &&
+        event.key === 'Escape' &&
         !event.metaKey &&
         !event.ctrlKey &&
         !event.altKey &&
@@ -62,13 +62,13 @@ export const use_keyboard_shortcuts = (params: {
     }
 
     const handle_key_up = (event: KeyboardEvent) => {
-      if (event.code == 'AltLeft') {
+      if (event.code === 'AltLeft') {
         left_alt_pressed_ref.current = false
       }
 
       if (!event.altKey) {
         alt_interrupted_ref.current = false
-      } else if (event.code != 'AltLeft') {
+      } else if (event.code !== 'AltLeft') {
         alt_interrupted_ref.current = true
       }
       update_alt_pressed(
@@ -90,7 +90,7 @@ export const use_keyboard_shortcuts = (params: {
     const handle_mouse_up = (event: MouseEvent) => {
       if (params.is_disabled) return
 
-      if (event.button == 3) {
+      if (event.button === 3) {
         params.on_show_home()
       }
     }
@@ -122,12 +122,12 @@ export const use_keyboard_shortcuts = (params: {
         return
       }
 
-      if (event.code == 'KeyE') {
+      if (event.code === 'KeyE') {
         event.preventDefault()
 
-        if (params.target == 'API') {
+        if (params.target === 'API') {
           params.on_api_prompt_type_change('edit')
-        } else if (params.target == 'CLI') {
+        } else if (params.target === 'CLI') {
           params.on_cli_prompt_type_change('edit')
         } else {
           params.on_web_prompt_type_change('edit')
@@ -135,19 +135,19 @@ export const use_keyboard_shortcuts = (params: {
         return
       }
 
-      if (event.code == 'KeyA') {
-        if (params.target == 'WEB') {
+      if (event.code === 'KeyA') {
+        if (params.target === 'WEB') {
           event.preventDefault()
           params.on_web_prompt_type_change('ask')
           return
-        } else if (params.target == 'CLI') {
+        } else if (params.target === 'CLI') {
           event.preventDefault()
           params.on_cli_prompt_type_change('ask')
           return
         }
       }
 
-      if (event.code == 'KeyF') {
+      if (event.code === 'KeyF') {
         event.preventDefault()
         params.on_agentic_search?.()
         return

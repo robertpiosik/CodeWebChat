@@ -45,7 +45,7 @@ export const Configurations = () => {
 
   const handle_set_default = (id: string) => {
     set_configurations(
-      configurations.map((c) => ({ ...c, is_default: c.id == id }))
+      configurations.map((c) => ({ ...c, is_default: c.id === id }))
     )
   }
 

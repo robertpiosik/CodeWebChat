@@ -26,25 +26,25 @@ export const use_preview_manager = (vscode: any) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
-      if (message.command == 'RESPONSE_PREVIEW_STARTED') {
+      if (message.command === 'RESPONSE_PREVIEW_STARTED') {
         set_items_in_preview(message.items)
         set_raw_instructions(message.raw_instructions)
         set_preview_item_created_at(message.created_at)
         set_recent_api_configuration(message.recent_api_configuration)
-      } else if (message.command == 'UPDATE_FILE_IN_PREVIEW') {
+      } else if (message.command === 'UPDATE_FILE_IN_PREVIEW') {
         set_items_in_preview((current_items) => {
           const items = current_items ?? []
           const existing_file_index = items.findIndex(
             (f) =>
-              f.type == 'file' &&
-              f.file_path == message.file.file_path &&
-              f.workspace_name == message.file.workspace_name
+              f.type === 'file' &&
+              f.file_path === message.file.file_path &&
+              f.workspace_name === message.file.workspace_name
           )
 
-          if (existing_file_index != -1) {
+          if (existing_file_index !== -1) {
             const new_items = [...items]
             const existing_item = items[existing_file_index]
-            if (existing_item.type == 'file') {
+            if (existing_item.type === 'file') {
               new_items[existing_file_index] = {
                 ...message.file,
                 is_checked: existing_item.is_checked,
@@ -59,7 +59,7 @@ export const use_preview_manager = (vscode: any) => {
             return [...items, { ...message.file, is_checked: true }]
           }
         })
-      } else if (message.command == 'REMOVE_FILE_FROM_PREVIEW') {
+      } else if (message.command === 'REMOVE_FILE_FROM_PREVIEW') {
         set_items_in_preview((current_items) => {
           if (!current_items) return undefined
           return current_items.filter(
@@ -71,21 +71,21 @@ export const use_preview_manager = (vscode: any) => {
               )
           )
         })
-      } else if (message.command == 'UPDATE_FILE_PROGRESS') {
+      } else if (message.command === 'UPDATE_FILE_PROGRESS') {
         set_items_in_preview((current_items) => {
           if (!current_items) return undefined
           const items = current_items ?? []
           const existing_file_index = items.findIndex(
             (f) =>
-              f.type == 'file' &&
-              f.file_path == message.file_path &&
-              f.workspace_name == message.workspace_name
+              f.type === 'file' &&
+              f.file_path === message.file_path &&
+              f.workspace_name === message.workspace_name
           )
 
-          if (existing_file_index != -1) {
+          if (existing_file_index !== -1) {
             const new_items = [...items]
             const existing_item = items[existing_file_index]
-            if (existing_item.type == 'file') {
+            if (existing_item.type === 'file') {
               new_items[existing_file_index] = {
                 ...existing_item,
                 is_applying: message.is_applying,
@@ -93,7 +93,7 @@ export const use_preview_manager = (vscode: any) => {
                 apply_progress: message.apply_progress,
                 apply_tokens_per_second: message.apply_tokens_per_second,
                 applied_with_patch_repair:
-                  message.apply_status == 'done'
+                  message.apply_status === 'done'
                     ? true
                     : existing_item.applied_with_patch_repair
               }
@@ -102,7 +102,7 @@ export const use_preview_manager = (vscode: any) => {
           }
           return items
         })
-      } else if (message.command == 'RESPONSE_PREVIEW_FINISHED') {
+      } else if (message.command === 'RESPONSE_PREVIEW_FINISHED') {
         set_items_in_preview(undefined)
         set_raw_instructions(undefined)
         set_preview_item_created_at(undefined)

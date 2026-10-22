@@ -30,7 +30,7 @@ export const handle_undo = async (
     string | undefined
   >(LAST_APPLIED_RAW_INSTRUCTIONS_STATE_KEY)
 
-  if (!original_states || original_states.length == 0) {
+  if (!original_states || original_states.length === 0) {
     vscode.window.showInformationMessage(
       t('views.prompt.handlers.handle-undo.no-recent-changes-to-undo')
     )

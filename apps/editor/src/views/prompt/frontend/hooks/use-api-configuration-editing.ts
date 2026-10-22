@@ -44,13 +44,13 @@ export const use_api_configuration_editing = (vscode: any) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
-      if (message.command == 'API_CONFIGURATION_UPDATED') {
+      if (message.command === 'API_CONFIGURATION_UPDATED') {
         set_updating_api_configuration(undefined)
         set_updated_api_configuration(undefined)
         set_is_new_api_configuration(false)
         set_api_configuration_insertion_index(undefined)
         set_api_configuration_api_prompt_type(undefined)
-      } else if (message.command == 'START_API_CONFIGURATION_CREATION') {
+      } else if (message.command === 'START_API_CONFIGURATION_CREATION') {
         set_updating_api_configuration(message.api_configuration)
         set_updated_api_configuration(message.api_configuration)
         set_is_new_api_configuration(true)

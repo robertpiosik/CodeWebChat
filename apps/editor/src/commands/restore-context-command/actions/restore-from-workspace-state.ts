@@ -207,7 +207,7 @@ export const restore_from_workspace_state = async (params: {
               quick_pick.items =
                 await create_quick_pick_items(internal_contexts)
               const active_item = quick_pick.items.find(
-                (i) => i.label == name_to_highlight
+                (i) => i.label === name_to_highlight
               )
               if (active_item) quick_pick.activeItems = [active_item]
               quick_pick.show()
@@ -256,7 +256,7 @@ export const restore_from_workspace_state = async (params: {
               active_dialog_count--
 
               if (active_deletion_timestamp !== current_timestamp) {
-                if (choice == 'Undo')
+                if (choice === 'Undo')
                   vscode.window.showInformationMessage(
                     t('common.context.undo.failed')
                   )
@@ -264,7 +264,7 @@ export const restore_from_workspace_state = async (params: {
                 return
               }
 
-              if (choice == 'Undo') {
+              if (choice === 'Undo') {
                 for (const [root, saved] of snapshot.entries()) {
                   const root_contexts = load_contexts_for_workspace({
                     extension_context: params.extension_context,
@@ -289,7 +289,7 @@ export const restore_from_workspace_state = async (params: {
                   await create_quick_pick_items(internal_contexts)
               }
 
-              if (internal_contexts.length == 0) {
+              if (internal_contexts.length === 0) {
                 await vscode.window.showInformationMessage(
                   t('command.restore-context-command.delete.empty-state')
                 )
@@ -307,10 +307,10 @@ export const restore_from_workspace_state = async (params: {
       quick_pick.show()
       const selected = await quick_pick_promise
       if (!selected) return
-      if (selected == 'back') return 'back'
+      if (selected === 'back') return 'back'
 
       const context_to_apply = internal_contexts.find(
-        (c) => c.name == selected.label
+        (c) => c.name === selected.label
       )
       if (!context_to_apply) return
 

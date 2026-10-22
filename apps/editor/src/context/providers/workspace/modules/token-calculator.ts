@@ -30,7 +30,7 @@ export class TokenCalculator implements vscode.Disposable {
       this._directory_file_counts.delete(dir_path)
       this._directory_selected_token_counts.delete(dir_path)
       const next_dir_path = path.dirname(dir_path)
-      if (next_dir_path == dir_path) break
+      if (next_dir_path === dir_path) break
       dir_path = next_dir_path
     }
   }
@@ -248,7 +248,7 @@ export class TokenCalculator implements vscode.Disposable {
     try {
       const workspace_root =
         this._provider.get_workspace_root_for_file(dir_path)
-      if (!workspace_root || workspace_root == '') {
+      if (!workspace_root || workspace_root === '') {
         Logger.warn({
           function_name: 'calculate_directory_selected_tokens',
           message: `No workspace root found for directory ${dir_path}`
@@ -331,7 +331,7 @@ export class TokenCalculator implements vscode.Disposable {
       try {
         if (
           options?.exclude_file_path &&
-          file_path == options.exclude_file_path
+          file_path === options.exclude_file_path
         ) {
           continue
         }

@@ -41,7 +41,7 @@ export const create_perform_paste =
     if (
       !refs.is_shift_pressed_ref.current &&
       props.current_selection &&
-      text == props.current_selection.text &&
+      text === props.current_selection.text &&
       text.length > 1 &&
       props.currently_open_file_path &&
       is_file_in_context
@@ -78,7 +78,7 @@ export const create_handle_paste =
           if (event.target?.result) {
             const base64 = event.target.result.toString()
             const commaIndex = base64.indexOf(',')
-            if (commaIndex != -1) {
+            if (commaIndex !== -1) {
               const rawBase64 = base64.substring(commaIndex + 1)
               props.on_paste_image(rawBase64)
             }
@@ -105,7 +105,7 @@ export const create_handle_paste =
 
     const is_fragment_paste =
       props.current_selection &&
-      text == props.current_selection.text &&
+      text === props.current_selection.text &&
       text.length > 1 &&
       props.currently_open_file_path &&
       is_file_in_context
@@ -119,7 +119,7 @@ export const create_handle_paste =
 
     const trimmed_text = text.trim()
     const is_single_character_or_number =
-      trimmed_text.length == 1 || /^\d+$/.test(trimmed_text)
+      trimmed_text.length === 1 || /^\d+$/.test(trimmed_text)
 
     if (
       !refs.is_shift_pressed_ref.current &&

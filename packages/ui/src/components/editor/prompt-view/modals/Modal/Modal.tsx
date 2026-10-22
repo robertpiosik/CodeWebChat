@@ -13,7 +13,7 @@ type Props = {
 
 export const Modal: React.FC<Props> = (props) => {
   const handle_background_click = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target == e.currentTarget) {
+    if (e.target === e.currentTarget) {
       props.on_background_click?.()
     }
   }
