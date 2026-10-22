@@ -32,71 +32,161 @@ export const build_commit_message_prompt = async (
   let changes_content = ''
   let context_content = ''
 
-  for (const file_diff_content of file_diffs) {
-    const full_file_diff = 'diff --git ' + file_diff_content
-    const lines = full_file_diff.split('\n')
-    const old_path_line = lines.find((l) => l.startsWith('--- a/'))
-    const new_path_line = lines.find((l) => l.startsWith('+++ b/'))
-    const rename_from_line = lines.find((l) => l.startsWith('rename from '))
+  const diff_results = await Promise.all(
+    file_diffs.map(async (file_diff_content) => {
+      let changes_content_part = ''
+      let context_content_part = ''
 
-    const old_path = old_path_line
-      ? old_path_line.substring('--- a/'.length)
-      : undefined
-    const new_path = new_path_line
-      ? new_path_line.substring('+++ b/'.length)
-      : undefined
+      const full_file_diff = 'diff --git ' + file_diff_content
+      const lines = full_file_diff.split('\n')
+      const old_path_line = lines.find((l) => l.startsWith('--- a/'))
+      const new_path_line = lines.find((l) => l.startsWith('+++ b/'))
+      const rename_from_line = lines.find((l) => l.startsWith('rename from '))
 
-    let final_diff_content = full_file_diff
-    let file_path: string | undefined
-    let is_deleted = false
-    const is_binary = lines.some((l) => l.startsWith('Binary files '))
+      const old_path = old_path_line
+        ? old_path_line.substring('--- a/'.length)
+        : undefined
+      const new_path = new_path_line
+        ? new_path_line.substring('+++ b/'.length)
+        : undefined
 
-    if (new_path && new_path !== '/dev/null') {
-      file_path = new_path
-    } else if (old_path && old_path !== '/dev/null') {
-      file_path = old_path
-      is_deleted = true
-      // Shorten diff of a deleted file
-      const split_diff = full_file_diff.split('+++ /dev/null')
-      final_diff_content = split_diff[0] + '+++ /dev/null'
-    } else {
-      // Fallback: try to identify file from diff header (e.g. binary files)
-      // diff --git a/path b/path
-      const diff_header = lines[0]
-      const match = diff_header.match(/^diff --git a\/(.*) b\/(.*)$/)
-      if (match) {
-        file_path = match[2]
-      }
-    }
+      let final_diff_content = full_file_diff
+      let file_path: string | undefined
+      let is_deleted = false
+      const is_binary = lines.some((l) => l.startsWith('Binary files '))
 
-    if (file_path) {
-      let status: 'created' | 'deleted' | 'renamed' | 'updated' = 'updated'
-
-      if (is_deleted) {
-        status = 'deleted'
-      } else if (!old_path && new_path) {
-        status = 'created'
-      } else if (rename_from_line) {
-        status = 'renamed'
-      } else if (lines.some((l) => l.startsWith('new file mode'))) {
-        status = 'created'
-      } else if (lines.some((l) => l.startsWith('deleted file mode'))) {
-        status = 'deleted'
+      if (new_path && new_path !== '/dev/null') {
+        file_path = new_path
+      } else if (old_path && old_path !== '/dev/null') {
+        file_path = old_path
         is_deleted = true
-      }
-
-      let old_path_attr: string | undefined
-      if (status === 'renamed') {
-        if (rename_from_line) {
-          old_path_attr = rename_from_line
-            .substring('rename from '.length)
-            .trim()
+        const split_diff = full_file_diff.split('+++ /dev/null')
+        final_diff_content = split_diff[0] + '+++ /dev/null'
+      } else {
+        const diff_header = lines[0]
+        const match = diff_header.match(/^diff --git a\/(.*) b\/(.*)$/)
+        if (match) {
+          file_path = match[2]
         }
       }
 
-      let is_ignored = false
+      if (file_path) {
+        let status: 'created' | 'deleted' | 'renamed' | 'updated' = 'updated'
 
-      if (file_path && workspace_provider) {
+        if (is_deleted) {
+          status = 'deleted'
+        } else if (!old_path && new_path) {
+          status = 'created'
+        } else if (rename_from_line) {
+          status = 'renamed'
+        } else if (lines.some((l) => l.startsWith('new file mode'))) {
+          status = 'created'
+        } else if (lines.some((l) => l.startsWith('deleted file mode'))) {
+          status = 'deleted'
+          is_deleted = true
+        }
+
+        let old_path_attr: string | undefined
+        if (status === 'renamed') {
+          if (rename_from_line) {
+            old_path_attr = rename_from_line
+              .substring('rename from '.length)
+              .trim()
+          }
+        }
+
+        let is_ignored = false
+
+        if (file_path && workspace_provider) {
+          const absolute_path = vscode.Uri.joinPath(
+            repository.rootUri,
+            file_path
+          ).fsPath
+          if (
+            workspace_provider.is_ignored_by_patterns(absolute_path) ||
+            workspace_provider.is_excluded(file_path)
+          ) {
+            is_ignored = true
+          }
+        }
+
+        if (is_binary) {
+          if (status === 'created')
+            final_diff_content = DIFF_PLACEHOLDERS.BINARY_FILE_CREATED
+          else if (status === 'deleted')
+            final_diff_content = DIFF_PLACEHOLDERS.BINARY_FILE_DELETED
+          else final_diff_content = DIFF_PLACEHOLDERS.BINARY_FILE_MODIFIED
+        } else if (is_ignored) {
+          if (status === 'created')
+            final_diff_content = DIFF_PLACEHOLDERS.FILE_CREATED
+          else if (status === 'deleted')
+            final_diff_content = DIFF_PLACEHOLDERS.FILE_DELETED
+          else if (status === 'renamed')
+            final_diff_content = DIFF_PLACEHOLDERS.FILE_RENAMED
+          else final_diff_content = DIFF_PLACEHOLDERS.FILE_MODIFIED
+        } else {
+          const hunk_start_index = final_diff_content.indexOf('\n@@ ')
+          if (hunk_start_index !== -1) {
+            final_diff_content = final_diff_content.substring(
+              hunk_start_index + 1
+            )
+          } else if (!final_diff_content.startsWith('@@ ')) {
+            final_diff_content = ''
+          }
+        }
+
+        const should_include_full_content = !is_ignored
+
+        if (
+          !is_deleted &&
+          file_path &&
+          !is_binary &&
+          should_include_full_content
+        ) {
+          try {
+            let full_content = ''
+            try {
+              full_content = await repository.show('', file_path)
+            } catch (e) {
+              const uri = vscode.Uri.joinPath(repository.rootUri, file_path)
+              const content = await vscode.workspace.fs.readFile(uri)
+              if (!content.includes(0)) {
+                full_content = Buffer.from(content).toString('utf8')
+              }
+            }
+            if (full_content && !full_content.includes('\0')) {
+              const full_content_tokens = Math.ceil(full_content.length / 4)
+              if (full_content_tokens <= MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE) {
+                context_content_part = PromptBuilder.build_file_context({
+                  filepath: file_path,
+                  content: full_content,
+                  is_binary: false
+                })
+              }
+            }
+          } catch (err) {}
+        }
+
+        changes_content_part = PromptBuilder.build_diff_file_context({
+          status,
+          filepath: file_path,
+          old_filepath: old_path_attr,
+          diff_content: final_diff_content
+        })
+      }
+
+      return { changes_content_part, context_content_part }
+    })
+  )
+
+  for (const res of diff_results) {
+    if (res.context_content_part) context_content += res.context_content_part
+    if (res.changes_content_part) changes_content += res.changes_content_part
+  }
+
+  const context_results = await Promise.all(
+    context_files.map(async (file_path) => {
+      if (workspace_provider) {
         const absolute_path = vscode.Uri.joinPath(
           repository.rootUri,
           file_path
@@ -105,105 +195,32 @@ export const build_commit_message_prompt = async (
           workspace_provider.is_ignored_by_patterns(absolute_path) ||
           workspace_provider.is_excluded(file_path)
         ) {
-          is_ignored = true
+          return ''
         }
       }
 
-      if (is_binary) {
-        if (status === 'created')
-          final_diff_content = DIFF_PLACEHOLDERS.BINARY_FILE_CREATED
-        else if (status === 'deleted')
-          final_diff_content = DIFF_PLACEHOLDERS.BINARY_FILE_DELETED
-        else final_diff_content = DIFF_PLACEHOLDERS.BINARY_FILE_MODIFIED
-      } else if (is_ignored) {
-        if (status === 'created')
-          final_diff_content = DIFF_PLACEHOLDERS.FILE_CREATED
-        else if (status === 'deleted')
-          final_diff_content = DIFF_PLACEHOLDERS.FILE_DELETED
-        else if (status === 'renamed')
-          final_diff_content = DIFF_PLACEHOLDERS.FILE_RENAMED
-        else final_diff_content = DIFF_PLACEHOLDERS.FILE_MODIFIED
-      } else {
-        const hunk_start_index = final_diff_content.indexOf('\n@@ ')
-        if (hunk_start_index !== -1) {
-          final_diff_content = final_diff_content.substring(
-            hunk_start_index + 1
-          )
-        } else if (!final_diff_content.startsWith('@@ ')) {
-          final_diff_content = ''
-        }
-      }
-
-      const should_include_full_content = !is_ignored
-
-      if (
-        !is_deleted &&
-        file_path &&
-        !is_binary &&
-        should_include_full_content
-      ) {
-        try {
-          let full_content = ''
-          try {
-            full_content = await repository.show('', file_path)
-          } catch (e) {
-            const uri = vscode.Uri.joinPath(repository.rootUri, file_path)
-            const content = await vscode.workspace.fs.readFile(uri)
-            if (!content.includes(0)) {
-              full_content = Buffer.from(content).toString('utf8')
-            }
+      try {
+        const uri = vscode.Uri.joinPath(repository.rootUri, file_path)
+        const content_uint8 = await vscode.workspace.fs.readFile(uri)
+        if (!content_uint8.includes(0)) {
+          const full_content = Buffer.from(content_uint8).toString('utf8')
+          const full_content_tokens = Math.ceil(full_content.length / 4)
+          if (full_content_tokens <= MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE) {
+            return PromptBuilder.build_file_context({
+              filepath: file_path,
+              content: full_content,
+              is_binary: false
+            })
           }
-          if (full_content && !full_content.includes('\0')) {
-            const full_content_tokens = Math.ceil(full_content.length / 4)
-            if (full_content_tokens <= MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE) {
-              context_content += PromptBuilder.build_file_context({
-                filepath: file_path,
-                content: full_content,
-                is_binary: false
-              })
-            }
-          }
-        } catch (err) {}
-      }
-
-      changes_content += PromptBuilder.build_diff_file_context({
-        status,
-        filepath: file_path,
-        old_filepath: old_path_attr,
-        diff_content: final_diff_content
-      })
-    }
-  }
-
-  for (const file_path of context_files) {
-    if (workspace_provider) {
-      const absolute_path = vscode.Uri.joinPath(
-        repository.rootUri,
-        file_path
-      ).fsPath
-      if (
-        workspace_provider.is_ignored_by_patterns(absolute_path) ||
-        workspace_provider.is_excluded(file_path)
-      ) {
-        continue
-      }
-    }
-
-    try {
-      const uri = vscode.Uri.joinPath(repository.rootUri, file_path)
-      const content_uint8 = await vscode.workspace.fs.readFile(uri)
-      if (!content_uint8.includes(0)) {
-        const full_content = Buffer.from(content_uint8).toString('utf8')
-        const full_content_tokens = Math.ceil(full_content.length / 4)
-        if (full_content_tokens <= MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE) {
-          context_content += PromptBuilder.build_file_context({
-            filepath: file_path,
-            content: full_content,
-            is_binary: false
-          })
         }
-      }
-    } catch (err) {}
+      } catch (err) {}
+
+      return ''
+    })
+  )
+
+  for (const res of context_results) {
+    if (res) context_content += res
   }
 
   let prompt_sections = ''

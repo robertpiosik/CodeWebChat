@@ -1,4 +1,5 @@
-import { execFileSync } from 'child_process'
+import { execFile } from 'child_process'
+import { promisify } from 'util'
 import * as path from 'path'
 import * as vscode from 'vscode'
 import { t } from '@/i18n'
@@ -14,6 +15,8 @@ import { WebSocketManager } from '@/services/websocket-manager'
 import { search_files } from '@/features/search-files'
 import { CommitMessageDetails } from './commit-message-details'
 import { normalize_path } from './normalize-path'
+
+const execFileAsync = promisify(execFile)
 
 export type GitRepository = {
   rootUri: vscode.Uri
@@ -250,6 +253,38 @@ export const prepare_staged_changes = async (params: {
         prompts_for_repo = all_prompts[params.repository.rootUri.fsPath] || []
       }
 
+      let bulk_diff_output = ''
+      try {
+        const { stdout } = await execFileAsync('git', ['diff'], {
+          cwd: params.repository.rootUri.fsPath,
+          maxBuffer: 1024 * 1024 * 50
+        })
+        bulk_diff_output = stdout
+      } catch (e: any) {
+        if (e.stdout) {
+          bulk_diff_output = e.stdout
+        }
+      }
+
+      const diff_map = new Map<string, string>()
+      if (bulk_diff_output) {
+        const diffs = bulk_diff_output
+          .split(/^diff --git /m)
+          .filter((d) => d.trim() !== '')
+        for (const d of diffs) {
+          const full_diff = 'diff --git ' + d
+          const match = full_diff
+            .split('\n')[0]
+            .match(/^diff --git a\/(.*) b\/(.*)$/)
+          if (match) {
+            const path_a = match[1].replace(/^"|"$/g, '')
+            const path_b = match[2].replace(/^"|"$/g, '')
+            diff_map.set(path_a, full_diff)
+            diff_map.set(path_b, full_diff)
+          }
+        }
+      }
+
       const items = await Promise.all(
         params.repository.state.workingTreeChanges.map(async (change: any) => {
           const relative_path = path.relative(
@@ -285,13 +320,10 @@ export const prepare_staged_changes = async (params: {
                   lines.map((l: string) => '+' + l).join('\n')
               }
             } else {
-              const raw_diff = execFileSync(
-                'git',
-                ['diff', '--', change.uri.fsPath],
-                {
-                  cwd: params.repository.rootUri.fsPath
-                }
-              ).toString()
+              const raw_diff =
+                diff_map.get(normalized_path) ||
+                diff_map.get(relative_path) ||
+                ''
 
               if (
                 raw_diff.includes('\n+++ /dev/null') ||
@@ -537,9 +569,18 @@ export const prepare_staged_changes = async (params: {
     await params.repository.status()
   }
 
-  const diff = execFileSync('git', ['diff', '--staged'], {
-    cwd: params.repository.rootUri.fsPath
-  }).toString()
+  let diff = ''
+  try {
+    const { stdout } = await execFileAsync('git', ['diff', '--staged'], {
+      cwd: params.repository.rootUri.fsPath,
+      maxBuffer: 1024 * 1024 * 50
+    })
+    diff = stdout
+  } catch (e: any) {
+    if (e.stdout) {
+      diff = e.stdout
+    }
+  }
 
   if (!diff || diff.length === 0) {
     vscode.window.showInformationMessage(
