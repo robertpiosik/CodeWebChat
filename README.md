@@ -39,7 +39,7 @@ Without ever-growing sessions, intent is clear. Model focused on the task from t
 <details>
 <summary><strong>Select files hands-free</strong></summary>
 
-Automatically select files attached to task instructions with your favorite agentic CLI using the [Agentic Search prompt](#-agentic-search).
+Automatically select files attached to task instructions with your favorite agentic CLI using [Agentic Search](#-agentic-search).
 
 </details>
 
