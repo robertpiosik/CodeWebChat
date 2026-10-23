@@ -225,7 +225,8 @@ export const history_command = (params: {
             if (Date.now() - temp_checkpoint.timestamp < three_hours_in_ms) {
               try {
                 const checkpoint_path = get_checkpoint_path(
-                  temp_checkpoint.timestamp
+                  temp_checkpoint.timestamp,
+                  params.extension_context
                 )
                 await vscode.workspace.fs.stat(vscode.Uri.file(checkpoint_path))
                 temp_checkpoint_is_valid = true

@@ -119,7 +119,8 @@ export const restore_checkpoint = async (params: {
           if (old_temp_checkpoint) {
             try {
               const checkpoint_path = get_checkpoint_path(
-                old_temp_checkpoint.timestamp
+                old_temp_checkpoint.timestamp,
+                params.extension_context
               )
               await vscode.workspace.fs.delete(
                 vscode.Uri.file(checkpoint_path),
@@ -137,7 +138,8 @@ export const restore_checkpoint = async (params: {
           }
 
           temp_checkpoint = await create_temporary_checkpoint(
-            params.workspace_provider
+            params.workspace_provider,
+            params.extension_context
           )
           await params.extension_context.workspaceState.update(
             TEMPORARY_CHECKPOINT_STATE_KEY,
@@ -163,7 +165,8 @@ export const restore_checkpoint = async (params: {
           Date.now()
         )
         const checkpoint_dir_path = get_checkpoint_path(
-          params.checkpoint.timestamp
+          params.checkpoint.timestamp,
+          params.extension_context
         )
         const checkpoint_dir_uri = vscode.Uri.file(checkpoint_dir_path)
 

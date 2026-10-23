@@ -22,7 +22,10 @@ export const clear_all_checkpoints = async (
         continue
       }
       try {
-        const checkpoint_path = get_checkpoint_path(checkpoint.timestamp)
+        const checkpoint_path = get_checkpoint_path(
+          checkpoint.timestamp,
+          extension_context
+        )
         await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
           recursive: true
         })
@@ -39,7 +42,10 @@ export const clear_all_checkpoints = async (
     )
     if (temp_checkpoint) {
       try {
-        const checkpoint_path = get_checkpoint_path(temp_checkpoint.timestamp)
+        const checkpoint_path = get_checkpoint_path(
+          temp_checkpoint.timestamp,
+          extension_context
+        )
         await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
           recursive: true
         })

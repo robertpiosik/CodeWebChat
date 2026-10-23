@@ -43,7 +43,10 @@ export const delete_checkpoint_with_undo = async (params: {
 
   const finalize = async () => {
     try {
-      const checkpoint_path = get_checkpoint_path(params.checkpoint.timestamp)
+      const checkpoint_path = get_checkpoint_path(
+        params.checkpoint.timestamp,
+        params.extension_context
+      )
       await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
         recursive: true
       })

@@ -25,7 +25,8 @@ export const delete_checkpoint = async (params: {
 
   try {
     const checkpoint_path = get_checkpoint_path(
-      params.checkpoint_to_delete.timestamp
+      params.checkpoint_to_delete.timestamp,
+      params.extension_context
     )
     await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
       recursive: true

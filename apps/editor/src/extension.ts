@@ -10,7 +10,6 @@ import {
   migrate_prompt_templates_suffixes,
   migrate_commit_message_details_filename,
   migrate_prompt_templates_to_templates,
-  migrate_clear_all_checkpoints,
   migrate_model_providers_to_providers,
   migrate_settings_keys_to_chatbots_and_models
 } from './migrations'
@@ -75,8 +74,6 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     await migrate_commit_message_details_filename(extension_context)
     // 16 August 2026
     await migrate_prompt_templates_to_templates(extension_context)
-    // 10 September 2026
-    await migrate_clear_all_checkpoints(extension_context)
     // 20 September 2026
     await migrate_model_providers_to_providers(extension_context)
     // 26 October 2026

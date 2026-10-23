@@ -6,7 +6,8 @@ import { Logger } from '@shared/utils/logger'
 import { CHECKPOINT_DEFAULT_LIFESPAN } from '@/constants/values'
 
 export const remove_old_checkpoints = async (
-  checkpoints: Checkpoint[]
+  checkpoints: Checkpoint[],
+  extension_context: vscode.ExtensionContext
 ): Promise<Checkpoint[]> => {
   const checkpoint_lifespan_ms = CHECKPOINT_DEFAULT_LIFESPAN * 60 * 60 * 1000
 
@@ -16,24 +17,22 @@ export const remove_old_checkpoints = async (
   const checkpoints_to_keep: Checkpoint[] = []
   const checkpoints_to_remove: Checkpoint[] = []
 
-  let unpinned_kept = 0
-
   for (const checkpoint of checkpoints) {
     if (checkpoint.is_pinned) {
       checkpoints_to_keep.push(checkpoint)
     } else if (checkpoint.timestamp < cutoff_time) {
       checkpoints_to_remove.push(checkpoint)
-    } else if (unpinned_kept >= 99) {
-      checkpoints_to_remove.push(checkpoint)
     } else {
       checkpoints_to_keep.push(checkpoint)
-      unpinned_kept++
     }
   }
 
   for (const checkpoint of checkpoints_to_remove) {
     try {
-      const checkpoint_path = get_checkpoint_path(checkpoint.timestamp)
+      const checkpoint_path = get_checkpoint_path(
+        checkpoint.timestamp,
+        extension_context
+      )
       await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
         recursive: true
       })
@@ -66,7 +65,10 @@ export const get_checkpoints = async (
   let state_updated = false
   for (const checkpoint of checkpoints) {
     try {
-      const checkpoint_path = get_checkpoint_path(checkpoint.timestamp)
+      const checkpoint_path = get_checkpoint_path(
+        checkpoint.timestamp,
+        extension_context
+      )
       await vscode.workspace.fs.stat(vscode.Uri.file(checkpoint_path))
       if (checkpoint.trigger !== 'temporary') valid_checkpoints.push(checkpoint)
     } catch {

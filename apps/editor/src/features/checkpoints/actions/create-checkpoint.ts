@@ -56,7 +56,8 @@ export const create_checkpoint = async (params: {
     if (old_temp_checkpoint) {
       try {
         const checkpoint_path = get_checkpoint_path(
-          old_temp_checkpoint.timestamp
+          old_temp_checkpoint.timestamp,
+          params.extension_context
         )
         await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
           recursive: true
@@ -95,7 +96,10 @@ export const create_checkpoint = async (params: {
         Date.now()
       )
       await vscode.workspace.saveAll()
-      const checkpoint_dir_path = get_checkpoint_path(timestamp)
+      const checkpoint_dir_path = get_checkpoint_path(
+        timestamp,
+        params.extension_context
+      )
       const checkpoint_dir_uri = vscode.Uri.file(checkpoint_dir_path)
       await vscode.workspace.fs.createDirectory(checkpoint_dir_uri)
 
@@ -178,7 +182,10 @@ export const create_checkpoint = async (params: {
 
       let checkpoints = await get_checkpoints(params.extension_context)
 
-      checkpoints = await remove_old_checkpoints(checkpoints)
+      checkpoints = await remove_old_checkpoints(
+        checkpoints,
+        params.extension_context
+      )
 
       const final_description = get_incremented_description(
         trigger,

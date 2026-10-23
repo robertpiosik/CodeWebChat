@@ -14,7 +14,8 @@ import {
 import { Logger } from '@shared/utils/logger'
 
 export const create_temporary_checkpoint = async (
-  workspace_provider: WorkspaceProvider
+  workspace_provider: WorkspaceProvider,
+  extension_context: vscode.ExtensionContext
 ): Promise<Checkpoint | undefined> => {
   const workspace_folders = vscode.workspace.workspaceFolders!
 
@@ -28,7 +29,7 @@ export const create_temporary_checkpoint = async (
 
   await vscode.workspace.saveAll()
   const timestamp = Date.now()
-  const checkpoint_dir_path = get_checkpoint_path(timestamp)
+  const checkpoint_dir_path = get_checkpoint_path(timestamp, extension_context)
   const checkpoint_dir_uri = vscode.Uri.file(checkpoint_dir_path)
   await vscode.workspace.fs.createDirectory(checkpoint_dir_uri)
 

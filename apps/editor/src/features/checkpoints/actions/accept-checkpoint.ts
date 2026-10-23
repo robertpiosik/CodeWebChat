@@ -22,8 +22,14 @@ export const accept_checkpoint = async (params: {
     const checkpoint_to_update = checkpoints[checkpoint_index]
     const old_timestamp = checkpoint_to_update.timestamp
     const new_timestamp = Date.now()
-    const old_path = get_checkpoint_path(old_timestamp)
-    const new_path = get_checkpoint_path(new_timestamp)
+    const old_path = get_checkpoint_path(
+      old_timestamp,
+      params.extension_context
+    )
+    const new_path = get_checkpoint_path(
+      new_timestamp,
+      params.extension_context
+    )
     try {
       await vscode.workspace.fs.rename(
         vscode.Uri.file(old_path),
