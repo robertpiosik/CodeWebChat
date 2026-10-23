@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { JSDOM } from 'jsdom'
+import * as dns from 'dns/promises'
 import { Readability, isProbablyReaderable } from '@mozilla/readability'
 import createDOMPurify from 'dompurify'
 import TurndownServiceJoplin from '@joplin/turndown'
@@ -86,11 +87,35 @@ const create_turndown_service = () => {
   return turndown_service
 }
 
+const is_private_ip = (ip: string): boolean => {
+  if (/^127\./.test(ip)) return true
+  if (/^10\./.test(ip)) return true
+  if (/^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(ip)) return true
+  if (/^192\.168\./.test(ip)) return true
+  if (/^169\.254\./.test(ip)) return true
+  if (/^0\./.test(ip)) return true
+  if (/^255\.255\.255\.255$/.test(ip)) return true
+  if (ip === '::1' || ip === '::') return true
+  if (/^fe80:/i.test(ip)) return true
+  if (/^fc[0-9a-f]{2}:/i.test(ip) || /^fd[0-9a-f]{2}:/i.test(ip)) return true
+  return false
+}
+
 export const fetch_website = async (
   url: string,
   abort_signal?: AbortSignal
 ): Promise<{ content: string; title: string } | null> => {
   try {
+    const parsed_url = new URL(url)
+    if (parsed_url.protocol !== 'http:' && parsed_url.protocol !== 'https:') {
+      return null
+    }
+
+    const { address } = await dns.lookup(parsed_url.hostname)
+    if (is_private_ip(address)) {
+      return null
+    }
+
     const response = await axios.get(url, {
       headers: {
         'User-Agent':

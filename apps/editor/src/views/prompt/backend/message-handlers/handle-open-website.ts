@@ -2,6 +2,8 @@ import * as vscode from 'vscode'
 import { OpenWebsiteMessage } from '../../types/messages'
 import * as fs from 'fs'
 import { marked } from 'marked'
+import { JSDOM } from 'jsdom'
+import createDOMPurify from 'dompurify'
 import { PromptViewProvider } from '../prompt-view-provider'
 import { PersistentTextStorage } from '../utils/persistent-text-storage'
 
@@ -44,13 +46,16 @@ export const handle_open_website = async (
 
   if (id && fs.existsSync(file_path)) {
     const markdown = fs.readFileSync(file_path, 'utf8')
-    const html = await marked.parse(markdown)
+    const raw_html = await marked.parse(markdown)
+    const window = new JSDOM('').window
+    const DOMPurify = createDOMPurify(window as any)
+    const html = DOMPurify.sanitize(raw_html)
 
     const webview_panel = vscode.window.createWebviewPanel(
       'websitePreview',
       title,
       vscode.ViewColumn.One,
-      { enableScripts: true }
+      {}
     )
 
     webview_panel.iconPath = new vscode.ThemeIcon('globe') as any
@@ -104,11 +109,8 @@ export const handle_open_website = async (
       <html lang="en">
       <head>
         <meta charset="UTF-8">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${csp} 'unsafe-inline' https://cdnjs.cloudflare.com; script-src 'unsafe-inline' https://cdnjs.cloudflare.com; font-src https://cdnjs.cloudflare.com;">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${csp} 'unsafe-inline';">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
-        <script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
         <title>${escaped_title}</title>
         <style>
           body {
