@@ -1,5 +1,6 @@
 import { useRef, RefObject } from 'react'
 import {
+  get_raw_selection_bounds,
   map_display_pos_to_raw_pos,
   map_raw_pos_to_display_pos,
   set_caret_position_for_div
@@ -15,37 +16,25 @@ export const use_drag_drop = (
   )
 
   const handle_drag_start = (e: React.DragEvent<HTMLDivElement>) => {
-    const selection = window.getSelection()
-    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
+    const input_element = input_ref.current
+    if (!input_element) {
       e.preventDefault()
       return
     }
 
-    const range = selection.getRangeAt(0)
-    const input_element = input_ref.current
-    if (!input_element || !input_element.contains(range.startContainer)) return
-
-    const pre_selection_range = document.createRange()
-    pre_selection_range.selectNodeContents(input_element)
-    pre_selection_range.setEnd(range.startContainer, range.startOffset)
-    const display_start = pre_selection_range.toString().length
-
-    pre_selection_range.setEnd(range.endContainer, range.endOffset)
-    const display_end = pre_selection_range.toString().length
-
-    const raw_start = map_display_pos_to_raw_pos({
-      display_pos: display_start,
-      raw_text: props.value,
-      context_file_paths: props.selected_files ?? []
-    })
-    const raw_end = map_display_pos_to_raw_pos({
-      display_pos: display_end,
+    const bounds = get_raw_selection_bounds({
+      input_element,
       raw_text: props.value,
       context_file_paths: props.selected_files ?? []
     })
 
-    dragged_text_range_ref.current = { start: raw_start, end: raw_end }
-    const dragged_text = props.value.substring(raw_start, raw_end)
+    if (!bounds || bounds.raw_start === bounds.raw_end) {
+      e.preventDefault()
+      return
+    }
+
+    dragged_text_range_ref.current = { start: bounds.raw_start, end: bounds.raw_end }
+    const dragged_text = props.value.substring(bounds.raw_start, bounds.raw_end)
     e.dataTransfer.setData('text/plain', dragged_text)
   }
 

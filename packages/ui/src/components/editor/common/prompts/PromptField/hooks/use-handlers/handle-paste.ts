@@ -1,35 +1,20 @@
-import { map_display_pos_to_raw_pos } from '../../../shared/symbols'
+import { get_raw_selection_bounds } from '../../../shared/symbols'
 import { HandlerContext } from './types'
 import { get_symbol_ranges } from './utils'
 
 export const create_perform_paste =
   ({ props, params, refs, utils }: HandlerContext) =>
   (text: string) => {
-    const selection = window.getSelection()
-    if (!selection || !selection.rangeCount || !params.input_ref.current) return
-    const range = selection.getRangeAt(0)
     const input_element = params.input_ref.current
+    if (!input_element) return
 
-    if (!input_element.contains(range.startContainer)) return
-
-    const pre_selection_range = document.createRange()
-    pre_selection_range.selectNodeContents(input_element)
-    pre_selection_range.setEnd(range.startContainer, range.startOffset)
-    const display_start = pre_selection_range.toString().length
-
-    pre_selection_range.setEnd(range.endContainer, range.endOffset)
-    const display_end = pre_selection_range.toString().length
-
-    const raw_start = map_display_pos_to_raw_pos({
-      display_pos: display_start,
+    const bounds = get_raw_selection_bounds({
+      input_element,
       raw_text: props.value,
       context_file_paths: props.selected_files ?? []
     })
-    const raw_end = map_display_pos_to_raw_pos({
-      display_pos: display_end,
-      raw_text: props.value,
-      context_file_paths: props.selected_files ?? []
-    })
+    if (!bounds) return
+    const { raw_start, raw_end } = bounds
 
     let text_to_insert = text
     let caret_offset_adjustment = 0
@@ -128,42 +113,20 @@ export const create_handle_paste =
       !has_symbols &&
       !is_single_character_or_number
     ) {
-      const selection = window.getSelection()
-      if (
-        selection &&
-        selection.rangeCount > 0 &&
-        !selection.isCollapsed &&
-        params.input_ref.current
-      ) {
-        const range = selection.getRangeAt(0)
-        const input_element = params.input_ref.current
-
-        if (input_element.contains(range.startContainer)) {
-          const pre_selection_range = document.createRange()
-          pre_selection_range.selectNodeContents(input_element)
-          pre_selection_range.setEnd(range.startContainer, range.startOffset)
-          const display_start = pre_selection_range.toString().length
-
-          pre_selection_range.setEnd(range.endContainer, range.endOffset)
-          const display_end = pre_selection_range.toString().length
-
-          const raw_start = map_display_pos_to_raw_pos({
-            display_pos: display_start,
-            raw_text: props.value,
-            context_file_paths: props.selected_files ?? []
-          })
-          const raw_end = map_display_pos_to_raw_pos({
-            display_pos: display_end,
-            raw_text: props.value,
-            context_file_paths: props.selected_files ?? []
-          })
-
+      const input_element = params.input_ref.current
+      if (input_element) {
+        const bounds = get_raw_selection_bounds({
+          input_element,
+          raw_text: props.value,
+          context_file_paths: props.selected_files ?? []
+        })
+        if (bounds && bounds.raw_start !== bounds.raw_end) {
           const new_value =
-            props.value.substring(0, raw_start) + props.value.substring(raw_end)
+            props.value.substring(0, bounds.raw_start) + props.value.substring(bounds.raw_end)
 
-          utils.update_value(new_value, raw_start)
-          props.on_caret_position_change(raw_start)
-          refs.raw_caret_pos_ref.current = raw_start
+          utils.update_value(new_value, bounds.raw_start)
+          props.on_caret_position_change(bounds.raw_start)
+          refs.raw_caret_pos_ref.current = bounds.raw_start
         }
       }
       props.on_paste_long_text(text)

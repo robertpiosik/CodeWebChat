@@ -18,14 +18,21 @@ const process_text_part_for_files = (params: {
   text: string
   context_file_paths: string[]
   interactive_text: boolean
+  highlight_template_variables?: boolean
 }): string => {
-  const file_path_regex = /`([^`]+)`/g
-  const parts = params.text.split(file_path_regex)
+  const regex = params.highlight_template_variables
+    ? /(`[^`]+`|\{[^}]+\})/g
+    : /(`[^`]+`)/g
+  const parts = params.text.split(regex)
 
   return parts
     .map((part, index) => {
       if (index % 2 === 1) {
-        const file_path = part
+        if (part.startsWith('{') && part.endsWith('}')) {
+          return `<span class="${styles['inline-code']}">${escape_html(part)}</span>`
+        }
+        
+        const file_path = part.slice(1, -1)
         if (params.context_file_paths.includes(file_path)) {
           const filename = file_path.split('/').pop() || file_path
           return `<span class="${cn(styles['symbol'], styles['symbol--file'], { [styles['symbol--non-interactive']]: !params.interactive_text })}" data-type="file-symbol" data-path="${escape_html(
@@ -53,6 +60,7 @@ export const get_highlighted_text = (params: {
     active_index: number
   }
   interactive_text?: boolean
+  highlight_template_variables?: boolean
 }): string => {
   const interactive_text = params.interactive_text ?? true
   const saved_context_regex_part =
@@ -237,7 +245,8 @@ export const get_highlighted_text = (params: {
       return process_text_part_for_files({
         text: part,
         context_file_paths: params.context_file_paths,
-        interactive_text
+        interactive_text,
+        highlight_template_variables: params.highlight_template_variables
       })
     })
     .join('')

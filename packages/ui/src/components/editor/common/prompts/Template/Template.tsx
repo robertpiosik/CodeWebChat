@@ -4,7 +4,6 @@ import {
   useImperativeHandle,
   useEffect,
   useMemo,
-  useState
 } from 'react'
 import styles from './Template.module.scss'
 import { Icon } from '../../Icon'
@@ -15,7 +14,8 @@ import {
   set_caret_position_for_div,
   map_raw_pos_to_display_pos,
   map_display_pos_to_raw_pos,
-  use_symbol_deletion
+  use_symbol_deletion,
+  get_raw_selection_bounds
 } from '../shared/symbols'
 import { use_undo_redo } from '../shared/hooks/use-undo-redo'
 
@@ -145,7 +145,8 @@ export const Template = forwardRef<TemplateHandle, TemplateProps>(
       return get_highlighted_text({
         text: props.value || '',
         context_file_paths: [],
-        interactive_text: false
+        interactive_text: false,
+        highlight_template_variables: true
       })
     }, [props.value])
 
@@ -223,6 +224,80 @@ export const Template = forwardRef<TemplateHandle, TemplateProps>(
       redo()
     }
 
+    const handle_enter = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      if (!input_ref.current) return
+      const bounds = get_raw_selection_bounds({
+        input_element: input_ref.current,
+        raw_text: props.value || '',
+        context_file_paths: []
+      })
+      if (!bounds) return
+
+      const new_value =
+        (props.value || '').substring(0, bounds.raw_start) +
+        '\n' +
+        (props.value || '').substring(bounds.raw_end)
+
+      update_value(new_value, bounds.raw_start + 1)
+    }
+
+    const handle_copy = (e: React.ClipboardEvent<HTMLDivElement>) => {
+      if (!input_ref.current) return
+      const bounds = get_raw_selection_bounds({
+        input_element: input_ref.current,
+        raw_text: props.value || '',
+        context_file_paths: []
+      })
+      if (!bounds || bounds.raw_start === bounds.raw_end) return
+
+      e.preventDefault()
+
+      const raw_text_slice = (props.value || '').substring(bounds.raw_start, bounds.raw_end)
+      e.clipboardData.setData('text/plain', raw_text_slice)
+    }
+
+    const handle_cut = (e: React.ClipboardEvent<HTMLDivElement>) => {
+      if (!input_ref.current) return
+      const bounds = get_raw_selection_bounds({
+        input_element: input_ref.current,
+        raw_text: props.value || '',
+        context_file_paths: []
+      })
+      if (!bounds || bounds.raw_start === bounds.raw_end) return
+
+      e.preventDefault()
+
+      const raw_text_slice = (props.value || '').substring(bounds.raw_start, bounds.raw_end)
+      e.clipboardData.setData('text/plain', raw_text_slice)
+
+      const new_value =
+        (props.value || '').substring(0, bounds.raw_start) +
+        (props.value || '').substring(bounds.raw_end)
+
+      update_value(new_value, bounds.raw_start)
+    }
+
+    const handle_paste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      const text = e.clipboardData.getData('text/plain')
+
+      if (!input_ref.current) return
+      const bounds = get_raw_selection_bounds({
+        input_element: input_ref.current,
+        raw_text: props.value || '',
+        context_file_paths: []
+      })
+      if (!bounds) return
+
+      const new_value =
+        (props.value || '').substring(0, bounds.raw_start) +
+        text +
+        (props.value || '').substring(bounds.raw_end)
+
+      update_value(new_value, bounds.raw_start + text.length)
+    }
+
     const handle_key_down = (e: React.KeyboardEvent<HTMLDivElement>) => {
       const { key, shiftKey } = e
 
@@ -241,6 +316,12 @@ export const Template = forwardRef<TemplateHandle, TemplateProps>(
 
       if (key === 'Backspace') {
         handle_backspace_key(e)
+        return
+      }
+
+      if (key === 'Enter') {
+        handle_enter(e)
+        return
       }
     }
 
@@ -263,6 +344,9 @@ export const Template = forwardRef<TemplateHandle, TemplateProps>(
           onFocus={props.on_focus}
           onClick={handle_click}
           onKeyDown={handle_key_down}
+          onCopy={handle_copy}
+          onCut={handle_cut}
+          onPaste={handle_paste}
         />
         <div className={styles['toolbar']}>
           <button
