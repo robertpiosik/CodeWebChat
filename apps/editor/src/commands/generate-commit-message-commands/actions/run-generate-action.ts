@@ -47,6 +47,11 @@ export const run_generate_action = async (params: {
   websocket_manager: WebSocketManager
   provided_text?: string
 }) => {
+  if (!vscode.workspace.isTrusted) {
+    vscode.window.showWarningMessage(t('common.error.workspace-not-trusted'))
+    return
+  }
+
   if (get_response_preview_promise_resolve()) {
     vscode.window.showInformationMessage(
       t('command.generate-commit-message-command.disabled-during-preview')

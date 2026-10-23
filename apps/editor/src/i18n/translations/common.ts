@@ -1657,5 +1657,23 @@ export const translations = {
     cs: 'Kořen pracovního prostoru nebyl nalezen.',
     hu: 'Nem található munkaterület gyökér.',
     bg: 'Не е намерена коренна папка на работното пространство.'
+  },
+  'common.error.workspace-not-trusted': {
+    en: 'Workspace is not trusted. This feature is disabled.',
+    pl: 'Obszar roboczy nie jest zaufany. Ta funkcja jest wyłączona.',
+    'zh-cn': '工作区不受信任。此功能已被禁用。',
+    ja: 'ワークスペースは信頼されていません。この機能は無効になっています。',
+    'zh-tw': '工作區不受信任。此功能已被停用。',
+    de: 'Der Arbeitsbereich ist nicht vertrauenswürdig. Diese Funktion ist deaktiviert.',
+    es: 'El espacio de trabajo no es de confianza. Esta función está deshabilitada.',
+    fr: "L'espace de travail n'est pas approuvé. Cette fonctionnalité est désactivée.",
+    'pt-br': 'O espaço de trabalho não é confiável. Este recurso está desativado.',
+    ru: 'Рабочая область не является доверенной. Эта функция отключена.',
+    ko: '작업 공간을 신뢰할 수 없습니다. 이 기능은 비활성화되었습니다.',
+    it: "L'area di lavoro non è attendibile. Questa funzionalità è disabilitata.",
+    tr: 'Çalışma alanı güvenilir değil. Bu özellik devre dışı bırakıldı.',
+    cs: 'Pracovní prostor není důvěryhodný. Tato funkce je zakázána.',
+    hu: 'A munkaterület nem megbízható. Ez a funkció le van tiltva.',
+    bg: 'Работното пространство не е надеждно. Тази функция е деактивирана.'
   }
 } as const
