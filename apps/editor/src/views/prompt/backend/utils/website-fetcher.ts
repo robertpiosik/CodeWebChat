@@ -2,7 +2,6 @@ import axios from 'axios'
 import { JSDOM } from 'jsdom'
 import * as dns from 'dns/promises'
 import { Readability, isProbablyReaderable } from '@mozilla/readability'
-import createDOMPurify from 'dompurify'
 import TurndownServiceJoplin from '@joplin/turndown'
 import * as turndownPluginGfm from '@joplin/turndown-plugin-gfm'
 import type TurndownService from 'turndown'
@@ -127,10 +126,7 @@ export const fetch_website = async (
 
     if (response.status === 200 && typeof response.data === 'string') {
       const html = response.data
-      const window = new JSDOM('').window
-      const DOMPurify = createDOMPurify(window as any)
-      const clean_html = DOMPurify.sanitize(html)
-      const dom = new JSDOM(clean_html, { url })
+      const dom = new JSDOM(html, { url })
       const doc = dom.window.document
 
       doc.querySelectorAll('pre').forEach((pre) => {
@@ -183,7 +179,7 @@ export const fetch_website = async (
           content = remove_markdown_images(content)
 
           if (content && content.trim().length > 0) {
-            return { content, title: article.title || '' }
+            return { content, title: article.title || doc.title || '' }
           }
         }
       }
