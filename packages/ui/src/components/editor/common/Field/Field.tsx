@@ -13,9 +13,7 @@ export const Field: React.FC<Props> = (props) => {
     <div className={styles.field}>
       {props.label && (
         <div className={styles.field__header}>
-          <label htmlFor={props.html_for} className={styles.field__label}>
-            {props.label}
-          </label>
+          <label htmlFor={props.html_for}>{props.label}</label>
           {props.action}
         </div>
       )}

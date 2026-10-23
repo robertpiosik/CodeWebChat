@@ -7,12 +7,12 @@
     justify-content: space-between;
     align-items: center;
     height: 24px;
-  }
-
-  &__label {
     font-size: 12px;
-    font-weight: 600;
-    color: var(--vscode-foreground);
+
+    > label {
+      font-weight: 600;
+      color: var(--vscode-foreground);
+    }
   }
 
   &__info {
