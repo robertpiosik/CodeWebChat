@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { GoToFileMessage } from '@/views/prompt/types/messages'
 import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
+import { create_safe_path } from '@/utils/path-sanitizer'
 
 export const handle_go_to_file = async (
   message: GoToFileMessage
@@ -58,7 +59,24 @@ export const handle_go_to_file = async (
     return
   }
 
-  const file_uri = vscode.Uri.joinPath(target_workspace.uri, relative_file_path)
+  const safe_path = create_safe_path(
+    target_workspace.uri.fsPath,
+    relative_file_path
+  )
+
+  if (!safe_path) {
+    Logger.error({
+      function_name: 'handle_go_to_file',
+      message: `Invalid file path: ${file_path}`,
+      data: { file_path }
+    })
+    vscode.window.showErrorMessage(
+      t('common.error.could-not-open-file', { file_path })
+    )
+    return
+  }
+
+  const file_uri = vscode.Uri.file(safe_path)
 
   try {
     const document = await vscode.workspace.openTextDocument(file_uri)
