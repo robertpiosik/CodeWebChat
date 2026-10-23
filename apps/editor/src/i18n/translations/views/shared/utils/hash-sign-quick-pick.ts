@@ -332,22 +332,25 @@ export const translations = {
   },
   'views.shared.utils.hash-sign-quick-pick.quick-pick.accuracy-boost.confirm-modal.message':
     {
-      en: 'Using Accuracy Boost will disable prompt caching by also placing instructions at the top of the constructed message. Do you want to continue?',
+      en: 'Using Accuracy Boost will disable prompt caching by placing instructions also at the top of the constructed message. Do you want to continue?',
       pl: 'Użycie Zwiększenia dokładności wyłączy prompt cache poprzez umieszczenie instrukcji również na górze skonstruowanej wiadomości. Czy chcesz kontynuować?',
-      'zh-cn': '使用提升准确度也会将说明放置在构建的消息顶部，从而禁用提示缓存。是否要继续？',
-      ja: '「精度向上」を使用すると、構築されたメッセージの先頭にも指示が配置されるため、プロンプトキャッシングが無効になります。続行しますか？',
-      'zh-tw': '使用提升準確度也會將說明放置在建構的訊息頂部，從而停用提示快取。是否要繼續？',
-      de: 'Die Verwendung der Genauigkeitssteigerung deaktiviert das Prompt-Caching, indem Anweisungen auch am Anfang der konstruierten Nachricht platziert werden. Möchten Sie fortfahren?',
-      es: 'El uso del Aumento de precisión desactivará el almacenamiento en caché del prompt al colocar también instrucciones en la parte superior del mensaje construido. ¿Desea continuar?',
-      fr: "L'utilisation de l'Augmentation de la précision désactivera la mise en cache des prompts en plaçant également des instructions en haut du message construit. Voulez-vous continuer ?",
-      'pt-br': 'O uso do Aumento de precisão desativará o cache do prompt, colocando também as instruções na parte superior da mensagem construída. Você deseja continuar?',
-      ru: 'Использование функции повышения точности отключит кэширование промптов, поскольку инструкции также будут помещены в начало созданного сообщения. Вы хотите продолжить?',
-      ko: '정확도 향상을 사용하면 구성된 메시지의 맨 위에도 지침을 배치하여 프롬프트 캐싱이 비활성화됩니다. 계속하시겠습니까?',
-      it: "L'utilizzo dell'Aumento di precisione disabiliterà la memorizzazione nella cache del prompt inserendo le istruzioni anche nella parte superiore del messaggio costruito. Vuoi continuare?",
-      tr: 'Doğruluk artışını kullanmak, talimatları oluşturulan mesajın en üstüne yerleştirerek istem önbelleğe almayı devre dışı bırakacaktır. Devam etmek istiyor musunuz?',
-      cs: 'Použití Zvýšení přesnosti zakáže ukládání promptů do mezipaměti tím, že se instrukce umístí také na začátek vytvořené zprávy. Chcete pokračovat?',
-      hu: 'A Pontosságnövelés használata letiltja a prompt gyorsítótárazást azáltal, hogy utasításokat helyez a megszerkesztett üzenet tetejére is. Szeretné folytatni?',
-      bg: 'Използването на Повишаване на точността ще деактивира кеширането на промпта, като постави инструкции и в горната част на конструираното съобщение. Искате ли да продължите?'
+      'zh-cn':
+        '使用提升准确度将禁用提示缓存，因为说明也会被放置在构建的消息顶部。您要继续吗？',
+      ja: '精度向上を使用すると、構築されたメッセージの先頭にも指示が配置されるため、プロンプトのキャッシュが無効になります。続行しますか？',
+      'zh-tw':
+        '使用提升準確度將停用提示快取，因為說明也會被放置在建構的訊息頂部。您要繼續嗎？',
+      de: 'Die Verwendung der Genauigkeitssteigerung deaktiviert das Prompt-Caching, da Anweisungen auch am Anfang der konstruierten Nachricht platziert werden. Möchten Sie fortfahren?',
+      es: 'El uso del Aumento de precisión desactivará el almacenamiento en caché del prompt al colocar las instrucciones también en la parte superior del mensaje construido. ¿Desea continuar?',
+      fr: "L'utilisation de l'Augmentation de la précision désactivera la mise en cache du prompt en plaçant également les instructions en haut du message construit. Voulez-vous continuer ?",
+      'pt-br':
+        'O uso do Aumento de precisão desativará o cache de prompt, colocando instruções também no topo da mensagem construída. Deseja continuar?',
+      ru: 'Использование Повышения точности отключит кэширование промпта за счет размещения инструкций также в начале создаваемого сообщения. Вы хотите продолжить?',
+      ko: '정확도 향상을 사용하면 구성된 메시지의 상단에도 지침이 배치되어 프롬프트 캐싱이 비활성화됩니다. 계속하시겠습니까?',
+      it: "L'utilizzo dell'Aumento di precisione disabiliterà la memorizzazione nella cache del prompt posizionando le istruzioni anche all'inizio del messaggio costruito. Vuoi continuare?",
+      tr: 'Doğruluk artışını kullanmak, talimatları oluşturulan mesajın en üstüne de yerleştirerek istem önbelleğe almayı devre dışı bırakır. Devam etmek istiyor musunuz?',
+      cs: 'Použití Zvýšení přesnosti zakáže ukládání promptů do mezipaměti tím, že se instrukce umístí také na začátek sestavené zprávy. Chcete pokračovat?',
+      hu: 'A Pontosságnövelés használata letiltja a prompt gyorsítótárazását azáltal, hogy az utasításokat a megszerkesztett üzenet tetejére is elhelyezi. Szeretné folytatni?',
+      bg: 'Използването на Повишаване на точността ще деактивира кеширането на промпта чрез поставяне на инструкции също в горната част на конструираното съобщение. Искате ли да продължите?'
     },
   'views.shared.utils.hash-sign-quick-pick.quick-pick.accuracy-boost.confirm-modal.confirm':
     {
