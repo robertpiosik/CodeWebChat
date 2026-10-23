@@ -833,7 +833,7 @@ export const translations = {
   },
   'general.agentic-search.title': {
     en: 'Agentic Search',
-    pl: 'Wyszukiwanie agentowe',
+    pl: 'Szukaj agentem',
     'zh-cn': '代理搜索',
     ja: 'エージェント検索',
     'zh-tw': '代理搜尋',

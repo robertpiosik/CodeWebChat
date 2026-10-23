@@ -1,7 +1,7 @@
 export const translations = {
   'feature.agentic-search.title.agentic-search': {
     en: 'Agentic Search',
-    pl: 'Wyszukiwanie agentowe',
+    pl: 'Szukaj agentem',
     'zh-cn': '智能体搜索',
     ja: 'エージェント検索',
     'zh-tw': '智能體搜尋',

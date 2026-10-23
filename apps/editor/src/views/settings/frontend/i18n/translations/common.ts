@@ -181,7 +181,7 @@ export const translations = {
   },
   'common.agentic-search': {
     en: 'Agentic Search',
-    pl: 'Wyszukiwanie agentowe',
+    pl: 'Szukaj agentem',
     'zh-cn': '智能搜索',
     ja: 'エージェント検索',
     'zh-tw': '智能搜尋',
