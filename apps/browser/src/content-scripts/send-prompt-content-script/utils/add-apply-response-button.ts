@@ -31,7 +31,9 @@ export function add_apply_response_button(params: {
   apply_response_button_style(apply_response_button)
   if (params.customize_button) params.customize_button(apply_response_button)
 
-  apply_response_button.addEventListener('click', async () => {
+  apply_response_button.addEventListener('click', async (event) => {
+    if (!event.isTrusted) return
+
     set_button_disabled_state(apply_response_button)
     requestAnimationFrame(async () => {
       await params.perform_copy(params.footer)
