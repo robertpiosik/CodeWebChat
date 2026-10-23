@@ -332,25 +332,25 @@ export const translations = {
   },
   'views.shared.utils.hash-sign-quick-pick.quick-pick.accuracy-boost.confirm-modal.message':
     {
-      en: 'Heads up! Using Accuracy Boost will disable prompt caching by placing instructions also at the top of the constructed message. Quotas could be drained faster or API costs higher. Do you want to continue?',
-      pl: 'Uwaga! Użycie Zwiększenia dokładności wyłączy prompt cache poprzez umieszczenie instrukcji również na górze skonstruowanej wiadomości. Limity mogą się szybciej wyczerpywać lub koszty API być wyższe. Czy chcesz kontynuować?',
+      en: 'Heads up! Accuracy Boost places instructions also on top of the prompt, invalidating cache whenever they change. Quotas could be drained faster or API cost be higher. Do you want to continue?',
+      pl: 'Uwaga! Zwiększenie dokładności umieszcza instrukcje również na górze promptu, unieważniając pamięć podręczną przy każdej ich edycji. Limity mogą wyczerpywać się szybciej lub koszty API mogą być wyższe. Czy chcesz kontynuować?',
       'zh-cn':
-        '注意！使用“准确度提升”将在构建的消息顶部也放置指令，从而禁用提示缓存。配额可能会消耗得更快，或者 API 成本更高。您要继续吗？',
-      ja: '注意！「精度向上」を使用すると、構築されたメッセージの先頭にも指示が配置されるため、プロンプトキャッシングが無効になります。クオータの消費が早くなったり、API コストが高くなる可能性があります。続行しますか？',
+        '注意！提升准确度也会将说明放置在提示的顶部，每当它们更改时都会使缓存失效。配额可能会更快耗尽，或者 API 成本会更高。您想继续吗？',
+      ja: '注意！精度向上ではプロンプトの上部にも指示が配置されるため、変更されるたびにキャッシュが無効になります。クォータの消費が早まったり、APIコストが高くなる可能性があります。続行しますか？',
       'zh-tw':
-        '注意！使用「準確度提升」將在建構的訊息頂部也放置指令，從而停用提示快取。配額可能會消耗得更快，或者 API 成本更高。您要繼續嗎？',
-      de: 'Achtung! Die Verwendung der Genauigkeitssteigerung deaktiviert das Prompt-Caching, indem Anweisungen auch am Anfang der erstellten Nachricht platziert werden. Quoten könnten schneller aufgebraucht werden oder API-Kosten höher sein. Möchten Sie fortfahren?',
-      es: '¡Atención! El uso de "Aumento de precisión" desactivará el almacenamiento en caché del prompt al colocar las instrucciones también en la parte superior del mensaje construido. Las cuotas podrían agotarse más rápido o los costos de la API ser mayores. ¿Deseas continuar?',
-      fr: "Attention ! L'utilisation de l'augmentation de la précision désactivera la mise en cache des prompts en plaçant également les instructions en haut du message construit. Les quotas pourraient être épuisés plus rapidement ou les coûts de l'API pourraient être plus élevés. Voulez-vous continuer ?",
+        '注意！提升準確度也會將說明放置在提示的頂部，每當它們更改時都會使緩存失效。配額可能會更快耗盡，或者 API 成本會更高。您想繼續嗎？',
+      de: 'Achtung! Die Genauigkeitssteigerung platziert Anweisungen auch oben im Prompt, wodurch der Cache bei jeder Änderung ungültig wird. Quoten könnten schneller aufgebraucht werden oder API-Kosten höher sein. Möchten Sie fortfahren?',
+      es: '¡Atención! El aumento de precisión también coloca instrucciones en la parte superior del prompt, invalidando la caché cada vez que cambian. Las cuotas podrían agotarse más rápido o el costo de la API podría ser mayor. ¿Desea continuar?',
+      fr: "Attention ! L'augmentation de la précision place également les instructions en haut du prompt, invalidant le cache à chaque modification. Les quotas pourraient être épuisés plus rapidement ou le coût de l'API pourrait être plus élevé. Voulez-vous continuer ?",
       'pt-br':
-        'Atenção! O uso do Aumento de Precisão desativará o cache do prompt, colocando as instruções também no topo da mensagem construída. As cotas podem ser esgotadas mais rapidamente ou os custos da API podem ser mais altos. Deseja continuar?',
-      ru: 'Внимание! Использование функции «Повышение точности» отключит кэширование промптов, поскольку инструкции будут размещены также в начале создаваемого сообщения. Квоты могут исчерпываться быстрее, а затраты на API — возрасти. Вы хотите продолжить?',
-      ko: '주의! 정확도 향상을 사용하면 구성된 메시지의 맨 위에도 지침이 배치되어 프롬프트 캐싱이 비활성화됩니다. 할당량이 더 빨리 소진되거나 API 비용이 높아질 수 있습니다. 계속하시겠습니까?',
-      it: "Attenzione! L'uso di Aumento di precisione disabiliterà la memorizzazione nella cache del prompt posizionando le istruzioni anche all'inizio del messaggio creato. Le quote potrebbero esaurirsi più velocemente o i costi dell'API potrebbero essere più elevati. Vuoi continuare?",
-      tr: 'Dikkat! Doğruluk Artışını kullanmak, talimatları oluşturulan mesajın en üstüne de yerleştirerek istemci önbelleğe almayı devre dışı bırakır. Kotalar daha hızlı tükenebilir veya API maliyetleri daha yüksek olabilir. Devam etmek istiyor musunuz?',
-      cs: 'Pozor! Použití funkce Zvýšení přesnosti zakáže ukládání promptů do mezipaměti tím, že instrukce umístí i na začátek sestavené zprávy. Kvóty by se mohly vyčerpat rychleji nebo by mohly být vyšší náklady na API. Chcete pokračovat?',
-      hu: 'Figyelem! A Pontosságnövelés használata letiltja a prompt gyorsítótárazását azáltal, hogy az utasításokat a megszerkesztett üzenet tetejére is elhelyezi. A kvóták gyorsabban kimerülhetnek, vagy az API költségei magasabbak lehetnek. Szeretné folytatni?',
-      bg: 'Внимание! Използването на Повишаване на точността ще деактивира кеширането на промпта, като постави инструкциите и в горната част на конструираното съобщение. Квотите могат да бъдат изчерпани по-бързо или разходите за API да бъдат по-високи. Искате ли да продължите?'
+        'Atenção! O aumento de precisão também coloca as instruções na parte superior do prompt, invalidando o cache sempre que forem alteradas. As cotas podem se esgotar mais rapidamente ou o custo da API pode ser maior. Deseja continuar?',
+      ru: 'Внимание! Повышение точности также помещает инструкции в начало промпта, делая кэш недействительным при каждом их изменении. Квоты могут исчерпаться быстрее или стоимость API может быть выше. Вы хотите продолжить?',
+      ko: '주의! 정확도 향상은 프롬프트 상단에도 지침을 배치하여 변경될 때마다 캐시를 무효화합니다. 할당량이 더 빨리 소진되거나 API 비용이 더 높아질 수 있습니다. 계속하시겠습니까?',
+      it: "Attenzione! L'aumento di precisione posiziona le istruzioni anche in cima al prompt, invalidando la cache ogni volta che cambiano. Le quote potrebbero esaurirsi più velocemente o il costo dell'API potrebbe essere più elevato. Vuoi continuare?",
+      tr: 'Dikkat! Doğruluk artışı, talimatları istemcinin en üstüne de yerleştirir ve her değiştiklerinde önbelleği geçersiz kılar. Kotalar daha hızlı tükenebilir veya API maliyeti daha yüksek olabilir. Devam etmek istiyor musunuz?',
+      cs: 'Pozor! Zvýšení přesnosti umisťuje instrukce také na začátek promptu, což zneplatní mezipaměť při každé jejich změně. Kvóty by se mohly vyčerpat rychleji nebo by mohly být vyšší náklady na API. Chcete pokračovat?',
+      hu: 'Figyelem! A pontosságnövelés a prompt tetejére is elhelyezi az utasításokat, így minden változáskor érvényteleníti a gyorsítótárat. A kvóták gyorsabban kimerülhetnek, vagy magasabbak lehetnek az API költségek. Biztosan folytatja?',
+      bg: 'Внимание! Повишаването на точността също така поставя инструкциите в горната част на промпта, като обезсилва кеша при всяка тяхна промяна. Квотите могат да бъдат изчерпани по-бързо или разходите за API да бъдат по-високи. Искате ли да продължите?'
     },
   'views.shared.utils.hash-sign-quick-pick.quick-pick.accuracy-boost.confirm-modal.confirm':
     {
