@@ -42,6 +42,7 @@ export const invoke_agentic_cli = async (params: {
   use_quick_pick?: boolean
   default_agent_key?: keyof ConfigAgentConfigurationFormat
   invocation_count?: number
+  target_folder?: string
 }): Promise<
   | {
       agent_output: string
@@ -416,6 +417,8 @@ export const invoke_agentic_cli = async (params: {
         }
 
         selected_root = temp_dir_path
+      } else if (params.target_folder) {
+        selected_root = params.target_folder
       } else {
         if (roots.length === 1) {
           selected_root = roots[0]

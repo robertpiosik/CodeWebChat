@@ -28,6 +28,7 @@ export const agentic_search = async (params: {
   query: string
   current_instructions: string
   skip_prompt_if_not_empty?: boolean
+  folder_path?: string
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | undefined
@@ -49,6 +50,16 @@ export const agentic_search = async (params: {
   let query = params.query
   let first_run = true
 
+  if (!query) {
+    const last_state = params.extension_context.workspaceState.get<{
+      instructions: string
+      query: string
+    }>(LAST_AGENTIC_SEARCH_QUERY_STATE_KEY)
+    if (last_state?.query) {
+      query = last_state.query
+    }
+  }
+
   while (true) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const invocation_count = config.get<number>('agenticSearchInvocationCount')
@@ -63,6 +74,7 @@ export const agentic_search = async (params: {
       default_agent_key: 'isDefaultForAgenticSearch',
       show_back_button: false,
       invocation_count,
+      target_folder: params.folder_path,
       build_prompt: async () => {
         while (true) {
           if (
@@ -137,18 +149,30 @@ export const agentic_search = async (params: {
       continue
     }
 
-    const all_workspace_files = await get_all_workspace_files({
-      workspace_provider: params.workspace_provider
-    })
+    let workspace_files: string[] = []
 
-    let workspace_files = all_workspace_files
+    if (params.folder_path) {
+      const files_in_root = await params.workspace_provider.find_all_files(
+        selected_root!
+      )
 
-    if (roots.length > 1 && selected_root) {
-      const workspace_name =
-        params.workspace_provider.get_workspace_name(selected_root)
-      const prefix = `${workspace_name}/`
-      const root_files = workspace_files.filter((f) => f.startsWith(prefix))
-      workspace_files = root_files.map((f) => f.substring(prefix.length))
+      workspace_files = files_in_root.map((f) =>
+        path.relative(selected_root!, f).replace(/\\/g, '/')
+      )
+    } else {
+      const all_workspace_files = await get_all_workspace_files({
+        workspace_provider: params.workspace_provider
+      })
+
+      workspace_files = all_workspace_files
+
+      if (roots.length > 1 && selected_root) {
+        const workspace_name =
+          params.workspace_provider.get_workspace_name(selected_root)
+        const prefix = `${workspace_name}/`
+        const root_files = workspace_files.filter((f) => f.startsWith(prefix))
+        workspace_files = root_files.map((f) => f.substring(prefix.length))
+      }
     }
 
     const valid_paths = extract_paths_from_bullet_list({

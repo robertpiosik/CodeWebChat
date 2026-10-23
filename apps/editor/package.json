@@ -362,6 +362,11 @@
         "icon": "$(search-sparkle)"
       },
       {
+        "command": "codeWebChat.agenticSearchFromDirectory",
+        "title": "%codeWebChat.agenticSearch.title%",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.selectReferencingFiles",
         "title": "%codeWebChat.selectReferencingFiles.title%",
         "category": "Code Web Chat"
@@ -879,6 +884,11 @@
           "command": "codeWebChat.referenceInPrompt",
           "when": "view == codeWebChatViewWorkspace || view == codeWebChatViewSelectedFiles",
           "group": "1_insertion@1"
+        },
+        {
+          "command": "codeWebChat.agenticSearchFromDirectory",
+          "when": "view == codeWebChatViewWorkspace && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
+          "group": "1_modification@0"
         },
         {
           "command": "codeWebChat.searchFilesFromDirectory",

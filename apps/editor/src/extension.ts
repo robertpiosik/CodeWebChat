@@ -216,7 +216,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       extension_context,
       websocket_server_instance
     ),
-    agentic_search_command({
+    ...agentic_search_command({
       workspace_provider,
       extension_context,
       websocket_manager: websocket_server_instance,
