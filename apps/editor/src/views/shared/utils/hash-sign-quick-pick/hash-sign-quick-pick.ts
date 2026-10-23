@@ -164,9 +164,24 @@ export const hash_sign_quick_pick = async (params: {
       case skill_label:
         result = await handle_skill_item()
         break
-      case accuracy_boost_label:
-        result = '#AccuracyBoost'
+      case accuracy_boost_label: {
+        const confirm_label = t(
+          'views.shared.utils.hash-sign-quick-pick.quick-pick.accuracy-boost.confirm-modal.confirm'
+        )
+        const confirm = await vscode.window.showWarningMessage(
+          t(
+            'views.shared.utils.hash-sign-quick-pick.quick-pick.accuracy-boost.confirm-modal.message'
+          ),
+          { modal: true },
+          confirm_label
+        )
+        if (confirm === confirm_label) {
+          result = '#AccuracyBoost'
+        } else {
+          result = 'continue'
+        }
         break
+      }
       default:
         continue
     }
