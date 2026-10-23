@@ -332,7 +332,7 @@ export const handle_commit_item = async (
           'views.shared.utils.hash-sign-quick-pick.quick-pick.commit.add-another'
         )
         const action = await vscode.window.showInformationMessage(
-          t('views.shared.utils.hash-sign-quick-pick.quick-pick.commit.added'),
+          t('views.shared.utils.hash-sign-quick-pick.quick-pick.commit.inserted'),
           add_another_label
         )
 

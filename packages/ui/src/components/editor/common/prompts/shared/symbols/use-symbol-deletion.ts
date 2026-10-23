@@ -100,7 +100,7 @@ export const use_symbol_deletion = (params: {
         symbol_type === 'commit-symbol' ? 'Commit' : 'CommitMessage'
       const search_pattern = `#${symbolName}(${repo_name}:${commit_hash} "${commit_message.replace(
         /"/g,
-        '\\\\"'
+        '\\"'
       )}")`
       const start_index = get_start_index(symbol_element, search_pattern)
 
