@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { JSDOM } from 'jsdom'
-import * as dns from 'dns/promises'
+import * as dns from 'dns'
+import * as http from 'http'
+import * as https from 'https'
 import { Readability, isProbablyReaderable } from '@mozilla/readability'
 import TurndownServiceJoplin from '@joplin/turndown'
 import * as turndownPluginGfm from '@joplin/turndown-plugin-gfm'
@@ -87,18 +89,78 @@ const create_turndown_service = () => {
 }
 
 const is_private_ip = (ip: string): boolean => {
-  if (/^127\./.test(ip)) return true
-  if (/^10\./.test(ip)) return true
-  if (/^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(ip)) return true
-  if (/^192\.168\./.test(ip)) return true
-  if (/^169\.254\./.test(ip)) return true
-  if (/^0\./.test(ip)) return true
-  if (/^255\.255\.255\.255$/.test(ip)) return true
-  if (ip === '::1' || ip === '::') return true
-  if (/^fe80:/i.test(ip)) return true
-  if (/^fc[0-9a-f]{2}:/i.test(ip) || /^fd[0-9a-f]{2}:/i.test(ip)) return true
+  let normalized_ip = ip.toLowerCase()
+  if (normalized_ip.startsWith('::ffff:')) {
+    normalized_ip = normalized_ip.replace(/^::ffff:/, '')
+  }
+
+  if (/^127\./.test(normalized_ip)) return true
+  if (/^10\./.test(normalized_ip)) return true
+  if (/^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(normalized_ip)) return true
+  if (/^192\.168\./.test(normalized_ip)) return true
+  if (/^169\.254\./.test(normalized_ip)) return true
+  if (/^0\./.test(normalized_ip)) return true
+  if (/^255\.255\.255\.255$/.test(normalized_ip)) return true
+  if (normalized_ip === '::1' || normalized_ip === '::') return true
+  if (/^fe80:/.test(normalized_ip)) return true
+  if (/^fc[0-9a-f]{2}:/.test(normalized_ip) || /^fd[0-9a-f]{2}:/.test(normalized_ip)) return true
   return false
 }
+
+const custom_lookup = (
+  hostname: string,
+  options:
+    | dns.LookupOneOptions
+    | ((
+        err: NodeJS.ErrnoException | null,
+        address: string,
+        family: number
+      ) => void),
+  callback?: (
+    err: NodeJS.ErrnoException | null,
+    address: string,
+    family: number
+  ) => void
+) => {
+  const cb = (typeof options === 'function' ? options : callback) as (
+    err: NodeJS.ErrnoException | null,
+    address: string,
+    family: number
+  ) => void
+  const opts = typeof options === 'function' ? {} : options
+
+  dns.lookup(hostname, opts, (err, address, family) => {
+    if (err) return cb(err, address, family)
+
+    if (typeof address === 'string' && is_private_ip(address)) {
+      return cb(
+        new Error(`SSRF blocked: private IP address ${address}`),
+        address,
+        family
+      )
+    }
+
+    if (Array.isArray(address)) {
+      for (const record of address) {
+        if (
+          typeof record.address === 'string' &&
+          is_private_ip(record.address)
+        ) {
+          return cb(
+            new Error(`SSRF blocked: private IP address ${record.address}`),
+            address as any,
+            family
+          )
+        }
+      }
+    }
+
+    cb(null, address as any, family)
+  })
+}
+
+const http_agent = new http.Agent({ lookup: custom_lookup as any })
+const https_agent = new https.Agent({ lookup: custom_lookup as any })
 
 export const fetch_website = async (
   url: string,
@@ -110,18 +172,15 @@ export const fetch_website = async (
       return null
     }
 
-    const { address } = await dns.lookup(parsed_url.hostname)
-    if (is_private_ip(address)) {
-      return null
-    }
-
     const response = await axios.get(url, {
       headers: {
         'User-Agent':
           'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36'
       },
       timeout: 5000,
-      signal: abort_signal
+      signal: abort_signal,
+      httpAgent: http_agent,
+      httpsAgent: https_agent
     })
 
     if (response.status === 200 && typeof response.data === 'string') {
