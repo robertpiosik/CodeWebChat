@@ -22,6 +22,12 @@ export const hash_sign_quick_pick = async (params: {
   const items: vscode.QuickPickItem[] = (
     [
       {
+        label: accuracy_boost_label,
+        description: t(
+          'views.shared.utils.hash-sign-quick-pick.quick-pick.accuracy-boost.description'
+        )
+      },
+      {
         label: changes_label,
         description: t(
           'views.shared.utils.hash-sign-quick-pick.quick-pick.changes.description'
@@ -52,12 +58,6 @@ export const hash_sign_quick_pick = async (params: {
             )
           }
         ]
-      },
-      {
-        label: accuracy_boost_label,
-        description: t(
-          'views.shared.utils.hash-sign-quick-pick.quick-pick.accuracy-boost.description'
-        )
       }
     ] as vscode.QuickPickItem[]
   ).filter((item) => {
