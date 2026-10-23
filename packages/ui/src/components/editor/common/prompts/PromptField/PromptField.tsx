@@ -79,6 +79,7 @@ export namespace PromptField {
       context_type: string,
       context_name: string
     ) => void
+    on_accuracy_boost_click?: () => void
     on_preview_prompt?: () => void
     is_recording: boolean
     on_recording_started: () => void

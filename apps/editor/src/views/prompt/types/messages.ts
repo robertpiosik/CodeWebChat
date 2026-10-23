@@ -611,6 +611,10 @@ export interface AgenticSearchMessage extends BaseMessage {
   command: 'AGENTIC_SEARCH'
 }
 
+export interface ShowAccuracyBoostInfoMessage extends BaseMessage {
+  command: 'SHOW_ACCURACY_BOOST_INFO'
+}
+
 export interface InstallBrowserExtensionMessage extends BaseMessage {
   command: 'INSTALL_BROWSER_EXTENSION'
 }
@@ -730,6 +734,7 @@ export type FrontendMessage =
   | PreviewSkillSymbolMessage
   | PreviewSavedContextSymbolMessage
   | AgenticSearchMessage
+  | ShowAccuracyBoostInfoMessage
   | GetAgentConfigurationsMessage
   | ReorderAgentConfigurationsMessage
   | TogglePinnedAgentConfigurationMessage

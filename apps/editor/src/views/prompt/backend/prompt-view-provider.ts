@@ -99,7 +99,8 @@ import {
   handle_pick_example_flags,
   handle_get_completed_tasks,
   handle_save_completed_tasks,
-  handle_clear_completed_tasks
+  handle_clear_completed_tasks,
+  handle_show_accuracy_boost_info
 } from './message-handlers'
 import { handle_agentic_search } from './message-handlers/handle-agentic-search'
 import { handle_preview_saved_context_symbol } from './message-handlers/handle-preview-saved-context-symbol'
@@ -906,6 +907,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             })
           } else if (message.command === 'AGENTIC_SEARCH') {
             await handle_agentic_search(this)
+          } else if (message.command === 'SHOW_ACCURACY_BOOST_INFO') {
+            await handle_show_accuracy_boost_info()
           } else if (message.command === 'GET_CLI_CONFIGURATIONS') {
             this.send_cli_configurations_to_webview(webview_view.webview)
           } else if (message.command === 'CREATE_CLI_CONFIGURATION') {

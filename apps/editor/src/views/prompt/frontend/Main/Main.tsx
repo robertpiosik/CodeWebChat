@@ -735,6 +735,11 @@ export const Main: React.FC<Props> = (props) => {
           context_name
         })
       }}
+      on_accuracy_boost_click={() => {
+        post_message(vscode, {
+          command: 'SHOW_ACCURACY_BOOST_INFO'
+        })
+      }}
       on_install_browser_extension={handle_install_browser_extension}
       on_agentic_search={props.on_agentic_search}
       on_clear_context={handle_clear_context}

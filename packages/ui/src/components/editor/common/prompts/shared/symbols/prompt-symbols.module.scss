@@ -132,19 +132,24 @@
     }
   }
 
+  &--accuracy-boost {
+    background: linear-gradient(to right, red, #c69e38);
+    color: white;
+  }
+
   &--accuracy-boost &__icon::before {
     content: '\eb44';
+  }
+
+  &--accuracy-boost &__icon:hover {
+    background-color: rgba(255, 255, 255, 0.2);
   }
 
   &--accuracy-boost &__text {
     cursor: pointer;
 
     &:hover {
-      background-color: color-mix(
-        in srgb,
-        var(--vscode-charts-blue) 30%,
-        transparent
-      );
+      background-color: rgba(255, 255, 255, 0.2);
     }
   }
 

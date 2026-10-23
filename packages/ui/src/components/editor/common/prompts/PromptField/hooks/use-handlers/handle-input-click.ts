@@ -117,6 +117,13 @@ export const create_handle_input_click = ({
         }
       }
 
+      const accuracy_boost_symbol_element = text_element.closest<HTMLElement>(
+        '[data-type="accuracy-boost-symbol"]'
+      )
+      if (accuracy_boost_symbol_element) {
+        props.on_accuracy_boost_click?.()
+      }
+
       const changes_symbol_element = text_element.closest<HTMLElement>(
         '[data-type="changes-symbol"]'
       )
