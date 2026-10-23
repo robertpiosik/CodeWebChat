@@ -63,7 +63,8 @@ export const handle_autofill = async (params: {
     collected_files,
     processed_instructions,
     processed_completed_tasks,
-    skill_definitions
+    skill_definitions,
+    accuracy_boost
   } = await build_prompt_payload({
     prompt_view_provider: params.prompt_view_provider,
     remove_images: true
@@ -98,7 +99,8 @@ export const handle_autofill = async (params: {
     skill_definitions,
     output_formatting,
     completed_tasks,
-    user_instructions
+    user_instructions,
+    accuracy_boost
   })
 
   const prompt_type = params.prompt_view_provider.web_prompt_type

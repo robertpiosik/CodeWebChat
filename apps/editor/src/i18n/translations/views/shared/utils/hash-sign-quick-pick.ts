@@ -312,6 +312,43 @@ export const translations = {
     hu: 'Fedezz fel képességeket a skills.sh oldalon',
     bg: 'Открийте умения на skills.sh'
   },
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.accuracy-boost.label': {
+    en: 'Accuracy boost',
+    pl: 'Zwiększenie dokładności',
+    'zh-cn': '提升准确度',
+    ja: '精度向上',
+    'zh-tw': '提升準確度',
+    de: 'Genauigkeitssteigerung',
+    es: 'Aumento de precisión',
+    fr: 'Augmentation de la précision',
+    'pt-br': 'Aumento de precisão',
+    ru: 'Повышение точности',
+    ko: '정확도 향상',
+    it: 'Aumento di precisione',
+    tr: 'Doğruluk artışı',
+    cs: 'Zvýšení přesnosti',
+    hu: 'Pontosságnövelés',
+    bg: 'Повишаване на точността'
+  },
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.accuracy-boost.description':
+    {
+      en: 'Place instructions at both ends of the prompt',
+      pl: 'Umieść instrukcje na obu końcach promptu',
+      'zh-cn': '在提示的两端放置说明',
+      ja: 'プロンプトの両端に指示を配置する',
+      'zh-tw': '在提示的兩端放置說明',
+      de: 'Anweisungen an beiden Enden des Prompts platzieren',
+      es: 'Colocar instrucciones en ambos extremos del prompt',
+      fr: 'Placer les instructions aux deux extrémités du prompt',
+      'pt-br': 'Colocar instruções em ambas as extremidades do prompt',
+      ru: 'Разместить инструкции на обоих концах промпта',
+      ko: '프롬프트의 양쪽 끝에 지침 배치',
+      it: 'Posizionare le istruzioni ad entrambe le estremità del prompt',
+      tr: 'İstemcinin her iki ucuna talimatları yerleştirin',
+      cs: 'Umístit instrukce na oba konce promptu',
+      hu: 'Helyezze az utasításokat a prompt mindkét végére',
+      bg: 'Поставете инструкции в двата края на промпта'
+    },
   'views.shared.utils.hash-sign-quick-pick.quick-pick.placeholder': {
     en: 'Select symbol to insert',
     pl: 'Wybierz symbol do wstawienia',

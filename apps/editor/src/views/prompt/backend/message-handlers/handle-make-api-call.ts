@@ -55,7 +55,8 @@ export const handle_make_api_call = async (
     collected_files,
     processed_instructions,
     processed_completed_tasks,
-    skill_definitions
+    skill_definitions,
+    accuracy_boost
   } = await build_prompt_payload({
     prompt_view_provider
   })
@@ -117,7 +118,8 @@ export const handle_make_api_call = async (
         skill_definitions,
         output_formatting,
         completed_tasks,
-        user_instructions: processed_instructions
+        user_instructions: processed_instructions,
+        accuracy_boost
       })
       user_content = build_user_content({
         provider,

@@ -12,6 +12,7 @@ const changes_label = `$(git-pull-request-draft) ${t('views.shared.utils.hash-si
 const commit_label = `$(git-commit) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.commit.label')}`
 const saved_context_label = `$(checklist) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.saved-context.label')}`
 const skill_label = `$(thinking) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.skill.label')}`
+const accuracy_boost_label = `$(rocket) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.accuracy-boost.label')}`
 
 export const hash_sign_quick_pick = async (params: {
   extension_context: vscode.ExtensionContext
@@ -51,6 +52,12 @@ export const hash_sign_quick_pick = async (params: {
             )
           }
         ]
+      },
+      {
+        label: accuracy_boost_label,
+        description: t(
+          'views.shared.utils.hash-sign-quick-pick.quick-pick.accuracy-boost.description'
+        )
       }
     ] as vscode.QuickPickItem[]
   ).filter((item) => {
@@ -156,6 +163,9 @@ export const hash_sign_quick_pick = async (params: {
         break
       case skill_label:
         result = await handle_skill_item()
+        break
+      case accuracy_boost_label:
+        result = '#AccuracyBoost'
         break
       default:
         continue

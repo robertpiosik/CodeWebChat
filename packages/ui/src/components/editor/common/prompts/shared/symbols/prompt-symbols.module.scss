@@ -132,6 +132,22 @@
     }
   }
 
+  &--accuracy-boost &__icon::before {
+    content: '\eb44';
+  }
+
+  &--accuracy-boost &__text {
+    cursor: pointer;
+
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-charts-blue) 30%,
+        transparent
+      );
+    }
+  }
+
   &--changes &__icon::before {
     content: '\ebdb';
   }

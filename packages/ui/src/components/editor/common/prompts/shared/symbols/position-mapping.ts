@@ -43,7 +43,7 @@ export const map_display_pos_to_raw_pos = (params: {
   let last_raw_index = 0
 
   const regex =
-    /`([^`]+)`|(#Changes\([^)]+\))|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "(?:\\.|[^"\\])*")?\))/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "(?:\\.|[^"\\])*")?\))|(#AccuracyBoost)/g
   let match
 
   while ((match = regex.exec(params.raw_text)) !== null) {
@@ -60,6 +60,7 @@ export const map_display_pos_to_raw_pos = (params: {
     const image_symbol = match[14]
     const pasted_text_symbol = match[15]
     const website_symbol = match[16]
+    const accuracy_boost_symbol = match[17]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -117,6 +118,9 @@ export const map_display_pos_to_raw_pos = (params: {
         label = match[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\')
       }
       display_match_length = label.length
+      is_replacement_match = true
+    } else if (accuracy_boost_symbol) {
+      display_match_length = 'Accuracy boost'.length
       is_replacement_match = true
     }
 
@@ -161,7 +165,7 @@ export const map_raw_pos_to_display_pos = (params: {
   let last_raw_index = 0
 
   const regex =
-    /`([^`]+)`|(#Changes\([^)]+\))|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "(?:\\.|[^"\\])*")?\))/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "(?:\\.|[^"\\])*")?\))|(#AccuracyBoost)/g
   let match
 
   while ((match = regex.exec(params.raw_text)) !== null) {
@@ -178,6 +182,7 @@ export const map_raw_pos_to_display_pos = (params: {
     const image_symbol = match[14]
     const pasted_text_symbol = match[15]
     const website_symbol = match[16]
+    const accuracy_boost_symbol = match[17]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -235,6 +240,9 @@ export const map_raw_pos_to_display_pos = (params: {
         label = match[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\')
       }
       display_match_length = label.length
+      is_replacement_match = true
+    } else if (accuracy_boost_symbol) {
+      display_match_length = 'Accuracy boost'.length
       is_replacement_match = true
     }
 

@@ -141,6 +141,14 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
         const title_part = title ? ` "${title}"` : ''
         return `${prefix}#Website(${url} ${id_and_token}${title_part})${suffix}`
       }
+    } else if (el.dataset.type === 'accuracy-boost-symbol') {
+      const expected_text = 'Accuracy boost'
+      const index = inner_content.indexOf(expected_text)
+      if (index !== -1) {
+        const prefix = inner_content.substring(0, index)
+        const suffix = inner_content.substring(index + expected_text.length)
+        return `${prefix}#AccuracyBoost${suffix}`
+      }
     }
 
     if (el.dataset.role === 'tabs-container') return ''

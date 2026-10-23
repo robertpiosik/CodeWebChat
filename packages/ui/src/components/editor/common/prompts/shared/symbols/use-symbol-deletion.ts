@@ -178,6 +178,13 @@ export const use_symbol_deletion = (params: {
       if (start_index !== -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
+    } else if (symbol_type === 'accuracy-boost-symbol') {
+      const search_pattern = `#AccuracyBoost`
+      const start_index = get_start_index(symbol_element, search_pattern)
+
+      if (start_index !== -1) {
+        apply_symbol_deletion(start_index, start_index + search_pattern.length)
+      }
     }
   }
 
@@ -203,11 +210,7 @@ export const use_symbol_deletion = (params: {
         end_of_path
       )
       if (context_file_paths.includes(path_in_backticks)) {
-        const new_value =
-          params.value.substring(0, start_of_path) +
-          params.value.substring(end_of_path + 1)
-        const new_raw_cursor_pos = start_of_path
-        params.on_delete(new_value, new_raw_cursor_pos)
+        apply_symbol_deletion(start_of_path, end_of_path + 1)
         return true
       }
     }
@@ -223,11 +226,7 @@ export const use_symbol_deletion = (params: {
 
     if (match) {
       const start_of_match = raw_pos - match[0].length
-      const new_value =
-        params.value.substring(0, start_of_match) +
-        params.value.substring(raw_pos)
-      const new_raw_cursor_pos = start_of_match
-      params.on_delete(new_value, new_raw_cursor_pos)
+      apply_symbol_deletion(start_of_match, raw_pos)
       return true
     }
     return false
@@ -244,11 +243,7 @@ export const use_symbol_deletion = (params: {
 
     if (match) {
       const start_of_match = raw_pos - match[0].length
-      const new_value =
-        params.value.substring(0, start_of_match) +
-        params.value.substring(raw_pos)
-      const new_raw_cursor_pos = start_of_match
-      params.on_delete(new_value, new_raw_cursor_pos)
+      apply_symbol_deletion(start_of_match, raw_pos)
       return true
     }
     return false
@@ -265,11 +260,7 @@ export const use_symbol_deletion = (params: {
 
     if (match) {
       const start_of_match = raw_pos - match[0].length
-      const new_value =
-        params.value.substring(0, start_of_match) +
-        params.value.substring(raw_pos)
-      const new_raw_cursor_pos = start_of_match
-      params.on_delete(new_value, new_raw_cursor_pos)
+      apply_symbol_deletion(start_of_match, raw_pos)
       return true
     }
     return false
@@ -281,11 +272,7 @@ export const use_symbol_deletion = (params: {
 
     if (match) {
       const start_of_match = raw_pos - match[0].length
-      const new_value =
-        params.value.substring(0, start_of_match) +
-        params.value.substring(raw_pos)
-      const new_raw_cursor_pos = start_of_match
-      params.on_delete(new_value, new_raw_cursor_pos)
+      apply_symbol_deletion(start_of_match, raw_pos)
       return true
     }
     return false
@@ -307,11 +294,7 @@ export const use_symbol_deletion = (params: {
       last_match.index + last_match[0].length === text_before_cursor.length
     ) {
       const start_of_match = last_match.index
-      const new_value =
-        params.value.substring(0, start_of_match) +
-        params.value.substring(raw_pos)
-      const new_raw_cursor_pos = start_of_match
-      params.on_delete(new_value, new_raw_cursor_pos)
+      apply_symbol_deletion(start_of_match, raw_pos)
       return true
     }
     return false
@@ -322,13 +305,8 @@ export const use_symbol_deletion = (params: {
     const match = text_before_cursor.match(/#Image\(([a-fA-F0-9]+)\)$/)
 
     if (match) {
-      const hash = match[1]
       const start_of_match = raw_pos - match[0].length
-      const new_value =
-        params.value.substring(0, start_of_match) +
-        params.value.substring(raw_pos)
-      const new_raw_cursor_pos = start_of_match
-      params.on_delete(new_value, new_raw_cursor_pos)
+      apply_symbol_deletion(start_of_match, raw_pos)
       return true
     }
     return false
@@ -342,11 +320,7 @@ export const use_symbol_deletion = (params: {
 
     if (match) {
       const start_of_match = raw_pos - match[0].length
-      const new_value =
-        params.value.substring(0, start_of_match) +
-        params.value.substring(raw_pos)
-      const new_raw_cursor_pos = start_of_match
-      params.on_delete(new_value, new_raw_cursor_pos)
+      apply_symbol_deletion(start_of_match, raw_pos)
       return true
     }
     return false
@@ -360,11 +334,19 @@ export const use_symbol_deletion = (params: {
 
     if (match) {
       const start_of_match = raw_pos - match[0].length
-      const new_value =
-        params.value.substring(0, start_of_match) +
-        params.value.substring(raw_pos)
-      const new_raw_cursor_pos = start_of_match
-      params.on_delete(new_value, new_raw_cursor_pos)
+      apply_symbol_deletion(start_of_match, raw_pos)
+      return true
+    }
+    return false
+  }
+
+  const handle_accuracy_boost_symbol_deletion = (raw_pos: number): boolean => {
+    const text_before_cursor = params.value.substring(0, raw_pos)
+    const match = text_before_cursor.match(/#AccuracyBoost$/)
+
+    if (match) {
+      const start_of_match = raw_pos - match[0].length
+      apply_symbol_deletion(start_of_match, raw_pos)
       return true
     }
     return false
@@ -418,6 +400,10 @@ export const use_symbol_deletion = (params: {
 
     if (deletion_params.el.dataset.type === 'website-symbol') {
       return handle_website_symbol_deletion(raw_pos)
+    }
+
+    if (deletion_params.el.dataset.type === 'accuracy-boost-symbol') {
+      return handle_accuracy_boost_symbol_deletion(raw_pos)
     }
 
     return false
@@ -495,7 +481,8 @@ export const use_symbol_deletion = (params: {
           parent.dataset.type === 'skill-symbol' ||
           parent.dataset.type === 'image-symbol' ||
           parent.dataset.type === 'pasted-text-symbol' ||
-          parent.dataset.type === 'website-symbol'
+          parent.dataset.type === 'website-symbol' ||
+          parent.dataset.type === 'accuracy-boost-symbol'
         ) {
           const range_after = document.createRange()
           range_after.selectNodeContents(parent)
@@ -524,7 +511,8 @@ export const use_symbol_deletion = (params: {
         el.dataset.type === 'skill-symbol' ||
         el.dataset.type === 'image-symbol' ||
         el.dataset.type === 'pasted-text-symbol' ||
-        el.dataset.type === 'website-symbol'
+        el.dataset.type === 'website-symbol' ||
+        el.dataset.type === 'accuracy-boost-symbol'
       ) {
         const display_pos = get_caret_position_from_div(
           params.input_ref.current

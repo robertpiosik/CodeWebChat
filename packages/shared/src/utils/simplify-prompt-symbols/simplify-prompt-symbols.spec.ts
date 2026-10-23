@@ -53,6 +53,11 @@ describe('simplify_prompt_symbols', () => {
     expect(simplify_prompt_symbols({ prompt })).toBe('Read [Website]')
   })
 
+  it('should replace #AccuracyBoost', () => {
+    const prompt = 'Run #AccuracyBoost task'
+    expect(simplify_prompt_symbols({ prompt })).toBe('Run [Accuracy boost] task')
+  })
+
   it('should handle multiple replacements', () => {
     const prompt = '#Fragment(a.ts:1:1-2:2) with #Changes(dev)'
     expect(simplify_prompt_symbols({ prompt })).toBe(

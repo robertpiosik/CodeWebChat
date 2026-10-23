@@ -26,6 +26,7 @@ export const simplify_prompt_symbols = (params: { prompt: string }): string => {
     /#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "(?:\\.|[^"\\])*")?\)/g,
     '[Website]'
   )
+  simplified = simplified.replace(/#AccuracyBoost/g, '[Accuracy boost]')
 
   return simplified
 }
@@ -44,6 +45,7 @@ export const is_prompt_empty_or_only_symbols = (params: {
     .replace(/\[Image\]/g, '')
     .replace(/\[Pasted text\]/g, '')
     .replace(/\[Website\]/g, '')
+    .replace(/\[Accuracy boost\]/g, '')
     .trim()
 
   return stripped === ''

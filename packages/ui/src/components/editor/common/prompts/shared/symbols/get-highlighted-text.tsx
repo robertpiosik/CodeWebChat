@@ -80,8 +80,10 @@ export const get_highlighted_text = (params: {
 
   const pasted_text_regex_part = '#PastedText\\([a-fA-F0-9]+:\\d+\\)'
 
+  const accuracy_boost_regex_part = '#AccuracyBoost'
+
   const regex = new RegExp(
-    `(${fragment_regex_part}|#Changes\\([^)]+\\)|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part}|${image_regex_part}|${pasted_text_regex_part}|${website_regex_part})`,
+    `(${fragment_regex_part}|#Changes\\([^)]+\\)|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part}|${image_regex_part}|${pasted_text_regex_part}|${website_regex_part}|${accuracy_boost_regex_part})`,
     'g'
   )
   const parts = params.text.split(regex)
@@ -240,6 +242,13 @@ export const get_highlighted_text = (params: {
         }" data-role="symbol-icon"></span><span class="${
           styles['symbol__text']
         }" data-role="symbol-text">${escape_html(label)}</span></span>`
+      }
+
+      const accuracy_boost_match = part.match(/^#AccuracyBoost$/)
+      if (part && accuracy_boost_match) {
+        return `<span class="${cn(styles['symbol'], styles['symbol--accuracy-boost'], {
+          [styles['symbol--non-interactive']]: !interactive_text
+        })}" data-type="accuracy-boost-symbol" title="Accuracy boost: Task instructions placed also above context"><span class="${styles['symbol__icon']}" data-role="symbol-icon"></span><span class="${styles['symbol__text']}" data-role="symbol-text">Accuracy boost</span></span>`
       }
 
       return process_text_part_for_files({

@@ -12,6 +12,7 @@ export const build_prompt_payload = async (params: {
   processed_instructions: string
   processed_completed_tasks: string[]
   skill_definitions: string
+  accuracy_boost: boolean
 }> => {
   const { prompt_view_provider, remove_images } = params
   let other_files = ''
@@ -31,7 +32,7 @@ export const build_prompt_payload = async (params: {
     ...prompt_view_provider.completed_tasks
   ]
 
-  const { instructions: processed_instructions_array, skill_definitions } =
+  const { instructions: processed_instructions_array, skill_definitions, accuracy_boost } =
     await replace_symbols({
       instructions: instructions_to_process,
       extension_context: prompt_view_provider.extension_context,
@@ -49,6 +50,7 @@ export const build_prompt_payload = async (params: {
     collected_files,
     processed_instructions,
     processed_completed_tasks,
-    skill_definitions
+    skill_definitions,
+    accuracy_boost
   }
 }

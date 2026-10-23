@@ -20,7 +20,7 @@ export const build_cli_prompt = async (params: {
     ...prompt_view_provider.completed_tasks
   ]
 
-  const { instructions: processed_instructions_array, skill_definitions } =
+  const { instructions: processed_instructions_array, skill_definitions, accuracy_boost } =
     await replace_symbols({
       instructions: instructions_to_process,
       extension_context: prompt_view_provider.extension_context,
@@ -103,7 +103,8 @@ export const build_cli_prompt = async (params: {
     skill_definitions,
     requirements: requirements_list,
     completed_tasks,
-    user_instructions: processed_query
+    user_instructions: processed_query,
+    accuracy_boost
   })
 
   return build_result.full_prompt

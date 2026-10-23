@@ -70,6 +70,7 @@ export namespace PromptBuilder {
     requirements?: string[]
     completed_tasks?: string[]
     user_instructions?: string
+    accuracy_boost?: boolean
   }): { part1: string; part2: string; full_prompt: string } => {
     let part1 = ''
     let part2 = ''
@@ -80,8 +81,23 @@ export namespace PromptBuilder {
       active_file_context = build_file_context(params.active_file)
     }
 
+    let top_sys = ''
+    if (params.accuracy_boost) {
+      if (params.user_instructions) {
+        top_sys += `# Task\n\n${params.user_instructions}\n\n`
+      }
+      if (params.output_formatting) {
+        top_sys += `# Output formatting\n\n${params.output_formatting.trimEnd()}\n\n`
+      }
+      if (params.requirements && params.requirements.length > 0) {
+        const req_str = params.requirements.map((r) => `- ${r}`).join('\n')
+        top_sys += `# Requirements\n\n${req_str}\n\n`
+      }
+    }
+
     if (params.files_context !== undefined) {
       if (params.files_context || active_file_context) {
+        if (top_sys) full_prompt += top_sys
         full_prompt += `# Files\n\n`
         if (params.files_context) {
           full_prompt += params.files_context
@@ -89,6 +105,8 @@ export namespace PromptBuilder {
         if (active_file_context) {
           full_prompt += active_file_context
         }
+      } else {
+        if (top_sys) full_prompt += top_sys
       }
     } else {
       const has_files = !!(
@@ -98,12 +116,17 @@ export namespace PromptBuilder {
       )
       if (has_files) {
         if (params.files_context_part1) {
-          part1 = `# Files\n\n${params.files_context_part1}`
+          part1 = (top_sys ? top_sys : '') + `# Files\n\n${params.files_context_part1}`
           part2 += `${params.files_context_part2 || ''}${active_file_context}`
         } else {
-          part2 += `# Files\n\n${params.files_context_part2 || ''}${active_file_context}`
+          part2 += (top_sys ? top_sys : '') + `# Files\n\n${params.files_context_part2 || ''}${active_file_context}`
         }
         full_prompt = part1 + part2
+      } else {
+        if (top_sys) {
+          part1 += top_sys
+          full_prompt += top_sys
+        }
       }
     }
 

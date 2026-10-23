@@ -19,7 +19,7 @@ export const replace_symbols = async (params: {
   remove_images?: boolean
   image_as_paths?: boolean
   symbols_cache?: SymbolCacheManager
-}): Promise<{ instructions: string[]; skill_definitions: string }> => {
+}): Promise<{ instructions: string[]; skill_definitions: string; accuracy_boost: boolean }> => {
   let processed_instructions = [...params.instructions]
   let skill_definitions = ''
 
@@ -95,5 +95,15 @@ export const replace_symbols = async (params: {
     })
   }
 
-  return { instructions: processed_instructions, skill_definitions }
+  const accuracy_boost = processed_instructions.some((i) => i.includes('#AccuracyBoost'))
+  if (accuracy_boost) {
+    processed_instructions = processed_instructions.map((i) =>
+      i
+        .replace(/ #AccuracyBoost /g, ' ')
+        .replace(/ ?#AccuracyBoost ?/g, '')
+        .trim()
+    )
+  }
+
+  return { instructions: processed_instructions, skill_definitions, accuracy_boost }
 }
