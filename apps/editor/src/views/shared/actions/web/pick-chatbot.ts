@@ -9,10 +9,7 @@ export const pick_chatbot = async (params: {
 
   const items: vscode.QuickPickItem[] = chatbots.map(([chatbot, { url }]) => ({
     label: chatbot,
-    description:
-      chatbot === 'Open WebUI'
-        ? 'localhost'
-        : url.replace(/^https?:\/\//, '').split('/')[0]
+    description: url.replace(/^https?:\/\//, '').split('/')[0]
   }))
 
   const quick_pick = vscode.window.createQuickPick()

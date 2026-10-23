@@ -125,63 +125,6 @@ export const translations = {
     hu: 'Csoport',
     bg: 'Група'
   },
-  'edit-web-configuration-form.port': {
-    en: 'Port',
-    pl: 'Port',
-    'zh-cn': '端口',
-    ja: 'ポート',
-    'zh-tw': '通訊埠',
-    de: 'Port',
-    es: 'Puerto',
-    fr: 'Port',
-    'pt-br': 'Porta',
-    ru: 'Порт',
-    ko: '포트',
-    it: 'Porta',
-    tr: 'Bağlantı Noktası',
-    cs: 'Port',
-    hu: 'Port',
-    bg: 'Порт'
-  },
-  'edit-web-configuration-form.port.info': {
-    en: 'Used for localhost. For networked instances leave empty and setup a proxy server for <code>http://openwebui/</code>.',
-    pl: 'Używane dla localhost. Dla instancji sieciowych pozostaw puste i skonfiguruj serwer proxy dla <code>http://openwebui/</code>.',
-    'zh-cn':
-      '用于 localhost。对于网络实例，请留空并为 <code>http://openwebui/</code> 设置代理服务器。',
-    ja: 'localhost に使用されます。ネットワーク化されたインスタンスの場合は空白のままにし、<code>http://openwebui/</code> 用のプロキシサーバーを設定します。',
-    'zh-tw':
-      '用於 localhost。對於網路實例，請留空並為 <code>http://openwebui/</code> 設定代理伺服器。',
-    de: 'Wird für Localhost verwendet. Lassen Sie dies bei vernetzten Instanzen leer und richten Sie einen Proxy-Server für <code>http://openwebui/</code> ein.',
-    es: 'Se usa para localhost. Para instancias en red, déjalo vacío y configura un servidor proxy para <code>http://openwebui/</code>.',
-    fr: 'Utilisé pour localhost. Pour les instances en réseau, laissez vide et configure un serveur proxy pour <code>http://openwebui/</code>.',
-    'pt-br':
-      'Usado para localhost. Para instâncias de rede, deixe vazio e configure um servidor proxy para <code>http://openwebui/</code>.',
-    ru: 'Используется для localhost. Для сетевых экземпляров оставьте пустым и настройте прокси-сервер для <code>http://openwebui/</code>.',
-    ko: 'localhost에 사용됩니다. 네트워크 인스턴스의 경우 비워 두고 <code>http://openwebui/</code>에 대한 프록시 서버를 설정합니다.',
-    it: 'Usado per localhost. Per le istanze di rete lascia vuoto e configura un server proxy per <code>http://openwebui/</code>.',
-    tr: 'Localhost için kullanılır. Ağa bağlı örnekler için boş bırakın ve <code>http://openwebui/</code> için bir proxy sunucusu kurun.',
-    cs: 'Používá se pro localhost. Pro síťové instance ponechte prázdné a nastavte proxy server pro <code>http://openwebui/</code>.',
-    hu: 'Localhosthoz használatos. Hálózati példányok esetén hagyja üresen, és állítson be proxyszervert a <code>http://openwebui/</code> számára.',
-    bg: 'Използва се за localhost. За мрежови инстанции оставете празно и настройте прокси сървър за <code>http://openwebui/</code>.'
-  },
-  'edit-web-configuration-form.port.placeholder': {
-    en: 'e.g. 3000',
-    pl: 'np. 3000',
-    'zh-cn': '例如 3000',
-    ja: '例：3000',
-    'zh-tw': '例如 3000',
-    de: 'z.B. 3000',
-    es: 'ej. 3000',
-    fr: 'ex. 3000',
-    'pt-br': 'ex. 3000',
-    ru: 'напр. 3000',
-    ko: '예: 3000',
-    it: 'es. 3000',
-    tr: 'örn. 3000',
-    cs: 'např. 3000',
-    hu: 'pl. 3000',
-    bg: 'напр. 3000'
-  },
   'edit-web-configuration-form.url-override': {
     en: 'URL override',
     pl: 'Nadpisanie URL',

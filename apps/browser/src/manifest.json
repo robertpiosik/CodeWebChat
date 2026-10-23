@@ -45,8 +45,7 @@
         "https://chat.together.ai/",
         "https://yuanbao.tencent.com/*",
         "https://chat.z.ai/",
-        "https://zchat.z.ai/",
-        "http://localhost/"
+        "https://zchat.z.ai/"
       ],
       "js": ["send-prompt-content-script.js"]
     }

@@ -11,7 +11,7 @@ import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrolla
 import { Fieldset as UiFieldset } from '@ui/components/editor/prompt-view/Fieldset'
 import { QuickPickButton as UiQuickPickButton } from '@ui/components/editor/common/QuickPickButton'
 import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
-import { use_translation, Translation } from '../../i18n/use-translation'
+import { use_translation } from '../../i18n/use-translation'
 
 type Props = {
   web_configuration: WebConfiguration
@@ -35,7 +35,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
   const [system_instructions, set_system_instructions] = useState(
     props.web_configuration.system_instructions
   )
-  const [port, set_port] = useState(props.web_configuration.port)
   const [new_url, set_new_url] = useState(props.web_configuration.new_url)
   const [options, set_options] = useState<string[]>(
     props.web_configuration.options || []
@@ -73,7 +72,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
     !!model_info?.supported_reasoning_efforts
   const supports_system_instructions =
     chatbot_config.supports_system_instructions
-  const supports_port = chatbot_config.supports_user_provided_port
   const supports_url_override = chatbot_config.supports_url_override
   const supports_user_provided_model =
     chatbot_config.supports_user_provided_model
@@ -85,7 +83,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
       ...(reasoning_effort ? { reasoning_effort } : {}),
       ...(model ? { model } : {}),
       ...(system_instructions ? { system_instructions } : {}),
-      ...(port !== undefined ? { port } : {}),
       ...(new_url ? { new_url } : {}),
       ...(options.length ? { options } : {}),
       is_pinned: props.web_configuration.is_pinned
@@ -96,7 +93,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
     chatbot,
     model,
     system_instructions,
-    port,
     new_url,
     options
   ])
@@ -104,7 +100,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
   const handle_chatbot_change = (new_chatbot: keyof typeof CHATBOTS) => {
     set_chatbot(new_chatbot)
     set_model(undefined)
-    set_port(undefined)
     set_new_url(undefined)
     set_reasoning_effort(undefined)
     if (CHATBOTS[new_chatbot].supports_system_instructions) {
@@ -269,34 +264,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
               }
             />
           </UiField>
-
-          {supports_port && (
-            <UiField
-              label={t('edit-web-configuration-form.port')}
-              html_for="port"
-              info={
-                chatbot === 'Open WebUI' && (
-                  <Translation id="edit-web-configuration-form.port.info" />
-                )
-              }
-            >
-              <UiInput
-                id="port"
-                type="text"
-                value={String(port ?? '')}
-                on_change={(value) => {
-                  const num = parseInt(value, 10)
-                  set_port(isNaN(num) ? undefined : num)
-                }}
-                placeholder={t('edit-web-configuration-form.port.placeholder')}
-                on_key_down={(e) =>
-                  !/[0-9]/.test(e.key) &&
-                  e.key !== 'Backspace' &&
-                  e.preventDefault()
-                }
-              />
-            </UiField>
-          )}
 
           {supports_url_override && (
             <UiField

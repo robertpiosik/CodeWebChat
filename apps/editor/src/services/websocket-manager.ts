@@ -454,11 +454,7 @@ export class WebSocketManager {
         url = base_url
       }
     } else if (web_configuration.chatbot === 'Open WebUI') {
-      if (web_configuration.port) {
-        url = `http://localhost:${web_configuration.port}/`
-      } else {
-        url = 'http://openwebui/'
-      }
+      url = 'http://openwebui/'
     } else if (web_configuration.chatbot === 'Arena') {
       if (web_configuration.model) {
         url = `https://arena.ai/?mode=direct&model=${web_configuration.model}`
@@ -559,11 +555,7 @@ export class WebSocketManager {
         url = base_url
       }
     } else if (params.web_configuration.chatbot === 'Open WebUI') {
-      if (params.web_configuration.port) {
-        url = `http://localhost:${params.web_configuration.port}/`
-      } else {
-        url = 'http://openwebui/'
-      }
+      url = 'http://openwebui/'
     } else if (params.web_configuration.chatbot === 'Arena') {
       if (params.web_configuration.model) {
         url = `https://arena.ai/?mode=direct&model=${params.web_configuration.model}`

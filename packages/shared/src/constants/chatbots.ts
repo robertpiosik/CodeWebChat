@@ -2,7 +2,6 @@ type Chatbot = {
   url: string
   supports_system_instructions?: boolean
   supports_user_provided_model?: boolean
-  supports_user_provided_port?: boolean
   supports_reasoning_effort?: boolean
   supported_reasoning_efforts?: string[]
   supports_url_override?: boolean
@@ -150,7 +149,6 @@ export const CHATBOTS = {
     url: 'http://openwebui/',
     supports_system_instructions: true,
     supports_user_provided_model: true,
-    supports_user_provided_port: true,
     default_system_instructions: "You're a helpful coding assistant."
   } as Chatbot,
   OpenRouter: {

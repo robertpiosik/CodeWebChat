@@ -94,7 +94,8 @@ const is_z_ai =
   current_url.startsWith(z_ai_global_url) ||
   current_url.startsWith(z_ai_china_url)
 
-const is_open_webui = document.title.includes('Open WebUI')
+const open_webui_url = 'http://openwebui/'
+const is_open_webui = current_url.startsWith(open_webui_url)
 
 let chatbot: Chatbot | null = null
 
