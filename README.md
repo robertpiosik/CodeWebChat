@@ -30,9 +30,9 @@ Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs
 > Click ▶ to expand.
 
 <details>
-<summary><strong>Sessionless design</strong></summary>
+<summary><strong>Files placed in prompt</strong></summary>
 
-Without ever-growing sessions, intent is clear. Model focused on the task from the start 'thinks' less.
+Because files are placed directly in prompt, there is no tool calling. Expect outputs in seconds!
 
 </details>
 
