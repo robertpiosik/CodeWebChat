@@ -92,9 +92,15 @@ export class TokenCalculator implements vscode.Disposable {
         }
       }
 
-      const wrapper_len =
-        `### File: \`${display_path}\`\n\n\`\`\`\n\n\`\`\`\n\n`.length
-      const estimated_tokens = Math.floor((file_size + wrapper_len) / 4)
+      let estimated_tokens = 0
+      if (is_binary_file(file_path)) {
+        const wrapper = `### File: \`${display_path}\`\n\nBinary file\n\n`
+        estimated_tokens = Math.floor(wrapper.length / 4)
+      } else {
+        const wrapper_len =
+          `### File: \`${display_path}\`\n\n\`\`\`\n\n\`\`\`\n\n`.length
+        estimated_tokens = Math.floor((file_size + wrapper_len) / 4)
+      }
 
       this._file_token_counts.set(file_path, estimated_tokens)
 
