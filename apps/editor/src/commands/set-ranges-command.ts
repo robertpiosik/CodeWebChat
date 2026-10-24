@@ -12,6 +12,7 @@ import {
 import { t } from '../i18n'
 import { normalize_path } from '../utils/normalize-path'
 import { get_error_message } from '@/utils/get-error-message'
+import { is_binary_file } from '../utils/is-binary'
 
 export const set_ranges_command = (
   workspace_provider: WorkspaceProvider,
@@ -33,6 +34,24 @@ export const set_ranges_command = (
       if (!workspace_folder) {
         vscode.window.showErrorMessage(
           t('command.set-ranges-command.not-in-workspace')
+        )
+        return
+      }
+
+      let is_binary = is_binary_file(file_path)
+      if (!is_binary) {
+        try {
+          const file_handle = await fs.open(file_path, 'r')
+          const buffer = Buffer.alloc(8000)
+          const { bytesRead } = await file_handle.read(buffer, 0, 8000, 0)
+          await file_handle.close()
+          is_binary = is_binary_file(file_path, buffer.subarray(0, bytesRead))
+        } catch {}
+      }
+
+      if (is_binary) {
+        vscode.window.showErrorMessage(
+          t('command.set-ranges-command.is-binary')
         )
         return
       }

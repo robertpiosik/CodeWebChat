@@ -1,4 +1,22 @@
 export const translations = {
+  'command.set-ranges-command.is-binary': {
+    en: 'Cannot set ranges on binary files.',
+    pl: 'Nie można ustawiać zakresów w plikach binarnych.',
+    'zh-cn': '不能在二进制文件上设置范围。',
+    ja: 'バイナリファイルに範囲を設定することはできません。',
+    'zh-tw': '不能在二進位檔案上設定範圍。',
+    de: 'Für Binärdateien können keine Bereiche festgelegt werden.',
+    es: 'No se pueden establecer rangos en archivos binarios.',
+    fr: 'Impossible de définir des plages sur des fichiers binaires.',
+    'pt-br': 'Não é possível definir intervalos em arquivos binários.',
+    ru: 'Невозможно установить диапазоны для бинарных файлов.',
+    ko: '이진 파일에는 범위를 설정할 수 없습니다.',
+    it: 'Impossibile impostare intervalli sui file binari.',
+    tr: 'İkili dosyalarda aralıklar ayarlanamaz.',
+    cs: 'Nelze nastavit rozsahy v binárních souborech.',
+    hu: 'Bináris fájlok esetén nem lehet tartományokat beállítani.',
+    bg: 'Не могат да се задават диапазони в двоични файлове.'
+  },
   'command.set-ranges-command.not-in-workspace': {
     en: 'File is not in a workspace folder.',
     pl: 'Plik nie znajduje się w folderze obszaru roboczego.',
