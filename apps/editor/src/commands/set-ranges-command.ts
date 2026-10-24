@@ -50,7 +50,7 @@ export const set_ranges_command = (
       }
 
       if (is_binary) {
-        vscode.window.showErrorMessage(
+        vscode.window.showWarningMessage(
           t('command.set-ranges-command.is-binary')
         )
         return
