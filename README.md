@@ -32,9 +32,9 @@ Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs
 > Click ▶ to expand.
 
 <details>
-<summary><strong>Files placed in prompt</strong></summary>
+<summary><strong>Files in prompt</strong></summary>
 
-Because files are placed directly in prompt, there is no tool calling. Expect outputs in seconds!
+By placing files alongside task instructions, tool calling is completely skipped. Expect outputs in seconds!
 
 </details>
 
