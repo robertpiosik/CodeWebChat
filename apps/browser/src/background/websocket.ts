@@ -16,6 +16,7 @@ const ports_to_check = (): number[] => {
 }
 
 const STALE_AFTER_MS = 20000
+const CONNECT_TIMEOUT_MS = 500 // a handshake that hangs (e.g. dead forwarded port) must not block the port
 const RETRY_AFTER_DROP_MS = 1000 // we had a live connection, retry quickly
 const RETRY_IDLE_MS = 5000 // nothing was ever listening, poll slowly
 
@@ -51,18 +52,28 @@ const is_busy = (c: Connection) =>
   c.ws?.readyState === WebSocket.OPEN ||
   c.ws?.readyState === WebSocket.CONNECTING
 
+const abandon_socket = (c: Connection) => {
+  const ws = c.ws
+  c.ws = null
+  if (!ws) return
+  ws.onopen = null
+  ws.onmessage = null
+  ws.onclose = null
+  try {
+    ws.close()
+  } catch {}
+}
+
 export const check_and_recover_connection = () => {
   for (const port of ports_to_check()) {
     const c = get_connection(port)
 
     if (c.ws?.readyState === WebSocket.OPEN) {
-      if (Date.now() - c.last_ping > STALE_AFTER_MS) {
-        console.warn(
-          `WebSocket on port ${port} is stale (no recent pings). Force reconnecting...`
-        )
-        c.ws.close()
-      }
-      continue
+      if (Date.now() - c.last_ping <= STALE_AFTER_MS) continue
+      console.warn(
+        `WebSocket on port ${port} is stale (no recent pings). Force reconnecting...`
+      )
+      abandon_socket(c)
     }
 
     if (!is_busy(c) && !c.retry_timer) {
@@ -111,7 +122,15 @@ export const connect_websocket = async (port: number): Promise<void> => {
     c.last_ping = Date.now()
     let was_opened = false
 
+    const connect_timer = setTimeout(() => {
+      if (c.ws === ws && ws.readyState === WebSocket.CONNECTING) {
+        abandon_socket(c)
+        schedule_retry(port, RETRY_IDLE_MS)
+      }
+    }, CONNECT_TIMEOUT_MS)
+
     ws.onopen = () => {
+      clearTimeout(connect_timer)
       if (c.ws !== ws) return
       was_opened = true
       c.last_ping = Date.now()
@@ -136,6 +155,7 @@ export const connect_websocket = async (port: number): Promise<void> => {
     }
 
     ws.onclose = () => {
+      clearTimeout(connect_timer)
       if (c.ws !== ws) return
       c.ws = null
       if (was_opened) {
