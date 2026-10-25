@@ -34,14 +34,14 @@ Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs
 <details>
 <summary><strong>Files in prompt</strong></summary>
 
-By placing files alongside task instructions, tool calling is completely skipped. Expect outputs in seconds!
+By placing files alongside task instructions, tool calling is completely skipped.
 
 </details>
 
 <details>
 <summary><strong>Select files hands-free</strong></summary>
 
-Automatically select files attached to task instructions with your favorite agentic CLI using [Agentic Search](#-agentic-search).
+By invoking CLI with [Agentic Search](#-agentic-search) prompt, you can get relevant files selected automatically.
 
 </details>
 
@@ -62,7 +62,7 @@ Selecting examples can make your prompts simpler and guide the model toward outp
 <details>
 <summary><strong>First-class support for prompt caching</strong></summary>
 
-To maximize prompt cache hits when including selected files, unchanged files are placed first, followed by recently modified ones, and task instructions are placed at the very end.
+When including selected files, unchanged files are placed first, followed by recently modified ones, and task instructions are placed at the very end.
 
 </details>
 
