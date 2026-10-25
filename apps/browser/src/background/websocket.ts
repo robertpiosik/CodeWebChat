@@ -2,72 +2,85 @@ import { WebSocketMessage } from '@shared/types/websocket-message'
 import { handle_messages } from './message-handler'
 import { DEFAULT_PORT, CLIENT_TYPE } from '@shared/constants/websocket'
 import browser from 'webextension-polyfill'
-let websocket: WebSocket | null = null
-let is_reconnecting = false
-let last_ping_timestamp = Date.now()
 
-browser.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === 'local' && changes['browser-profile-name']) {
-    if (websocket) {
-      is_reconnecting = false
-      const old_ws = websocket
-      websocket = null
-      old_ws.close()
-    }
-    connect_websocket()
-  }
-})
+// Remote setups (Remote-SSH, WSL, Dev Containers) may forward the server to
+// DEFAULT_PORT + n when the local DEFAULT_PORT is already occupied.
+const PORT_RANGE_SIZE = 10
 
-export const check_server_health = async (): Promise<boolean> => {
-  try {
-    const response = await fetch(`http://localhost:${DEFAULT_PORT}/health`)
-    return response.ok
-  } catch {
-    return false
+const ports_to_check = (): number[] => {
+  const ports = []
+  for (let i = 0; i < PORT_RANGE_SIZE; i++) {
+    ports.push(DEFAULT_PORT + i)
   }
+  return ports
 }
+
+const STALE_AFTER_MS = 20000
+const RETRY_AFTER_DROP_MS = 1000 // we had a live connection, retry quickly
+const RETRY_IDLE_MS = 5000 // nothing was ever listening, poll slowly
+
+type Connection = {
+  ws: WebSocket | null
+  last_ping: number
+  retry_timer: ReturnType<typeof setTimeout> | null
+}
+
+const connections = new Map<number, Connection>()
+
+const client_id_to_port = new Map<string, number>()
+
+const get_connection = (port: number): Connection => {
+  let c = connections.get(port)
+  if (!c) {
+    c = { ws: null, last_ping: Date.now(), retry_timer: null }
+    connections.set(port, c)
+  }
+  return c
+}
+
+const schedule_retry = (port: number, delay_ms: number) => {
+  const c = get_connection(port)
+  if (c.retry_timer) return
+  c.retry_timer = setTimeout(() => {
+    c.retry_timer = null
+    connect_websocket(port)
+  }, delay_ms)
+}
+
+const is_busy = (c: Connection) =>
+  c.ws?.readyState === WebSocket.OPEN ||
+  c.ws?.readyState === WebSocket.CONNECTING
 
 export const check_and_recover_connection = () => {
-  if (websocket?.readyState === WebSocket.OPEN) {
-    if (Date.now() - last_ping_timestamp > 20000) {
-      console.warn(
-        'WebSocket connection is stale (no recent pings). Force reconnecting...'
-      )
-      is_reconnecting = false
-      websocket.close()
-    }
-  }
+  for (const port of ports_to_check()) {
+    const c = get_connection(port)
 
-  if (
-    !is_reconnecting &&
-    websocket?.readyState !== WebSocket.OPEN &&
-    websocket?.readyState !== WebSocket.CONNECTING
-  ) {
-    connect_websocket()
+    if (c.ws?.readyState === WebSocket.OPEN) {
+      if (Date.now() - c.last_ping > STALE_AFTER_MS) {
+        console.warn(
+          `WebSocket on port ${port} is stale (no recent pings). Force reconnecting...`
+        )
+        c.ws.close()
+      }
+      continue
+    }
+
+    if (!is_busy(c) && !c.retry_timer) {
+      connect_websocket(port)
+    }
   }
 }
 
-export const connect_websocket = async (): Promise<void> => {
-  if (
-    is_reconnecting ||
-    websocket?.readyState === WebSocket.OPEN ||
-    websocket?.readyState === WebSocket.CONNECTING
-  ) {
-    return
+export const connect_websocket = async (port: number): Promise<void> => {
+  const c = get_connection(port)
+  if (is_busy(c)) return
+
+  if (c.retry_timer) {
+    clearTimeout(c.retry_timer)
+    c.retry_timer = null
   }
 
-  is_reconnecting = true
-  last_ping_timestamp = Date.now()
-
   try {
-    const is_healthy = await check_server_health()
-    if (!is_healthy) {
-      console.debug('Server health check failed, retrying in 5 seconds...')
-      is_reconnecting = false
-      setTimeout(check_and_recover_connection, 5000)
-      return
-    }
-
     const manifest = browser.runtime.getManifest()
     const version = manifest.version
     const user_agent = navigator.userAgent
@@ -86,61 +99,99 @@ export const connect_websocket = async (): Promise<void> => {
       await browser.storage.local.set({ 'browser-id': browser_id })
     }
 
-    let ws_url = `ws://localhost:${DEFAULT_PORT}?client_type=${CLIENT_TYPE.BROWSER}&version=${version}&user_agent=${encodeURIComponent(user_agent)}&browser_id=${encodeURIComponent(browser_id)}`
+    if (is_busy(c)) return
+
+    let ws_url = `ws://localhost:${port}?client_type=${CLIENT_TYPE.BROWSER}&version=${version}&user_agent=${encodeURIComponent(user_agent)}&browser_id=${encodeURIComponent(browser_id)}`
     if (profile_name) {
       ws_url += `&profile_name=${encodeURIComponent(profile_name)}`
     }
 
     const ws = new WebSocket(ws_url)
-    websocket = ws
+    c.ws = ws
+    c.last_ping = Date.now()
+    let was_opened = false
 
     ws.onopen = () => {
-      if (websocket !== ws) return
-      console.log('Connected with the VS Code!')
-      is_reconnecting = false
-      last_ping_timestamp = Date.now()
+      if (c.ws !== ws) return
+      was_opened = true
+      c.last_ping = Date.now()
+      console.log(`Connected with the VS Code on port ${port}!`)
+      check_and_recover_connection()
     }
 
-    ws.onmessage = async (event) => {
-      if (websocket !== ws) return
+    ws.onmessage = (event) => {
+      if (c.ws !== ws) return
       const message = JSON.parse(event.data)
       if (message.action === 'ping') {
-        last_ping_timestamp = Date.now()
+        c.last_ping = Date.now()
         if (ws.readyState === WebSocket.OPEN) {
           ws.send(JSON.stringify({ action: 'pong' }))
         }
         return
       }
+      if (message.action === 'initialize-chat' && message.client_id) {
+        client_id_to_port.set(message.client_id, port)
+      }
       handle_messages(message as WebSocketMessage)
     }
 
     ws.onclose = () => {
-      console.log('Disconnected from VS Code, attempting to reconnect...')
-      if (websocket === ws) {
-        websocket = null
+      if (c.ws !== ws) return
+      c.ws = null
+      if (was_opened) {
+        console.log(
+          `Disconnected from VS Code on port ${port}, attempting to reconnect...`
+        )
       }
-      is_reconnecting = false
-      setTimeout(check_and_recover_connection, 1000)
-    }
-
-    ws.onerror = () => {
-      if (websocket === ws) {
-        websocket = null
-      }
-      is_reconnecting = false
-      setTimeout(check_and_recover_connection, 1000)
+      schedule_retry(port, was_opened ? RETRY_AFTER_DROP_MS : RETRY_IDLE_MS)
     }
   } catch {
-    is_reconnecting = false
-    setTimeout(check_and_recover_connection, 5000)
+    c.ws = null
+    schedule_retry(port, RETRY_IDLE_MS)
   }
 }
 
-export const send_message_to_server = (message: any): boolean => {
-  if (websocket?.readyState === WebSocket.OPEN) {
-    websocket.send(JSON.stringify(message))
-    return true
+const reset_all_connections = () => {
+  for (const port of ports_to_check()) {
+    const c = get_connection(port)
+    if (c.retry_timer) {
+      clearTimeout(c.retry_timer)
+      c.retry_timer = null
+    }
+    const old_ws = c.ws
+    c.ws = null
+    old_ws?.close()
+    connect_websocket(port)
   }
-  console.warn('WebSocket not connected, cannot send message')
-  return false
+}
+
+browser.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName === 'local' && changes['browser-profile-name']) {
+    reset_all_connections()
+  }
+})
+
+export const send_message_to_server = (message: any): boolean => {
+  const json = JSON.stringify(message)
+  const port: number | undefined = message?.client_id
+    ? client_id_to_port.get(message.client_id)
+    : undefined
+
+  if (port === undefined && message.action === 'apply-response') {
+    console.warn('Dropping apply-response message: unknown client_id')
+    return false
+  }
+
+  const targets =
+    port !== undefined ? [get_connection(port)] : [...connections.values()]
+
+  let sent = false
+  for (const c of targets) {
+    if (c.ws?.readyState === WebSocket.OPEN) {
+      c.ws.send(json)
+      sent = true
+    }
+  }
+  if (!sent) console.warn('WebSocket not connected, cannot send message')
+  return sent
 }

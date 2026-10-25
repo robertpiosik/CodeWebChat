@@ -6,6 +6,7 @@ import {
 import browser from 'webextension-polyfill'
 import { send_message_to_server } from './websocket'
 import { is_message } from '@/utils/is-message'
+import { CHATBOTS } from '@shared/constants/chatbots'
 
 interface ChatQueueItem {
   message: InitializeChatMessage
@@ -157,6 +158,34 @@ const start_processing = async () => {
 const handle_initialize_chat_message = async (
   message: InitializeChatMessage
 ) => {
+  try {
+    const parsed_url = new URL(message.url)
+    let is_allowed = parsed_url.hostname === 'openwebui'
+
+    if (!is_allowed) {
+      for (const key of Object.keys(CHATBOTS)) {
+        const chatbot = CHATBOTS[key as keyof typeof CHATBOTS] as any
+        try {
+          if (chatbot?.url) {
+            const chatbot_url = new URL(chatbot.url)
+            if (parsed_url.hostname === chatbot_url.hostname) {
+              is_allowed = true
+              break
+            }
+          }
+        } catch {}
+      }
+    }
+
+    if (!is_allowed) {
+      console.warn(`Blocked initialize-chat with disallowed URL: ${message.url}`)
+      return
+    }
+  } catch {
+    console.warn(`Blocked initialize-chat with invalid URL: ${message.url}`)
+    return
+  }
+
   chat_queue.push({ message })
   await start_processing()
 }

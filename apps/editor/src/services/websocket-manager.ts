@@ -62,7 +62,7 @@ export class WebSocketManager {
 
   private async _initialize_server() {
     try {
-      this._connect_as_client()
+      await this._connect_as_client()
     } catch (error) {
       Logger.error({
         function_name: '_initialize_server',
@@ -204,6 +204,26 @@ export class WebSocketManager {
       }
     }
 
+    if (vscode.env.remoteName) {
+      try {
+        const forwarded = await vscode.env.asExternalUri(
+          vscode.Uri.parse(`http://localhost:${this.port}`)
+        )
+        if (forwarded.authority !== `localhost:${this.port}`) {
+          Logger.info({
+            function_name: '_connect_as_client',
+            message: `Remote port forwarded to ${forwarded.authority}`
+          })
+        }
+      } catch (error) {
+        Logger.warn({
+          function_name: '_connect_as_client',
+          message: 'asExternalUri failed',
+          data: error
+        })
+      }
+    }
+
     const token = get_or_create_shared_token()
     const ws_url = `ws://localhost:${this.port}?client_type=${CLIENT_TYPE.EDITOR}`
     this.client = new WebSocket.WebSocket(ws_url, {
@@ -285,8 +305,16 @@ export class WebSocketManager {
       clearTimeout(this.reconnect_timer)
     }
 
-    this.reconnect_timer = setTimeout(() => {
-      this._connect_as_client()
+    this.reconnect_timer = setTimeout(async () => {
+      try {
+        await this._connect_as_client()
+      } catch (error) {
+        Logger.error({
+          function_name: '_schedule_reconnect',
+          message: 'Error reconnecting',
+          data: error
+        })
+      }
     }, 3000)
   }
 
