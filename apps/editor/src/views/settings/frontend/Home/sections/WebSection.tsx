@@ -1,7 +1,6 @@
 import { forwardRef, useEffect, useState } from 'react'
 import { Section as UiSection } from '@ui/components/editor/settings-view/Section'
 import { Group as UiGroup } from '@ui/components/editor/settings-view/Group/Group'
-import { Notices as UiNotices } from '@ui/components/editor/settings-view/Notices'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Item as UiItem } from '@ui/components/editor/settings-view/Item'
 import { SortableList } from '@ui/components/editor/settings-view/SortableList'
@@ -10,7 +9,7 @@ import { DefaultConfigurationSelector } from '@ui/components/editor/settings-vie
 import { WebConfiguration } from '@/types/web-configuration'
 import { Icon } from '@ui/components/editor/common/Icon'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { use_translation, Translation } from '../../i18n/use-translation'
+import { use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
 
 type Props = {
@@ -158,25 +157,6 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   return (
     <UiSection ref={ref} title={t('web.title')} subtitle={t('web.subtitle')}>
-      <UiNotices
-        notices={[
-          {
-            type: 'info',
-            message: (
-              <Translation
-                id="web.notice-forwarding"
-                components={{
-                  forwarding: (
-                    <a href="https://code.visualstudio.com/docs/debugtest/port-forwarding">
-                      {t('web.forwarding')}
-                    </a>
-                  )
-                }}
-              />
-            )
-          }
-        ]}
-      />
       <div
         ref={(el) => props.set_section_ref('section:web:group:chatbots', el)}
       >
