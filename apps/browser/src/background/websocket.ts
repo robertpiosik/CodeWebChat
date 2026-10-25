@@ -4,21 +4,14 @@ import { DEFAULT_PORT, CLIENT_TYPE } from '@shared/constants/websocket'
 import browser from 'webextension-polyfill'
 
 // Remote setups (Remote-SSH, WSL, Dev Containers) may forward the server to
-// DEFAULT_PORT + n when the local DEFAULT_PORT is already occupied.
-const PORT_RANGE_SIZE = 10
-
+// DEFAULT_PORT + 1 when the local DEFAULT_PORT is already occupied.
 const ports_to_check = (): number[] => {
-  const ports = []
-  for (let i = 0; i < PORT_RANGE_SIZE; i++) {
-    ports.push(DEFAULT_PORT + i)
-  }
-  return ports
+  return [DEFAULT_PORT, DEFAULT_PORT + 1]
 }
 
 const STALE_AFTER_MS = 20000
-const CONNECT_TIMEOUT_MS = 500 // a handshake that hangs (e.g. dead forwarded port) must not block the port
-const RETRY_AFTER_DROP_MS = 1000 // we had a live connection, retry quickly
-const RETRY_IDLE_MS = 5000 // nothing was ever listening, poll slowly
+const CONNECT_TIMEOUT_MS = 2000
+const RETRY_IDLE_MS = 5000
 
 type Connection = {
   ws: WebSocket | null
@@ -163,7 +156,7 @@ export const connect_websocket = async (port: number): Promise<void> => {
           `Disconnected from VS Code on port ${port}, attempting to reconnect...`
         )
       }
-      schedule_retry(port, was_opened ? RETRY_AFTER_DROP_MS : RETRY_IDLE_MS)
+      schedule_retry(port, RETRY_IDLE_MS)
     }
   } catch {
     c.ws = null
