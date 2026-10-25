@@ -11,9 +11,11 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> 
 </p>
 
-<p align="center"><strong>Markdown prompts for everyday tasks</strong></p>
+<p align="center"><strong>Blazing fast AI coding</strong></p>
 
-<p align="center">VS Code · Cursor · Antigravity</br>Chatbots · APIs · CLIs</br></br><i>Free, independent, and privacy-first.</i></p>
+<p align="center"><i>Markdown prompts for everyday tasks</i></p>
+
+<p align="center">VS Code · Cursor · Antigravity</br>Chatbots · APIs · CLIs</p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
@@ -23,7 +25,7 @@
 
 ## Introduction
 
-Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs with CWC-constructed, lean [markdown prompts](#markdown-prompts) covering everyday tasks.
+Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs with CWC-constructed, lean [markdown prompts](#markdown-prompts) covering everyday tasks. It's free!
 
 > [!TIP]
 >
