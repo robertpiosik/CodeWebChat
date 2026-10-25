@@ -13,7 +13,7 @@
 
 <p align="center"><strong>Blazing fast AI coding</strong></p>
 
-<p align="center"><i>Markdown prompts for everyday tasks</i></p>
+<p align="center"><i>Lean markdown prompts for everyday tasks</i></p>
 
 <p align="center">VS Code · Cursor · Antigravity</br>Chatbots · APIs · CLIs</p>
 
@@ -25,7 +25,7 @@
 
 ## Introduction
 
-Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs with CWC-constructed, lean [markdown prompts](#markdown-prompts) covering everyday tasks. It's free!
+Autofill chatbots in your web browser, send API requests, or invoke agentic CLIs with CWC-constructed, lean [markdown prompts](#markdown-prompts) for everyday tasks. It's free!
 
 > [!TIP]
 >
