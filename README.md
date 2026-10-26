@@ -32,9 +32,9 @@ Autofill free chatbots in your web browser, send API requests, or headlessly inv
 > Click ▶ to expand.
 
 <details>
-<summary><strong>Files in prompt</strong></summary>
+<summary><strong>Attaching files</strong></summary>
 
-By placing files alongside task instructions, tool calling is completely skipped.
+By sending files alongside task instructions, tool calling is completely skipped.
 
 </details>
 
