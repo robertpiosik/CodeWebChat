@@ -38,7 +38,7 @@ export const handle_agentic_search = async (
       websocket_manager: prompt_view_provider.websocket_server_instance,
       query: initial_query,
       current_instructions,
-      skip_prompt_if_not_empty: true
+      skip_prompt_if_not_empty: current_instructions !== ''
     })
 
     if (!result || result === 'back') return
