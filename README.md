@@ -41,14 +41,14 @@ By placing files alongside task instructions, tool calling is completely skipped
 <details>
 <summary><strong>Select files hands-free</strong></summary>
 
-By invoking CLI with [Agentic Search](#-agentic-search) prompt, you can get relevant files selected automatically.
+[Agentic Search](#-agentic-search) prompt can get you relevant files automatically.
 
 </details>
 
 <details>
 <summary><strong>Iterations without context bloat</strong></summary>
 
-Refine instructions without dragging old ones in the condex window, hurting accuracy and time spent 'thinking'.
+Refine instructions without dragging old ones in the condex window.
 
 </details>
 
