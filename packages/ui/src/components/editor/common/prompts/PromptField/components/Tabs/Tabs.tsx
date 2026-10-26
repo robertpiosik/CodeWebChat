@@ -116,7 +116,7 @@ export const Tabs = forwardRef<TabsRef, Props>((props, ref) => {
               }
               position="bottom"
               align="right"
-              offset={3}
+              offset={2}
             />
           )}
           <div className={styles['tabs__tab__icon']} />
