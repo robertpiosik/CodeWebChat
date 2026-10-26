@@ -25,7 +25,7 @@
 
 ## Introduction
 
-Autofill chatbots in your web browser, send API requests, or headlessly invoke agentic CLIs with CWC-constructed, [markdown prompts](#markdown-prompts) for everyday tasks. It's free!
+Autofill chatbots in your web browser, send API requests, or headlessly invoke agentic CLIs with [markdown prompts](#markdown-prompts) for everyday tasks. It's free!
 
 > [!TIP]
 >
