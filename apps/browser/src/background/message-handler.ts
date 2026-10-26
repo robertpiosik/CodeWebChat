@@ -76,7 +76,11 @@ const process_next_chat = async () => {
       web_configuration_details: current_chat_message.chatbot
         ? {
             chatbot: current_chat_message.chatbot,
-            model: current_chat_message.model,
+            model: current_chat_message.model
+              ? CHATBOTS[current_chat_message.chatbot as keyof typeof CHATBOTS]?.models?.[
+                  current_chat_message.model
+                ]?.label ?? current_chat_message.model
+              : undefined,
             reasoning_effort: current_chat_message.reasoning_effort
           }
         : undefined
