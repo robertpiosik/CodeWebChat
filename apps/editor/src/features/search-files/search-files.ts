@@ -61,11 +61,17 @@ export const search_files = async (params: {
     })
   }
 
+  const is_folder_search =
+    !!params.folder_path &&
+    !params.is_workspace_action &&
+    !params.is_search_in_selected
+
   while (true) {
     try {
       const mode_result = await prompt_for_search_mode(
         initial_search_mode,
-        params.show_back_button
+        params.show_back_button,
+        is_folder_search
       )
 
       if (mode_result === 'back') return 'back'
@@ -104,33 +110,35 @@ export const search_files = async (params: {
         let is_search_in_selected = params.is_search_in_selected
 
         if (!is_search_in_selected && !params.is_sub_search) {
-          const currently_selected =
-            params.workspace_provider.get_selected_files()
+          if (!params.folder_path || params.is_workspace_action) {
+            const currently_selected =
+              params.workspace_provider.get_selected_files()
 
-          if (currently_selected.length === 0) {
-            vscode.window.showWarningMessage(
-              t('command.search-files-command.warning.no-files-selected')
-            )
-            continue
+            if (currently_selected.length === 0) {
+              vscode.window.showWarningMessage(
+                t('command.search-files-command.warning.no-files-selected')
+              )
+              continue
+            }
+
+            let files_to_search = currently_selected
+            if (params.folder_path) {
+              files_to_search = currently_selected.filter((f) => {
+                const relative = path.relative(params.folder_path!, f)
+                return !relative.startsWith('..') && !path.isAbsolute(relative)
+              })
+            }
+
+            if (files_to_search.length === 0) {
+              vscode.window.showInformationMessage(
+                t('feature.search-files.info.no-files-selected-in-folder')
+              )
+              continue
+            }
+
+            files = files_to_search
+            is_search_in_selected = true
           }
-
-          let files_to_search = currently_selected
-          if (params.folder_path) {
-            files_to_search = currently_selected.filter((f) => {
-              const relative = path.relative(params.folder_path!, f)
-              return !relative.startsWith('..') && !path.isAbsolute(relative)
-            })
-          }
-
-          if (files_to_search.length === 0) {
-            vscode.window.showInformationMessage(
-              t('feature.search-files.info.no-files-selected-in-folder')
-            )
-            continue
-          }
-
-          files = files_to_search
-          is_search_in_selected = true
         }
 
         flow_result = await perform_intelligent_search_mode({

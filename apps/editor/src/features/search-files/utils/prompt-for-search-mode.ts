@@ -3,7 +3,8 @@ import { t } from '@/i18n'
 
 export const prompt_for_search_mode = async (
   last_mode: 'phrase' | 'keywords' | 'intelligent',
-  show_back_button?: boolean
+  show_back_button?: boolean,
+  is_folder_search?: boolean
 ): Promise<'phrase' | 'keywords' | 'intelligent' | undefined | 'back'> => {
   const items: (vscode.QuickPickItem & {
     mode: 'phrase' | 'keywords' | 'intelligent'
@@ -20,7 +21,9 @@ export const prompt_for_search_mode = async (
     },
     {
       label: t('feature.search-files.mode.intelligent'),
-      description: t('feature.search-files.mode.intelligent-description'),
+      description: is_folder_search
+        ? t('feature.search-files.mode.intelligent-description-folder')
+        : t('feature.search-files.mode.intelligent-description'),
       mode: 'intelligent'
     }
   ]
