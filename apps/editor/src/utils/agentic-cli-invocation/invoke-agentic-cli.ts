@@ -42,6 +42,7 @@ export const invoke_agentic_cli = async (params: {
   use_quick_pick?: boolean
   default_agent_key?: keyof ConfigAgentConfigurationFormat
   invocation_count?: number
+  allow_adding_invocations?: boolean
   target_folder?: string
 }): Promise<
   | {
@@ -627,7 +628,9 @@ export const invoke_agentic_cli = async (params: {
         }
       }
 
-      const invocation_count = params.invocation_count || 1
+      const initial_invocation_count = params.invocation_count || 1
+      let total_invocations = 0
+      let is_finished = false
       let cancelled_count = 0
       const agent_outputs: string[] = []
 
@@ -635,8 +638,7 @@ export const invoke_agentic_cli = async (params: {
       const start_time = Date.now()
 
       try {
-        await Promise.all(
-          Array.from({ length: invocation_count }).map(async (_, index) => {
+        const run_invocation = async (index: number) => {
             return vscode.window.withProgress(
               {
                 location: vscode.ProgressLocation.Notification,
@@ -756,7 +758,7 @@ export const invoke_agentic_cli = async (params: {
                     if (
                       params.generate_diff_for_temp_dir &&
                       temp_dir_path &&
-                      invocation_count === 1
+                      total_invocations === 1
                     ) {
                       try {
                         const diff_markdown = await generate_diff_markdown(
@@ -801,8 +803,43 @@ export const invoke_agentic_cli = async (params: {
                 })
               }
             )
-          })
-        )
+        }
+
+        const tasks: Promise<void>[] = []
+        const start_invocation = () => {
+          const index = tasks.length
+          total_invocations++
+          tasks.push(run_invocation(index))
+        }
+
+        const show_add_invocation_button = () => {
+          const label = t('utils.agentic-cli-invocation.agent.add-invocation')
+          vscode.window
+            .showInformationMessage(
+              t('utils.agentic-cli-invocation.agent.add-invocation-message'),
+              label
+            )
+            .then((selection) => {
+              if (selection !== label || is_finished) return
+              start_invocation()
+              show_add_invocation_button()
+            })
+        }
+
+        for (let i = 0; i < initial_invocation_count; i++) {
+          start_invocation()
+        }
+
+        if (params.allow_adding_invocations) {
+          show_add_invocation_button()
+        }
+
+        let awaited_count = 0
+        while (awaited_count < tasks.length) {
+          const batch = tasks.slice(awaited_count)
+          awaited_count = tasks.length
+          await Promise.all(batch)
+        }
       } catch (err) {
         vscode.window.showErrorMessage(
           t('utils.agentic-cli-invocation.error.failed', {
@@ -812,12 +849,13 @@ export const invoke_agentic_cli = async (params: {
         go_back_to_caller = true
         break
       } finally {
+        is_finished = true
         await fs.promises
           .rm(temp_prompt_dir, { recursive: true, force: true })
           .catch(() => {})
       }
 
-      if (cancelled_count === invocation_count) {
+      if (cancelled_count === total_invocations) {
         go_back_to_caller = true
         break
       }

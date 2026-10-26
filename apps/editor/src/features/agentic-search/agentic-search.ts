@@ -74,6 +74,7 @@ export const agentic_search = async (params: {
       default_agent_key: 'isDefaultForAgenticSearch',
       show_back_button: false,
       invocation_count,
+      allow_adding_invocations: true,
       target_folder: params.folder_path,
       build_prompt: async () => {
         while (true) {
