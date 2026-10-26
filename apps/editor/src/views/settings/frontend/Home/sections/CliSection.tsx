@@ -56,16 +56,20 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   return (
     <UiSection ref={ref} title={t('cli.title')} subtitle={t('cli.subtitle')}>
-      <UiNotices
-        notices={[
-          {
-            type: 'info',
-            message: t('cli.notice')
-          }
-        ]}
-      />
       <div ref={(el) => props.set_section_ref('section:cli:group:agents', el)}>
-        <UiGroup title={t('agents.configurations.title')}>
+        <UiGroup
+          title={t('agents.configurations.title')}
+          notice_slot={
+            <UiNotices
+              notices={[
+                {
+                  type: 'info',
+                  message: t('cli.notice')
+                }
+              ]}
+            />
+          }
+        >
           <SortableList
             items={props.cli_configurations.map((c) => ({
               ...c,

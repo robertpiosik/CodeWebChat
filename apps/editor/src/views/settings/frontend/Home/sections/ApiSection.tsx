@@ -65,46 +65,44 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   return (
     <UiSection ref={ref} title={t('api.title')} subtitle={t('api.subtitle')}>
-      <UiNotices
-        notices={[
-          {
-            type: 'info',
-            message: (
-              <Translation
-                id="api.notice.credentials"
-                components={{
-                  link: (
-                    <a href="https://code.visualstudio.com/api/references/vscode-api#SecretStorage">
-                      SecretStorage
-                    </a>
-                  )
-                }}
-              />
-            )
-          }
-        ]}
-      />
       <div
         ref={(el) => props.set_section_ref('section:api:group:providers', el)}
       >
         <UiGroup
           title={t('api.providers.title')}
           notice_slot={
-            !props.providers.length ? (
-              <UiNotices
-                notices={[
-                  {
-                    type: 'warning',
-                    slot_right: (
-                      <Button on_click={() => props.on_add_provider()}>
-                        {t('action.add-new')}
-                      </Button>
-                    ),
-                    message: t('api.providers.missing-provider')
-                  }
-                ]}
-              />
-            ) : null
+            <UiNotices
+              notices={[
+                {
+                  type: 'info',
+                  message: (
+                    <Translation
+                      id="api.notice.credentials"
+                      components={{
+                        link: (
+                          <a href="https://code.visualstudio.com/api/references/vscode-api#SecretStorage">
+                            SecretStorage
+                          </a>
+                        )
+                      }}
+                    />
+                  )
+                },
+                ...(!props.providers.length
+                  ? [
+                      {
+                        type: 'warning' as const,
+                        slot_right: (
+                          <Button on_click={() => props.on_add_provider()}>
+                            {t('action.add-new')}
+                          </Button>
+                        ),
+                        message: t('api.providers.missing-provider')
+                      }
+                    ]
+                  : [])
+              ]}
+            />
           }
         >
           {props.providers.length > 0 && (
