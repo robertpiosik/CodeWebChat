@@ -18,6 +18,8 @@ let is_processing = false
 let is_waiting_for_focus = false
 let is_first_item_in_queue = true
 let last_opened_tab_id: number | undefined
+let last_opened_tab_client_id: string | undefined
+let last_opened_tab_chatbot: string | undefined
 let last_opened_tab_injected_apply_button = false
 let is_finished_responding = false
 
@@ -109,6 +111,8 @@ const process_next_chat = async () => {
 
   if (
     last_opened_tab_id !== undefined &&
+    last_opened_tab_client_id === current_chat_message.client_id &&
+    last_opened_tab_chatbot === current_chat_message.chatbot &&
     is_finished_responding &&
     last_opened_tab_injected_apply_button
   ) {
@@ -123,6 +127,8 @@ const process_next_chat = async () => {
       }
     } catch {
       last_opened_tab_id = undefined
+      last_opened_tab_client_id = undefined
+      last_opened_tab_chatbot = undefined
     }
   }
 
@@ -133,6 +139,8 @@ const process_next_chat = async () => {
     }
     const new_tab = await browser.tabs.create(create_tab_options)
     last_opened_tab_id = new_tab.id
+    last_opened_tab_client_id = current_chat_message.client_id
+    last_opened_tab_chatbot = current_chat_message.chatbot
   }
 
   last_opened_tab_injected_apply_button =
