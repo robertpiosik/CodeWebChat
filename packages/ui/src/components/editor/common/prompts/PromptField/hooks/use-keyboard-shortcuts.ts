@@ -140,7 +140,55 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
   ) => {
     if (props.are_keyboard_shortcuts_disabled) return
 
+    const is_next_tab =
+      (e.ctrlKey && e.key === 'Tab' && !e.shiftKey && !e.altKey && !e.metaKey) ||
+      (e.ctrlKey && e.key === 'PageDown' && !e.shiftKey && !e.altKey && !e.metaKey) ||
+      (e.metaKey && e.altKey && e.key === 'ArrowRight' && !e.shiftKey && !e.ctrlKey) ||
+      (e.metaKey && e.shiftKey && (e.key === ']' || e.key === '}' || e.code === 'BracketRight') && !e.altKey && !e.ctrlKey)
+
+    const is_prev_tab =
+      (e.ctrlKey && e.key === 'Tab' && e.shiftKey && !e.altKey && !e.metaKey) ||
+      (e.ctrlKey && e.key === 'PageUp' && !e.shiftKey && !e.altKey && !e.metaKey) ||
+      (e.metaKey && e.altKey && e.key === 'ArrowLeft' && !e.shiftKey && !e.ctrlKey) ||
+      (e.metaKey && e.shiftKey && (e.key === '[' || e.key === '{' || e.code === 'BracketLeft') && !e.altKey && !e.ctrlKey)
+
+    if (is_next_tab) {
+      e.preventDefault()
+      e.stopPropagation()
+      if (props.tabs_count > 1) {
+        props.on_tab_change((props.active_tab_index + 1) % props.tabs_count)
+      }
+      return
+    }
+
+    if (is_prev_tab) {
+      e.preventDefault()
+      e.stopPropagation()
+      if (props.tabs_count > 1) {
+        props.on_tab_change(
+          (props.active_tab_index - 1 + props.tabs_count) % props.tabs_count
+        )
+      }
+      return
+    }
+
     if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey) {
+      if (e.key.toLowerCase() === 'w') {
+        if (props.tabs_count > 1) {
+          e.preventDefault()
+          e.stopPropagation()
+          props.on_tab_delete(props.active_tab_index)
+          return
+        }
+      }
+
+      if (e.key.toLowerCase() === 't') {
+        e.preventDefault()
+        e.stopPropagation()
+        props.on_new_tab()
+        return
+      }
+
       const match = e.key.match(/^[1-9]$/)
       if (match) {
         const index = parseInt(match[0], 10) - 1
