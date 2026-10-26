@@ -93,6 +93,12 @@ export namespace PromptBuilder {
         const req_str = params.requirements.map((r) => `- ${r}`).join('\n')
         top_sys += `# Requirements\n\n${req_str}\n\n`
       }
+      if (params.completed_tasks && params.completed_tasks.length > 0) {
+        const tasks_str = params.completed_tasks
+          .map((t) => `- [x] ${t}`)
+          .join('\n')
+        top_sys += `# Completed tasks\n\n${tasks_str}\n\n`
+      }
     }
 
     if (params.files_context !== undefined) {
