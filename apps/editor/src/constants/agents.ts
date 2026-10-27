@@ -65,7 +65,11 @@ export const AGENTS = {
   OpenCode: {
     docs_url: 'https://opencode.ai/v2/docs',
     homepage_url: 'https://opencode.ai/',
-    flags_placeholder: '',
-    example_flags: []
+    flags_placeholder: '-m deepseek/deepseek-flash#high',
+    example_flags: [
+      '-m deepseek/deepseek-flash#high',
+      '-m deepseek/deepseek-flash#medium',
+      '-m deepseek/deepseek-flash#low'
+    ]
   }
 } satisfies Agents
