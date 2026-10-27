@@ -346,9 +346,7 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             item_description: t('forwarded-ports.add.description'),
             placeholder: t('forwarded-ports.add.placeholder'),
             add: t('forwarded-ports.add.action'),
-            delete: t('forwarded-ports.delete'),
-            expand: t('common.expand'),
-            collapse: t('common.collapse')
+            delete: t('forwarded-ports.delete')
           }}
         />
       </div>

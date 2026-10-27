@@ -14,8 +14,6 @@ export namespace ForwardedPorts {
     placeholder: string
     add: string
     delete: string
-    expand: string
-    collapse: string
   }
 
   export type Props = {
@@ -50,11 +48,6 @@ export const ForwardedPorts: React.FC<ForwardedPorts.Props> = (props) => {
       <Item
         title={props.translations.item_title}
         description={props.translations.item_description}
-        is_toggleable
-        translations={{
-          expand: props.translations.expand,
-          collapse: props.translations.collapse
-        }}
       >
         <div className={styles.container}>
           <div className={styles.row}>
