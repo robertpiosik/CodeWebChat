@@ -491,17 +491,13 @@ export class WorkspaceProvider
 
     this._checked_items.set(
       created_file_path,
-      vscode.TreeItemCheckboxState.Checked
-    )
-    this._selected_timestamps.set(
-      created_file_path,
-      Math.floor(Date.now() / 1000)
+      vscode.TreeItemCheckboxState.Unchecked
     )
 
     if (is_directory) {
       await this._update_directory_checkbox_state(
         created_file_path,
-        vscode.TreeItemCheckboxState.Checked,
+        vscode.TreeItemCheckboxState.Unchecked,
         false
       )
     }
@@ -544,6 +540,49 @@ export class WorkspaceProvider
       this._on_did_change_tree_data.fire()
       this._refresh_timeout = null
     }, 1500)
+  }
+
+  async sync_externally_changed_paths(file_paths: string[]): Promise<void> {
+    let changed = false
+
+    for (const file_path of file_paths) {
+      const workspace_root = this.get_workspace_root_for_file(file_path)
+      if (!workspace_root) continue
+
+      if (fs.existsSync(file_path)) {
+        if (this.is_ignored_by_patterns(file_path)) continue
+        const relative_path = path.relative(workspace_root, file_path)
+        if (this.is_excluded(relative_path)) continue
+
+        this._file_workspace_map.set(file_path, workspace_root)
+        if (!this._checked_items.has(file_path)) {
+          this._checked_items.set(
+            file_path,
+            vscode.TreeItemCheckboxState.Unchecked
+          )
+        }
+      } else {
+        this._file_workspace_map.delete(file_path)
+        this._checked_items.delete(file_path)
+        this._selected_timestamps.delete(file_path)
+        this._partially_selected_dirs.delete(file_path)
+      }
+
+      this._token_calculator.invalidate_token_counts_for_file(file_path)
+
+      let dir_path = path.dirname(file_path)
+      while (dir_path.startsWith(workspace_root)) {
+        await this._update_parent_state(dir_path)
+        const next_dir_path = path.dirname(dir_path)
+        if (next_dir_path === dir_path) break
+        dir_path = next_dir_path
+      }
+      changed = true
+    }
+
+    if (changed) {
+      this._dispatch_change_events()
+    }
   }
 
   async clear_selected_files(): Promise<void> {
@@ -934,17 +973,7 @@ export class WorkspaceProvider
 
         let checkbox_state = this._checked_items.get(key)
         if (checkbox_state === undefined) {
-          const parent_path = path.dirname(full_path)
-          const parent_checkbox_state = this._checked_items.get(parent_path)
-          if (
-            parent_checkbox_state === vscode.TreeItemCheckboxState.Checked &&
-            !is_ignored
-          ) {
-            checkbox_state = vscode.TreeItemCheckboxState.Checked
-            this._checked_items.set(full_path, checkbox_state)
-          } else {
-            checkbox_state = vscode.TreeItemCheckboxState.Unchecked
-          }
+          checkbox_state = vscode.TreeItemCheckboxState.Unchecked
         }
 
         const tokens = is_directory

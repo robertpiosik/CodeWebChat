@@ -45,6 +45,11 @@ export const preview_handler = async (params: {
   })
 
   try {
+    await sync_workspace_selection_for_states({
+      workspace_provider: params.workspace_provider,
+      states: params.original_states
+    })
+
     const preview_result = await preview({
       original_states: params.original_states,
       prompt_view_provider: params.prompt_view_provider,
@@ -101,6 +106,10 @@ export const preview_handler = async (params: {
         await undo_files({
           original_states: params.original_states
         })
+        await sync_workspace_selection_for_states({
+          workspace_provider: params.workspace_provider,
+          states: params.original_states
+        })
       } finally {
         params.workspace_provider.resume_file_watcher()
       }
@@ -117,6 +126,10 @@ export const preview_handler = async (params: {
       try {
         await undo_files({
           original_states: preview_result.rejected_states
+        })
+        await sync_workspace_selection_for_states({
+          workspace_provider: params.workspace_provider,
+          states: preview_result.rejected_states
         })
       } finally {
         params.workspace_provider.resume_file_watcher()
@@ -265,4 +278,34 @@ export const preview_handler = async (params: {
     resolve_cleanup_promise!()
     ongoing_preview_cleanup_promise = null
   }
+}
+
+const sync_workspace_selection_for_states = async (params: {
+  workspace_provider: WorkspaceProvider
+  states: OriginalFileState[]
+}) => {
+  const { workspace_map, default_workspace } = get_workspace_map_and_default()
+  const paths = new Set<string>()
+
+  const add = (file_path?: string, workspace_name?: string) => {
+    if (!file_path) return
+    if (path.isAbsolute(file_path)) {
+      paths.add(file_path)
+      return
+    }
+    const root = resolve_workspace_root({
+      workspace_name,
+      workspace_map,
+      default_workspace
+    })
+    if (root) paths.add(path.join(root, file_path))
+  }
+
+  for (const state of params.states) {
+    add(state.file_path, state.workspace_name)
+    add(state.new_file_path, state.new_workspace_name ?? state.workspace_name)
+    add(state.file_path_to_restore, state.restore_workspace_name)
+  }
+
+  await params.workspace_provider.sync_externally_changed_paths([...paths])
 }
