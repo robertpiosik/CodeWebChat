@@ -57,6 +57,11 @@ export type PongMessage = {
   action: 'pong'
 }
 
+export type ForwardedPortsMessage = {
+  action: 'forwarded-ports'
+  ports: number[]
+}
+
 export type WebSocketMessage =
   | InitializeChatMessage
   | BrowserConnectionStatusMessage
@@ -64,3 +69,4 @@ export type WebSocketMessage =
   | ApplyResponseMessage
   | PingMessage
   | PongMessage
+  | ForwardedPortsMessage

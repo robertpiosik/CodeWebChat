@@ -3,10 +3,12 @@ import { handle_messages } from './message-handler'
 import { DEFAULT_PORT, CLIENT_TYPE } from '@shared/constants/websocket'
 import browser from 'webextension-polyfill'
 
-// Remote setups (Remote-SSH, WSL, Dev Containers) may forward the server to
-// DEFAULT_PORT + 1 when the local DEFAULT_PORT is already occupied.
-const ports_to_check = (): number[] => {
-  return [DEFAULT_PORT, DEFAULT_PORT + 1]
+const FORWARDED_PORTS_BY_CLIENT_KEY = 'forwarded-ports-by-client'
+
+const ports_to_check = async (): Promise<number[]> => {
+  const storage = await browser.storage.local.get('forwarded-ports')
+  const forwarded_ports = (storage['forwarded-ports'] as number[]) || []
+  return [DEFAULT_PORT, ...forwarded_ports]
 }
 
 const STALE_AFTER_MS = 20000
@@ -22,6 +24,49 @@ type Connection = {
 const connections = new Map<number, Connection>()
 
 const client_id_to_port = new Map<string, number>()
+
+let forwarded_ports_queue: Promise<void> = Promise.resolve()
+
+const update_forwarded_ports = (params: {
+  server_port: number
+  client_id: string | null
+  ports: number[] | null
+}) => {
+  forwarded_ports_queue = forwarded_ports_queue
+    .then(async () => {
+      const storage = await browser.storage.local.get(
+        FORWARDED_PORTS_BY_CLIENT_KEY
+      )
+      const by_client: Record<string, number[]> = {
+        ...((storage[FORWARDED_PORTS_BY_CLIENT_KEY] as
+          | Record<string, number[]>
+          | undefined) ?? {})
+      }
+
+      if (params.client_id === null) {
+        const prefix = `${params.server_port}:`
+        for (const key of Object.keys(by_client)) {
+          if (key.startsWith(prefix)) delete by_client[key]
+        }
+      } else {
+        const key = `${params.server_port}:${params.client_id}`
+        if (params.ports === null) {
+          delete by_client[key]
+        } else {
+          by_client[key] = params.ports
+        }
+      }
+
+      const union = [...new Set(Object.values(by_client).flat())]
+      await browser.storage.local.set({
+        [FORWARDED_PORTS_BY_CLIENT_KEY]: by_client,
+        'forwarded-ports': union
+      })
+    })
+    .catch((e) => {
+      console.error('Failed to update forwarded ports', e)
+    })
+}
 
 const get_connection = (port: number): Connection => {
   let c = connections.get(port)
@@ -57,8 +102,9 @@ const abandon_socket = (c: Connection) => {
   } catch {}
 }
 
-export const check_and_recover_connection = () => {
-  for (const port of ports_to_check()) {
+export const check_and_recover_connection = async () => {
+  const ports = await ports_to_check()
+  for (const port of ports) {
     const c = get_connection(port)
 
     if (c.ws?.readyState === WebSocket.OPEN) {
@@ -141,6 +187,33 @@ export const connect_websocket = async (port: number): Promise<void> => {
         }
         return
       }
+      if (message.action === 'connected') {
+        update_forwarded_ports({
+          server_port: port,
+          client_id: null,
+          ports: null
+        })
+      }
+      if (message.action === 'forwarded-ports') {
+        if (message.client_id) {
+          update_forwarded_ports({
+            server_port: port,
+            client_id: message.client_id,
+            ports: Array.isArray(message.ports) ? message.ports : []
+          })
+        }
+        return
+      }
+      if (message.action === 'vscode-client-disconnected') {
+        if (message.client_id) {
+          client_id_to_port.delete(message.client_id)
+          update_forwarded_ports({
+            server_port: port,
+            client_id: message.client_id,
+            ports: null
+          })
+        }
+      }
       if (message.action === 'initialize-chat' && message.client_id) {
         client_id_to_port.set(message.client_id, port)
       }
@@ -164,8 +237,9 @@ export const connect_websocket = async (port: number): Promise<void> => {
   }
 }
 
-const reset_all_connections = () => {
-  for (const port of ports_to_check()) {
+const reset_all_connections = async () => {
+  const ports = await ports_to_check()
+  for (const port of ports) {
     const c = get_connection(port)
     if (c.retry_timer) {
       clearTimeout(c.retry_timer)
@@ -181,6 +255,29 @@ const reset_all_connections = () => {
 browser.storage.onChanged.addListener((changes, areaName) => {
   if (areaName === 'local' && changes['browser-profile-name']) {
     reset_all_connections()
+  }
+  if (areaName === 'local' && changes['forwarded-ports']) {
+    const new_ports = (changes['forwarded-ports'].newValue as number[]) || []
+    const old_ports = (changes['forwarded-ports'].oldValue as number[]) || []
+
+    for (const port of old_ports) {
+      if (
+        !new_ports.includes(port) &&
+        port !== DEFAULT_PORT
+      ) {
+        const c = connections.get(port)
+        if (c) {
+          abandon_socket(c)
+          if (c.retry_timer) {
+            clearTimeout(c.retry_timer)
+            c.retry_timer = null
+          }
+          connections.delete(port)
+        }
+      }
+    }
+
+    check_and_recover_connection()
   }
 })
 

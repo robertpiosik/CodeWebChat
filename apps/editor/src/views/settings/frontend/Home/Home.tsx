@@ -26,6 +26,7 @@ export type NavItem =
   | 'section:general:group:agentic-search'
   | 'section:web'
   | 'section:web:group:chatbots'
+  | 'section:web:group:ports'
   | 'section:web:group:web-defaults'
   | 'section:api'
   | 'section:api:group:providers'
@@ -72,6 +73,10 @@ export const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'chatbots.configurations.title'
   },
   {
+    id: 'section:web:group:ports',
+    label: 'web.autofill.title'
+  },
+  {
     id: 'section:web:group:web-defaults',
     label: 'common.defaults'
   },
@@ -112,6 +117,7 @@ export const NAV_ITEMS_CONFIG: NavConfigItem[] = [
 type Props = {
   providers: Provider[]
   api_configurations: ApiConfiguration[]
+  forwarded_ports: number[]
   web_configurations: WebConfiguration[]
   cli_configurations: CliConfiguration[]
   defaults: Record<ApiFeature, string | null>
@@ -209,6 +215,7 @@ type Props = {
   on_edit_web_configuration: (id: string) => void
   on_delete_web_configuration: (name: string) => void
   on_toggle_pinned_web_configuration: (config: WebConfiguration) => void
+  on_update_forwarded_ports: (ports: number[]) => void
   web_defaults: Record<string, string | null>
   on_set_default_web_configuration: (
     web_feature: string,
@@ -446,6 +453,8 @@ export const Home: React.FC<Props> = (props) => {
         <WebSection
           ref={(el) => set_section_ref('section:web', el)}
           set_section_ref={set_section_ref}
+          forwarded_ports={props.forwarded_ports}
+          on_update_forwarded_ports={props.on_update_forwarded_ports}
           web_configurations={props.web_configurations}
           set_web_configurations={props.set_web_configurations}
           on_reorder_web_configurations={props.on_reorder_web_configurations}

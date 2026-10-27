@@ -182,6 +182,15 @@ export interface OpenKeybindingsMessage {
   search?: string
 }
 
+export interface GetForwardedPortsMessage {
+  command: 'GET_FORWARDED_PORTS'
+}
+
+export interface UpdateForwardedPortsMessage {
+  command: 'UPDATE_FORWARDED_PORTS'
+  forwarded_ports: number[]
+}
+
 export interface GetWebConfigurationsMessage {
   command: 'GET_WEB_CONFIGURATIONS'
 }
@@ -418,6 +427,8 @@ export type FrontendMessage =
   | OpenIgnorePatternsSettingsMessage
   | OpenAllowPatternsSettingsMessage
   | OpenKeybindingsMessage
+  | GetForwardedPortsMessage
+  | UpdateForwardedPortsMessage
   | GetWebConfigurationsMessage
   | SetDefaultWebConfigurationMessage
   | SelectDefaultWebConfigurationMessage
@@ -533,6 +544,11 @@ export interface SendWithShiftEnterMessage {
 export interface ShowSectionMessage {
   command: 'SHOW_SECTION'
   section: string
+}
+
+export interface ForwardedPortsMessage {
+  command: 'FORWARDED_PORTS'
+  forwarded_ports: number[]
 }
 
 export interface WebConfigurationsMessage {
@@ -678,6 +694,7 @@ export type BackendMessage =
   | AiStudioUserIdMessage
   | SendWithShiftEnterMessage
   | ShowSectionMessage
+  | ForwardedPortsMessage
   | WebConfigurationsMessage
   | NewlyPickedModelMessage
   | NewlyPickedChatbotMessage

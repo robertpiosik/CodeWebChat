@@ -24,8 +24,10 @@ export const Input: React.FC<Props> = (props) => {
     style.width = `${props.width}px`
   }
 
+  const is_empty = String(props.value).trim() === ''
   const numeric_value = Number(props.value)
   const is_out_of_range =
+    !is_empty &&
     !Number.isNaN(numeric_value) &&
     ((props.min !== undefined && numeric_value < props.min) ||
       (props.max !== undefined && numeric_value > props.max))

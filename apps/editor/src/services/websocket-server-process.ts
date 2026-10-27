@@ -281,6 +281,25 @@ class WebSocketServer {
       if (target_client && target_client.ws.readyState === WebSocket.OPEN) {
         target_client.ws.send(msg_string)
       }
+    } else if (msg_data.action === 'forwarded-ports') {
+      let sender_client_id: string | null = null
+      for (const [client_id, client] of this.vscode_clients.entries()) {
+        if (client.ws === ws) {
+          sender_client_id = client_id
+          break
+        }
+      }
+      if (sender_client_id === null) return
+
+      const tagged_message = JSON.stringify({
+        ...msg_data,
+        client_id: sender_client_id
+      })
+      for (const client of this.browser_clients.values()) {
+        if (client.ws.readyState === WebSocket.OPEN) {
+          client.ws.send(tagged_message)
+        }
+      }
     }
   }
 

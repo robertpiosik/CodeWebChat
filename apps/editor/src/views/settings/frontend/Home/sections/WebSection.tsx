@@ -5,6 +5,7 @@ import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Item as UiItem } from '@ui/components/editor/settings-view/Item'
 import { SortableList } from '@ui/components/editor/settings-view/SortableList'
 import { IconButton } from '@ui/components/editor/common/IconButton'
+import { ForwardedPorts } from '@ui/components/editor/settings-view/ForwardedPorts'
 import { DefaultConfigurationSelector } from '@ui/components/editor/settings-view/DefaultConfigurationSelector'
 import { WebConfiguration } from '@/types/web-configuration'
 import { Icon } from '@ui/components/editor/common/Icon'
@@ -13,6 +14,8 @@ import { use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
 
 type Props = {
+  forwarded_ports: number[]
+  on_update_forwarded_ports: (ports: number[]) => void
   web_configurations: WebConfiguration[]
   set_web_configurations: (configurations: WebConfiguration[]) => void
   on_reorder_web_configurations: (reordered: WebConfiguration[]) => void
@@ -73,7 +76,6 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   const [gemini_user_id_str, set_gemini_user_id_str] = useState('')
   const [ai_studio_user_id_str, set_ai_studio_user_id_str] = useState('')
-
   useEffect(() => {
     set_gemini_user_id_str(
       props.gemini_user_id === null || props.gemini_user_id === undefined
@@ -333,6 +335,22 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             />
           )}
         </UiGroup>
+      </div>
+      <div ref={(el) => props.set_section_ref('section:web:group:ports', el)}>
+        <ForwardedPorts
+          forwarded_ports={props.forwarded_ports}
+          on_update={props.on_update_forwarded_ports}
+          translations={{
+            title: t('web.autofill.title'),
+            item_title: t('forwarded-ports.add.title'),
+            item_description: t('forwarded-ports.add.description'),
+            placeholder: t('forwarded-ports.add.placeholder'),
+            add: t('forwarded-ports.add.action'),
+            delete: t('forwarded-ports.delete'),
+            expand: t('common.expand'),
+            collapse: t('common.collapse')
+          }}
+        />
       </div>
       <div
         ref={(el) =>

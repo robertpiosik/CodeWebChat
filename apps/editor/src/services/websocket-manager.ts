@@ -39,6 +39,17 @@ export class WebSocketManager {
   public readonly on_connection_status_change: vscode.Event<boolean> =
     this._on_connection_status_change.event
 
+  send_forwarded_ports(ports: number[]) {
+    if (this.client?.readyState === WebSocket.WebSocket.OPEN) {
+      this.client.send(
+        JSON.stringify({
+          action: 'forwarded-ports',
+          ports
+        })
+      )
+    }
+  }
+
   constructor(extension_context: vscode.ExtensionContext) {
     this.extension_context = extension_context
     this._initialize_server()
@@ -260,6 +271,10 @@ export class WebSocketManager {
           this.connected_browsers = message.connected_browsers
           this.has_connected_browsers = this.connected_browsers.length > 0
           this._on_connection_status_change.fire(this.has_connected_browsers)
+
+          const config = vscode.workspace.getConfiguration('codeWebChat')
+          const forwarded_ports = config.get<number[]>('forwardedPorts') ?? []
+          this.send_forwarded_ports(forwarded_ports)
         } else if (message.action === 'apply-response') {
           const apply_msg = message as ApplyResponseMessage
           vscode.commands.executeCommand('codeWebChat.applyResponse', {

@@ -1115,6 +1115,14 @@
             ]
           }
         },
+        "codeWebChat.forwardedPorts": {
+          "type": "array",
+          "scope": "application",
+          "items": {
+            "type": "number"
+          },
+          "default": []
+        },
         "codeWebChat.chatbots": {
           "type": "array",
           "scope": "application",

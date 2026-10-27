@@ -299,6 +299,16 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     )
   )
 
+  extension_context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration((e) => {
+      if (e.affectsConfiguration('codeWebChat.forwardedPorts')) {
+        const config = vscode.workspace.getConfiguration('codeWebChat')
+        const forwarded_ports = config.get<number[]>('forwardedPorts') ?? []
+        websocket_server_instance?.send_forwarded_ports(forwarded_ports)
+      }
+    })
+  )
+
   const commit_status_bar_item = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Left,
     1000

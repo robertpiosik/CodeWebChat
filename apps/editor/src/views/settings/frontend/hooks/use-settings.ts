@@ -15,6 +15,9 @@ export const use_settings = (vscode: any) => {
   const [api_configurations, set_api_configurations] = useState<
     ApiConfiguration[] | undefined
   >(undefined)
+  const [forwarded_ports, set_forwarded_ports] = useState<
+    number[] | undefined
+  >(undefined)
   const [web_configurations, set_web_configurations] = useState<
     WebConfiguration[] | undefined
   >(undefined)
@@ -86,6 +89,7 @@ export const use_settings = (vscode: any) => {
   useEffect(() => {
     post_message(vscode, { command: 'GET_PROVIDERS' })
     post_message(vscode, { command: 'GET_API_CONFIGURATIONS' })
+    post_message(vscode, { command: 'GET_FORWARDED_PORTS' })
     post_message(vscode, { command: 'GET_WEB_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_CLI_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS' })
@@ -117,6 +121,8 @@ export const use_settings = (vscode: any) => {
       } else if (message.command === 'API_CONFIGURATIONS') {
         set_api_configurations(message.api_configurations)
         set_defaults(message.defaults)
+      } else if (message.command === 'FORWARDED_PORTS') {
+        set_forwarded_ports(message.forwarded_ports)
       } else if (message.command === 'WEB_CONFIGURATIONS') {
         set_web_configurations(message.web_configurations)
         set_web_defaults(message.defaults || {})
@@ -291,6 +297,14 @@ export const use_settings = (vscode: any) => {
     })
   }
 
+  const handle_update_forwarded_ports = (ports: number[]) => {
+    set_forwarded_ports(ports)
+    post_message(vscode, {
+      command: 'UPDATE_FORWARDED_PORTS',
+      forwarded_ports: ports
+    })
+  }
+
   const handle_commit_instructions_change = (instructions: string) =>
     post_message(vscode, {
       command: 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS',
@@ -462,6 +476,7 @@ export const use_settings = (vscode: any) => {
     set_providers,
     api_configurations,
     set_api_configurations,
+    forwarded_ports,
     web_configurations,
     set_web_configurations,
     cli_configurations,
@@ -499,6 +514,7 @@ export const use_settings = (vscode: any) => {
     handle_reorder_web_configurations,
     handle_add_web_configuration,
     handle_delete_web_configuration,
+    handle_update_forwarded_ports,
     handle_toggle_pinned_cli_configuration,
     handle_toggle_pinned_api_configuration,
     handle_toggle_pinned_web_configuration,
