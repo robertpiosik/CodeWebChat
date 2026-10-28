@@ -39,23 +39,23 @@ By sending files alongside task instructions, tool calling is completely skipped
 </details>
 
 <details>
-<summary><strong>Select files hands-free</strong></summary>
+<summary><strong>Hands-free context for the task</strong></summary>
 
-[Agentic Search](#-agentic-search) prompt can get you relevant files automatically.
+[Agentic Search](#-agentic-search) prompt accurately selects you relevant files automatically.
 
 </details>
 
 <details>
 <summary><strong>Iterations without context bloat</strong></summary>
 
-Refine instructions without dragging old ones in the condex window.
+Refine instructions without dragging old ones in the ever-growing conversation.
 
 </details>
 
 <details>
 <summary><strong>Effective steering with examples</strong></summary>
 
-Selecting examples can make your prompts simpler and guide the model toward outputs you're looking for.
+Show the model broader context without typing irrelevant instructions.
 
 </details>
 
