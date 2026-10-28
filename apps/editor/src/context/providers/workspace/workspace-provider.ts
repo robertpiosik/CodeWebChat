@@ -1424,13 +1424,28 @@ export class WorkspaceProvider
           .split('\n')
           .map((rule) => rule.trim())
           .filter((rule) => rule && !rule.startsWith('#'))
-          .map((rule) =>
-            relative_gitignore_path === ''
-              ? rule
-              : `${relative_gitignore_path}${
-                  rule.startsWith('/') ? rule : `/${rule}`
-                }`
-          )
+          .map((rule) => {
+            if (relative_gitignore_path === '') {
+              return rule
+            }
+
+            const is_negated = rule.startsWith('!')
+            let actual_rule = is_negated ? rule.substring(1) : rule
+
+            const is_anchored =
+              actual_rule.indexOf('/') !== -1 &&
+              actual_rule.indexOf('/') !== actual_rule.length - 1
+
+            if (!is_anchored && !actual_rule.startsWith('**')) {
+              actual_rule = `**/${actual_rule}`
+            }
+
+            if (actual_rule.startsWith('/')) {
+              actual_rule = actual_rule.substring(1)
+            }
+
+            return `${is_negated ? '!' : ''}${relative_gitignore_path}/${actual_rule}`
+          })
 
         this._combined_gitignore.add(rules_with_prefix)
       } catch (error) {
