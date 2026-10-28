@@ -13,7 +13,7 @@
 
 <p align="center"><strong>Blazing fast AI coding</strong></p>
 
-<p align="center"><i>Efficient markdown prompts with seamless integration</i></p>
+<p align="center"><i>Markdown prompts with seamless integration</i></p>
 
 <p align="center">VS Code · Cursor · Antigravity</br><strong>Free chatbots</strong> · APIs · CLIs</p>
 
