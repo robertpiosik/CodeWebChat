@@ -34,7 +34,7 @@ Autofill free chatbots in your web browser, send API requests, or headlessly inv
 <details>
 <summary><strong>Attaching files</strong></summary>
 
-By sending files alongside task instructions in a single message, tool calling is skipped entirely.
+Selected files are sent alongside task instructions in a single message.
 
 </details>
 
