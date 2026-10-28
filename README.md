@@ -55,7 +55,7 @@ Refine instructions without dragging old ones in the ever-growing conversation.
 <details>
 <summary><strong>Effective steering with examples</strong></summary>
 
-Show the model broader context without typing irrelevant instructions.
+Guide the model with broader context for outputs you're looking for.
 
 </details>
 
