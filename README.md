@@ -41,14 +41,14 @@ Selected files are sent alongside task instructions in a single message.
 <details>
 <summary><strong>Effortless context selection</strong></summary>
 
-[Agentic Search](#-agentic-search) prompt accurately selects you relevant files hands-free.
+[Agentic Search](#-agentic-search) prompt accurately selects relevant files hands-free.
 
 </details>
 
 <details>
 <summary><strong>Iterations without context bloat</strong></summary>
 
-Refine instructions without dragging old ones in the ever-growing conversation.
+Refine instructions without dragging old ones in an ever-growing conversation.
 
 </details>
 
