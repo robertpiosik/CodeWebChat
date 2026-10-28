@@ -26,7 +26,6 @@
     "eslint-plugin-react": "^7.37.5",
     "react-refresh": "^0.17.0",
     "sass": "^1.93.2",
-    "typescript": "^7.0.0",
     "webextension-polyfill": "^0.12.0"
   },
   "dependencies": {

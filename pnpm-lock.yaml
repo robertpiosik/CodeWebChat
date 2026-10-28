@@ -108,9 +108,6 @@ importers:
       sass:
         specifier: ^1.93.2
         version: 1.93.2
-      typescript:
-        specifier: ^7.0.0
-        version: 7.0.2
       webextension-polyfill:
         specifier: ^0.12.0
         version: 0.12.0
