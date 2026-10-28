@@ -325,6 +325,9 @@ export const apply_response_command = (params: {
           }
         }
 
+        const selected_paths_before_apply =
+          params.workspace_provider.get_all_selected_paths()
+
         const preview_data = await process_response({
           args,
           response: response!,
@@ -388,21 +391,22 @@ export const apply_response_command = (params: {
           const history_for_checkpoint = [
             ...params.prompt_view_provider.response_history
           ]
-            const changes_accepted = await preview_handler({
-              original_states: preview_data.original_states,
-              chat_response: preview_data.response,
-              prompt_view_provider: params.prompt_view_provider,
-              workspace_provider: params.workspace_provider,
-              extension_context: params.extension_context,
-              original_editor_state: args?.original_editor_state,
-              raw_instructions: args?.raw_instructions,
-              created_at: created_at_for_preview,
-              api_configuration_details: args?.api_configuration_details,
-              cli_configuration_details: args?.cli_configuration_details,
-              web_configuration_details: args?.web_configuration_details,
-              is_code_at_cursor,
-              is_from_agentic_cli: args?.is_from_agentic_cli
-            })
+          const changes_accepted = await preview_handler({
+            selected_paths_before: selected_paths_before_apply,
+            original_states: preview_data.original_states,
+            chat_response: preview_data.response,
+            prompt_view_provider: params.prompt_view_provider,
+            workspace_provider: params.workspace_provider,
+            extension_context: params.extension_context,
+            original_editor_state: args?.original_editor_state,
+            raw_instructions: args?.raw_instructions,
+            created_at: created_at_for_preview,
+            api_configuration_details: args?.api_configuration_details,
+            cli_configuration_details: args?.cli_configuration_details,
+            web_configuration_details: args?.web_configuration_details,
+            is_code_at_cursor,
+            is_from_agentic_cli: args?.is_from_agentic_cli
+          })
 
           if (changes_accepted) {
             params.prompt_view_api_calls_manager.cancel_all_requests()

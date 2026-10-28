@@ -1,3 +1,4 @@
+import * as fs from 'fs'
 import * as path from 'path'
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
@@ -22,6 +23,7 @@ import {
 export let ongoing_preview_cleanup_promise: Promise<void> | null = null
 
 export const preview_handler = async (params: {
+  selected_paths_before?: string[]
   original_states: OriginalFileState[]
   chat_response: string
   prompt_view_provider: PromptViewProvider
@@ -110,6 +112,11 @@ export const preview_handler = async (params: {
           workspace_provider: params.workspace_provider,
           states: params.original_states
         })
+        await restore_selection_for_states({
+          workspace_provider: params.workspace_provider,
+          states: params.original_states,
+          selected_paths_before: params.selected_paths_before
+        })
       } finally {
         params.workspace_provider.resume_file_watcher()
       }
@@ -130,6 +137,11 @@ export const preview_handler = async (params: {
         await sync_workspace_selection_for_states({
           workspace_provider: params.workspace_provider,
           states: preview_result.rejected_states
+        })
+        await restore_selection_for_states({
+          workspace_provider: params.workspace_provider,
+          states: preview_result.rejected_states,
+          selected_paths_before: params.selected_paths_before
         })
       } finally {
         params.workspace_provider.resume_file_watcher()
@@ -278,6 +290,47 @@ export const preview_handler = async (params: {
     resolve_cleanup_promise!()
     ongoing_preview_cleanup_promise = null
   }
+}
+
+const restore_selection_for_states = async (params: {
+  workspace_provider: WorkspaceProvider
+  states: OriginalFileState[]
+  selected_paths_before?: string[]
+}) => {
+  if (!params.selected_paths_before?.length) return
+
+  const { workspace_map, default_workspace } = get_workspace_map_and_default()
+  const before = new Set(params.selected_paths_before)
+  const to_restore: string[] = []
+
+  const consider = (file_path?: string, workspace_name?: string) => {
+    if (!file_path) return
+    const abs_path = path.isAbsolute(file_path)
+      ? file_path
+      : (() => {
+          const root = resolve_workspace_root({
+            workspace_name,
+            workspace_map,
+            default_workspace
+          })
+          return root ? path.join(root, file_path) : undefined
+        })()
+    if (abs_path && before.has(abs_path) && fs.existsSync(abs_path)) {
+      to_restore.push(abs_path)
+    }
+  }
+
+  for (const state of params.states) {
+    consider(state.file_path, state.workspace_name)
+    consider(state.file_path_to_restore, state.restore_workspace_name)
+  }
+
+  if (to_restore.length == 0) return
+
+  const current_selected = params.workspace_provider.get_all_selected_paths()
+  await params.workspace_provider.set_selected_files(
+    Array.from(new Set([...current_selected, ...to_restore]))
+  )
 }
 
 const sync_workspace_selection_for_states = async (params: {
