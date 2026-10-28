@@ -20,14 +20,17 @@ export const build_cli_prompt = async (params: {
     ...prompt_view_provider.completed_tasks
   ]
 
-  const { instructions: processed_instructions_array, skill_definitions, accuracy_boost } =
-    await replace_symbols({
-      instructions: instructions_to_process,
-      extension_context: prompt_view_provider.extension_context,
-      workspace_provider: prompt_view_provider.workspace_provider,
-      image_as_paths: true,
-      symbols_cache: prompt_view_provider.symbols_cache
-    })
+  const {
+    instructions: processed_instructions_array,
+    skill_definitions,
+    accuracy_boost
+  } = await replace_symbols({
+    instructions: instructions_to_process,
+    extension_context: prompt_view_provider.extension_context,
+    workspace_provider: prompt_view_provider.workspace_provider,
+    image_as_paths: true,
+    symbols_cache: prompt_view_provider.symbols_cache
+  })
 
   const processed_query = processed_instructions_array[0]
   const processed_completed_tasks = processed_instructions_array.slice(1)
@@ -76,7 +79,7 @@ export const build_cli_prompt = async (params: {
         filepath: relative_path,
         content
       })
-    } catch (err) {
+    } catch {
       files_context += PromptBuilder.build_file_context({
         filepath: relative_path
       })

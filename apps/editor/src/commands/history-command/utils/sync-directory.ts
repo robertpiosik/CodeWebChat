@@ -12,7 +12,7 @@ const count_sync_operations = async (params: {
 
   try {
     await vscode.workspace.fs.stat(params.dest_dir)
-  } catch (e) {
+  } catch {
     return 1
   }
 
@@ -75,7 +75,7 @@ export const sync_directory = async (params: {
   let dest_entries: [string, vscode.FileType][]
   try {
     dest_entries = await vscode.workspace.fs.readDirectory(params.dest_dir)
-  } catch (e) {
+  } catch {
     await vscode.workspace.fs.copy(params.source_dir, params.dest_dir, {
       overwrite: true
     })

@@ -19,7 +19,7 @@ export const handle_preview_generated_code = async (
 
   try {
     await fs.promises.writeFile(temp_file_path, content, 'utf8')
-  } catch (error) {
+  } catch {
     vscode.window.showErrorMessage(
       'Failed to create temporary file for preview.'
     )

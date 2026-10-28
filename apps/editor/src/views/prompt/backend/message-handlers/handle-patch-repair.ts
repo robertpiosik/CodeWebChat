@@ -539,7 +539,7 @@ export const handle_patch_repair = async (params: {
                   await vscode.workspace.fs.delete(
                     vscode.Uri.file(old_safe_path)
                   )
-                } catch (e) {}
+                } catch {}
               }
             }
 

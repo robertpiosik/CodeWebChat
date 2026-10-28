@@ -150,7 +150,7 @@ export class WebSocketManager {
                     resolve()
                     return
                   }
-                } catch (e) {
+                } catch {
                   // Ignore parse errors and fall through to retry
                 }
               }
@@ -520,7 +520,7 @@ export class WebSocketManager {
             })
           )
         }
-      } catch (error) {
+      } catch {
         url = chatbot.url
       }
     } else {
@@ -628,7 +628,7 @@ export class WebSocketManager {
             })
           )
         }
-      } catch (error) {
+      } catch {
         url = chatbot.url
       }
     } else {

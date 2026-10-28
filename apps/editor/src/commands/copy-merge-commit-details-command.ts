@@ -25,9 +25,7 @@ export const copy_merge_commit_details_command = (): vscode.Disposable => {
           })
             .toString()
             .trim()
-        } catch (e) {
-          // Error handled below
-        }
+        } catch {}
 
         if (!branches_output) {
           vscode.window.showInformationMessage(
@@ -119,7 +117,7 @@ export const copy_merge_commit_details_command = (): vscode.Disposable => {
           )
             .toString()
             .trim()
-        } catch (e) {
+        } catch {
           vscode.window.showErrorMessage('Failed to fetch commit logs.')
           return
         }

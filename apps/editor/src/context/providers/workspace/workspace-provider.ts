@@ -1340,7 +1340,7 @@ export class WorkspaceProvider
             all_files_to_check.push(file_path)
           }
         }
-      } catch (e) {}
+      } catch {}
     }
 
     for (const file_path of all_files_to_check) {
@@ -1399,7 +1399,7 @@ export class WorkspaceProvider
             gitignore_files.push(full_path)
           }
         }
-      } catch (error) {}
+      } catch {}
     }
 
     for (const root of this._workspace_roots) {

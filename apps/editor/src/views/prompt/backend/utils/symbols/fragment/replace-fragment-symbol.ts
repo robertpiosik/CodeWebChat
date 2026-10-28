@@ -73,7 +73,7 @@ export const replace_fragment_symbol = async (params: {
             new vscode.Range(start_pos, end_pos)
           )
           content = document.getText(valid_range)
-        } catch (e) {
+        } catch {
           content = `// Error reading file ${file_path}`
         }
 

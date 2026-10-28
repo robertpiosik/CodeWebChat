@@ -20,7 +20,7 @@ export const read_rename_source_file = async (params: {
         path: safe_rename_path,
         content: document.getText()
       }
-    } catch (e) {
+    } catch {
       Logger.warn({
         function_name: 'read_rename_source_file',
         message: 'Failed to read rename source file',

@@ -11,7 +11,7 @@ export const get_target_folder_path = async (
       if (!stats.isDirectory()) {
         folder_path = path.dirname(folder_path)
       }
-    } catch (error) {
+    } catch {
       folder_path = undefined
     }
   }

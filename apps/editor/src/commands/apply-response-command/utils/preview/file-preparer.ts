@@ -47,14 +47,17 @@ export const prepare_files_from_original_states = async (params: {
       } else if (state.proposed_content !== undefined) {
         current_content = state.proposed_content
       }
-    } catch (error) {
+    } catch {
       continue
     }
 
     let new_content_for_diff = current_content
     if (state.is_pure_rename) {
       new_content_for_diff = ''
-    } else if (state.is_checked === false && state.current_content !== undefined) {
+    } else if (
+      state.is_checked === false &&
+      state.current_content !== undefined
+    ) {
       current_content = state.current_content
       new_content_for_diff = state.content
     } else if (state.is_checked === false && state.ai_content !== undefined) {

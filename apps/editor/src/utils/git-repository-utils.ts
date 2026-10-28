@@ -361,11 +361,11 @@ export const prepare_staged_changes = async (params: {
                     if (!content.includes(0)) {
                       full_content = Buffer.from(content).toString('utf8')
                     }
-                  } catch (e) {}
+                  } catch {}
                 }
               }
             }
-          } catch (e) {}
+          } catch {}
 
           const file_tokens = Math.ceil(
             (full_content ? full_content.length : final_diff_content.length) / 4

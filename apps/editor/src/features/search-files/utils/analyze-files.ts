@@ -91,7 +91,7 @@ export const analyze_files = async (params: {
 
           const wrapped_shrunk = `### File: \`${display_path}\`\n\n${backticks_shrunk}\n${shrunk_content}\n${backticks_shrunk}\n\n`
           shrink_tokens += Math.floor(wrapped_shrunk.length / 4)
-        } catch (e) {}
+        } catch {}
       }
     }
   )

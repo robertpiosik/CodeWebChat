@@ -8,7 +8,7 @@ export const check_command_exists = (cmd: string): boolean => {
       stdio: 'ignore'
     })
     return true
-  } catch (e) {
+  } catch {
     return false
   }
 }

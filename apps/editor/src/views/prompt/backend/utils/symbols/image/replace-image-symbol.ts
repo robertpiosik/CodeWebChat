@@ -53,7 +53,7 @@ export const replace_image_symbol = async (params: {
                 success: true
               }
             }
-          } catch (error) {
+          } catch {
             return {
               success: false
             }

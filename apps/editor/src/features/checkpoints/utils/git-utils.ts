@@ -50,7 +50,7 @@ export const get_git_info = async (
       commit_hash,
       has_git: true
     }
-  } catch (error) {
+  } catch {
     return null
   }
 }
@@ -153,7 +153,7 @@ export const is_git_repository = async (
       cwd: workspace_folder.uri.fsPath
     })
     return true
-  } catch (error) {
+  } catch {
     return false
   }
 }

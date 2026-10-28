@@ -18,7 +18,9 @@ export const prepare_rename_operation = async (params: {
       default_workspace: params.default_workspace
     })
     const sanitized_rename_path = sanitize_file_name(params.file.renamed_from)
-    rename_source_path = create_safe_path(rename_source_workspace_root, sanitized_rename_path) ?? undefined
+    rename_source_path =
+      create_safe_path(rename_source_workspace_root, sanitized_rename_path) ??
+      undefined
   }
 
   const is_pure_rename = params.file.content === ''
@@ -28,9 +30,7 @@ export const prepare_rename_operation = async (params: {
     try {
       const doc = await vscode.workspace.openTextDocument(rename_source_path)
       original_content = doc.getText()
-    } catch (e) {
-      // Ignored: Will be handled if missing
-    }
+    } catch {}
   }
 
   return {

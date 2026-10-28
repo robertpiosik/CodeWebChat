@@ -50,7 +50,7 @@ export const create_safe_path = (
   let resolved_parent: string
   try {
     resolved_parent = fs.realpathSync(parent_path)
-  } catch (err) {
+  } catch {
     resolved_parent = path.resolve(parent_path)
   }
 

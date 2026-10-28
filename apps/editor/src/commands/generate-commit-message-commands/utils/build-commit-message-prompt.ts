@@ -147,7 +147,7 @@ export const build_commit_message_prompt = async (
             let full_content = ''
             try {
               full_content = await repository.show('', file_path)
-            } catch (e) {
+            } catch {
               const uri = vscode.Uri.joinPath(repository.rootUri, file_path)
               const content = await vscode.workspace.fs.readFile(uri)
               if (!content.includes(0)) {
@@ -164,7 +164,7 @@ export const build_commit_message_prompt = async (
                 })
               }
             }
-          } catch (err) {}
+          } catch {}
         }
 
         changes_content_part = PromptBuilder.build_diff_file_context({
@@ -213,7 +213,7 @@ export const build_commit_message_prompt = async (
             })
           }
         }
-      } catch (err) {}
+      } catch {}
 
       return ''
     })

@@ -16,7 +16,7 @@ export const preview_text_in_temp_file = async (params: {
     temp_dir_path = await fs.promises.mkdtemp(
       path.join(os.tmpdir(), 'cwc-preview-')
     )
-  } catch (error) {
+  } catch {
     vscode.window.showErrorMessage(
       'Failed to create temporary directory for preview.'
     )
@@ -30,7 +30,7 @@ export const preview_text_in_temp_file = async (params: {
       encoding: 'utf8',
       mode: 0o600
     })
-  } catch (error) {
+  } catch {
     vscode.window.showErrorMessage(
       'Failed to create temporary file for preview.'
     )

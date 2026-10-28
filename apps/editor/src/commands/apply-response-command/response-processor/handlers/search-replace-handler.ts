@@ -117,18 +117,18 @@ export const handle_search_replace = async (params: {
 
           let proposed_content = ''
           if (!is_pure_rename) {
-             if (has_markers) {
-               proposed_content = apply_search_replace_to_content({
-                 original_content,
-                 segments: parse_search_replace_segments(file.content)
-               })
-             } else {
-               proposed_content = file.content
-             }
-             await vscode.workspace.fs.writeFile(
-               vscode.Uri.file(safe_path),
-               Buffer.from(proposed_content, 'utf8')
-             )
+            if (has_markers) {
+              proposed_content = apply_search_replace_to_content({
+                original_content,
+                segments: parse_search_replace_segments(file.content)
+              })
+            } else {
+              proposed_content = file.content
+            }
+            await vscode.workspace.fs.writeFile(
+              vscode.Uri.file(safe_path),
+              Buffer.from(proposed_content, 'utf8')
+            )
           }
 
           original_states.push({
@@ -142,7 +142,7 @@ export const handle_search_replace = async (params: {
             is_pure_rename
           })
           continue
-        } catch (error) {
+        } catch {
           failed_files.push(file)
         }
       } else if (file_exists && has_markers) {
@@ -207,7 +207,7 @@ export const handle_search_replace = async (params: {
             workspace_name: file.workspace_name,
             proposed_content: content_to_write
           })
-        } catch (error) {
+        } catch {
           failed_files.push(file)
         }
       } else if (file_exists && !has_markers) {
@@ -215,8 +215,11 @@ export const handle_search_replace = async (params: {
           const document = await vscode.workspace.openTextDocument(safe_path)
           const original_content_doc = document.getText()
 
-          const final_content = preserve_trailing_newline(original_content_doc, file.content)
-          
+          const final_content = preserve_trailing_newline(
+            original_content_doc,
+            file.content
+          )
+
           await replace_document_content(document, final_content)
 
           original_states.push({

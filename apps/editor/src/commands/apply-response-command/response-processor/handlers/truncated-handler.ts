@@ -1,5 +1,4 @@
 import * as fs from 'fs'
-import * as path from 'path'
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
@@ -106,7 +105,7 @@ export const handle_truncated_edit = async (params: {
           old_workspace_root: rename_source_workspace_root,
           new_workspace_root: workspace_root
         })
-        
+
         let proposed_content = ''
         if (!is_pure_rename) {
           proposed_content = process_truncations(file.content, original_content)

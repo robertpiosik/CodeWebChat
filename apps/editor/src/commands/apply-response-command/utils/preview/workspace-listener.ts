@@ -166,9 +166,7 @@ export const setup_workspace_listeners = (params: {
               const content = Buffer.from(contentBytes).toString('utf8')
               deleted_files_content_cache.set(uri.fsPath, content)
             }
-          } catch (e) {
-            // Ignore
-          }
+          } catch {}
         }
 
         for (const uri of event.files) {
@@ -262,7 +260,7 @@ export const setup_workspace_listeners = (params: {
           try {
             const contentBytes = await vscode.workspace.fs.readFile(doc.uri)
             original_content = Buffer.from(contentBytes).toString('utf8')
-          } catch (e) {
+          } catch {
             is_new = true // File on disk does not exist, but buffer does.
           }
         }
@@ -528,7 +526,7 @@ export const setup_workspace_listeners = (params: {
         try {
           const doc = await vscode.workspace.openTextDocument(uri)
           new_content = doc.getText()
-        } catch (e) {
+        } catch {
           new_content = ''
         }
 
@@ -905,8 +903,8 @@ export const setup_workspace_listeners = (params: {
     ) {
       return
     }
-    
-    if (file_to_discard.previewable_file.is_pure_rename) return;
+
+    if (file_to_discard.previewable_file.is_pure_rename) return
 
     if (file_to_discard.previewable_file.applied_with_patch_repair) {
       file_to_discard.previewable_file.applied_with_patch_repair = false
@@ -1019,7 +1017,7 @@ export const setup_workspace_listeners = (params: {
                 workspace_root
               })
             }
-          } catch (e) {}
+          } catch {}
         } else {
           await vscode.workspace.fs.writeFile(
             vscode.Uri.file(file_to_toggle.sanitized_path),
@@ -1038,7 +1036,7 @@ export const setup_workspace_listeners = (params: {
                 workspace_root
               })
             }
-          } catch (e) {}
+          } catch {}
         } else {
           await vscode.workspace.fs.writeFile(
             vscode.Uri.file(file_to_toggle.sanitized_path),

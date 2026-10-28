@@ -1310,8 +1310,8 @@
     "@types/vscode": "1.96.0",
     "@types/ws": "^8.18.1",
     "@types/turndown": "^5.0.5",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
+    "@typescript-eslint/eslint-plugin": "^8.72.1",
+    "@typescript-eslint/parser": "^8.72.1",
     "@rsbuild/core": "^1.1.12",
     "@rsbuild/plugin-react": "^1.0.6",
     "@rsbuild/plugin-sass": "^1.1.2",
@@ -1322,7 +1322,7 @@
     "eslint-plugin-react": "^7.37.5",
     "sass-embedded": "^1.89.2",
     "typed-css-modules": "^0.9.1",
-    "typescript": "^7.0.0"
+    "typescript": "^6.x"
   },
   "dependencies": {
     "@joplin/turndown": "^4.0.81",

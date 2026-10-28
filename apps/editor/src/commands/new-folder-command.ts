@@ -12,7 +12,6 @@ export const new_folder_command = () => {
     async (item?: vscode.TreeItem | vscode.Uri) => {
       let parent_path: string | undefined
 
-      // Handle case when invoked from view/title (no item parameter)
       if (!item) {
         if (
           vscode.workspace.workspaceFolders &&
@@ -25,13 +24,9 @@ export const new_folder_command = () => {
           )
           return
         }
-      }
-      // Handle case when invoked with URI (from view/title)
-      else if (item instanceof vscode.Uri) {
+      } else if (item instanceof vscode.Uri) {
         parent_path = item.fsPath
-      }
-      // Handle case when invoked with TreeItem (from context menu)
-      else if (item.resourceUri) {
+      } else if (item.resourceUri) {
         parent_path = item.resourceUri.fsPath
       }
 
@@ -46,12 +41,9 @@ export const new_folder_command = () => {
       try {
         const stats = fs.statSync(parent_path)
         if (!stats.isDirectory()) {
-          // If it's a file, use its parent directory
           parent_path = path.dirname(parent_path)
         }
-      } catch (error) {
-        // If the path doesn't exist, we'll create it later
-      }
+      } catch {}
 
       const input_box = vscode.window.createInputBox()
       input_box.title = t('command.new-folder-command.title')
@@ -153,9 +145,7 @@ export const new_folder_command = () => {
             })
           )
           return
-        } catch {
-          // Folder doesn't exist, which is what we want
-        }
+        } catch {}
 
         await vscode.workspace.fs.createDirectory(vscode.Uri.file(target_path))
       } catch (error) {

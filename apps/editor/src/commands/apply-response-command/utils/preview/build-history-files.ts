@@ -52,7 +52,7 @@ export const build_history_files = async (params: {
       } else if (state.proposed_content !== undefined) {
         current_content = state.proposed_content
       }
-    } catch (error) {
+    } catch {
       continue
     }
 
@@ -95,7 +95,9 @@ export const build_history_files = async (params: {
       added_in_preview: state.added_in_preview,
       is_pure_rename: state.is_pure_rename,
       renamed_from: is_rename ? state.file_path_to_restore : undefined,
-      renamed_from_workspace: is_rename ? state.restore_workspace_name : undefined
+      renamed_from_workspace: is_rename
+        ? state.restore_workspace_name
+        : undefined
     })
 
     if (state.file_path_to_restore) {

@@ -165,9 +165,7 @@ export const select_files_of_commit_command = (
                 )
                   .toString()
                   .trim()
-              } catch (e) {
-                // ignore empty output
-              }
+              } catch {}
 
               const branches = branches_output
                 .split('\n')
@@ -258,9 +256,7 @@ export const select_files_of_commit_command = (
                 )
                   .toString()
                   .trim()
-              } catch (e) {
-                // ignore
-              }
+              } catch {}
 
               is_ahead_of_branch = true
               branch_name = selected_branch.name
@@ -288,9 +284,7 @@ export const select_files_of_commit_command = (
                 )
                   .toString()
                   .trim()
-              } catch (e) {
-                // ignore
-              }
+              } catch {}
 
               if (!files_output) {
                 vscode.window.showInformationMessage(

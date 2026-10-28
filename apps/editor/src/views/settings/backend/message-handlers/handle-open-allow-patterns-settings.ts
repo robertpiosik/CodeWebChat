@@ -83,7 +83,7 @@ export const handle_open_allow_patterns_settings = async (): Promise<void> => {
   try {
     const doc = await vscode.workspace.openTextDocument(settingsUri)
     await vscode.window.showTextDocument(doc)
-  } catch (e) {
+  } catch {
     vscode.window.showErrorMessage(
       t('common.error.could-not-open-settings', { path: settingsPath })
     )

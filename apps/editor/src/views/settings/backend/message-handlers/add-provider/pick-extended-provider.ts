@@ -81,7 +81,7 @@ export const pick_extended_provider = async (): Promise<
     })
 
     return ext_choice
-  } catch (e) {
+  } catch {
     vscode.window.showErrorMessage(
       t('views.shared.actions.api.pick-extended-provider.error')
     )

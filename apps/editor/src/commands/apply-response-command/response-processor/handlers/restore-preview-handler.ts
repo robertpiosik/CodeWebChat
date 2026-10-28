@@ -10,7 +10,13 @@ import {
   get_workspace_map_and_default,
   resolve_workspace_root
 } from '../../utils/workspace'
-import { remove_directory_if_empty, relocate_file, preserve_trailing_newline, replace_document_content, ensure_directory_exists } from '../../utils/file-operations'
+import {
+  remove_directory_if_empty,
+  relocate_file,
+  preserve_trailing_newline,
+  replace_document_content,
+  ensure_directory_exists
+} from '../../utils/file-operations'
 
 export const handle_restore_preview = async (
   files: FileInPreview[]
@@ -42,7 +48,9 @@ export const handle_restore_preview = async (
   const rename_sources = new Set<string>()
   for (const file of files) {
     if (file.renamed_from) {
-      rename_sources.add(`${file.renamed_from_workspace ?? file.workspace_name ?? ''}:${file.renamed_from}`)
+      rename_sources.add(
+        `${file.renamed_from_workspace ?? file.workspace_name ?? ''}:${file.renamed_from}`
+      )
     }
   }
 
@@ -87,12 +95,16 @@ export const handle_restore_preview = async (
         workspace_map,
         default_workspace
       })
-      const source_safe_path = create_safe_path(source_workspace_root, file.renamed_from)
+      const source_safe_path = create_safe_path(
+        source_workspace_root,
+        file.renamed_from
+      )
       if (source_safe_path && fs.existsSync(source_safe_path)) {
         try {
-          const document = await vscode.workspace.openTextDocument(source_safe_path)
+          const document =
+            await vscode.workspace.openTextDocument(source_safe_path)
           original_content = document.getText()
-        } catch (e) {}
+        } catch {}
       }
     }
 
@@ -120,18 +132,21 @@ export const handle_restore_preview = async (
           workspace_map,
           default_workspace
         })
-        
+
         await relocate_file({
           old_path: file.renamed_from,
           new_path: file.file_path,
           old_workspace_root: source_workspace_root,
           new_workspace_root: workspace_root
         })
-        
+
         if (!file.is_pure_rename && file.content !== undefined) {
           const file_uri = vscode.Uri.file(safe_path)
           const document = await vscode.workspace.openTextDocument(file_uri)
-          const final_content = preserve_trailing_newline(original_content, file.content)
+          const final_content = preserve_trailing_newline(
+            original_content,
+            file.content
+          )
           await replace_document_content(document, final_content)
           Logger.info({
             function_name: 'handle_restore_preview',
@@ -144,7 +159,7 @@ export const handle_restore_preview = async (
         if (rename_sources.has(file_key)) {
           continue
         }
-        
+
         if (file_exists) {
           try {
             const tabs_to_close: vscode.Tab[] = []
@@ -189,7 +204,10 @@ export const handle_restore_preview = async (
           try {
             const file_uri = vscode.Uri.file(safe_path)
             const document = await vscode.workspace.openTextDocument(file_uri)
-            const final_content = preserve_trailing_newline(original_content, file.content)
+            const final_content = preserve_trailing_newline(
+              original_content,
+              file.content
+            )
             await replace_document_content(document, final_content)
 
             Logger.info({

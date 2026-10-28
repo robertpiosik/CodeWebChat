@@ -103,7 +103,11 @@ const is_private_ip = (ip: string): boolean => {
   if (/^255\.255\.255\.255$/.test(normalized_ip)) return true
   if (normalized_ip === '::1' || normalized_ip === '::') return true
   if (/^fe80:/.test(normalized_ip)) return true
-  if (/^fc[0-9a-f]{2}:/.test(normalized_ip) || /^fd[0-9a-f]{2}:/.test(normalized_ip)) return true
+  if (
+    /^fc[0-9a-f]{2}:/.test(normalized_ip) ||
+    /^fd[0-9a-f]{2}:/.test(normalized_ip)
+  )
+    return true
   return false
 }
 
@@ -244,7 +248,7 @@ export const fetch_website = async (
       }
     }
     return null
-  } catch (error) {
+  } catch {
     return null
   }
 }

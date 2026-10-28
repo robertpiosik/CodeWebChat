@@ -583,7 +583,7 @@ const create_failed_file_state = (params: {
   if (safe_path && fs.existsSync(safe_path)) {
     try {
       content = fs.readFileSync(safe_path, 'utf8')
-    } catch (e) {}
+    } catch {}
   }
 
   const result: OriginalFileState = {

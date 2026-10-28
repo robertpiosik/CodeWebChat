@@ -3,7 +3,7 @@ import * as http from 'http'
 import * as path from 'path'
 import * as process from 'process'
 import * as dotenv from 'dotenv'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const WebSocket = require('ws')
 import { DEFAULT_PORT, CLIENT_TYPE } from '@shared/constants/websocket'
 
@@ -78,7 +78,7 @@ class WebSocketServer {
 
           const {
             get_or_create_shared_token
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
           } = require('../utils/shared-token')
           const expected_token = get_or_create_shared_token()
 
@@ -126,7 +126,7 @@ class WebSocketServer {
         if (challenge) {
           const {
             get_or_create_shared_token
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
           } = require('../utils/shared-token')
           const token = get_or_create_shared_token()
           const signature = crypto

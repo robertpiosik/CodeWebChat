@@ -233,7 +233,7 @@ export const restore_checkpoint = async (params: {
                     vscode.Uri.file(diff_file_path)
                   )
                   diff = Buffer.from(diff_content).toString('utf8')
-                } catch (e) {}
+                } catch {}
 
                 if (diff.trim().length > 0) {
                   const temp_diff_path = path.join(
@@ -256,7 +256,7 @@ export const restore_checkpoint = async (params: {
                         stdio: 'pipe'
                       }
                     )
-                  } catch (e) {
+                  } catch {
                     try {
                       execFileSync(
                         'git',
@@ -341,7 +341,7 @@ export const restore_checkpoint = async (params: {
                     vscode.Uri.file(diff_file_path)
                   )
                   diff = Buffer.from(diff_content).toString('utf8')
-                } catch (e) {}
+                } catch {}
 
                 if (diff.trim().length > 0) {
                   const temp_diff_path = path.join(
@@ -361,7 +361,7 @@ export const restore_checkpoint = async (params: {
                         stdio: 'pipe'
                       }
                     )
-                  } catch (e) {
+                  } catch {
                     try {
                       execFileSync(
                         'git',
@@ -558,9 +558,12 @@ export const restore_checkpoint = async (params: {
               raw_instructions: item_to_preview.raw_instructions,
               files_with_content: item_to_preview.files,
               created_at: item_to_preview.created_at,
-              api_configuration_details: item_to_preview.api_configuration_details,
-              cli_configuration_details: item_to_preview.cli_configuration_details,
-              web_configuration_details: item_to_preview.web_configuration_details,
+              api_configuration_details:
+                item_to_preview.api_configuration_details,
+              cli_configuration_details:
+                item_to_preview.cli_configuration_details,
+              web_configuration_details:
+                item_to_preview.web_configuration_details,
               is_from_agentic_cli: item_to_preview.is_from_agentic_cli
             })
           }
@@ -608,7 +611,7 @@ export const restore_checkpoint = async (params: {
       },
       main_task
     )
-  } catch (e) {
+  } catch {
     return
   }
 

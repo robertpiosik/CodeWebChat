@@ -43,7 +43,7 @@ export const replace_website_symbol = async (params: {
               content,
               success: true
             }
-          } catch (error) {
+          } catch {
             return {
               success: false
             }

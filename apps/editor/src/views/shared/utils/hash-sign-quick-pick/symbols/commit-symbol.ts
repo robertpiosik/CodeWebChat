@@ -31,7 +31,7 @@ export const handle_commit_item = async (
           stdio: 'ignore'
         })
         git_folders.push(folder)
-      } catch (error) {
+      } catch {
         console.log(`Skipping ${folder.name}: not a Git repository`)
       }
     }
@@ -244,7 +244,7 @@ export const handle_commit_item = async (
             commit_message
           })
           diff_token_count = Math.ceil(replacement_text.length / 4)
-        } catch (error) {
+        } catch {
           // ignore
         }
 
@@ -332,7 +332,9 @@ export const handle_commit_item = async (
           'views.shared.utils.hash-sign-quick-pick.quick-pick.commit.add-another'
         )
         const action = await vscode.window.showInformationMessage(
-          t('views.shared.utils.hash-sign-quick-pick.quick-pick.commit.inserted'),
+          t(
+            'views.shared.utils.hash-sign-quick-pick.quick-pick.commit.inserted'
+          ),
           add_another_label
         )
 
@@ -349,7 +351,7 @@ export const handle_commit_item = async (
 
       return 'continue'
     }
-  } catch (error) {
+  } catch {
     vscode.window.showErrorMessage(
       t(
         'views.shared.utils.hash-sign-quick-pick.commit-symbol.failed-to-get-commits'

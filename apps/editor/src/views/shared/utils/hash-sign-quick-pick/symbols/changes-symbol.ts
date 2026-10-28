@@ -49,7 +49,7 @@ export const handle_changes_item = async (
         if (branches.length > 0) {
           workspace_with_branches.push({ folder, branches })
         }
-      } catch (error) {
+      } catch {
         console.log(`Skipping ${folder.name}: not a Git repository`)
       }
     }
@@ -207,7 +207,7 @@ export const handle_changes_item = async (
                   const token_count = Math.ceil(replacement_text.length / 4)
                   branch_items[i].description = display_token_count(token_count)
                 }
-              } catch (error) {
+              } catch {
                 branch_items[i].description = 'Failed to calculate'
               }
 
@@ -224,7 +224,7 @@ export const handle_changes_item = async (
                 }
               }
             }
-          } catch (e) {
+          } catch {
             // ignore
           } finally {
             if (is_active) {
@@ -290,7 +290,7 @@ export const handle_changes_item = async (
 
       return 'continue'
     }
-  } catch (error) {
+  } catch {
     vscode.window.showErrorMessage(
       t(
         'views.shared.utils.hash-sign-quick-pick.changes-symbol.failed-to-get-git-branches'

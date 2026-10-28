@@ -71,7 +71,7 @@ export const handle_paste_url = async (
     } else {
       await paste_as_text()
     }
-  } catch (error) {
+  } catch {
     await paste_as_text()
   }
 }

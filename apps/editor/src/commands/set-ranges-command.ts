@@ -70,7 +70,6 @@ export const set_ranges_command = (
       }
       const state_key = get_path_key_for_state()
 
-      // Load ranges from file
       const ranges_file_path = path.join(
         workspace_folder.uri.fsPath,
         '.vscode',
@@ -80,11 +79,8 @@ export const set_ranges_command = (
       try {
         const content = await fs.readFile(ranges_file_path, 'utf-8')
         file_ranges = JSON.parse(content)
-      } catch (error) {
-        // File might not exist, which is fine
-      }
+      } catch {}
 
-      // Load ranges from state
       const state_ranges = extension_context.workspaceState.get<
         Record<string, string>
       >(RANGES_STATE_KEY, {})
@@ -184,7 +180,6 @@ export const set_ranges_command = (
         return
       }
 
-      // If range is cleared, remove from both locations
       if (!new_ranges) {
         let changed = false
         if (file_ranges[relative_path]) {
@@ -224,7 +219,6 @@ export const set_ranges_command = (
         return
       }
 
-      // If range is set, determine where to save
       let save_location: 'file' | 'state' | undefined
 
       if (file_range_value) save_location = 'file'
@@ -281,7 +275,6 @@ export const set_ranges_command = (
               JSON.stringify(file_ranges, null, 2)
             )
 
-            // Remove from state if exists
             if (state_ranges[state_key]) {
               const updated_state = { ...state_ranges }
               delete updated_state[state_key]
@@ -298,7 +291,6 @@ export const set_ranges_command = (
             )
           }
         } else {
-          // Save to state
           const updated_state = {
             ...state_ranges,
             [state_key]: formatted_range
@@ -308,7 +300,6 @@ export const set_ranges_command = (
             updated_state
           )
 
-          // Remove from file if exists
           if (file_ranges[relative_path]) {
             delete file_ranges[relative_path]
             try {

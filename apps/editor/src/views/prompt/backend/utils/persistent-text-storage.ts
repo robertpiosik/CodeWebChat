@@ -71,7 +71,7 @@ export class PersistentTextStorage {
             if (stats.mtimeMs < threshold_time) {
               await fs.promises.unlink(file_path)
             }
-          } catch (err) {
+          } catch {
             // ignore
           }
         }

@@ -27,7 +27,7 @@ export const replace_pasted_text_symbol = async (params: {
               content,
               success: true
             }
-          } catch (error) {
+          } catch {
             return {
               success: false
             }

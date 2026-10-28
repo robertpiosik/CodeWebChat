@@ -23,7 +23,7 @@ const directory_contains_ignored = async (
     let entry_stat: vscode.FileStat
     try {
       entry_stat = await vscode.workspace.fs.stat(entry_uri)
-    } catch (e) {
+    } catch {
       return true
     }
 
@@ -59,7 +59,7 @@ export const copy_optimised_recursively = async (
   let source_stat: vscode.FileStat
   try {
     source_stat = await vscode.workspace.fs.stat(source_uri)
-  } catch (e) {
+  } catch {
     return
   }
 
