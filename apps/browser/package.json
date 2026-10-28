@@ -1,18 +1,13 @@
 {
   "name": "gemini-coder-connector",
-  "type": "module",
   "scripts": {
-    "build": "rsbuild build && node --experimental-strip-types create-firefox-build.ts && node --experimental-strip-types create-zip-archives.ts",
+    "build": "webpack --mode production && ts-node create-firefox-build.ts && ts-node create-zip-archives.ts",
     "lint": "eslint src --ext ts,tsx",
     "lint:fix": "eslint src --ext ts,tsx --fix"
   },
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.6.1",
-    "@rsbuild/core": "^1.1.12",
-    "@rsbuild/plugin-react": "^1.0.6",
-    "@rsbuild/plugin-sass": "^1.1.2",
-    "@rsbuild/plugin-svgr": "^1.0.1",
-    "@rsbuild/plugin-type-check": "^1.1.1",
+    "@svgr/webpack": "^8.1.0",
     "@types/archiver": "^6.0.3",
     "@types/jest": "^29.5.14",
     "@types/node": "20.x",
@@ -21,12 +16,24 @@
     "@typescript-eslint/parser": "^8.54.0",
     "archiver": "^6.0.1",
     "baseline-browser-mapping": "^2.9.19",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^6.8.1",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
+    "mini-css-extract-plugin": "^2.9.4",
     "react-refresh": "^0.17.0",
     "sass": "^1.93.2",
-    "webextension-polyfill": "^0.12.0"
+    "sass-loader": "^13.3.3",
+    "style-loader": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "webextension-polyfill": "^0.12.0",
+    "webpack": "^5.102.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.2.2"
   },
   "dependencies": {
     "@types/chrome": "^0.1.16",
@@ -35,6 +42,7 @@
     "@types/webextension-polyfill": "^0.12.4",
     "classnames": "^2.5.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "tsconfig-paths-webpack-plugin": "^4.2.0"
   }
 }

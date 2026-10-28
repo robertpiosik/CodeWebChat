@@ -1,0 +1,272 @@
+import * as crypto from 'crypto'
+import * as path from 'path'
+import * as webpack from 'webpack'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
+import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+import { EsbuildPlugin } from 'esbuild-loader'
+
+let active_compilers = 0
+
+const build_status_plugin = {
+  apply(compiler: webpack.Compiler) {
+    let is_initial_build = true
+
+    const on_start = () => {
+      if (is_initial_build) {
+        if (active_compilers === 0) {
+          console.log('Building...')
+        }
+        active_compilers++
+      }
+    }
+
+    compiler.hooks.run.tap('BuildStatusPlugin', on_start)
+    compiler.hooks.watchRun.tap('BuildStatusPlugin', on_start)
+
+    compiler.hooks.done.tap('BuildStatusPlugin', () => {
+      if (is_initial_build) {
+        active_compilers--
+        if (active_compilers === 0) {
+          console.log('Done.')
+        }
+        is_initial_build = false
+      }
+    })
+  }
+}
+
+const config: ((env: any, argv: any) => webpack.Configuration)[] = [
+  // Extension Configuration (Node.js environment)
+  (env: any, argv: any): webpack.Configuration => {
+    const is_production = argv.mode === 'production'
+    return {
+      name: 'extension',
+      mode: is_production ? 'production' : 'development',
+      target: 'node',
+      entry: {
+        extension: './src/extension.ts',
+        'websocket-server-process': './src/services/websocket-server-process.ts'
+      },
+      output: {
+        path: path.resolve(__dirname, 'out'),
+        filename: '[name].js',
+        libraryTarget: 'commonjs2',
+        devtoolModuleFilenameTemplate: '../[resource-path]'
+      },
+      devtool: is_production ? false : 'eval-cheap-module-source-map',
+      optimization: {
+        minimizer: [
+          new EsbuildPlugin({
+            target: 'es2022'
+          })
+        ]
+      },
+      cache: {
+        type: 'filesystem',
+        buildDependencies: {
+          config: [__filename]
+        }
+      },
+      externals: {
+        vscode: 'commonjs vscode'
+      },
+      resolve: {
+        extensions: ['.ts', '.js'],
+        alias: {
+          '@': path.resolve(__dirname, 'src'),
+          '@shared': path.resolve(__dirname, '../../packages/shared/src')
+        }
+      },
+      module: {
+        rules: [
+          {
+            test: /\.ts$/,
+            exclude: /node_modules/,
+            use: [
+              {
+                loader: 'esbuild-loader',
+                options: {
+                  loader: 'ts',
+                  target: 'es2022'
+                }
+              }
+            ]
+          }
+        ]
+      },
+      plugins: [
+        build_status_plugin,
+        new CleanWebpackPlugin({
+          cleanOnceBeforeBuildPatterns: ['../*.vsix'],
+          dangerouslyAllowCleanPatternsOutsideProject: true,
+          dry: false
+        }),
+        new ForkTsCheckerWebpackPlugin({
+          typescript: {
+            configFile: path.resolve(__dirname, 'tsconfig.json'),
+            diagnosticOptions: {
+              semantic: true,
+              syntactic: true
+            }
+          }
+        }),
+        new CopyWebpackPlugin({
+          patterns: [
+            {
+              from: '../../README.md',
+              to: '../README.md',
+              transform(content) {
+                return content
+                  .toString()
+                  .split('\n')
+                  .slice(12)
+                  .filter(
+                    (line) =>
+                      !['> [!TIP]', '> [!IMPORTANT]', '> [!NOTE]'].includes(
+                        line.trim()
+                      )
+                  )
+                  .join('\n')
+              }
+            }
+          ]
+        }),
+        new webpack.optimize.LimitChunkCountPlugin({
+          maxChunks: 1
+        })
+      ],
+      stats: 'errors-only'
+    }
+  },
+  // View Configuration (Web environment)
+  (env: any, argv: any): webpack.Configuration => {
+    const is_production = argv.mode === 'production'
+    return {
+      name: 'view',
+      mode: is_production ? 'production' : 'development',
+      target: 'web',
+      entry: {
+        prompt: './src/views/prompt/frontend/App.tsx',
+        settings: './src/views/settings/frontend/App.tsx',
+        chats: './src/views/chats/frontend/App.tsx'
+      },
+      output: {
+        path: path.resolve(__dirname, 'out'),
+        filename: '[name].js',
+        devtoolModuleFilenameTemplate: '../[resource-path]'
+      },
+      performance: {
+        hints: false
+      },
+      devtool: is_production ? false : 'eval-cheap-module-source-map',
+      optimization: {
+        minimizer: [
+          new EsbuildPlugin({
+            target: 'es2022',
+            css: true
+          })
+        ]
+      },
+      cache: {
+        type: 'filesystem',
+        buildDependencies: {
+          config: [__filename]
+        }
+      },
+      resolve: {
+        extensions: ['.ts', '.tsx', '.js'],
+        alias: {
+          '@': path.resolve(__dirname, 'src'),
+          '@shared': path.resolve(__dirname, '../../packages/shared/src'),
+          '@ui': path.resolve(__dirname, '../../packages/ui/src')
+        }
+      },
+      module: {
+        rules: [
+          {
+            test: /\.css$/,
+            use: [MiniCssExtractPlugin.loader, 'css-loader']
+          },
+          {
+            test: /\.scss$/,
+            use: [
+              MiniCssExtractPlugin.loader,
+              {
+                loader: 'css-loader',
+                options: {
+                  modules: {
+                    getLocalIdent: (
+                      context: webpack.LoaderContext<any>,
+                      _: any,
+                      local_name: string
+                    ) => {
+                      const filename = context.resourcePath
+                      const is_module = /\.module\.(scss|css)$/i.test(filename)
+                      if (is_module) {
+                        const module_name = path
+                          .basename(filename as string)
+                          .replace(/\.module\.(scss|css)$/i, '')
+                        const hash = crypto
+                          .createHash('md5')
+                          .update(`${filename}${local_name}`)
+                          .digest('hex')
+                          .substring(0, 5)
+                        return `${module_name}__${local_name}__${hash}`
+                      }
+                      // Return original name for non-module files
+                      return local_name
+                    }
+                  },
+                  importLoaders: 1
+                }
+              },
+              {
+                loader: 'sass-loader',
+                options: {
+                  additionalData: `@use "${path
+                    .resolve(
+                      __dirname,
+                      '../../packages/ui/src/styles/foundation'
+                    )
+                    .replace(/\\/g, '/')}" as *;`
+                }
+              }
+            ]
+          },
+          {
+            test: /\.(ts|tsx)$/,
+            exclude: /node_modules/,
+            use: [
+              {
+                loader: 'esbuild-loader',
+                options: {
+                  loader: 'tsx',
+                  target: 'es2022',
+                  jsx: 'automatic'
+                }
+              }
+            ]
+          },
+          {
+            test: /\.svg$/,
+            use: ['@svgr/webpack']
+          }
+        ]
+      },
+      plugins: [
+        build_status_plugin,
+        new MiniCssExtractPlugin({
+          filename: '[name].css'
+        }) as unknown as webpack.WebpackPluginInstance,
+        new webpack.optimize.LimitChunkCountPlugin({
+          maxChunks: 1
+        }) as webpack.WebpackPluginInstance
+      ] as webpack.WebpackPluginInstance[],
+      stats: 'errors-only'
+    }
+  }
+]
+
+export default config

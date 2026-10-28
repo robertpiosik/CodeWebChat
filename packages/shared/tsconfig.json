@@ -2,12 +2,14 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "ESNext",
+    "outDir": "out",
     "lib": ["ESNext", "dom"],
     "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
     "jsxImportSource": "react",
+    "baseUrl": ".",
     "paths": {
       "@shared/*": ["./src/*"]
     }
