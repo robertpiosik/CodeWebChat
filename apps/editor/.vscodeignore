@@ -3,3 +3,4 @@ src
 tsconfig.json
 __mocks__
 jest.config.js
+rsbuild.config.ts

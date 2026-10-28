@@ -17,7 +17,7 @@
     "sass-loader": "^12.4.0",
     "storybook": "^7.6.20",
     "style-loader": "^3.3.1",
-    "typescript": "^5.8.2"
+    "typescript": "^7.0.0"
   },
   "dependencies": {
     "@storybook/react": "^7.6.20",
