@@ -144,6 +144,11 @@ export const undo_files = async (params: {
         }
         if (!safe_path) continue
         file_uri = vscode.Uri.file(safe_path)
+
+        if (state.is_pure_rename) {
+           continue
+        }
+
         if (!(await uri_exists(file_uri))) {
           try {
             const dir_uri = vscode.Uri.file(path.dirname(safe_path))

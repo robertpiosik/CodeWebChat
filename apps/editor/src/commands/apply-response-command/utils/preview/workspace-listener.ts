@@ -905,6 +905,8 @@ export const setup_workspace_listeners = (params: {
     ) {
       return
     }
+    
+    if (file_to_discard.previewable_file.is_pure_rename) return;
 
     if (file_to_discard.previewable_file.applied_with_patch_repair) {
       file_to_discard.previewable_file.applied_with_patch_repair = false
@@ -942,6 +944,30 @@ export const setup_workspace_listeners = (params: {
     if (!file_to_toggle) return
 
     file_to_toggle.previewable_file.is_checked = is_checked
+
+    if (file_to_toggle.previewable_file.is_pure_rename) {
+      if (params.created_at) {
+        const history = params.prompt_view_provider.response_history
+        const item_to_update = history.find(
+          (i) => i.created_at === params.created_at
+        )
+        if (item_to_update && item_to_update.files) {
+          const file_in_history = item_to_update.files.find(
+            (f) =>
+              f.file_path === file_path && f.workspace_name === workspace_name
+          )
+          if (file_in_history) {
+            file_in_history.is_checked = is_checked
+            recalculate_history_item_totals(item_to_update)
+            params.prompt_view_provider.send_message({
+              command: 'RESPONSE_HISTORY',
+              history
+            })
+          }
+        }
+      }
+      return
+    }
 
     if (params.created_at) {
       const history = params.prompt_view_provider.response_history

@@ -17,6 +17,9 @@ export type FileInPreview = {
   apply_tokens_per_second?: number
   applied_with_patch_repair?: boolean
   added_in_preview?: boolean
+  is_pure_rename?: boolean
+  renamed_from?: string
+  renamed_from_workspace?: string
 }
 
 export type TextContentInPreview = {

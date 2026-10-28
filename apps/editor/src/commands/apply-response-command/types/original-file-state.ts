@@ -16,4 +16,5 @@ export type OriginalFileState = {
   apply_failed?: boolean
   applied_with_patch_repair?: boolean
   added_in_preview?: boolean
+  is_pure_rename?: boolean
 }

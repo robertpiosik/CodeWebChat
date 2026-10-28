@@ -1,5 +1,4 @@
 import * as fs from 'fs'
-import * as path from 'path'
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
@@ -11,9 +10,12 @@ import {
   resolve_workspace_root
 } from '../../utils/workspace'
 import {
-  cleanup_rename_source,
   handle_deleted_file_item,
-  get_rename_source_info
+  relocate_file,
+  replace_document_content,
+  preserve_trailing_newline,
+  ensure_directory_exists,
+  prepare_rename_operation
 } from '../../utils/file-operations'
 import { get_error_message } from '@/utils/get-error-message'
 import { apply_search_replace_to_content } from '../../../../utils/changes-integration/search-replace-processor/apply-search-replace-to-content'
@@ -95,53 +97,51 @@ export const handle_search_replace = async (params: {
 
       const {
         rename_source_path,
-        rename_source_content,
-        rename_source_workspace_root
-      } = await get_rename_source_info({
+        rename_source_workspace_root,
+        is_pure_rename,
+        original_content
+      } = await prepare_rename_operation({
         file,
         workspace_map,
         default_workspace
       })
 
-      if (
-        rename_source_path &&
-        rename_source_content !== undefined &&
-        rename_source_workspace_root
-      ) {
+      if (rename_source_path && rename_source_workspace_root) {
         try {
-          let new_content = rename_source_content
-          if (has_markers) {
-            new_content = apply_search_replace_to_content({
-              original_content: rename_source_content,
-              segments: parse_search_replace_segments(file.content)
-            })
-          } else if (file.content !== '') {
-            new_content = file.content
-          }
-
-          await cleanup_rename_source({
-            source_path: rename_source_path,
-            workspace_root: rename_source_workspace_root
+          await relocate_file({
+            old_path: file.renamed_from!,
+            new_path: file.file_path,
+            old_workspace_root: rename_source_workspace_root,
+            new_workspace_root: workspace_root
           })
 
-          const directory = path.dirname(safe_path)
-          if (!fs.existsSync(directory)) {
-            await fs.promises.mkdir(directory, { recursive: true })
+          let proposed_content = ''
+          if (!is_pure_rename) {
+             if (has_markers) {
+               proposed_content = apply_search_replace_to_content({
+                 original_content,
+                 segments: parse_search_replace_segments(file.content)
+               })
+             } else {
+               proposed_content = file.content
+             }
+             await vscode.workspace.fs.writeFile(
+               vscode.Uri.file(safe_path),
+               Buffer.from(proposed_content, 'utf8')
+             )
           }
-          await vscode.workspace.fs.writeFile(
-            vscode.Uri.file(safe_path),
-            Buffer.from(new_content, 'utf8')
-          )
 
           original_states.push({
             file_path: file.file_path,
-            content: rename_source_content,
+            content: original_content,
             workspace_name: file.workspace_name,
             file_path_to_restore: file.renamed_from,
             restore_workspace_name: file.renamed_from_workspace,
             ai_content: file.content,
-            proposed_content: new_content
+            proposed_content: is_pure_rename ? '' : proposed_content,
+            is_pure_rename
           })
+          continue
         } catch (error) {
           failed_files.push(file)
         }
@@ -184,10 +184,7 @@ export const handle_search_replace = async (params: {
         }
       } else if (!file_exists) {
         try {
-          const directory = path.dirname(safe_path)
-          if (!fs.existsSync(directory)) {
-            await fs.promises.mkdir(directory, { recursive: true })
-          }
+          await ensure_directory_exists(safe_path)
 
           let content_to_write = file.content
           if (has_markers) {
@@ -216,30 +213,15 @@ export const handle_search_replace = async (params: {
       } else if (file_exists && !has_markers) {
         try {
           const document = await vscode.workspace.openTextDocument(safe_path)
-          const original_content = document.getText()
+          const original_content_doc = document.getText()
 
-          let final_content = file.content
-          if (
-            original_content.endsWith('\n') &&
-            !final_content.endsWith('\n')
-          ) {
-            final_content += '\n'
-          }
-          const edit = new vscode.WorkspaceEdit()
-          edit.replace(
-            document.uri,
-            new vscode.Range(
-              document.positionAt(0),
-              document.positionAt(document.getText().length)
-            ),
-            final_content
-          )
-          await vscode.workspace.applyEdit(edit)
-          await document.save()
+          const final_content = preserve_trailing_newline(original_content_doc, file.content)
+          
+          await replace_document_content(document, final_content)
 
           original_states.push({
             file_path: file.file_path,
-            content: original_content,
+            content: original_content_doc,
             workspace_name: file.workspace_name,
             ai_content: file.content,
             proposed_content: final_content

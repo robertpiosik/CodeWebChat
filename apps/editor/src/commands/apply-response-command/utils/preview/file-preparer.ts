@@ -34,10 +34,14 @@ export const prepare_files_from_original_states = async (params: {
     try {
       if (fs.existsSync(sanitized_file_path)) {
         file_exists = true
-        current_content =
-          state.current_content ??
-          state.proposed_content ??
-          fs.readFileSync(sanitized_file_path, 'utf8')
+        if (state.is_pure_rename) {
+          current_content = ''
+        } else {
+          current_content =
+            state.current_content ??
+            state.proposed_content ??
+            fs.readFileSync(sanitized_file_path, 'utf8')
+        }
       } else if (state.current_content !== undefined) {
         current_content = state.current_content
       } else if (state.proposed_content !== undefined) {
@@ -48,7 +52,9 @@ export const prepare_files_from_original_states = async (params: {
     }
 
     let new_content_for_diff = current_content
-    if (state.is_checked === false && state.current_content !== undefined) {
+    if (state.is_pure_rename) {
+      new_content_for_diff = ''
+    } else if (state.is_checked === false && state.current_content !== undefined) {
       current_content = state.current_content
       new_content_for_diff = state.content
     } else if (state.is_checked === false && state.ai_content !== undefined) {
@@ -99,7 +105,10 @@ export const prepare_files_from_original_states = async (params: {
       apply_failed: state.apply_failed,
       ai_content: state.ai_content,
       applied_with_patch_repair: state.applied_with_patch_repair,
-      added_in_preview: state.added_in_preview
+      added_in_preview: state.added_in_preview,
+      is_pure_rename: state.is_pure_rename,
+      renamed_from: state.file_path_to_restore,
+      renamed_from_workspace: state.restore_workspace_name
     }
 
     prepared_files.push({
@@ -151,7 +160,8 @@ export const prepare_files_from_original_states = async (params: {
         lines_added: restored_diff_stats.lines_added,
         lines_removed: restored_diff_stats.lines_removed,
         proposed_content: restored_current_content,
-        is_checked: state.is_checked ?? true
+        is_checked: state.is_checked ?? true,
+        is_pure_rename: state.is_pure_rename
       }
 
       prepared_files.push({

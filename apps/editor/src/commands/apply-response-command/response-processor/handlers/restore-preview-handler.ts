@@ -10,7 +10,7 @@ import {
   get_workspace_map_and_default,
   resolve_workspace_root
 } from '../../utils/workspace'
-import { remove_directory_if_empty } from '../../utils/file-operations'
+import { remove_directory_if_empty, relocate_file, preserve_trailing_newline, replace_document_content, ensure_directory_exists } from '../../utils/file-operations'
 
 export const handle_restore_preview = async (
   files: FileInPreview[]
@@ -39,6 +39,13 @@ export const handle_restore_preview = async (
 
   const original_states: OriginalFileState[] = []
 
+  const rename_sources = new Set<string>()
+  for (const file of files) {
+    if (file.renamed_from) {
+      rename_sources.add(`${file.renamed_from_workspace ?? file.workspace_name ?? ''}:${file.renamed_from}`)
+    }
+  }
+
   for (const file of files) {
     const workspace_root = resolve_workspace_root({
       workspace_name: file.workspace_name,
@@ -62,15 +69,30 @@ export const handle_restore_preview = async (
     const file_exists = fs.existsSync(safe_path)
     let original_content = ''
     if (file_exists) {
-      try {
-        const document = await vscode.workspace.openTextDocument(safe_path)
-        original_content = document.getText()
-      } catch (e) {
-        Logger.warn({
-          function_name: 'handle_restore_preview',
-          message: 'Could not read original content of file',
-          data: { file_path: safe_path, error: e }
-        })
+      if (!file.is_pure_rename) {
+        try {
+          const document = await vscode.workspace.openTextDocument(safe_path)
+          original_content = document.getText()
+        } catch (e) {
+          Logger.warn({
+            function_name: 'handle_restore_preview',
+            message: 'Could not read original content of file',
+            data: { file_path: safe_path, error: e }
+          })
+        }
+      }
+    } else if (file.renamed_from) {
+      const source_workspace_root = resolve_workspace_root({
+        workspace_name: file.renamed_from_workspace ?? file.workspace_name,
+        workspace_map,
+        default_workspace
+      })
+      const source_safe_path = create_safe_path(source_workspace_root, file.renamed_from)
+      if (source_safe_path && fs.existsSync(source_safe_path)) {
+        try {
+          const document = await vscode.workspace.openTextDocument(source_safe_path)
+          original_content = document.getText()
+        } catch (e) {}
       }
     }
 
@@ -85,11 +107,44 @@ export const handle_restore_preview = async (
             ? 'new'
             : file.file_state,
       is_checked: file.is_checked,
-      diff_application_method: file.diff_application_method
+      diff_application_method: file.diff_application_method,
+      is_pure_rename: file.is_pure_rename,
+      file_path_to_restore: file.renamed_from,
+      restore_workspace_name: file.renamed_from_workspace
     })
 
     if (file.is_checked !== false) {
-      if (file.file_state === 'deleted') {
+      if (file.renamed_from) {
+        const source_workspace_root = resolve_workspace_root({
+          workspace_name: file.renamed_from_workspace ?? file.workspace_name,
+          workspace_map,
+          default_workspace
+        })
+        
+        await relocate_file({
+          old_path: file.renamed_from,
+          new_path: file.file_path,
+          old_workspace_root: source_workspace_root,
+          new_workspace_root: workspace_root
+        })
+        
+        if (!file.is_pure_rename && file.content !== undefined) {
+          const file_uri = vscode.Uri.file(safe_path)
+          const document = await vscode.workspace.openTextDocument(file_uri)
+          const final_content = preserve_trailing_newline(original_content, file.content)
+          await replace_document_content(document, final_content)
+          Logger.info({
+            function_name: 'handle_restore_preview',
+            message: 'Existing file replaced and saved after relocation',
+            data: safe_path
+          })
+        }
+      } else if (file.file_state === 'deleted') {
+        const file_key = `${file.workspace_name ?? ''}:${file.file_path}`
+        if (rename_sources.has(file_key)) {
+          continue
+        }
+        
         if (file_exists) {
           try {
             const tabs_to_close: vscode.Tab[] = []
@@ -134,25 +189,9 @@ export const handle_restore_preview = async (
           try {
             const file_uri = vscode.Uri.file(safe_path)
             const document = await vscode.workspace.openTextDocument(file_uri)
-            let final_content = file.content
-            if (
-              original_content.endsWith('\n') &&
-              !final_content.endsWith('\n')
-            ) {
-              final_content += '\n'
-            }
-            const edit = new vscode.WorkspaceEdit()
-            edit.replace(
-              document.uri,
-              new vscode.Range(
-                document.positionAt(0),
-                document.positionAt(document.getText().length)
-              ),
-              final_content
-            )
-            await vscode.workspace.applyEdit(edit)
+            const final_content = preserve_trailing_newline(original_content, file.content)
+            await replace_document_content(document, final_content)
 
-            await document.save()
             Logger.info({
               function_name: 'handle_restore_preview',
               message: 'Existing file replaced and saved',
@@ -169,31 +208,23 @@ export const handle_restore_preview = async (
             )
           }
         } else {
-          const directory = path.dirname(safe_path)
-          if (!fs.existsSync(directory)) {
-            try {
-              fs.mkdirSync(directory, { recursive: true })
-              Logger.info({
-                function_name: 'handle_restore_preview',
-                message: 'Directory created',
-                data: directory
-              })
-            } catch (error) {
-              Logger.error({
-                function_name: 'handle_restore_preview',
-                message: 'Failed to create directory',
-                data: { directory, error, file_path: file.file_path }
-              })
-              vscode.window.showErrorMessage(
-                t(
-                  'command.apply-response-command.error.failed-to-create-directory',
-                  {
-                    path: file.file_path
-                  }
-                )
+          try {
+            await ensure_directory_exists(safe_path)
+          } catch (error) {
+            Logger.error({
+              function_name: 'handle_restore_preview',
+              message: 'Failed to create directory',
+              data: { error, file_path: file.file_path }
+            })
+            vscode.window.showErrorMessage(
+              t(
+                'command.apply-response-command.error.failed-to-create-directory',
+                {
+                  path: file.file_path
+                }
               )
-              continue
-            }
+            )
+            continue
           }
 
           try {

@@ -92,7 +92,10 @@ export const build_history_files = async (params: {
       apply_failed: state.apply_failed,
       ai_content: state.ai_content,
       applied_with_patch_repair: state.applied_with_patch_repair,
-      added_in_preview: state.added_in_preview
+      added_in_preview: state.added_in_preview,
+      is_pure_rename: state.is_pure_rename,
+      renamed_from: is_rename ? state.file_path_to_restore : undefined,
+      renamed_from_workspace: is_rename ? state.restore_workspace_name : undefined
     })
 
     if (state.file_path_to_restore) {
@@ -112,7 +115,8 @@ export const build_history_files = async (params: {
         lines_removed: deleted_diff_stats.lines_removed,
         content: '',
         proposed_content: '',
-        is_checked: true
+        is_checked: true,
+        is_pure_rename: state.is_pure_rename
       })
     }
   }

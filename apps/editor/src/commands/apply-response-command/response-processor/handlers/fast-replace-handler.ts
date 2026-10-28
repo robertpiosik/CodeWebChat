@@ -1,5 +1,4 @@
 import * as fs from 'fs'
-import * as path from 'path'
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
@@ -12,9 +11,12 @@ import {
 } from '../../utils/workspace'
 import { get_error_message } from '@/utils/get-error-message'
 import {
-  cleanup_rename_source,
   handle_deleted_file_item,
-  get_rename_source_info
+  relocate_file,
+  replace_document_content,
+  preserve_trailing_newline,
+  ensure_directory_exists,
+  prepare_rename_operation
 } from '../../utils/file-operations'
 
 export const handle_fast_replace = async (params: {
@@ -123,49 +125,41 @@ export const handle_fast_replace = async (params: {
 
       const {
         rename_source_path,
-        rename_source_content,
-        rename_source_workspace_root
-      } = await get_rename_source_info({
+        rename_source_workspace_root,
+        is_pure_rename,
+        original_content
+      } = await prepare_rename_operation({
         file,
         workspace_map,
         default_workspace
       })
 
-      if (
-        rename_source_path &&
-        rename_source_content !== undefined &&
-        rename_source_workspace_root
-      ) {
+      if (rename_source_path && rename_source_workspace_root) {
         try {
-          let new_content = file.content
-          if (new_content === '') {
-            new_content = rename_source_content
-          }
-
-          await cleanup_rename_source({
-            source_path: rename_source_path,
-            workspace_root: rename_source_workspace_root
+          await relocate_file({
+            old_path: file.renamed_from!,
+            new_path: file.file_path,
+            old_workspace_root: rename_source_workspace_root,
+            new_workspace_root: workspace_root
           })
 
-          const directory = path.dirname(safe_path)
-          if (!fs.existsSync(directory)) {
-            await fs.promises.mkdir(directory, { recursive: true })
+          if (!is_pure_rename) {
+             await vscode.workspace.fs.writeFile(
+               vscode.Uri.file(safe_path),
+               Buffer.from(file.content, 'utf8')
+             )
           }
-          await vscode.workspace.fs.writeFile(
-            vscode.Uri.file(safe_path),
-            Buffer.from(new_content, 'utf8')
-          )
 
           original_states.push({
             file_path: file.file_path,
-            content: rename_source_content,
+            content: original_content,
             workspace_name: file.workspace_name,
             file_path_to_restore: file.renamed_from,
             restore_workspace_name: file.renamed_from_workspace,
             ai_content: file.content,
-            proposed_content: new_content
+            proposed_content: is_pure_rename ? '' : file.content,
+            is_pure_rename
           })
-
           continue
         } catch (error) {
           Logger.error({
@@ -189,35 +183,19 @@ export const handle_fast_replace = async (params: {
         if (file_exists) {
           const file_uri = vscode.Uri.file(safe_path)
           const document = await vscode.workspace.openTextDocument(file_uri)
-          const original_content = document.getText()
-          let final_content = file.content
-          if (
-            original_content.endsWith('\n') &&
-            !final_content.endsWith('\n')
-          ) {
-            final_content += '\n'
-          }
+          const original_content_doc = document.getText()
+          const final_content = preserve_trailing_newline(original_content_doc, file.content)
 
           original_states.push({
             file_path: file.file_path,
-            content: original_content,
+            content: original_content_doc,
             workspace_name: file.workspace_name,
             ai_content: file.content,
             proposed_content: final_content
           })
 
-          const edit = new vscode.WorkspaceEdit()
-          edit.replace(
-            document.uri,
-            new vscode.Range(
-              document.positionAt(0),
-              document.positionAt(document.getText().length)
-            ),
-            final_content
-          )
-          await vscode.workspace.applyEdit(edit)
+          await replace_document_content(document, final_content)
 
-          await document.save()
           Logger.info({
             function_name: 'handle_fast_replace',
             message: 'Existing file replaced and saved',
@@ -232,31 +210,24 @@ export const handle_fast_replace = async (params: {
             ai_content: file.content,
             proposed_content: file.content
           })
-          const directory = path.dirname(safe_path)
-          if (!fs.existsSync(directory)) {
-            try {
-              fs.mkdirSync(directory, { recursive: true })
-              Logger.info({
-                function_name: 'handle_fast_replace',
-                message: 'Directory created',
-                data: directory
-              })
-            } catch (error) {
-              Logger.error({
-                function_name: 'handle_fast_replace',
-                message: 'Failed to create directory',
-                data: { directory, error, file_path: file.file_path }
-              })
-              vscode.window.showErrorMessage(
-                t(
-                  'command.apply-response-command.error.failed-to-create-directory',
-                  {
-                    path: file.file_path
-                  }
-                )
+
+          try {
+            await ensure_directory_exists(safe_path)
+          } catch (error) {
+            Logger.error({
+              function_name: 'handle_fast_replace',
+              message: 'Failed to create directory',
+              data: { error, file_path: file.file_path }
+            })
+            vscode.window.showErrorMessage(
+              t(
+                'command.apply-response-command.error.failed-to-create-directory',
+                {
+                  path: file.file_path
+                }
               )
-              continue
-            }
+            )
+            continue
           }
 
           try {

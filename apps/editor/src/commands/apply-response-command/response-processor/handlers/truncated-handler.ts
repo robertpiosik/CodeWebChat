@@ -13,9 +13,10 @@ import {
 import { get_error_message } from '@/utils/get-error-message'
 import { process_truncations } from '../../../../utils/changes-integration/truncations-processor'
 import {
-  cleanup_rename_source,
   handle_deleted_file_item,
-  get_rename_source_info
+  relocate_file,
+  ensure_directory_exists,
+  prepare_rename_operation
 } from '../../utils/file-operations'
 
 export const handle_truncated_edit = async (params: {
@@ -88,53 +89,42 @@ export const handle_truncated_edit = async (params: {
 
     const {
       rename_source_path,
-      rename_source_content,
-      rename_source_workspace_root
-    } = await get_rename_source_info({
+      rename_source_workspace_root,
+      is_pure_rename,
+      original_content
+    } = await prepare_rename_operation({
       file,
       workspace_map,
       default_workspace
     })
 
-    if (
-      rename_source_path &&
-      rename_source_content !== undefined &&
-      rename_source_workspace_root
-    ) {
+    if (rename_source_path && rename_source_workspace_root) {
       try {
-        const new_content = process_truncations(
-          file.content,
-          rename_source_content
-        )
-
-        await cleanup_rename_source({
-          source_path: rename_source_path,
-          workspace_root: rename_source_workspace_root
+        await relocate_file({
+          old_path: file.renamed_from!,
+          new_path: file.file_path,
+          old_workspace_root: rename_source_workspace_root,
+          new_workspace_root: workspace_root
         })
-
-        const directory = path.dirname(safe_path)
-        if (!fs.existsSync(directory)) {
-          await fs.promises.mkdir(directory, { recursive: true })
+        
+        let proposed_content = ''
+        if (!is_pure_rename) {
+          proposed_content = process_truncations(file.content, original_content)
+          await vscode.workspace.fs.writeFile(
+            vscode.Uri.file(safe_path),
+            Buffer.from(proposed_content, 'utf8')
+          )
         }
-        await vscode.workspace.fs.writeFile(
-          vscode.Uri.file(safe_path),
-          Buffer.from(new_content, 'utf8')
-        )
 
         original_states.push({
           file_path: file.file_path,
-          content: rename_source_content,
+          content: original_content,
           workspace_name: file.workspace_name,
           file_path_to_restore: file.renamed_from,
           restore_workspace_name: file.renamed_from_workspace,
           ai_content: file.content,
-          proposed_content: new_content
-        })
-
-        Logger.info({
-          function_name: 'handle_truncated_edit',
-          message: 'Applied truncated edit',
-          data: safe_path
+          proposed_content: is_pure_rename ? '' : proposed_content,
+          is_pure_rename
         })
         continue
       } catch (error) {
@@ -153,10 +143,7 @@ export const handle_truncated_edit = async (params: {
 
     if (!fs.existsSync(safe_path)) {
       try {
-        const directory = path.dirname(safe_path)
-        if (!fs.existsSync(directory)) {
-          await fs.promises.mkdir(directory, { recursive: true })
-        }
+        await ensure_directory_exists(safe_path)
 
         const new_content = process_truncations(file.content, '')
 
@@ -189,10 +176,7 @@ export const handle_truncated_edit = async (params: {
       const original_content = document.getText()
       const new_content = process_truncations(file.content, original_content)
 
-      const directory = path.dirname(safe_path)
-      if (!fs.existsSync(directory)) {
-        await fs.promises.mkdir(directory, { recursive: true })
-      }
+      await ensure_directory_exists(safe_path)
 
       await vscode.workspace.fs.writeFile(
         vscode.Uri.file(safe_path),

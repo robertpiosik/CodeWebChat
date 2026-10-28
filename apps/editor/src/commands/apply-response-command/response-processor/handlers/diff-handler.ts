@@ -6,7 +6,7 @@ import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '../../types/original-file-state'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { apply_diff } from '../../../../utils/changes-integration/diff-processor'
-import { remove_directory_if_empty } from '../../utils/file-operations'
+import { remove_directory_if_empty, ensure_directory_exists } from '../../utils/file-operations'
 import { DiffItem } from '../../utils/response-parser'
 import { get_error_message } from '@/utils/get-error-message'
 
@@ -153,7 +153,8 @@ export const store_original_file_states = async (
   patch_content: string,
   workspace_path: string,
   workspace_name?: string,
-  fallback_patch?: DiffItem
+  fallback_patch?: DiffItem,
+  is_renaming?: boolean
 ): Promise<OriginalFileState[]> => {
   const file_paths = extract_file_paths_from_patch(
     patch_content,
@@ -173,20 +174,29 @@ export const store_original_file_states = async (
     }
 
     if (fs.existsSync(safe_path)) {
-      try {
-        const document = await vscode.workspace.openTextDocument(safe_path)
-        const content = document.getText()
+      if (is_renaming) {
         original_states.push({
           file_path,
-          content,
-          workspace_name
+          content: '',
+          workspace_name,
+          is_pure_rename: true
         })
-      } catch (error) {
-        Logger.error({
-          function_name: 'store_original_file_states',
-          message: 'Failed to read file content',
-          data: { file_path, error }
-        })
+      } else {
+        try {
+          const document = await vscode.workspace.openTextDocument(safe_path)
+          const content = document.getText()
+          original_states.push({
+            file_path,
+            content,
+            workspace_name
+          })
+        } catch (error) {
+          Logger.error({
+            function_name: 'store_original_file_states',
+            message: 'Failed to read file content',
+            data: { file_path, error }
+          })
+        }
       }
     } else {
       original_states.push({
@@ -364,10 +374,7 @@ const handle_new_file_patch = async (
     }
     const new_content = content_lines.join('\n')
 
-    const dir = path.dirname(safe_path)
-    if (!fs.existsSync(dir)) {
-      await fs.promises.mkdir(dir, { recursive: true })
-    }
+    await ensure_directory_exists(safe_path)
 
     await fs.promises.writeFile(safe_path, new_content, 'utf8')
 
@@ -552,7 +559,8 @@ export const apply_git_patch = async (
       patch_content,
       workspace_path,
       workspace_name,
-      patch
+      patch,
+      patch_info.is_renaming
     )
 
     closed_files = await close_files_in_all_editor_groups(
