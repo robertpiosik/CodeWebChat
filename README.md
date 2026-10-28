@@ -39,7 +39,7 @@ By sending files alongside task instructions, tool calling is completely skipped
 </details>
 
 <details>
-<summary><strong>Hands-free context for the task</strong></summary>
+<summary><strong>Effortless context selection</strong></summary>
 
 [Agentic Search](#-agentic-search) prompt accurately selects you relevant files automatically.
 
