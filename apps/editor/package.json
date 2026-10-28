@@ -4,7 +4,7 @@
   "description": "CWC makes AI coding blazing fast!",
   "version": "2026.1028.303",
   "scripts": {
-    "build": "npx vsce package --no-dependencies",
+    "build": "npx rimraf *.vsix && npx vsce package --no-dependencies",
     "vscode:prepublish": "npm run compile",
     "compile": "NODE_OPTIONS=--disable-warning=MODULE_TYPELESS_PACKAGE_JSON rsbuild build",
     "watch": "NODE_OPTIONS=--disable-warning=MODULE_TYPELESS_PACKAGE_JSON rsbuild build --watch",
