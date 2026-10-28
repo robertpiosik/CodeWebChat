@@ -8,6 +8,7 @@ import * as path from 'path'
 
 export default defineConfig({
   performance: {
+    buildCache: true,
     chunkSplit: {
       strategy: 'all-in-one'
     }
@@ -103,7 +104,9 @@ export default defineConfig({
           }
         }),
         pluginSvgr({
-          mixedImport: true
+          svgrOptions: {
+            exportType: 'named'
+          }
         })
       ]
     }
