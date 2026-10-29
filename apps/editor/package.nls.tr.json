@@ -58,5 +58,6 @@
   "codeWebChat.selectFilesOfCommit.title": "Bir İşlemeden (Commit) Dosyaları Seç...",
   "codeWebChat.selectClipboardPaths.title": "Panodaki Yolları Seç...",
   "codeWebChat.selectParentFolder.title": "Üst Klasörü Seç...",
-  "codeWebChat.copyMergeCommitDetails.title": "CWC: Birleştirilmiş Commit Ayrıntılarını Kopyala"
+  "codeWebChat.copyMergeCommitDetails.title": "Birleştirilmiş Commit Ayrıntılarını Kopyala",
+  "codeWebChat.category": "CWC"
 }

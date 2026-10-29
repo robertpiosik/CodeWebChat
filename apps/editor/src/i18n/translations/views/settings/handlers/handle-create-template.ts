@@ -1,7 +1,7 @@
 export const translations = {
   'views.settings.handlers.handle-create-template.title': {
     en: 'Create Template',
-    pl: 'Utwórz szablon promptu',
+    pl: 'Dodaj szablon promptu',
     'zh-cn': '创建提示词模板',
     ja: 'プロンプトテンプレートを作成',
     'zh-tw': '建立提示詞範本',

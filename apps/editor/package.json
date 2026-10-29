@@ -54,7 +54,7 @@
       "activitybar": [
         {
           "id": "activitybar",
-          "title": "Code Web Chat",
+          "title": "%codeWebChat.category%",
           "icon": "resources/activity-bar-icon.svg"
         }
       ],
@@ -109,156 +109,156 @@
       {
         "command": "codeWebChat.copyMarkdown",
         "title": "%codeWebChat.copyMarkdown.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(copy)"
       },
       {
         "command": "codeWebChat.undoSelection",
         "title": "%codeWebChat.undoSelection.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(discard)"
       },
       {
         "command": "codeWebChat.redoSelection",
         "title": "%codeWebChat.redoSelection.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(redo)"
       },
       {
         "command": "codeWebChat.duplicateWorkspace",
         "title": "%codeWebChat.duplicateWorkspace.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.copyMarkdownOpenEditors",
         "title": "%codeWebChat.copyMarkdownOpenEditors.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.copyPaths",
         "title": "%codeWebChat.copyPaths.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.copyPathsOpenEditors",
         "title": "%codeWebChat.copyPathsOpenEditors.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.visitWebsite",
         "title": "%codeWebChat.visitWebsite.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.rateExtension",
         "title": "%codeWebChat.rateExtension.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.openRepository",
         "title": "%codeWebChat.openRepository.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(github-alt)"
       },
       {
         "command": "codeWebChat.followOnX",
         "title": "%codeWebChat.followOnX.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(twitter)"
       },
       {
         "command": "codeWebChat.restoreContext",
         "title": "%codeWebChat.restoreContext.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.saveContext",
         "title": "%codeWebChat.saveContext.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.clearContext",
         "title": "%codeWebChat.clearContext.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(clear-all)"
       },
       {
         "command": "codeWebChat.expandContextFolders",
         "title": "%codeWebChat.expandContextFolders.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(expand-all)"
       },
       {
         "command": "codeWebChat.collapseContextFolders",
         "title": "%codeWebChat.collapseContextFolders.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(collapse-all)"
       },
       {
         "command": "codeWebChat.collapseWorkspaceFolders",
         "title": "%codeWebChat.collapseWorkspaceFolders.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(collapse-all)"
       },
       {
         "command": "codeWebChat.checkAllOpenEditors",
         "title": "%codeWebChat.checkAllOpenEditors.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(check-all)"
       },
       {
         "command": "codeWebChat.closeEditor",
         "title": "%codeWebChat.closeEditor.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(close)"
       },
       {
         "command": "codeWebChat.closeAllEditors",
         "title": "%codeWebChat.closeAllEditors.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(close-all)"
       },
       {
         "command": "codeWebChat.saveAll",
         "title": "%codeWebChat.saveAll.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(save-all)"
       },
       {
         "command": "codeWebChat.codeAtCursor",
         "title": "%codeWebChat.codeAtCursor.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.codeAtCursorUsing",
         "title": "%codeWebChat.codeAtCursorUsing.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.codeAtCursorWithInstructions",
         "title": "%codeWebChat.codeAtCursorWithInstructions.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.codeAtCursorWithInstructionsUsing",
         "title": "%codeWebChat.codeAtCursorWithInstructionsUsing.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.selectAllFiles",
         "title": "%codeWebChat.selectAllFiles.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.selectFile",
         "title": "%codeWebChat.selectFile.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(files)"
       },
       {
         "command": "codeWebChat.applyResponse",
         "title": "%codeWebChat.applyResponse.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.newFolder",
@@ -282,125 +282,125 @@
       {
         "command": "codeWebChat.referenceInPrompt",
         "title": "%codeWebChat.referenceInPrompt.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.revealInExplorer",
         "title": "%codeWebChat.revealInExplorer.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.findInFolder",
         "title": "%codeWebChat.findInFolder.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(search)"
       },
       {
         "command": "codeWebChat.history",
         "title": "%codeWebChat.history.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(history)"
       },
       {
         "command": "codeWebChat.createNewCheckpoint",
         "title": "%codeWebChat.createNewCheckpoint.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.settings",
         "title": "%codeWebChat.settings.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(gear)"
       },
       {
         "command": "codeWebChat.generateCommitMessage",
         "title": "%codeWebChat.generateCommitMessage.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(sparkle)"
       },
       {
         "command": "codeWebChat.generateCommitMessageAndCommit",
         "title": "%codeWebChat.generateCommitMessageAndCommit.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.setRanges",
         "title": "%codeWebChat.setRanges.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.searchFiles",
         "title": "%codeWebChat.searchFiles.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.searchFilesWorkspaceAction",
         "title": "%codeWebChat.searchFilesWorkspaceAction.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(search)"
       },
       {
         "command": "codeWebChat.searchSelectedFiles",
         "title": "%codeWebChat.searchSelectedFiles.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(search)"
       },
       {
         "command": "codeWebChat.searchFilesFromDirectory",
         "title": "%codeWebChat.searchFilesFromDirectory.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.searchSelectedFilesFromDirectory",
         "title": "%codeWebChat.searchSelectedFilesFromDirectory.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.agenticSearch",
         "title": "%codeWebChat.agenticSearch.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(search-sparkle)"
       },
       {
         "command": "codeWebChat.agenticSearchFromDirectory",
         "title": "%codeWebChat.agenticSearch.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.selectReferencingFiles",
         "title": "%codeWebChat.selectReferencingFiles.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.selectImportedFiles",
         "title": "%codeWebChat.selectImportedFiles.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.selectReferencingFilesForSelected",
         "title": "%codeWebChat.selectReferencingFilesForSelected.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.selectImportedFilesForSelected",
         "title": "%codeWebChat.selectImportedFilesForSelected.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.selectDefinitionFile",
         "title": "%codeWebChat.selectDefinitionFile.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.openInIntegratedTerminal",
         "title": "%codeWebChat.openInIntegratedTerminal.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(terminal)"
       },
       {
         "command": "codeWebChat.removeFolderFromWorkspace",
         "title": "%codeWebChat.removeFolderFromWorkspace.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(close)"
       },
       {
@@ -411,34 +411,34 @@
       {
         "command": "codeWebChat.selectClipboardPaths",
         "title": "%codeWebChat.selectClipboardPaths.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.selectModifiedFiles",
         "title": "%codeWebChat.selectModifiedFiles.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.selectFilesOfCommit",
         "title": "%codeWebChat.selectFilesOfCommit.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.selectParentFolder",
         "title": "%codeWebChat.selectParentFolder.title%",
-        "category": "Code Web Chat"
+        "category": "%codeWebChat.category%"
       },
       {
         "command": "codeWebChat.copyMergeCommitDetails",
         "title": "%codeWebChat.copyMergeCommitDetails.title%",
-        "category": "Code Web Chat",
+        "category": "%codeWebChat.category%",
         "icon": "$(copy)"
       }
     ],
     "submenus": [
       {
         "id": "codeWebChat.editorSubmenu",
-        "label": "Code Web Chat"
+        "label": "%codeWebChat.category%"
       }
     ],
     "menus": {

@@ -54,23 +54,22 @@ export const translations = {
     bg: 'Отваряне на настройки на редактора'
   },
   'general.open-links.open-editor-settings.description': {
-    en: 'For general editor settings, visit the Editor Settings Page.',
-    pl: 'Aby uzyskać ogólne ustawienia edytora, odwiedź stronę ustawień edytora.',
-    'zh-cn': '有关常规编辑器设置，请访问编辑器设置页面。',
-    ja: '一般的なエディター設定については、エディター設定ページにアクセスしてください。',
-    'zh-tw': '有關一般編輯器設定，請瀏覽編輯器設定頁面。',
-    de: 'Für allgemeine Editor-Einstellungen besuchen Sie die Seite Editor-Einstellungen.',
-    es: 'Para la configuración general, visita la página de configuración del editor.',
-    fr: "Pour les paramètres généraux de l'éditeur, visitez la page des paramètres.",
-    'pt-br':
-      'Para configurações gerais, visite a Página de Configurações do Editor.',
-    ru: 'Для общих настроек посетите страницу настроек редактора.',
-    ko: '일반 에디터 설정은 에디터 설정 페이지를 방문하세요.',
-    it: 'Per le impostazioni generali, visita la pagina delle impostazioni.',
-    tr: 'Genel ayarlar için Editör Ayarları Sayfasını ziyaret edin.',
-    cs: 'Pro obecná nastavení navštivte stránku Nastavení editoru.',
-    hu: 'Az általános beállításokhoz látogassa meg a Beállítások oldalt.',
-    bg: 'За общи настройки посетете страницата с настройки.'
+    en: 'Adjusting built-in editor settings.',
+    pl: 'Dostosowanie wbudowanych ustawień edytora.',
+    'zh-cn': '调整内置编辑器设置。',
+    ja: '組み込みエディター設定の調整。',
+    'zh-tw': '調整內建編輯器設定。',
+    de: 'Anpassen der integrierten Editor-Einstellungen.',
+    es: 'Ajustar la configuración del editor integrado.',
+    fr: "Ajustement des paramètres intégrés de l'éditeur.",
+    'pt-br': 'Ajustando as configurações do editor embutido.',
+    ru: 'Настройка встроенных параметров редактора.',
+    ko: '내장 에디터 설정 조정.',
+    it: "Regolazione delle impostazioni dell'editor integrato.",
+    tr: 'Yerleşik editör ayarlarını yapma.',
+    cs: 'Úprava vestavěných nastavení editoru.',
+    hu: 'A beépített szerkesztő beállításainak módosítása.',
+    bg: 'Коригиране на вградените настройки на редактора.'
   },
   'general.open-links.open-editor-settings.action': {
     en: 'Open Editor Settings',
@@ -725,7 +724,7 @@ export const translations = {
   },
   'general.voice-input.title': {
     en: 'Voice Input',
-    pl: 'Wprowadzanie głosowe',
+    pl: 'Dyktowanie',
     'zh-cn': '语音输入',
     ja: '音声入力',
     'zh-tw': '語音輸入',

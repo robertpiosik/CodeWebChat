@@ -58,5 +58,6 @@
   "codeWebChat.selectFilesOfCommit.title": "Commit fájljainak kijelölése...",
   "codeWebChat.selectClipboardPaths.title": "Vágólap útvonalainak kijelölése...",
   "codeWebChat.selectParentFolder.title": "Szülő mappa kiválasztása...",
-  "codeWebChat.copyMergeCommitDetails.title": "CWC: Egyesített commit részletek másolása"
+  "codeWebChat.copyMergeCommitDetails.title": "Egyesített commit részletek másolása",
+  "codeWebChat.category": "CWC"
 }

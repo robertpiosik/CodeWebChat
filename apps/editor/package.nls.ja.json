@@ -24,8 +24,8 @@
   "codeWebChat.saveAll.title": "すべて保存",
   "codeWebChat.codeAtCursor.title": "カーソル位置のコード",
   "codeWebChat.codeAtCursorUsing.title": "カーソル位置のコード...",
-  "codeWebChat.codeAtCursorWithInstructions.title": "指示付きでカーソル位置のコードを生成",
-  "codeWebChat.codeAtCursorWithInstructionsUsing.title": "指示付きでカーソル位置のコードを生成...",
+  "codeWebChat.codeAtCursorWithInstructions.title": "指示付きのカーソル位置のコード",
+  "codeWebChat.codeAtCursorWithInstructionsUsing.title": "指示付きのカーソル位置のコード...",
   "codeWebChat.selectAllFiles.title": "すべてのファイルを選択",
   "codeWebChat.selectFile.title": "ファイルを選択...",
   "codeWebChat.newFolder.title": "新しいフォルダー...",
@@ -58,5 +58,6 @@
   "codeWebChat.selectFilesOfCommit.title": "コミットからのファイルを選択...",
   "codeWebChat.selectClipboardPaths.title": "クリップボードのパスを選択...",
   "codeWebChat.selectParentFolder.title": "親フォルダーを選択...",
-  "codeWebChat.copyMergeCommitDetails.title": "CWC: マージされたコミットの詳細をコピー"
+  "codeWebChat.copyMergeCommitDetails.title": "マージされたコミットの詳細をコピー",
+  "codeWebChat.category": "CWC"
 }

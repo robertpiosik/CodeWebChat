@@ -22,10 +22,10 @@
   "codeWebChat.closeEditor.title": "Zamknij edytor",
   "codeWebChat.closeAllEditors.title": "Zamknij wszystkie edytory",
   "codeWebChat.saveAll.title": "Zapisz wszystko",
-  "codeWebChat.codeAtCursor.title": "Generuj kod w miejscu kursora",
-  "codeWebChat.codeAtCursorUsing.title": "Generuj kod w miejscu kursora...",
-  "codeWebChat.codeAtCursorWithInstructions.title": "Generuj kod w miejscu kursora z instrukcjami",
-  "codeWebChat.codeAtCursorWithInstructionsUsing.title": "Generuj kod w miejscu kursora z instrukcjami...",
+  "codeWebChat.codeAtCursor.title": "Kod w miejscu kursora",
+  "codeWebChat.codeAtCursorUsing.title": "Kod w miejscu kursora...",
+  "codeWebChat.codeAtCursorWithInstructions.title": "Kod w miejscu kursora z instrukcjami",
+  "codeWebChat.codeAtCursorWithInstructionsUsing.title": "Kod w miejscu kursora z instrukcjami...",
   "codeWebChat.selectAllFiles.title": "Wybierz wszystkie pliki",
   "codeWebChat.selectFile.title": "Wybierz plik...",
   "codeWebChat.newFolder.title": "Nowy folder...",
@@ -58,5 +58,6 @@
   "codeWebChat.selectFilesOfCommit.title": "Zaznacz pliki z commita...",
   "codeWebChat.selectClipboardPaths.title": "Wybierz ścieżki ze schowka...",
   "codeWebChat.selectParentFolder.title": "Wybierz folder nadrzędny...",
-  "codeWebChat.copyMergeCommitDetails.title": "CWC: Kopiuj szczegóły złączonych commitów"
+  "codeWebChat.copyMergeCommitDetails.title": "Kopiuj szczegóły złączonych commitów",
+  "codeWebChat.category": "CWC"
 }

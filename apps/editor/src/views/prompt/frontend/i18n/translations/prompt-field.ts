@@ -1,7 +1,7 @@
 export const prompt_field = {
   'prompt-field.voice-input': {
     en: 'Voice input',
-    pl: 'Wprowadzanie głosowe',
+    pl: 'Dyktowanie',
     'zh-cn': '语音输入',
     ja: '音声入力',
     'zh-tw': '語音輸入',

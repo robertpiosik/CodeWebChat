@@ -22,10 +22,10 @@
   "codeWebChat.closeEditor.title": "關閉編輯器",
   "codeWebChat.closeAllEditors.title": "關閉所有編輯器",
   "codeWebChat.saveAll.title": "全部儲存",
-  "codeWebChat.codeAtCursor.title": "在游標處產生程式碼",
-  "codeWebChat.codeAtCursorUsing.title": "在游標處產生程式碼...",
-  "codeWebChat.codeAtCursorWithInstructions.title": "包含指示在游標處產生程式碼",
-  "codeWebChat.codeAtCursorWithInstructionsUsing.title": "包含指示在游標處產生程式碼...",
+  "codeWebChat.codeAtCursor.title": "游標處程式碼",
+  "codeWebChat.codeAtCursorUsing.title": "游標處程式碼...",
+  "codeWebChat.codeAtCursorWithInstructions.title": "包含指示的游標處程式碼",
+  "codeWebChat.codeAtCursorWithInstructionsUsing.title": "包含指示的游標處程式碼...",
   "codeWebChat.selectAllFiles.title": "選擇所有檔案",
   "codeWebChat.selectFile.title": "選擇檔案...",
   "codeWebChat.newFolder.title": "新增資料夾...",
@@ -58,5 +58,6 @@
   "codeWebChat.selectFilesOfCommit.title": "選取提交中的檔案...",
   "codeWebChat.selectClipboardPaths.title": "選擇剪貼簿路徑...",
   "codeWebChat.selectParentFolder.title": "選擇父資料夾...",
-  "codeWebChat.copyMergeCommitDetails.title": "CWC: 複製合併的提交詳細資訊"
+  "codeWebChat.copyMergeCommitDetails.title": "複製合併的提交詳細資訊",
+  "codeWebChat.category": "CWC"
 }

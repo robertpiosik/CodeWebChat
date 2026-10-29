@@ -528,46 +528,46 @@ Respond with the audio transcription or the word INAUDIBLE, without explanations
 
 ### Code at Cursor
 
-- `Code at Cursor` - Get an inline snippet while using the current context.
-- `Code at Cursor using...` - Inline snippet with configuration selection.
-- `Code at Cursor with Instructions` - Inline snippet with instructions.
-- `Code at Cursor with Instructions using...` - Inline snippet with instructions and configuration selection.
+- `CWC: Code at Cursor` - Get an inline snippet while using the current context.
+- `CWC: Code at Cursor using...` - Inline snippet with configuration selection.
+- `CWC: Code at Cursor with Instructions` - Inline snippet with instructions.
+- `CWC: Code at Cursor with Instructions using...` - Inline snippet with instructions and configuration selection.
 
 ### Context
 
-- `Save File Selection` - Save the current context.
-- `Restore File Selection` - Restore a saved context.
-- `Select Workspace File...` - Select a file from the workspace.
-- `Search Files...` - Find files based on a search query.
-- `Search in Selected Files...` - Find within currently selected files.
-- `Agentic Search...` - Find task-relevant files using a headless CLI invocation.
-- `Select Clipboard Paths...` - Select files based on paths in your clipboard.
-- `Select Unstaged Files...` - Select files with unstaged changes.
-- `Select Files of Commit...` - Select files modified in a specific commit.
+- `CWC: Save File Selection` - Save the current context.
+- `CWC: Restore File Selection` - Restore a saved context.
+- `CWC: Select Workspace File...` - Select a file from the workspace.
+- `CWC: Search Files...` - Find files based on a search query.
+- `CWC: Search in Selected Files...` - Find within currently selected files.
+- `CWC: Agentic Search...` - Find task-relevant files using a headless CLI invocation.
+- `CWC: Select Clipboard Paths...` - Select files based on paths in your clipboard.
+- `CWC: Select Unstaged Files...` - Select files with unstaged changes.
+- `CWC: Select Files of Commit...` - Select files modified in a specific commit.
 
 ### Copy
 
-- `Copy Markdown` - Copy contents of the current file selection.
-- `Copy Markdown of Open Editors` - Copy contents of file selection in open editors.
-- `Copy Paths...` - Copy paths of the current file selection.
-- `Copy Paths of Open Editors...` - Copy paths of file selection in open editors.
+- `CWC: Copy Markdown` - Copy contents of the current file selection.
+- `CWC: Copy Markdown of Open Editors` - Copy contents of file selection in open editors.
+- `CWC: Copy Paths...` - Copy paths of the current file selection.
+- `CWC: Copy Paths of Open Editors...` - Copy paths of file selection in open editors.
 
 ### Commit messages
 
-- `Commit Changes` - Generate commit message in your preferred style and commit.
+- `CWC: Commit Changes` - Generate commit message in your preferred style and commit.
 
 ### History
 
-- `History` - Manage saved states of the workspace.
-- `Create New Checkpoint` - Create a history entry of the workspace state.
+- `CWC: History` - Manage saved states of the workspace.
+- `CWC: Create New Checkpoint` - Create a history entry of the workspace state.
 
 ### Actions
 
-- `Apply Chat Response` - Integrate LLM response.
+- `CWC: Apply Chat Response` - Integrate LLM response.
 
 ### Misc
 
-- `Duplicate Workspace` - Copy the extension's state in a new window.
+- `CWC: Duplicate Workspace` - Copy the extension's state in a new window.
 
 ## Building from source
 

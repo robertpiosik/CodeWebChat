@@ -58,5 +58,6 @@
   "codeWebChat.selectFilesOfCommit.title": "Marcar archivos de un commit...",
   "codeWebChat.selectClipboardPaths.title": "Seleccionar rutas del portapapeles...",
   "codeWebChat.selectParentFolder.title": "Seleccionar carpeta principal...",
-  "codeWebChat.copyMergeCommitDetails.title": "CWC: Copiar detalles de commits agrupados"
+  "codeWebChat.copyMergeCommitDetails.title": "Copiar detalles de commits agrupados",
+  "codeWebChat.category": "CWC"
 }

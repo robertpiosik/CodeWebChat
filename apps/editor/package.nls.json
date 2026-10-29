@@ -58,5 +58,6 @@
   "codeWebChat.selectFilesOfCommit.title": "Select Files of Commit...",
   "codeWebChat.selectClipboardPaths.title": "Select Clipboard Paths...",
   "codeWebChat.selectParentFolder.title": "Select Parent Folder...",
-  "codeWebChat.copyMergeCommitDetails.title": "CWC: Copy Merge Commit Details"
+  "codeWebChat.copyMergeCommitDetails.title": "Copy Merge Commit Details",
+  "codeWebChat.category": "CWC"
 }

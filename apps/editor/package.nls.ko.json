@@ -22,10 +22,10 @@
   "codeWebChat.closeEditor.title": "편집기 닫기",
   "codeWebChat.closeAllEditors.title": "모든 편집기 닫기",
   "codeWebChat.saveAll.title": "모두 저장",
-  "codeWebChat.codeAtCursor.title": "커서 위치에 코드 생성",
-  "codeWebChat.codeAtCursorUsing.title": "커서 위치에 코드 생성...",
-  "codeWebChat.codeAtCursorWithInstructions.title": "지침과 함께 커서 위치에 코드 생성",
-  "codeWebChat.codeAtCursorWithInstructionsUsing.title": "지침과 함께 커서 위치에 코드 생성...",
+  "codeWebChat.codeAtCursor.title": "커서 위치 코드",
+  "codeWebChat.codeAtCursorUsing.title": "커서 위치 코드...",
+  "codeWebChat.codeAtCursorWithInstructions.title": "지침이 있는 커서 위치 코드",
+  "codeWebChat.codeAtCursorWithInstructionsUsing.title": "지침이 있는 커서 위치 코드...",
   "codeWebChat.selectAllFiles.title": "모든 파일 선택",
   "codeWebChat.selectFile.title": "파일 선택...",
   "codeWebChat.newFolder.title": "새 폴더...",
@@ -58,5 +58,6 @@
   "codeWebChat.selectFilesOfCommit.title": "커밋에서 파일 선택...",
   "codeWebChat.selectClipboardPaths.title": "클립보드 경로 선택...",
   "codeWebChat.selectParentFolder.title": "상위 폴더 선택...",
-  "codeWebChat.copyMergeCommitDetails.title": "CWC: 병합된 커밋 세부 정보 복사"
+  "codeWebChat.copyMergeCommitDetails.title": "병합된 커밋 세부 정보 복사",
+  "codeWebChat.category": "CWC"
 }

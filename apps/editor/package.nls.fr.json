@@ -22,10 +22,10 @@
   "codeWebChat.closeEditor.title": "Fermer l'éditeur",
   "codeWebChat.closeAllEditors.title": "Fermer tous les éditeurs",
   "codeWebChat.saveAll.title": "Tout enregistrer",
-  "codeWebChat.codeAtCursor.title": "Générer du code au curseur",
-  "codeWebChat.codeAtCursorUsing.title": "Générer du code au curseur...",
-  "codeWebChat.codeAtCursorWithInstructions.title": "Générer du code au curseur avec des instructions",
-  "codeWebChat.codeAtCursorWithInstructionsUsing.title": "Générer du code au curseur avec des instructions...",
+  "codeWebChat.codeAtCursor.title": "Code au curseur",
+  "codeWebChat.codeAtCursorUsing.title": "Code au curseur...",
+  "codeWebChat.codeAtCursorWithInstructions.title": "Code au curseur avec des instructions",
+  "codeWebChat.codeAtCursorWithInstructionsUsing.title": "Code au curseur avec des instructions...",
   "codeWebChat.selectAllFiles.title": "Sélectionner tous les fichiers",
   "codeWebChat.selectFile.title": "Sélectionner un fichier...",
   "codeWebChat.newFolder.title": "Nouveau dossier...",
@@ -58,5 +58,6 @@
   "codeWebChat.selectFilesOfCommit.title": "Cocher les fichiers d'un commit...",
   "codeWebChat.selectClipboardPaths.title": "Sélectionner les chemins du presse-papiers...",
   "codeWebChat.selectParentFolder.title": "Sélectionner le dossier parent...",
-  "codeWebChat.copyMergeCommitDetails.title": "CWC: Copier les détails des commits fusionnés"
+  "codeWebChat.copyMergeCommitDetails.title": "Copier les détails des commits fusionnés",
+  "codeWebChat.category": "CWC"
 }

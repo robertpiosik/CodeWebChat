@@ -22,10 +22,10 @@
   "codeWebChat.closeEditor.title": "关闭编辑器",
   "codeWebChat.closeAllEditors.title": "关闭所有编辑器",
   "codeWebChat.saveAll.title": "全部保存",
-  "codeWebChat.codeAtCursor.title": "在光标处生成代码",
-  "codeWebChat.codeAtCursorUsing.title": "在光标处生成代码...",
-  "codeWebChat.codeAtCursorWithInstructions.title": "带指令在光标处生成代码",
-  "codeWebChat.codeAtCursorWithInstructionsUsing.title": "带指令在光标处生成代码...",
+  "codeWebChat.codeAtCursor.title": "光标处代码",
+  "codeWebChat.codeAtCursorUsing.title": "光标处代码...",
+  "codeWebChat.codeAtCursorWithInstructions.title": "带指令的光标处代码",
+  "codeWebChat.codeAtCursorWithInstructionsUsing.title": "带指令的光标处代码...",
   "codeWebChat.selectAllFiles.title": "选择所有文件",
   "codeWebChat.selectFile.title": "选择文件...",
   "codeWebChat.newFolder.title": "新建文件夹...",
@@ -58,5 +58,6 @@
   "codeWebChat.selectFilesOfCommit.title": "选中提交中的文件...",
   "codeWebChat.selectClipboardPaths.title": "选择剪贴板路径...",
   "codeWebChat.selectParentFolder.title": "选择父文件夹...",
-  "codeWebChat.copyMergeCommitDetails.title": "CWC: 复制合并的提交详细信息"
+  "codeWebChat.copyMergeCommitDetails.title": "复制合并的提交详细信息",
+  "codeWebChat.category": "CWC"
 }

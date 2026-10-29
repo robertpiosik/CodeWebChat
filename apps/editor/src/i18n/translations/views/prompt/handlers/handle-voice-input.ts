@@ -19,7 +19,7 @@ export const translations = {
   },
   'views.prompt.handlers.handle-voice-input.title': {
     en: 'Voice Input',
-    pl: 'Wprowadzanie głosowe',
+    pl: 'Dyktowanie',
     'zh-cn': '语音输入',
     ja: '音声入力',
     'zh-tw': '語音輸入',
