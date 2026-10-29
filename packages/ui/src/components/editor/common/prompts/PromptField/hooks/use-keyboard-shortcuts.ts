@@ -141,16 +141,44 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
     if (props.are_keyboard_shortcuts_disabled) return
 
     const is_next_tab =
-      (e.ctrlKey && e.key === 'Tab' && !e.shiftKey && !e.altKey && !e.metaKey) ||
-      (e.ctrlKey && e.key === 'PageDown' && !e.shiftKey && !e.altKey && !e.metaKey) ||
-      (e.metaKey && e.altKey && e.key === 'ArrowRight' && !e.shiftKey && !e.ctrlKey) ||
-      (e.metaKey && e.shiftKey && (e.key === ']' || e.key === '}' || e.code === 'BracketRight') && !e.altKey && !e.ctrlKey)
+      (e.ctrlKey &&
+        e.key === 'Tab' &&
+        !e.shiftKey &&
+        !e.altKey &&
+        !e.metaKey) ||
+      (e.ctrlKey &&
+        e.key === 'PageDown' &&
+        !e.shiftKey &&
+        !e.altKey &&
+        !e.metaKey) ||
+      (e.metaKey &&
+        e.altKey &&
+        e.key === 'ArrowRight' &&
+        !e.shiftKey &&
+        !e.ctrlKey) ||
+      (e.metaKey &&
+        e.shiftKey &&
+        (e.key === ']' || e.key === '}' || e.code === 'BracketRight') &&
+        !e.altKey &&
+        !e.ctrlKey)
 
     const is_prev_tab =
       (e.ctrlKey && e.key === 'Tab' && e.shiftKey && !e.altKey && !e.metaKey) ||
-      (e.ctrlKey && e.key === 'PageUp' && !e.shiftKey && !e.altKey && !e.metaKey) ||
-      (e.metaKey && e.altKey && e.key === 'ArrowLeft' && !e.shiftKey && !e.ctrlKey) ||
-      (e.metaKey && e.shiftKey && (e.key === '[' || e.key === '{' || e.code === 'BracketLeft') && !e.altKey && !e.ctrlKey)
+      (e.ctrlKey &&
+        e.key === 'PageUp' &&
+        !e.shiftKey &&
+        !e.altKey &&
+        !e.metaKey) ||
+      (e.metaKey &&
+        e.altKey &&
+        e.key === 'ArrowLeft' &&
+        !e.shiftKey &&
+        !e.ctrlKey) ||
+      (e.metaKey &&
+        e.shiftKey &&
+        (e.key === '[' || e.key === '{' || e.code === 'BracketLeft') &&
+        !e.altKey &&
+        !e.ctrlKey)
 
     if (is_next_tab) {
       e.preventDefault()
@@ -170,6 +198,15 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
         )
       }
       return
+    }
+
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && !e.altKey) {
+      if (e.key.toLowerCase() === 't') {
+        e.preventDefault()
+        e.stopPropagation()
+        props.on_tab_restore?.()
+        return
+      }
     }
 
     if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey) {

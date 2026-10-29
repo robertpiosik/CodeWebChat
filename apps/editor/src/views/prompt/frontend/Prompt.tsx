@@ -74,6 +74,7 @@ export const Prompt = () => {
     handle_new_tab,
     handle_tab_delete,
     handle_tabs_reorder,
+    handle_tab_restore,
     voice_input_push_to_talk,
     is_modern_ui,
     selected_files_token_count,
@@ -386,6 +387,7 @@ export const Prompt = () => {
                 on_new_tab={handle_new_tab}
                 on_tab_delete={handle_tab_delete}
                 on_tabs_reorder={handle_tabs_reorder}
+                on_tab_restore={handle_tab_restore}
                 voice_input_push_to_talk={voice_input_push_to_talk}
                 selected_files_token_count={selected_files_token_count}
                 edit_instructions_token_count={edit_instructions_token_count}
@@ -647,13 +649,13 @@ export const Prompt = () => {
                 />
               }
             >
-                <UiResponsePreview
-                  items={items_in_preview}
-                  raw_instructions={raw_instructions}
-                  api_configuration_details={api_configuration_details}
-                  cli_configuration_details={cli_configuration_details}
-                  web_configuration_details={web_configuration_details}
-                  has_multiple_workspaces={workspace_folder_count > 1}
+              <UiResponsePreview
+                items={items_in_preview}
+                raw_instructions={raw_instructions}
+                api_configuration_details={api_configuration_details}
+                cli_configuration_details={cli_configuration_details}
+                web_configuration_details={web_configuration_details}
+                has_multiple_workspaces={workspace_folder_count > 1}
                 is_from_agentic_cli={is_from_agentic_cli}
                 on_focus_file={(file) => {
                   post_message(vscode, {

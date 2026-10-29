@@ -47,7 +47,8 @@ export const use_prompt = (vscode: any) => {
     handle_tab_change,
     handle_new_tab,
     handle_tab_delete,
-    handle_tabs_reorder
+    handle_tabs_reorder,
+    handle_tab_restore
   } = use_instructions(
     vscode,
     target,
@@ -337,6 +338,7 @@ export const use_prompt = (vscode: any) => {
     handle_new_tab,
     handle_tab_delete,
     handle_tabs_reorder,
+    handle_tab_restore,
     voice_input_push_to_talk,
     is_modern_ui,
     selected_files_token_count,

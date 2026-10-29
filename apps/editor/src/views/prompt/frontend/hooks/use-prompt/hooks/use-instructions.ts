@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { BackendMessage, InstructionsState } from '../../../../types/messages'
 import { post_message } from '../../../utils/post-message'
 import { Target } from '@shared/types/target'
@@ -20,6 +20,9 @@ export const use_instructions = (
   const [edit_files_instructions, set_edit_files_instructions] = useState<
     InstructionsState | undefined
   >()
+
+  const closed_ask_tabs = useRef<string[]>([])
+  const closed_edit_tabs = useRef<string[]>([])
 
   const handle_instructions_change = (
     value: string,
@@ -133,9 +136,13 @@ export const use_instructions = (
       state: InstructionsState | undefined,
       setter: React.Dispatch<
         React.SetStateAction<InstructionsState | undefined>
-      >
+      >,
+      closed_tabs_ref: React.MutableRefObject<string[]>
     ) => {
       if (!state || state.instructions.length <= 1) return
+
+      const deleted_instruction = state.instructions[index]
+      closed_tabs_ref.current.push(deleted_instruction)
 
       const new_instructions = state.instructions.filter((_, i) => i !== index)
       let new_active_index = state.active_index
@@ -157,9 +164,64 @@ export const use_instructions = (
     }
 
     if (prompt_type === 'ask') {
-      update(ask_about_context_instructions, set_ask_about_context_instructions)
+      update(
+        ask_about_context_instructions,
+        set_ask_about_context_instructions,
+        closed_ask_tabs
+      )
     } else if (prompt_type === 'edit') {
-      update(edit_files_instructions, set_edit_files_instructions)
+      update(
+        edit_files_instructions,
+        set_edit_files_instructions,
+        closed_edit_tabs
+      )
+    }
+  }
+
+  const handle_tab_restore = () => {
+    const prompt_type = (
+      target === 'WEB'
+        ? web_prompt_type
+        : target === 'API'
+          ? api_prompt_type
+          : cli_prompt_type
+    ) as any
+
+    const update = (
+      state: InstructionsState | undefined,
+      setter: React.Dispatch<
+        React.SetStateAction<InstructionsState | undefined>
+      >,
+      closed_tabs_ref: React.MutableRefObject<string[]>
+    ) => {
+      if (closed_tabs_ref.current.length === 0) return
+
+      const restored_instruction = closed_tabs_ref.current.pop()!
+      const current_instructions = state?.instructions ?? ['']
+      const new_state = {
+        instructions: [...current_instructions, restored_instruction],
+        active_index: current_instructions.length
+      }
+      setter(new_state)
+      post_message(vscode, {
+        command: 'SAVE_INSTRUCTIONS',
+        instruction: new_state,
+        prompt_type
+      })
+    }
+
+    if (prompt_type === 'ask') {
+      update(
+        ask_about_context_instructions,
+        set_ask_about_context_instructions,
+        closed_ask_tabs
+      )
+    } else if (prompt_type === 'edit') {
+      update(
+        edit_files_instructions,
+        set_edit_files_instructions,
+        closed_edit_tabs
+      )
     }
   }
 
@@ -222,6 +284,7 @@ export const use_instructions = (
     handle_tab_change,
     handle_new_tab,
     handle_tab_delete,
-    handle_tabs_reorder
+    handle_tabs_reorder,
+    handle_tab_restore
   }
 }

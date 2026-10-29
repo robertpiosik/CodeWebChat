@@ -90,6 +90,7 @@ export namespace PromptField {
     on_new_tab: () => void
     on_tab_delete: (index: number) => void
     on_tabs_reorder?: (new_order: number[]) => void
+    on_tab_restore?: () => void
     voice_input_push_to_talk?: boolean
     prompt_token_count: number
     is_copy_only?: boolean

@@ -135,6 +135,7 @@ type Props = {
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
   on_tabs_reorder: (new_order: number[]) => void
+  on_tab_restore: () => void
   voice_input_push_to_talk: boolean
   on_preview_prompt: () => void
   on_changes_click?: (branch_name: string) => void
@@ -520,6 +521,7 @@ export const MainView: React.FC<Props> = (props) => {
           on_new_tab={props.on_new_tab}
           on_tab_delete={props.on_tab_delete}
           on_tabs_reorder={props.on_tabs_reorder}
+          on_tab_restore={props.on_tab_restore}
           voice_input_push_to_talk={props.voice_input_push_to_talk}
           currently_open_file_path={props.currently_open_file_path}
           are_keyboard_shortcuts_disabled={
