@@ -52,7 +52,14 @@ type Props = {
 
 export const ResponsePreview: FC<Props> = (props) => {
   const [last_clicked_file_index, set_last_clicked_file_index] = useState(
-    props.items.findIndex((i) => i.type === 'file')
+    () => {
+      const first_non_deleted = props.items.findIndex(
+        (i) => i.type === 'file' && i.file_state !== 'deleted'
+      )
+      return first_non_deleted !== -1
+        ? first_non_deleted
+        : props.items.findIndex((i) => i.type === 'file')
+    }
   )
   const [expanded_text_items, set_expanded_text_items] = useState<Set<number>>(
     new Set()
@@ -144,7 +151,12 @@ export const ResponsePreview: FC<Props> = (props) => {
   )
 
   useEffect(() => {
-    if (error_count > 0 && !is_fixing_all && !has_attempted_auto_fix && !props.is_from_agentic_cli) {
+    if (
+      error_count > 0 &&
+      !is_fixing_all &&
+      !has_attempted_auto_fix &&
+      !props.is_from_agentic_cli
+    ) {
       set_is_fixing_all(true)
       set_has_attempted_auto_fix(true)
       const files_to_fix = files_in_preview
@@ -158,7 +170,13 @@ export const ResponsePreview: FC<Props> = (props) => {
         }))
       props.on_fix_all_failed(files_to_fix, true)
     }
-  }, [error_count, is_fixing_all, has_attempted_auto_fix, files_in_preview, props.is_from_agentic_cli])
+  }, [
+    error_count,
+    is_fixing_all,
+    has_attempted_auto_fix,
+    files_in_preview,
+    props.is_from_agentic_cli
+  ])
 
   const get_status_text = (file: FileInPreview) => {
     if (file.apply_status === 'waiting') return 'Waiting for server...'

@@ -164,6 +164,13 @@ export const preview = async (params: {
     }))
 
     let current_index = 0
+    const first_non_deleted_index = preview_items.findIndex(
+      (item) => item.file.previewable_file.file_state !== 'deleted'
+    )
+    if (first_non_deleted_index !== -1) {
+      current_index = first_non_deleted_index
+    }
+
     while (current_index >= 0 && current_index < preview_items.length) {
       const preview_item = preview_items[current_index]
 
