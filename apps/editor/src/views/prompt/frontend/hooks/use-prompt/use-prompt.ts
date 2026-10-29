@@ -196,7 +196,9 @@ export const use_prompt = (vscode: any) => {
       } else if (message.command === 'API_CONFIGURATIONS') {
         set_api_configurations((message as any).configurations)
       } else if (message.command === 'RESPONSE_PREVIEW_FINISHED') {
-        set_chat_input_focus_key((k) => k + 1)
+        setTimeout(() => {
+          set_chat_input_focus_key((k) => k + 1)
+        }, 100)
       }
     }
     window.addEventListener('message', handle_message)
