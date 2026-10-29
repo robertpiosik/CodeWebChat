@@ -3,9 +3,10 @@ import type { PromptField, EditFormat } from '../PromptField'
 
 export const use_keyboard_shortcuts = (props: PromptField.Props) => {
   const [is_alt_pressed, set_is_alt_pressed] = useState(false)
+  const pressed_keys_ref = useRef(new Set<string>())
   const is_alt_pressed_raw_ref = useRef(false)
+  const is_alt_consumed_ref = useRef(false)
   const pending_edit_format_ref = useRef<EditFormat | null>(null)
-  const left_alt_pressed_ref = useRef(false)
 
   const update_alt_pressed = (val: boolean) => {
     is_alt_pressed_raw_ref.current = val
@@ -23,19 +24,19 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
     }
   }, [props.edit_format])
 
-  const alt_interrupted_ref = useRef(false)
-
   useEffect(() => {
     const handle_key_down = (e: KeyboardEvent) => {
       if (props.are_keyboard_shortcuts_disabled) return
-      if (e.code === 'AltLeft') {
-        left_alt_pressed_ref.current = true
+
+      pressed_keys_ref.current.add(e.code)
+      if (pressed_keys_ref.current.size > 1) {
+        is_alt_consumed_ref.current = true
       }
 
       let format: EditFormat | undefined
       if (
         e.altKey &&
-        left_alt_pressed_ref.current &&
+        pressed_keys_ref.current.has('AltLeft') &&
         !e.shiftKey &&
         !e.ctrlKey &&
         !e.metaKey
@@ -43,16 +44,19 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
         if (e.code === 'Digit1') {
           e.preventDefault()
           props.on_target_change?.('WEB')
+          update_alt_pressed(false)
           return
         }
         if (e.code === 'Digit2') {
           e.preventDefault()
           props.on_target_change?.('API')
+          update_alt_pressed(false)
           return
         }
         if (e.code === 'Digit3') {
           e.preventDefault()
           props.on_target_change?.('CLI')
+          update_alt_pressed(false)
           return
         }
 
@@ -74,21 +78,14 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
         }
       }
 
-      if (e.code === 'AltLeft' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
-        if (!alt_interrupted_ref.current) {
-          update_alt_pressed(true)
-        }
-      } else {
-        if (e.altKey) {
-          alt_interrupted_ref.current = true
-        }
-
+      if (pressed_keys_ref.current.size > 1) {
         if (format && props.edit_format !== format) {
           pending_edit_format_ref.current = format
-          update_alt_pressed(false)
-        } else {
-          update_alt_pressed(false)
         }
+        update_alt_pressed(false)
+      } else if (e.code === 'AltLeft') {
+        is_alt_consumed_ref.current = false
+        update_alt_pressed(true)
       }
 
       if (format) {
@@ -97,35 +94,34 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
         return
       }
     }
+
     const handle_key_up = (e: KeyboardEvent) => {
+      pressed_keys_ref.current.delete(e.code)
       if (e.code === 'AltLeft') {
-        left_alt_pressed_ref.current = false
+        is_alt_consumed_ref.current = false
       }
-      if (!e.altKey) {
-        alt_interrupted_ref.current = false
-      } else if (e.code !== 'AltLeft') {
-        alt_interrupted_ref.current = true
+
+      if (pressed_keys_ref.current.size > 1 || is_alt_consumed_ref.current) {
+        update_alt_pressed(false)
+      } else if (pressed_keys_ref.current.has('AltLeft')) {
+        update_alt_pressed(true)
+      } else {
+        update_alt_pressed(false)
       }
-      update_alt_pressed(
-        e.altKey &&
-          left_alt_pressed_ref.current &&
-          !alt_interrupted_ref.current &&
-          !e.shiftKey &&
-          !e.ctrlKey &&
-          !e.metaKey
-      )
     }
+
     const handle_blur = () => {
+      pressed_keys_ref.current.clear()
+      is_alt_consumed_ref.current = false
       update_alt_pressed(false)
-      alt_interrupted_ref.current = false
-      left_alt_pressed_ref.current = false
     }
-    window.addEventListener('keydown', handle_key_down)
-    window.addEventListener('keyup', handle_key_up)
+
+    window.addEventListener('keydown', handle_key_down, true)
+    window.addEventListener('keyup', handle_key_up, true)
     window.addEventListener('blur', handle_blur)
     return () => {
-      window.removeEventListener('keydown', handle_key_down)
-      window.removeEventListener('keyup', handle_key_up)
+      window.removeEventListener('keydown', handle_key_down, true)
+      window.removeEventListener('keyup', handle_key_up, true)
       window.removeEventListener('blur', handle_blur)
     }
   }, [
@@ -139,6 +135,11 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
     e: React.KeyboardEvent<HTMLDivElement>
   ) => {
     if (props.are_keyboard_shortcuts_disabled) return
+
+    pressed_keys_ref.current.add(e.nativeEvent.code)
+    if (pressed_keys_ref.current.size > 1) {
+      is_alt_consumed_ref.current = true
+    }
 
     const is_next_tab =
       (e.ctrlKey &&
@@ -253,19 +254,20 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
     if (
       e.key === 'c' &&
       e.altKey &&
-      left_alt_pressed_ref.current &&
+      pressed_keys_ref.current.has('AltLeft') &&
       (e.ctrlKey || e.metaKey)
     ) {
       if (props.on_copy && props.target === 'WEB') {
         e.stopPropagation()
         e.preventDefault()
         props.on_copy()
+        update_alt_pressed(false)
       }
     }
     if (
       e.code === 'KeyC' &&
       e.altKey &&
-      left_alt_pressed_ref.current &&
+      pressed_keys_ref.current.has('AltLeft') &&
       !e.ctrlKey &&
       !e.metaKey &&
       !e.shiftKey
@@ -274,12 +276,13 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
         e.stopPropagation()
         e.preventDefault()
         props.on_task_completed()
+        update_alt_pressed(false)
       }
     }
     if (
       e.code === 'KeyX' &&
       e.altKey &&
-      left_alt_pressed_ref.current &&
+      pressed_keys_ref.current.has('AltLeft') &&
       !e.ctrlKey &&
       !e.metaKey &&
       !e.shiftKey
@@ -288,6 +291,7 @@ export const use_keyboard_shortcuts = (props: PromptField.Props) => {
         e.stopPropagation()
         e.preventDefault()
         props.on_clear_context()
+        update_alt_pressed(false)
       }
     }
   }
