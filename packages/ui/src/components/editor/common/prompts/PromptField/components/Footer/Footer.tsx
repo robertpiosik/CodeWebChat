@@ -424,41 +424,44 @@ export const Footer: React.FC<Props> = (props) => {
         >
           {props.props.target && props.props.on_target_change && (
             <div className={styles['footer__right__target-switch']}>
-              {(is_target_dropdown_open || props.is_alt_pressed) && (
-                <div
-                  className={
-                    styles['footer__right__target-switch__dropdown-wrapper']
+              <div
+                className={cn(
+                  styles['footer__right__target-switch__dropdown-wrapper'],
+                  {
+                    [styles[
+                      'footer__right__target-switch__dropdown-wrapper--open'
+                    ]]: is_target_dropdown_open || props.is_alt_pressed
                   }
+                )}
+              >
+                <div
+                  className={styles['footer__right__target-switch__dropdown']}
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <div
-                    className={styles['footer__right__target-switch__dropdown']}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {(['WEB', 'API', 'CLI'] as Target[]).map((t, idx) => (
-                      <button
-                        key={t}
-                        className={
-                          styles['footer__right__target-switch__dropdown-item']
-                        }
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          props.props.on_target_change!(t)
-                          set_is_target_dropdown_open(false)
-                        }}
-                        disabled={t === props.props.target}
-                      >
-                        {props.is_alt_pressed && t !== props.props.target ? (
-                          <KeycapWrapper char={(idx + 1).toString()}>
-                            <span>{t}</span>
-                          </KeycapWrapper>
-                        ) : (
-                          t
-                        )}
-                      </button>
-                    ))}
-                  </div>
+                  {(['WEB', 'API', 'CLI'] as Target[]).map((t, idx) => (
+                    <button
+                      key={t}
+                      className={
+                        styles['footer__right__target-switch__dropdown-item']
+                      }
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        props.props.on_target_change!(t)
+                        set_is_target_dropdown_open(false)
+                      }}
+                      disabled={t === props.props.target}
+                    >
+                      {props.is_alt_pressed && t !== props.props.target ? (
+                        <KeycapWrapper char={(idx + 1).toString()}>
+                          <span>{t}</span>
+                        </KeycapWrapper>
+                      ) : (
+                        t
+                      )}
+                    </button>
+                  ))}
                 </div>
-              )}
+              </div>
               <button
                 className={cn(
                   styles['footer__right__submit__button'],
