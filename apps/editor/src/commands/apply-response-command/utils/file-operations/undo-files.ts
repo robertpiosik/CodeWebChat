@@ -7,6 +7,8 @@ import { create_safe_path } from '@/utils/path-sanitizer'
 import { uri_exists } from './uri-exists'
 import { remove_directory_if_empty } from './remove-directory-if-empty'
 import { relocate_file } from './relocate-file'
+import { close_file_tabs } from './close-file-tabs'
+import { ensure_directory_exists } from './ensure-directory'
 import { get_error_message } from '@/utils/get-error-message'
 import {
   get_workspace_map_and_default,
@@ -62,35 +64,7 @@ export const undo_files = async (params: {
 
       if (state.file_state === 'new' && !state.file_path_to_restore) {
         if (await uri_exists(file_uri)) {
-          const text_editors = vscode.window.visibleTextEditors.filter(
-            (editor) => editor.document.uri.toString() === file_uri.toString()
-          )
-
-          const tabs_to_close: vscode.Tab[] = []
-          for (const tab_group of vscode.window.tabGroups.all) {
-            tabs_to_close.push(
-              ...tab_group.tabs.filter((tab) => {
-                const tab_uri = (tab.input as any)?.uri as
-                  | vscode.Uri
-                  | undefined
-                return tab_uri && tab_uri.fsPath === safe_path
-              })
-            )
-          }
-
-          if (tabs_to_close.length > 0) {
-            await vscode.window.tabGroups.close(tabs_to_close)
-          }
-
-          for (const editor of text_editors) {
-            await vscode.window.showTextDocument(editor.document, {
-              preview: false,
-              preserveFocus: false
-            })
-            await vscode.commands.executeCommand(
-              'workbench.action.closeActiveEditor'
-            )
-          }
+          await close_file_tabs(safe_path)
 
           try {
             await vscode.workspace.fs.delete(file_uri)
@@ -146,15 +120,12 @@ export const undo_files = async (params: {
         file_uri = vscode.Uri.file(safe_path)
 
         if (state.is_pure_rename) {
-           continue
+          continue
         }
 
         if (!(await uri_exists(file_uri))) {
           try {
-            const dir_uri = vscode.Uri.file(path.dirname(safe_path))
-            if (!(await uri_exists(dir_uri))) {
-              await vscode.workspace.fs.createDirectory(dir_uri)
-            }
+            await ensure_directory_exists(safe_path)
             await vscode.workspace.fs.writeFile(
               file_uri,
               Buffer.from(state.content, 'utf8')
@@ -165,8 +136,6 @@ export const undo_files = async (params: {
               message: 'Recreated deleted file.',
               data: { file_path: state.file_path }
             })
-            const document = await vscode.workspace.openTextDocument(safe_path)
-            await vscode.window.showTextDocument(document, { preview: false })
           } catch (err) {
             Logger.warn({
               function_name: 'undo_files',

@@ -3,7 +3,7 @@ import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
 import { create_safe_path } from '@/utils/path-sanitizer'
-import { uri_exists } from './uri-exists'
+import { ensure_directory_exists } from './ensure-directory'
 import {
   get_workspace_map_and_default,
   resolve_workspace_root
@@ -59,29 +59,21 @@ export const create_file_if_needed = async (params: {
     return false
   }
   const file_uri = vscode.Uri.file(safe_path)
-  const directory_uri = vscode.Uri.file(path.dirname(safe_path))
 
-  if (!(await uri_exists(directory_uri))) {
-    try {
-      await vscode.workspace.fs.createDirectory(directory_uri)
-      Logger.info({
-        function_name: 'create_file_if_needed',
-        message: 'Directory created',
-        data: directory_uri.fsPath
+  try {
+    await ensure_directory_exists(safe_path)
+  } catch (error) {
+    Logger.error({
+      function_name: 'create_file_if_needed',
+      message: 'Failed to create directory',
+      data: { directory: path.dirname(safe_path), error }
+    })
+    vscode.window.showErrorMessage(
+      t('command.apply-response-command.error.failed-to-create-directory', {
+        path: path.dirname(safe_path)
       })
-    } catch (error) {
-      Logger.error({
-        function_name: 'create_file_if_needed',
-        message: 'Failed to create directory',
-        data: { directory: directory_uri.fsPath, error }
-      })
-      vscode.window.showErrorMessage(
-        t('command.apply-response-command.error.failed-to-create-directory', {
-          path: directory_uri.fsPath
-        })
-      )
-      return false
-    }
+    )
+    return false
   }
 
   try {

@@ -15,7 +15,8 @@ import {
   relocate_file,
   preserve_trailing_newline,
   replace_document_content,
-  ensure_directory_exists
+  ensure_directory_exists,
+  close_file_tabs
 } from '../../utils/file-operations'
 
 export const handle_restore_preview = async (
@@ -162,21 +163,7 @@ export const handle_restore_preview = async (
 
         if (file_exists) {
           try {
-            const tabs_to_close: vscode.Tab[] = []
-            for (const tab_group of vscode.window.tabGroups.all) {
-              tabs_to_close.push(
-                ...tab_group.tabs.filter((tab) => {
-                  const tab_uri = (tab.input as any)?.uri as
-                    | vscode.Uri
-                    | undefined
-                  return tab_uri && tab_uri.fsPath === safe_path
-                })
-              )
-            }
-
-            if (tabs_to_close.length > 0) {
-              await vscode.window.tabGroups.close(tabs_to_close)
-            }
+            await close_file_tabs(safe_path)
 
             fs.unlinkSync(safe_path)
             Logger.info({

@@ -68,7 +68,6 @@ export const AGENTS = {
     flags_placeholder: '-m deepseek/deepseek-flash#high',
     example_flags: [
       '-m deepseek/deepseek-flash#high',
-      '-m deepseek/deepseek-flash#medium',
       '-m deepseek/deepseek-flash#low'
     ]
   }

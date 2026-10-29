@@ -4,6 +4,8 @@ import { Logger } from '@shared/utils/logger'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { uri_exists } from './uri-exists'
 import { remove_directory_if_empty } from './remove-directory-if-empty'
+import { close_file_tabs } from './close-file-tabs'
+import { ensure_directory_exists } from './ensure-directory'
 
 export const relocate_file = async (params: {
   old_path: string
@@ -41,21 +43,9 @@ export const relocate_file = async (params: {
     }
 
     const new_uri = vscode.Uri.file(new_safe_path)
-    const new_dir_uri = vscode.Uri.file(path.dirname(new_safe_path))
-    if (!(await uri_exists(new_dir_uri))) {
-      await vscode.workspace.fs.createDirectory(new_dir_uri)
-    }
+    await ensure_directory_exists(new_safe_path)
 
-    const text_editors = vscode.window.visibleTextEditors.filter(
-      (editor) => editor.document.uri.toString() === old_uri.toString()
-    )
-    for (const editor of text_editors) {
-      await vscode.window.showTextDocument(editor.document, {
-        preview: false,
-        preserveFocus: false
-      })
-      await vscode.commands.executeCommand('workbench.action.closeActiveEditor')
-    }
+    await close_file_tabs(old_safe_path)
 
     await vscode.workspace.fs.rename(old_uri, new_uri, { overwrite: true })
 
