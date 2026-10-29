@@ -52,9 +52,6 @@ export const search_files_commands = (
     }
 
     let paths_to_apply: string[]
-    const all_listed_were_selected = params.result.matched_paths.every((file) =>
-      currently_selected.includes(file)
-    )
 
     if (params.is_search_in_selected) {
       const searched_but_not_selected = params.resolved_all_files.filter(
@@ -69,25 +66,6 @@ export const search_files_commands = (
           ...params.result.selected_paths
         ])
       ]
-    } else if (params.is_provided_files) {
-      if (currently_selected.length > 0) {
-        const action = all_listed_were_selected ? 'replace' : 'merge'
-
-        if (action === 'merge') {
-          paths_to_apply = [
-            ...new Set([
-              ...currently_selected.filter(
-                (p) => !params.result.matched_paths.includes(p)
-              ),
-              ...params.result.selected_paths
-            ])
-          ]
-        } else {
-          paths_to_apply = [...params.result.selected_paths]
-        }
-      } else {
-        paths_to_apply = [...params.result.selected_paths]
-      }
     } else {
       paths_to_apply = [
         ...new Set([
@@ -170,7 +148,7 @@ export const search_files_commands = (
             searched_files: resolved_all_files
           })
 
-          if (!result) return
+          if (!result || result === 'back' || result === 'cancel') return
 
           if ('action' in result) {
             const sub_search_result = await search_files({

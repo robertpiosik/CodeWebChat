@@ -13,12 +13,14 @@ import {
 } from '@/features/context-restoration'
 import { t } from '@/i18n'
 import { normalize_path } from '@/utils/normalize-path'
+import { WebSocketManager } from '@/services/websocket-manager'
 
 let active_deletion_timestamp: number | undefined
 
 export const restore_from_workspace_state = async (params: {
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
+  websocket_manager: WebSocketManager
   on_context_selected: () => void
   show_back_button?: boolean
 }): Promise<'back' | void> => {
@@ -337,6 +339,8 @@ export const restore_from_workspace_state = async (params: {
       const result = await select_context_paths({
         context: context_to_apply,
         workspace_provider: params.workspace_provider,
+        extension_context: params.extension_context,
+        websocket_manager: params.websocket_manager,
         update_context_paths: async (remaining_files: string[]) => {
           const files_by_workspace = group_files_by_workspace(remaining_files)
           const current_roots =

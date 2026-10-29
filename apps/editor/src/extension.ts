@@ -177,6 +177,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     restore_context_command({
       workspace_provider,
       extension_context,
+      websocket_manager: websocket_server_instance,
       on_context_selected: () => {}
     }),
     select_modified_files_command(

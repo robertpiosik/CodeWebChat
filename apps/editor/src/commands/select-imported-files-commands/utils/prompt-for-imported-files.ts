@@ -455,7 +455,8 @@ export const prompt_for_imported_files = async (params: {
         workspace_provider,
         extension_context,
         websocket_manager,
-        show_back_button: true
+        show_back_button: true,
+        is_sub_search: true
       })
 
       if (search_result === 'back') {

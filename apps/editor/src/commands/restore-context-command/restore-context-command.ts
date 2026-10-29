@@ -4,11 +4,13 @@ import { select_context_source } from '@/features/context-restoration'
 import { restore_from_workspace_state } from './actions/restore-from-workspace-state'
 import { restore_from_json_file } from './actions/restore-from-json-file'
 import { t } from '@/i18n'
+import { WebSocketManager } from '@/services/websocket-manager'
 
 export const restore_context_command = (params: {
   workspace_provider: WorkspaceProvider
   on_context_selected: () => void
   extension_context: vscode.ExtensionContext
+  websocket_manager: WebSocketManager
 }): vscode.Disposable => {
   return vscode.commands.registerCommand(
     'codeWebChat.restoreContext',
@@ -32,6 +34,7 @@ export const restore_context_command = (params: {
           action_result = await restore_from_workspace_state({
             workspace_provider: params.workspace_provider,
             extension_context: params.extension_context,
+            websocket_manager: params.websocket_manager,
             on_context_selected: params.on_context_selected,
             show_back_button: !skipped_menu
           })
@@ -39,6 +42,7 @@ export const restore_context_command = (params: {
           action_result = await restore_from_json_file({
             workspace_provider: params.workspace_provider,
             extension_context: params.extension_context,
+            websocket_manager: params.websocket_manager,
             on_context_selected: params.on_context_selected,
             show_back_button: !skipped_menu
           })

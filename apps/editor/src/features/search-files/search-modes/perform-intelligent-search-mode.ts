@@ -285,6 +285,12 @@ export const perform_intelligent_search_mode = async (params: {
             } else {
               metadata = ` for selected files`
             }
+          } else if (params.is_sub_search) {
+            if (display_folder_path) {
+              metadata = ` for subset of files in folder \`${display_folder_path}\``
+            } else {
+              metadata = ` for subset of files`
+            }
           } else if (display_folder_path) {
             metadata = ` for folder \`${display_folder_path}\``
           }

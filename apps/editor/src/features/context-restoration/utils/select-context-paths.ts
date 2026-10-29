@@ -5,12 +5,16 @@ import { WorkspaceProvider } from '../../../context/providers/workspace/workspac
 import { resolve_context_paths } from './resolve-context-paths'
 import { t } from '@/i18n'
 import { display_token_count } from '@shared/utils/display-token-count'
+import { search_files } from '@/features/search-files'
+import { WebSocketManager } from '@/services/websocket-manager'
 
 let active_deletion_timestamp: number | undefined
 
 export const select_context_paths = async (params: {
   context: SavedContext
   workspace_provider: WorkspaceProvider
+  extension_context: vscode.ExtensionContext
+  websocket_manager: WebSocketManager
   update_context_paths?: (remaining_files: string[]) => Promise<void>
 }): Promise<'back' | void> => {
   const primary_workspace_root =
@@ -25,6 +29,13 @@ export const select_context_paths = async (params: {
     iconPath: new vscode.ThemeIcon('trash'),
     tooltip: t('common.delete')
   }
+
+  const search_button = {
+    iconPath: new vscode.ThemeIcon('search'),
+    tooltip: t('common.search-in-selected-results')
+  }
+
+  let restored_selected_paths: Set<string> | undefined
 
   while (true) {
     const create_quick_pick_items = async (local_params: {
@@ -51,7 +62,7 @@ export const select_context_paths = async (params: {
           const buttons: vscode.QuickInputButton[] = [
             {
               iconPath: new vscode.ThemeIcon('go-to-file'),
-              tooltip: 'Go to file'
+              tooltip: t('common.go-to-file')
             }
           ]
 
@@ -74,8 +85,11 @@ export const select_context_paths = async (params: {
     }
 
     const quick_pick_items = await create_quick_pick_items({
-      paths: resolved_paths
+      paths: resolved_paths,
+      selected_paths_override: restored_selected_paths
     })
+
+    restored_selected_paths = undefined
 
     const list_quick_pick = vscode.window.createQuickPick<
       vscode.QuickPickItem & { file_path: string; token_count: number }
@@ -92,12 +106,16 @@ export const select_context_paths = async (params: {
         0
       )
       const total_text =
-        total > 0 ? ` (totalling ${display_token_count(total)} tokens)` : ''
+        total > 0
+          ? ` (${t('common.totalling-tokens', {
+              tokens: display_token_count(total)
+            })})`
+          : ''
       list_quick_pick.placeholder = `Select files to apply to context${total_text}`
     }
     update_placeholder()
     list_quick_pick.onDidChangeSelection(update_placeholder)
-    list_quick_pick.buttons = [vscode.QuickInputButtons.Back]
+    list_quick_pick.buttons = [vscode.QuickInputButtons.Back, search_button]
 
     const list_selection = await new Promise<
       | readonly (vscode.QuickPickItem & {
@@ -105,6 +123,7 @@ export const select_context_paths = async (params: {
           token_count: number
         })[]
       | 'back'
+      | { search: string[] }
       | undefined
     >((resolve) => {
       let is_resolved = false
@@ -119,11 +138,26 @@ export const select_context_paths = async (params: {
         if (button === vscode.QuickInputButtons.Back) {
           list_quick_pick.hide()
           resolve_once('back')
+        } else if (button === search_button) {
+          const selected_paths = list_quick_pick.selectedItems.map(
+            (i) => i.file_path
+          )
+          if (selected_paths.length === 0) {
+            vscode.window.showInformationMessage(
+              t('common.info.select-files-to-search')
+            )
+            return
+          }
+          list_quick_pick.hide()
+          resolve_once({ search: selected_paths })
         }
       })
 
       list_quick_pick.onDidTriggerItemButton(async (e) => {
-        if (e.button.tooltip === 'Go to file') {
+        if (
+          e.button.tooltip === 'Go to file' ||
+          e.button.tooltip === t('common.go-to-file')
+        ) {
           const uri = vscode.Uri.file(e.item.file_path)
           vscode.window.showTextDocument(uri, {
             preview: true,
@@ -203,6 +237,37 @@ export const select_context_paths = async (params: {
 
     if (!list_selection) return undefined
     if (list_selection === 'back') return 'back'
+
+    if (!Array.isArray(list_selection) && 'search' in list_selection) {
+      const search_result = await search_files({
+        get_files: async () => list_selection.search,
+        workspace_provider: params.workspace_provider,
+        extension_context: params.extension_context,
+        websocket_manager: params.websocket_manager,
+        show_back_button: true,
+        is_sub_search: true
+      })
+
+      if (search_result === 'back') {
+        restored_selected_paths = new Set(list_selection.search)
+        continue
+      }
+
+      if (!search_result) {
+        return undefined
+      }
+
+      const select_paths_set = new Set(resolved_paths)
+      const current_selected_files =
+        params.workspace_provider.get_selected_files()
+      const final_selected = current_selected_files
+        .filter((p) => !select_paths_set.has(p))
+        .concat(search_result.selected_paths)
+      await params.workspace_provider.set_selected_files([
+        ...new Set(final_selected)
+      ])
+      return undefined
+    }
 
     if (Array.isArray(list_selection)) {
       const new_selected = list_selection.map((i) => i.file_path)

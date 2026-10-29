@@ -17,6 +17,8 @@ export const prompt_for_provided_results = async (params: {
       selected_paths: string[]
       unmatched_paths: string[]
     }
+  | 'back'
+  | 'cancel'
   | undefined
 > => {
   const currently_selected = params.workspace_provider.get_selected_files()
@@ -33,12 +35,12 @@ export const prompt_for_provided_results = async (params: {
 
   const base_title = t('feature.search-files.results.intelligent')
 
-  return (await show_search_results_quick_pick({
+  return await show_search_results_quick_pick({
     matched_items: params.files,
     unmatched_selected_paths: unmatched_selected_files,
     workspace_provider: params.workspace_provider,
     title: base_title,
     show_back_button: false,
     restored_selected_paths: params.restored_selected_paths
-  })) as any
+  })
 }
