@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import * as os from 'os'
 import * as path from 'path'
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
@@ -16,10 +17,16 @@ import { build_agent_prompt } from './utils/build-agent-prompt'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
 import { search_files } from '@/features/search-files'
 import { WebSocketManager } from '@/services/websocket-manager'
+import { Logger } from '@shared/utils/logger'
 import {
   invoke_agentic_cli,
   show_agentic_cli_output_channel
 } from '@/utils/agentic-cli-invocation'
+import {
+  create_workspace_snapshot,
+  restore_workspace_snapshot,
+  WorkspaceSnapshotData
+} from '@/utils/workspace-snapshot'
 
 export const agentic_search = async (params: {
   workspace_provider: WorkspaceProvider
@@ -35,9 +42,7 @@ export const agentic_search = async (params: {
   | 'back'
 > => {
   if (!vscode.workspace.isTrusted) {
-    vscode.window.showWarningMessage(
-      t('common.error.workspace-not-trusted')
-    )
+    vscode.window.showWarningMessage(t('common.error.workspace-not-trusted'))
     return undefined
   }
 
@@ -64,73 +69,115 @@ export const agentic_search = async (params: {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const invocation_count = config.get<number>('agenticSearchInvocationCount')
 
-    const result = await invoke_agentic_cli({
-      workspace_provider: params.workspace_provider,
-      extension_context: params.extension_context,
-      notification_title: t('feature.agentic-search.title.agentic-search'),
-      agent_state_key: LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY,
-      last_selected_workspace_state_key:
-        LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY,
-      default_agent_key: 'isDefaultForAgenticSearch',
-      show_back_button: false,
-      invocation_count,
-      allow_adding_invocations: true,
-      target_folder: params.folder_path,
-      build_prompt: async () => {
-        while (true) {
-          if (
-            first_run &&
-            params.skip_prompt_if_not_empty &&
-            query.trim() !== ''
-          ) {
+    let snapshot_dir: string | undefined
+    let snapshot_data: WorkspaceSnapshotData | undefined
+
+    let result: any
+    try {
+      result = await invoke_agentic_cli({
+        workspace_provider: params.workspace_provider,
+        extension_context: params.extension_context,
+        notification_title: t('feature.agentic-search.title.agentic-search'),
+        agent_state_key: LAST_USED_AGENTIC_SEARCH_AGENT_STATE_KEY,
+        last_selected_workspace_state_key:
+          LAST_SELECTED_WORKSPACE_IN_AGENTIC_SEARCH_STATE_KEY,
+        default_agent_key: 'isDefaultForAgenticSearch',
+        show_back_button: false,
+        invocation_count,
+        allow_adding_invocations: true,
+        target_folder: params.folder_path,
+        build_prompt: async () => {
+          while (true) {
+            if (
+              first_run &&
+              params.skip_prompt_if_not_empty &&
+              query.trim() !== ''
+            ) {
+              first_run = false
+            } else {
+              const query_result = await prompt_for_search_term(query, {
+                show_back_button: true
+              })
+
+              if (query_result.back) {
+                return 'back'
+              }
+
+              if (query_result.value === undefined) {
+                return undefined
+              }
+
+              query = query_result.value
+            }
             first_run = false
-          } else {
-            const query_result = await prompt_for_search_term(query, {
-              show_back_button: true
-            })
 
-            if (query_result.back) {
-              return 'back'
+            if (query.trim() === '') {
+              continue
             }
 
-            if (query_result.value === undefined) {
-              return undefined
-            }
+            await params.extension_context.workspaceState.update(
+              LAST_AGENTIC_SEARCH_QUERY_STATE_KEY,
+              {
+                instructions: params.current_instructions,
+                query
+              }
+            )
 
-            query = query_result.value
+            const { instructions: processed_queries, skill_definitions } =
+              await replace_symbols({
+                instructions: [query],
+                extension_context: params.extension_context,
+                workspace_provider: params.workspace_provider,
+                image_as_paths: true
+              })
+
+            const processed_query = processed_queries[0]
+
+            const final_query = skill_definitions
+              ? `${processed_query}\n\n${skill_definitions}`
+              : processed_query
+
+            snapshot_dir = path.join(
+              os.tmpdir(),
+              `cwc-agentic-search-snapshot-${Date.now()}-${Math.random().toString().slice(2)}`
+            )
+            await vscode.workspace.fs.createDirectory(
+              vscode.Uri.file(snapshot_dir)
+            )
+            snapshot_data = await create_workspace_snapshot(
+              snapshot_dir,
+              params.workspace_provider
+            )
+
+            return build_agent_prompt(final_query)
           }
-          first_run = false
-
-          if (query.trim() === '') {
-            continue
-          }
-
-          await params.extension_context.workspaceState.update(
-            LAST_AGENTIC_SEARCH_QUERY_STATE_KEY,
-            {
-              instructions: params.current_instructions,
-              query
-            }
+        }
+      })
+    } finally {
+      if (snapshot_dir && snapshot_data) {
+        try {
+          params.workspace_provider.pause_file_watcher()
+          await restore_workspace_snapshot(
+            snapshot_dir,
+            snapshot_data,
+            params.workspace_provider
           )
-
-          const { instructions: processed_queries, skill_definitions } =
-            await replace_symbols({
-              instructions: [query],
-              extension_context: params.extension_context,
-              workspace_provider: params.workspace_provider,
-              image_as_paths: true
+        } catch (err) {
+          Logger.error({
+            function_name: 'agentic_search',
+            message: 'Failed to restore snapshot',
+            data: err
+          })
+        } finally {
+          params.workspace_provider.resume_file_watcher()
+          try {
+            await vscode.workspace.fs.delete(vscode.Uri.file(snapshot_dir), {
+              recursive: true
             })
-
-          const processed_query = processed_queries[0]
-
-          const final_query = skill_definitions
-            ? `${processed_query}\n\n${skill_definitions}`
-            : processed_query
-
-          return build_agent_prompt(final_query)
+          } catch {}
         }
       }
-    })
+    }
 
     if (result === 'back') {
       return 'back'

@@ -1,6 +1,3 @@
-import { execFileSync } from 'child_process'
-import * as os from 'os'
-import * as path from 'path'
 import * as vscode from 'vscode'
 import {
   TEMPORARY_CHECKPOINT_STATE_KEY,
@@ -16,17 +13,16 @@ import {
   get_checkpoints
 } from '@/features/checkpoints/actions'
 import { create_temporary_checkpoint } from './create-temporary-checkpoint'
-import { sync_workspace_from_dir } from './sync-workspace-from-dir'
 import { get_checkpoint_path } from '@/features/checkpoints/utils'
-import { sync_directory } from '../utils/sync-directory'
+import { restore_workspace_snapshot } from '@/utils/workspace-snapshot'
 import { Logger } from '@shared/utils/logger'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 import { ongoing_preview_cleanup_promise } from '@/commands/apply-response-command/utils/preview-handler'
-import { get_git_info } from '@/features/checkpoints/utils/git-utils'
 import { CommitMessageDetails } from '@/utils/commit-message-details'
 import { t } from '@/i18n'
 import { get_error_message } from '@/utils/get-error-message'
+
 export const restore_checkpoint = async (params: {
   checkpoint: Checkpoint
   workspace_provider: WorkspaceProvider
@@ -164,301 +160,21 @@ export const restore_checkpoint = async (params: {
           CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
           Date.now()
         )
+
         const checkpoint_dir_path = get_checkpoint_path(
           params.checkpoint.timestamp,
           params.extension_context
         )
-        const checkpoint_dir_uri = vscode.Uri.file(checkpoint_dir_path)
 
-        if (params.checkpoint.uses_git && params.checkpoint.git_data) {
-          const workspace_folders = vscode.workspace.workspaceFolders!
-
-          for (let index = 0; index < workspace_folders.length; index++) {
-            const folder = workspace_folders[index]
-            const folder_key = `${index}-${folder.name}`
-            const git_info = params.checkpoint.git_data[folder_key]
-
-            if (git_info) {
-              const current_git_info = await get_git_info(folder)
-              if (
-                current_git_info &&
-                current_git_info.commit_hash === git_info.commit_hash
-              ) {
-                try {
-                  execFileSync('git', ['restore', '.'], {
-                    cwd: folder.uri.fsPath,
-                    stdio: 'pipe'
-                  })
-                  execFileSync('git', ['clean', '-fd'], {
-                    cwd: folder.uri.fsPath,
-                    stdio: 'pipe'
-                  })
-                } catch (error) {
-                  Logger.warn({
-                    function_name: 'restore_checkpoint',
-                    message: `git restore/clean failed for ${folder.name}, falling back to checkout`,
-                    data: error
-                  })
-                  try {
-                    execFileSync('git', ['checkout', '.'], {
-                      cwd: folder.uri.fsPath,
-                      stdio: 'pipe'
-                    })
-                    execFileSync('git', ['clean', '-fd'], {
-                      cwd: folder.uri.fsPath,
-                      stdio: 'pipe'
-                    })
-                  } catch (e) {
-                    Logger.error({
-                      function_name: 'restore_checkpoint',
-                      message: `Failed to reject changes for ${folder.name}`,
-                      data: e
-                    })
-                    throw new Error(
-                      t('command.history-command.error.reject-changes-failed', {
-                        folder: folder.name
-                      })
-                    )
-                  }
-                }
-
-                const diff_file_path = path.join(
-                  checkpoint_dir_path,
-                  `${git_info.folder_name}.diff`
-                )
-
-                let diff = ''
-                try {
-                  const diff_content = await vscode.workspace.fs.readFile(
-                    vscode.Uri.file(diff_file_path)
-                  )
-                  diff = Buffer.from(diff_content).toString('utf8')
-                } catch {}
-
-                if (diff.trim().length > 0) {
-                  const temp_diff_path = path.join(
-                    os.tmpdir(),
-                    `cwc-diff-${Date.now()}-${Math.random()
-                      .toString()
-                      .slice(2)}.diff`
-                  )
-
-                  await vscode.workspace.fs.writeFile(
-                    vscode.Uri.file(temp_diff_path),
-                    Buffer.from(diff, 'utf8')
-                  )
-                  try {
-                    execFileSync(
-                      'git',
-                      ['apply', '--whitespace=nowarn', temp_diff_path],
-                      {
-                        cwd: folder.uri.fsPath,
-                        stdio: 'pipe'
-                      }
-                    )
-                  } catch {
-                    try {
-                      execFileSync(
-                        'git',
-                        [
-                          'apply',
-                          '--reject',
-                          '--whitespace=nowarn',
-                          temp_diff_path
-                        ],
-                        {
-                          cwd: folder.uri.fsPath,
-                          stdio: 'pipe'
-                        }
-                      )
-                      vscode.window.showWarningMessage(
-                        t('command.history-command.warning.diff-apply-issues', {
-                          folder: folder.name
-                        })
-                      )
-                    } catch (reject_error) {
-                      Logger.error({
-                        function_name: 'restore_checkpoint',
-                        message: `Failed to apply git diff even with --reject for ${folder.name}`,
-                        data: reject_error
-                      })
-                      throw new Error(
-                        t('command.history-command.error.diff-apply-failed', {
-                          folder: folder.name
-                        })
-                      )
-                    }
-                  } finally {
-                    try {
-                      await vscode.workspace.fs.delete(
-                        vscode.Uri.file(temp_diff_path)
-                      )
-                    } catch {}
-                  }
-                }
-                continue
-              }
-
-              const temp_git_clone_path = path.join(
-                os.tmpdir(),
-                `cwc-git-clone-${Date.now()}-${Math.random().toString().slice(2)}`
-              )
-              const temp_git_dir_uri = vscode.Uri.file(temp_git_clone_path)
-              const temp_index_path = path.join(
-                os.tmpdir(),
-                `cwc-index-${Date.now()}-${Math.random().toString().slice(2)}.index`
-              )
-
-              try {
-                await vscode.workspace.fs.createDirectory(temp_git_dir_uri)
-
-                const git_env = {
-                  ...process.env,
-                  GIT_INDEX_FILE: temp_index_path,
-                  GIT_WORK_TREE: temp_git_clone_path
-                }
-
-                execFileSync('git', ['read-tree', git_info.commit_hash], {
-                  cwd: folder.uri.fsPath,
-                  env: git_env,
-                  stdio: 'pipe'
-                })
-
-                execFileSync('git', ['checkout-index', '-a', '-f'], {
-                  cwd: folder.uri.fsPath,
-                  env: git_env,
-                  stdio: 'pipe'
-                })
-
-                const diff_file_path = path.join(
-                  checkpoint_dir_path,
-                  `${git_info.folder_name}.diff`
-                )
-
-                let diff = ''
-                try {
-                  const diff_content = await vscode.workspace.fs.readFile(
-                    vscode.Uri.file(diff_file_path)
-                  )
-                  diff = Buffer.from(diff_content).toString('utf8')
-                } catch {}
-
-                if (diff.trim().length > 0) {
-                  const temp_diff_path = path.join(
-                    temp_git_clone_path,
-                    'cwc.diff'
-                  )
-                  await vscode.workspace.fs.writeFile(
-                    vscode.Uri.file(temp_diff_path),
-                    Buffer.from(diff, 'utf8')
-                  )
-                  try {
-                    execFileSync(
-                      'git',
-                      ['apply', '--whitespace=nowarn', temp_diff_path],
-                      {
-                        cwd: temp_git_clone_path,
-                        stdio: 'pipe'
-                      }
-                    )
-                  } catch {
-                    try {
-                      execFileSync(
-                        'git',
-                        [
-                          'apply',
-                          '--reject',
-                          '--whitespace=nowarn',
-                          temp_diff_path
-                        ],
-                        {
-                          cwd: temp_git_clone_path,
-                          stdio: 'pipe'
-                        }
-                      )
-                      vscode.window.showWarningMessage(
-                        t('command.history-command.warning.diff-apply-issues', {
-                          folder: folder.name
-                        })
-                      )
-                    } catch (reject_error) {
-                      Logger.error({
-                        function_name: 'restore_checkpoint',
-                        message: `Failed to apply git diff even with --reject for ${folder.name}`,
-                        data: reject_error
-                      })
-                      throw new Error(
-                        t('command.history-command.error.diff-apply-failed', {
-                          folder: folder.name
-                        })
-                      )
-                    }
-                  } finally {
-                    try {
-                      await vscode.workspace.fs.delete(
-                        vscode.Uri.file(temp_diff_path)
-                      )
-                    } catch {}
-                  }
-                }
-
-                await sync_directory({
-                  source_dir: temp_git_dir_uri,
-                  dest_dir: folder.uri,
-                  root_path: folder.uri.fsPath,
-                  workspace_provider: params.workspace_provider,
-                  progress
-                })
-              } catch (err) {
-                Logger.error({
-                  function_name: 'restore_checkpoint',
-                  message: `Error restoring git checkpoint for ${folder.name}`,
-                  data: err
-                })
-                throw err
-              } finally {
-                if (temp_git_dir_uri) {
-                  try {
-                    await vscode.workspace.fs.delete(temp_git_dir_uri, {
-                      recursive: true
-                    })
-                  } catch {}
-                }
-                if (temp_index_path) {
-                  try {
-                    await vscode.workspace.fs.delete(
-                      vscode.Uri.file(temp_index_path)
-                    )
-                  } catch {}
-                }
-              }
-            } else {
-              let source_folder_uri = checkpoint_dir_uri
-              if (workspace_folders.length > 1) {
-                source_folder_uri = vscode.Uri.joinPath(
-                  checkpoint_dir_uri,
-                  folder_key
-                )
-              }
-              try {
-                await vscode.workspace.fs.stat(source_folder_uri)
-                await sync_directory({
-                  source_dir: source_folder_uri,
-                  dest_dir: folder.uri,
-                  root_path: folder.uri.fsPath,
-                  workspace_provider: params.workspace_provider,
-                  progress
-                })
-              } catch {}
-            }
-          }
-        } else {
-          await sync_workspace_from_dir({
-            source_dir_uri: checkpoint_dir_uri,
-            workspace_provider: params.workspace_provider,
-            progress
-          })
-        }
+        await restore_workspace_snapshot(
+          checkpoint_dir_path,
+          {
+            uses_git: params.checkpoint.uses_git ?? false,
+            git_data: params.checkpoint.git_data
+          },
+          params.workspace_provider,
+          progress
+        )
 
         if (params.checkpoint.response_history) {
           params.prompt_view_provider.response_history =

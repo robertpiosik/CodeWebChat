@@ -1,17 +1,9 @@
-import * as path from 'path'
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import type { Checkpoint, CheckpointTab } from '@/features/checkpoints/types'
-import {
-  copy_optimised_recursively,
-  get_checkpoint_path
-} from '@/features/checkpoints/utils'
-import {
-  get_git_diff,
-  get_git_info,
-  is_git_repository
-} from '@/features/checkpoints/utils/git-utils'
-import { Logger } from '@shared/utils/logger'
+import { get_checkpoint_path } from '@/features/checkpoints/utils'
+import { create_workspace_snapshot } from '@/utils/workspace-snapshot'
+import { is_git_repository } from '@/utils/git-utils'
 
 export const create_temporary_checkpoint = async (
   workspace_provider: WorkspaceProvider,
@@ -27,85 +19,14 @@ export const create_temporary_checkpoint = async (
     return undefined
   }
 
-  await vscode.workspace.saveAll()
   const timestamp = Date.now()
   const checkpoint_dir_path = get_checkpoint_path(timestamp, extension_context)
   const checkpoint_dir_uri = vscode.Uri.file(checkpoint_dir_path)
   await vscode.workspace.fs.createDirectory(checkpoint_dir_uri)
 
-  const git_data: Record<string, any> = {}
-  let uses_git = false
-
-  await Promise.all(
-    workspace_folders.map(async (folder, index) => {
-      const has_git = folder_git_statuses[index]
-      const folder_key = `${index}-${folder.name}`
-
-      if (has_git) {
-        uses_git = true
-        const git_info = await get_git_info(folder)
-        const diff = await get_git_diff(folder)
-
-        if (git_info && diff !== null) {
-          git_data[folder_key] = {
-            branch: git_info.branch,
-            commit_hash: git_info.commit_hash,
-            folder_name: folder_key
-          }
-
-          const diff_file_path = path.join(
-            checkpoint_dir_path,
-            `${folder_key}.diff`
-          )
-          await vscode.workspace.fs.writeFile(
-            vscode.Uri.file(diff_file_path),
-            Buffer.from(diff, 'utf8')
-          )
-        } else {
-          Logger.warn({
-            function_name: 'create_temporary_checkpoint',
-            message: `Failed to get git information for repository in ${folder.name}. Falling back to file copy.`
-          })
-          const dest_folder_path =
-            workspace_folders.length > 1
-              ? path.join(checkpoint_dir_path, folder_key)
-              : checkpoint_dir_path
-          const dest_folder_uri = vscode.Uri.file(dest_folder_path)
-          if (workspace_folders.length > 1) {
-            await vscode.workspace.fs.createDirectory(dest_folder_uri)
-          }
-
-          const entries = await vscode.workspace.fs.readDirectory(folder.uri)
-          for (const [name] of entries) {
-            await copy_optimised_recursively(
-              vscode.Uri.joinPath(folder.uri, name),
-              vscode.Uri.joinPath(dest_folder_uri, name),
-              folder.uri.fsPath,
-              workspace_provider
-            )
-          }
-        }
-      } else {
-        const dest_folder_path =
-          workspace_folders.length > 1
-            ? path.join(checkpoint_dir_path, folder_key)
-            : checkpoint_dir_path
-        const dest_folder_uri = vscode.Uri.file(dest_folder_path)
-        if (workspace_folders.length > 1) {
-          await vscode.workspace.fs.createDirectory(dest_folder_uri)
-        }
-
-        const entries = await vscode.workspace.fs.readDirectory(folder.uri)
-        for (const [name] of entries) {
-          await copy_optimised_recursively(
-            vscode.Uri.joinPath(folder.uri, name),
-            vscode.Uri.joinPath(dest_folder_uri, name),
-            folder.uri.fsPath,
-            workspace_provider
-          )
-        }
-      }
-    })
+  const snapshot_data = await create_workspace_snapshot(
+    checkpoint_dir_path,
+    workspace_provider
   )
 
   const active_tabs: CheckpointTab[] = []
@@ -126,8 +47,8 @@ export const create_temporary_checkpoint = async (
   const new_checkpoint: Checkpoint = {
     timestamp,
     trigger: 'temporary',
-    uses_git,
-    git_data: Object.keys(git_data).length > 0 ? git_data : undefined,
+    uses_git: snapshot_data.uses_git,
+    git_data: snapshot_data.git_data,
     selected_files: workspace_provider.get_all_selected_paths(),
     active_tabs
   }
