@@ -42,7 +42,7 @@ export const Footer: React.FC<Props> = (props) => {
   const handle_apply_click = () => {
     set_is_apply_disabled_temporarily(true)
     on_apply_click()
-    setTimeout(() => set_is_apply_disabled_temporarily(false), 10000)
+    setTimeout(() => set_is_apply_disabled_temporarily(false), 3000)
   }
 
   return (
