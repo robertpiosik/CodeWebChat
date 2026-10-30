@@ -99,6 +99,14 @@ export const apply_response_command = (params: {
 
         const resolve_fn = get_response_preview_promise_resolve()
 
+        if (!resolve_fn) {
+          params.prompt_view_provider.send_message({
+            command: 'SHOW_PROGRESS',
+            title: t('common.progress.response-preview'),
+            subtitle: t('common.progress.preparing')
+          })
+        }
+
         const is_single_root_folder_workspace =
           (vscode.workspace.workspaceFolders?.length ?? 0) <= 1
 
@@ -149,6 +157,7 @@ export const apply_response_command = (params: {
         ) as any
 
         if (commit_message_item) {
+          params.prompt_view_provider.send_message({ command: 'HIDE_PROGRESS' })
           await vscode.commands.executeCommand(
             'codeWebChat.internal.generateCommitMessageWithProvidedTextAndCommit',
             commit_message_item.message
@@ -165,6 +174,7 @@ export const apply_response_command = (params: {
         )
 
         if (patch_repair_items.length > 0) {
+          params.prompt_view_provider.send_message({ command: 'HIDE_PROGRESS' })
           if (!resolve_fn) {
             return false
           }
@@ -182,6 +192,7 @@ export const apply_response_command = (params: {
         )
 
         if (is_code_at_cursor) {
+          params.prompt_view_provider.send_message({ command: 'HIDE_PROGRESS' })
           const item = response_items.find(
             (i) => i.type === 'code-at-cursor'
           ) as any
@@ -213,6 +224,9 @@ export const apply_response_command = (params: {
           patch_repair_items.length === 0
         ) {
           if ((args as any)?.is_from_agentic_cli) {
+            params.prompt_view_provider.send_message({
+              command: 'HIDE_PROGRESS'
+            })
             vscode.window.showWarningMessage(
               t('command.apply-response-command.error.no-valid-response')
             )
@@ -248,16 +262,27 @@ export const apply_response_command = (params: {
           }
 
           if (params.prompt_view_provider.preview_switch_choice_resolver) {
+            params.prompt_view_provider.send_message({
+              command: 'HIDE_PROGRESS'
+            })
             return
           }
 
           const choice = await new Promise<'Switch' | undefined>((resolve) => {
+            params.prompt_view_provider.send_message({
+              command: 'HIDE_PROGRESS'
+            })
             params.prompt_view_provider.preview_switch_choice_resolver = resolve
             params.prompt_view_provider.show_preview_ongoing_modal()
           })
           params.prompt_view_provider.preview_switch_choice_resolver = undefined
 
           if (choice === 'Switch') {
+            params.prompt_view_provider.send_message({
+              command: 'SHOW_PROGRESS',
+              title: t('common.progress.response-preview'),
+              subtitle: t('common.progress.preparing')
+            })
             args = { ...args, created_at: created_at_for_switch }
             resolve_fn({ accepted_files: [] })
             if (ongoing_preview_cleanup_promise) {
@@ -272,6 +297,9 @@ export const apply_response_command = (params: {
         }
 
         in_progress = true
+      } catch (err) {
+        params.prompt_view_provider.send_message({ command: 'HIDE_PROGRESS' })
+        throw err
       } finally {
         release_mutex()
       }

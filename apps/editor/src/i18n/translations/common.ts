@@ -539,6 +539,24 @@ export const translations = {
     hu: 'Válasz előnézete',
     bg: 'Преглед на отговора'
   },
+  'common.progress.preparing': {
+    en: 'Preparing...',
+    pl: 'Przygotowywanie...',
+    'zh-cn': '准备中...',
+    ja: '準備中...',
+    'zh-tw': '準備中...',
+    de: 'Vorbereitung...',
+    es: 'Preparando...',
+    fr: 'Préparation...',
+    'pt-br': 'Preparando...',
+    ru: 'Подготовка...',
+    ko: '준비 중...',
+    it: 'Preparazione...',
+    tr: 'Hazırlanıyor...',
+    cs: 'Příprava...',
+    hu: 'Előkészítés...',
+    bg: 'Подготовка...'
+  },
   'common.separator.recently-used': {
     en: 'recently used',
     pl: 'ostatnio używane',
@@ -1667,7 +1685,8 @@ export const translations = {
     de: 'Der Arbeitsbereich ist nicht vertrauenswürdig. Diese Funktion ist deaktiviert.',
     es: 'El espacio de trabajo no es de confianza. Esta función está deshabilitada.',
     fr: "L'espace de travail n'est pas approuvé. Cette fonctionnalité est désactivée.",
-    'pt-br': 'O espaço de trabalho não é confiável. Este recurso está desativado.',
+    'pt-br':
+      'O espaço de trabalho não é confiável. Este recurso está desativado.',
     ru: 'Рабочая область не является доверенной. Эта функция отключена.',
     ko: '작업 공간을 신뢰할 수 없습니다. 이 기능은 비활성화되었습니다.',
     it: "L'area di lavoro non è attendibile. Questa funzionalità è disabilitata.",
