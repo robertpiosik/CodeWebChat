@@ -205,9 +205,7 @@
   font-size: 11px;
   opacity: var(--dimmed-opacity);
   margin: 4px 12px 0 12px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  word-wrap: break-word;
 
   @include modern-ui {
     margin: 4px 10px 0 10px;
