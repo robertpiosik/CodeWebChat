@@ -1,24 +1,24 @@
-import styles from './Templates.module.scss'
+import styles from './PromptInstructions.module.scss'
 import cn from 'classnames'
 import { IconButton } from '../../common/IconButton'
 import { useState } from 'react'
 import { SortableList } from '../SortableList'
 
-export namespace Templates {
-  export type Template = {
+export namespace PromptInstructions {
+  export type Item = {
     name?: string
-    template: string
+    value: string
   }
 
   export type Props = {
-    templates: {
+    items: {
       key: string
       label: string
       icon?: string
       accent_color?: 'blue' | 'purple'
-      items: Template[]
+      items: Item[]
     }[]
-    on_reorder: (key: string, templates: Template[]) => void
+    on_reorder: (key: string, items: Item[]) => void
     on_delete: (key: string, index: number) => void
     on_edit: (key: string, index: number) => void
     on_add: (
@@ -36,7 +36,9 @@ export namespace Templates {
   }
 }
 
-export const Templates: React.FC<Templates.Props> = (props) => {
+export const PromptInstructions: React.FC<PromptInstructions.Props> = (
+  props
+) => {
   const [expanded_keys, set_expanded_keys] = useState<string[]>([])
 
   const toggle_expanded = (key: string) => {
@@ -47,10 +49,10 @@ export const Templates: React.FC<Templates.Props> = (props) => {
 
   return (
     <div className={styles.container}>
-      {props.templates.map(({ key, label, icon, accent_color, items }) => {
+      {props.items.map(({ key, label, icon, accent_color, items }) => {
         const is_expanded = expanded_keys.includes(key)
         const sortable_items = items.map((t, index) => ({
-          id: `${index}-${t.name}-${t.template}`,
+          id: `${index}-${t.name}-${t.value}`,
           original_index: index,
           ...t
         }))
@@ -98,7 +100,7 @@ export const Templates: React.FC<Templates.Props> = (props) => {
                       key,
                       new_list.map((i) => ({
                         name: i.name,
-                        template: i.template
+                        value: i.value
                       }))
                     )
                   }}

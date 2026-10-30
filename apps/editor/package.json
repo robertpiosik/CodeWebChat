@@ -1235,6 +1235,42 @@
             ]
           }
         },
+        "codeWebChat.snippetsForAskAboutFiles": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "instruction": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "instruction"
+            ]
+          }
+        },
+        "codeWebChat.snippetsForEditFiles": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "instruction": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "instruction"
+            ]
+          }
+        },
         "codeWebChat.providers": {
           "type": "array",
           "scope": "application",

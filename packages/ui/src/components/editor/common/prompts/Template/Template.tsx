@@ -3,7 +3,7 @@ import {
   useRef,
   useImperativeHandle,
   useEffect,
-  useMemo,
+  useMemo
 } from 'react'
 import styles from './Template.module.scss'
 import { Icon } from '../../Icon'
@@ -32,6 +32,7 @@ export type TemplateProps = {
   on_change: (value: string) => void
   on_focus: () => void
   on_insert_symbol_click: () => void
+  highlight_template_variables?: boolean
 }
 
 export const Template = forwardRef<TemplateHandle, TemplateProps>(
@@ -60,10 +61,7 @@ export const Template = forwardRef<TemplateHandle, TemplateProps>(
 
     useEffect(() => {
       const handle_selection_change = () => {
-        if (
-          document.activeElement === input_ref.current &&
-          input_ref.current
-        ) {
+        if (document.activeElement === input_ref.current && input_ref.current) {
           const display_pos = get_caret_position_from_div(input_ref.current)
           const raw_pos = map_display_pos_to_raw_pos({
             display_pos,
@@ -81,7 +79,10 @@ export const Template = forwardRef<TemplateHandle, TemplateProps>(
       return () => {
         document.removeEventListener('selectionchange', handle_selection_change)
         if (input_ref.current) {
-          input_ref.current.removeEventListener('focus', handle_selection_change)
+          input_ref.current.removeEventListener(
+            'focus',
+            handle_selection_change
+          )
         }
       }
     }, [props.value])
@@ -146,9 +147,9 @@ export const Template = forwardRef<TemplateHandle, TemplateProps>(
         text: props.value || '',
         context_file_paths: [],
         interactive_text: false,
-        highlight_template_variables: true
+        highlight_template_variables: props.highlight_template_variables ?? true
       })
-    }, [props.value])
+    }, [props.value, props.highlight_template_variables])
 
     useEffect(() => {
       if (
@@ -253,7 +254,10 @@ export const Template = forwardRef<TemplateHandle, TemplateProps>(
 
       e.preventDefault()
 
-      const raw_text_slice = (props.value || '').substring(bounds.raw_start, bounds.raw_end)
+      const raw_text_slice = (props.value || '').substring(
+        bounds.raw_start,
+        bounds.raw_end
+      )
       e.clipboardData.setData('text/plain', raw_text_slice)
     }
 
@@ -268,7 +272,10 @@ export const Template = forwardRef<TemplateHandle, TemplateProps>(
 
       e.preventDefault()
 
-      const raw_text_slice = (props.value || '').substring(bounds.raw_start, bounds.raw_end)
+      const raw_text_slice = (props.value || '').substring(
+        bounds.raw_start,
+        bounds.raw_end
+      )
       e.clipboardData.setData('text/plain', raw_text_slice)
 
       const new_value =

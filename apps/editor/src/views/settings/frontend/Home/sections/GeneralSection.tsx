@@ -8,8 +8,12 @@ import { TextButton as UiTextButton } from '@ui/components/editor/common/TextBut
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
-import { Template } from '@/views/settings/types/messages'
+import {
+  PromptInstruction,
+  PromptInstructionKey
+} from '@/views/settings/types/messages'
 import { TemplatesForm } from '../../forms/TemplatesForm'
+import { SnippetsForm } from '../../forms/SnippetsForm'
 
 type Props = {
   send_with_shift_enter: boolean
@@ -52,14 +56,22 @@ type Props = {
   on_commit_instructions_blur: () => void
   default_commit_instructions: string
   on_restore_commit_instructions: () => void
-  templates: Record<string, Template[]>
-  on_update_templates: (key: string, templates: Template[]) => void
-  on_edit_template: (key: string, index: number) => void
-  on_add_template: (
-    key: string,
+  prompt_instructions: Partial<
+    Record<PromptInstructionKey, PromptInstruction[]>
+  >
+  on_update_prompt_instructions: (
+    key: PromptInstructionKey,
+    instructions: PromptInstruction[]
+  ) => void
+  on_edit_prompt_instruction: (key: PromptInstructionKey, index: number) => void
+  on_add_prompt_instruction: (
+    key: PromptInstructionKey,
     params?: { insertion_index?: number; exact_insertion?: boolean }
   ) => void
-  on_delete_template: (key: string, index: number) => void
+  on_delete_prompt_instruction: (
+    key: PromptInstructionKey,
+    index: number
+  ) => void
 }
 
 export const GeneralSection = forwardRef<HTMLDivElement, Props>(
@@ -140,11 +152,23 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               description={t('general.prompt.templates.description')}
             >
               <TemplatesForm
-                templates={props.templates}
-                on_reorder={props.on_update_templates}
-                on_delete={props.on_delete_template}
-                on_edit={props.on_edit_template}
-                on_add={props.on_add_template}
+                prompt_instructions={props.prompt_instructions}
+                on_reorder={props.on_update_prompt_instructions}
+                on_delete={props.on_delete_prompt_instruction}
+                on_edit={props.on_edit_prompt_instruction}
+                on_add={props.on_add_prompt_instruction}
+              />
+            </UiItem>
+            <UiItem
+              title={t('general.prompt.snippets.title')}
+              description={t('general.prompt.snippets.description')}
+            >
+              <SnippetsForm
+                prompt_instructions={props.prompt_instructions}
+                on_reorder={props.on_update_prompt_instructions}
+                on_delete={props.on_delete_prompt_instruction}
+                on_edit={props.on_edit_prompt_instruction}
+                on_add={props.on_add_prompt_instruction}
               />
             </UiItem>
             <UiItem

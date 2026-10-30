@@ -350,44 +350,52 @@ export interface TestProviderConnectionMessage {
   is_api_key_cleared?: boolean
 }
 
-export type Template = {
+export type PromptInstructionKey =
+  | 'templatesForEditFiles'
+  | 'templatesForAskAboutFiles'
+  | 'snippetsForEditFiles'
+  | 'snippetsForAskAboutFiles'
+
+export type PromptInstruction = {
   name?: string
-  template: string
+  value: string
 }
 
-export interface GetTemplatesMessage {
-  command: 'GET_TEMPLATES'
+export interface GetPromptInstructionsMessage {
+  command: 'GET_PROMPT_INSTRUCTIONS'
 }
 
-export interface UpdateTemplatesMessage {
-  command: 'UPDATE_TEMPLATES'
-  templates_key: string
-  templates: Template[]
+export interface UpdatePromptInstructionsMessage {
+  command: 'UPDATE_PROMPT_INSTRUCTIONS'
+  key: PromptInstructionKey
+  instructions: PromptInstruction[]
 }
 
-export interface CreateTemplateMessage {
-  command: 'CREATE_TEMPLATE'
-  templates_key: string
+export interface CreatePromptInstructionMessage {
+  command: 'CREATE_PROMPT_INSTRUCTION'
+  key: PromptInstructionKey
   insertion_index?: number
   exact_insertion?: boolean
 }
 
-export interface DeleteTemplateMessage {
-  command: 'DELETE_TEMPLATE'
-  templates_key: string
+export interface DeletePromptInstructionMessage {
+  command: 'DELETE_PROMPT_INSTRUCTION'
+  key: PromptInstructionKey
   index: number
 }
 
 export interface ShowHashSignQuickPickMessage {
   command: 'SHOW_HASH_SIGN_QUICK_PICK'
+  include: ('skill' | 'snippets')[]
 }
 
 export interface GetIsModernUiMessage {
   command: 'GET_IS_MODERN_UI'
 }
 
-export interface CancelTemplateEditMessage {
-  command: 'CANCEL_TEMPLATE_EDIT'
+export interface CancelPromptInstructionEditMessage {
+  command: 'CANCEL_PROMPT_INSTRUCTION_EDIT'
+  key?: PromptInstructionKey
 }
 
 export type FrontendMessage =
@@ -449,10 +457,10 @@ export type FrontendMessage =
   | UpdateProviderMessage
   | TestProviderConnectionMessage
   | GetIsModernUiMessage
-  | GetTemplatesMessage
-  | UpdateTemplatesMessage
-  | CreateTemplateMessage
-  | DeleteTemplateMessage
+  | GetPromptInstructionsMessage
+  | UpdatePromptInstructionsMessage
+  | CreatePromptInstructionMessage
+  | DeletePromptInstructionMessage
   | ShowHashSignQuickPickMessage
   | GetAgentConfigurationsMessage
   | ReorderAgentConfigurationsMessage
@@ -463,7 +471,7 @@ export type FrontendMessage =
   | PickExampleFlagsMessage
   | SetDefaultAgentConfigurationMessage
   | SelectDefaultAgentConfigurationMessage
-  | CancelTemplateEditMessage
+  | CancelPromptInstructionEditMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ProvidersMessage {
@@ -657,15 +665,17 @@ export interface IsModernUiMessage {
   is_modern_ui: boolean
 }
 
-export interface TemplatesMessage {
-  command: 'TEMPLATES'
-  templates: Record<string, Template[]>
+export interface PromptInstructionsMessage {
+  command: 'PROMPT_INSTRUCTIONS'
+  prompt_instructions: Partial<
+    Record<PromptInstructionKey, PromptInstruction[]>
+  >
 }
 
-export interface StartTemplateCreationMessage {
-  command: 'START_TEMPLATE_CREATION'
-  templates_key: string
-  template: Template
+export interface StartPromptInstructionCreationMessage {
+  command: 'START_PROMPT_INSTRUCTION_CREATION'
+  key: PromptInstructionKey
+  instruction: PromptInstruction
   insertion_index?: number
 }
 
@@ -674,8 +684,8 @@ export interface InsertSymbolMessage {
   text: string
 }
 
-export interface TemplateEditCancelledMessage {
-  command: 'TEMPLATE_EDIT_CANCELLED'
+export interface PromptInstructionEditCancelledMessage {
+  command: 'PROMPT_INSTRUCTION_EDIT_CANCELLED'
 }
 
 export type BackendMessage =
@@ -709,12 +719,12 @@ export type BackendMessage =
   | StartProviderCreationMessage
   | ProviderUpdatedMessage
   | IsModernUiMessage
-  | TemplatesMessage
-  | StartTemplateCreationMessage
+  | PromptInstructionsMessage
+  | StartPromptInstructionCreationMessage
   | InsertSymbolMessage
   | AgentConfigurationsMessage
   | AgentConfigurationUpdatedMessage
   | StartAgentConfigurationCreationMessage
   | NewlyPickedAgentMessage
   | NewlyPickedExampleFlagMessage
-  | TemplateEditCancelledMessage
+  | PromptInstructionEditCancelledMessage

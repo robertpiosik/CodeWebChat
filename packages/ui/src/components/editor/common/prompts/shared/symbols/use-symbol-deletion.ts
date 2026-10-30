@@ -178,6 +178,18 @@ export const use_symbol_deletion = (params: {
       if (start_index !== -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
+    } else if (symbol_type === 'snippet-symbol') {
+      const snippet_name = symbol_element.dataset.snippetName
+      if (!snippet_name) return
+
+      const search_pattern = `#Snippet("${snippet_name
+        .replace(/\\/g, '\\\\')
+        .replace(/"/g, '\\"')}")`
+      const start_index = get_start_index(symbol_element, search_pattern)
+
+      if (start_index !== -1) {
+        apply_symbol_deletion(start_index, start_index + search_pattern.length)
+      }
     } else if (symbol_type === 'accuracy-boost-symbol') {
       const search_pattern = `#AccuracyBoost`
       const start_index = get_start_index(symbol_element, search_pattern)
@@ -340,6 +352,18 @@ export const use_symbol_deletion = (params: {
     return false
   }
 
+  const handle_snippet_symbol_deletion = (raw_pos: number): boolean => {
+    const text_before_cursor = params.value.substring(0, raw_pos)
+    const match = text_before_cursor.match(/#Snippet\("(?:\\.|[^"\\])*"\)$/)
+
+    if (match) {
+      const start_of_match = raw_pos - match[0].length
+      apply_symbol_deletion(start_of_match, raw_pos)
+      return true
+    }
+    return false
+  }
+
   const handle_accuracy_boost_symbol_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = params.value.substring(0, raw_pos)
     const match = text_before_cursor.match(/#AccuracyBoost$/)
@@ -404,6 +428,10 @@ export const use_symbol_deletion = (params: {
 
     if (deletion_params.el.dataset.type === 'accuracy-boost-symbol') {
       return handle_accuracy_boost_symbol_deletion(raw_pos)
+    }
+
+    if (deletion_params.el.dataset.type === 'snippet-symbol') {
+      return handle_snippet_symbol_deletion(raw_pos)
     }
 
     return false
@@ -482,7 +510,8 @@ export const use_symbol_deletion = (params: {
           parent.dataset.type === 'image-symbol' ||
           parent.dataset.type === 'pasted-text-symbol' ||
           parent.dataset.type === 'website-symbol' ||
-          parent.dataset.type === 'accuracy-boost-symbol'
+          parent.dataset.type === 'accuracy-boost-symbol' ||
+          parent.dataset.type === 'snippet-symbol'
         ) {
           const range_after = document.createRange()
           range_after.selectNodeContents(parent)
@@ -512,7 +541,8 @@ export const use_symbol_deletion = (params: {
         el.dataset.type === 'image-symbol' ||
         el.dataset.type === 'pasted-text-symbol' ||
         el.dataset.type === 'website-symbol' ||
-        el.dataset.type === 'accuracy-boost-symbol'
+        el.dataset.type === 'accuracy-boost-symbol' ||
+        el.dataset.type === 'snippet-symbol'
       ) {
         const display_pos = get_caret_position_from_div(
           params.input_ref.current

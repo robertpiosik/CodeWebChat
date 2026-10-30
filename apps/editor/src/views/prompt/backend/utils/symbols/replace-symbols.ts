@@ -10,6 +10,7 @@ import { replace_image_symbol } from './image/replace-image-symbol'
 import { replace_pasted_text_symbol } from './pasted-text/replace-pasted-text-symbol'
 import { replace_website_symbol } from './website/replace-website-symbol'
 import { replace_fragment_symbol } from './fragment/replace-fragment-symbol'
+import { replace_snippet_symbol } from './snippet/replace-snippet-symbol'
 import { SymbolCacheManager } from './symbol-cache'
 
 export const replace_symbols = async (params: {
@@ -19,9 +20,32 @@ export const replace_symbols = async (params: {
   remove_images?: boolean
   image_as_paths?: boolean
   symbols_cache?: SymbolCacheManager
-}): Promise<{ instructions: string[]; skill_definitions: string; accuracy_boost: boolean }> => {
+}): Promise<{
+  instructions: string[]
+  skill_definitions: string
+  accuracy_boost: boolean
+}> => {
   let processed_instructions = [...params.instructions]
   let skill_definitions = ''
+
+  let snippet_iterations = 0
+  let has_snippets = processed_instructions.some((i) => i.includes('#Snippet('))
+  while (has_snippets && snippet_iterations < 10) {
+    const result = await replace_snippet_symbol({
+      instructions: processed_instructions
+    })
+
+    const changed = result.instructions.some(
+      (instr, idx) => instr !== processed_instructions[idx]
+    )
+    if (!changed) {
+      break
+    }
+
+    processed_instructions = result.instructions
+    has_snippets = processed_instructions.some((i) => i.includes('#Snippet('))
+    snippet_iterations++
+  }
 
   if (processed_instructions.some((i) => i.includes('#Changes('))) {
     const result = await replace_changes_symbol({
@@ -95,7 +119,9 @@ export const replace_symbols = async (params: {
     })
   }
 
-  const accuracy_boost = processed_instructions.some((i) => i.includes('#AccuracyBoost'))
+  const accuracy_boost = processed_instructions.some((i) =>
+    i.includes('#AccuracyBoost')
+  )
   if (accuracy_boost) {
     processed_instructions = processed_instructions.map((i) =>
       i
@@ -105,5 +131,9 @@ export const replace_symbols = async (params: {
     )
   }
 
-  return { instructions: processed_instructions, skill_definitions, accuracy_boost }
+  return {
+    instructions: processed_instructions,
+    skill_definitions,
+    accuracy_boost
+  }
 }

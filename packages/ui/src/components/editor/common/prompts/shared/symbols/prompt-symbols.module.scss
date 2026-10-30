@@ -139,11 +139,15 @@
   }
 
   &--accuracy-boost &__icon::before {
-    content: '\eb44';
+    content: '\ebf8';
   }
 
   &--accuracy-boost &__icon:hover {
     background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  &--snippet &__icon::before {
+    content: '\ec24';
   }
 
   &--accuracy-boost &__text {

@@ -12,8 +12,8 @@ import { Modal as UiModal } from '@ui/components/editor/settings-view/Modal'
 import { EditWebConfigurationForm } from '@/views/shared/forms/EditWebConfigurationForm'
 import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurationForm'
 import { EditProviderForm } from './forms/EditProviderForm'
-import { EditTemplateForm } from './forms/EditTemplateForm'
-import { use_template_editing } from './hooks/use-template-editing'
+import { EditPromptInstructionForm } from './forms/EditPromptInstructionForm'
+import { use_prompt_instruction_editing } from './hooks/use-prompt-instruction-editing'
 import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
 import { use_translation } from './i18n/use-translation'
 
@@ -64,15 +64,15 @@ export const Settings = () => {
     useState<NavItem>()
 
   const {
-    updating_template,
-    set_updated_template,
-    edit_template_cancel_handler,
-    edit_template_save_handler,
-    start_editing_template
-  } = use_template_editing(
+    updating_instruction,
+    set_updated_instruction,
+    edit_instruction_cancel_handler,
+    edit_instruction_save_handler,
+    start_editing_instruction
+  } = use_prompt_instruction_editing(
     vscode,
-    settings_hook.templates,
-    settings_hook.handle_update_templates
+    settings_hook.prompt_instructions,
+    settings_hook.handle_update_prompt_instructions
   )
 
   const [default_option_for_voice_input, set_default_option_for_voice_input] =
@@ -106,7 +106,7 @@ export const Settings = () => {
       settings_hook.ai_studio_user_id !== undefined &&
       settings_hook.send_with_shift_enter !== undefined &&
       settings_hook.is_modern_ui !== undefined &&
-      settings_hook.templates !== undefined
+      settings_hook.prompt_instructions !== undefined
     )
   }, [settings_hook, default_option_for_voice_input])
 
@@ -189,11 +189,15 @@ export const Settings = () => {
         gemini_user_id={settings_hook.gemini_user_id!}
         ai_studio_user_id={settings_hook.ai_studio_user_id!}
         send_with_shift_enter={settings_hook.send_with_shift_enter!}
-        templates={settings_hook.templates!}
-        on_update_templates={settings_hook.handle_update_templates}
-        on_edit_template={start_editing_template}
-        on_add_template={settings_hook.handle_add_template}
-        on_delete_template={settings_hook.handle_delete_template}
+        prompt_instructions={settings_hook.prompt_instructions!}
+        on_update_prompt_instructions={
+          settings_hook.handle_update_prompt_instructions
+        }
+        on_edit_prompt_instruction={start_editing_instruction}
+        on_add_prompt_instruction={settings_hook.handle_add_prompt_instruction}
+        on_delete_prompt_instruction={
+          settings_hook.handle_delete_prompt_instruction
+        }
         set_providers={settings_hook.set_providers}
         set_api_configurations={settings_hook.set_api_configurations}
         on_commit_instructions_change={
@@ -264,9 +268,7 @@ export const Settings = () => {
           settings_hook.handle_toggle_pinned_api_configuration
         }
         forwarded_ports={settings_hook.forwarded_ports!}
-        on_update_forwarded_ports={
-          settings_hook.handle_update_forwarded_ports
-        }
+        on_update_forwarded_ports={settings_hook.handle_update_forwarded_ports}
         web_configurations={settings_hook.web_configurations!}
         set_web_configurations={settings_hook.set_web_configurations}
         on_reorder_web_configurations={
@@ -439,9 +441,12 @@ export const Settings = () => {
                   post_message(vscode, {
                     command: 'TEST_PROVIDER_CONNECTION',
                     original_name: updating_provider.original_name,
-                    base_url: updated_provider?.base_url ?? updating_provider.provider.base_url,
+                    base_url:
+                      updated_provider?.base_url ??
+                      updating_provider.provider.base_url,
                     api_key: updated_provider?.api_key ?? '',
-                    is_api_key_cleared: updated_provider?.is_api_key_cleared ?? false
+                    is_api_key_cleared:
+                      updated_provider?.is_api_key_cleared ?? false
                   })
                 }}
               >
@@ -456,21 +461,30 @@ export const Settings = () => {
           </UiModal.Form>
         </UiModal>
       )}
-      {updating_template && (
-        <UiModal on_close={edit_template_cancel_handler}>
+      {updating_instruction && (
+        <UiModal on_close={edit_instruction_cancel_handler}>
           <UiModal.Form
             title={
-              updating_template.index !== undefined
-                ? 'Edit Template'
-                : 'Add Template'
+              updating_instruction.index !== undefined
+                ? updating_instruction.key.startsWith('templates')
+                  ? 'Edit Template'
+                  : 'Edit Snippet'
+                : updating_instruction.key.startsWith('templates')
+                  ? 'Add Template'
+                  : 'Add Snippet'
             }
-            on_save={edit_template_save_handler}
-            on_cancel={edit_template_cancel_handler}
+            on_save={edit_instruction_save_handler}
+            on_cancel={edit_instruction_cancel_handler}
           >
-            <EditTemplateForm
-              template={updating_template.template}
-              on_update={set_updated_template}
+            <EditPromptInstructionForm
+              instruction={updating_instruction.instruction}
+              on_update={set_updated_instruction}
               vscode={vscode}
+              type={
+                updating_instruction.key.startsWith('templates')
+                  ? 'template'
+                  : 'snippet'
+              }
             />
           </UiModal.Form>
         </UiModal>

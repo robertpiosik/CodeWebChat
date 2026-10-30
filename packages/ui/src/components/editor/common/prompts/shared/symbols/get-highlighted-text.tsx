@@ -31,7 +31,7 @@ const process_text_part_for_files = (params: {
         if (part.startsWith('{') && part.endsWith('}')) {
           return `<span class="${styles['inline-code']}">${escape_html(part)}</span>`
         }
-        
+
         const file_path = part.slice(1, -1)
         if (params.context_file_paths.includes(file_path)) {
           const filename = file_path.split('/').pop() || file_path
@@ -82,8 +82,10 @@ export const get_highlighted_text = (params: {
 
   const accuracy_boost_regex_part = '#AccuracyBoost'
 
+  const snippet_regex_part = '#Snippet\\("(?:\\\\.|[^"\\\\])*"\\)'
+
   const regex = new RegExp(
-    `(${fragment_regex_part}|#Changes\\([^)]+\\)|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part}|${image_regex_part}|${pasted_text_regex_part}|${website_regex_part}|${accuracy_boost_regex_part})`,
+    `(${fragment_regex_part}|#Changes\\([^)]+\\)|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part}|${image_regex_part}|${pasted_text_regex_part}|${website_regex_part}|${accuracy_boost_regex_part}|${snippet_regex_part})`,
     'g'
   )
   const parts = params.text.split(regex)
@@ -246,9 +248,31 @@ export const get_highlighted_text = (params: {
 
       const accuracy_boost_match = part.match(/^#AccuracyBoost$/)
       if (part && accuracy_boost_match) {
-        return `<span class="${cn(styles['symbol'], styles['symbol--accuracy-boost'], {
-          [styles['symbol--non-interactive']]: !interactive_text
-        })}" data-type="accuracy-boost-symbol" title="Accuracy boost: Task instructions placed also above context"><span class="${styles['symbol__icon']}" data-role="symbol-icon"></span><span class="${styles['symbol__text']}" data-role="symbol-text">Accuracy boost</span></span>`
+        return `<span class="${cn(
+          styles['symbol'],
+          styles['symbol--accuracy-boost'],
+          {
+            [styles['symbol--non-interactive']]: !interactive_text
+          }
+        )}" data-type="accuracy-boost-symbol" title="Accuracy boost: Task instructions placed also above context"><span class="${styles['symbol__icon']}" data-role="symbol-icon"></span><span class="${styles['symbol__text']}" data-role="symbol-text">Accuracy boost</span></span>`
+      }
+
+      const snippet_match = part.match(/^#Snippet\("((?:\\.|[^"\\])*)"\)$/)
+      if (part && snippet_match) {
+        const snippet_name = snippet_match[1]
+          .replace(/\\"/g, '"')
+          .replace(/\\\\/g, '\\')
+        return `<span class="${cn(
+          styles['symbol'],
+          styles['symbol--snippet'],
+          styles['symbol--non-interactive']
+        )}" data-type="snippet-symbol" data-snippet-name="${escape_html(
+          snippet_name
+        )}"><span class="${
+          styles['symbol__icon']
+        }" data-role="symbol-icon"></span><span class="${
+          styles['symbol__text']
+        }" data-role="symbol-text">${escape_html(snippet_name)}</span></span>`
       }
 
       return process_text_part_for_files({

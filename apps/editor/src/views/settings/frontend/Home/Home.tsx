@@ -8,7 +8,8 @@ import { ApiSection } from './sections/ApiSection'
 import {
   ApiConfiguration,
   Provider,
-  Template
+  PromptInstruction,
+  PromptInstructionKey
 } from '@/views/settings/types/messages'
 import { WebConfiguration } from '@/types/web-configuration'
 import { CliConfiguration } from '@/types/cli-configuration'
@@ -143,14 +144,22 @@ type Props = {
   gemini_user_id: number | null
   ai_studio_user_id: number | null
   send_with_shift_enter: boolean
-  templates: Record<string, Template[]>
-  on_update_templates: (key: string, templates: Template[]) => void
-  on_edit_template: (key: string, index: number) => void
-  on_add_template: (
-    key: string,
+  prompt_instructions: Partial<
+    Record<PromptInstructionKey, PromptInstruction[]>
+  >
+  on_update_prompt_instructions: (
+    key: PromptInstructionKey,
+    instructions: PromptInstruction[]
+  ) => void
+  on_edit_prompt_instruction: (key: PromptInstructionKey, index: number) => void
+  on_add_prompt_instruction: (
+    key: PromptInstructionKey,
     params?: { insertion_index?: number; exact_insertion?: boolean }
   ) => void
-  on_delete_template: (key: string, index: number) => void
+  on_delete_prompt_instruction: (
+    key: PromptInstructionKey,
+    index: number
+  ) => void
   set_providers: (providers: Provider[]) => void
   set_api_configurations: (configurations: ApiConfiguration[]) => void
   set_web_configurations: (configurations: WebConfiguration[]) => void
@@ -443,11 +452,11 @@ export const Home: React.FC<Props> = (props) => {
               props.default_commit_message_instructions
             )
           }}
-          templates={props.templates}
-          on_update_templates={props.on_update_templates}
-          on_edit_template={props.on_edit_template}
-          on_add_template={props.on_add_template}
-          on_delete_template={props.on_delete_template}
+          prompt_instructions={props.prompt_instructions}
+          on_update_prompt_instructions={props.on_update_prompt_instructions}
+          on_edit_prompt_instruction={props.on_edit_prompt_instruction}
+          on_add_prompt_instruction={props.on_add_prompt_instruction}
+          on_delete_prompt_instruction={props.on_delete_prompt_instruction}
         />
 
         <WebSection

@@ -55,10 +55,11 @@ import {
   handle_pick_provider,
   handle_pick_api_model,
   handle_pick_api_reasoning_effort,
-  handle_get_templates,
-  handle_update_templates,
-  handle_create_template,
-  handle_delete_template,
+  handle_get_prompt_instructions,
+  handle_update_prompt_instructions,
+  handle_create_prompt_instruction,
+  handle_delete_prompt_instruction,
+  handle_cancel_prompt_instruction_edit,
   handle_create_cli_configuration,
   handle_delete_cli_configuration,
   handle_update_cli_configuration,
@@ -74,7 +75,6 @@ import {
   handle_select_default_cli_configuration,
   handle_open_editor_settings,
   handle_hash_sign_quick_pick,
-  handle_cancel_template_edit,
   handle_test_provider_connection
 } from './message-handlers'
 import { webview_html } from '@/views/shared/utils/webview-html'
@@ -152,17 +152,17 @@ export class SettingsViewProvider {
         } else if (message.command === 'TEST_PROVIDER_CONNECTION') {
           await handle_test_provider_connection(this, message)
         } else if (message.command === 'SHOW_HASH_SIGN_QUICK_PICK') {
-          await handle_hash_sign_quick_pick(this)
-        } else if (message.command === 'GET_TEMPLATES') {
-          await handle_get_templates(this)
-        } else if (message.command === 'UPDATE_TEMPLATES') {
-          await handle_update_templates(message)
-        } else if (message.command === 'CREATE_TEMPLATE') {
-          await handle_create_template(this, message)
-        } else if (message.command === 'DELETE_TEMPLATE') {
-          await handle_delete_template(this, message)
-        } else if (message.command === 'CANCEL_TEMPLATE_EDIT') {
-          await handle_cancel_template_edit(this, message)
+          await handle_hash_sign_quick_pick(this, message)
+        } else if (message.command === 'GET_PROMPT_INSTRUCTIONS') {
+          await handle_get_prompt_instructions(this)
+        } else if (message.command === 'UPDATE_PROMPT_INSTRUCTIONS') {
+          await handle_update_prompt_instructions(message)
+        } else if (message.command === 'CREATE_PROMPT_INSTRUCTION') {
+          await handle_create_prompt_instruction(this, message)
+        } else if (message.command === 'DELETE_PROMPT_INSTRUCTION') {
+          await handle_delete_prompt_instruction(this, message)
+        } else if (message.command === 'CANCEL_PROMPT_INSTRUCTION_EDIT') {
+          await handle_cancel_prompt_instruction_edit(this, message)
         } else if (message.command === 'GET_API_CONFIGURATIONS') {
           await handle_get_api_configurations(this)
         } else if (message.command === 'SET_DEFAULT_API_CONFIGURATION') {
@@ -329,7 +329,7 @@ export class SettingsViewProvider {
           void handle_get_gemini_user_id(this)
           void handle_get_ai_studio_user_id(this)
           void handle_get_send_with_shift_enter(this)
-          void handle_get_templates(this)
+          void handle_get_prompt_instructions(this)
           void handle_get_forwarded_ports(this)
           void handle_get_web_configurations(this)
           void handle_get_cli_configurations(this)

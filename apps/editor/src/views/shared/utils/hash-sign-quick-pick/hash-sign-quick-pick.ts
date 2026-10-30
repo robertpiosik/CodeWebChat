@@ -5,19 +5,29 @@ import {
   handle_changes_item,
   handle_commit_item,
   handle_saved_context_item,
-  handle_skill_item
+  handle_skill_item,
+  handle_snippet_item
 } from './symbols'
 
+const accuracy_boost_label = `$(target) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.accuracy-boost.label')}`
 const changes_label = `$(git-pull-request-draft) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.changes.label')}`
 const commit_label = `$(git-commit) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.commit.label')}`
 const saved_context_label = `$(checklist) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.saved-context.label')}`
 const skill_label = `$(thinking) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.skill.label')}`
-const accuracy_boost_label = `$(rocket) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.accuracy-boost.label')}`
+const snippet_label = `$(surround-with) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.snippets.label')}`
 
 export const hash_sign_quick_pick = async (params: {
   extension_context: vscode.ExtensionContext
   on_insert: (text: string) => void
-  exclude?: ('changes' | 'commit' | 'saved-context' | 'skill')[]
+  prompt_type?: 'ask' | 'edit'
+  include?: (
+    | 'accuracy-boost'
+    | 'changes'
+    | 'commit'
+    | 'saved-context'
+    | 'skill'
+    | 'snippets'
+  )[]
 }): Promise<string | undefined> => {
   const items: vscode.QuickPickItem[] = (
     [
@@ -58,23 +68,43 @@ export const hash_sign_quick_pick = async (params: {
             )
           }
         ]
+      },
+      {
+        label: snippet_label,
+        description: t(
+          'views.shared.utils.hash-sign-quick-pick.quick-pick.snippets.description'
+        )
       }
     ] as vscode.QuickPickItem[]
   ).filter((item) => {
-    if (params.exclude?.includes('changes') && item.label === changes_label) {
-      return false
-    }
-    if (params.exclude?.includes('commit') && item.label === commit_label) {
-      return false
-    }
-    if (
-      params.exclude?.includes('saved-context') &&
-      item.label === saved_context_label
-    ) {
-      return false
-    }
-    if (params.exclude?.includes('skill') && item.label === skill_label) {
-      return false
+    if (params.include) {
+      if (item.label === changes_label && !params.include.includes('changes')) {
+        return false
+      }
+      if (item.label === commit_label && !params.include.includes('commit')) {
+        return false
+      }
+      if (
+        item.label === saved_context_label &&
+        !params.include.includes('saved-context')
+      ) {
+        return false
+      }
+      if (item.label === skill_label && !params.include.includes('skill')) {
+        return false
+      }
+      if (
+        item.label === accuracy_boost_label &&
+        !params.include.includes('accuracy-boost')
+      ) {
+        return false
+      }
+      if (
+        item.label === snippet_label &&
+        !params.include.includes('snippets')
+      ) {
+        return false
+      }
     }
     return true
   })
@@ -163,6 +193,9 @@ export const hash_sign_quick_pick = async (params: {
         break
       case skill_label:
         result = await handle_skill_item()
+        break
+      case snippet_label:
+        result = await handle_snippet_item(params.prompt_type)
         break
       case accuracy_boost_label: {
         const confirm_label = t(

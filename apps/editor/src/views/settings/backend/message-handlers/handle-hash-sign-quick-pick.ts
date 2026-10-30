@@ -1,8 +1,10 @@
 import { SettingsViewProvider } from '../settings-view-provider'
 import { hash_sign_quick_pick } from '@/views/shared/utils/hash-sign-quick-pick'
+import { ShowHashSignQuickPickMessage } from '@/views/settings/types/messages'
 
 export const handle_hash_sign_quick_pick = async (
-  provider: SettingsViewProvider
+  provider: SettingsViewProvider,
+  message: ShowHashSignQuickPickMessage
 ): Promise<void> => {
   const on_insert = (text: string) => {
     provider.postMessage({
@@ -14,7 +16,7 @@ export const handle_hash_sign_quick_pick = async (
   const replacement = await hash_sign_quick_pick({
     extension_context: provider.extension_context,
     on_insert,
-    exclude: ['commit', 'changes', 'saved-context']
+    include: message.include
   })
 
   if (replacement) {

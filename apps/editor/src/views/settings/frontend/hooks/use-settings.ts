@@ -3,7 +3,8 @@ import {
   BackendMessage,
   ApiConfiguration,
   Provider,
-  Template
+  PromptInstruction,
+  PromptInstructionKey
 } from '@/views/settings/types/messages'
 import { ApiFeature } from '@/views/shared/types/api-features'
 import { post_message } from '../utils/post-message'
@@ -15,9 +16,9 @@ export const use_settings = (vscode: any) => {
   const [api_configurations, set_api_configurations] = useState<
     ApiConfiguration[] | undefined
   >(undefined)
-  const [forwarded_ports, set_forwarded_ports] = useState<
-    number[] | undefined
-  >(undefined)
+  const [forwarded_ports, set_forwarded_ports] = useState<number[] | undefined>(
+    undefined
+  )
   const [web_configurations, set_web_configurations] = useState<
     WebConfiguration[] | undefined
   >(undefined)
@@ -82,8 +83,8 @@ export const use_settings = (vscode: any) => {
   const [is_modern_ui, set_is_modern_ui] = useState<boolean | undefined>(
     undefined
   )
-  const [templates, set_templates] = useState<
-    Record<string, Template[]> | undefined
+  const [prompt_instructions, set_prompt_instructions] = useState<
+    Partial<Record<PromptInstructionKey, PromptInstruction[]>> | undefined
   >(undefined)
 
   useEffect(() => {
@@ -110,7 +111,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_AI_STUDIO_USER_ID' })
     post_message(vscode, { command: 'GET_SEND_WITH_SHIFT_ENTER' })
     post_message(vscode, { command: 'GET_IS_MODERN_UI' })
-    post_message(vscode, { command: 'GET_TEMPLATES' })
+    post_message(vscode, { command: 'GET_PROMPT_INSTRUCTIONS' })
   }, [vscode])
 
   useEffect(() => {
@@ -161,8 +162,8 @@ export const use_settings = (vscode: any) => {
         set_send_with_shift_enter(message.enabled)
       } else if (message.command === 'IS_MODERN_UI') {
         set_is_modern_ui(message.is_modern_ui)
-      } else if (message.command === 'TEMPLATES') {
-        set_templates(message.templates)
+      } else if (message.command === 'PROMPT_INSTRUCTIONS') {
+        set_prompt_instructions(message.prompt_instructions)
       }
     }
 
@@ -403,44 +404,47 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_add_template = (
-    key: string,
+  const handle_add_prompt_instruction = (
+    key: PromptInstructionKey,
     params?: { insertion_index?: number; exact_insertion?: boolean }
   ) => {
     post_message(vscode, {
-      command: 'CREATE_TEMPLATE',
-      templates_key: key,
+      command: 'CREATE_PROMPT_INSTRUCTION',
+      key,
       insertion_index: params?.insertion_index,
       exact_insertion: params?.exact_insertion
     })
   }
 
-  const handle_delete_template = (key: string, index: number) => {
+  const handle_delete_prompt_instruction = (
+    key: PromptInstructionKey,
+    index: number
+  ) => {
     post_message(vscode, {
-      command: 'DELETE_TEMPLATE',
-      templates_key: key,
+      command: 'DELETE_PROMPT_INSTRUCTION',
+      key,
       index
     })
   }
 
-  const handle_update_templates = (
-    templates_key: string,
-    templates: Template[]
+  const handle_update_prompt_instructions = (
+    key: PromptInstructionKey,
+    instructions: PromptInstruction[]
   ) => {
-    if (templates) {
-      set_templates((prev) =>
+    if (instructions) {
+      set_prompt_instructions((prev) =>
         prev
           ? {
               ...prev,
-              [templates_key]: templates
+              [key]: instructions
             }
           : prev
       )
     }
     post_message(vscode, {
-      command: 'UPDATE_TEMPLATES',
-      templates_key,
-      templates
+      command: 'UPDATE_PROMPT_INSTRUCTIONS',
+      key,
+      instructions
     })
   }
 
@@ -533,9 +537,9 @@ export const use_settings = (vscode: any) => {
     handle_ai_studio_user_id_change,
     handle_send_with_shift_enter_change,
     handle_open_keybindings,
-    templates,
-    handle_update_templates,
-    handle_add_template,
-    handle_delete_template
+    prompt_instructions,
+    handle_update_prompt_instructions,
+    handle_add_prompt_instruction,
+    handle_delete_prompt_instruction
   }
 }

@@ -27,7 +27,8 @@ export const handle_hash_sign_quick_pick = async (
 
   const replacement = await hash_sign_quick_pick({
     extension_context,
-    on_insert
+    on_insert,
+    prompt_type: prompt_view_provider.prompt_type as 'ask' | 'edit' | undefined
   })
 
   if (replacement) {

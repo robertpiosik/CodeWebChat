@@ -1,21 +1,24 @@
 import * as vscode from 'vscode'
 import { SettingsViewProvider } from '../settings-view-provider'
-import { CancelTemplateEditMessage } from '@/views/settings/types/messages'
+import { CancelPromptInstructionEditMessage } from '@/views/settings/types/messages'
 import { t } from '@/i18n'
 
-export const handle_cancel_template_edit = async (
+export const handle_cancel_prompt_instruction_edit = async (
   provider: SettingsViewProvider,
-  _message: CancelTemplateEditMessage
+  message: CancelPromptInstructionEditMessage
 ): Promise<void> => {
   const discard_button = t('common.action.discard')
+  const is_template = message.key?.startsWith('templates')
+  const item_name = is_template ? 'template' : 'snippet'
+
   const result = await vscode.window.showWarningMessage(
     t('views.common.handlers.common.confirm-discard-unsaved-changes', {
-      item_type: 'template'
+      item_type: item_name
     }),
     {
       modal: true,
       detail: t('views.common.handlers.common.unsaved-changes-will-be-lost', {
-        item_type: 'template'
+        item_type: item_name
       })
     },
     discard_button
@@ -25,5 +28,5 @@ export const handle_cancel_template_edit = async (
     return
   }
 
-  provider.postMessage({ command: 'TEMPLATE_EDIT_CANCELLED' })
+  provider.postMessage({ command: 'PROMPT_INSTRUCTION_EDIT_CANCELLED' })
 }

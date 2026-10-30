@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import styles from './EditTemplateForm.module.scss'
+import styles from './EditPromptInstructionForm.module.scss'
 import { Field as UiField } from '@ui/components/editor/common/Field'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
 import {
@@ -9,28 +9,32 @@ import {
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { Fieldset as UiFieldset } from '@ui/components/editor/prompt-view/Fieldset'
 import { use_translation } from '../../i18n/use-translation'
-import { Template, BackendMessage } from '@/views/settings/types/messages'
+import {
+  PromptInstruction,
+  BackendMessage
+} from '@/views/settings/types/messages'
 import { post_message } from '../../utils/post-message'
 
 type Props = {
-  template: Template
-  on_update: (draft: Template) => void
+  instruction: PromptInstruction
+  on_update: (draft: PromptInstruction) => void
   vscode: any
+  type: 'template' | 'snippet'
 }
 
-export const EditTemplateForm: React.FC<Props> = (props) => {
+export const EditPromptInstructionForm: React.FC<Props> = (props) => {
   const { t } = use_translation()
-  const [name, set_name] = useState(props.template.name || '')
-  const [template, set_template] = useState(props.template.template)
+  const [name, set_name] = useState(props.instruction.name || '')
+  const [value, set_value] = useState(props.instruction.value || '')
   const template_ref = useRef<TemplateHandle>(null)
   const [first_insert, set_first_insert] = useState(true)
 
   useEffect(() => {
     props.on_update({
       name: name.trim() || undefined,
-      template
+      value
     })
-  }, [name, template, props.on_update])
+  }, [name, value, props.on_update])
 
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
@@ -40,7 +44,7 @@ export const EditTemplateForm: React.FC<Props> = (props) => {
           const caret_pos = template_ref.current.get_caret_position()
           let new_caret_pos = caret_pos
 
-          set_template((prev) => {
+          set_value((prev) => {
             let before = prev.slice(0, caret_pos)
             const after = prev.slice(caret_pos)
 
@@ -75,27 +79,42 @@ export const EditTemplateForm: React.FC<Props> = (props) => {
               type="text"
               value={name}
               on_change={set_name}
-              placeholder={t('edit-template-form.name.placeholder')}
+              placeholder={
+                props.type === 'template'
+                  ? t('edit-template-form.name.placeholder')
+                  : 'E.g., Rule 1'
+              }
             />
           </UiField>
 
           <UiField
-            label={t('edit-template-form.template.label')}
-            html_for="template"
+            label={
+              props.type === 'template'
+                ? t('edit-template-form.template.label')
+                : 'Instruction'
+            }
+            html_for="value"
           >
             <UiTemplate
-              id="template"
+              id="value"
               ref={template_ref}
-              value={template}
-              placeholder={t('edit-template-form.template.placeholder')}
-              on_change={set_template}
+              value={value}
+              placeholder={
+                props.type === 'template'
+                  ? t('edit-template-form.template.placeholder')
+                  : 'E.g., Do not use relative imports.'
+              }
+              on_change={set_value}
               on_focus={() => {}}
               on_insert_symbol_click={() => {
                 set_first_insert(true)
                 post_message(props.vscode, {
-                  command: 'SHOW_HASH_SIGN_QUICK_PICK'
+                  command: 'SHOW_HASH_SIGN_QUICK_PICK',
+                  include:
+                    props.type == 'template' ? ['skill', 'snippets'] : ['skill']
                 })
               }}
+              highlight_template_variables={props.type === 'template'}
             />
           </UiField>
         </UiFieldset>

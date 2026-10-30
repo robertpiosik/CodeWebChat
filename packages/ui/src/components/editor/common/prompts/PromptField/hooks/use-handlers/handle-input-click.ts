@@ -31,6 +31,13 @@ export const create_handle_input_click = ({
         utils.handle_symbol_deletion_by_click(symbol_element)
       }
     } else if (text_element) {
+      if (
+        text_element.closest('[class*="symbol--non-interactive"]') ||
+        text_element.closest('[data-type="snippet-symbol"]')
+      ) {
+        return
+      }
+
       e.preventDefault()
       e.stopPropagation()
 
