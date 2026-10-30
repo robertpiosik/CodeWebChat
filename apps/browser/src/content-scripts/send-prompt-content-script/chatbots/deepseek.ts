@@ -7,6 +7,28 @@ import {
 import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const deepseek: Chatbot = {
+  wait_until_ready: async () => {
+    await new Promise((resolve) => {
+      const check_for_element = () => {
+        const input_element = document.querySelector(
+          'textarea'
+        ) as HTMLTextAreaElement
+
+        if (input_element) {
+          input_element.value = ' '
+          input_element.dispatchEvent(new Event('input', { bubbles: true }))
+
+          if (input_element.value === ' ') {
+            resolve(null)
+            return
+          }
+        }
+
+        setTimeout(check_for_element, 100)
+      }
+      check_for_element()
+    })
+  },
   set_options: async (chat) => {
     const deep_think_button = Array.from(
       document.querySelectorAll('div.ds-toggle-button')

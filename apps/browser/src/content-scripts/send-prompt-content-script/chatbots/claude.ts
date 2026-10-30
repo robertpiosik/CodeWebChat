@@ -88,7 +88,7 @@ export const claude: Chatbot = {
         footer,
         perform_copy: (f) => {
           const copy_button = f.querySelector(
-            'button:first-child'
+            'button:nth-child(2)'
           ) as HTMLElement
           if (!copy_button) {
             report_initialization_error({
@@ -99,8 +99,7 @@ export const claude: Chatbot = {
           }
           copy_button.click()
         },
-        insert_button: (f, b) =>
-          f.insertBefore(b, f.children[f.children.length])
+        insert_button: (f, b) => f.insertBefore(b, f.children[0])
       })
     }
 
@@ -109,7 +108,10 @@ export const claude: Chatbot = {
 
     observe_for_responses({
       chatbot_name: 'Claude',
-      is_generating: () => false, // Find robust way to determine when stop button is shown
+      is_generating: () =>
+        !!document.querySelector(
+          'div[data-cds="AssistantMessage"] div[data-cds="TurnStatus"]'
+        ),
       footer_selector,
       add_buttons: params.inject_button ? add_buttons : undefined
     })
