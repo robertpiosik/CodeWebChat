@@ -74,7 +74,7 @@ REPO_DIR="$TMP_DIR"
 echo "Installing dependencies..."
 pnpm install > /dev/null 2>&1
 
-echo "Building VS Code extension..."
+echo "Building extension..."
 cd apps/editor
 pnpm run build > /dev/null 2>&1
 
