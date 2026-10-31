@@ -23,7 +23,7 @@ export const simplify_prompt_symbols = (params: { prompt: string }): string => {
     '[Pasted text]'
   )
   simplified = simplified.replace(
-    /#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "(?:\\.|[^"\\])*")?\)/g,
+    /#Website\([^ ]+(?: [a-fA-F0-9]+:\d+(?: "(?:\\.|[^"\\])*")?)?\)/g,
     '[Website]'
   )
   simplified = simplified.replace(/ ?#AccuracyBoost ?/g, ' ')

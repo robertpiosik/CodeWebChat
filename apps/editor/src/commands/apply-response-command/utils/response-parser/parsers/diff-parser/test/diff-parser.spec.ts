@@ -195,7 +195,7 @@ describe('diff-parser', () => {
 
     it('parses multiple diffs with git headers each in their own markdown code block', () => {
       const test_case =
-        'multiple-files-with-git-headers-separate-markdown-blocks'
+        'multi-files-git-sep-blocks'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
