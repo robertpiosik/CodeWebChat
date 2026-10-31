@@ -43,7 +43,7 @@ export const map_display_pos_to_raw_pos = (params: {
   let last_raw_index = 0
 
   const regex =
-    /`([^`]+)`|(#Changes\([^)]+\))|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "(?:\\.|[^"\\])*")?\))|(#AccuracyBoost)|(#Snippet\("((?:\\.|[^"\\])*)"\))/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage|CommitDiff)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "(?:\\.|[^"\\])*")?\))|(#AccuracyBoost)|(#Snippet\("((?:\\.|[^"\\])*)"\))/g
   let match
 
   while ((match = regex.exec(params.raw_text)) !== null) {
@@ -173,7 +173,7 @@ export const map_raw_pos_to_display_pos = (params: {
   let last_raw_index = 0
 
   const regex =
-    /`([^`]+)`|(#Changes\([^)]+\))|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "(?:\\.|[^"\\])*")?\))|(#AccuracyBoost)|(#Snippet\("((?:\\.|[^"\\])*)"\))/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|CommitMessage|CommitDiff)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(#Fragment\((.+?):(\d+):(\d+)-(\d+):(\d+)\))|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^ ]+ [a-fA-F0-9]+:\d+(?: "(?:\\.|[^"\\])*")?\))|(#AccuracyBoost)|(#Snippet\("((?:\\.|[^"\\])*)"\))/g
   let match
 
   while ((match = regex.exec(params.raw_text)) !== null) {

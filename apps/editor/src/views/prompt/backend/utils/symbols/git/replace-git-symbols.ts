@@ -583,7 +583,7 @@ export const replace_commit_symbol = async (params: {
   symbols_cache?: SymbolCacheManager
 }): Promise<{ instructions: string[]; commit_definitions: string }> => {
   const regex =
-    /#(Commit|CommitMessage)\(([^:]+):([a-fA-F0-9]+)\s*(?:"((?:[^"\\]|\\.)*)")?\)/g
+    /#(Commit|CommitMessage|CommitDiff)\(([^:]+):([a-fA-F0-9]+)\s*(?:"((?:[^"\\]|\\.)*)")?\)/g
 
   const result_instructions = [...params.instructions]
   let commit_definitions = ''
@@ -670,7 +670,7 @@ export const replace_commit_symbol = async (params: {
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-|-$/g, '')
 
-        if (symbol_type === 'Commit') {
+        if (symbol_type === 'Commit' || symbol_type === 'CommitDiff') {
           const diff = execFileSync('git', ['show', commit_hash], {
             cwd: target_folder.uri.fsPath,
             encoding: 'utf-8'
@@ -697,7 +697,7 @@ export const replace_commit_symbol = async (params: {
             diff,
             commit_hash,
             path_prefix: workspace_folders.length > 1 ? folder_name : undefined,
-            commit_message: commit_message_body
+            commit_message: symbol_type === 'CommitDiff' ? undefined : commit_message_body
           })
         } else {
           if (commit_message_body) {
@@ -705,7 +705,7 @@ export const replace_commit_symbol = async (params: {
           }
         }
 
-        if (symbol_type === 'Commit') {
+        if (symbol_type === 'Commit' || symbol_type === 'CommitDiff') {
           const replacement = ` [${title_text}](#${link_hash}) `
           if (params.symbols_cache) {
             params.symbols_cache.set(full_match, replacement, replacement_text)

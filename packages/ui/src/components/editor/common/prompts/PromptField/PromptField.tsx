@@ -71,7 +71,7 @@ export namespace PromptField {
     on_commit_click?: (
       repo_name: string,
       commit_hash: string,
-      type: 'Commit' | 'CommitMessage',
+      type: 'Commit' | 'CommitMessage' | 'CommitDiff',
       commit_message?: string
     ) => void
     on_skill_click?: (agent: string, repo: string, skill_name: string) => void

@@ -591,7 +591,7 @@ export interface PreviewCommitSymbolMessage extends BaseMessage {
   repo_name: string
   commit_hash: string
   commit_message?: string
-  type: 'Commit' | 'CommitMessage'
+  type: 'Commit' | 'CommitMessage' | 'CommitDiff'
 }
 
 export interface PreviewSkillSymbolMessage extends BaseMessage {

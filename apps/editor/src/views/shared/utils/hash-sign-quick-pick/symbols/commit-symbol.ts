@@ -54,8 +54,12 @@ export const handle_commit_item = async (
         }))
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = folder_items
-        quick_pick.placeholder = 'Select a repository'
-        quick_pick.title = 'Repositories'
+        quick_pick.placeholder = t(
+          'views.shared.utils.hash-sign-quick-pick.commit-symbol.select-repository'
+        )
+        quick_pick.title = t(
+          'views.shared.utils.hash-sign-quick-pick.commit-symbol.repositories'
+        )
         quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
         const last_repo = extension_context.workspaceState.get<string>(
@@ -155,8 +159,12 @@ export const handle_commit_item = async (
       while (true) {
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = commit_items
-        quick_pick.placeholder = 'Select a commit to reference'
-        quick_pick.title = 'Commits'
+        quick_pick.placeholder = t(
+          'views.shared.utils.hash-sign-quick-pick.commit-symbol.select-commit'
+        )
+        quick_pick.title = t(
+          'views.shared.utils.hash-sign-quick-pick.commit-symbol.commits'
+        )
         quick_pick.buttons = [vscode.QuickInputButtons.Back]
         quick_pick.matchOnDetail = true
 
@@ -211,6 +219,7 @@ export const handle_commit_item = async (
         last_selected_commit = selected_commit
         const commit_hash = selected_commit.label
         let diff_token_count = 0
+        let diff_only_token_count = 0
         let msg_token_count = 0
 
         try {
@@ -236,38 +245,69 @@ export const handle_commit_item = async (
             encoding: 'utf-8'
           }).toString()
 
-          const replacement_text = build_commit_changes_markdown({
+          const replacement_text_with_msg = build_commit_changes_markdown({
             diff,
             commit_hash,
             path_prefix:
               workspace_folders.length > 1 ? selected_folder.name : undefined,
             commit_message
           })
-          diff_token_count = Math.ceil(replacement_text.length / 4)
+          diff_token_count = Math.ceil(replacement_text_with_msg.length / 4)
+
+          const replacement_text_only_diff = build_commit_changes_markdown({
+            diff,
+            commit_hash,
+            path_prefix:
+              workspace_folders.length > 1 ? selected_folder.name : undefined
+          })
+          diff_only_token_count = Math.ceil(
+            replacement_text_only_diff.length / 4
+          )
         } catch {
           // ignore
         }
 
         const action_quick_pick = vscode.window.createQuickPick()
+        const diff_with_message_label = t(
+          'views.shared.utils.hash-sign-quick-pick.commit-symbol.diff-with-message'
+        )
+        const message_only_label = t(
+          'views.shared.utils.hash-sign-quick-pick.commit-symbol.message-only'
+        )
+        const diff_only_label = t(
+          'views.shared.utils.hash-sign-quick-pick.commit-symbol.diff-only'
+        )
+
         const action_items = [
           {
-            label: 'Diff with commit message',
+            label: diff_with_message_label,
             description:
               diff_token_count > 0
                 ? display_token_count(diff_token_count)
                 : undefined
           },
           {
-            label: 'Commit message only',
+            label: message_only_label,
             description:
               msg_token_count > 0
                 ? display_token_count(msg_token_count)
                 : undefined
+          },
+          {
+            label: diff_only_label,
+            description:
+              diff_only_token_count > 0
+                ? display_token_count(diff_only_token_count)
+                : undefined
           }
         ]
         action_quick_pick.items = action_items
-        action_quick_pick.placeholder = 'Select what to include'
-        action_quick_pick.title = 'Commit Reference Options'
+        action_quick_pick.placeholder = t(
+          'views.shared.utils.hash-sign-quick-pick.commit-symbol.select-what-to-include'
+        )
+        action_quick_pick.title = t(
+          'views.shared.utils.hash-sign-quick-pick.commit-symbol.options'
+        )
         action_quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
         const last_action = extension_context.workspaceState.get<string>(
@@ -319,9 +359,11 @@ export const handle_commit_item = async (
         )
 
         const symbol =
-          selected_action.label === 'Commit message only'
+          selected_action.label === message_only_label
             ? 'CommitMessage'
-            : 'Commit'
+            : selected_action.label === diff_only_label
+              ? 'CommitDiff'
+              : 'Commit'
         const message = (selected_commit.detail || '').replace(/"/g, '\\"')
 
         on_insert(

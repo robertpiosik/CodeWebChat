@@ -175,12 +175,14 @@
   }
 
   &--commit &__icon::before,
-  &--commitmessage &__icon::before {
+  &--commitmessage &__icon::before,
+  &--commitdiff &__icon::before {
     content: '\eafc';
   }
 
   &--commit &__text,
-  &--commitmessage &__text {
+  &--commitmessage &__text,
+  &--commitdiff &__text {
     cursor: pointer;
 
     &:hover {

@@ -58,7 +58,7 @@ export const replace_symbols = async (params: {
 
   if (
     processed_instructions.some(
-      (i) => i.includes('#Commit(') || i.includes('#CommitMessage(')
+      (i) => i.includes('#Commit(') || i.includes('#CommitMessage(') || i.includes('#CommitDiff(')
     )
   ) {
     const result = await replace_commit_symbol({

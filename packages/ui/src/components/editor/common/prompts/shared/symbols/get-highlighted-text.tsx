@@ -67,7 +67,7 @@ export const get_highlighted_text = (params: {
     '#SavedContext\\((?:WorkspaceState|JSON) "(?:\\\\.|[^"\\\\])*"\\)'
 
   const commit_regex_part =
-    '#(?:Commit|CommitMessage)\\([^:]+:[^\\s"]+ "(?:\\\\.|[^"\\\\])*"\\)'
+    '#(?:Commit|CommitMessage|CommitDiff)\\([^:]+:[^\\s"]+ "(?:\\\\.|[^"\\\\])*"\\)'
 
   const fragment_regex_part = '#Fragment\\(.+?:\\d+:\\d+-\\d+:\\d+\\)'
 
@@ -151,7 +151,7 @@ export const get_highlighted_text = (params: {
         )}"</span></span>`
       }
       const commit_match = part.match(
-        /^#(Commit|CommitMessage)\(([^:]+):([^\s"]+) "((?:\\.|[^"\\])*)"\)$/
+        /^#(Commit|CommitMessage|CommitDiff)\(([^:]+):([^\s"]+) "((?:\\.|[^"\\])*)"\)$/
       )
       if (part && commit_match) {
         const symbol = commit_match[1]

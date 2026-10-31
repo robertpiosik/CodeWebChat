@@ -13,7 +13,7 @@ export const simplify_prompt_symbols = (params: { prompt: string }): string => {
     '[Saved context]'
   )
   simplified = simplified.replace(
-    /#Commit\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\)/g,
+    /#(?:Commit|CommitMessage|CommitDiff)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\)/g,
     '[Commit]'
   )
   simplified = simplified.replace(/#Skill\([^)]+\)/g, '[Skill]')

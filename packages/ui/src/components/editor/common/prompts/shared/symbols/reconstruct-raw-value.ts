@@ -49,7 +49,8 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
       }
     } else if (
       el.dataset.type === 'commit-symbol' ||
-      el.dataset.type === 'commitmessage-symbol'
+      el.dataset.type === 'commitmessage-symbol' ||
+      el.dataset.type === 'commitdiff-symbol'
     ) {
       const repo_name = el.dataset.repoName
       const commit_hash = el.dataset.commitHash
@@ -63,7 +64,11 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + short_hash.length)
         const symbolName =
-          el.dataset.type === 'commit-symbol' ? 'Commit' : 'CommitMessage'
+          el.dataset.type === 'commit-symbol'
+            ? 'Commit'
+            : el.dataset.type === 'commitmessage-symbol'
+              ? 'CommitMessage'
+              : 'CommitDiff'
         return `${prefix}#${symbolName}(${repo_name}:${commit_hash} "${commit_message.replace(
           /"/g,
           '\\"'

@@ -143,7 +143,8 @@ export const create_handle_input_click = ({
 
       const commit_symbol_element =
         text_element.closest<HTMLElement>('[data-type="commit-symbol"]') ||
-        text_element.closest<HTMLElement>('[data-type="commitmessage-symbol"]')
+        text_element.closest<HTMLElement>('[data-type="commitmessage-symbol"]') ||
+        text_element.closest<HTMLElement>('[data-type="commitdiff-symbol"]')
       if (commit_symbol_element) {
         const repo_name = commit_symbol_element.dataset.repoName
         const commit_hash = commit_symbol_element.dataset.commitHash
@@ -151,7 +152,9 @@ export const create_handle_input_click = ({
         const type =
           commit_symbol_element.dataset.type === 'commitmessage-symbol'
             ? 'CommitMessage'
-            : 'Commit'
+            : commit_symbol_element.dataset.type === 'commitdiff-symbol'
+              ? 'CommitDiff'
+              : 'Commit'
         if (repo_name && commit_hash) {
           props.on_commit_click?.(repo_name, commit_hash, type, commit_message)
         }

@@ -6,7 +6,7 @@ export const handle_preview_commit_symbol = async (message: {
   repo_name: string
   commit_hash: string
   commit_message?: string
-  type: 'Commit' | 'CommitMessage'
+  type: 'Commit' | 'CommitMessage' | 'CommitDiff'
 }) => {
   try {
     const message_escaped = message.commit_message

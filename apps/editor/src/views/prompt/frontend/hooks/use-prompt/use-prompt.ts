@@ -117,7 +117,7 @@ export const use_prompt = (vscode: any) => {
   const handle_commit_click = (
     repo_name: string,
     commit_hash: string,
-    type: 'Commit' | 'CommitMessage',
+    type: 'Commit' | 'CommitMessage' | 'CommitDiff',
     commit_message?: string
   ) => {
     post_message(vscode, {
