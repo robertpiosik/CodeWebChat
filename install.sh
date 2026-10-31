@@ -1,19 +1,50 @@
 #!/usr/bin/env bash
 set -e
 
-# Check required dependencies
-for cmd in git node pnpm; do
-  if ! command -v $cmd &> /dev/null; then
-    echo "Error: $cmd is required but not installed."
+# Check git first
+if ! command -v git &> /dev/null; then
+  echo "Error: git is required but not installed."
+  exit 1
+fi
+
+# Validate Node.js version and attempt to switch if necessary
+check_node_version() {
+  if ! command -v node &> /dev/null; then return 1; fi
+  local version
+  version=$(node -v | sed 's/^v//' | cut -d. -f1)
+  [ "$version" -ge 20 ]
+}
+
+if ! check_node_version; then
+  echo "Node.js version 20 or higher is required (Node.js 22.x is recommended)."
+  echo "Attempting to switch to Node.js 22 using a version manager..."
+  
+  SWITCHED=false
+
+  # Try nvm
+  export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+  if [ -s "$NVM_DIR/nvm.sh" ]; then
+    \. "$NVM_DIR/nvm.sh"
+  fi
+  if type nvm >/dev/null 2>&1; then
+    nvm install 22 && nvm use 22 && SWITCHED=true
+  fi
+
+  # Try fnm
+  if [ "$SWITCHED" = false ] && command -v fnm &> /dev/null; then
+    eval "$(fnm env)"
+    fnm install 22 && fnm use 22 && SWITCHED=true
+  fi
+
+  # Try n
+  if [ "$SWITCHED" = false ] && command -v n &> /dev/null; then
+    n 22 && SWITCHED=true
+  fi
+
+  if [ "$SWITCHED" = false ]; then
+    echo "Error: Failed to find a compatible Node.js version and no supported version manager (nvm, fnm, n) could switch it."
     exit 1
   fi
-done
-
-# Validate Node.js version
-NODE_MAJOR_VERSION=$(node -v | sed 's/^v//' | cut -d. -f1)
-if [ "$NODE_MAJOR_VERSION" -lt 20 ]; then
-  echo "Error: Node.js version 20 or higher is required (Node.js 22.x is recommended)."
-  exit 1
 fi
 
 # Detect available editors in the system
@@ -72,11 +103,11 @@ cd "$TMP_DIR"
 REPO_DIR="$TMP_DIR"
 
 echo "Installing dependencies..."
-pnpm install > /dev/null 2>&1
+npx --yes pnpm install > /dev/null 2>&1
 
 echo "Building extension..."
 cd apps/editor
-pnpm run build > /dev/null 2>&1
+npx --yes pnpm run build > /dev/null 2>&1
 
 VSIX_FILE=$(ls *.vsix | head -n 1)
 
