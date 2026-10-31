@@ -122,10 +122,11 @@ install_to_editor() {
   local idx=$1
   local editor_name="${AVAILABLE_EDITORS[$idx]}"
   local editor_cmd="${EDITOR_CMDS[$idx]}"
-  echo "Installing to $editor_name..."
   $editor_cmd --install-extension "$VSIX_FILE" --force > /dev/null 2>&1
+  echo "Successfully installed to $editor_name!"
 }
 
+echo ""
 if [[ "$choice" == "a" || "$choice" == "A" ]]; then
   for i in "${!AVAILABLE_EDITORS[@]}"; do
     install_to_editor $i
@@ -133,6 +134,3 @@ if [[ "$choice" == "a" || "$choice" == "A" ]]; then
 else
   install_to_editor $((choice-1))
 fi
-
-echo ""
-echo "Done!"

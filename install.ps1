@@ -94,10 +94,11 @@ if (!$vsixFile) {
 function Install-ToEditor($idx) {
     $editorName = $availableEditors[$idx]
     $editorCmd = $editorCmds[$idx]
-    Write-Host "Installing to $editorName..."
     & $editorCmd --install-extension $vsixFile.FullName --force *>$null
+    Write-Host "Successfully installed to $editorName!"
 }
 
+Write-Host ""
 if ($choice -eq 'a' -or $choice -eq 'A') {
     for ($i = 0; $i -lt $availableEditors.Count; $i++) {
         Install-ToEditor $i
@@ -105,8 +106,6 @@ if ($choice -eq 'a' -or $choice -eq 'A') {
 } else {
     Install-ToEditor ([int]$choice - 1)
 }
-
-Write-Host "`nDone!"
 
 Pause
 Pop-Location
