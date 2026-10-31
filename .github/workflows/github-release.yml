@@ -80,9 +80,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.package_version.outputs.version }}
-          name: ${{ steps.package_version.outputs.raw_version }} - editor
+          name: ${{ steps.package_version.outputs.raw_version }} - Editor
           body_path: release_notes.md
-          discussion_category_name: "Announcements"
           files: apps/editor/*.vsix
 
   release-browser:
@@ -153,7 +152,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.browser_version.outputs.version }}
-          name: ${{ steps.browser_version.outputs.raw_version }} - browser
+          name: ${{ steps.browser_version.outputs.raw_version }} - Browser
           body_path: release_notes_browser.md
-          discussion_category_name: "Announcements"
           files: apps/browser/*.zip
