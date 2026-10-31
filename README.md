@@ -18,8 +18,8 @@
 </p>
 
 <p align="center">
-  <strong>Windows (PowerShell)</strong><br>
-  <code>irm https://raw.githubusercontent.com/robertpiosik/CodeWebChat/main/install.ps1 | iex</code>
+  <strong>Windows</strong><br>
+  <code>powershell -c "irm https://raw.githubusercontent.com/robertpiosik/CodeWebChat/main/install.ps1 | iex"</code>
 </p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
