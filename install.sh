@@ -66,12 +66,12 @@ fi
 TMP_DIR=$(mktemp -d)
 trap 'rm -rf "$TMP_DIR"' EXIT
 echo ""
-echo "Cloning repository into temporary directory ($TMP_DIR)..."
+echo "Cloning repository into temporary directory..."
 git clone -q --depth 1 https://github.com/robertpiosik/CodeWebChat.git "$TMP_DIR"
 cd "$TMP_DIR"
 REPO_DIR="$TMP_DIR"
 
-echo "Installing workspace dependencies..."
+echo "Installing dependencies..."
 pnpm install > /dev/null 2>&1
 
 echo "Building VS Code extension..."
@@ -84,9 +84,6 @@ if [ -z "$VSIX_FILE" ]; then
   echo "Error: VSIX file was not generated."
   exit 1
 fi
-
-echo "Build successful: $VSIX_FILE"
-echo ""
 
 install_to_editor() {
   local idx=$1
