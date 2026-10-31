@@ -2,7 +2,7 @@
 set -e
 
 # Check required dependencies
-for cmd in git node pnpm; do
+for cmd in git node npm; do
   if ! command -v $cmd &> /dev/null; then
     echo "Error: $cmd is required but not installed."
     exit 1
@@ -73,12 +73,12 @@ REPO_DIR="$TMP_DIR"
 
 echo ""
 echo "Installing workspace dependencies..."
-pnpm install
+npm install
 
 echo ""
 echo "Building VS Code extension..."
 cd apps/editor
-pnpm run build
+npm run build
 
 VSIX_FILE=$(ls *.vsix | head -n 1)
 
