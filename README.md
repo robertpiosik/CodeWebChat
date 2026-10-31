@@ -8,14 +8,12 @@
   </a>
 </p>
 
-<p align="center"><strong>Blazing fast AI coding</strong></p>
-
-<p align="center"><i>Markdown prompts for chatbots, APIs, and CLIs with seamless integration</i></p>
+<p align="center"><strong>Markdown prompts for chatbots, APIs, and CLIs with seamless integration</strong></p>
 
 <p align="center">Build from source for VS Code, Cursor, or Antigravity:</p>
 
 <p align="center">
-  <code><sup>curl -fsSL https://raw.githubusercontent.com/robertpiosik/CodeWebChat/master/install.sh | bash</sup></code>
+  <code>curl -fsSL https://raw.githubusercontent.com/robertpiosik/CodeWebChat/master/install.sh | bash</code>
 </p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
