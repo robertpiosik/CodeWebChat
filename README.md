@@ -10,7 +10,7 @@
 
 <p align="center"><strong>Markdown prompts for chatbots, APIs, and CLIs with seamless integration</strong></p>
 
-<p align="center">Build from source for VS Code, Cursor, or Antigravity:</p>
+<p align="center">Securely build from source for VS Code, Cursor, or Antigravity:</p>
 
 <p align="center">
   <code>curl -fsSL https://raw.githubusercontent.com/robertpiosik/CodeWebChat/main/install.sh | bash</code>
