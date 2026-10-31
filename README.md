@@ -13,7 +13,13 @@
 <p align="center">Securely build from source for VS Code, Cursor, or Antigravity:</p>
 
 <p align="center">
+  <strong>macOS / Linux</strong><br>
   <code>curl -fsSL https://raw.githubusercontent.com/robertpiosik/CodeWebChat/main/install.sh | bash</code>
+</p>
+
+<p align="center">
+  <strong>Windows (PowerShell)</strong><br>
+  <code>irm https://raw.githubusercontent.com/robertpiosik/CodeWebChat/main/install.ps1 | iex</code>
 </p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>

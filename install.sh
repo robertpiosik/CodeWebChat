@@ -62,10 +62,12 @@ check_editor "VS Code" "code"
 check_editor "VS Code Insiders" "code-insiders"
 check_editor "VSCodium" "codium"
 check_editor "Cursor" "cursor"
-check_editor "Windsurf" "windsurf"
+check_editor "Antigravity" "agy-ide"
 
 if [ ${#AVAILABLE_EDITORS[@]} -eq 0 ]; then
   echo "Error: No supported editors found in your PATH."
+  echo "Hint: If your editor is installed, you might need to add its command to your PATH."
+  echo "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and run a command like: \"Shell Command: Install 'cursor' command in PATH\" (or 'agy-ide' etc.)."
   exit 1
 fi
 
