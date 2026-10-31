@@ -76,11 +76,13 @@ git clone -c core.longpaths=true -q --depth 1 https://github.com/robertpiosik/Co
 Push-Location $tmpDir
 
 Write-Host "Installing dependencies..."
+$ErrorActionPreference = "Continue"
 npx.cmd --yes pnpm install *>$null
 
 Write-Host "Building extension..."
 Set-Location apps/editor
 npx.cmd --yes pnpm run build *>$null
+$ErrorActionPreference = "Stop"
 
 $vsixFile = Get-ChildItem *.vsix | Select-Object -First 1
 
@@ -94,7 +96,9 @@ if (!$vsixFile) {
 function Install-ToEditor($idx) {
     $editorName = $availableEditors[$idx]
     $editorCmd = $editorCmds[$idx]
+    $ErrorActionPreference = "Continue"
     & $editorCmd --install-extension $vsixFile.FullName --force *>$null
+    $ErrorActionPreference = "Stop"
     Write-Host "Successfully installed to $editorName!"
 }
 
