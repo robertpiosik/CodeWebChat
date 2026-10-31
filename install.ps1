@@ -3,12 +3,14 @@ $ErrorActionPreference = "Stop"
 # Check git first
 if (!(Get-Command git -ErrorAction SilentlyContinue)) {
     Write-Host "Error: git is required but not installed." -ForegroundColor Red
+    Pause
     exit 1
 }
 
 # Validate Node.js version
 if (!(Get-Command node -ErrorAction SilentlyContinue)) {
     Write-Host "Error: Node.js version 20 or higher is required." -ForegroundColor Red
+    Pause
     exit 1
 }
 
@@ -16,6 +18,7 @@ $nodeVersion = (node -v) -replace '^v',''
 $major = [int]($nodeVersion -split '\.')[0]
 if ($major -lt 20) {
     Write-Host "Error: Node.js version 20 or higher is required (Node.js 22.x is recommended)." -ForegroundColor Red
+    Pause
     exit 1
 }
 
@@ -40,6 +43,7 @@ if ($availableEditors.Count -eq 0) {
     Write-Host "Hint: If your editor is installed, you might need to add its command to your PATH." -ForegroundColor Yellow
     Write-Host "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and run a command like: `"Shell Command: Install 'cursor' command in PATH`" (or 'agy-ide', etc.)." -ForegroundColor Yellow
     Write-Host "Error: No supported editors found in your PATH." -ForegroundColor Red
+    Pause
     exit 1
 }
 
@@ -54,10 +58,12 @@ $choice = Read-Host "Select editor(s) to install CWC to"
 
 if ($choice -eq 'q' -or $choice -eq 'Q') {
     Write-Host "Installation cancelled."
+    Pause
     exit 0
 } elseif ($choice -ne 'a' -and $choice -ne 'A') {
     if ($choice -notmatch '^[0-9]+$' -or [int]$choice -lt 1 -or [int]$choice -gt $availableEditors.Count) {
         Write-Host "Error: Invalid choice. Exiting." -ForegroundColor Red
+        Pause
         exit 1
     }
 }
@@ -81,6 +87,7 @@ $vsixFile = Get-ChildItem *.vsix | Select-Object -First 1
 if (!$vsixFile) {
     Write-Host "Error: VSIX file was not generated." -ForegroundColor Red
     Pop-Location
+    Pause
     exit 1
 }
 
@@ -101,6 +108,7 @@ if ($choice -eq 'a' -or $choice -eq 'A') {
 
 Write-Host "`nDone!"
 
+Pause
 Pop-Location
 # Run cleanup in the background to avoid sluggish exit
 Start-Process -FilePath "cmd.exe" -ArgumentList "/c", "rmdir", "/s", "/q", "`"$tmpDir`"" -WindowStyle Hidden
