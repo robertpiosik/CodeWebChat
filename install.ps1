@@ -40,7 +40,7 @@ Check-Editor "Cursor" "cursor"
 Check-Editor "Antigravity" "agy-ide"
 
 Write-Host "`nHint: If your editor is installed but not listed, you might need to add its command to your PATH." -ForegroundColor Yellow
-Write-Host "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and run a command like: `"Shell Command: Install 'cursor' command in PATH`" (or 'agy-ide', etc.)." -ForegroundColor Yellow
+Write-Host "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and find a command like: `"Shell Command: Install 'cursor' command in PATH`" (or 'agy-ide', etc.)." -ForegroundColor Yellow
 
 if ($availableEditors.Count -eq 0) {
     Write-Host "Error: No supported editors found in your PATH." -ForegroundColor Red

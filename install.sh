@@ -66,7 +66,7 @@ check_editor "Antigravity" "agy-ide"
 
 echo ""
 echo "Hint: If your editor is installed but not listed, you might need to add its command to your PATH."
-echo "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and run a command like: \"Shell Command: Install 'cursor' command in PATH\" (or 'agy-ide' etc.)."
+echo "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and find a command like: \"Shell Command: Install 'cursor' command in PATH\" (or 'agy-ide' etc.)."
 
 if [ ${#AVAILABLE_EDITORS[@]} -eq 0 ]; then
   echo "Error: No supported editors found in your PATH."
