@@ -7,15 +7,16 @@
     </picture>
   </a>
 </p>
-<p align="center">
-  <code>curl -fsSL https://raw.githubusercontent.com/robertpiosik/CodeWebChat/master/install.sh | bash</code>
-</p>
 
 <p align="center"><strong>Blazing fast AI coding</strong></p>
 
 <p align="center"><i>Markdown prompts with seamless integration</i></p>
 
 <p align="center">VS Code · Cursor · Antigravity</br><strong>Free chatbots</strong> · APIs · CLIs</p>
+
+<p align="center">
+  <code>curl -fsSL https://raw.githubusercontent.com/robertpiosik/CodeWebChat/master/install.sh | bash</code>
+</p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
