@@ -71,16 +71,16 @@ if ($choice -eq 'q' -or $choice -eq 'Q') {
 $tmpDir = Join-Path $env:TEMP ("CWC_Install_" + [Guid]::NewGuid().ToString().Substring(0,8))
 New-Item -ItemType Directory -Path $tmpDir | Out-Null
 Write-Host "`nCloning repository into temporary directory..."
-git clone -q --depth 1 https://github.com/robertpiosik/CodeWebChat.git $tmpDir
+git clone -c core.longpaths=true -q --depth 1 https://github.com/robertpiosik/CodeWebChat.git $tmpDir
 
 Push-Location $tmpDir
 
 Write-Host "Installing dependencies..."
-npx --yes pnpm install *>$null
+npx.cmd --yes pnpm install *>$null
 
 Write-Host "Building extension..."
 Set-Location apps/editor
-npx --yes pnpm run build *>$null
+npx.cmd --yes pnpm run build *>$null
 
 $vsixFile = Get-ChildItem *.vsix | Select-Object -First 1
 
