@@ -25,7 +25,7 @@ jobs:
         id: package_version
         run: |
           VERSION=$(jq -r .version apps/editor/package.json)
-          echo "version=$VERSION-editor" >> $GITHUB_OUTPUT
+          echo "version=$VERSION-vscode" >> $GITHUB_OUTPUT
           echo "raw_version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Check if tag exists
@@ -64,9 +64,9 @@ jobs:
       - name: Generate Release Notes
         if: steps.check_tag.outputs.exists == 'false'
         run: |
-          PREV_TAG=$(git describe --tags --match "*-editor" --abbrev=0 2>/dev/null || echo "")
+          PREV_TAG=$(git describe --tags --match "*-vscode" --abbrev=0 2>/dev/null || echo "")
 
-          echo "### What's new in the editor extension:" > release_notes.md
+          echo "### What's new in the VS Code extension:" > release_notes.md
           echo "" >> release_notes.md
 
           if [ -n "$PREV_TAG" ]; then
@@ -80,7 +80,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.package_version.outputs.version }}
-          name: ${{ steps.package_version.outputs.raw_version }} - Editor
+          name: ${{ steps.package_version.outputs.raw_version }} - VS Code
           body_path: release_notes.md
           files: apps/editor/*.vsix
 
