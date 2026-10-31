@@ -25,7 +25,7 @@ jobs:
         id: package_version
         run: |
           VERSION=$(jq -r .version apps/editor/package.json)
-          echo "version=v$VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Check if tag exists
         id: check_tag
@@ -63,7 +63,7 @@ jobs:
       - name: Generate Release Notes
         if: steps.check_tag.outputs.exists == 'false'
         run: |
-          PREV_TAG=$(git describe --tags --match "v*" --abbrev=0 2>/dev/null || echo "")
+          PREV_TAG=$(git describe --tags --match "[0-9]*" --abbrev=0 2>/dev/null || echo "")
 
           echo "### What's new in the editor extension:" > release_notes.md
           echo "" >> release_notes.md
@@ -97,8 +97,8 @@ jobs:
         id: browser_version
         run: |
           VERSION=$(jq -r .version apps/browser/src/manifest.json)
-          echo "version=browser-v$VERSION" >> $GITHUB_OUTPUT
-          echo "raw_version=v$VERSION" >> $GITHUB_OUTPUT
+          echo "version=browser-$VERSION" >> $GITHUB_OUTPUT
+          echo "raw_version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Check if tag exists
         id: check_tag
@@ -136,7 +136,7 @@ jobs:
       - name: Generate Release Notes
         if: steps.check_tag.outputs.exists == 'false'
         run: |
-          PREV_TAG=$(git describe --tags --match "browser-v*" --abbrev=0 2>/dev/null || echo "")
+          PREV_TAG=$(git describe --tags --match "browser-*" --abbrev=0 2>/dev/null || echo "")
 
           echo "### What's new in the browser extension:" > release_notes_browser.md
           echo "" >> release_notes_browser.md
