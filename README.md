@@ -10,9 +10,9 @@
 
 <p align="center"><strong>Blazing fast AI coding</strong></p>
 
-<p align="center"><i>Markdown prompts with seamless integration</i></p>
+<p align="center"><i>Markdown prompts for chatbots, APIs, and CLIs with seamless integration</i></p>
 
-<p align="center">VS Code · Cursor · Antigravity</br><strong>Free chatbots</strong> · APIs · CLIs</p>
+<p align="center">VS Code · Cursor · Antigravity</br>Free chatbots · APIs · CLIs</p>
 
 <p align="center">
   <code>curl -fsSL https://raw.githubusercontent.com/robertpiosik/CodeWebChat/master/install.sh | bash</code>
