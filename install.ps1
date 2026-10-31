@@ -39,9 +39,10 @@ Check-Editor "VSCodium" "codium"
 Check-Editor "Cursor" "cursor"
 Check-Editor "Antigravity" "agy-ide"
 
+Write-Host "`nHint: If your editor is installed but not listed, you might need to add its command to your PATH." -ForegroundColor Yellow
+Write-Host "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and run a command like: `"Shell Command: Install 'cursor' command in PATH`" (or 'agy-ide', etc.)." -ForegroundColor Yellow
+
 if ($availableEditors.Count -eq 0) {
-    Write-Host "Hint: If your editor is installed, you might need to add its command to your PATH." -ForegroundColor Yellow
-    Write-Host "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and run a command like: `"Shell Command: Install 'cursor' command in PATH`" (or 'agy-ide', etc.)." -ForegroundColor Yellow
     Write-Host "Error: No supported editors found in your PATH." -ForegroundColor Red
     Pause
     exit 1
@@ -51,7 +52,9 @@ Write-Host ""
 for ($i = 0; $i -lt $availableEditors.Count; $i++) {
     Write-Host "$($i + 1)) $($availableEditors[$i])"
 }
-Write-Host "a) All detected editors"
+if ($availableEditors.Count -gt 1) {
+    Write-Host "a) All detected editors"
+}
 Write-Host "q) Quit`n"
 
 $choice = Read-Host "Select where to install CWC to"
@@ -60,7 +63,13 @@ if ($choice -eq 'q' -or $choice -eq 'Q') {
     Write-Host "Installation cancelled."
     Pause
     exit 0
-} elseif ($choice -ne 'a' -and $choice -ne 'A') {
+} elseif ($choice -eq 'a' -or $choice -eq 'A') {
+    if ($availableEditors.Count -le 1) {
+        Write-Host "Error: Invalid choice. Exiting." -ForegroundColor Red
+        Pause
+        exit 1
+    }
+} else {
     if ($choice -notmatch '^[0-9]+$' -or [int]$choice -lt 1 -or [int]$choice -gt $availableEditors.Count) {
         Write-Host "Error: Invalid choice. Exiting." -ForegroundColor Red
         Pause

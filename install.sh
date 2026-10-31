@@ -64,10 +64,12 @@ check_editor "VSCodium" "codium"
 check_editor "Cursor" "cursor"
 check_editor "Antigravity" "agy-ide"
 
+echo ""
+echo "Hint: If your editor is installed but not listed, you might need to add its command to your PATH."
+echo "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and run a command like: \"Shell Command: Install 'cursor' command in PATH\" (or 'agy-ide' etc.)."
+
 if [ ${#AVAILABLE_EDITORS[@]} -eq 0 ]; then
   echo "Error: No supported editors found in your PATH."
-  echo "Hint: If your editor is installed, you might need to add its command to your PATH."
-  echo "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and run a command like: \"Shell Command: Install 'cursor' command in PATH\" (or 'agy-ide' etc.)."
   exit 1
 fi
 
@@ -75,7 +77,9 @@ echo ""
 for i in "${!AVAILABLE_EDITORS[@]}"; do
   echo "$((i+1))) ${AVAILABLE_EDITORS[$i]}"
 done
-echo "a) All detected editors"
+if [ ${#AVAILABLE_EDITORS[@]} -gt 1 ]; then
+  echo "a) All detected editors"
+fi
 echo "q) Quit"
 echo ""
 
@@ -89,7 +93,12 @@ fi
 if [[ "$choice" == "q" || "$choice" == "Q" ]]; then
   echo "Installation cancelled."
   exit 0
-elif [[ "$choice" != "a" && "$choice" != "A" ]]; then
+elif [[ "$choice" == "a" || "$choice" == "A" ]]; then
+  if [ ${#AVAILABLE_EDITORS[@]} -le 1 ]; then
+    echo "Invalid choice. Exiting."
+    exit 1
+  fi
+else
   if ! [[ "$choice" =~ ^[0-9]+$ ]] || [ "$choice" -lt 1 ] || [ "$choice" -gt "${#AVAILABLE_EDITORS[@]}" ]; then
     echo "Invalid choice. Exiting."
     exit 1
