@@ -65,20 +65,20 @@ fi
 
 TMP_DIR=$(mktemp -d)
 trap 'rm -rf "$TMP_DIR"' EXIT
-echo ""
-echo "Cloning repository into temporary directory ($TMP_DIR)..."
-git clone --depth 1 https://github.com/robertpiosik/CodeWebChat.git "$TMP_DIR"
+echo -n "Cloning repository into temporary directory ($TMP_DIR)... "
+git clone -q --depth 1 https://github.com/robertpiosik/CodeWebChat.git "$TMP_DIR"
+echo "Done"
 cd "$TMP_DIR"
 REPO_DIR="$TMP_DIR"
 
-echo ""
-echo "Installing workspace dependencies..."
-pnpm install
+echo -n "Installing workspace dependencies... "
+pnpm install > /dev/null 2>&1
+echo "Done"
 
-echo ""
-echo "Building VS Code extension..."
+echo -n "Building VS Code extension... "
 cd apps/editor
-pnpm run build
+pnpm run build > /dev/null 2>&1
+echo "Done"
 
 VSIX_FILE=$(ls *.vsix | head -n 1)
 
@@ -87,6 +87,7 @@ if [ -z "$VSIX_FILE" ]; then
   exit 1
 fi
 
+echo ""
 echo "Build successful: $VSIX_FILE"
 echo ""
 
@@ -94,8 +95,9 @@ install_to_editor() {
   local idx=$1
   local editor_name="${AVAILABLE_EDITORS[$idx]}"
   local editor_cmd="${EDITOR_CMDS[$idx]}"
-  echo "Installing to $editor_name..."
-  $editor_cmd --install-extension "$VSIX_FILE" --force
+  echo -n "Installing to $editor_name... "
+  $editor_cmd --install-extension "$VSIX_FILE" --force > /dev/null 2>&1
+  echo "Done"
 }
 
 if [[ "$choice" == "a" || "$choice" == "A" ]]; then
