@@ -7,19 +7,42 @@ if (!(Get-Command git -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
-# Validate Node.js version
-if (!(Get-Command node -ErrorAction SilentlyContinue)) {
-    Write-Host "Error: Node.js version 20 or higher is required." -ForegroundColor Red
-    Pause
-    exit 1
+# Validate Node.js version and attempt to switch if necessary
+$nodeIsGood = $false
+if (Get-Command node -ErrorAction SilentlyContinue) {
+    $nodeVersion = (node -v) -replace '^v',''
+    $major = [int]($nodeVersion -split '\.')[0]
+    if ($major -ge 20) {
+        $nodeIsGood = $true
+    }
 }
 
-$nodeVersion = (node -v) -replace '^v',''
-$major = [int]($nodeVersion -split '\.')[0]
-if ($major -lt 20) {
-    Write-Host "Error: Node.js version 20 or higher is required (Node.js 22.x is recommended)." -ForegroundColor Red
-    Pause
-    exit 1
+if (!$nodeIsGood) {
+    Write-Host "Node.js version 20 or higher is required (Node.js 22.x is recommended)."
+    Write-Host "Attempting to switch to Node.js 22 using a version manager..."
+    
+    $switched = $false
+
+    # Try fnm
+    if (!$switched -and (Get-Command fnm -ErrorAction SilentlyContinue)) {
+        fnm env --shell powershell | Out-String | Invoke-Expression
+        fnm install 22
+        fnm use 22
+        $switched = $true
+    }
+
+    # Try nvm
+    if (!$switched -and (Get-Command nvm -ErrorAction SilentlyContinue)) {
+        nvm install 22
+        nvm use 22
+        $switched = $true
+    }
+
+    if (!$switched) {
+        Write-Host "Error: Failed to find a compatible Node.js version and no supported version manager (fnm, nvm) could switch it." -ForegroundColor Red
+        Pause
+        exit 1
+    }
 }
 
 # Detect available editors in the system
