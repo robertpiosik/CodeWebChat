@@ -2,20 +2,20 @@ $ErrorActionPreference = "Stop"
 
 # Check git first
 if (!(Get-Command git -ErrorAction SilentlyContinue)) {
-    Write-Error "Error: git is required but not installed."
+    Write-Host "Error: git is required but not installed." -ForegroundColor Red
     exit 1
 }
 
 # Validate Node.js version
 if (!(Get-Command node -ErrorAction SilentlyContinue)) {
-    Write-Error "Error: Node.js version 20 or higher is required."
+    Write-Host "Error: Node.js version 20 or higher is required." -ForegroundColor Red
     exit 1
 }
 
 $nodeVersion = (node -v) -replace '^v',''
 $major = [int]($nodeVersion -split '\.')[0]
 if ($major -lt 20) {
-    Write-Error "Error: Node.js version 20 or higher is required (Node.js 22.x is recommended)."
+    Write-Host "Error: Node.js version 20 or higher is required (Node.js 22.x is recommended)." -ForegroundColor Red
     exit 1
 }
 
@@ -39,7 +39,7 @@ Check-Editor "Antigravity" "agy-ide"
 if ($availableEditors.Count -eq 0) {
     Write-Host "Hint: If your editor is installed, you might need to add its command to your PATH." -ForegroundColor Yellow
     Write-Host "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and run a command like: `"Shell Command: Install 'cursor' command in PATH`" (or 'agy-ide', etc.)." -ForegroundColor Yellow
-    Write-Error "Error: No supported editors found in your PATH."
+    Write-Host "Error: No supported editors found in your PATH." -ForegroundColor Red
     exit 1
 }
 
@@ -57,7 +57,7 @@ if ($choice -eq 'q' -or $choice -eq 'Q') {
     exit 0
 } elseif ($choice -ne 'a' -and $choice -ne 'A') {
     if ($choice -notmatch '^[0-9]+$' -or [int]$choice -lt 1 -or [int]$choice -gt $availableEditors.Count) {
-        Write-Error "Invalid choice. Exiting."
+        Write-Host "Error: Invalid choice. Exiting." -ForegroundColor Red
         exit 1
     }
 }
@@ -79,7 +79,7 @@ npx --yes pnpm run build *>$null
 $vsixFile = Get-ChildItem *.vsix | Select-Object -First 1
 
 if (!$vsixFile) {
-    Write-Error "Error: VSIX file was not generated."
+    Write-Host "Error: VSIX file was not generated." -ForegroundColor Red
     Pop-Location
     exit 1
 }
