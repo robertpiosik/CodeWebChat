@@ -24,7 +24,7 @@
 
 ## Introduction
 
-Autofill free chatbots in your web browser, send API requests, or headlessly invoke agentic CLIs using [markdown prompts](#markdown-prompts) with seamless integration. It's free!
+Autofill chatbots in your web browser, send API requests, or headlessly invoke agentic CLIs using [markdown prompts](#markdown-prompts) with seamless integration. It's free!
 
 > [!TIP]
 >
