@@ -12,10 +12,10 @@
 
 <p align="center"><i>Markdown prompts for chatbots, APIs, and CLIs with seamless integration</i></p>
 
-<p align="center">VS Code · Cursor · Antigravity</br>Free chatbots · APIs · CLIs</p>
+<p align="center">Build from source for VS Code, Cursor, or Antigravity:</p>
 
 <p align="center">
-  <code>curl -fsSL https://raw.githubusercontent.com/robertpiosik/CodeWebChat/master/install.sh | bash</code>
+  <small><code>curl -fsSL https://raw.githubusercontent.com/robertpiosik/CodeWebChat/master/install.sh | bash</code></small>
 </p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
