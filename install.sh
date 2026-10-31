@@ -71,7 +71,7 @@ if [ ${#AVAILABLE_EDITORS[@]} -eq 0 ]; then
   exit 1
 fi
 
-echo "Detected editors:"
+echo ""
 for i in "${!AVAILABLE_EDITORS[@]}"; do
   echo "$((i+1))) ${AVAILABLE_EDITORS[$i]}"
 done
@@ -81,9 +81,9 @@ echo ""
 
 # Handle interactive prompt even if script is piped via curl | bash
 if [ -c /dev/tty ]; then
-  read -p "Select editor(s) to install CWC to: " choice < /dev/tty
+  read -p "Select where to install CWC to: " choice < /dev/tty
 else
-  read -p "Select editor(s) to install CWC to: " choice
+  read -p "Select where to install CWC to: " choice
 fi
 
 if [[ "$choice" == "q" || "$choice" == "Q" ]]; then

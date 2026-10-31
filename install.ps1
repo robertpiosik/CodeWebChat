@@ -47,14 +47,14 @@ if ($availableEditors.Count -eq 0) {
     exit 1
 }
 
-Write-Host "Detected editors:"
+Write-Host ""
 for ($i = 0; $i -lt $availableEditors.Count; $i++) {
     Write-Host "$($i + 1)) $($availableEditors[$i])"
 }
 Write-Host "a) All detected editors"
 Write-Host "q) Quit`n"
 
-$choice = Read-Host "Select editor(s) to install CWC to"
+$choice = Read-Host "Select where to install CWC to"
 
 if ($choice -eq 'q' -or $choice -eq 'Q') {
     Write-Host "Installation cancelled."
