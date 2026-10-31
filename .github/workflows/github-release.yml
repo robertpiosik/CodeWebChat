@@ -3,7 +3,7 @@ name: Create GitHub Release
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'apps/editor/package.json'
       - 'apps/browser/src/manifest.json'

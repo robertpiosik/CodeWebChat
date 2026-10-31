@@ -13,7 +13,7 @@
 <p align="center">Build from source for VS Code, Cursor, or Antigravity:</p>
 
 <p align="center">
-  <code>curl -fsSL https://raw.githubusercontent.com/robertpiosik/CodeWebChat/master/install.sh | bash</code>
+  <code>curl -fsSL https://raw.githubusercontent.com/robertpiosik/CodeWebChat/main/install.sh | bash</code>
 </p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>

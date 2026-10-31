@@ -3,7 +3,7 @@ name: Deploy VS Code Extension
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'apps/editor/package.json'
   workflow_dispatch:
