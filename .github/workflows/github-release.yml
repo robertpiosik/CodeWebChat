@@ -38,29 +38,6 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Setup Node.js
-        if: steps.check_tag.outputs.exists == 'false'
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Setup PNPM
-        if: steps.check_tag.outputs.exists == 'false'
-        uses: pnpm/action-setup@v2
-        with:
-          version: 9.6.0
-          run_install: false
-
-      - name: Install dependencies
-        if: steps.check_tag.outputs.exists == 'false'
-        run: pnpm i
-
-      - name: Build VS Code extension
-        if: steps.check_tag.outputs.exists == 'false'
-        run: |
-          cd apps/editor
-          pnpm build
-
       - name: Generate Release Notes
         if: steps.check_tag.outputs.exists == 'false'
         run: |
@@ -75,14 +52,13 @@ jobs:
             git log --pretty=format:"* %s (%h)" -- apps/editor >> release_notes.md
           fi
 
-      - name: Create Release and Upload VSIX
+      - name: Create Release
         if: steps.check_tag.outputs.exists == 'false'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.package_version.outputs.version }}
           name: ${{ steps.package_version.outputs.raw_version }} - VS Code
           body_path: release_notes.md
-          files: apps/editor/*.vsix
 
   release-browser:
     runs-on: ubuntu-latest
@@ -110,29 +86,6 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Setup Node.js
-        if: steps.check_tag.outputs.exists == 'false'
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Setup PNPM
-        if: steps.check_tag.outputs.exists == 'false'
-        uses: pnpm/action-setup@v2
-        with:
-          version: 9.6.0
-          run_install: false
-
-      - name: Install dependencies
-        if: steps.check_tag.outputs.exists == 'false'
-        run: pnpm i
-
-      - name: Build Browser extension
-        if: steps.check_tag.outputs.exists == 'false'
-        run: |
-          cd apps/browser
-          pnpm build
-
       - name: Generate Release Notes
         if: steps.check_tag.outputs.exists == 'false'
         run: |
@@ -147,11 +100,10 @@ jobs:
             git log --pretty=format:"* %s (%h)" -- apps/browser >> release_notes_browser.md
           fi
 
-      - name: Create Release and Upload ZIPs
+      - name: Create Release
         if: steps.check_tag.outputs.exists == 'false'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.browser_version.outputs.version }}
           name: ${{ steps.browser_version.outputs.raw_version }} - Browser
           body_path: release_notes_browser.md
-          files: apps/browser/*.zip
