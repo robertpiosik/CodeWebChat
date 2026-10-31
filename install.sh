@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-echo "========================================"
-echo " Code Web Chat - Installation Script"
-echo "========================================"
-echo ""
-
 # Check required dependencies
 for cmd in git node pnpm; do
   if ! command -v $cmd &> /dev/null; then
@@ -53,9 +48,9 @@ echo ""
 
 # Handle interactive prompt even if script is piped via curl | bash
 if [ -c /dev/tty ]; then
-  read -p "Select editor(s) to install to: " choice < /dev/tty
+  read -p "Select editor(s) to install CWC to: " choice < /dev/tty
 else
-  read -p "Select editor(s) to install to: " choice
+  read -p "Select editor(s) to install CWC to: " choice
 fi
 
 if [[ "$choice" == "q" || "$choice" == "Q" ]]; then
