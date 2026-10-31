@@ -209,7 +209,7 @@ describe('standard-parser', () => {
     })
 
     it('extracts file path from commented backticks even with intermediate text before code block', () => {
-      const test_case = 'path-backticks-comment-text'
+      const test_case = 'path-in-backticks-comment-with-intermediate-text'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
