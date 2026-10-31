@@ -47,9 +47,9 @@ jobs:
           echo "" >> release_notes.md
 
           if [ -n "$PREV_TAG" ]; then
-            git log ${PREV_TAG}..HEAD --pretty=format:"* %s (%h)" -- apps/editor >> release_notes.md
+            git log ${PREV_TAG}..HEAD --pretty=format:"* %s (%h)" -- apps/editor packages/ui/src/components/editor >> release_notes.md
           else
-            git log --pretty=format:"* %s (%h)" -- apps/editor >> release_notes.md
+            git log --pretty=format:"* %s (%h)" -- apps/editor packages/ui/src/components/editor >> release_notes.md
           fi
 
       - name: Create Release
@@ -95,9 +95,9 @@ jobs:
           echo "" >> release_notes_browser.md
 
           if [ -n "$PREV_TAG" ]; then
-            git log ${PREV_TAG}..HEAD --pretty=format:"* %s (%h)" -- apps/browser >> release_notes_browser.md
+            git log ${PREV_TAG}..HEAD --pretty=format:"* %s (%h)" -- apps/browser packages/shared/src/constants/chatbots.ts packages/ui/src/components/browser >> release_notes_browser.md
           else
-            git log --pretty=format:"* %s (%h)" -- apps/browser >> release_notes_browser.md
+            git log --pretty=format:"* %s (%h)" -- apps/browser packages/shared/src/constants/chatbots.ts packages/ui/src/components/browser >> release_notes_browser.md
           fi
 
       - name: Create Release
