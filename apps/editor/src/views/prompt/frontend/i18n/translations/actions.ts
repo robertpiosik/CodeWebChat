@@ -17,7 +17,7 @@ export const actions = {
     hu: 'Beállítások',
     bg: 'Настройки'
   },
-  'action.add-new': {
+  'actions.add-new': {
     en: 'Add New',
     pl: 'Dodaj...',
     'zh-cn': '添加新项',
@@ -53,7 +53,7 @@ export const actions = {
     hu: 'Másolás vágólapra',
     bg: 'Копиране в клипборда'
   },
-  'action.pin': {
+  'actions.pin': {
     en: 'Pin',
     pl: 'Przypnij',
     'zh-cn': '固定',
@@ -71,7 +71,7 @@ export const actions = {
     hu: 'Rögzítés',
     bg: 'Фиксиране'
   },
-  'action.unpin': {
+  'actions.unpin': {
     en: 'Unpin',
     pl: 'Odepnij',
     'zh-cn': '取消固定',
@@ -125,7 +125,7 @@ export const actions = {
     hu: 'Törlés',
     bg: 'Изтриване'
   },
-  'action.insert': {
+  'actions.insert': {
     en: 'Insert',
     pl: 'Wstaw',
     'zh-cn': '插入',

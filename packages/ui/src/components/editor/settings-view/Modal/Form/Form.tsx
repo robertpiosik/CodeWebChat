@@ -8,6 +8,7 @@ export type FormProps = {
   on_save: () => void
   on_cancel?: () => void
   save_label?: string
+  cancel_label?: string
   custom_footer_left?: React.ReactNode
 }
 
@@ -17,6 +18,7 @@ export const Form: React.FC<FormProps> = ({
   on_save,
   on_cancel,
   save_label = 'Save',
+  cancel_label = 'Cancel',
   custom_footer_left
 }) => {
   return (
@@ -29,7 +31,7 @@ export const Form: React.FC<FormProps> = ({
         )}
         {on_cancel && (
           <Button is_secondary on_click={on_cancel}>
-            Cancel
+            {cancel_label}
           </Button>
         )}
         <Button on_click={on_save}>{save_label}</Button>

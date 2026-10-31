@@ -37,12 +37,9 @@ export const rename_command = () => {
         try {
           await vscode.workspace.fs.stat(vscode.Uri.file(new_path))
           vscode.window.showInformationMessage(
-            t(
-              'command.rename-command.info.file-or-folder-already-exists' as any,
-              {
-                name: path.basename(new_path)
-              }
-            )
+            t('command.rename-command.info.file-or-folder-already-exists', {
+              name: path.basename(new_path)
+            })
           )
           return
         } catch {

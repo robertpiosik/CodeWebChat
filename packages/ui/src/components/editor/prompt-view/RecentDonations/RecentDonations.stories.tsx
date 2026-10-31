@@ -4,6 +4,14 @@ export default {
   component: RecentDonations
 }
 
+const sample_translations = {
+  about:
+    'Hey there! Donating is a great way to show your support for the project. Thank you!',
+  platforms: 'Platforms',
+  wallets: 'Wallets',
+  scan_qr: 'Scan QR'
+}
+
 const sample_donations: RecentDonationsProps['donations'] = [
   {
     support_message:
@@ -29,6 +37,7 @@ export const Default = () => {
       is_revalidating={false}
       on_fetch_next_page={() => console.log('Fetching next page…')}
       has_more={false}
+      translations={sample_translations}
     />
   )
 }
@@ -41,6 +50,7 @@ export const Loading = () => {
       is_revalidating={false}
       on_fetch_next_page={() => console.log('Fetching next page…')}
       has_more={false}
+      translations={sample_translations}
     />
   )
 }
@@ -54,6 +64,7 @@ export const Revalidating = () => {
       is_revalidating={true}
       on_fetch_next_page={() => console.log('Fetching next page…')}
       has_more={true}
+      translations={sample_translations}
     />
   )
 }

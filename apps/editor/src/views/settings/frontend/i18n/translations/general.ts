@@ -724,7 +724,7 @@ export const translations = {
   },
   'general.prompt.snippets.title': {
     en: 'Snippets',
-    pl: 'Fragmenty',
+    pl: 'Snippety',
     'zh-cn': '片段',
     ja: 'スニペット',
     'zh-tw': '片段',
@@ -742,7 +742,7 @@ export const translations = {
   },
   'general.prompt.snippets.description': {
     en: 'Manage snippets of each prompt type.',
-    pl: 'Zarządzaj fragmentami dla każdego typu promptu.',
+    pl: 'Zarządzaj snippetami dla każdego typu promptu.',
     'zh-cn': '管理每种提示类型的片段。',
     ja: '各プロンプトタイプのスニペットを管理します。',
     'zh-tw': '管理每種提示類型的片段。',
@@ -760,7 +760,7 @@ export const translations = {
   },
   'general.prompt.snippets.item': {
     en: 'snippet',
-    pl: 'fragment',
+    pl: 'snippet',
     'zh-cn': '片段',
     ja: 'スニペット',
     'zh-tw': '片段',
@@ -778,7 +778,7 @@ export const translations = {
   },
   'general.prompt.snippets.items': {
     en: 'snippets',
-    pl: 'fragmenty',
+    pl: 'snippety',
     'zh-cn': '片段',
     ja: 'スニペット',
     'zh-tw': '片段',
@@ -796,7 +796,7 @@ export const translations = {
   },
   'general.prompt.snippets.items-many': {
     en: 'snippets',
-    pl: 'fragmentów',
+    pl: 'snippetów',
     'zh-cn': '片段',
     ja: 'スニペット',
     'zh-tw': '片段',

@@ -99,8 +99,8 @@ export const Header: React.FC<Props> = (props) => {
                         on_selected_history_item_change={() => {}}
                         on_response_history_item_remove={() => {}}
                         translations={{
-                          applied_manually: '',
-                          reject: ''
+                          applied_manually: t('main.applied-manually'),
+                          reject: t('action.reject')
                         }}
                       />
                     )}
@@ -128,8 +128,8 @@ export const Header: React.FC<Props> = (props) => {
                         on_selected_history_item_change={() => {}}
                         on_response_history_item_remove={() => {}}
                         translations={{
-                          applied_manually: '',
-                          reject: ''
+                          applied_manually: t('main.applied-manually'),
+                          reject: t('action.reject')
                         }}
                       />
                     )}
@@ -176,8 +176,8 @@ export const Header: React.FC<Props> = (props) => {
                         on_selected_history_item_change={() => {}}
                         on_response_history_item_remove={() => {}}
                         translations={{
-                          applied_manually: '',
-                          reject: ''
+                          applied_manually: t('main.applied-manually'),
+                          reject: t('action.reject')
                         }}
                       />
                     )}

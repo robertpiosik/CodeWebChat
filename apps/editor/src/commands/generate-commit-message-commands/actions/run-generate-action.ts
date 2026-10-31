@@ -167,7 +167,7 @@ export const run_generate_action = async (params: {
                 'command.generate-commit-message-command.action-quick-pick.title'
               )
               quick_pick.placeholder = t(
-                'command.generate-commit-message-command.action-quick-pick.placeholder' as any,
+                'command.generate-commit-message-command.action-quick-pick.placeholder',
                 { tokens: display_token_count(base_token_count) }
               )
               quick_pick.ignoreFocusOut = show_back_button

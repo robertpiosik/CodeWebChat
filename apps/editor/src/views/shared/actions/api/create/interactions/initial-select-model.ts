@@ -176,7 +176,7 @@ export const initial_select_model = async (
     const input = await vscode.window.showInputBox({
       title: t('common.select-model.title'),
       prompt: t(
-        'views.shared.actions.api.update.interactions.edit-model-for-api-config.prompt.enter-model-name' as any
+        'views.shared.actions.api.update.interactions.edit-model-for-api-config.prompt.enter-model-name'
       ),
       ignoreFocusOut: true
     })

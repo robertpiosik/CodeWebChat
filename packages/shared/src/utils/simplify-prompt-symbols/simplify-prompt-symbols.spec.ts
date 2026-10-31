@@ -54,8 +54,13 @@ describe('simplify_prompt_symbols', () => {
   })
 
   it('should replace #AccuracyBoost', () => {
-    const prompt = 'Run #AccuracyBoost task'
-    expect(simplify_prompt_symbols({ prompt })).toBe('Run [Accuracy boost] task')
+    const prompt = 'Do #AccuracyBoost task'
+    expect(simplify_prompt_symbols({ prompt })).toBe('Do task')
+  })
+
+  it('should replace #Snippet', () => {
+    const prompt = 'Do task #Snippet("my snippet")'
+    expect(simplify_prompt_symbols({ prompt })).toBe('Do task')
   })
 
   it('should handle multiple replacements', () => {

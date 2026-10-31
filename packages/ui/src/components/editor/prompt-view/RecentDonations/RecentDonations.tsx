@@ -80,7 +80,7 @@ export type RecentDonationsProps = {
   on_fetch_next_page: () => void
   has_more?: boolean
   on_show_qr_code: (wallet: { name: string; address: string }) => void
-  translations?: {
+  translations: {
     about: string
     platforms: string
     wallets: string
@@ -147,14 +147,11 @@ export const RecentDonations: React.FC<RecentDonationsProps> = (props) => {
     <>
       <Scrollable top_shadow>
         <div className={styles.container}>
-          <div className={styles.about}>
-            {props.translations?.about ??
-              'Hey there! Donating is a great way to show your support for the project. Thank you!'}
-          </div>
+          <div className={styles.about}>{props.translations.about}</div>
           <div className={styles.platforms}>
             <UiFieldset
               is_collapsed={is_platforms_collapsed}
-              label={props.translations?.platforms ?? 'Platforms'}
+              label={props.translations.platforms}
               on_toggle_collapsed={() =>
                 set_platforms_collapsed(!is_platforms_collapsed)
               }
@@ -178,7 +175,7 @@ export const RecentDonations: React.FC<RecentDonationsProps> = (props) => {
           <div className={styles.wallets}>
             <UiFieldset
               is_collapsed={is_wallets_collapsed}
-              label={props.translations?.wallets ?? 'Wallets'}
+              label={props.translations.wallets}
               on_toggle_collapsed={() =>
                 set_wallets_collapsed(!is_wallets_collapsed)
               }
@@ -191,7 +188,7 @@ export const RecentDonations: React.FC<RecentDonationsProps> = (props) => {
                       {wallet.address}
                     </span>
                     <TextButton on_click={() => props.on_show_qr_code(wallet)}>
-                      {props.translations?.scan_qr ?? 'Scan QR'}
+                      {props.translations.scan_qr}
                     </TextButton>
                   </div>
                 </div>

@@ -1,5 +1,5 @@
 export const translations = {
-  'action.add-new': {
+  'actions.add-new': {
     en: 'Add New',
     pl: 'Dodaj...',
     'zh-cn': '添加新的',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Új Hozzáadása',
     bg: 'Добавяне на нов'
   },
-  'action.insert': {
+  'actions.insert': {
     en: 'Insert configuration',
     pl: 'Wstaw konfigurację',
     'zh-cn': '插入配置',
@@ -35,7 +35,7 @@ export const translations = {
     hu: 'Konfiguráció beszúrása',
     bg: 'Вмъкване на конфигурация'
   },
-  'action.pin': {
+  'actions.pin': {
     en: 'Pin',
     pl: 'Przypnij',
     'zh-cn': '固定',
@@ -53,7 +53,7 @@ export const translations = {
     hu: 'Rögzítés',
     bg: 'Закрепване'
   },
-  'action.unpin': {
+  'actions.unpin': {
     en: 'Unpin',
     pl: 'Odepnij',
     'zh-cn': '取消固定',
@@ -70,5 +70,41 @@ export const translations = {
     cs: 'Odepnout',
     hu: 'Rögzítés törlése',
     bg: 'Откачане'
+  },
+  'actions.save': {
+    en: 'Save',
+    pl: 'Zapisz',
+    'zh-cn': '保存',
+    ja: '保存',
+    'zh-tw': '儲存',
+    de: 'Speichern',
+    es: 'Guardar',
+    fr: 'Enregistrer',
+    'pt-br': 'Salvar',
+    ru: 'Сохранить',
+    ko: '저장',
+    it: 'Salva',
+    tr: 'Kaydet',
+    cs: 'Uložit',
+    hu: 'Mentés',
+    bg: 'Запази'
+  },
+  'actions.cancel': {
+    en: 'Cancel',
+    pl: 'Anuluj',
+    'zh-cn': '取消',
+    ja: 'キャンセル',
+    'zh-tw': '取消',
+    de: 'Abbrechen',
+    es: 'Cancelar',
+    fr: 'Annuler',
+    'pt-br': 'Cancelar',
+    ru: 'Отмена',
+    ko: '취소',
+    it: 'Annulla',
+    tr: 'İptal',
+    cs: 'Zrušit',
+    hu: 'Mégse',
+    bg: 'Отказ'
   }
 } as const

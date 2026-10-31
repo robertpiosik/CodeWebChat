@@ -467,14 +467,16 @@ export const Settings = () => {
             title={
               updating_instruction.index !== undefined
                 ? updating_instruction.key.startsWith('templates')
-                  ? 'Edit Template'
-                  : 'Edit Snippet'
+                  ? t('edit-template-form.title.edit-template')
+                  : t('edit-template-form.title.edit-snippet')
                 : updating_instruction.key.startsWith('templates')
-                  ? 'Add Template'
-                  : 'Add Snippet'
+                  ? t('edit-template-form.title.add-template')
+                  : t('edit-template-form.title.add-snippet')
             }
             on_save={edit_instruction_save_handler}
             on_cancel={edit_instruction_cancel_handler}
+            save_label={t('actions.save')}
+            cancel_label={t('actions.cancel')}
           >
             <EditPromptInstructionForm
               instruction={updating_instruction.instruction}

@@ -569,7 +569,7 @@ export const handle_patch_repair = async (params: {
 
             vscode.window.showErrorMessage(
               t(
-                'views.prompt.handlers.handle-patch-repair.error.applying-changes-generic-error' as any,
+                'views.prompt.handlers.handle-patch-repair.error.applying-changes-generic-error',
                 {
                   msg: error_msg
                 }

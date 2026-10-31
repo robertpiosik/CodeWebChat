@@ -34,7 +34,7 @@ export const edit_model_for_api_configuration = async (params: {
   if (!base_url) {
     vscode.window.showErrorMessage(
       t(
-        'views.shared.actions.api.update.interactions.edit-model-for-api-config.error.base-url-not-found-for-provider' as any,
+        'views.shared.actions.api.update.interactions.edit-model-for-api-config.error.base-url-not-found-for-provider',
         {
           name: params.api_configuration.provider_name
         }

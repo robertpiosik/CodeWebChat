@@ -940,7 +940,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           })
           vscode.window.showErrorMessage(
             t(
-              'views.prompt.prompt-view-provider.error.error-handling-message' as any,
+              'views.prompt.prompt-view-provider.error.error-handling-message',
               {
                 message: get_error_message(error)
               }

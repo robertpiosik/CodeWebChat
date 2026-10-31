@@ -94,7 +94,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                         type: 'warning' as const,
                         slot_right: (
                           <Button on_click={() => props.on_add_provider()}>
-                            {t('action.add-new')}
+                            {t('actions.add-new')}
                           </Button>
                         ),
                         message: t('api.providers.missing-provider')
@@ -117,7 +117,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               }}
               on_add={props.on_add_provider}
               translations={{
-                add_title: t('action.add-new'),
+                add_title: t('actions.add-new'),
                 item_text: t('api.providers.item'),
                 items_text: t('api.providers.items')
               }}
@@ -168,7 +168,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                   <>
                     <IconButton
                       codicon_icon="insert"
-                      title={t('action.insert')}
+                      title={t('actions.insert')}
                       on_click={() =>
                         props.on_add_provider({ insertion_index: index })
                       }
@@ -203,7 +203,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                     type: 'warning',
                     slot_right: (
                       <Button on_click={() => props.on_add_api_configuration()}>
-                        {t('action.add-new')}
+                        {t('actions.add-new')}
                       </Button>
                     ),
                     message: t('api.configurations.missing-model')
@@ -222,7 +222,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               }}
               on_add={props.on_add_api_configuration}
               translations={{
-                add_title: t('action.add-new'),
+                add_title: t('actions.add-new'),
                 item_text: t('api.configurations.item'),
                 items_text: t('api.configurations.items'),
                 items_text_many: t('api.configurations.items-many')
@@ -262,7 +262,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                   <IconButton
                     codicon_icon={config.is_pinned ? 'pinned' : 'pin'}
                     title={
-                      config.is_pinned ? t('action.unpin') : t('action.pin')
+                      config.is_pinned ? t('actions.unpin') : t('actions.pin')
                     }
                     on_click={(e) => {
                       e.stopPropagation()
@@ -271,7 +271,7 @@ export const ApiSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                   />
                   <IconButton
                     codicon_icon="insert"
-                    title={t('action.insert')}
+                    title={t('actions.insert')}
                     on_click={() =>
                       props.on_add_api_configuration({
                         insertion_index: index

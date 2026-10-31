@@ -82,7 +82,7 @@ export const EditPromptInstructionForm: React.FC<Props> = (props) => {
               placeholder={
                 props.type === 'template'
                   ? t('edit-template-form.name.placeholder')
-                  : 'E.g., Rule 1'
+                  : t('edit-template-form.snippet.name.placeholder')
               }
             />
           </UiField>
@@ -91,7 +91,7 @@ export const EditPromptInstructionForm: React.FC<Props> = (props) => {
             label={
               props.type === 'template'
                 ? t('edit-template-form.template.label')
-                : 'Instruction'
+                : t('edit-template-form.snippet.instruction.label')
             }
             html_for="value"
           >
@@ -102,7 +102,7 @@ export const EditPromptInstructionForm: React.FC<Props> = (props) => {
               placeholder={
                 props.type === 'template'
                   ? t('edit-template-form.template.placeholder')
-                  : 'E.g., Do not use relative imports.'
+                  : t('edit-template-form.snippet.instruction.placeholder')
               }
               on_change={set_value}
               on_focus={() => {}}

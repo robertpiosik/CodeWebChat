@@ -15,7 +15,7 @@ type Props = {
   on_response_history_item_remove: (created_at: number) => void
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void
-  translations?: {
+  translations: {
     applied_manually: string
     reject: string
   }
@@ -76,7 +76,7 @@ export const Responses: React.FC<Props> = (props) => {
                     ]
                   }
                 >
-                  {props.translations?.applied_manually || 'Applied manually'}
+                  {props.translations.applied_manually}
                 </span>
               )}
             </div>
@@ -116,7 +116,7 @@ export const Responses: React.FC<Props> = (props) => {
               onClick={() => {
                 props.on_response_history_item_remove(item.created_at)
               }}
-              title={props.translations?.reject || 'Reject'}
+              title={props.translations.reject}
             >
               <span className="codicon codicon-close-small" />
             </button>

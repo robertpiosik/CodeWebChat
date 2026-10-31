@@ -164,7 +164,7 @@ export class PromptViewApiCallsManager {
               const msg =
                 tokens_per_second && total_tokens
                   ? t(
-                      'service.prompt-view-api-calls-manager.progress.receiving-stats' as any,
+                      'service.prompt-view-api-calls-manager.progress.receiving-stats',
                       {
                         total_tokens: display_token_count(total_tokens),
                         tokens_per_second: Math.round(tokens_per_second)

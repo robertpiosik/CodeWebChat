@@ -410,7 +410,7 @@ export const translations = {
   },
   'views.shared.utils.hash-sign-quick-pick.snippet-symbol.no-instructions': {
     en: 'No snippets found.',
-    pl: 'Nie znaleziono fragmentów.',
+    pl: 'Nie znaleziono snippetów.',
     'zh-cn': '未找到片段。',
     ja: 'スニペットが見つかりません。',
     'zh-tw': '未找到片段。',
@@ -428,7 +428,7 @@ export const translations = {
   },
   'views.shared.utils.hash-sign-quick-pick.snippet-symbol.placeholder': {
     en: 'Select snippet',
-    pl: 'Wybierz fragment',
+    pl: 'Wybierz snippet',
     'zh-cn': '选择片段',
     ja: 'スニペットを選択',
     'zh-tw': '選擇片段',
@@ -446,7 +446,7 @@ export const translations = {
   },
   'views.shared.utils.hash-sign-quick-pick.snippet-symbol.title': {
     en: 'Snippets',
-    pl: 'Fragmenty',
+    pl: 'Snippety',
     'zh-cn': '片段',
     ja: 'スニペット',
     'zh-tw': '片段',
@@ -462,23 +462,23 @@ export const translations = {
     hu: 'Töredékek',
     bg: 'Фрагменти'
   },
-  'views.shared.utils.hash-sign-quick-pick.quick-pick.snippets.label': {
-    en: 'Snippets',
-    pl: 'Fragmenty',
+  'views.shared.utils.hash-sign-quick-pick.quick-pick.snippet.label': {
+    en: 'Snippet',
+    pl: 'Snippet',
     'zh-cn': '片段',
     ja: 'スニペット',
     'zh-tw': '片段',
     de: 'Schnipsel',
-    es: 'Fragmentos',
-    fr: 'Extraits',
-    'pt-br': 'Snippets',
-    ru: 'Фрагменты',
+    es: 'Fragmento',
+    fr: 'Extrait',
+    'pt-br': 'Snippet',
+    ru: 'Фрагмент',
     ko: '스니펫',
     it: 'Snippet',
-    tr: 'Parçalar',
-    cs: 'Fragmenty',
-    hu: 'Töredékek',
-    bg: 'Фрагменти'
+    tr: 'Parça',
+    cs: 'Fragment',
+    hu: 'Töredék',
+    bg: 'Фрагмент'
   },
   'views.shared.utils.hash-sign-quick-pick.quick-pick.snippets.description': {
     en: 'Reusable instructions',

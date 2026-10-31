@@ -125,42 +125,42 @@ export const verify_model = async (params: {
       switch (status) {
         case 400:
           reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.error.bad-request' as any
+            'views.shared.actions.api.create.interactions.verify-model.error.bad-request'
           )
           break
         case 401:
           reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.error.authentication' as any
+            'views.shared.actions.api.create.interactions.verify-model.error.authentication'
           )
           break
         case 403:
           reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.error.forbidden' as any
+            'views.shared.actions.api.create.interactions.verify-model.error.forbidden'
           )
           break
         case 404:
           reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.error.not-found' as any
+            'views.shared.actions.api.create.interactions.verify-model.error.not-found'
           )
           break
         case 429:
           reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.error.rate-limit' as any
+            'views.shared.actions.api.create.interactions.verify-model.error.rate-limit'
           )
           break
         case 500:
           reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.error.internal' as any
+            'views.shared.actions.api.create.interactions.verify-model.error.internal'
           )
           break
         case 502:
           reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.error.bad-gateway' as any
+            'views.shared.actions.api.create.interactions.verify-model.error.bad-gateway'
           )
           break
         case 503:
           reason = t(
-            'views.shared.actions.api.create.interactions.verify-model.error.service-unavailable' as any
+            'views.shared.actions.api.create.interactions.verify-model.error.service-unavailable'
           )
           break
       }

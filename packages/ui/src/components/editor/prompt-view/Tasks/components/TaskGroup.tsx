@@ -100,7 +100,7 @@ export const TaskGroup: React.FC<TaskGroupProps> = (props) => {
                 depth * 20
               }px)`
             }}
-            title={props.add_text || 'Add task'}
+            title={props.add_text}
           />
           {props.add_text && (
             <span className={styles['add-text']}>{props.add_text}</span>

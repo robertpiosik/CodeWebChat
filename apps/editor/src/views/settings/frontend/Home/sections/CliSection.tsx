@@ -84,7 +84,7 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             }}
             on_add={props.on_add_cli_configuration}
             translations={{
-              add_title: t('action.add-new'),
+              add_title: t('actions.add-new'),
               item_text: t('agents.configurations.item'),
               items_text: t('agents.configurations.items'),
               items_text_many: t('agents.configurations.items-many')
@@ -134,7 +134,9 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
               <>
                 <IconButton
                   codicon_icon={config.is_pinned ? 'pinned' : 'pin'}
-                  title={config.is_pinned ? t('action.unpin') : t('action.pin')}
+                  title={
+                    config.is_pinned ? t('actions.unpin') : t('actions.pin')
+                  }
                   on_click={(e) => {
                     e.stopPropagation()
                     props.on_toggle_pinned_cli_configuration(config)
@@ -142,7 +144,7 @@ export const CliSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
                 />
                 <IconButton
                   codicon_icon="insert"
-                  title={t('action.insert')}
+                  title={t('actions.insert')}
                   on_click={() =>
                     props.on_add_cli_configuration({
                       insertion_index: index

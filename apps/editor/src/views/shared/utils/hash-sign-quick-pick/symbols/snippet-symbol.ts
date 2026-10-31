@@ -22,7 +22,7 @@ export const handle_snippet_item = async (
   if (!instructions || instructions.length === 0) {
     const selection = await vscode.window.showInformationMessage(
       t(
-        'views.shared.utils.hash-sign-quick-pick.snippet-symbol.no-instructions' as any
+        'views.shared.utils.hash-sign-quick-pick.snippet-symbol.no-instructions'
       ),
       t('common.open-settings')
     )
@@ -39,10 +39,10 @@ export const handle_snippet_item = async (
     label: i.name
   }))
   quick_pick.placeholder = t(
-    'views.shared.utils.hash-sign-quick-pick.snippet-symbol.placeholder' as any
+    'views.shared.utils.hash-sign-quick-pick.snippet-symbol.placeholder'
   )
   quick_pick.title = t(
-    'views.shared.utils.hash-sign-quick-pick.snippet-symbol.title' as any
+    'views.shared.utils.hash-sign-quick-pick.snippet-symbol.title'
   )
 
   return new Promise((resolve) => {

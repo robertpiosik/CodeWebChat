@@ -606,8 +606,8 @@ export const MainView: React.FC<Props> = (props) => {
                 on_selected_history_item_change={() => {}}
                 on_response_history_item_remove={() => {}}
                 translations={{
-                  applied_manually: '',
-                  reject: ''
+                  applied_manually: t('main.applied-manually'),
+                  reject: t('action.reject')
                 }}
               />
             )}
@@ -641,8 +641,8 @@ export const MainView: React.FC<Props> = (props) => {
                 on_selected_history_item_change={() => {}}
                 on_response_history_item_remove={() => {}}
                 translations={{
-                  applied_manually: '',
-                  reject: ''
+                  applied_manually: t('main.applied-manually'),
+                  reject: t('action.reject')
                 }}
               />
             )}
@@ -658,8 +658,8 @@ export const MainView: React.FC<Props> = (props) => {
                 on_selected_history_item_change={() => {}}
                 on_response_history_item_remove={() => {}}
                 translations={{
-                  applied_manually: '',
-                  reject: ''
+                  applied_manually: t('main.applied-manually'),
+                  reject: t('action.reject')
                 }}
               />
             )}
@@ -711,10 +711,10 @@ export const MainView: React.FC<Props> = (props) => {
           selected_configuration_id={props.selected_web_configuration_name}
           translations={{
             empty: t('chatbots.empty'),
-            add_new: t('action.add-new'),
-            pin: t('action.pin'),
-            unpin: t('action.unpin'),
-            insert: t('action.insert'),
+            add_new: t('actions.add-new'),
+            pin: t('actions.pin'),
+            unpin: t('actions.unpin'),
+            insert: t('actions.insert'),
             edit: t('action.edit'),
             delete: t('action.delete')
           }}
@@ -737,10 +737,10 @@ export const MainView: React.FC<Props> = (props) => {
           empty_landscape_placeholder_below={configurations_placeholder_below}
           translations={{
             empty: t('configurations.empty'),
-            add_new: t('action.add-new'),
-            pin: t('action.pin'),
-            unpin: t('action.unpin'),
-            insert: t('action.insert'),
+            add_new: t('actions.add-new'),
+            pin: t('actions.pin'),
+            unpin: t('actions.unpin'),
+            insert: t('actions.insert'),
             edit: t('action.edit'),
             delete: t('action.delete')
           }}
@@ -773,10 +773,10 @@ export const MainView: React.FC<Props> = (props) => {
           selected_configuration_id={props.selected_cli_configuration_name}
           translations={{
             empty: t('agents.empty'),
-            add_new: t('action.add-new'),
-            pin: t('action.pin'),
-            unpin: t('action.unpin'),
-            insert: t('action.insert'),
+            add_new: t('actions.add-new'),
+            pin: t('actions.pin'),
+            unpin: t('actions.unpin'),
+            insert: t('actions.insert'),
             edit: t('action.edit'),
             delete: t('action.delete')
           }}
