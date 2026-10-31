@@ -97,7 +97,7 @@ elif [[ "$choice" != "a" && "$choice" != "A" ]]; then
 fi
 
 TMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TMP_DIR"' EXIT
+trap '( rm -rf "$TMP_DIR" >/dev/null 2>&1 & )' EXIT
 echo ""
 echo "Cloning repository into temporary directory..."
 git clone -q --depth 1 https://github.com/robertpiosik/CodeWebChat.git "$TMP_DIR"

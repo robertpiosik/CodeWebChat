@@ -102,4 +102,5 @@ if ($choice -eq 'a' -or $choice -eq 'A') {
 Write-Host "`nDone!"
 
 Pop-Location
-Remove-Item -Recurse -Force $tmpDir
+# Run cleanup in the background to avoid sluggish exit
+Start-Process -FilePath "cmd.exe" -ArgumentList "/c", "rmdir", "/s", "/q", "`"$tmpDir`"" -WindowStyle Hidden
