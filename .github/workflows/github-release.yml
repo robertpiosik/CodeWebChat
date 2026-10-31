@@ -25,7 +25,7 @@ jobs:
         id: package_version
         run: |
           VERSION=$(jq -r .version apps/editor/package.json)
-          echo "version=editor-$VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION-editor" >> $GITHUB_OUTPUT
           echo "raw_version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Check if tag exists
@@ -64,7 +64,7 @@ jobs:
       - name: Generate Release Notes
         if: steps.check_tag.outputs.exists == 'false'
         run: |
-          PREV_TAG=$(git describe --tags --match "editor-*" --abbrev=0 2>/dev/null || echo "")
+          PREV_TAG=$(git describe --tags --match "*-editor" --abbrev=0 2>/dev/null || echo "")
 
           echo "### What's new in the editor extension:" > release_notes.md
           echo "" >> release_notes.md
@@ -80,7 +80,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.package_version.outputs.version }}
-          name: Editor ${{ steps.package_version.outputs.raw_version }}
+          name: ${{ steps.package_version.outputs.raw_version }} - editor
           body_path: release_notes.md
           discussion_category_name: "Announcements"
           files: apps/editor/*.vsix
@@ -98,7 +98,7 @@ jobs:
         id: browser_version
         run: |
           VERSION=$(jq -r .version apps/browser/src/manifest.json)
-          echo "version=browser-$VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION-browser" >> $GITHUB_OUTPUT
           echo "raw_version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Check if tag exists
@@ -137,7 +137,7 @@ jobs:
       - name: Generate Release Notes
         if: steps.check_tag.outputs.exists == 'false'
         run: |
-          PREV_TAG=$(git describe --tags --match "browser-*" --abbrev=0 2>/dev/null || echo "")
+          PREV_TAG=$(git describe --tags --match "*-browser" --abbrev=0 2>/dev/null || echo "")
 
           echo "### What's new in the browser extension:" > release_notes_browser.md
           echo "" >> release_notes_browser.md
@@ -153,7 +153,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.browser_version.outputs.version }}
-          name: Browser ${{ steps.browser_version.outputs.raw_version }}
+          name: ${{ steps.browser_version.outputs.raw_version }} - browser
           body_path: release_notes_browser.md
           discussion_category_name: "Announcements"
           files: apps/browser/*.zip
