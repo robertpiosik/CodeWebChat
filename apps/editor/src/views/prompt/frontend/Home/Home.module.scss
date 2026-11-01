@@ -139,6 +139,14 @@
     }
   }
 
+  &__update {
+    margin: 0 12px;
+
+    @include modern-ui {
+      margin: 0 10px;
+    }
+  }
+
   &__workspace-dropdown {
     position: relative;
     display: flex;

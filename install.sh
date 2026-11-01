@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
-# Check git first
-if ! command -v git &> /dev/null; then
-  echo "Error: git is required but not installed."
+if ! command -v curl &> /dev/null; then
+  echo "Error: curl is required but not installed."
+  exit 1
+fi
+
+if ! command -v unzip &> /dev/null; then
+  echo "Error: unzip is required but not installed."
   exit 1
 fi
 
@@ -66,7 +70,7 @@ check_editor "Antigravity" "agy-ide"
 
 echo ""
 echo "Hint: If your editor is installed but not listed, you might need to add its command to your PATH."
-echo "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and find a command like: \"Shell Command: Install 'cursor' command in PATH\" (or 'agy-ide' etc.)."
+echo "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and find a command like: \"Shell Command: Install 'cursor' command in PATH\" (or 'agy-ide', etc.)."
 
 if [ ${#AVAILABLE_EDITORS[@]} -eq 0 ]; then
   echo "Error: No supported editors found in your PATH."
@@ -95,23 +99,60 @@ if [[ "$choice" == "q" || "$choice" == "Q" ]]; then
   exit 0
 elif [[ "$choice" == "a" || "$choice" == "A" ]]; then
   if [ ${#AVAILABLE_EDITORS[@]} -le 1 ]; then
-    echo "Invalid choice. Exiting."
+    echo "Error: Invalid choice. Exiting."
     exit 1
   fi
 else
   if ! [[ "$choice" =~ ^[0-9]+$ ]] || [ "$choice" -lt 1 ] || [ "$choice" -gt "${#AVAILABLE_EDITORS[@]}" ]; then
-    echo "Invalid choice. Exiting."
+    echo "Error: Invalid choice. Exiting."
     exit 1
   fi
 fi
 
 TMP_DIR=$(mktemp -d)
 trap '( rm -rf "$TMP_DIR" >/dev/null 2>&1 & )' EXIT
+
 echo ""
-echo "Cloning repository into temporary directory..."
-git clone -q --depth 1 https://github.com/robertpiosik/CodeWebChat.git "$TMP_DIR"
-cd "$TMP_DIR"
-REPO_DIR="$TMP_DIR"
+echo "Fetching latest version info..."
+PAGE=1
+ZIP_URL=""
+
+while [ $PAGE -le 10 ]; do
+  TAGS_JSON=$(curl -s "https://api.github.com/repos/robertpiosik/CodeWebChat/tags?per_page=100&page=$PAGE")
+  
+  # Break if the page is empty or rate limited/not found
+  if [[ "$TAGS_JSON" == *"\"message\":"* ]] || [[ "$TAGS_JSON" == "[]" ]] || [[ -z "$TAGS_JSON" ]]; then
+    break
+  fi
+
+  ZIP_URL=$(echo "$TAGS_JSON" | grep -o '"zipball_url": *"[^"]*-vscode"' | head -n 1 | sed -e 's/"zipball_url": *"//' -e 's/"$//')
+  
+  if [ -n "$ZIP_URL" ]; then
+    break
+  fi
+  
+  PAGE=$((PAGE + 1))
+done
+
+if [ -z "$ZIP_URL" ]; then
+  echo "Error: Could not find latest vscode tag."
+  exit 1
+fi
+
+echo "Downloading latest source code..."
+curl -sL "$ZIP_URL" -o "$TMP_DIR/source.zip"
+
+echo "Extracting archive..."
+unzip -q "$TMP_DIR/source.zip" -d "$TMP_DIR"
+
+EXTRACTED_DIR=$(find "$TMP_DIR" -mindepth 1 -maxdepth 1 -type d | head -n 1)
+
+if [ -z "$EXTRACTED_DIR" ]; then
+  echo "Error: Extraction failed."
+  exit 1
+fi
+
+cd "$EXTRACTED_DIR"
 
 echo "Installing dependencies..."
 npx --yes pnpm install > /dev/null 2>&1

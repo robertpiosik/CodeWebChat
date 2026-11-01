@@ -20,6 +20,8 @@ import {
   CliPromptType
 } from '@shared/types/prompt-types'
 import { use_is_landscape } from '../hooks/use-is-landscape'
+import { use_update_check } from './hooks/use-update-check'
+import { UpdateAvailable as UiUpdateAvailable } from '@ui/components/editor/prompt-view/UpdateAvailable'
 
 type Props = {
   vscode: any
@@ -68,6 +70,8 @@ export const Home: React.FC<Props> = (props) => {
   const { container_ref, compact_step } = use_compacting({
     is_disabled: is_landscape
   })
+
+  const update_info = use_update_check(props.version, props.is_active)
 
   const header_targets_ref = useRef<HTMLDivElement>(null)
 
@@ -154,6 +158,43 @@ export const Home: React.FC<Props> = (props) => {
       </div>
     </div>
   )
+
+  const update_section = !update_info.is_available ? (
+    <>
+      <div className={styles.inner__update}>
+        <UiUpdateAvailable
+          on_update={() =>
+            post_message(props.vscode, { command: 'UPDATE_EXTENSION' })
+          }
+          translations={{
+            title: t('home.update.title'),
+            button: t('home.update.button'),
+            installed_version: (
+              <Translation
+                id="home.update.installed-version"
+                components={{ version: props.version }}
+              />
+            ),
+            latest_version: (
+              <Translation
+                id="home.update.latest-version"
+                components={{ version: update_info.latest_version }}
+              />
+            ),
+            age: (
+              <Translation
+                id="home.update.age"
+                components={{
+                  days: update_info.current_version_age_days!.toString()
+                }}
+              />
+            )
+          }}
+        />
+      </div>
+      <UiSpacer height={6} />
+    </>
+  ) : null
 
   const targets_section = (
     <div className={styles.inner__target} ref={target_ref}>
@@ -292,6 +333,7 @@ export const Home: React.FC<Props> = (props) => {
             <div className={styles.content}>
               <div className={styles.inner}>
                 <UiSpacer height={6} />
+                {update_section}
                 {targets_section}
                 <UiSpacer height={6} />
               </div>
@@ -322,6 +364,7 @@ export const Home: React.FC<Props> = (props) => {
         <div className={styles.content}>
           <div className={styles.inner}>
             <UiSpacer height={2} />
+            {update_section}
             {targets_section}
             <UiSpacer height={10} />
             {tasks_section}

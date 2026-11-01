@@ -1,12 +1,5 @@
 $ErrorActionPreference = "Stop"
 
-# Check git first
-if (!(Get-Command git -ErrorAction SilentlyContinue)) {
-    Write-Host "Error: git is required but not installed." -ForegroundColor Red
-    Pause
-    exit 1
-}
-
 # Validate Node.js version and attempt to switch if necessary
 $nodeIsGood = $false
 if (Get-Command node -ErrorAction SilentlyContinue) {
@@ -100,12 +93,52 @@ if ($choice -eq 'q' -or $choice -eq 'Q') {
     }
 }
 
+Write-Host "`nFetching latest version info..."
+$page = 1
+$latestTag = $null
+
+while ($page -le 10 -and !$latestTag) {
+    $tagsUrl = "https://api.github.com/repos/robertpiosik/CodeWebChat/tags?page=$page"
+    try {
+        $tags = Invoke-RestMethod -Uri $tagsUrl
+        if (!$tags -or $tags.Count -eq 0) { break }
+        $latestTag = $tags | Where-Object { $_.name -match '-vscode$' } | Select-Object -First 1
+    } catch {
+        Write-Host "Error: Failed to fetch tags." -ForegroundColor Red
+        Pause
+        exit 1
+    }
+    $page++
+}
+
+if (!$latestTag) {
+    Write-Host "Error: Could not find latest vscode tag." -ForegroundColor Red
+    Pause
+    exit 1
+}
+
+$zipUrl = $latestTag.zipball_url
+
 $tmpDir = Join-Path $env:TEMP ("CWC_Install_" + [Guid]::NewGuid().ToString().Substring(0,8))
 New-Item -ItemType Directory -Path $tmpDir | Out-Null
-Write-Host "`nCloning repository into temporary directory..."
-git clone -c core.longpaths=true -q --depth 1 https://github.com/robertpiosik/CodeWebChat.git $tmpDir
 
-Push-Location $tmpDir
+$zipPath = Join-Path $tmpDir "source.zip"
+Write-Host "Downloading latest source code..."
+Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
+
+Write-Host "Extracting archive..."
+Expand-Archive -Path $zipPath -DestinationPath $tmpDir -Force
+
+# The extracted content is in a subfolder inside $tmpDir
+$extractedDir = Get-ChildItem -Path $tmpDir -Directory | Select-Object -First 1
+
+if (!$extractedDir) {
+    Write-Host "Error: Extraction failed." -ForegroundColor Red
+    Pause
+    exit 1
+}
+
+Push-Location $extractedDir.FullName
 
 Write-Host "Installing dependencies..."
 $ErrorActionPreference = "Continue"

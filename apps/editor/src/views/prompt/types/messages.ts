@@ -636,6 +636,10 @@ export interface CompletedTasksMessage extends BaseMessage {
   completed_tasks: string[]
 }
 
+export interface UpdateExtensionMessage extends BaseMessage {
+  command: 'UPDATE_EXTENSION'
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -746,6 +750,7 @@ export type FrontendMessage =
   | GetCompletedTasksMessage
   | SaveCompletedTasksMessage
   | ClearCompletedTasksMessage
+  | UpdateExtensionMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {

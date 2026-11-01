@@ -100,7 +100,8 @@ import {
   handle_get_completed_tasks,
   handle_save_completed_tasks,
   handle_clear_completed_tasks,
-  handle_show_accuracy_boost_info
+  handle_show_accuracy_boost_info,
+  handle_update_extension
 } from './message-handlers'
 import { handle_agentic_search } from './message-handlers/handle-agentic-search'
 import { handle_preview_saved_context_symbol } from './message-handlers/handle-preview-saved-context-symbol'
@@ -931,6 +932,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_save_completed_tasks(this)
           } else if (message.command === 'CLEAR_COMPLETED_TASKS') {
             await handle_clear_completed_tasks(this)
+          } else if (message.command === 'UPDATE_EXTENSION') {
+            handle_update_extension()
           }
         } catch (error) {
           Logger.error({
