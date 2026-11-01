@@ -234,6 +234,7 @@ function Install-ToEditor($idx) {
     
     Stop-Spinner $spinner $cmdSuccess
     
+    Write-Host ""
     if ($cmdSuccess) {
         if ($targetScheme) {
             Write-Host "Updated successfully! Please reload the window or restart the editor for changes to take effect."
@@ -245,7 +246,6 @@ function Install-ToEditor($idx) {
     }
 }
 
-Write-Host ""
 if ($choice -eq 'a' -or $choice -eq 'A') {
     for ($i = 0; $i -lt $availableEditors.Count; $i++) {
         Install-ToEditor $i

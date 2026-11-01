@@ -206,12 +206,14 @@ install_to_editor() {
   
   if ! $editor_cmd --install-extension "$VSIX_FILE" --force > /dev/null 2>&1; then
     stop_spinner $SPINNER_PID 1
+    echo ""
     echo "Error: Failed to install to $editor_name."
     return 1
   fi
   
   stop_spinner $SPINNER_PID 0
   
+  echo ""
   if [ -n "$TARGET_SCHEME" ]; then
     echo "Updated successfully! Please reload the window or restart the editor for changes to take effect."
   else
@@ -219,7 +221,6 @@ install_to_editor() {
   fi
 }
 
-echo ""
 if [[ "$choice" == "a" || "$choice" == "A" ]]; then
   for i in "${!AVAILABLE_EDITORS[@]}"; do
     install_to_editor $i
