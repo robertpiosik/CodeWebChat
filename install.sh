@@ -143,6 +143,7 @@ while [ $PAGE -le 10 ]; do
     break
   fi
 
+  TAG_NAME=$(echo "$TAGS_JSON" | grep -o '"name": *"[^"]*-vscode"' | head -n 1 | sed -e 's/"name": *"//' -e 's/"$//')
   ZIP_URL=$(echo "$TAGS_JSON" | grep -o '"zipball_url": *"[^"]*-vscode"' | head -n 1 | sed -e 's/"zipball_url": *"//' -e 's/"$//')
   
   if [ -n "$ZIP_URL" ]; then
@@ -157,7 +158,8 @@ if [ -z "$ZIP_URL" ]; then
   exit 1
 fi
 
-echo "Downloading latest source code..."
+echo "Found: $TAG_NAME"
+echo "Downloading source code..."
 curl -sL "$ZIP_URL" -o "$TMP_DIR/source.zip"
 
 echo "Extracting archive..."

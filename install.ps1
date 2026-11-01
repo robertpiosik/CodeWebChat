@@ -134,13 +134,14 @@ if (!$latestTag) {
     exit 1
 }
 
+Write-Host "Found: $($latestTag.name)"
 $zipUrl = $latestTag.zipball_url
 
 $tmpDir = Join-Path $env:TEMP ("CWC_Install_" + [Guid]::NewGuid().ToString().Substring(0,8))
 New-Item -ItemType Directory -Path $tmpDir | Out-Null
 
 $zipPath = Join-Path $tmpDir "source.zip"
-Write-Host "Downloading latest source code..."
+Write-Host "Downloading source code..."
 Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
 
 Write-Host "Extracting archive..."
