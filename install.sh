@@ -54,19 +54,21 @@ fi
 # Detect available editors in the system
 declare -a AVAILABLE_EDITORS
 declare -a EDITOR_CMDS
+declare -a EDITOR_SCHEMES
 
 check_editor() {
   if command -v "$2" >/dev/null 2>&1; then
     AVAILABLE_EDITORS+=("$1")
     EDITOR_CMDS+=("$2")
+    EDITOR_SCHEMES+=("$3")
   fi
 }
 
-check_editor "VS Code" "code"
-check_editor "VS Code Insiders" "code-insiders"
-check_editor "VSCodium" "codium"
-check_editor "Cursor" "cursor"
-check_editor "Antigravity" "agy-ide"
+check_editor "VS Code" "code" "vscode"
+check_editor "VS Code Insiders" "code-insiders" "vscode-insiders"
+check_editor "VSCodium" "codium" "vscodium"
+check_editor "Cursor" "cursor" "cursor"
+check_editor "Antigravity" "agy-ide" "agy"
 
 echo ""
 echo "Hint: If your editor is installed but not listed, you might need to add its command to your PATH."
@@ -87,11 +89,28 @@ fi
 echo "q) Quit"
 echo ""
 
-# Handle interactive prompt even if script is piped via curl | bash
-if [ -c /dev/tty ]; then
-  read -p "Select where to install CWC to: " choice < /dev/tty
+TARGET_SCHEME="$1"
+AUTO_CHOICE=""
+
+if [ -n "$TARGET_SCHEME" ]; then
+  for i in "${!EDITOR_SCHEMES[@]}"; do
+    if [ "${EDITOR_SCHEMES[$i]}" = "$TARGET_SCHEME" ]; then
+      AUTO_CHOICE=$((i + 1))
+      break
+    fi
+  done
+fi
+
+if [ -n "$AUTO_CHOICE" ]; then
+  choice="$AUTO_CHOICE"
+  echo "Automatically selected ${AVAILABLE_EDITORS[$((choice-1))]} based on current editor ($TARGET_SCHEME)."
 else
-  read -p "Select where to install CWC to: " choice
+  # Handle interactive prompt even if script is piped via curl | bash
+  if [ -c /dev/tty ]; then
+    read -p "Select where to install CWC to: " choice < /dev/tty
+  else
+    read -p "Select where to install CWC to: " choice
+  fi
 fi
 
 if [[ "$choice" == "q" || "$choice" == "Q" ]]; then

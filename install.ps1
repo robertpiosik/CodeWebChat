@@ -1,4 +1,5 @@
 $ErrorActionPreference = "Stop"
+$targetScheme = if ($args.Count -gt 0) { $args[0] } else { $null }
 
 # Validate Node.js version and attempt to switch if necessary
 $nodeIsGood = $false
@@ -41,19 +42,21 @@ if (!$nodeIsGood) {
 # Detect available editors in the system
 $availableEditors = @()
 $editorCmds = @()
+$editorSchemes = @()
 
-function Check-Editor($Name, $Cmd) {
+function Check-Editor($Name, $Cmd, $Scheme) {
     if (Get-Command $Cmd -ErrorAction SilentlyContinue) {
         $script:availableEditors += $Name
         $script:editorCmds += $Cmd
+        $script:editorSchemes += $Scheme
     }
 }
 
-Check-Editor "VS Code" "code"
-Check-Editor "VS Code Insiders" "code-insiders"
-Check-Editor "VSCodium" "codium"
-Check-Editor "Cursor" "cursor"
-Check-Editor "Antigravity" "agy-ide"
+Check-Editor "VS Code" "code" "vscode"
+Check-Editor "VS Code Insiders" "code-insiders" "vscode-insiders"
+Check-Editor "VSCodium" "codium" "vscodium"
+Check-Editor "Cursor" "cursor" "cursor"
+Check-Editor "Antigravity" "agy-ide" "agy"
 
 Write-Host "`nHint: If your editor is installed but not listed, you might need to add its command to your PATH." -ForegroundColor Yellow
 Write-Host "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and find a command like: `"Shell Command: Install 'cursor' command in PATH`" (or 'agy-ide', etc.)." -ForegroundColor Yellow
@@ -73,7 +76,22 @@ if ($availableEditors.Count -gt 1) {
 }
 Write-Host "q) Quit`n"
 
-$choice = Read-Host "Select where to install CWC to"
+$autoChoice = $null
+if ($targetScheme) {
+    for ($i = 0; $i -lt $editorSchemes.Count; $i++) {
+        if ($editorSchemes[$i] -eq $targetScheme) {
+            $autoChoice = $i + 1
+            break
+        }
+    }
+}
+
+if ($autoChoice) {
+    $choice = $autoChoice.ToString()
+    Write-Host "Automatically selected $($availableEditors[$autoChoice - 1]) based on current editor ($targetScheme)." -ForegroundColor Green
+} else {
+    $choice = Read-Host "Select where to install CWC to"
+}
 
 if ($choice -eq 'q' -or $choice -eq 'Q') {
     Write-Host "Installation cancelled."
