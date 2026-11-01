@@ -159,7 +159,7 @@ echo ""
 printf "  Cloning repository..."
 start_spinner &
 SPINNER_PID=$!
-if ! git clone -c core.longpaths=true --quiet https://github.com/robertpiosik/CodeWebChat.git "$TMP_DIR/source" > /dev/null 2>&1; then
+if ! git clone -b main -c core.longpaths=true --quiet https://github.com/robertpiosik/CodeWebChat.git "$TMP_DIR/source" > /dev/null 2>&1; then
   stop_spinner $SPINNER_PID 1
   exit 1
 fi

@@ -174,7 +174,7 @@ $extractedDir = Join-Path $tmpDir "source"
 
 $spinner = Start-Spinner "Cloning repository..."
 $ErrorActionPreference = "Continue"
-git clone -c core.longpaths=true --quiet https://github.com/robertpiosik/CodeWebChat.git $extractedDir *>$null
+git clone -b main -c core.longpaths=true --quiet https://github.com/robertpiosik/CodeWebChat.git $extractedDir *>$null
 $cmdSuccess = ($LASTEXITCODE -eq 0)
 $ErrorActionPreference = "Stop"
 Stop-Spinner $spinner $cmdSuccess
