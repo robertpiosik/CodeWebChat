@@ -13,35 +13,19 @@ check_node_version() {
   [ "$version" -ge 20 ]
 }
 
+try_nvm() { type nvm >/dev/null 2>&1 && nvm install 22 && nvm use 22; }
+try_fnm() { command -v fnm >/dev/null 2>&1 && eval "$(fnm env)" && fnm install 22 && fnm use 22; }
+try_n()   { command -v n >/dev/null 2>&1 && n 22; }
+
 if ! check_node_version; then
-  SWITCHED=false
-
   export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-  if [ -s "$NVM_DIR/nvm.sh" ]; then
-    \. "$NVM_DIR/nvm.sh"
-  fi
-  if type nvm >/dev/null 2>&1; then
-    nvm install 22 >/dev/null 2>&1 && nvm use 22 >/dev/null 2>&1 && SWITCHED=true
-  fi
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-  if [ "$SWITCHED" = false ] && command -v fnm &> /dev/null; then
-    eval "$(fnm env)"
-    fnm install 22 >/dev/null 2>&1 && fnm use 22 >/dev/null 2>&1 && SWITCHED=true
-  fi
-
-  if [ "$SWITCHED" = false ] && command -v n &> /dev/null; then
-    n 22 >/dev/null 2>&1 && SWITCHED=true
-  fi
-
-  if [ "$SWITCHED" = false ]; then
+  if ! { try_nvm || try_fnm || try_n; } >/dev/null 2>&1; then
     echo "Error: Failed to find a compatible Node.js version and no supported version manager (nvm, fnm, n) could switch it."
     exit 1
   fi
 fi
-
-declare -a AVAILABLE_EDITORS
-declare -a EDITOR_CMDS
-declare -a EDITOR_SCHEMES
 
 check_editor() {
   if command -v "$2" >/dev/null 2>&1; then
@@ -63,20 +47,20 @@ if [ ${#AVAILABLE_EDITORS[@]} -eq 0 ]; then
 fi
 
 TARGET_SCHEME="$1"
-AUTO_CHOICE=""
+choice=""
 
 if [ -n "$TARGET_SCHEME" ]; then
   for i in "${!EDITOR_SCHEMES[@]}"; do
     if [ "${EDITOR_SCHEMES[$i]}" = "$TARGET_SCHEME" ]; then
-      AUTO_CHOICE=$((i + 1))
+      choice=$((i + 1))
       break
     fi
   done
 fi
 
-if [ -n "$AUTO_CHOICE" ]; then
-  choice="$AUTO_CHOICE"
-else
+invalid_choice() { echo "Error: Invalid choice. Exiting."; exit 1; }
+
+if [ -z "$choice" ]; then
   echo ""
   echo "Hint: If your editor is installed but not listed, you might need to add its command to your PATH."
   echo "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and find a command like: \"Shell Command: Install 'cursor' command in PATH\" (or 'agy-ide', etc.)."
@@ -97,31 +81,31 @@ else
     read -p "Select where to install CWC to: " choice
   fi
 
-  if [[ "$choice" == "q" || "$choice" == "Q" ]]; then
-    echo "Installation cancelled."
-    exit 0
-  elif [[ "$choice" == "a" || "$choice" == "A" ]]; then
-    if [ ${#AVAILABLE_EDITORS[@]} -le 1 ]; then
-      echo "Error: Invalid choice. Exiting."
-      exit 1
-    fi
-  else
-    if ! [[ "$choice" =~ ^[0-9]+$ ]] || [ "$choice" -lt 1 ] || [ "$choice" -gt "${#AVAILABLE_EDITORS[@]}" ]; then
-      echo "Error: Invalid choice. Exiting."
-      exit 1
-    fi
-  fi
+  case "$choice" in
+    q|Q) echo "Installation cancelled."; exit 0 ;;
+    a|A) [ ${#AVAILABLE_EDITORS[@]} -gt 1 ] || invalid_choice ;;
+    ''|*[!0-9]*) invalid_choice ;;
+    *) [ "$choice" -ge 1 ] && [ "$choice" -le ${#AVAILABLE_EDITORS[@]} ] || invalid_choice ;;
+  esac
 fi
 
 TMP_DIR=$(mktemp -d)
+ORIGINAL_DIR="$(pwd)"
 
-cleanup() {
+kill_spinner() {
   if [ -n "${SPINNER_PID:-}" ]; then
     kill "$SPINNER_PID" >/dev/null 2>&1 || true
     wait "$SPINNER_PID" 2>/dev/null || true
+    SPINNER_PID=""
   fi
   tput cnorm 2>/dev/null || true
-  rm -rf "$TMP_DIR" >/dev/null 2>&1
+}
+
+cleanup() {
+  kill_spinner
+  if [ -d "$TMP_DIR" ]; then
+    rm -rf "$TMP_DIR" >/dev/null 2>&1
+  fi
 }
 trap cleanup EXIT INT TERM
 
@@ -130,20 +114,15 @@ start_spinner() {
   local delay=0.1
   local spinstr='|/-\'
   while :; do
-    local temp=${spinstr#?}
     printf "\r%c" "$spinstr"
-    local spinstr=$temp${spinstr%"$temp"}
+    spinstr="${spinstr:1}${spinstr:0:1}"
     sleep $delay
   done
 }
 
 stop_spinner() {
-  local pid=$1
-  local exit_code=$2
-  SPINNER_PID=""
-  kill "$pid" >/dev/null 2>&1 || true
-  wait "$pid" 2>/dev/null || true
-  tput cnorm 2>/dev/null || true
+  local exit_code=$1
+  kill_spinner
   if [ "$exit_code" -eq 0 ]; then
     printf "\r\033[32m\xE2\x9C\x94\033[0m\n"
   else
@@ -151,43 +130,34 @@ stop_spinner() {
   fi
 }
 
+run_step() {
+  local msg="$1"; shift
+  printf "  %s..." "$msg"
+  start_spinner &
+  SPINNER_PID=$!
+  if "$@" > /dev/null 2>&1; then
+    stop_spinner 0
+  else
+    stop_spinner 1
+    return 1
+  fi
+}
+
 echo ""
 
-printf "  Cloning repository..."
-start_spinner &
-SPINNER_PID=$!
-if ! git clone -b main -c core.longpaths=true --quiet https://github.com/robertpiosik/CodeWebChat.git "$TMP_DIR/source" > /dev/null 2>&1; then
-  stop_spinner $SPINNER_PID 1
-  exit 1
-fi
-stop_spinner $SPINNER_PID 0
+run_step "Cloning repository" git clone -b main -c core.longpaths=true --quiet https://github.com/robertpiosik/CodeWebChat.git "$TMP_DIR/source"
 
-EXTRACTED_DIR="$TMP_DIR/source"
+cd "$TMP_DIR/source"
 
-cd "$EXTRACTED_DIR"
+run_step "Installing dependencies" corepack pnpm install
 
-printf "  Installing dependencies..."
-start_spinner &
-SPINNER_PID=$!
-if ! npx --yes pnpm install > /dev/null 2>&1; then
-  stop_spinner $SPINNER_PID 1
-  exit 1
-fi
-stop_spinner $SPINNER_PID 0
-
-printf "  Building extension..."
-start_spinner &
-SPINNER_PID=$!
 cd apps/editor
-if ! npx --yes pnpm run build > /dev/null 2>&1; then
-  stop_spinner $SPINNER_PID 1
-  exit 1
-fi
-stop_spinner $SPINNER_PID 0
+run_step "Building extension" corepack pnpm run build
 
-VSIX_FILE=$(ls *.vsix | head -n 1)
+vsix_files=(*.vsix)
+VSIX_FILE="${vsix_files[0]}"
 
-if [ -z "$VSIX_FILE" ]; then
+if [ ! -f "$VSIX_FILE" ]; then
   echo "Error: VSIX file was not generated."
   exit 1
 fi
@@ -196,20 +166,13 @@ install_to_editor() {
   local idx=$1
   local editor_name="${AVAILABLE_EDITORS[$idx]}"
   local editor_cmd="${EDITOR_CMDS[$idx]}"
-  
-  printf "  Installing to %s..." "$editor_name"
-  start_spinner &
-  SPINNER_PID=$!
-  
-  if ! $editor_cmd --install-extension "$VSIX_FILE" --force > /dev/null 2>&1; then
-    stop_spinner $SPINNER_PID 1
+
+  if ! run_step "Installing to $editor_name" "$editor_cmd" --install-extension "$VSIX_FILE" --force; then
     echo ""
     echo "Error: Failed to install to $editor_name."
     return 1
   fi
-  
-  stop_spinner $SPINNER_PID 0
-  
+
   echo ""
   if [ -n "$TARGET_SCHEME" ]; then
     echo "Updated successfully! Please restart the editor for changes to take effect."
@@ -218,10 +181,14 @@ install_to_editor() {
   fi
 }
 
-if [[ "$choice" == "a" || "$choice" == "A" ]]; then
-  for i in "${!AVAILABLE_EDITORS[@]}"; do
-    install_to_editor $i
-  done
+if [[ "$choice" == [aA] ]]; then
+  indices=("${!AVAILABLE_EDITORS[@]}")
 else
-  install_to_editor $((choice-1))
+  indices=($((choice-1)))
 fi
+for i in "${indices[@]}"; do install_to_editor "$i"; done
+
+cd "$ORIGINAL_DIR" || cd /
+
+echo ""
+run_step "Cleaning up" rm -rf "$TMP_DIR"

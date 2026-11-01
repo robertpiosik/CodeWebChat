@@ -1,47 +1,30 @@
 $ErrorActionPreference = "Stop"
-$targetScheme = if ($args.Count -gt 0) { $args[0] } else { $null }
+$targetScheme = $args[0]
 
-if (!(Get-Command git -ErrorAction SilentlyContinue)) {
-    Write-Host "Error: git is required but not installed." -ForegroundColor Red
+function Fail($Message) {
+    Write-Host "Error: $Message" -ForegroundColor Red
     Pause
     exit 1
 }
 
-$nodeIsGood = $false
-if (Get-Command node -ErrorAction SilentlyContinue) {
-    $nodeVersion = (node -v) -replace '^v',''
-    $major = [int]($nodeVersion -split '\.')[0]
-    if ($major -ge 20) {
-        $nodeIsGood = $true
-    }
+if (!(Get-Command git -ErrorAction SilentlyContinue)) {
+    Fail "git is required but not installed."
 }
 
-if (!$nodeIsGood) {
-    $switched = $false
+$nodeIsGood = (Get-Command node -ErrorAction SilentlyContinue) -and ([version]((node -v) -replace '^v','')).Major -ge 20
 
-    if (!$switched -and (Get-Command fnm -ErrorAction SilentlyContinue)) {
+if (!$nodeIsGood) {
+    if (Get-Command fnm -ErrorAction SilentlyContinue) {
         fnm env --shell powershell | Out-String | Invoke-Expression
         fnm install 22 *>$null
         fnm use 22 *>$null
-        $switched = $true
-    }
-
-    if (!$switched -and (Get-Command nvm -ErrorAction SilentlyContinue)) {
+    } elseif (Get-Command nvm -ErrorAction SilentlyContinue) {
         nvm install 22 *>$null
         nvm use 22 *>$null
-        $switched = $true
-    }
-
-    if (!$switched) {
-        Write-Host "Error: Failed to find a compatible Node.js version and no supported version manager (fnm, nvm) could switch it." -ForegroundColor Red
-        Pause
-        exit 1
+    } else {
+        Fail "Failed to find a compatible Node.js version and no supported version manager (fnm, nvm) could switch it."
     }
 }
-
-$availableEditors = @()
-$editorCmds = @()
-$editorSchemes = @()
 
 $editorsToCheck = @(
     @{ Name = "VS Code"; Cmd = "code"; Scheme = "vscode" },
@@ -51,39 +34,23 @@ $editorsToCheck = @(
     @{ Name = "Antigravity"; Cmd = "agy-ide"; Scheme = "agy" }
 )
 
-foreach ($editor in $editorsToCheck) {
-    if (Get-Command $editor.Cmd -ErrorAction SilentlyContinue) {
-        $availableEditors += $editor.Name
-        $editorCmds += $editor.Cmd
-        $editorSchemes += $editor.Scheme
-    }
-}
+$availableEditors = @($editorsToCheck | Where-Object { Get-Command $_.Cmd -ErrorAction SilentlyContinue })
 
 if ($availableEditors.Count -eq 0) {
-    Write-Host "Error: No supported editors found in your PATH." -ForegroundColor Red
-    Pause
-    exit 1
+    Fail "No supported editors found in your PATH."
 }
 
-$autoChoice = $null
-if ($targetScheme) {
-    for ($i = 0; $i -lt $editorSchemes.Count; $i++) {
-        if ($editorSchemes[$i] -eq $targetScheme) {
-            $autoChoice = $i + 1
-            break
-        }
-    }
-}
+$idx = [Array]::IndexOf(@($availableEditors.Scheme), $targetScheme)
 
-if ($autoChoice) {
-    $choice = $autoChoice.ToString()
+if ($targetScheme -and $idx -ge 0) {
+    $selectedIndex = $idx
 } else {
     Write-Host "`nHint: If your editor is installed but not listed, you might need to add its command to your PATH." -ForegroundColor Yellow
     Write-Host "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and find a command like: `"Shell Command: Install 'cursor' command in PATH`" (or 'agy-ide', etc.)." -ForegroundColor Yellow
 
     Write-Host ""
     for ($i = 0; $i -lt $availableEditors.Count; $i++) {
-        Write-Host "$($i + 1)) $($availableEditors[$i])"
+        Write-Host "$($i + 1)) $($availableEditors[$i].Name)"
     }
     if ($availableEditors.Count -gt 1) {
         Write-Host "a) All detected editors"
@@ -92,139 +59,104 @@ if ($autoChoice) {
 
     $choice = Read-Host "Select where to install CWC to"
 
-    if ($choice -eq 'q' -or $choice -eq 'Q') {
+    if ($choice -eq 'q') {
         Write-Host "Installation cancelled."
         Pause
         exit 0
-    } elseif ($choice -eq 'a' -or $choice -eq 'A') {
+    } elseif ($choice -eq 'a') {
         if ($availableEditors.Count -le 1) {
-            Write-Host "Error: Invalid choice. Exiting." -ForegroundColor Red
-            Pause
-            exit 1
+            Fail "Invalid choice. Exiting."
         }
+        $installAll = $true
     } else {
         if ($choice -notmatch '^[0-9]+$' -or [int]$choice -lt 1 -or [int]$choice -gt $availableEditors.Count) {
-            Write-Host "Error: Invalid choice. Exiting." -ForegroundColor Red
-            Pause
-            exit 1
+            Fail "Invalid choice. Exiting."
         }
+        $selectedIndex = [int]$choice - 1
     }
 }
 
-function Start-Spinner {
-    param([string]$Message)
+function Invoke-Step {
+    param([string]$Message, [scriptblock]$Action, [string]$ErrorMsg)
     Write-Progress -Activity "CodeWebChat Installation" -Status $Message
     Write-Host -NoNewline "  $Message"
-    return $Message
-}
-
-function Stop-Spinner {
-    param([string]$Message, [bool]$Success = $true)
+    & $Action
+    $ok = $?
     Write-Progress -Activity "CodeWebChat Installation" -Completed
-    if ($Success) {
-        Write-Host "`r$([char]0x2714) " -ForegroundColor Green -NoNewline
-        Write-Host $Message
-    } else {
-        Write-Host "`r$([char]0x2718) " -ForegroundColor Red -NoNewline
-        Write-Host $Message
-    }
+    if ($ok) { Write-Host "`r$([char]0x2714)" -ForegroundColor Green }
+    else     { Write-Host "`r$([char]0x2718)" -ForegroundColor Red }
+    if (!$ok -and $ErrorMsg) { Fail $ErrorMsg }
+    return $ok
 }
 
 Write-Host ""
 
+$originalLocation = Get-Location
+$tmpDir = Join-Path $env:TEMP ("CWC_Install_" + [Guid]::NewGuid().ToString().Substring(0,8))
+
 try {
 
-$tmpDir = Join-Path $env:TEMP ("CWC_Install_" + [Guid]::NewGuid().ToString().Substring(0,8))
 New-Item -ItemType Directory -Path $tmpDir | Out-Null
 
 $extractedDir = Join-Path $tmpDir "source"
 
-$spinner = Start-Spinner "Cloning repository..."
-$ErrorActionPreference = "Continue"
-git clone -b main -c core.longpaths=true --quiet https://github.com/robertpiosik/CodeWebChat.git $extractedDir *>$null
-$cmdSuccess = ($LASTEXITCODE -eq 0)
-$ErrorActionPreference = "Stop"
-Stop-Spinner $spinner $cmdSuccess
+$null = Invoke-Step "Cloning repository..." {
+    git clone -b main -c core.longpaths=true --quiet https://github.com/robertpiosik/CodeWebChat.git $extractedDir *>$null
+} "Cloning repository failed."
 
-if (!$cmdSuccess) {
-    Write-Host "Error: Cloning repository failed." -ForegroundColor Red
-    Pause
-    exit 1
-}
+Set-Location $extractedDir
 
-Push-Location $extractedDir
+$null = Invoke-Step "Installing dependencies..." {
+    corepack.cmd pnpm install *>$null
+} "Failed to install dependencies."
 
-$spinner = Start-Spinner "Installing dependencies..."
-$ErrorActionPreference = "Continue"
-npx.cmd --yes pnpm install *>$null
-$cmdSuccess = ($LASTEXITCODE -eq 0)
-Stop-Spinner $spinner $cmdSuccess
-
-if (!$cmdSuccess) {
-    Write-Host "Error: Failed to install dependencies." -ForegroundColor Red
-    Pause
-    exit 1
-}
-
-$spinner = Start-Spinner "Building extension..."
 Set-Location apps/editor
-npx.cmd --yes pnpm run build *>$null
-$cmdSuccess = ($LASTEXITCODE -eq 0)
-$ErrorActionPreference = "Stop"
-Stop-Spinner $spinner $cmdSuccess
 
-if (!$cmdSuccess) {
-    Write-Host "Error: Build failed." -ForegroundColor Red
-    Pop-Location
-    Pause
-    exit 1
-}
+$null = Invoke-Step "Building extension..." {
+    corepack.cmd pnpm run build *>$null
+} "Build failed."
 
 $vsixFile = Get-ChildItem *.vsix -ErrorAction SilentlyContinue | Select-Object -First 1
 
 if (!$vsixFile) {
-    Write-Host "Error: VSIX file was not generated." -ForegroundColor Red
-    Pop-Location
-    Pause
-    exit 1
+    Fail "VSIX file was not generated."
 }
 
 function Install-ToEditor($idx) {
-    $editorName = $availableEditors[$idx]
-    $editorCmd = $editorCmds[$idx]
-    
-    $spinner = Start-Spinner "Installing to $editorName..."
-    $ErrorActionPreference = "Continue"
-    & $editorCmd --install-extension $vsixFile.FullName --force *>$null
-    $cmdSuccess = ($LASTEXITCODE -eq 0)
-    $ErrorActionPreference = "Stop"
-    
-    Stop-Spinner $spinner $cmdSuccess
+    $editor = $availableEditors[$idx]
+    $ok = Invoke-Step "Installing to $($editor.Name)..." {
+        & $editor.Cmd --install-extension $vsixFile.FullName --force *>$null
+    }
     
     Write-Host ""
-    if ($cmdSuccess) {
+    if ($ok) {
         if ($targetScheme) {
             Write-Host "Updated successfully! Please restart the editor for changes to take effect."
         } else {
-            Write-Host "Successfully installed to $editorName!"
+            Write-Host "Successfully installed to $($editor.Name)!"
         }
     } else {
-        Write-Host "Error: Failed to install to $editorName." -ForegroundColor Red
+        Write-Host "Error: Failed to install to $($editor.Name)." -ForegroundColor Red
     }
 }
 
-if ($choice -eq 'a' -or $choice -eq 'A') {
-    for ($i = 0; $i -lt $availableEditors.Count; $i++) {
-        Install-ToEditor $i
+$indices = if ($installAll) { 0..($availableEditors.Count - 1) } else { $selectedIndex }
+foreach ($i in $indices) { Install-ToEditor $i }
+
+Set-Location $originalLocation
+
+Write-Host ""
+$null = Invoke-Step "Cleaning up..." {
+    if (Test-Path $tmpDir) {
+        Remove-Item -Path $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
     }
-} else {
-    Install-ToEditor ([int]$choice - 1)
-}
+} "Failed to clean up."
 
 } finally {
-    Write-Progress -Activity "CodeWebChat Installation" -Completed
+    Set-Location $originalLocation -ErrorAction SilentlyContinue
+    if (Test-Path $tmpDir) {
+        Remove-Item -Path $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
+    }
 }
 
-Pop-Location
-Remove-Item -Path $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
 Pause
