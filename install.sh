@@ -195,6 +195,13 @@ install_to_editor() {
   $editor_cmd --install-extension "$VSIX_FILE" --force > /dev/null 2>&1
   
   if [ -n "$TARGET_SCHEME" ]; then
+    case "$editor_cmd" in
+      "code") pkill -f "Visual Studio Code" || pkill -x code || killall code ;;
+      "code-insiders") pkill -f "Visual Studio Code - Insiders" || pkill -x code-insiders || killall code-insiders ;;
+      "codium") pkill -f "VSCodium" || pkill -x codium || killall codium ;;
+      "cursor") pkill -f "Cursor" || pkill -x cursor || killall cursor ;;
+      "agy-ide") pkill -f "Antigravity" || pkill -x agy-ide || killall agy-ide ;;
+    esac >/dev/null 2>&1
     echo "Updated successfully! Restart editor for changes to take effect."
   else
     echo "Successfully installed to $editor_name!"
