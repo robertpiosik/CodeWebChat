@@ -46,19 +46,21 @@ $availableEditors = @()
 $editorCmds = @()
 $editorSchemes = @()
 
-function Check-Editor($Name, $Cmd, $Scheme) {
-    if (Get-Command $Cmd -ErrorAction SilentlyContinue) {
-        $script:availableEditors += $Name
-        $script:editorCmds += $Cmd
-        $script:editorSchemes += $Scheme
+$editorsToCheck = @(
+    @{ Name = "VS Code"; Cmd = "code"; Scheme = "vscode" },
+    @{ Name = "VS Code Insiders"; Cmd = "code-insiders"; Scheme = "vscode-insiders" },
+    @{ Name = "VSCodium"; Cmd = "codium"; Scheme = "vscodium" },
+    @{ Name = "Cursor"; Cmd = "cursor"; Scheme = "cursor" },
+    @{ Name = "Antigravity"; Cmd = "agy-ide"; Scheme = "agy" }
+)
+
+foreach ($editor in $editorsToCheck) {
+    if (Get-Command $editor.Cmd -ErrorAction SilentlyContinue) {
+        $availableEditors += $editor.Name
+        $editorCmds += $editor.Cmd
+        $editorSchemes += $editor.Scheme
     }
 }
-
-Check-Editor "VS Code" "code" "vscode"
-Check-Editor "VS Code Insiders" "code-insiders" "vscode-insiders"
-Check-Editor "VSCodium" "codium" "vscodium"
-Check-Editor "Cursor" "cursor" "cursor"
-Check-Editor "Antigravity" "agy-ide" "agy"
 
 if ($availableEditors.Count -eq 0) {
     Write-Host "Error: No supported editors found in your PATH." -ForegroundColor Red
