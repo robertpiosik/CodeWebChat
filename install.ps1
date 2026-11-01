@@ -181,7 +181,12 @@ function Install-ToEditor($idx) {
     $ErrorActionPreference = "Continue"
     & $editorCmd --install-extension $vsixFile.FullName --force *>$null
     $ErrorActionPreference = "Stop"
-    Write-Host "Successfully installed to $editorName!"
+    
+    if ($targetScheme) {
+        Write-Host "Updated successfully! Restart extensions for changes to take effect."
+    } else {
+        Write-Host "Successfully installed to $editorName!"
+    }
 }
 
 Write-Host ""
