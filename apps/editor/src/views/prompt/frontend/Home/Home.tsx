@@ -191,8 +191,15 @@ export const Home: React.FC<Props> = (props) => {
             ) : undefined,
             changelog: (
               <a
-                href="https://github.com/robertpiosik/CodeWebChat/releases"
-                onClick={(e) => e.stopPropagation()}
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  post_message(props.vscode, {
+                    command: 'OPEN_WEBSITE',
+                    url: 'https://github.com/robertpiosik/CodeWebChat/releases'
+                  })
+                }}
               >
                 {t('home.update.changelog')}
               </a>
@@ -317,7 +324,20 @@ export const Home: React.FC<Props> = (props) => {
               id="home.footer.copyright"
               components={{
                 year: new Date().getFullYear().toString(),
-                link: <a href="https://x.com/robertpiosik">Robert Piosik</a>
+                link: (
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      post_message(props.vscode, {
+                        command: 'OPEN_WEBSITE',
+                        url: 'https://x.com/robertpiosik'
+                      })
+                    }}
+                  >
+                    Robert Piosik
+                  </a>
+                )
               }}
             />
           </div>
