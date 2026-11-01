@@ -21,14 +21,17 @@ const is_newer = (latest: string, current: string) => {
   return false
 }
 
-export const use_update_check = (current_version: string, is_active: boolean) => {
-  const [update_info, set_update_info] = useState<UpdateInfo>(global_update_info)
+export const use_update_check = (
+  current_version: string,
+  is_active: boolean
+) => {
+  const [update_info, set_update_info] =
+    useState<UpdateInfo>(global_update_info)
 
   useEffect(() => {
     if (!is_active || !current_version) {
       return
     }
-    let is_mounted = true
     let timeout_id: ReturnType<typeof setTimeout>
 
     const check = async () => {
@@ -56,7 +59,8 @@ export const use_update_check = (current_version: string, is_active: boolean) =>
                   const date = commit_data.commit?.committer?.date
                   if (date) {
                     age_days = Math.floor(
-                      (Date.now() - new Date(date).getTime()) / (1000 * 60 * 60 * 24)
+                      (Date.now() - new Date(date).getTime()) /
+                        (1000 * 60 * 60 * 24)
                     )
                   }
                 }
@@ -69,9 +73,7 @@ export const use_update_check = (current_version: string, is_active: boolean) =>
                 latest_version,
                 current_version_age_days: age_days
               }
-              if (is_mounted) {
-                set_update_info(global_update_info)
-              }
+              set_update_info(global_update_info)
             }
             break
           }
@@ -81,15 +83,12 @@ export const use_update_check = (current_version: string, is_active: boolean) =>
         console.error('Failed to check for updates:', e)
       }
 
-      if (is_mounted) {
-        timeout_id = setTimeout(check, CHECK_INTERVAL)
-      }
+      timeout_id = setTimeout(check, CHECK_INTERVAL)
     }
 
     check()
 
     return () => {
-      is_mounted = false
       clearTimeout(timeout_id)
     }
   }, [current_version, is_active])
