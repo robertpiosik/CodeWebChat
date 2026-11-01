@@ -51,7 +51,7 @@ export const UpdateAvailable: React.FC<Props> = (props) => {
             {props.current_version}
             {props.latest_version && (
               <>
-                <span className="codicon codicon-arrow-small-right" />
+                <span className="codicon codicon-triangle-right" />
                 {props.latest_version}
               </>
             )}
