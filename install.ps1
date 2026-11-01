@@ -111,52 +111,22 @@ if ($autoChoice) {
     }
 }
 
-$global:activeSpinner = $null
-
 function Start-Spinner {
     param([string]$Message)
+    Write-Progress -Activity "CodeWebChat Installation" -Status $Message
     Write-Host -NoNewline "  $Message"
-    try { [Console]::CursorVisible = $false } catch {}
-    
-    $runspace = [runspacefactory]::CreateRunspace()
-    $runspace.Open()
-    $ps = [powershell]::Create()
-    $ps.Runspace = $runspace
-    $ps.AddScript({
-        $spinner = @('-', '\', '|', '/')
-        $i = 0
-        while ($true) {
-            try { [Console]::Write("`r$($spinner[$i % 4])") } catch {}
-            $i++
-            Start-Sleep -Milliseconds 100
-        }
-    }) | Out-Null
-    $asyncResult = $ps.BeginInvoke()
-    $spinnerObj = @{ PS = $ps; Runspace = $runspace; Message = $Message }
-    $global:activeSpinner = $spinnerObj
-    return $spinnerObj
+    return $Message
 }
 
 function Stop-Spinner {
-    param($spinnerObj, [bool]$Success = $true)
-    if ($global:activeSpinner -and $spinnerObj -and $global:activeSpinner.PS -eq $spinnerObj.PS) {
-        $global:activeSpinner = $null
-    }
-    $msg = if ($spinnerObj.Message) { $spinnerObj.Message } else { "" }
-    if ($spinnerObj) {
-        try { $spinnerObj.PS.Stop() } catch {}
-        try { $spinnerObj.PS.Dispose() } catch {}
-        try { $spinnerObj.Runspace.Close() } catch {}
-        try { $spinnerObj.Runspace.Dispose() } catch {}
-    }
-    try { [Console]::CursorVisible = $true } catch {}
-    
+    param([string]$Message, [bool]$Success = $true)
+    Write-Progress -Activity "CodeWebChat Installation" -Completed
     if ($Success) {
         Write-Host "`r$([char]0x2714) " -ForegroundColor Green -NoNewline
-        Write-Host $msg
+        Write-Host $Message
     } else {
         Write-Host "`r$([char]0x2718) " -ForegroundColor Red -NoNewline
-        Write-Host $msg
+        Write-Host $Message
     }
 }
 
@@ -252,12 +222,9 @@ if ($choice -eq 'a' -or $choice -eq 'A') {
 }
 
 } finally {
-    if ($global:activeSpinner) {
-        Stop-Spinner $global:activeSpinner $false
-    }
-    try { [Console]::CursorVisible = $true } catch {}
+    Write-Progress -Activity "CodeWebChat Installation" -Completed
 }
 
-Pause
 Pop-Location
-Start-Process -FilePath "cmd.exe" -ArgumentList "/c", "rmdir", "/s", "/q", "`"$tmpDir`"" -WindowStyle Hidden
+Remove-Item -Path $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
+Pause
