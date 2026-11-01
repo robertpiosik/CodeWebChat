@@ -122,10 +122,44 @@ else
 fi
 
 TMP_DIR=$(mktemp -d)
-trap '( rm -rf "$TMP_DIR" >/dev/null 2>&1 & )' EXIT
+
+cleanup() {
+  if [ -n "${SPINNER_PID:-}" ]; then
+    kill "$SPINNER_PID" >/dev/null 2>&1 || true
+    wait "$SPINNER_PID" 2>/dev/null || true
+  fi
+  tput cnorm 2>/dev/null || true
+  rm -rf "$TMP_DIR" >/dev/null 2>&1
+}
+trap cleanup EXIT INT TERM
+
+start_spinner() {
+  tput civis 2>/dev/null || true
+  local delay=0.1
+  local spinstr='|/-\'
+  while :; do
+    local temp=${spinstr#?}
+    printf "\r%c" "$spinstr"
+    local spinstr=$temp${spinstr%"$temp"}
+    sleep $delay
+  done
+}
+
+stop_spinner() {
+  local pid=$1
+  local exit_code=$2
+  SPINNER_PID=""
+  kill "$pid" >/dev/null 2>&1 || true
+  wait "$pid" 2>/dev/null || true
+  tput cnorm 2>/dev/null || true
+  if [ "$exit_code" -eq 0 ]; then
+    printf "\r\033[32m\xE2\x9C\x94\033[0m\n"
+  else
+    printf "\r\033[31m\xE2\x9C\x98\033[0m\n"
+  fi
+}
 
 echo ""
-echo "Fetching latest version info..."
 PAGE=1
 ZIP_URL=""
 
@@ -151,12 +185,18 @@ if [ -z "$ZIP_URL" ]; then
   exit 1
 fi
 
-echo "The latest is ${TAG_NAME%-vscode}"
-echo "Downloading source code..."
-curl -sL "$ZIP_URL" -o "$TMP_DIR/source.zip"
+printf "  Downloading source code..."
+start_spinner &
+SPINNER_PID=$!
+if ! curl -sL "$ZIP_URL" -o "$TMP_DIR/source.zip"; then
+  stop_spinner $SPINNER_PID 1
+  exit 1
+fi
+stop_spinner $SPINNER_PID 0
 
-echo "Extracting archive..."
-unzip -q "$TMP_DIR/source.zip" -d "$TMP_DIR"
+if ! unzip -q "$TMP_DIR/source.zip" -d "$TMP_DIR"; then
+  exit 1
+fi
 
 EXTRACTED_DIR=$(find "$TMP_DIR" -mindepth 1 -maxdepth 1 -type d | head -n 1)
 
@@ -167,12 +207,24 @@ fi
 
 cd "$EXTRACTED_DIR"
 
-echo "Installing dependencies..."
-npx --yes pnpm install > /dev/null 2>&1
+printf "  Installing dependencies..."
+start_spinner &
+SPINNER_PID=$!
+if ! npx --yes pnpm install > /dev/null 2>&1; then
+  stop_spinner $SPINNER_PID 1
+  exit 1
+fi
+stop_spinner $SPINNER_PID 0
 
-echo "Building extension..."
+printf "  Building extension..."
+start_spinner &
+SPINNER_PID=$!
 cd apps/editor
-npx --yes pnpm run build > /dev/null 2>&1
+if ! npx --yes pnpm run build > /dev/null 2>&1; then
+  stop_spinner $SPINNER_PID 1
+  exit 1
+fi
+stop_spinner $SPINNER_PID 0
 
 VSIX_FILE=$(ls *.vsix | head -n 1)
 
@@ -185,7 +237,18 @@ install_to_editor() {
   local idx=$1
   local editor_name="${AVAILABLE_EDITORS[$idx]}"
   local editor_cmd="${EDITOR_CMDS[$idx]}"
-  $editor_cmd --install-extension "$VSIX_FILE" --force > /dev/null 2>&1
+  
+  printf "  Installing to %s..." "$editor_name"
+  start_spinner &
+  SPINNER_PID=$!
+  
+  if ! $editor_cmd --install-extension "$VSIX_FILE" --force > /dev/null 2>&1; then
+    stop_spinner $SPINNER_PID 1
+    echo "Error: Failed to install to $editor_name."
+    return 1
+  fi
+  
+  stop_spinner $SPINNER_PID 0
   
   if [ -n "$TARGET_SCHEME" ]; then
     echo "Updated successfully! Please reload the window or restart the editor for changes to take effect."

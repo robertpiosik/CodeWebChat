@@ -106,7 +106,59 @@ if ($autoChoice) {
     }
 }
 
-Write-Host "`nFetching latest version info..."
+$global:activeSpinner = $null
+
+function Start-Spinner {
+    param([string]$Message)
+    Write-Host -NoNewline "  $Message"
+    try { [Console]::CursorVisible = $false } catch {}
+    
+    $runspace = [runspacefactory]::CreateRunspace()
+    $runspace.Open()
+    $ps = [powershell]::Create()
+    $ps.Runspace = $runspace
+    $ps.AddScript({
+        $spinner = @('-', '\', '|', '/')
+        $i = 0
+        while ($true) {
+            try { [Console]::Write("`r$($spinner[$i % 4])") } catch {}
+            $i++
+            Start-Sleep -Milliseconds 100
+        }
+    }) | Out-Null
+    $asyncResult = $ps.BeginInvoke()
+    $spinnerObj = @{ PS = $ps; Runspace = $runspace; Message = $Message }
+    $global:activeSpinner = $spinnerObj
+    return $spinnerObj
+}
+
+function Stop-Spinner {
+    param($spinnerObj, [bool]$Success = $true)
+    if ($global:activeSpinner -and $spinnerObj -and $global:activeSpinner.PS -eq $spinnerObj.PS) {
+        $global:activeSpinner = $null
+    }
+    $msg = if ($spinnerObj.Message) { $spinnerObj.Message } else { "" }
+    if ($spinnerObj) {
+        try { $spinnerObj.PS.Stop() } catch {}
+        try { $spinnerObj.PS.Dispose() } catch {}
+        try { $spinnerObj.Runspace.Close() } catch {}
+        try { $spinnerObj.Runspace.Dispose() } catch {}
+    }
+    try { [Console]::CursorVisible = $true } catch {}
+    
+    if ($Success) {
+        Write-Host "`r$([char]0x2714) " -ForegroundColor Green -NoNewline
+        Write-Host $msg
+    } else {
+        Write-Host "`r$([char]0x2718) " -ForegroundColor Red -NoNewline
+        Write-Host $msg
+    }
+}
+
+Write-Host ""
+
+try {
+
 $page = 1
 $latestTag = $null
 
@@ -130,18 +182,30 @@ if (!$latestTag) {
     exit 1
 }
 
-Write-Host "The latest is $($latestTag.name -replace '-vscode$','')"
 $zipUrl = $latestTag.zipball_url
 
 $tmpDir = Join-Path $env:TEMP ("CWC_Install_" + [Guid]::NewGuid().ToString().Substring(0,8))
 New-Item -ItemType Directory -Path $tmpDir | Out-Null
 
 $zipPath = Join-Path $tmpDir "source.zip"
-Write-Host "Downloading source code..."
-Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
+$spinner = Start-Spinner "Downloading source code..."
+try {
+    Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
+    Stop-Spinner $spinner $true
+} catch {
+    Stop-Spinner $spinner $false
+    Write-Host "Error: Download failed." -ForegroundColor Red
+    Pause
+    exit 1
+}
 
-Write-Host "Extracting archive..."
-Expand-Archive -Path $zipPath -DestinationPath $tmpDir -Force
+try {
+    Expand-Archive -Path $zipPath -DestinationPath $tmpDir -Force
+} catch {
+    Write-Host "Error: Extraction failed." -ForegroundColor Red
+    Pause
+    exit 1
+}
 
 $extractedDir = Get-ChildItem -Path $tmpDir -Directory | Select-Object -First 1
 
@@ -153,14 +217,31 @@ if (!$extractedDir) {
 
 Push-Location $extractedDir.FullName
 
-Write-Host "Installing dependencies..."
+$spinner = Start-Spinner "Installing dependencies..."
 $ErrorActionPreference = "Continue"
 npx.cmd --yes pnpm install *>$null
+$cmdSuccess = $?
+Stop-Spinner $spinner $cmdSuccess
 
-Write-Host "Building extension..."
+if (!$cmdSuccess) {
+    Write-Host "Error: Failed to install dependencies." -ForegroundColor Red
+    Pause
+    exit 1
+}
+
+$spinner = Start-Spinner "Building extension..."
 Set-Location apps/editor
 npx.cmd --yes pnpm run build *>$null
+$cmdSuccess = $?
 $ErrorActionPreference = "Stop"
+Stop-Spinner $spinner $cmdSuccess
+
+if (!$cmdSuccess) {
+    Write-Host "Error: Build failed." -ForegroundColor Red
+    Pop-Location
+    Pause
+    exit 1
+}
 
 $vsixFile = Get-ChildItem *.vsix | Select-Object -First 1
 
@@ -174,14 +255,23 @@ if (!$vsixFile) {
 function Install-ToEditor($idx) {
     $editorName = $availableEditors[$idx]
     $editorCmd = $editorCmds[$idx]
+    
+    $spinner = Start-Spinner "Installing to $editorName..."
     $ErrorActionPreference = "Continue"
     & $editorCmd --install-extension $vsixFile.FullName --force *>$null
+    $cmdSuccess = $?
     $ErrorActionPreference = "Stop"
     
-    if ($targetScheme) {
-        Write-Host "Updated successfully! Please reload the window or restart the editor for changes to take effect."
+    Stop-Spinner $spinner $cmdSuccess
+    
+    if ($cmdSuccess) {
+        if ($targetScheme) {
+            Write-Host "Updated successfully! Please reload the window or restart the editor for changes to take effect."
+        } else {
+            Write-Host "Successfully installed to $editorName!"
+        }
     } else {
-        Write-Host "Successfully installed to $editorName!"
+        Write-Host "Error: Failed to install to $editorName." -ForegroundColor Red
     }
 }
 
@@ -192,6 +282,13 @@ if ($choice -eq 'a' -or $choice -eq 'A') {
     }
 } else {
     Install-ToEditor ([int]$choice - 1)
+}
+
+} finally {
+    if ($global:activeSpinner) {
+        Stop-Spinner $global:activeSpinner $false
+    }
+    try { [Console]::CursorVisible = $true } catch {}
 }
 
 Pause
