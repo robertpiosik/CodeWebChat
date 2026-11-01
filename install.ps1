@@ -134,7 +134,7 @@ if (!$latestTag) {
     exit 1
 }
 
-Write-Host "Found: $($latestTag.name)"
+Write-Host "The latest is $($latestTag.name -replace '-vscode$','')"
 $zipUrl = $latestTag.zipball_url
 
 $tmpDir = Join-Path $env:TEMP ("CWC_Install_" + [Guid]::NewGuid().ToString().Substring(0,8))

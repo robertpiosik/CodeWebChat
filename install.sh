@@ -158,7 +158,7 @@ if [ -z "$ZIP_URL" ]; then
   exit 1
 fi
 
-echo "Found: $TAG_NAME"
+echo "The latest is ${TAG_NAME%-vscode}"
 echo "Downloading source code..."
 curl -sL "$ZIP_URL" -o "$TMP_DIR/source.zip"
 
