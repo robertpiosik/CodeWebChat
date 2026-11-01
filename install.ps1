@@ -184,16 +184,7 @@ function Install-ToEditor($idx) {
     $ErrorActionPreference = "Stop"
     
     if ($targetScheme) {
-        $processName = switch ($editorCmd) {
-            "code" { "Code" }
-            "code-insiders" { "Code - Insiders" }
-            "codium" { "VSCodium" }
-            "cursor" { "Cursor" }
-            "agy-ide" { "Antigravity" }
-            default { $editorCmd }
-        }
-        Get-Process -Name $processName -ErrorAction SilentlyContinue | Stop-Process -Force
-        Write-Host "Updated successfully! Restart extensions for changes to take effect."
+        Write-Host "Updated successfully! Please reload the window or restart the editor for changes to take effect."
     } else {
         Write-Host "Successfully installed to $editorName!"
     }
