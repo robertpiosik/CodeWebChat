@@ -193,7 +193,7 @@ install_to_editor() {
   $editor_cmd --install-extension "$VSIX_FILE" --force > /dev/null 2>&1
   
   if [ -n "$TARGET_SCHEME" ]; then
-    echo "Updated successfully! Restart extensions for changes to take effect."
+    echo "Updated successfully! Restart editor for changes to take effect."
   else
     echo "Successfully installed to $editor_name!"
   fi
