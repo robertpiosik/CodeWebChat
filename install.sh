@@ -215,7 +215,7 @@ install_to_editor() {
   
   echo ""
   if [ -n "$TARGET_SCHEME" ]; then
-    echo "Updated successfully! Please reload the window or restart the editor for changes to take effect."
+    echo "Updated successfully! Please restart the editor for changes to take effect."
   else
     echo "Successfully installed to $editor_name!"
   fi

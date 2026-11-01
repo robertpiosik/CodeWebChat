@@ -237,7 +237,7 @@ function Install-ToEditor($idx) {
     Write-Host ""
     if ($cmdSuccess) {
         if ($targetScheme) {
-            Write-Host "Updated successfully! Please reload the window or restart the editor for changes to take effect."
+            Write-Host "Updated successfully! Please restart the editor for changes to take effect."
         } else {
             Write-Host "Successfully installed to $editorName!"
         }
