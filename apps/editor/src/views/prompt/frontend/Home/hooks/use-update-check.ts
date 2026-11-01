@@ -6,8 +6,9 @@ type UpdateInfo = {
   current_version_age_days?: number
 }
 
-let has_checked = false
 let global_update_info: UpdateInfo = { is_available: false }
+let last_checked_time = 0
+const CHECK_INTERVAL = 5 * 60 * 1000
 
 const is_newer = (latest: string, current: string) => {
   const l = latest.split('.').map(Number)
@@ -25,16 +26,24 @@ export const use_update_check = (current_version: string, is_active: boolean) =>
   const [update_info, set_update_info] = useState<UpdateInfo>(global_update_info)
 
   useEffect(() => {
-    if (!is_active || !current_version || has_checked) {
-      if (has_checked) {
-        set_update_info(global_update_info)
-      }
+    if (!is_active || !current_version) {
       return
     }
     let is_mounted = true
-    has_checked = true
+    let timeout_id: ReturnType<typeof setTimeout>
 
     const check = async () => {
+      const now = Date.now()
+      if (last_checked_time !== 0 && now - last_checked_time < CHECK_INTERVAL) {
+        if (is_mounted) {
+          set_update_info(global_update_info)
+          timeout_id = setTimeout(check, CHECK_INTERVAL - (now - last_checked_time))
+        }
+        return
+      }
+
+      last_checked_time = Date.now()
+
       try {
         let page = 1
         while (page <= 10) {
@@ -83,12 +92,17 @@ export const use_update_check = (current_version: string, is_active: boolean) =>
       } catch (e) {
         console.error('Failed to check for updates:', e)
       }
+
+      if (is_mounted) {
+        timeout_id = setTimeout(check, CHECK_INTERVAL)
+      }
     }
 
     check()
 
     return () => {
       is_mounted = false
+      clearTimeout(timeout_id)
     }
   }, [current_version, is_active])
 
