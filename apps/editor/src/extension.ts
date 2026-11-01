@@ -228,6 +228,10 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       url: 'https://codeweb.chat/'
     }),
     open_url_command({
+      command: 'codeWebChat.openChangelog',
+      url: 'https://github.com/robertpiosik/CodeWebChat/releases'
+    }),
+    open_url_command({
       command: 'codeWebChat.openRepository',
       url: 'https://github.com/robertpiosik/CodeWebChat'
     }),
