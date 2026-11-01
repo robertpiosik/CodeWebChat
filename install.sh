@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-if ! command -v curl &> /dev/null; then
-  echo "Error: curl is required but not installed."
-  exit 1
-fi
-
-if ! command -v unzip &> /dev/null; then
-  echo "Error: unzip is required but not installed."
+if ! command -v git &> /dev/null; then
+  echo "Error: git is required but not installed."
   exit 1
 fi
 
@@ -160,50 +155,17 @@ stop_spinner() {
 }
 
 echo ""
-PAGE=1
-ZIP_URL=""
 
-while [ $PAGE -le 10 ]; do
-  TAGS_JSON=$(curl -s "https://api.github.com/repos/robertpiosik/CodeWebChat/tags?per_page=100&page=$PAGE")
-  
-  if [[ "$TAGS_JSON" == *"\"message\":"* ]] || [[ "$TAGS_JSON" == "[]" ]] || [[ -z "$TAGS_JSON" ]]; then
-    break
-  fi
-
-  TAG_NAME=$(echo "$TAGS_JSON" | grep -o '"name": *"[^"]*-vscode"' | head -n 1 | sed -e 's/"name": *"//' -e 's/"$//')
-  ZIP_URL=$(echo "$TAGS_JSON" | grep -o '"zipball_url": *"[^"]*-vscode"' | head -n 1 | sed -e 's/"zipball_url": *"//' -e 's/"$//')
-  
-  if [ -n "$ZIP_URL" ]; then
-    break
-  fi
-  
-  PAGE=$((PAGE + 1))
-done
-
-if [ -z "$ZIP_URL" ]; then
-  echo "Error: Could not find latest vscode tag."
-  exit 1
-fi
-
-printf "  Downloading source code..."
+printf "  Cloning repository..."
 start_spinner &
 SPINNER_PID=$!
-if ! curl -sL "$ZIP_URL" -o "$TMP_DIR/source.zip"; then
+if ! git clone --quiet https://github.com/robertpiosik/CodeWebChat.git "$TMP_DIR/source" > /dev/null 2>&1; then
   stop_spinner $SPINNER_PID 1
   exit 1
 fi
 stop_spinner $SPINNER_PID 0
 
-if ! unzip -q "$TMP_DIR/source.zip" -d "$TMP_DIR"; then
-  exit 1
-fi
-
-EXTRACTED_DIR=$(find "$TMP_DIR" -mindepth 1 -maxdepth 1 -type d | head -n 1)
-
-if [ -z "$EXTRACTED_DIR" ]; then
-  echo "Error: Extraction failed."
-  exit 1
-fi
+EXTRACTED_DIR="$TMP_DIR/source"
 
 cd "$EXTRACTED_DIR"
 

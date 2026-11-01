@@ -1,6 +1,12 @@
 $ErrorActionPreference = "Stop"
 $targetScheme = if ($args.Count -gt 0) { $args[0] } else { $null }
 
+if (!(Get-Command git -ErrorAction SilentlyContinue)) {
+    Write-Host "Error: git is required but not installed." -ForegroundColor Red
+    Pause
+    exit 1
+}
+
 $nodeIsGood = $false
 if (Get-Command node -ErrorAction SilentlyContinue) {
     $nodeVersion = (node -v) -replace '^v',''
@@ -159,63 +165,25 @@ Write-Host ""
 
 try {
 
-$page = 1
-$latestTag = $null
-
-while ($page -le 10 -and !$latestTag) {
-    $tagsUrl = "https://api.github.com/repos/robertpiosik/CodeWebChat/tags?page=$page"
-    try {
-        $tags = Invoke-RestMethod -Uri $tagsUrl
-        if (!$tags -or $tags.Count -eq 0) { break }
-        $latestTag = $tags | Where-Object { $_.name -match '-vscode$' } | Select-Object -First 1
-    } catch {
-        Write-Host "Error: Failed to fetch tags." -ForegroundColor Red
-        Pause
-        exit 1
-    }
-    $page++
-}
-
-if (!$latestTag) {
-    Write-Host "Error: Could not find latest vscode tag." -ForegroundColor Red
-    Pause
-    exit 1
-}
-
-$zipUrl = $latestTag.zipball_url
-
 $tmpDir = Join-Path $env:TEMP ("CWC_Install_" + [Guid]::NewGuid().ToString().Substring(0,8))
 New-Item -ItemType Directory -Path $tmpDir | Out-Null
 
-$zipPath = Join-Path $tmpDir "source.zip"
-$spinner = Start-Spinner "Downloading source code..."
-try {
-    Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
-    Stop-Spinner $spinner $true
-} catch {
-    Stop-Spinner $spinner $false
-    Write-Host "Error: Download failed." -ForegroundColor Red
+$extractedDir = Join-Path $tmpDir "source"
+
+$spinner = Start-Spinner "Cloning repository..."
+$ErrorActionPreference = "Continue"
+git clone --quiet https://github.com/robertpiosik/CodeWebChat.git $extractedDir *>$null
+$cmdSuccess = $?
+$ErrorActionPreference = "Stop"
+Stop-Spinner $spinner $cmdSuccess
+
+if (!$cmdSuccess) {
+    Write-Host "Error: Cloning repository failed." -ForegroundColor Red
     Pause
     exit 1
 }
 
-try {
-    Expand-Archive -Path $zipPath -DestinationPath $tmpDir -Force
-} catch {
-    Write-Host "Error: Extraction failed." -ForegroundColor Red
-    Pause
-    exit 1
-}
-
-$extractedDir = Get-ChildItem -Path $tmpDir -Directory | Select-Object -First 1
-
-if (!$extractedDir) {
-    Write-Host "Error: Extraction failed." -ForegroundColor Red
-    Pause
-    exit 1
-}
-
-Push-Location $extractedDir.FullName
+Push-Location $extractedDir
 
 $spinner = Start-Spinner "Installing dependencies..."
 $ErrorActionPreference = "Continue"
