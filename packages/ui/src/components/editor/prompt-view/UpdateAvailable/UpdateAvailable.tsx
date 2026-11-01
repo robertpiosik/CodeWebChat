@@ -49,7 +49,7 @@ export const UpdateAvailable: React.FC<Props> = (props) => {
         <div className={styles.details}>
           <span className={styles.versions}>
             {props.current_version}
-            {props.latest_version && <>→ {props.latest_version}</>}
+            {props.latest_version && <> → {props.latest_version}</>}
           </span>
           {props.translations.age && <span>{props.translations.age}</span>}
           {props.translations.changelog && (
