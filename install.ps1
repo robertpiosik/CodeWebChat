@@ -17,9 +17,6 @@ if (Get-Command node -ErrorAction SilentlyContinue) {
 }
 
 if (!$nodeIsGood) {
-    Write-Host "Node.js version 20 or higher is required (Node.js 22.x is recommended)."
-    Write-Host "Attempting to switch to Node.js 22 using a version manager..."
-    
     $switched = $false
 
     if (!$switched -and (Get-Command fnm -ErrorAction SilentlyContinue)) {

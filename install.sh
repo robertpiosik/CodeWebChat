@@ -14,9 +14,6 @@ check_node_version() {
 }
 
 if ! check_node_version; then
-  echo "Node.js version 20 or higher is required (Node.js 22.x is recommended)."
-  echo "Attempting to switch to Node.js 22 using a version manager..."
-  
   SWITCHED=false
 
   export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
