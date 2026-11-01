@@ -7,7 +7,6 @@ type UpdateInfo = {
 }
 
 let global_update_info: UpdateInfo = { is_available: false }
-let last_checked_time = 0
 const CHECK_INTERVAL = 5 * 60 * 1000
 
 const is_newer = (latest: string, current: string) => {
@@ -33,17 +32,6 @@ export const use_update_check = (current_version: string, is_active: boolean) =>
     let timeout_id: ReturnType<typeof setTimeout>
 
     const check = async () => {
-      const now = Date.now()
-      if (last_checked_time !== 0 && now - last_checked_time < CHECK_INTERVAL) {
-        if (is_mounted) {
-          set_update_info(global_update_info)
-          timeout_id = setTimeout(check, CHECK_INTERVAL - (now - last_checked_time))
-        }
-        return
-      }
-
-      last_checked_time = Date.now()
-
       try {
         let page = 1
         while (page <= 10) {
