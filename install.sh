@@ -11,7 +11,6 @@ if ! command -v unzip &> /dev/null; then
   exit 1
 fi
 
-# Validate Node.js version and attempt to switch if necessary
 check_node_version() {
   if ! command -v node &> /dev/null; then return 1; fi
   local version
@@ -25,7 +24,6 @@ if ! check_node_version; then
   
   SWITCHED=false
 
-  # Try nvm
   export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
   if [ -s "$NVM_DIR/nvm.sh" ]; then
     \. "$NVM_DIR/nvm.sh"
@@ -34,13 +32,11 @@ if ! check_node_version; then
     nvm install 22 >/dev/null 2>&1 && nvm use 22 >/dev/null 2>&1 && SWITCHED=true
   fi
 
-  # Try fnm
   if [ "$SWITCHED" = false ] && command -v fnm &> /dev/null; then
     eval "$(fnm env)"
     fnm install 22 >/dev/null 2>&1 && fnm use 22 >/dev/null 2>&1 && SWITCHED=true
   fi
 
-  # Try n
   if [ "$SWITCHED" = false ] && command -v n &> /dev/null; then
     n 22 >/dev/null 2>&1 && SWITCHED=true
   fi
@@ -51,7 +47,6 @@ if ! check_node_version; then
   fi
 fi
 
-# Detect available editors in the system
 declare -a AVAILABLE_EDITORS
 declare -a EDITOR_CMDS
 declare -a EDITOR_SCHEMES
@@ -104,7 +99,6 @@ else
   echo "q) Quit"
   echo ""
 
-  # Handle interactive prompt even if script is piped via curl | bash
   if [ -c /dev/tty ]; then
     read -p "Select where to install CWC to: " choice < /dev/tty
   else
@@ -138,7 +132,6 @@ ZIP_URL=""
 while [ $PAGE -le 10 ]; do
   TAGS_JSON=$(curl -s "https://api.github.com/repos/robertpiosik/CodeWebChat/tags?per_page=100&page=$PAGE")
   
-  # Break if the page is empty or rate limited/not found
   if [[ "$TAGS_JSON" == *"\"message\":"* ]] || [[ "$TAGS_JSON" == "[]" ]] || [[ -z "$TAGS_JSON" ]]; then
     break
   fi

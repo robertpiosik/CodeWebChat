@@ -1,7 +1,6 @@
 $ErrorActionPreference = "Stop"
 $targetScheme = if ($args.Count -gt 0) { $args[0] } else { $null }
 
-# Validate Node.js version and attempt to switch if necessary
 $nodeIsGood = $false
 if (Get-Command node -ErrorAction SilentlyContinue) {
     $nodeVersion = (node -v) -replace '^v',''
@@ -17,7 +16,6 @@ if (!$nodeIsGood) {
     
     $switched = $false
 
-    # Try fnm
     if (!$switched -and (Get-Command fnm -ErrorAction SilentlyContinue)) {
         fnm env --shell powershell | Out-String | Invoke-Expression
         fnm install 22 *>$null
@@ -25,7 +23,6 @@ if (!$nodeIsGood) {
         $switched = $true
     }
 
-    # Try nvm
     if (!$switched -and (Get-Command nvm -ErrorAction SilentlyContinue)) {
         nvm install 22 *>$null
         nvm use 22 *>$null
@@ -39,7 +36,6 @@ if (!$nodeIsGood) {
     }
 }
 
-# Detect available editors in the system
 $availableEditors = @()
 $editorCmds = @()
 $editorSchemes = @()
@@ -147,7 +143,6 @@ Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
 Write-Host "Extracting archive..."
 Expand-Archive -Path $zipPath -DestinationPath $tmpDir -Force
 
-# The extracted content is in a subfolder inside $tmpDir
 $extractedDir = Get-ChildItem -Path $tmpDir -Directory | Select-Object -First 1
 
 if (!$extractedDir) {
@@ -201,5 +196,4 @@ if ($choice -eq 'a' -or $choice -eq 'A') {
 
 Pause
 Pop-Location
-# Run cleanup in the background to avoid sluggish exit
 Start-Process -FilePath "cmd.exe" -ArgumentList "/c", "rmdir", "/s", "/q", "`"$tmpDir`"" -WindowStyle Hidden
