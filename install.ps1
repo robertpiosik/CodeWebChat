@@ -20,15 +20,15 @@ if (!$nodeIsGood) {
     # Try fnm
     if (!$switched -and (Get-Command fnm -ErrorAction SilentlyContinue)) {
         fnm env --shell powershell | Out-String | Invoke-Expression
-        fnm install 22
-        fnm use 22
+        fnm install 22 *>$null
+        fnm use 22 *>$null
         $switched = $true
     }
 
     # Try nvm
     if (!$switched -and (Get-Command nvm -ErrorAction SilentlyContinue)) {
-        nvm install 22
-        nvm use 22
+        nvm install 22 *>$null
+        nvm use 22 *>$null
         $switched = $true
     }
 

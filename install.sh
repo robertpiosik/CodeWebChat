@@ -31,18 +31,18 @@ if ! check_node_version; then
     \. "$NVM_DIR/nvm.sh"
   fi
   if type nvm >/dev/null 2>&1; then
-    nvm install 22 && nvm use 22 && SWITCHED=true
+    nvm install 22 >/dev/null 2>&1 && nvm use 22 >/dev/null 2>&1 && SWITCHED=true
   fi
 
   # Try fnm
   if [ "$SWITCHED" = false ] && command -v fnm &> /dev/null; then
     eval "$(fnm env)"
-    fnm install 22 && fnm use 22 && SWITCHED=true
+    fnm install 22 >/dev/null 2>&1 && fnm use 22 >/dev/null 2>&1 && SWITCHED=true
   fi
 
   # Try n
   if [ "$SWITCHED" = false ] && command -v n &> /dev/null; then
-    n 22 && SWITCHED=true
+    n 22 >/dev/null 2>&1 && SWITCHED=true
   fi
 
   if [ "$SWITCHED" = false ]; then
