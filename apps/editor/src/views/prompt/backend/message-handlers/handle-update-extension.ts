@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import * as os from 'os'
 
 export const handle_update_extension = () => {
-  const terminal = vscode.window.createTerminal('CodeWebChat Update')
+  const terminal = vscode.window.createTerminal('CWC Updater')
   terminal.show()
 
   const uriScheme = vscode.env.uriScheme
