@@ -60,6 +60,7 @@ jobs:
           tag_name: ${{ steps.package_version.outputs.version }}
           name: ${{ steps.package_version.outputs.raw_version }} - VS Code
           body_path: release_notes.md
+          target_commitish: ${{ github.sha }}
 
   release-browser:
     runs-on: ubuntu-latest
@@ -109,3 +110,4 @@ jobs:
           tag_name: ${{ steps.browser_version.outputs.version }}
           name: ${{ steps.browser_version.outputs.raw_version }} - Browser
           body_path: release_notes_browser.md
+          target_commitish: ${{ github.sha }}
