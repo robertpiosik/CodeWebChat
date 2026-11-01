@@ -173,7 +173,7 @@ $extractedDir = Join-Path $tmpDir "source"
 $spinner = Start-Spinner "Cloning repository..."
 $ErrorActionPreference = "Continue"
 git clone -c core.longpaths=true --quiet https://github.com/robertpiosik/CodeWebChat.git $extractedDir *>$null
-$cmdSuccess = $?
+$cmdSuccess = ($LASTEXITCODE -eq 0)
 $ErrorActionPreference = "Stop"
 Stop-Spinner $spinner $cmdSuccess
 
@@ -188,7 +188,7 @@ Push-Location $extractedDir
 $spinner = Start-Spinner "Installing dependencies..."
 $ErrorActionPreference = "Continue"
 npx.cmd --yes pnpm install *>$null
-$cmdSuccess = $?
+$cmdSuccess = ($LASTEXITCODE -eq 0)
 Stop-Spinner $spinner $cmdSuccess
 
 if (!$cmdSuccess) {
@@ -200,7 +200,7 @@ if (!$cmdSuccess) {
 $spinner = Start-Spinner "Building extension..."
 Set-Location apps/editor
 npx.cmd --yes pnpm run build *>$null
-$cmdSuccess = $?
+$cmdSuccess = ($LASTEXITCODE -eq 0)
 $ErrorActionPreference = "Stop"
 Stop-Spinner $spinner $cmdSuccess
 
@@ -211,7 +211,7 @@ if (!$cmdSuccess) {
     exit 1
 }
 
-$vsixFile = Get-ChildItem *.vsix | Select-Object -First 1
+$vsixFile = Get-ChildItem *.vsix -ErrorAction SilentlyContinue | Select-Object -First 1
 
 if (!$vsixFile) {
     Write-Host "Error: VSIX file was not generated." -ForegroundColor Red
@@ -227,7 +227,7 @@ function Install-ToEditor($idx) {
     $spinner = Start-Spinner "Installing to $editorName..."
     $ErrorActionPreference = "Continue"
     & $editorCmd --install-extension $vsixFile.FullName --force *>$null
-    $cmdSuccess = $?
+    $cmdSuccess = ($LASTEXITCODE -eq 0)
     $ErrorActionPreference = "Stop"
     
     Stop-Spinner $spinner $cmdSuccess
