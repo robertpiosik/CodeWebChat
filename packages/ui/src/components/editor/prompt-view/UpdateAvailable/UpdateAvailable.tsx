@@ -5,11 +5,11 @@ import cn from 'classnames'
 
 type Props = {
   on_update: () => void
+  current_version: string
+  latest_version?: string
   translations: {
     title: string
     button: string
-    installed_version: React.ReactNode
-    latest_version: React.ReactNode
     age?: React.ReactNode
     changelog?: React.ReactNode
   }
@@ -47,8 +47,15 @@ export const UpdateAvailable: React.FC<Props> = (props) => {
       </div>
       {is_expanded && (
         <div className={styles.details}>
-          <span>{props.translations.installed_version}</span>
-          <span>{props.translations.latest_version}</span>
+          <span className={styles.versions}>
+            {props.current_version}
+            {props.latest_version && (
+              <>
+                <span className="codicon codicon-arrow-small-right" />
+                {props.latest_version}
+              </>
+            )}
+          </span>
           {props.translations.age && <span>{props.translations.age}</span>}
           {props.translations.changelog && <span>{props.translations.changelog}</span>}
         </div>

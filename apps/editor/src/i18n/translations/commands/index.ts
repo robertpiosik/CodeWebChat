@@ -11,7 +11,6 @@ import { translations as set_ranges_command } from './set-ranges-command'
 import { translations as new_file_command } from './new-file-command'
 import { translations as new_folder_command } from './new-folder-command'
 import { translations as rename_command } from './rename-command'
-import { translations as rate_extension_command } from './rate-extension-command'
 import { translations as install_browser_extension_command } from './install-browser-extension-command'
 import { translations as select_modified_files_command } from './select-modified-files-command'
 import { translations as select_files_of_commit_command } from './select-files-of-commit-command'
@@ -37,7 +36,6 @@ export const translations = {
   ...new_file_command,
   ...new_folder_command,
   ...rename_command,
-  ...rate_extension_command,
   ...install_browser_extension_command,
   ...select_modified_files_command,
   ...select_files_of_commit_command,

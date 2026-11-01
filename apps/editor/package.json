@@ -150,11 +150,6 @@
         "category": "%codeWebChat.category%"
       },
       {
-        "command": "codeWebChat.rateExtension",
-        "title": "%codeWebChat.rateExtension.title%",
-        "category": "%codeWebChat.category%"
-      },
-      {
         "command": "codeWebChat.openRepository",
         "title": "%codeWebChat.openRepository.title%",
         "category": "%codeWebChat.category%",
@@ -564,10 +559,6 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.rateExtension",
-          "when": "false"
-        },
-        {
           "command": "codeWebChat.setRanges",
           "when": "false"
         },
@@ -780,19 +771,14 @@
           "group": "1_more@1"
         },
         {
-          "command": "codeWebChat.rateExtension",
+          "command": "codeWebChat.openRepository",
           "when": "view == promptView",
           "group": "1_more@2"
         },
         {
-          "command": "codeWebChat.openRepository",
-          "when": "view == promptView",
-          "group": "1_more@3"
-        },
-        {
           "command": "codeWebChat.followOnX",
           "when": "view == promptView",
-          "group": "1_more@4"
+          "group": "1_more@3"
         }
       ],
       "scm/title": [

@@ -166,21 +166,11 @@ export const Home: React.FC<Props> = (props) => {
           on_update={() =>
             post_message(props.vscode, { command: 'UPDATE_EXTENSION' })
           }
+          current_version={props.version}
+          latest_version={update_info.latest_version}
           translations={{
             title: t('home.update.title'),
             button: t('home.update.button'),
-            installed_version: (
-              <Translation
-                id="home.update.installed-version"
-                components={{ version: props.version }}
-              />
-            ),
-            latest_version: (
-              <Translation
-                id="home.update.latest-version"
-                components={{ version: update_info.latest_version }}
-              />
-            ),
             age: update_info.current_version_age_days ? (
               <Translation
                 id="home.update.age"
@@ -201,7 +191,7 @@ export const Home: React.FC<Props> = (props) => {
                   })
                 }}
               >
-                {t('home.update.changelog')}
+                {t('home.update.open-changelog')}
               </a>
             )
           }}
@@ -318,7 +308,20 @@ export const Home: React.FC<Props> = (props) => {
     <div className={styles['bottom-wrapper']}>
       <div className={styles.bottom}>
         <div className={styles.bottom__links}>
-          <div className={styles.bottom__version}>{props.version}</div>
+          <div className={styles.bottom__version}>
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault()
+                post_message(props.vscode, {
+                  command: 'OPEN_WEBSITE',
+                  url: `https://github.com/robertpiosik/CodeWebChat/releases#release-${props.version}-vscode`
+                })
+              }}
+            >
+              {props.version}
+            </a>
+          </div>
           <div>
             <Translation
               id="home.footer.copyright"

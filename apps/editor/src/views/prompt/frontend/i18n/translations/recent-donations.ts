@@ -110,20 +110,20 @@ export const recent_donations = {
   },
   'recent-donations.buy-me-a-coffee': {
     en: 'Buy Me A Coffee',
-    pl: 'Kup mi kawę',
+    pl: 'Postaw kawę',
     'zh-cn': '请我喝杯咖啡',
     ja: 'コーヒーをおごる',
     'zh-tw': '請我喝杯咖啡',
     de: 'Kauf mir einen Kaffee',
-    es: 'Invítame a un café',
+    es: 'Cómprame un café',
     fr: 'Offrez-moi un café',
-    'pt-br': 'Pague-me um café',
-    ru: 'Угостить кофе',
-    ko: '커피 한 잔 사주기',
+    'pt-br': 'Me pague um café',
+    ru: 'Купить мне кофе',
+    ko: '커피 사주기',
     it: 'Offrimi un caffè',
     tr: 'Bana Bir Kahve Ismarla',
     cs: 'Kup mi kávu',
     hu: 'Vegyél nekem egy kávét',
-    bg: 'Купи ми кафе'
+    bg: 'Купете ми кафе'
   }
 } as const

@@ -8,7 +8,7 @@
   cursor: pointer;
 
   &:hover {
-    background-color: var(--cwc-bg-tertiary);
+    border-color: var(--cwc-border-color);
   }
 }
 
@@ -40,10 +40,17 @@
   font-size: 12px;
   color: var(--cwc-text-color-dimmed);
   padding-bottom: 4px;
+  padding-right: 6px;
 
   > span {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
   }
+}
+
+.versions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
