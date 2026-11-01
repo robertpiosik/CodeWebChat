@@ -70,24 +70,10 @@ check_editor "VSCodium" "codium" "vscodium"
 check_editor "Cursor" "cursor" "cursor"
 check_editor "Antigravity" "agy-ide" "agy"
 
-echo ""
-echo "Hint: If your editor is installed but not listed, you might need to add its command to your PATH."
-echo "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and find a command like: \"Shell Command: Install 'cursor' command in PATH\" (or 'agy-ide', etc.)."
-
 if [ ${#AVAILABLE_EDITORS[@]} -eq 0 ]; then
   echo "Error: No supported editors found in your PATH."
   exit 1
 fi
-
-echo ""
-for i in "${!AVAILABLE_EDITORS[@]}"; do
-  echo "$((i+1))) ${AVAILABLE_EDITORS[$i]}"
-done
-if [ ${#AVAILABLE_EDITORS[@]} -gt 1 ]; then
-  echo "a) All detected editors"
-fi
-echo "q) Quit"
-echo ""
 
 TARGET_SCHEME="$1"
 AUTO_CHOICE=""
@@ -103,28 +89,41 @@ fi
 
 if [ -n "$AUTO_CHOICE" ]; then
   choice="$AUTO_CHOICE"
-  echo "Automatically selected ${AVAILABLE_EDITORS[$((choice-1))]} based on current editor ($TARGET_SCHEME)."
 else
+  echo ""
+  echo "Hint: If your editor is installed but not listed, you might need to add its command to your PATH."
+  echo "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and find a command like: \"Shell Command: Install 'cursor' command in PATH\" (or 'agy-ide', etc.)."
+
+  echo ""
+  for i in "${!AVAILABLE_EDITORS[@]}"; do
+    echo "$((i+1))) ${AVAILABLE_EDITORS[$i]}"
+  done
+  if [ ${#AVAILABLE_EDITORS[@]} -gt 1 ]; then
+    echo "a) All detected editors"
+  fi
+  echo "q) Quit"
+  echo ""
+
   # Handle interactive prompt even if script is piped via curl | bash
   if [ -c /dev/tty ]; then
     read -p "Select where to install CWC to: " choice < /dev/tty
   else
     read -p "Select where to install CWC to: " choice
   fi
-fi
 
-if [[ "$choice" == "q" || "$choice" == "Q" ]]; then
-  echo "Installation cancelled."
-  exit 0
-elif [[ "$choice" == "a" || "$choice" == "A" ]]; then
-  if [ ${#AVAILABLE_EDITORS[@]} -le 1 ]; then
-    echo "Error: Invalid choice. Exiting."
-    exit 1
-  fi
-else
-  if ! [[ "$choice" =~ ^[0-9]+$ ]] || [ "$choice" -lt 1 ] || [ "$choice" -gt "${#AVAILABLE_EDITORS[@]}" ]; then
-    echo "Error: Invalid choice. Exiting."
-    exit 1
+  if [[ "$choice" == "q" || "$choice" == "Q" ]]; then
+    echo "Installation cancelled."
+    exit 0
+  elif [[ "$choice" == "a" || "$choice" == "A" ]]; then
+    if [ ${#AVAILABLE_EDITORS[@]} -le 1 ]; then
+      echo "Error: Invalid choice. Exiting."
+      exit 1
+    fi
+  else
+    if ! [[ "$choice" =~ ^[0-9]+$ ]] || [ "$choice" -lt 1 ] || [ "$choice" -gt "${#AVAILABLE_EDITORS[@]}" ]; then
+      echo "Error: Invalid choice. Exiting."
+      exit 1
+    fi
   fi
 fi
 

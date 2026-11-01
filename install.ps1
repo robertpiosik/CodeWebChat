@@ -58,23 +58,11 @@ Check-Editor "VSCodium" "codium" "vscodium"
 Check-Editor "Cursor" "cursor" "cursor"
 Check-Editor "Antigravity" "agy-ide" "agy"
 
-Write-Host "`nHint: If your editor is installed but not listed, you might need to add its command to your PATH." -ForegroundColor Yellow
-Write-Host "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and find a command like: `"Shell Command: Install 'cursor' command in PATH`" (or 'agy-ide', etc.)." -ForegroundColor Yellow
-
 if ($availableEditors.Count -eq 0) {
     Write-Host "Error: No supported editors found in your PATH." -ForegroundColor Red
     Pause
     exit 1
 }
-
-Write-Host ""
-for ($i = 0; $i -lt $availableEditors.Count; $i++) {
-    Write-Host "$($i + 1)) $($availableEditors[$i])"
-}
-if ($availableEditors.Count -gt 1) {
-    Write-Host "a) All detected editors"
-}
-Write-Host "q) Quit`n"
 
 $autoChoice = $null
 if ($targetScheme) {
@@ -88,26 +76,37 @@ if ($targetScheme) {
 
 if ($autoChoice) {
     $choice = $autoChoice.ToString()
-    Write-Host "Automatically selected $($availableEditors[$autoChoice - 1]) based on current editor ($targetScheme)." -ForegroundColor Green
 } else {
-    $choice = Read-Host "Select where to install CWC to"
-}
+    Write-Host "`nHint: If your editor is installed but not listed, you might need to add its command to your PATH." -ForegroundColor Yellow
+    Write-Host "Open your editor, open the Command Palette (Ctrl+Shift+P / Cmd+Shift+P), and find a command like: `"Shell Command: Install 'cursor' command in PATH`" (or 'agy-ide', etc.)." -ForegroundColor Yellow
 
-if ($choice -eq 'q' -or $choice -eq 'Q') {
-    Write-Host "Installation cancelled."
-    Pause
-    exit 0
-} elseif ($choice -eq 'a' -or $choice -eq 'A') {
-    if ($availableEditors.Count -le 1) {
-        Write-Host "Error: Invalid choice. Exiting." -ForegroundColor Red
-        Pause
-        exit 1
+    Write-Host ""
+    for ($i = 0; $i -lt $availableEditors.Count; $i++) {
+        Write-Host "$($i + 1)) $($availableEditors[$i])"
     }
-} else {
-    if ($choice -notmatch '^[0-9]+$' -or [int]$choice -lt 1 -or [int]$choice -gt $availableEditors.Count) {
-        Write-Host "Error: Invalid choice. Exiting." -ForegroundColor Red
+    if ($availableEditors.Count -gt 1) {
+        Write-Host "a) All detected editors"
+    }
+    Write-Host "q) Quit`n"
+
+    $choice = Read-Host "Select where to install CWC to"
+
+    if ($choice -eq 'q' -or $choice -eq 'Q') {
+        Write-Host "Installation cancelled."
         Pause
-        exit 1
+        exit 0
+    } elseif ($choice -eq 'a' -or $choice -eq 'A') {
+        if ($availableEditors.Count -le 1) {
+            Write-Host "Error: Invalid choice. Exiting." -ForegroundColor Red
+            Pause
+            exit 1
+        }
+    } else {
+        if ($choice -notmatch '^[0-9]+$' -or [int]$choice -lt 1 -or [int]$choice -gt $availableEditors.Count) {
+            Write-Host "Error: Invalid choice. Exiting." -ForegroundColor Red
+            Pause
+            exit 1
+        }
     }
 }
 
