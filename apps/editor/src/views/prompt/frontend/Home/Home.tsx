@@ -159,7 +159,7 @@ export const Home: React.FC<Props> = (props) => {
     </div>
   )
 
-  const update_section = !update_info.is_available ? (
+  const update_section = update_info.is_available ? (
     <>
       <div className={styles.inner__update}>
         <UiUpdateAvailable
