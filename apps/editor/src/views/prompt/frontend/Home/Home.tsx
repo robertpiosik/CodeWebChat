@@ -188,7 +188,15 @@ export const Home: React.FC<Props> = (props) => {
                   days: update_info.current_version_age_days.toString()
                 }}
               />
-            ) : undefined
+            ) : undefined,
+            changelog: (
+              <a
+                href="https://github.com/robertpiosik/CodeWebChat/releases"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {t('home.update.changelog')}
+              </a>
+            )
           }}
         />
       </div>

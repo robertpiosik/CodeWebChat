@@ -11,6 +11,7 @@ type Props = {
     installed_version: React.ReactNode
     latest_version: React.ReactNode
     age?: React.ReactNode
+    changelog?: React.ReactNode
   }
 }
 
@@ -49,6 +50,7 @@ export const UpdateAvailable: React.FC<Props> = (props) => {
           <span>{props.translations.installed_version}</span>
           <span>{props.translations.latest_version}</span>
           {props.translations.age && <span>{props.translations.age}</span>}
+          {props.translations.changelog && <span>{props.translations.changelog}</span>}
         </div>
       )}
     </div>

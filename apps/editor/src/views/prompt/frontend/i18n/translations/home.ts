@@ -268,5 +268,23 @@ export const home = {
     cs: 'Vaše verze je stará {days} dní.',
     hu: 'Az Ön verziója {days} napos.',
     bg: 'Вашата версия е на {days} дни.'
+  },
+  'home.update.changelog': {
+    en: 'Open changelog',
+    pl: 'Otwórz dziennik zmian',
+    'zh-cn': '打开更新日志',
+    ja: '変更履歴を開く',
+    'zh-tw': '開啟更新日誌',
+    de: 'Änderungsprotokoll öffnen',
+    es: 'Abrir registro de cambios',
+    fr: 'Ouvrir le journal des modifications',
+    'pt-br': 'Abrir registro de alterações',
+    ru: 'Открыть список изменений',
+    ko: '변경 로그 열기',
+    it: 'Apri log delle modifiche',
+    tr: 'Değişiklik günlüğünü aç',
+    cs: 'Otevřít seznam změn',
+    hu: 'Változásnapló megnyitása',
+    bg: 'Отвори дневник на промените'
   }
 } as const
