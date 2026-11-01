@@ -181,14 +181,14 @@ export const Home: React.FC<Props> = (props) => {
                 components={{ version: update_info.latest_version }}
               />
             ),
-            age: (
+            age: update_info.current_version_age_days ? (
               <Translation
                 id="home.update.age"
                 components={{
-                  days: update_info.current_version_age_days!.toString()
+                  days: update_info.current_version_age_days.toString()
                 }}
               />
-            )
+            ) : undefined
           }}
         />
       </div>

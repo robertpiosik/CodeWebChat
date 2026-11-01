@@ -10,7 +10,7 @@ type Props = {
     button: string
     installed_version: React.ReactNode
     latest_version: React.ReactNode
-    age: React.ReactNode
+    age?: React.ReactNode
   }
 }
 
@@ -48,7 +48,7 @@ export const UpdateAvailable: React.FC<Props> = (props) => {
         <div className={styles.details}>
           <span>{props.translations.installed_version}</span>
           <span>{props.translations.latest_version}</span>
-          <span>{props.translations.age}</span>
+          {props.translations.age && <span>{props.translations.age}</span>}
         </div>
       )}
     </div>
