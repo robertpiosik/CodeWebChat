@@ -20,7 +20,7 @@ import {
   CliPromptType
 } from '@shared/types/prompt-types'
 import { use_is_landscape } from '../hooks/use-is-landscape'
-import { use_update_check } from './hooks/use-update-check'
+import { UpdateInfo } from '../hooks/use-update-check'
 import { UpdateAvailable as UiUpdateAvailable } from '@ui/components/editor/prompt-view/UpdateAvailable'
 
 type Props = {
@@ -36,6 +36,7 @@ type Props = {
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
   cli_prompt_type: CliPromptType
+  update_info: UpdateInfo
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -70,8 +71,6 @@ export const Home: React.FC<Props> = (props) => {
   const { container_ref, compact_step } = use_compacting({
     is_disabled: is_landscape
   })
-
-  const update_info = use_update_check(props.version, props.is_active)
 
   const header_targets_ref = useRef<HTMLDivElement>(null)
 
@@ -159,7 +158,7 @@ export const Home: React.FC<Props> = (props) => {
     </div>
   )
 
-  const update_section = update_info.is_available ? (
+  const update_section = props.update_info.is_available ? (
     <>
       <div className={styles.inner__update}>
         <UiUpdateAvailable
@@ -167,19 +166,19 @@ export const Home: React.FC<Props> = (props) => {
             post_message(props.vscode, { command: 'UPDATE_EXTENSION' })
           }
           current_version={props.version}
-          latest_version={update_info.latest_version}
+          latest_version={props.update_info.latest_version}
           translations={{
             title: t('home.update.title'),
             button: t('home.update.button'),
-            age: update_info.current_version_age_days ? (
+            age: props.update_info.current_version_age_days ? (
               <Translation
                 id={
-                  update_info.current_version_age_days === 1
+                  props.update_info.current_version_age_days === 1
                     ? 'home.update.age.singular'
                     : 'home.update.age'
                 }
                 components={{
-                  days: update_info.current_version_age_days.toString()
+                  days: props.update_info.current_version_age_days.toString()
                 }}
               />
             ) : undefined,

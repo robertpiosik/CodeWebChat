@@ -39,6 +39,22 @@
 
   &__back {
     display: flex;
+
+    &_wrapper {
+      position: relative;
+      display: flex;
+    }
+  }
+
+  &__update_dot {
+    position: absolute;
+    right: 0;
+    --size: 6px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background-color: var(--vscode-button-background);
+    pointer-events: none;
   }
 
   &__types {

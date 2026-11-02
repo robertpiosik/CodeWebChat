@@ -31,6 +31,7 @@ import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurat
 import { use_cli_configuration_editing } from './hooks/use-cli-configuration-editing'
 import { EditCliConfigurationForm } from '@/views/shared/forms/EditCliConfigurationForm/EditCliConfigurationForm'
 import { use_translation } from './i18n/use-translation'
+import { use_update_check } from './hooks/use-update-check'
 
 const vscode = acquireVsCodeApi()
 
@@ -165,6 +166,8 @@ export const Prompt = () => {
   const { viewing_donations, set_viewing_donations, ...donations_state } =
     use_recent_donations()
 
+  const update_info = use_update_check(version, true)
+
   if (
     ask_about_context_instructions === undefined ||
     edit_files_instructions === undefined ||
@@ -289,6 +292,7 @@ export const Prompt = () => {
               })}
             >
               <Main
+                has_update={update_info.is_available}
                 api_configurations={api_configurations}
                 set_api_configurations={set_api_configurations}
                 scroll_reset_key={main_view_scroll_reset_key}
@@ -432,6 +436,7 @@ export const Prompt = () => {
                 version={version}
                 is_setup_complete={is_setup_complete}
                 on_donate_click={() => set_viewing_donations(true)}
+                update_info={update_info}
               />
             </div>
           </Layout>

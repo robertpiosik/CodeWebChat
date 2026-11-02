@@ -90,6 +90,7 @@ type Props = {
   ) => void
   on_skill_click?: (agent: string, repo: string, skill_name: string) => void
   on_agentic_search: () => void
+  has_update?: boolean
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -748,6 +749,7 @@ export const Main: React.FC<Props> = (props) => {
       completed_tasks={completed_tasks}
       on_task_completed={handle_task_completed}
       on_clear_completed_tasks={handle_clear_completed_tasks}
+      has_update={props.has_update}
     />
   )
 }

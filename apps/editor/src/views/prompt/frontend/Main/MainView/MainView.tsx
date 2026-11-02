@@ -154,6 +154,7 @@ type Props = {
   completed_tasks: string[]
   on_task_completed: () => void
   on_clear_completed_tasks: () => void
+  has_update?: boolean
 }
 
 const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
@@ -355,6 +356,7 @@ export const MainView: React.FC<Props> = (props) => {
       is_content_scrollable={is_content_scrollable}
       is_api_warning_visible={is_api_warning_visible}
       response_history={props.response_history}
+      has_update={props.has_update || false}
     />
   )
 

@@ -35,6 +35,7 @@ type Props = {
   is_content_scrollable: boolean
   is_api_warning_visible: boolean
   response_history: ResponseHistoryItem[]
+  has_update: boolean
 }
 
 export const Header: React.FC<Props> = (props) => {
@@ -51,11 +52,14 @@ export const Header: React.FC<Props> = (props) => {
     >
       <div className={styles.header__left}>
         <div className={styles.header__back}>
-          <UiIconButton
-            codicon_icon="chevron-left"
-            on_click={props.on_show_home}
-            title={`${t('header.return')} (Esc)`}
-          />
+          <div className={styles.header__back_wrapper}>
+            <UiIconButton
+              codicon_icon="chevron-left"
+              on_click={props.on_show_home}
+              title={`${t('header.return')} (Esc)`}
+            />
+            {!props.has_update && <div className={styles.header__update_dot} />}
+          </div>
         </div>
 
         <div className={styles.header__types}>
