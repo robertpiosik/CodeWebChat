@@ -32,7 +32,8 @@ export const use_modal_manager = () => {
           title: message.title,
           subtitle: message.subtitle,
           progress: message.progress,
-          cancellable: message.cancellable ?? false
+          cancellable: message.cancellable ?? false,
+          delay_visibility: message.delay_visibility
         })
       } else if (message.command === 'HIDE_PROGRESS') {
         set_progress_state(undefined)

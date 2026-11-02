@@ -29,7 +29,7 @@ export const ProgressModal: React.FC<Props> = (props) => {
       set_is_visible(false)
       visibility_timer = setTimeout(() => {
         set_is_visible(true)
-      }, 1500)
+      }, 500)
     } else {
       set_is_visible(true)
     }

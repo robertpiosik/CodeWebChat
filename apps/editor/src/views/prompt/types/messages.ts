@@ -963,6 +963,7 @@ export interface ShowProgressMessage extends BaseMessage {
   subtitle?: string
   progress?: number
   cancellable?: boolean
+  delay_visibility?: boolean
 }
 
 export interface HideProgressMessage extends BaseMessage {

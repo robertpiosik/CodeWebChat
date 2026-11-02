@@ -103,7 +103,8 @@ export const apply_response_command = (params: {
           params.prompt_view_provider.send_message({
             command: 'SHOW_PROGRESS',
             title: t('common.progress.response-preview'),
-            subtitle: t('common.progress.preparing')
+            subtitle: t('common.progress.preparing'),
+            delay_visibility: true
           })
         }
 
