@@ -149,10 +149,10 @@ run_step "Cloning repository" git clone -b main -c core.longpaths=true --quiet h
 
 cd "$TMP_DIR/source"
 
-run_step "Installing dependencies" corepack pnpm install
+run_step "Installing dependencies" npx --yes pnpm install
 
 cd apps/editor
-run_step "Building extension" corepack pnpm run build
+run_step "Building extension" npx --yes pnpm run build
 
 vsix_files=(*.vsix)
 VSIX_FILE="${vsix_files[0]}"
