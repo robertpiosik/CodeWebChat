@@ -109,9 +109,7 @@ export const claude: Chatbot = {
     observe_for_responses({
       chatbot_name: 'Claude',
       is_generating: () =>
-        !!document.querySelector(
-          'div[data-cds="AssistantMessage"] div[data-cds="TurnStatus"]'
-        ),
+        !!document.querySelector('button[data-testid="chat-input-stop"]'),
       footer_selector,
       add_buttons: params.inject_button ? add_buttons : undefined
     })
