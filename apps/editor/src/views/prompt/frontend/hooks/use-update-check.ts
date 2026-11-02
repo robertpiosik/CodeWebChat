@@ -7,7 +7,7 @@ export type UpdateInfo = {
 }
 
 let global_update_info: UpdateInfo = { is_available: false }
-const CHECK_INTERVAL = 5 * 60 * 1000
+const CHECK_INTERVAL = 24 * 60 * 60 * 1000
 
 const is_newer = (latest: string, current: string) => {
   const l = latest.split('.').map(Number)
