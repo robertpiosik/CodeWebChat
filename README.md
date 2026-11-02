@@ -1,9 +1,9 @@
 <p align="center" title="Code Web Chat">
   <a href="https://codeweb.chat">
     <picture>
-      <source srcset="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/readme-heading-dark.svg" media="(prefers-color-scheme: dark)">
-      <source srcset="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/readme-heading-light.svg" media="(prefers-color-scheme: light)">
-      <img alt="Logo" width="680" src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/readme-heading-light.svg">
+      <source srcset="https://github.com/CodeWebChat/CWC/raw/HEAD/media/readme-heading-dark.svg" media="(prefers-color-scheme: dark)">
+      <source srcset="https://github.com/CodeWebChat/CWC/raw/HEAD/media/readme-heading-light.svg" media="(prefers-color-scheme: light)">
+      <img alt="Logo" width="680" src="https://github.com/CodeWebChat/CWC/raw/HEAD/media/readme-heading-light.svg">
     </picture>
   </a>
 </p>
@@ -15,16 +15,16 @@
 <p align="center"><strong>macOS / Linux</strong></p>
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/robertpiosik/CodeWebChat/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/CodeWebChat/CWC/main/install.sh | bash
 ```
 
 <p align="center"><strong>Windows</strong></p>
 
 ```powershell
-powershell -c "irm https://raw.githubusercontent.com/robertpiosik/CodeWebChat/main/install.ps1 | iex"
+powershell -c "irm https://raw.githubusercontent.com/CodeWebChat/CWC/main/install.ps1 | iex"
 ```
 
-<p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
+<p align="center"><img src="https://github.com/CodeWebChat/CWC/raw/HEAD/media/screenshot-1.png"></p>
 
 ## Privacy-first
 
@@ -586,7 +586,7 @@ Respond with the audio transcription or the word INAUDIBLE, without explanations
 ### Steps
 
 1. Clone the repository:
-   `git clone https://github.com/robertpiosik/CodeWebChat.git && cd CodeWebChat`
+   `git clone https://github.com/CodeWebChat/CWC.git && cd CWC`
 2. Install workspace dependencies:
    `pnpm install`
 3. Navigate to the editor app and build the package:

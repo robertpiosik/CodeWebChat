@@ -9,11 +9,11 @@ export const handle_update_extension = () => {
 
   if (os.platform() === 'win32') {
     terminal.sendText(
-      `powershell -c "& ([scriptblock]::Create((irm https://raw.githubusercontent.com/robertpiosik/CodeWebChat/main/install.ps1))) '${uriScheme}'"`
+      `powershell -c "& ([scriptblock]::Create((irm https://raw.githubusercontent.com/CodeWebChat/CWC/main/install.ps1))) '${uriScheme}'"`
     )
   } else {
     terminal.sendText(
-      `curl -fsSL https://raw.githubusercontent.com/robertpiosik/CodeWebChat/main/install.sh | bash -s -- "${uriScheme}"`
+      `curl -fsSL https://raw.githubusercontent.com/CodeWebChat/CWC/main/install.sh | bash -s -- "${uriScheme}"`
     )
   }
 }

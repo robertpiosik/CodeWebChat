@@ -229,11 +229,11 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     }),
     open_url_command({
       command: 'codeWebChat.openChangelog',
-      url: 'https://github.com/robertpiosik/CodeWebChat/releases'
+      url: 'https://github.com/CodeWebChat/CWC/releases'
     }),
     open_url_command({
       command: 'codeWebChat.openRepository',
-      url: 'https://github.com/robertpiosik/CodeWebChat'
+      url: 'https://github.com/CodeWebChat/CWC'
     }),
     open_url_command({
       command: 'codeWebChat.followOnX',

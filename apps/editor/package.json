@@ -18,7 +18,7 @@
   "homepage": "https://codeweb.chat/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/robertpiosik/CodeWebChat"
+    "url": "https://github.com/CodeWebChat/CWC"
   },
   "engines": {
     "vscode": "^1.96.0"

@@ -39,7 +39,7 @@ export const use_update_check = (
         let page = 1
         while (page <= 10) {
           const res = await fetch(
-            `https://api.github.com/repos/robertpiosik/CodeWebChat/tags?page=${page}`
+            `https://api.github.com/repos/CodeWebChat/CWC/tags?page=${page}`
           )
           if (!res.ok) break
           const tags = await res.json()
@@ -52,7 +52,7 @@ export const use_update_check = (
               let age_days = 0
               try {
                 const commit_res = await fetch(
-                  `https://api.github.com/repos/robertpiosik/CodeWebChat/commits/${current_version}-vscode`
+                  `https://api.github.com/repos/CodeWebChat/CWC/commits/${current_version}-vscode`
                 )
                 if (commit_res.ok) {
                   const commit_data = await commit_res.json()

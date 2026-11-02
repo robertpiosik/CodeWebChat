@@ -101,7 +101,7 @@ New-Item -ItemType Directory -Path $tmpDir | Out-Null
 $extractedDir = Join-Path $tmpDir "source"
 
 $null = Invoke-Step "Cloning repository..." {
-    git clone -b main -c core.longpaths=true --quiet https://github.com/robertpiosik/CodeWebChat.git $extractedDir *>$null
+    git clone -b main -c core.longpaths=true --quiet https://github.com/CodeWebChat/CWC.git $extractedDir *>$null
 } "Cloning repository failed."
 
 Set-Location $extractedDir

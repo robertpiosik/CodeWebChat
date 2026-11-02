@@ -145,7 +145,7 @@ run_step() {
 
 echo ""
 
-run_step "Cloning repository" git clone -b main -c core.longpaths=true --quiet https://github.com/robertpiosik/CodeWebChat.git "$TMP_DIR/source"
+run_step "Cloning repository" git clone -b main -c core.longpaths=true --quiet https://github.com/CodeWebChat/CWC.git "$TMP_DIR/source"
 
 cd "$TMP_DIR/source"
 
