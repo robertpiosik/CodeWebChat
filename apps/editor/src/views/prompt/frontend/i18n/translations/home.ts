@@ -233,6 +233,24 @@ export const home = {
     hu: '{days} napos',
     bg: '{days} дни'
   },
+  'home.update.age.singular': {
+    en: '{days} day old',
+    pl: '{days} dzień',
+    'zh-cn': '{days} 天',
+    ja: '{days} 日前',
+    'zh-tw': '{days} 天',
+    de: '{days} Tag alt',
+    es: '{days} día',
+    fr: '{days} jour',
+    'pt-br': '{days} dia',
+    ru: '{days} день',
+    ko: '{days}일',
+    it: '{days} giorno',
+    tr: '{days} günlük',
+    cs: '{days} den',
+    hu: '{days} napos',
+    bg: '{days} ден'
+  },
   'home.update.open-changelog': {
     en: 'Open changelog',
     pl: 'Otwórz dziennik zmian',

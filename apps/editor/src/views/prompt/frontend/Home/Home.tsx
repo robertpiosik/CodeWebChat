@@ -173,7 +173,11 @@ export const Home: React.FC<Props> = (props) => {
             button: t('home.update.button'),
             age: update_info.current_version_age_days ? (
               <Translation
-                id="home.update.age"
+                id={
+                  update_info.current_version_age_days === 1
+                    ? 'home.update.age.singular'
+                    : 'home.update.age'
+                }
                 components={{
                   days: update_info.current_version_age_days.toString()
                 }}
