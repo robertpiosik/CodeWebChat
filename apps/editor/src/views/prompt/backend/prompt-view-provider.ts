@@ -1,6 +1,5 @@
 import { ChildProcessWithoutNullStreams } from 'child_process'
 import * as path from 'path'
-import axios from 'axios'
 import * as vscode from 'vscode'
 import { WebSocketManager } from '@/services/websocket-manager'
 import {
@@ -137,6 +136,7 @@ import {
 } from '@shared/types/prompt-types'
 import { Logger } from '@shared/utils/logger'
 import { get_error_message } from '@/utils/get-error-message'
+import { check_for_updates } from '@/utils/check-for-updates'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { ProvidersManager } from '@/services/providers-manager'
 import { SharedContextState } from '@/context/shared-context-state'
@@ -571,76 +571,12 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     const current_version = this.extension_context.extension.packageJSON.version
     if (!current_version) return
 
-    const is_newer = (latest: string, current: string) => {
-      const l = latest.split('.').map(Number)
-      const c = current.split('.').map(Number)
-      for (let i = 0; i < Math.max(l.length, c.length); i++) {
-        const l_val = l[i] || 0
-        const c_val = c[i] || 0
-        if (l_val > c_val) return true
-        if (l_val < c_val) return false
-      }
-      return false
-    }
-
-    try {
-      let page = 1
-      while (page <= 10) {
-        const res = await axios.get(
-          `https://api.github.com/repos/CodeWebChat/CWC/tags?page=${page}`,
-          { validateStatus: () => true }
-        )
-        if (res.status !== 200) break
-        const tags = res.data
-        if (!Array.isArray(tags) || tags.length === 0) break
-
-        const vscode_tag = tags.find((t: any) => t.name?.endsWith('-vscode'))
-        if (vscode_tag) {
-          const latest_version = vscode_tag.name.replace('-vscode', '')
-          if (is_newer(latest_version, current_version)) {
-            let age_days = 0
-            try {
-              const commit_res = await axios.get(
-                `https://api.github.com/repos/CodeWebChat/CWC/commits/${current_version}-vscode`,
-                { validateStatus: () => true }
-              )
-              if (commit_res.status === 200) {
-                const commit_data = commit_res.data
-                const date = commit_data.commit?.committer?.date
-                if (date) {
-                  age_days = Math.floor(
-                    (Date.now() - new Date(date).getTime()) /
-                      (1000 * 60 * 60 * 24)
-                  )
-                }
-              }
-            } catch (e) {
-              console.error('Failed to fetch commit date:', e)
-            }
-
-            this.update_info = {
-              is_available: true,
-              latest_version,
-              current_version_age_days: age_days
-            }
-            this.send_message({
-              command: 'UPDATE_INFO',
-              update_info: this.update_info
-            })
-          } else {
-            this.update_info = { is_available: false }
-            this.send_message({
-              command: 'UPDATE_INFO',
-              update_info: this.update_info
-            })
-          }
-          break
-        }
-        page++
-      }
-    } catch (e) {
-      console.error('Failed to check for updates:', e)
-    }
+    this.update_info = await check_for_updates(current_version)
+    
+    this.send_message({
+      command: 'UPDATE_INFO',
+      update_info: this.update_info
+    })
   }
 
   cancel_all_patch_repairs() {
