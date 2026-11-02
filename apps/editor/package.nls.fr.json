@@ -59,5 +59,6 @@
   "codeWebChat.selectClipboardPaths.title": "Sélectionner les chemins du presse-papiers...",
   "codeWebChat.selectParentFolder.title": "Sélectionner le dossier parent...",
   "codeWebChat.copyMergeCommitDetails.title": "Copier les détails des commits fusionnés",
+  "codeWebChat.checkForUpdates.title": "Vérifier les mises à jour...",
   "codeWebChat.category": "CWC"
 }

@@ -44,7 +44,8 @@ import {
   select_parent_folder_command,
   select_referencing_files_commands,
   select_imported_files_commands,
-  copy_merge_commit_details_command
+  copy_merge_commit_details_command,
+  check_for_updates_command
 } from './commands'
 import { setup_git_discard_file_watcher } from './services/git-discard-file-watcher'
 import { SettingsViewProvider } from './views/settings/backend/settings-view-provider'
@@ -144,7 +145,8 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       extension_context,
       workspace_provider,
       prompt_view_provider
-    })
+    }),
+    check_for_updates_command(prompt_view_provider)
   )
 
   prompt_view_provider.set_prompt_view_api_calls_manager(

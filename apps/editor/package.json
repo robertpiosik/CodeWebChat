@@ -433,6 +433,11 @@
         "title": "%codeWebChat.copyMergeCommitDetails.title%",
         "category": "%codeWebChat.category%",
         "icon": "$(copy)"
+      },
+      {
+        "command": "codeWebChat.checkForUpdates",
+        "title": "%codeWebChat.checkForUpdates.title%",
+        "category": "%codeWebChat.category%"
       }
     ],
     "submenus": [

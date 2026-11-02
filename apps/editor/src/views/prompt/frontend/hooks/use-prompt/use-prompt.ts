@@ -3,7 +3,8 @@ import {
   BackendMessage,
   FrontendMessage,
   SetupProgress,
-  ApiConfiguration
+  ApiConfiguration,
+  UpdateInfo
 } from '../../../types/messages'
 import { Target } from '@shared/types/target'
 import {
@@ -39,6 +40,9 @@ export const use_prompt = (vscode: any) => {
     useState<number>(0)
   const [api_configurations, set_api_configurations] =
     useState<ApiConfiguration[]>()
+  const [update_info, set_update_info] = useState<UpdateInfo>({
+    is_available: false
+  })
 
   const {
     ask_about_context_instructions,
@@ -199,6 +203,8 @@ export const use_prompt = (vscode: any) => {
         setTimeout(() => {
           set_chat_input_focus_key((k) => k + 1)
         }, 100)
+      } else if (message.command === 'UPDATE_INFO') {
+        set_update_info(message.update_info)
       }
     }
     window.addEventListener('message', handle_message)
@@ -216,7 +222,8 @@ export const use_prompt = (vscode: any) => {
       { command: 'GET_VOICE_INPUT_PUSH_TO_TALK' },
       { command: 'GET_IS_MODERN_UI' },
       { command: 'GET_TOKEN_COUNT' },
-      { command: 'GET_API_CONFIGURATIONS' }
+      { command: 'GET_API_CONFIGURATIONS' },
+      { command: 'GET_UPDATE_INFO' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -352,6 +359,7 @@ export const use_prompt = (vscode: any) => {
     handle_changes_click,
     handle_commit_click,
     handle_skill_click,
-    handle_agentic_search
+    handle_agentic_search,
+    update_info
   }
 }

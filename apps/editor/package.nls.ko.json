@@ -59,5 +59,6 @@
   "codeWebChat.selectClipboardPaths.title": "클립보드 경로 선택...",
   "codeWebChat.selectParentFolder.title": "상위 폴더 선택...",
   "codeWebChat.copyMergeCommitDetails.title": "병합된 커밋 세부 정보 복사",
+  "codeWebChat.checkForUpdates.title": "업데이트 확인...",
   "codeWebChat.category": "CWC"
 }

@@ -20,7 +20,7 @@ import {
   CliPromptType
 } from '@shared/types/prompt-types'
 import { use_is_landscape } from '../hooks/use-is-landscape'
-import { UpdateInfo } from '../hooks/use-update-check'
+import { UpdateInfo } from '@/views/prompt/types/messages'
 import { UpdateAvailable as UiUpdateAvailable } from '@ui/components/editor/prompt-view/UpdateAvailable'
 
 type Props = {

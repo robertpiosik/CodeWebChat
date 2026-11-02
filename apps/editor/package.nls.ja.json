@@ -59,5 +59,6 @@
   "codeWebChat.selectClipboardPaths.title": "クリップボードのパスを選択...",
   "codeWebChat.selectParentFolder.title": "親フォルダーを選択...",
   "codeWebChat.copyMergeCommitDetails.title": "マージされたコミットの詳細をコピー",
+  "codeWebChat.checkForUpdates.title": "更新を確認...",
   "codeWebChat.category": "CWC"
 }

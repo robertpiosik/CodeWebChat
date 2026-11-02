@@ -59,5 +59,6 @@
   "codeWebChat.selectClipboardPaths.title": "Выбрать пути из буфера обмена...",
   "codeWebChat.selectParentFolder.title": "Выбрать родительскую папку...",
   "codeWebChat.copyMergeCommitDetails.title": "Копировать сведения об объединенных коммитах",
+  "codeWebChat.checkForUpdates.title": "Проверить обновления...",
   "codeWebChat.category": "CWC"
 }

@@ -455,6 +455,21 @@ export interface SaveTasksMessage extends BaseMessage {
   tasks: Record<string, Task[]>
 }
 
+export type UpdateInfo = {
+  is_available: boolean
+  latest_version?: string
+  current_version_age_days?: number
+}
+
+export interface GetUpdateInfoMessage extends BaseMessage {
+  command: 'GET_UPDATE_INFO'
+}
+
+export interface UpdateInfoMessage extends BaseMessage {
+  command: 'UPDATE_INFO'
+  update_info: UpdateInfo
+}
+
 export interface DeleteTaskMessage extends BaseMessage {
   command: 'DELETE_TASK'
   root: string
@@ -751,6 +766,7 @@ export type FrontendMessage =
   | SaveCompletedTasksMessage
   | ClearCompletedTasksMessage
   | UpdateExtensionMessage
+  | GetUpdateInfoMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -1086,3 +1102,4 @@ export type BackendMessage =
   | NewlyPickedExampleFlagMessage
   | SelectedAgentConfigurationChangedMessage
   | CompletedTasksMessage
+  | UpdateInfoMessage

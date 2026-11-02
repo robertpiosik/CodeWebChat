@@ -31,7 +31,6 @@ import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurat
 import { use_cli_configuration_editing } from './hooks/use-cli-configuration-editing'
 import { EditCliConfigurationForm } from '@/views/shared/forms/EditCliConfigurationForm/EditCliConfigurationForm'
 import { use_translation } from './i18n/use-translation'
-import { use_update_check } from './hooks/use-update-check'
 
 const vscode = acquireVsCodeApi()
 
@@ -87,7 +86,8 @@ export const Prompt = () => {
     handle_changes_click,
     handle_commit_click,
     handle_skill_click,
-    handle_agentic_search
+    handle_agentic_search,
+    update_info
   } = use_panel(vscode)
 
   const {
@@ -165,8 +165,6 @@ export const Prompt = () => {
 
   const { viewing_donations, set_viewing_donations, ...donations_state } =
     use_recent_donations()
-
-  const update_info = use_update_check(version, true)
 
   if (
     ask_about_context_instructions === undefined ||
