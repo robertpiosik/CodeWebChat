@@ -15,7 +15,8 @@ export const build_commit_message_prompt = async (
   diff: string,
   repository: GitRepository,
   context_files: string[] = [],
-  workspace_provider?: WorkspaceProvider
+  workspace_provider?: WorkspaceProvider,
+  diffs_only?: boolean
 ): Promise<{
   api_prompt: string
   chatbot_prompt: string
@@ -138,6 +139,7 @@ export const build_commit_message_prompt = async (
         const should_include_full_content = !is_ignored
 
         if (
+          !diffs_only &&
           !is_deleted &&
           file_path &&
           !is_binary &&

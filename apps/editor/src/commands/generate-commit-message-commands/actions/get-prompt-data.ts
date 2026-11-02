@@ -119,11 +119,20 @@ export const get_prompt_data = async (params: {
     return normalize_path(path.relative(workspace_root, f))
   })
 
+  const prompt_diffs_only = await build_commit_message_prompt(
+    diff,
+    params.repository,
+    [],
+    params.workspace_provider,
+    true
+  )
+
   const prompt_without_context = await build_commit_message_prompt(
     diff,
     params.repository,
     [],
-    params.workspace_provider
+    params.workspace_provider,
+    false
   )
 
   let prompt_with_context:
@@ -149,6 +158,7 @@ export const get_prompt_data = async (params: {
   return {
     repository: params.repository,
     was_empty_stage,
+    prompt_diffs_only,
     prompt_without_context,
     prompt_with_context,
     setting,
