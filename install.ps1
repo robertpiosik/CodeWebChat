@@ -107,13 +107,13 @@ $null = Invoke-Step "Cloning repository..." {
 Set-Location $extractedDir
 
 $null = Invoke-Step "Installing dependencies..." {
-    npx --yes pnpm install *>$null
+    npx.cmd --yes pnpm install *>$null
 } "Failed to install dependencies."
 
 Set-Location apps/editor
 
 $null = Invoke-Step "Building extension..." {
-    npx --yes pnpm run build *>$null
+    npx.cmd --yes pnpm run build *>$null
 } "Build failed."
 
 $vsixFile = Get-ChildItem *.vsix -ErrorAction SilentlyContinue | Select-Object -First 1
