@@ -14,15 +14,15 @@
 
 ## Quick start
 
-<p align="center">Securely build from source for VS Code, Cursor, or Antigravity:</p>
+Securely build from source for VS Code, Cursor, or Antigravity:
 
-<p align="center"><strong>macOS / Linux</strong></p>
+**macOS / Linux**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/CodeWebChat/CWC/main/install.sh | bash
 ```
 
-<p align="center"><strong>Windows</strong></p>
+**Windows**
 
 ```powershell
 powershell -c "irm https://raw.githubusercontent.com/CodeWebChat/CWC/main/install.ps1 | iex"
