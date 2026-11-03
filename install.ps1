@@ -1,4 +1,5 @@
 $ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
 $targetScheme = $args[0]
 
 function Fail($Message) {
@@ -84,7 +85,6 @@ if ($targetScheme -and $idx -ge 0) {
 
 function Invoke-Step {
     param([string]$Message, [scriptblock]$Action, [string]$ErrorMsg)
-    Write-Progress -Activity "CodeWebChat Installation" -Status $Message
     Write-Host -NoNewline "  $Message"
     
     $prevPreference = $ErrorActionPreference
@@ -99,7 +99,6 @@ function Invoke-Step {
         $ErrorActionPreference = $prevPreference
     }
     
-    Write-Progress -Activity "CodeWebChat Installation" -Completed
     if ($ok) { Write-Host "`r$([char]0x2714)" -ForegroundColor Green }
     else     { Write-Host "`r$([char]0x2718)" -ForegroundColor Red }
     if (!$ok -and $ErrorMsg) { Fail $ErrorMsg }
