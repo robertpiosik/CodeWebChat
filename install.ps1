@@ -89,9 +89,12 @@ function Invoke-Step {
     
     $prevPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
+    $ok = $true
     try {
         & $Action
-        $ok = $?
+        if (-not $?) { $ok = $false }
+    } catch {
+        $ok = $false
     } finally {
         $ErrorActionPreference = $prevPreference
     }
@@ -106,25 +109,47 @@ function Invoke-Step {
 Write-Host ""
 
 $originalLocation = Get-Location
-$tmpDir = Join-Path $env:TEMP ("CWC_Install_" + [Guid]::NewGuid().ToString().Substring(0,8))
+
+$cwcDir = Join-Path $env:USERPROFILE ".cwc"
+$repoDir = Join-Path $cwcDir "repository"
 
 try {
 
-New-Item -ItemType Directory -Path $tmpDir | Out-Null
+if (!(Test-Path $cwcDir)) {
+    New-Item -ItemType Directory -Path $cwcDir | Out-Null
+}
 
-$extractedDir = Join-Path $tmpDir "source"
+$updated = $false
+if (Test-Path (Join-Path $repoDir ".git")) {
+    $updated = Invoke-Step "Updating repository..." {
+        git -C $repoDir fetch origin main --quiet *>$null
+        if ($LASTEXITCODE -ne 0) { throw "Failed to fetch" }
+        git -C $repoDir reset --hard FETCH_HEAD --quiet *>$null
+        if ($LASTEXITCODE -ne 0) { throw "Failed to reset" }
+        git -C $repoDir clean -fd --quiet *>$null
+        if ($LASTEXITCODE -ne 0) { throw "Failed to clean" }
+    }
+}
 
-$null = Invoke-Step "Cloning repository..." {
-    git clone -b main -c core.longpaths=true --quiet https://github.com/CodeWebChat/CWC.git $extractedDir *>$null
-} "Cloning repository failed."
+if (-not $updated) {
+    if (Test-Path $repoDir) {
+        Remove-Item -Path $repoDir -Recurse -Force -ErrorAction SilentlyContinue
+    }
+    $null = Invoke-Step "Cloning repository..." {
+        git clone -b main -c core.longpaths=true --quiet https://github.com/CodeWebChat/CWC.git $repoDir *>$null
+        if ($LASTEXITCODE -ne 0) { throw "Failed to clone" }
+    } "Cloning repository failed."
+}
 
-Set-Location $extractedDir
+Set-Location $repoDir
 
 $null = Invoke-Step "Installing dependencies..." {
     npx.cmd --yes pnpm install *>$null
 } "Failed to install dependencies."
 
 Set-Location apps/editor
+
+Remove-Item *.vsix -Force -ErrorAction SilentlyContinue
 
 $null = Invoke-Step "Building extension..." {
     npx.cmd --yes pnpm run build *>$null
@@ -159,18 +184,8 @@ foreach ($i in $indices) { Install-ToEditor $i }
 
 Set-Location $originalLocation
 
-Write-Host ""
-$null = Invoke-Step "Cleaning up..." {
-    if (Test-Path $tmpDir) {
-        Remove-Item -Path $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
-    }
-} "Failed to clean up."
-
 } finally {
     Set-Location $originalLocation -ErrorAction SilentlyContinue
-    if (Test-Path $tmpDir) {
-        Remove-Item -Path $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
-    }
 }
 
 Pause

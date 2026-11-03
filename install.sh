@@ -89,7 +89,6 @@ if [ -z "$choice" ]; then
   esac
 fi
 
-TMP_DIR=$(mktemp -d)
 ORIGINAL_DIR="$(pwd)"
 
 kill_spinner() {
@@ -103,9 +102,6 @@ kill_spinner() {
 
 cleanup() {
   kill_spinner
-  if [ -d "$TMP_DIR" ]; then
-    rm -rf "$TMP_DIR" >/dev/null 2>&1
-  fi
 }
 trap cleanup EXIT INT TERM
 
@@ -145,13 +141,37 @@ run_step() {
 
 echo ""
 
-run_step "Cloning repository" git clone -b main -c core.longpaths=true --quiet https://github.com/CodeWebChat/CWC.git "$TMP_DIR/source"
+CWC_DIR="$HOME/.cwc"
+REPO_DIR="$CWC_DIR/repository"
 
-cd "$TMP_DIR/source"
+mkdir -p -m 700 "$CWC_DIR"
+chmod 700 "$CWC_DIR" 2>/dev/null || true
+
+update_repo() {
+  git -C "$REPO_DIR" fetch origin main --quiet && \
+  git -C "$REPO_DIR" reset --hard FETCH_HEAD --quiet && \
+  git -C "$REPO_DIR" clean -fd --quiet
+}
+
+clone_repo() {
+  git clone -b main -c core.longpaths=true --quiet https://github.com/CodeWebChat/CWC.git "$REPO_DIR"
+}
+
+if [ -d "$REPO_DIR/.git" ] && run_step "Updating repository" update_repo; then
+  :
+else
+  rm -rf "$REPO_DIR"
+  run_step "Cloning repository" clone_repo
+fi
+
+cd "$REPO_DIR"
 
 run_step "Installing dependencies" npx --yes pnpm install
 
 cd apps/editor
+
+rm -f ./*.vsix
+
 run_step "Building extension" npx --yes pnpm run build
 
 vsix_files=(*.vsix)
@@ -189,6 +209,3 @@ fi
 for i in "${indices[@]}"; do install_to_editor "$i"; done
 
 cd "$ORIGINAL_DIR" || cd /
-
-echo ""
-run_step "Cleaning up" rm -rf "$TMP_DIR"
