@@ -1,6 +1,6 @@
 {
   "name": "cwc",
-  "packageManager": "pnpm@12.16.1+sha512.091d1dee7927575661b25dab3c2ae31cafc1c54d6b71ed6a6600cf0c1cb10434a447eae14015f1b23e2e6bedeed79df94a932e2164d2832280dce3fb32f656d1",
+  "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39",
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "husky": "^9.1.7",
@@ -11,7 +11,7 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
-    "prepare": "husky",
+    "preinstall": "husky",
     "test": "jest",
     "test:watch": "jest --watch"
   },
