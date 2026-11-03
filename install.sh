@@ -131,7 +131,7 @@ run_step() {
   printf "  %s..." "$msg"
   start_spinner &
   SPINNER_PID=$!
-  if "$@" > /dev/null 2>&1; then
+  if "$@" > /dev/null 2>&1 < /dev/null; then
     stop_spinner 0
   else
     stop_spinner 1
