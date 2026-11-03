@@ -58,7 +58,7 @@ export const Header: React.FC<Props> = (props) => {
               on_click={props.on_show_home}
               title={`${t('header.return')} (Esc)`}
             />
-            {!props.has_update && <div className={styles.header__update_dot} />}
+            {props.has_update && <div className={styles.header__update_dot} />}
           </div>
         </div>
 
