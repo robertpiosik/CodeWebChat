@@ -30,20 +30,25 @@ export const apply_search_replace_to_content = (params: {
         : []
 
     const clean_lines = (lines: string[]) =>
-      lines.filter((l) => l.trim() !== '')
+      lines.filter((l) => l.replace(/[\u200B-\u200F\uFEFF]/g, '').trim() !== '')
 
     const clean_context_before = clean_lines(context_before)
     const clean_original = clean_lines(segment.original_lines)
     const clean_context_after = clean_lines(context_after)
 
-    const SEPARATOR = '(?:[ \\t]*\\r?\\n){1,5}'
+    // Allow invisible characters alongside tabs and spaces
+    const SEPARATOR = '(?:[ \\t\\u200B-\\u200F\\uFEFF]*\\r?\\n){1,5}'
 
     const build_block_pattern = (lines: string[]) => {
       return lines
         .map((line) => {
-          const trimmed = line.trim()
-          const escaped = escape_reg_exp(trimmed)
-          return `[ \\t]*${escaped}`
+          const cleaned = line.replace(/[\u200B-\u200F\uFEFF]/g, '').trim()
+          // Spread operator iterates code points correctly (safeguards emojis/surrogate pairs).
+          // Allow optional zero-width characters anywhere inside the matched line.
+          const flexible = [...cleaned]
+            .map(escape_reg_exp)
+            .join('[\\u200B-\\u200F\\uFEFF]*')
+          return `[ \\t\\u200B-\\u200F\\uFEFF]*${flexible}`
         })
         .join(SEPARATOR)
     }
@@ -91,7 +96,9 @@ export const apply_search_replace_to_content = (params: {
     const matched_after =
       clean_context_after.length > 0 ? match[group_index++] : ''
 
-    const updated_text = segment.updated_lines.join(line_ending)
+    const updated_text = segment.updated_lines
+      .map((line) => line.replace(/[\u200B-\u200F\uFEFF]/g, ''))
+      .join(line_ending)
 
     const replacement_parts: string[] = []
     if (matched_before) replacement_parts.push(matched_before)

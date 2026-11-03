@@ -19,10 +19,11 @@ export const normalize_original_code = (params: {
       .replace(/\r/g, '')
       .replace(/\n/g, '')
 
-    let line_normalized_processed = line_normalized.replace(/\s+/g, '')
+    const clean_invisibles = line_normalized.replace(/[\u200B-\u200F\uFEFF]/g, '')
+    let line_normalized_processed = clean_invisibles.replace(/\s+/g, '')
 
     if (params.use_strict_whitespace) {
-      line_normalized_processed = line_normalized
+      line_normalized_processed = clean_invisibles
     }
 
     original_code_lines_normalized.push({
@@ -63,11 +64,13 @@ export const normalize_patch_lines = (params: {
       line = '-~nnn'
     }
 
+    const cleaned_line = line.replace(/[\u200B-\u200F\uFEFF]/g, '')
+    
     patch_lines_original.push(
-      line.startsWith(' ') ? line.substring(1, line.length) : line
+      cleaned_line.startsWith(' ') ? cleaned_line.substring(1, cleaned_line.length) : cleaned_line
     )
 
-    let line_normalized = line
+    let line_normalized = cleaned_line
       .replace(/\r\n/g, '')
       .replace(/\r/g, '')
       .replace(/\n/g, '')

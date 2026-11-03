@@ -5,7 +5,8 @@ export const process_truncations = (
   new_text: string,
   original_text: string
 ): string => {
-  const new_lines = new_text.split(/\r?\n/)
+  const cleaned_new_text = new_text.replace(/[\u200B-\u200F\uFEFF]/g, '')
+  const new_lines = cleaned_new_text.split(/\r?\n/)
   const original_lines = original_text.split(/\r?\n/)
 
   const blocks: { type: 'code' | 'truncation'; lines: string[] }[] = []
