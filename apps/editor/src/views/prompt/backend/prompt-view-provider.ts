@@ -1,5 +1,4 @@
 import { ChildProcessWithoutNullStreams } from 'child_process'
-import * as path from 'path'
 import * as vscode from 'vscode'
 import { WebSocketManager } from '@/services/websocket-manager'
 import {
@@ -12,122 +11,18 @@ import { OpenEditorsProvider } from '@/context/providers/open-editors/open-edito
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { token_count_emitter } from '@/context/context-initialization'
 import { EditFormat } from '@shared/types/edit-format'
-import {
-  handle_copy_prompt,
-  handle_autofill,
-  handle_create_web_configuration,
-  handle_update_web_configuration,
-  handle_delete_web_configuration,
-  handle_preview_web_configuration,
-  handle_reorder_web_configurations,
-  handle_toggle_pinned_web_configuration,
-  handle_get_connection_status,
-  handle_get_history,
-  handle_apply_response_from_history,
-  handle_save_history,
-  handle_save_instructions,
-  handle_get_instructions,
-  handle_request_editor_state,
-  handle_request_editor_selection_state,
-  handle_make_api_call,
-  handle_get_edit_format,
-  handle_save_edit_format,
-  handle_get_edit_format_instructions,
-  handle_at_sign_quick_pick,
-  handle_get_web_prompt_type,
-  handle_save_web_prompt_type,
-  handle_target_changed,
-  handle_get_api_prompt_type,
-  handle_save_api_prompt_type,
-  handle_get_cli_prompt_type,
-  handle_save_cli_prompt_type,
-  handle_invoke_agentic_cli,
-  handle_get_target,
-  handle_get_workspace_state,
-  handle_get_version,
-  handle_template_quick_pick,
-  handle_get_api_configurations,
-  handle_reorder_api_configurations,
-  handle_toggle_pinned_api_configuration,
-  handle_pick_model,
-  handle_pick_chatbot,
-  handle_pick_reasoning_effort,
-  handle_focus_on_file_in_preview,
-  handle_go_to_file,
-  handle_show_diff,
-  handle_toggle_file_in_preview,
-  handle_discard_user_changes_in_preview,
-  handle_patch_repair,
-  handle_response_preview,
-  handle_undo,
-  handle_request_can_undo,
-  handle_preview_generated_code,
-  handle_get_tasks,
-  handle_save_tasks,
-  handle_delete_task,
-  handle_cancel_patch_repair_file_in_preview,
-  handle_open_file_and_select,
-  handle_hash_sign_quick_pick,
-  handle_save_prompt_image,
-  handle_open_prompt_image,
-  handle_save_prompt_pasted_text,
-  handle_open_prompt_pasted_text,
-  handle_paste_url,
-  handle_voice_input,
-  handle_open_website,
-  handle_create_api_configuration,
-  handle_delete_api_configuration,
-  handle_request_return_home,
-  handle_pick_tasks_workspace,
-  handle_preview_prompt,
-  handle_install_browser_extension,
-  handle_preview_changes_symbol,
-  handle_preview_commit_symbol,
-  handle_preview_skill_symbol,
-  handle_update_api_configuration,
-  handle_pick_provider,
-  handle_pick_api_model,
-  handle_create_cli_configuration,
-  handle_delete_cli_configuration,
-  handle_reorder_cli_configurations,
-  handle_toggle_pinned_cli_configuration,
-  handle_update_cli_configuration,
-  handle_pick_api_reasoning_effort,
-  handle_select_edit_format_instructions,
-  handle_update_last_used_web_configuration,
-  handle_pick_agent,
-  handle_pick_example_flags,
-  handle_get_completed_tasks,
-  handle_save_completed_tasks,
-  handle_clear_completed_tasks,
-  handle_show_accuracy_boost_info,
-  handle_update_extension
-} from './message-handlers'
+import * as handlers from './message-handlers'
 import { handle_agentic_search } from './message-handlers/handle-agentic-search'
 import { handle_preview_saved_context_symbol } from './message-handlers/handle-preview-saved-context-symbol'
 import { SelectionState, UpdateInfo } from '../types/messages'
+import * as state_keys from '@/constants/state-keys'
 import {
-  EDIT_FORMAT_STATE_KEY,
-  API_TARGET_STATE_KEY,
-  INSTRUCTIONS_ASK_STATE_KEY,
-  INSTRUCTIONS_EDIT_FILES_STATE_KEY,
-  PROMPT_VIEW_TARGET_STATE_KEY,
-  WEB_TARGET_STATE_KEY,
-  CLI_TARGET_STATE_KEY,
-  LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
-  get_last_used_web_configuration_key,
-  get_last_used_cli_configuration_key,
-  COMPLETED_TASKS_STATE_KEY
-} from '@/constants/state-keys'
-import {
-  config_web_configuration_to_ui_format,
   ConfigWebConfigurationFormat
 } from '@/utils/web-configuration-format-converters'
 import {
   config_cli_configuration_to_ui_format,
   ConfigAgentConfigurationFormat
 } from '@/utils/cli-configuration-format-converters'
-import { CHATBOTS } from '@shared/constants/chatbots'
 import { Target } from '@shared/types/target'
 import {
   ApiPromptType,
@@ -142,12 +37,17 @@ import { ProvidersManager } from '@/services/providers-manager'
 import { SharedContextState } from '@/context/shared-context-state'
 import { webview_html } from '@/views/shared/utils/webview-html'
 import { get_selected_files } from '@/context/helpers/get-selected-files'
-import { normalize_path } from '@/utils/normalize-path'
 import { open_settings } from '@/views/settings/helpers/open-settings'
 import { replace_symbols } from './utils/symbols/replace-symbols'
 import { SymbolCacheManager } from './utils/symbols/symbol-cache'
 import { AgenticSearchState } from '@/features/agentic-search'
 import { t } from '@/i18n'
+import {
+  get_valid_web_configurations,
+  get_display_path_for_editor,
+  insert_text_at_caret,
+  estimate_token_count
+} from './utils'
 
 export class PromptViewProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri
@@ -329,48 +229,48 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     })
 
     this.edit_files_instructions = this._load_instructions(
-      INSTRUCTIONS_EDIT_FILES_STATE_KEY
+      state_keys.INSTRUCTIONS_EDIT_FILES_STATE_KEY
     )
     this.ask_about_context_instructions = this._load_instructions(
-      INSTRUCTIONS_ASK_STATE_KEY
+      state_keys.INSTRUCTIONS_ASK_STATE_KEY
     )
 
     this.completed_tasks = this.extension_context.workspaceState.get<string[]>(
-      COMPLETED_TASKS_STATE_KEY,
+      state_keys.COMPLETED_TASKS_STATE_KEY,
       []
     )
 
     this.edit_format =
       this.extension_context.workspaceState.get<EditFormat>(
-        EDIT_FORMAT_STATE_KEY
+        state_keys.EDIT_FORMAT_STATE_KEY
       ) ??
       this.extension_context.globalState.get<EditFormat>(
-        EDIT_FORMAT_STATE_KEY
+        state_keys.EDIT_FORMAT_STATE_KEY
       ) ??
       'whole'
 
     this.target =
       this.extension_context.workspaceState.get<Target>(
-        PROMPT_VIEW_TARGET_STATE_KEY
+        state_keys.PROMPT_VIEW_TARGET_STATE_KEY
       ) ??
       this.extension_context.globalState.get<Target>(
-        PROMPT_VIEW_TARGET_STATE_KEY
+        state_keys.PROMPT_VIEW_TARGET_STATE_KEY
       ) ??
       'WEB'
 
     this.web_prompt_type =
       this.extension_context.workspaceState.get<WebPromptType>(
-        WEB_TARGET_STATE_KEY,
+        state_keys.WEB_TARGET_STATE_KEY,
         'edit'
       )
     this.api_prompt_type =
       this.extension_context.workspaceState.get<ApiPromptType>(
-        API_TARGET_STATE_KEY,
+        state_keys.API_TARGET_STATE_KEY,
         'edit'
       )
     this.cli_prompt_type =
       this.extension_context.workspaceState.get<CliPromptType>(
-        CLI_TARGET_STATE_KEY,
+        state_keys.CLI_TARGET_STATE_KEY,
         'edit'
       )
 
@@ -380,15 +280,15 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           this.send_message({
             command: 'RESET_APPLY_BUTTON_TEMPORARY_DISABLED_STATE'
           })
-          handle_get_tasks(this)
+          handlers.handle_get_tasks(this)
         }
       })
     )
 
     this.extension_context.subscriptions.push(
       vscode.workspace.onDidChangeWorkspaceFolders(() => {
-        handle_get_tasks(this)
-        handle_get_workspace_state(this)
+        handlers.handle_get_tasks(this)
+        handlers.handle_get_workspace_state(this)
         this.send_token_count()
       })
     )
@@ -404,7 +304,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           event.affectsConfiguration('codeWebChat.providers') ||
           event.affectsConfiguration('codeWebChat.models')
         ) {
-          handle_get_api_configurations(this)
+          handlers.handle_get_api_configurations(this)
         }
 
         const setup_progress_keys = [
@@ -453,25 +353,10 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       let display_path: string | undefined
 
       if (current_file_path) {
-        const workspace_root =
-          this.workspace_provider.get_workspace_root_for_file(current_file_path)
-
-        if (workspace_root) {
-          const relative_path = normalize_path(
-            path.relative(workspace_root, current_file_path)
-          )
-
-          const workspace_roots = this.workspace_provider.get_workspace_roots()
-          if (workspace_roots.length > 1) {
-            const workspace_name =
-              this.workspace_provider.get_workspace_name(workspace_root)
-            display_path = `${workspace_name}/${relative_path}`
-          } else {
-            display_path = relative_path
-          }
-        } else {
-          display_path = normalize_path(current_file_path)
-        }
+        display_path = get_display_path_for_editor(
+          current_file_path,
+          this.workspace_provider
+        )
       }
 
       if (display_path !== this.currently_open_file_path) {
@@ -612,21 +497,13 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     this.send_message({
       command: 'TOKEN_COUNT_UPDATED',
       selected_files_token_count: this.current_selected_files_token_count,
-      edit_instructions_token_count: Math.ceil(
-        (edit_instructions_result.instructions.reduce(
-          (acc, text) => acc + text.length,
-          0
-        ) +
-          edit_instructions_result.skill_definitions.length) /
-          4
+      edit_instructions_token_count: estimate_token_count(
+        edit_instructions_result.instructions,
+        edit_instructions_result.skill_definitions.length
       ),
-      ask_instructions_token_count: Math.ceil(
-        (ask_instructions_result.instructions.reduce(
-          (acc, text) => acc + text.length,
-          0
-        ) +
-          ask_instructions_result.skill_definitions.length) /
-          4
+      ask_instructions_token_count: estimate_token_count(
+        ask_instructions_result.instructions,
+        ask_instructions_result.skill_definitions.length
       ),
       selected_files
     })
@@ -684,18 +561,18 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       async (message: FrontendMessage) => {
         try {
           if (message.command === 'GET_HISTORY') {
-            handle_get_history(this)
+            handlers.handle_get_history(this)
           } else if (message.command === 'GET_RESPONSE_HISTORY') {
             this.send_message({
               command: 'RESPONSE_HISTORY',
               history: this.response_history
             })
           } else if (message.command === 'SAVE_HISTORY') {
-            await handle_save_history(this, message)
+            await handlers.handle_save_history(this, message)
           } else if (message.command === 'GET_INSTRUCTIONS') {
-            handle_get_instructions(this)
+            handlers.handle_get_instructions(this)
           } else if (message.command === 'SAVE_INSTRUCTIONS') {
-            await handle_save_instructions(this, message)
+            await handlers.handle_save_instructions(this, message)
             if (this._save_instructions_timeout) {
               clearTimeout(this._save_instructions_timeout)
             }
@@ -711,110 +588,110 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
               }, 500)
             }
           } else if (message.command === 'GET_CONNECTION_STATUS') {
-            handle_get_connection_status(this)
+            handlers.handle_get_connection_status(this)
           } else if (message.command === 'GET_WEB_CONFIGURATIONS') {
             this.send_web_configurations_to_webview(webview_view.webview)
           } else if (message.command === 'AUTOFILL') {
-            await handle_autofill({
+            await handlers.handle_autofill({
               prompt_view_provider: this,
               web_configuration_name: message.web_configuration_name,
               show_quick_pick: message.show_quick_pick
             })
           } else if (message.command === 'PREVIEW_WEB_CONFIGURATION') {
-            await handle_preview_web_configuration(this, message)
+            await handlers.handle_preview_web_configuration(this, message)
           } else if (message.command === 'COPY_PROMPT') {
-            await handle_copy_prompt({
+            await handlers.handle_copy_prompt({
               prompt_view_provider: this
             })
           } else if (message.command === 'REQUEST_EDITOR_STATE') {
-            handle_request_editor_state(this)
+            handlers.handle_request_editor_state(this)
           } else if (message.command === 'REQUEST_EDITOR_SELECTION_STATE') {
-            handle_request_editor_selection_state(this)
+            handlers.handle_request_editor_selection_state(this)
           } else if (message.command === 'REQUEST_CURRENTLY_OPEN_FILE_TEXT') {
             this.send_currently_open_file_text()
           } else if (message.command === 'REORDER_WEB_CONFIGURATIONS') {
-            await handle_reorder_web_configurations(message)
+            await handlers.handle_reorder_web_configurations(message)
           } else if (message.command === 'TOGGLE_PINNED_WEB_CONFIGURATION') {
-            await handle_toggle_pinned_web_configuration(message)
+            await handlers.handle_toggle_pinned_web_configuration(message)
           } else if (message.command === 'GET_SEND_WITH_SHIFT_ENTER') {
             this._send_send_with_shift_enter()
           } else if (message.command === 'CREATE_WEB_CONFIGURATION') {
-            await handle_create_web_configuration(this, message)
+            await handlers.handle_create_web_configuration(this, message)
           } else if (message.command === 'UPDATE_WEB_CONFIGURATION') {
-            await handle_update_web_configuration(this, message)
+            await handlers.handle_update_web_configuration(this, message)
           } else if (message.command === 'DELETE_WEB_CONFIGURATION') {
-            await handle_delete_web_configuration(message)
+            await handlers.handle_delete_web_configuration(message)
           } else if (message.command === 'UNDO') {
-            await handle_undo(this)
+            await handlers.handle_undo(this)
             this.send_token_count()
           } else if (message.command === 'APPLY_RESPONSE_FROM_HISTORY') {
-            await handle_apply_response_from_history(message)
+            await handlers.handle_apply_response_from_history(message)
             this.send_token_count()
           } else if (message.command === 'EXECUTE_COMMAND') {
             await vscode.commands.executeCommand(message.command_id)
           } else if (message.command === 'MAKE_API_CALL') {
-            await handle_make_api_call(this, message)
+            await handlers.handle_make_api_call(this, message)
           } else if (message.command === 'SHOW_TEMPLATE_QUICK_PICK') {
-            await handle_template_quick_pick(this)
+            await handlers.handle_template_quick_pick(this)
           } else if (message.command === 'GET_WEB_PROMPT_TYPE') {
-            handle_get_web_prompt_type(this)
+            handlers.handle_get_web_prompt_type(this)
           } else if (message.command === 'CANCEL_API_REQUEST') {
             if (this.api_call_abort_controller) {
               this.api_call_abort_controller.abort('Cancelled by user.')
               this.api_call_abort_controller = null
             }
           } else if (message.command === 'GET_API_CONFIGURATIONS') {
-            await handle_get_api_configurations(this)
+            await handlers.handle_get_api_configurations(this)
           } else if (message.command === 'REORDER_API_CONFIGURATIONS') {
-            await handle_reorder_api_configurations(this, message)
+            await handlers.handle_reorder_api_configurations(this, message)
           } else if (message.command === 'TOGGLE_PINNED_API_CONFIGURATION') {
-            await handle_toggle_pinned_api_configuration(this, message)
+            await handlers.handle_toggle_pinned_api_configuration(this, message)
           } else if (message.command === 'SAVE_WEB_PROMPT_TYPE') {
-            await handle_save_web_prompt_type(this, message.prompt_type)
+            await handlers.handle_save_web_prompt_type(this, message.prompt_type)
           } else if (message.command === 'GET_API_PROMPT_TYPE') {
-            handle_get_api_prompt_type(this)
+            handlers.handle_get_api_prompt_type(this)
           } else if (message.command === 'SAVE_API_PROMPT_TYPE') {
-            await handle_save_api_prompt_type(this, message.prompt_type)
+            await handlers.handle_save_api_prompt_type(this, message.prompt_type)
           } else if (message.command === 'GET_CLI_PROMPT_TYPE') {
-            handle_get_cli_prompt_type(this)
+            handlers.handle_get_cli_prompt_type(this)
           } else if (message.command === 'SAVE_CLI_PROMPT_TYPE') {
-            await handle_save_cli_prompt_type(this, message.prompt_type)
+            await handlers.handle_save_cli_prompt_type(this, message.prompt_type)
           } else if (message.command === 'INVOKE_AGENTIC_CLI') {
-            await handle_invoke_agentic_cli(this, message as any)
+            await handlers.handle_invoke_agentic_cli(this, message as any)
           } else if (message.command === 'GET_EDIT_FORMAT_INSTRUCTIONS') {
-            handle_get_edit_format_instructions(this)
+            handlers.handle_get_edit_format_instructions(this)
           } else if (message.command === 'GET_EDIT_FORMAT') {
-            handle_get_edit_format(this)
+            handlers.handle_get_edit_format(this)
           } else if (message.command === 'SAVE_EDIT_FORMAT') {
-            await handle_save_edit_format(this, message)
+            await handlers.handle_save_edit_format(this, message)
           } else if (message.command === 'SELECT_EDIT_FORMAT_INSTRUCTIONS') {
-            await handle_select_edit_format_instructions(this, message)
+            await handlers.handle_select_edit_format_instructions(this, message)
           } else if (message.command === 'CARET_POSITION_CHANGED') {
             this.caret_position = message.caret_position
           } else if (message.command === 'TARGET_CHANGED') {
-            handle_target_changed(this, message)
+            handlers.handle_target_changed(this, message)
           } else if (message.command === 'GET_TARGET') {
-            handle_get_target(this)
+            handlers.handle_get_target(this)
           } else if (message.command === 'GET_VERSION') {
-            handle_get_version(this)
+            handlers.handle_get_version(this)
           } else if (message.command === 'SHOW_AT_SIGN_QUICK_PICK') {
-            await handle_at_sign_quick_pick(this)
+            await handlers.handle_at_sign_quick_pick(this)
           } else if (message.command === 'SHOW_HASH_SIGN_QUICK_PICK') {
-            await handle_hash_sign_quick_pick(this, this.extension_context)
+            await handlers.handle_hash_sign_quick_pick(this, this.extension_context)
           } else if (message.command === 'GO_TO_FILE') {
-            handle_go_to_file(message)
+            handlers.handle_go_to_file(message)
           } else if (message.command === 'OPEN_FILE_AND_SELECT') {
-            handle_open_file_and_select(message)
+            handlers.handle_open_file_and_select(message)
           } else if (message.command === 'SHOW_DIFF') {
-            await handle_show_diff(message)
+            await handlers.handle_show_diff(message)
           } else if (message.command === 'FOCUS_ON_FILE_IN_PREVIEW') {
-            handle_focus_on_file_in_preview(message)
+            handlers.handle_focus_on_file_in_preview(message)
           } else if (message.command === 'TOGGLE_FILE_IN_PREVIEW') {
-            await handle_toggle_file_in_preview(message)
+            await handlers.handle_toggle_file_in_preview(message)
           } else if (message.command === 'DISCARD_USER_CHANGES_IN_PREVIEW') {
-            await handle_discard_user_changes_in_preview(message)
+            await handlers.handle_discard_user_changes_in_preview(message)
           } else if (message.command === 'PATCH_REPAIR_FILE_IN_PREVIEW') {
-            await handle_patch_repair({
+            await handlers.handle_patch_repair({
               prompt_view_provider: this,
               files_to_fix: [
                 {
@@ -827,23 +704,23 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (
             message.command === 'CANCEL_PATCH_REPAIR_FILE_IN_PREVIEW'
           ) {
-            handle_cancel_patch_repair_file_in_preview(this, message)
+            handlers.handle_cancel_patch_repair_file_in_preview(this, message)
           } else if (message.command === 'RESPONSE_PREVIEW') {
-            await handle_response_preview(message)
+            await handlers.handle_response_preview(message)
           } else if (message.command === 'REMOVE_RESPONSE_HISTORY_ITEM') {
             this.response_history = this.response_history.filter(
               (item) => item.created_at !== message.created_at
             )
           } else if (message.command === 'GET_WORKSPACE_STATE') {
-            handle_get_workspace_state(this)
+            handlers.handle_get_workspace_state(this)
           } else if (message.command === 'PICK_MODEL') {
-            await handle_pick_model(this, message)
+            await handlers.handle_pick_model(this, message)
           } else if (message.command === 'PICK_CHATBOT') {
-            await handle_pick_chatbot(this, message)
+            await handlers.handle_pick_chatbot(this, message)
           } else if (message.command === 'PICK_REASONING_EFFORT') {
-            await handle_pick_reasoning_effort(this, message)
+            await handlers.handle_pick_reasoning_effort(this, message)
           } else if (message.command === 'UPDATE_LAST_USED_WEB_CONFIGURATION') {
-            handle_update_last_used_web_configuration({
+            handlers.handle_update_last_used_web_configuration({
               prompt_view_provider: this,
               web_configuration_name: message.web_configuration_name
             })
@@ -856,73 +733,73 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
               this.preview_switch_choice_resolver(message.choice)
             }
           } else if (message.command === 'GET_TASKS') {
-            await handle_get_tasks(this)
+            await handlers.handle_get_tasks(this)
           } else if (message.command === 'SAVE_TASKS') {
-            await handle_save_tasks(this, message)
+            await handlers.handle_save_tasks(this, message)
           } else if (message.command === 'DELETE_TASK') {
-            await handle_delete_task(this, message)
+            await handlers.handle_delete_task(this, message)
           } else if (message.command === 'PREVIEW_GENERATED_CODE') {
-            await handle_preview_generated_code(message)
+            await handlers.handle_preview_generated_code(message)
           } else if (message.command === 'UPDATE_FILE_PROGRESS') {
             // Handle the message internally instead of invoking a command
           } else if (message.command === 'CREATE_API_CONFIGURATION') {
-            await handle_create_api_configuration(this, message)
+            await handlers.handle_create_api_configuration(this, message)
           } else if (message.command === 'UPDATE_API_CONFIGURATION') {
-            await handle_update_api_configuration(this, message)
+            await handlers.handle_update_api_configuration(this, message)
           } else if (message.command === 'PICK_PROVIDER') {
-            await handle_pick_provider(this, message)
+            await handlers.handle_pick_provider(this, message)
           } else if (message.command === 'PICK_API_MODEL') {
-            await handle_pick_api_model(this, message)
+            await handlers.handle_pick_api_model(this, message)
           } else if (message.command === 'PICK_API_REASONING_EFFORT') {
-            await handle_pick_api_reasoning_effort(this, message)
+            await handlers.handle_pick_api_reasoning_effort(this, message)
           } else if (message.command === 'DELETE_API_CONFIGURATION') {
-            await handle_delete_api_configuration(this, message)
+            await handlers.handle_delete_api_configuration(this, message)
           } else if (message.command === 'REQUEST_CAN_UNDO') {
-            handle_request_can_undo(this)
+            handlers.handle_request_can_undo(this)
           } else if (message.command === 'FIX_ALL_FAILED_FILES') {
-            await handle_patch_repair({
+            await handlers.handle_patch_repair({
               prompt_view_provider: this,
               files_to_fix: message.files,
               is_auto_run: message.is_auto_run
             })
           } else if (message.command === 'SAVE_PROMPT_IMAGE') {
-            await handle_save_prompt_image(this, message)
+            await handlers.handle_save_prompt_image(this, message)
           } else if (message.command === 'OPEN_PROMPT_IMAGE') {
-            await handle_open_prompt_image(message)
+            await handlers.handle_open_prompt_image(message)
           } else if (message.command === 'SAVE_PROMPT_PASTED_TEXT') {
-            await handle_save_prompt_pasted_text(this, message)
+            await handlers.handle_save_prompt_pasted_text(this, message)
           } else if (message.command === 'OPEN_PROMPT_PASTED_TEXT') {
-            await handle_open_prompt_pasted_text(this, message)
+            await handlers.handle_open_prompt_pasted_text(this, message)
           } else if (message.command === 'PASTE_URL') {
-            await handle_paste_url(this, message)
+            await handlers.handle_paste_url(this, message)
           } else if (message.command === 'OPEN_WEBSITE') {
-            await handle_open_website(this, message)
+            await handlers.handle_open_website(this, message)
           } else if (message.command === 'SET_RECORDING_STATE') {
-            await handle_voice_input(this, message)
+            await handlers.handle_voice_input(this, message)
           } else if (message.command === 'GET_SETUP_PROGRESS') {
             await this.send_setup_progress()
           } else if (message.command === 'REQUEST_RETURN_HOME') {
-            await handle_request_return_home(this)
+            await handlers.handle_request_return_home(this)
           } else if (message.command === 'GET_VOICE_INPUT_PUSH_TO_TALK') {
             this._send_voice_input_push_to_talk()
           } else if (message.command === 'GET_IS_MODERN_UI') {
             this._send_is_modern_ui()
           } else if (message.command === 'PICK_TASKS_WORKSPACE') {
-            await handle_pick_tasks_workspace(this, message)
+            await handlers.handle_pick_tasks_workspace(this, message)
           } else if (message.command === 'GET_TOKEN_COUNT') {
             this.send_token_count()
           } else if (message.command === 'PREVIEW_PROMPT') {
-            await handle_preview_prompt({
+            await handlers.handle_preview_prompt({
               prompt_view_provider: this
             })
           } else if (message.command === 'INSTALL_BROWSER_EXTENSION') {
-            await handle_install_browser_extension()
+            await handlers.handle_install_browser_extension()
           } else if (message.command === 'PREVIEW_CHANGES_SYMBOL') {
-            await handle_preview_changes_symbol(message)
+            await handlers.handle_preview_changes_symbol(message)
           } else if (message.command === 'PREVIEW_COMMIT_SYMBOL') {
-            await handle_preview_commit_symbol(message)
+            await handlers.handle_preview_commit_symbol(message)
           } else if (message.command === 'PREVIEW_SKILL_SYMBOL') {
-            await handle_preview_skill_symbol(message)
+            await handlers.handle_preview_skill_symbol(message)
           } else if (message.command === 'PREVIEW_SAVED_CONTEXT_SYMBOL') {
             await handle_preview_saved_context_symbol({
               prompt_view_provider: this,
@@ -931,31 +808,31 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command === 'AGENTIC_SEARCH') {
             await handle_agentic_search(this)
           } else if (message.command === 'SHOW_ACCURACY_BOOST_INFO') {
-            await handle_show_accuracy_boost_info()
+            await handlers.handle_show_accuracy_boost_info()
           } else if (message.command === 'GET_CLI_CONFIGURATIONS') {
             this.send_cli_configurations_to_webview(webview_view.webview)
           } else if (message.command === 'CREATE_CLI_CONFIGURATION') {
-            await handle_create_cli_configuration(this, message)
+            await handlers.handle_create_cli_configuration(this, message)
           } else if (message.command === 'UPDATE_CLI_CONFIGURATION') {
-            await handle_update_cli_configuration(this, message)
+            await handlers.handle_update_cli_configuration(this, message)
           } else if (message.command === 'DELETE_CLI_CONFIGURATION') {
-            await handle_delete_cli_configuration(message)
+            await handlers.handle_delete_cli_configuration(message)
           } else if (message.command === 'REORDER_CLI_CONFIGURATIONS') {
-            await handle_reorder_cli_configurations(message)
+            await handlers.handle_reorder_cli_configurations(message)
           } else if (message.command === 'TOGGLE_PINNED_CLI_CONFIGURATION') {
-            await handle_toggle_pinned_cli_configuration(message)
+            await handlers.handle_toggle_pinned_cli_configuration(message)
           } else if (message.command === 'PICK_AGENT') {
-            await handle_pick_agent(this, message)
+            await handlers.handle_pick_agent(this, message)
           } else if (message.command === 'PICK_EXAMPLE_FLAGS') {
-            await handle_pick_example_flags(this, message)
+            await handlers.handle_pick_example_flags(this, message)
           } else if (message.command === 'GET_COMPLETED_TASKS') {
-            handle_get_completed_tasks(this)
+            handlers.handle_get_completed_tasks(this)
           } else if (message.command === 'SAVE_COMPLETED_TASKS') {
-            await handle_save_completed_tasks(this)
+            await handlers.handle_save_completed_tasks(this)
           } else if (message.command === 'CLEAR_COMPLETED_TASKS') {
-            await handle_clear_completed_tasks(this)
+            await handlers.handle_clear_completed_tasks(this)
           } else if (message.command === 'UPDATE_EXTENSION') {
-            handle_update_extension()
+            handlers.handle_update_extension()
           } else if (message.command === 'GET_UPDATE_INFO') {
             this.send_message({
               command: 'UPDATE_INFO',
@@ -998,7 +875,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       selected_cli_configuration_name_by_mode: Object.fromEntries(
         cli_prompt_types.map((prompt_type) => {
           let selected_name: string | undefined = undefined
-          const key = get_last_used_cli_configuration_key(prompt_type)
+          const key = state_keys.get_last_used_cli_configuration_key(prompt_type)
           const last_selected =
             this.extension_context.workspaceState.get<string>(key) ??
             this.extension_context.globalState.get<string>(key)
@@ -1018,26 +895,9 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
 
     const web_configurations_config =
       config.get<ConfigWebConfigurationFormat[]>('chatbots', []) || []
-    const web_configurations_ui = web_configurations_config
-      .filter((config) => config.chatbot && CHATBOTS[config.chatbot])
-      .map((config) => {
-        let model = config.model
-        if (config.chatbot && model) {
-          const chatbot_info = CHATBOTS[config.chatbot]
-          const is_user_provided_supported =
-            chatbot_info.supports_user_provided_model
-          const is_model_predefined = chatbot_info.models?.[model]
-
-          if (
-            !is_user_provided_supported &&
-            !is_model_predefined &&
-            config.chatbot !== 'OpenRouter'
-          ) {
-            model = undefined
-          }
-        }
-        return config_web_configuration_to_ui_format({ ...config, model })
-      })
+    const web_configurations_ui = get_valid_web_configurations(
+      web_configurations_config
+    )
 
     const web_prompt_types: WebPromptType[] = ['ask', 'edit']
 
@@ -1047,7 +907,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       selected_web_configuration_name_by_mode: Object.fromEntries(
         web_prompt_types.map((prompt_type) => {
           let selected_name: string | undefined = undefined
-          const key = get_last_used_web_configuration_key(prompt_type)
+          const key = state_keys.get_last_used_web_configuration_key(prompt_type)
           const last_selected =
             this.extension_context.workspaceState.get<string>(key) ??
             this.extension_context.globalState.get<string>(key)
@@ -1061,7 +921,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       ),
       selected_api_configuration_id_by_prompt_type: {
         edit: this.extension_context.workspaceState.get<string>(
-          LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
+          state_keys.LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
         )
       }
     })
@@ -1087,19 +947,14 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     const target_state = this.active_instructions_state
     const current_instructions = this.current_instructions
 
-    const before_caret = current_instructions.slice(
-      0,
-      this.caret_position - chars_to_remove_before
+    const { new_text, new_caret_position } = insert_text_at_caret(
+      current_instructions,
+      text,
+      this.caret_position,
+      chars_to_remove_before
     )
-    const after_caret = current_instructions.slice(this.caret_position)
 
-    const new_instructions = (before_caret + text + after_caret).replace(
-      /  +/g,
-      ' '
-    )
-    const new_caret_position = (before_caret + text).replace(/  +/g, ' ').length
-
-    target_state.instructions[target_state.active_index] = new_instructions
+    target_state.instructions[target_state.active_index] = new_text
     this.caret_position = new_caret_position
 
     this.send_message({

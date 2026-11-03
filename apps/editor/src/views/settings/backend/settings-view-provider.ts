@@ -3,80 +3,7 @@ import {
   BackendMessage,
   FrontendMessage
 } from '@/views/settings/types/messages'
-import {
-  handle_add_provider,
-  handle_update_provider,
-  handle_delete_provider,
-  handle_get_api_configurations,
-  handle_get_commit_message_instructions,
-  handle_get_attach_ascii_tree_of_context,
-  handle_get_use_context_files_in_commit_message_prompt,
-  handle_get_include_prompts_in_commit_messages,
-  handle_get_default_option_for_voice_input,
-  handle_get_voice_input_instructions,
-  handle_get_agentic_search_instructions,
-  handle_get_agentic_search_invocation_count,
-  handle_get_edit_files_system_instructions,
-  handle_get_gemini_user_id,
-  handle_get_ai_studio_user_id,
-  handle_get_providers,
-  handle_get_send_with_shift_enter,
-  handle_reorder_providers,
-  handle_set_default_api_configuration,
-  handle_select_default_api_configuration,
-  handle_update_commit_message_instructions,
-  handle_update_attach_ascii_tree_of_context,
-  handle_update_use_context_files_in_commit_message_prompt,
-  handle_update_include_prompts_in_commit_messages,
-  handle_update_default_option_for_voice_input,
-  handle_update_voice_input_instructions,
-  handle_update_agentic_search_instructions,
-  handle_update_agentic_search_invocation_count,
-  handle_update_edit_files_system_instructions,
-  handle_update_gemini_user_id,
-  handle_update_ai_studio_user_id,
-  handle_update_send_with_shift_enter,
-  handle_open_ignore_patterns_settings,
-  handle_open_allow_patterns_settings,
-  handle_open_keybindings,
-  handle_delete_web_configuration,
-  handle_reorder_web_configurations,
-  handle_create_web_configuration,
-  handle_pick_chatbot,
-  handle_pick_model,
-  handle_pick_reasoning_effort,
-  handle_update_web_configuration,
-  handle_set_default_web_configuration,
-  handle_select_default_web_configuration,
-  handle_create_api_configuration,
-  handle_update_api_configuration,
-  handle_delete_api_configuration,
-  handle_reorder_api_configurations,
-  handle_pick_provider,
-  handle_pick_api_model,
-  handle_pick_api_reasoning_effort,
-  handle_get_prompt_instructions,
-  handle_update_prompt_instructions,
-  handle_create_prompt_instruction,
-  handle_delete_prompt_instruction,
-  handle_cancel_prompt_instruction_edit,
-  handle_create_cli_configuration,
-  handle_delete_cli_configuration,
-  handle_update_cli_configuration,
-  handle_reorder_cli_configurations,
-  handle_pick_agent,
-  handle_pick_example_flags,
-  handle_get_forwarded_ports,
-  handle_update_forwarded_ports,
-  handle_get_web_configurations,
-  handle_get_cli_configurations,
-  handle_get_is_modern_ui,
-  handle_set_default_cli_configuration,
-  handle_select_default_cli_configuration,
-  handle_open_editor_settings,
-  handle_hash_sign_quick_pick,
-  handle_test_provider_connection
-} from './message-handlers'
+import * as handlers from './message-handlers'
 import { webview_html } from '@/views/shared/utils/webview-html'
 
 export class SettingsViewProvider {
@@ -140,172 +67,172 @@ export class SettingsViewProvider {
             this._pending_section_to_show = undefined
           }
         } else if (message.command === 'GET_PROVIDERS') {
-          await handle_get_providers(this)
+          await handlers.handle_get_providers(this)
         } else if (message.command === 'REORDER_PROVIDERS') {
-          await handle_reorder_providers(this, message)
+          await handlers.handle_reorder_providers(this, message)
         } else if (message.command === 'ADD_PROVIDER') {
-          await handle_add_provider(this, message)
+          await handlers.handle_add_provider(this, message)
         } else if (message.command === 'DELETE_PROVIDER') {
-          await handle_delete_provider(this, message)
+          await handlers.handle_delete_provider(this, message)
         } else if (message.command === 'UPDATE_PROVIDER') {
-          await handle_update_provider(this, message)
+          await handlers.handle_update_provider(this, message)
         } else if (message.command === 'TEST_PROVIDER_CONNECTION') {
-          await handle_test_provider_connection(this, message)
+          await handlers.handle_test_provider_connection(this, message)
         } else if (message.command === 'SHOW_HASH_SIGN_QUICK_PICK') {
-          await handle_hash_sign_quick_pick(this, message)
+          await handlers.handle_hash_sign_quick_pick(this, message)
         } else if (message.command === 'GET_PROMPT_INSTRUCTIONS') {
-          await handle_get_prompt_instructions(this)
+          await handlers.handle_get_prompt_instructions(this)
         } else if (message.command === 'UPDATE_PROMPT_INSTRUCTIONS') {
-          await handle_update_prompt_instructions(message)
+          await handlers.handle_update_prompt_instructions(message)
         } else if (message.command === 'CREATE_PROMPT_INSTRUCTION') {
-          await handle_create_prompt_instruction(this, message)
+          await handlers.handle_create_prompt_instruction(this, message)
         } else if (message.command === 'DELETE_PROMPT_INSTRUCTION') {
-          await handle_delete_prompt_instruction(this, message)
+          await handlers.handle_delete_prompt_instruction(this, message)
         } else if (message.command === 'CANCEL_PROMPT_INSTRUCTION_EDIT') {
-          await handle_cancel_prompt_instruction_edit(this, message)
+          await handlers.handle_cancel_prompt_instruction_edit(this, message)
         } else if (message.command === 'GET_API_CONFIGURATIONS') {
-          await handle_get_api_configurations(this)
+          await handlers.handle_get_api_configurations(this)
         } else if (message.command === 'SET_DEFAULT_API_CONFIGURATION') {
-          await handle_set_default_api_configuration(
+          await handlers.handle_set_default_api_configuration(
             this,
             message.api_configuration_id,
             message.api_feature
           )
         } else if (message.command === 'SELECT_DEFAULT_API_CONFIGURATION') {
-          await handle_select_default_api_configuration(this, message)
+          await handlers.handle_select_default_api_configuration(this, message)
         } else if (message.command === 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS') {
-          await handle_get_edit_files_system_instructions(this)
+          await handlers.handle_get_edit_files_system_instructions(this)
         } else if (
           message.command === 'UPDATE_EDIT_FILES_SYSTEM_INSTRUCTIONS'
         ) {
-          await handle_update_edit_files_system_instructions(message)
+          await handlers.handle_update_edit_files_system_instructions(message)
         } else if (message.command === 'GET_COMMIT_MESSAGE_INSTRUCTIONS') {
-          await handle_get_commit_message_instructions(this)
+          await handlers.handle_get_commit_message_instructions(this)
         } else if (message.command === 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS') {
-          await handle_update_commit_message_instructions(message)
+          await handlers.handle_update_commit_message_instructions(message)
         } else if (message.command === 'GET_ATTACH_ASCII_TREE_OF_CONTEXT') {
-          await handle_get_attach_ascii_tree_of_context(this)
+          await handlers.handle_get_attach_ascii_tree_of_context(this)
         } else if (message.command === 'UPDATE_ATTACH_ASCII_TREE_OF_CONTEXT') {
-          await handle_update_attach_ascii_tree_of_context(message)
+          await handlers.handle_update_attach_ascii_tree_of_context(message)
         } else if (
           message.command === 'GET_USE_CONTEXT_FILES_IN_COMMIT_MESSAGE_PROMPT'
         ) {
-          await handle_get_use_context_files_in_commit_message_prompt(this)
+          await handlers.handle_get_use_context_files_in_commit_message_prompt(this)
         } else if (
           message.command ===
           'UPDATE_USE_CONTEXT_FILES_IN_COMMIT_MESSAGE_PROMPT'
         ) {
-          await handle_update_use_context_files_in_commit_message_prompt(
+          await handlers.handle_update_use_context_files_in_commit_message_prompt(
             message
           )
         } else if (
           message.command ==
           'GET_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
         ) {
-          await handle_get_include_prompts_in_commit_messages(this)
+          await handlers.handle_get_include_prompts_in_commit_messages(this)
         } else if (
           message.command ==
           'UPDATE_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
         ) {
-          await handle_update_include_prompts_in_commit_messages(message)
+          await handlers.handle_update_include_prompts_in_commit_messages(message)
         } else if (message.command === 'GET_DEFAULT_OPTION_FOR_VOICE_INPUT') {
-          await handle_get_default_option_for_voice_input(this)
+          await handlers.handle_get_default_option_for_voice_input(this)
         } else if (
           message.command === 'UPDATE_DEFAULT_OPTION_FOR_VOICE_INPUT'
         ) {
-          await handle_update_default_option_for_voice_input(message)
+          await handlers.handle_update_default_option_for_voice_input(message)
         } else if (message.command === 'GET_VOICE_INPUT_INSTRUCTIONS') {
-          await handle_get_voice_input_instructions(this)
+          await handlers.handle_get_voice_input_instructions(this)
         } else if (message.command === 'UPDATE_VOICE_INPUT_INSTRUCTIONS') {
-          await handle_update_voice_input_instructions(message)
+          await handlers.handle_update_voice_input_instructions(message)
         } else if (message.command === 'GET_AGENTIC_SEARCH_INSTRUCTIONS') {
-          await handle_get_agentic_search_instructions(this)
+          await handlers.handle_get_agentic_search_instructions(this)
         } else if (message.command === 'UPDATE_AGENTIC_SEARCH_INSTRUCTIONS') {
-          await handle_update_agentic_search_instructions(message)
+          await handlers.handle_update_agentic_search_instructions(message)
         } else if (message.command === 'GET_AGENTIC_SEARCH_INVOCATION_COUNT') {
-          await handle_get_agentic_search_invocation_count(this)
+          await handlers.handle_get_agentic_search_invocation_count(this)
         } else if (
           message.command === 'UPDATE_AGENTIC_SEARCH_INVOCATION_COUNT'
         ) {
-          await handle_update_agentic_search_invocation_count(message)
+          await handlers.handle_update_agentic_search_invocation_count(message)
         } else if (message.command === 'GET_GEMINI_USER_ID') {
-          await handle_get_gemini_user_id(this)
+          await handlers.handle_get_gemini_user_id(this)
         } else if (message.command === 'UPDATE_GEMINI_USER_ID') {
-          await handle_update_gemini_user_id(message)
+          await handlers.handle_update_gemini_user_id(message)
         } else if (message.command === 'GET_AI_STUDIO_USER_ID') {
-          await handle_get_ai_studio_user_id(this)
+          await handlers.handle_get_ai_studio_user_id(this)
         } else if (message.command === 'UPDATE_AI_STUDIO_USER_ID') {
-          await handle_update_ai_studio_user_id(message)
+          await handlers.handle_update_ai_studio_user_id(message)
         } else if (message.command === 'GET_SEND_WITH_SHIFT_ENTER') {
-          await handle_get_send_with_shift_enter(this)
+          await handlers.handle_get_send_with_shift_enter(this)
         } else if (message.command === 'UPDATE_SEND_WITH_SHIFT_ENTER') {
-          await handle_update_send_with_shift_enter(message)
+          await handlers.handle_update_send_with_shift_enter(message)
         } else if (message.command === 'OPEN_EDITOR_SETTINGS') {
-          await handle_open_editor_settings()
+          await handlers.handle_open_editor_settings()
         } else if (message.command === 'OPEN_IGNORE_PATTERNS_SETTINGS') {
-          await handle_open_ignore_patterns_settings()
+          await handlers.handle_open_ignore_patterns_settings()
         } else if (message.command === 'OPEN_ALLOW_PATTERNS_SETTINGS') {
-          await handle_open_allow_patterns_settings()
+          await handlers.handle_open_allow_patterns_settings()
         } else if (message.command === 'OPEN_KEYBINDINGS') {
-          await handle_open_keybindings(message)
+          await handlers.handle_open_keybindings(message)
         } else if (message.command === 'GET_CLI_CONFIGURATIONS') {
-          await handle_get_cli_configurations(this)
+          await handlers.handle_get_cli_configurations(this)
         } else if (message.command === 'CREATE_CLI_CONFIGURATION') {
-          await handle_create_cli_configuration(this, message)
+          await handlers.handle_create_cli_configuration(this, message)
         } else if (message.command === 'DELETE_CLI_CONFIGURATION') {
-          await handle_delete_cli_configuration(message.name)
+          await handlers.handle_delete_cli_configuration(message.name)
         } else if (message.command === 'UPDATE_CLI_CONFIGURATION') {
-          await handle_update_cli_configuration(this, message)
+          await handlers.handle_update_cli_configuration(this, message)
         } else if (message.command === 'REORDER_CLI_CONFIGURATIONS') {
-          await handle_reorder_cli_configurations(message)
+          await handlers.handle_reorder_cli_configurations(message)
         } else if (message.command === 'PICK_AGENT') {
-          await handle_pick_agent(this, message)
+          await handlers.handle_pick_agent(this, message)
         } else if (message.command === 'PICK_EXAMPLE_FLAGS') {
-          await handle_pick_example_flags(this, message)
+          await handlers.handle_pick_example_flags(this, message)
         } else if (message.command === 'GET_FORWARDED_PORTS') {
-          await handle_get_forwarded_ports(this)
+          await handlers.handle_get_forwarded_ports(this)
         } else if (message.command === 'UPDATE_FORWARDED_PORTS') {
-          await handle_update_forwarded_ports(message)
+          await handlers.handle_update_forwarded_ports(message)
         } else if (message.command === 'GET_WEB_CONFIGURATIONS') {
-          await handle_get_web_configurations(this)
+          await handlers.handle_get_web_configurations(this)
         } else if (message.command === 'REORDER_WEB_CONFIGURATIONS') {
-          await handle_reorder_web_configurations(message)
+          await handlers.handle_reorder_web_configurations(message)
         } else if (message.command === 'DELETE_WEB_CONFIGURATION') {
-          await handle_delete_web_configuration(message.name)
+          await handlers.handle_delete_web_configuration(message.name)
         } else if (message.command === 'CREATE_WEB_CONFIGURATION') {
-          await handle_create_web_configuration(this, message)
+          await handlers.handle_create_web_configuration(this, message)
         } else if (message.command === 'PICK_CHATBOT') {
-          await handle_pick_chatbot(this, message)
+          await handlers.handle_pick_chatbot(this, message)
         } else if (message.command === 'PICK_MODEL') {
-          await handle_pick_model(this, message)
+          await handlers.handle_pick_model(this, message)
         } else if (message.command === 'PICK_REASONING_EFFORT') {
-          await handle_pick_reasoning_effort(this, message)
+          await handlers.handle_pick_reasoning_effort(this, message)
         } else if (message.command === 'UPDATE_WEB_CONFIGURATION') {
-          await handle_update_web_configuration(this, message)
+          await handlers.handle_update_web_configuration(this, message)
         } else if (message.command === 'SET_DEFAULT_WEB_CONFIGURATION') {
-          await handle_set_default_web_configuration(message)
+          await handlers.handle_set_default_web_configuration(message)
         } else if (message.command === 'SELECT_DEFAULT_WEB_CONFIGURATION') {
-          await handle_select_default_web_configuration(message)
+          await handlers.handle_select_default_web_configuration(message)
         } else if (message.command === 'CREATE_API_CONFIGURATION') {
-          await handle_create_api_configuration(this, message)
+          await handlers.handle_create_api_configuration(this, message)
         } else if (message.command === 'UPDATE_API_CONFIGURATION') {
-          await handle_update_api_configuration(this, message)
+          await handlers.handle_update_api_configuration(this, message)
         } else if (message.command === 'DELETE_API_CONFIGURATION') {
-          await handle_delete_api_configuration(this, message)
+          await handlers.handle_delete_api_configuration(this, message)
         } else if (message.command === 'REORDER_API_CONFIGURATIONS') {
-          await handle_reorder_api_configurations(this, message)
+          await handlers.handle_reorder_api_configurations(this, message)
         } else if (message.command === 'PICK_PROVIDER') {
-          await handle_pick_provider(this, message)
+          await handlers.handle_pick_provider(this, message)
         } else if (message.command === 'PICK_API_MODEL') {
-          await handle_pick_api_model(this, message)
+          await handlers.handle_pick_api_model(this, message)
         } else if (message.command === 'PICK_API_REASONING_EFFORT') {
-          await handle_pick_api_reasoning_effort(this, message)
+          await handlers.handle_pick_api_reasoning_effort(this, message)
         } else if (message.command === 'SET_DEFAULT_CLI_CONFIGURATION') {
-          await handle_set_default_cli_configuration(message)
+          await handlers.handle_set_default_cli_configuration(message)
         } else if (message.command === 'SELECT_DEFAULT_CLI_CONFIGURATION') {
-          await handle_select_default_cli_configuration(message)
+          await handlers.handle_select_default_cli_configuration(message)
         } else if (message.command === 'GET_IS_MODERN_UI') {
-          await handle_get_is_modern_ui(this)
+          await handlers.handle_get_is_modern_ui(this)
         }
       },
       null,
@@ -315,27 +242,27 @@ export class SettingsViewProvider {
     this._disposables.push(
       vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration('codeWebChat')) {
-          void handle_get_providers(this)
-          void handle_get_api_configurations(this)
-          void handle_get_edit_files_system_instructions(this)
-          void handle_get_commit_message_instructions(this)
-          void handle_get_attach_ascii_tree_of_context(this)
-          void handle_get_use_context_files_in_commit_message_prompt(this)
-          void handle_get_include_prompts_in_commit_messages(this)
-          void handle_get_default_option_for_voice_input(this)
-          void handle_get_voice_input_instructions(this)
-          void handle_get_agentic_search_instructions(this)
-          void handle_get_agentic_search_invocation_count(this)
-          void handle_get_gemini_user_id(this)
-          void handle_get_ai_studio_user_id(this)
-          void handle_get_send_with_shift_enter(this)
-          void handle_get_prompt_instructions(this)
-          void handle_get_forwarded_ports(this)
-          void handle_get_web_configurations(this)
-          void handle_get_cli_configurations(this)
+          void handlers.handle_get_providers(this)
+          void handlers.handle_get_api_configurations(this)
+          void handlers.handle_get_edit_files_system_instructions(this)
+          void handlers.handle_get_commit_message_instructions(this)
+          void handlers.handle_get_attach_ascii_tree_of_context(this)
+          void handlers.handle_get_use_context_files_in_commit_message_prompt(this)
+          void handlers.handle_get_include_prompts_in_commit_messages(this)
+          void handlers.handle_get_default_option_for_voice_input(this)
+          void handlers.handle_get_voice_input_instructions(this)
+          void handlers.handle_get_agentic_search_instructions(this)
+          void handlers.handle_get_agentic_search_invocation_count(this)
+          void handlers.handle_get_gemini_user_id(this)
+          void handlers.handle_get_ai_studio_user_id(this)
+          void handlers.handle_get_send_with_shift_enter(this)
+          void handlers.handle_get_prompt_instructions(this)
+          void handlers.handle_get_forwarded_ports(this)
+          void handlers.handle_get_web_configurations(this)
+          void handlers.handle_get_cli_configurations(this)
         }
         if (e.affectsConfiguration('workbench.experimental.modernUI')) {
-          void handle_get_is_modern_ui(this)
+          void handlers.handle_get_is_modern_ui(this)
         }
       })
     )
