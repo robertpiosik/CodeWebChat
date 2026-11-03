@@ -10,6 +10,10 @@
 
 <p align="center"><strong>Markdown prompts for chatbots, APIs, and CLIs with seamless integration</strong></p>
 
+<p align="center"><img src="https://github.com/CodeWebChat/CWC/raw/HEAD/media/screenshot-1.png"></p>
+
+## Quick start
+
 <p align="center">Securely build from source for VS Code, Cursor, or Antigravity:</p>
 
 <p align="center"><strong>macOS / Linux</strong></p>
@@ -23,8 +27,6 @@ curl -fsSL https://raw.githubusercontent.com/CodeWebChat/CWC/main/install.sh | b
 ```powershell
 powershell -c "irm https://raw.githubusercontent.com/CodeWebChat/CWC/main/install.ps1 | iex"
 ```
-
-<p align="center"><img src="https://github.com/CodeWebChat/CWC/raw/HEAD/media/screenshot-1.png"></p>
 
 ## Privacy-first
 

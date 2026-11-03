@@ -798,6 +798,11 @@
           "command": "codeWebChat.followOnX",
           "when": "view == promptView",
           "group": "1_more@4"
+        },
+        {
+          "command": "codeWebChat.checkForUpdates",
+          "when": "view == promptView",
+          "group": "2_more@1"
         }
       ],
       "scm/title": [
