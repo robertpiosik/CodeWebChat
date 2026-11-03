@@ -443,7 +443,7 @@
     "submenus": [
       {
         "id": "codeWebChat.editorSubmenu",
-        "label": "%codeWebChat.category%"
+        "label": "CodeWebChat"
       }
     ],
     "menus": {
