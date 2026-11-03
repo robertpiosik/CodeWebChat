@@ -466,6 +466,7 @@ export const Main: React.FC<Props> = (props) => {
 
   const handle_edit_format_change = (format?: EditFormat) => {
     if (format) {
+      set_edit_format(format)
       post_message(props.vscode, {
         command: 'SAVE_EDIT_FORMAT',
         edit_format: format

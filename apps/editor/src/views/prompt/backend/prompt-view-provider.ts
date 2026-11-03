@@ -16,9 +16,7 @@ import { handle_agentic_search } from './message-handlers/handle-agentic-search'
 import { handle_preview_saved_context_symbol } from './message-handlers/handle-preview-saved-context-symbol'
 import { SelectionState, UpdateInfo } from '../types/messages'
 import * as state_keys from '@/constants/state-keys'
-import {
-  ConfigWebConfigurationFormat
-} from '@/utils/web-configuration-format-converters'
+import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import {
   config_cli_configuration_to_ui_format,
   ConfigAgentConfigurationFormat
@@ -213,12 +211,9 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     this.agentic_search_state = params.agentic_search_state
 
     this.check_for_updates()
-    setInterval(
-      () => {
-        this.check_for_updates()
-      },
-      UPDATE_CHECK_INTERVAL
-    )
+    setInterval(() => {
+      this.check_for_updates()
+    }, UPDATE_CHECK_INTERVAL)
 
     this.websocket_server_instance.on_connection_status_change((connected) => {
       if (this.webview_view) {
@@ -458,7 +453,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     if (!current_version) return
 
     this.update_info = await check_for_updates(current_version)
-    
+
     this.send_message({
       command: 'UPDATE_INFO',
       update_info: this.update_info
@@ -648,15 +643,24 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command === 'TOGGLE_PINNED_API_CONFIGURATION') {
             await handlers.handle_toggle_pinned_api_configuration(this, message)
           } else if (message.command === 'SAVE_WEB_PROMPT_TYPE') {
-            await handlers.handle_save_web_prompt_type(this, message.prompt_type)
+            await handlers.handle_save_web_prompt_type(
+              this,
+              message.prompt_type
+            )
           } else if (message.command === 'GET_API_PROMPT_TYPE') {
             handlers.handle_get_api_prompt_type(this)
           } else if (message.command === 'SAVE_API_PROMPT_TYPE') {
-            await handlers.handle_save_api_prompt_type(this, message.prompt_type)
+            await handlers.handle_save_api_prompt_type(
+              this,
+              message.prompt_type
+            )
           } else if (message.command === 'GET_CLI_PROMPT_TYPE') {
             handlers.handle_get_cli_prompt_type(this)
           } else if (message.command === 'SAVE_CLI_PROMPT_TYPE') {
-            await handlers.handle_save_cli_prompt_type(this, message.prompt_type)
+            await handlers.handle_save_cli_prompt_type(
+              this,
+              message.prompt_type
+            )
           } else if (message.command === 'INVOKE_AGENTIC_CLI') {
             await handlers.handle_invoke_agentic_cli(this, message as any)
           } else if (message.command === 'GET_EDIT_FORMAT_INSTRUCTIONS') {
@@ -664,7 +668,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command === 'GET_EDIT_FORMAT') {
             handlers.handle_get_edit_format(this)
           } else if (message.command === 'SAVE_EDIT_FORMAT') {
-            await handlers.handle_save_edit_format(this, message)
+            handlers.handle_save_edit_format(this, message)
           } else if (message.command === 'SELECT_EDIT_FORMAT_INSTRUCTIONS') {
             await handlers.handle_select_edit_format_instructions(this, message)
           } else if (message.command === 'CARET_POSITION_CHANGED') {
@@ -678,7 +682,10 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command === 'SHOW_AT_SIGN_QUICK_PICK') {
             await handlers.handle_at_sign_quick_pick(this)
           } else if (message.command === 'SHOW_HASH_SIGN_QUICK_PICK') {
-            await handlers.handle_hash_sign_quick_pick(this, this.extension_context)
+            await handlers.handle_hash_sign_quick_pick(
+              this,
+              this.extension_context
+            )
           } else if (message.command === 'GO_TO_FILE') {
             handlers.handle_go_to_file(message)
           } else if (message.command === 'OPEN_FILE_AND_SELECT') {
@@ -876,7 +883,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       selected_cli_configuration_name_by_mode: Object.fromEntries(
         cli_prompt_types.map((prompt_type) => {
           let selected_name: string | undefined = undefined
-          const key = state_keys.get_last_used_cli_configuration_key(prompt_type)
+          const key =
+            state_keys.get_last_used_cli_configuration_key(prompt_type)
           const last_selected =
             this.extension_context.workspaceState.get<string>(key) ??
             this.extension_context.globalState.get<string>(key)
@@ -908,7 +916,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       selected_web_configuration_name_by_mode: Object.fromEntries(
         web_prompt_types.map((prompt_type) => {
           let selected_name: string | undefined = undefined
-          const key = state_keys.get_last_used_web_configuration_key(prompt_type)
+          const key =
+            state_keys.get_last_used_web_configuration_key(prompt_type)
           const last_selected =
             this.extension_context.workspaceState.get<string>(key) ??
             this.extension_context.globalState.get<string>(key)
