@@ -75,7 +75,7 @@ switch -Regex ($lang) {
         $msg_no_editors="在您的 PATH 中未找到支持的编辑器。"
         $msg_invalid="无效的选择。正在退出。"
         $msg_hint="提示：如果您的编辑器已安装但未列出，您可能需要将其命令添加到您的 PATH 中。"
-        $msg_hint2="打开您的编辑器，打开命令面板 (Ctrl+Shift+P / Cmd+Shift+P)，然后找到类似以下的命令：“Shell Command: Install 'cursor' command in PATH”（或 'agy-ide' 等）。"
+        $msg_hint2="打开您的编辑器，打开命令面板 (Ctrl+Shift+P / Cmd+Shift+P)，然后找到类似以下的命令：`"Shell Command: Install 'cursor' command in PATH`"（或 'agy-ide' 等）。"
         $msg_all_editors="所有检测到的编辑器"
         $msg_quit="退出"
         $msg_select_install="选择将 CWC 安装到哪里： "
