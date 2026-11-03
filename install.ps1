@@ -14,15 +14,21 @@ if (!(Get-Command git -ErrorAction SilentlyContinue)) {
 $nodeIsGood = (Get-Command node -ErrorAction SilentlyContinue) -and ([version]((node -v) -replace '^v','')).Major -ge 20
 
 if (!$nodeIsGood) {
-    if (Get-Command fnm -ErrorAction SilentlyContinue) {
-        fnm env --shell powershell | Out-String | Invoke-Expression
-        fnm install 22 *>$null
-        fnm use 22 *>$null
-    } elseif (Get-Command nvm -ErrorAction SilentlyContinue) {
-        nvm install 22 *>$null
-        nvm use 22 *>$null
-    } else {
-        Fail "Failed to find a compatible Node.js version and no supported version manager (fnm, nvm) could switch it."
+    $prevPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    try {
+        if (Get-Command fnm -ErrorAction SilentlyContinue) {
+            fnm env --shell powershell | Out-String | Invoke-Expression
+            fnm install 22 *>$null
+            fnm use 22 *>$null
+        } elseif (Get-Command nvm -ErrorAction SilentlyContinue) {
+            nvm install 22 *>$null
+            nvm use 22 *>$null
+        } else {
+            Fail "Failed to find a compatible Node.js version and no supported version manager (fnm, nvm) could switch it."
+        }
+    } finally {
+        $ErrorActionPreference = $prevPreference
     }
 }
 
@@ -80,8 +86,16 @@ function Invoke-Step {
     param([string]$Message, [scriptblock]$Action, [string]$ErrorMsg)
     Write-Progress -Activity "CodeWebChat Installation" -Status $Message
     Write-Host -NoNewline "  $Message"
-    & $Action
-    $ok = $?
+    
+    $prevPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    try {
+        & $Action
+        $ok = $?
+    } finally {
+        $ErrorActionPreference = $prevPreference
+    }
+    
     Write-Progress -Activity "CodeWebChat Installation" -Completed
     if ($ok) { Write-Host "`r$([char]0x2714)" -ForegroundColor Green }
     else     { Write-Host "`r$([char]0x2718)" -ForegroundColor Red }
