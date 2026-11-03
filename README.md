@@ -575,6 +575,7 @@ Respond with the audio transcription or the word INAUDIBLE, without explanations
 ### Misc
 
 - `CWC: Duplicate Workspace` - Copy the extension's state in a new window.
+- `CWC: Check for Updates` - Check for extension updates.
 
 ## Building from source
 
