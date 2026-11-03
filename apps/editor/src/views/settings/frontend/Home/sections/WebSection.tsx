@@ -7,6 +7,7 @@ import { SortableList } from '@ui/components/editor/settings-view/SortableList'
 import { IconButton } from '@ui/components/editor/common/IconButton'
 import { ForwardedPorts } from '@ui/components/editor/settings-view/ForwardedPorts'
 import { DefaultConfigurationSelector } from '@ui/components/editor/settings-view/DefaultConfigurationSelector'
+import { Notices as UiNotices } from '@ui/components/editor/settings-view/Notices'
 import { WebConfiguration } from '@/types/web-configuration'
 import { Icon } from '@ui/components/editor/common/Icon'
 import { CHATBOTS } from '@shared/constants/chatbots'
@@ -162,7 +163,19 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
       <div
         ref={(el) => props.set_section_ref('section:web:group:chatbots', el)}
       >
-        <UiGroup title={t('chatbots.configurations.title')}>
+        <UiGroup
+          title={t('chatbots.configurations.title')}
+          notice_slot={
+            <UiNotices
+              notices={[
+                {
+                  type: 'info',
+                  message: t('chatbots.configurations.notice')
+                }
+              ]}
+            />
+          }
+        >
           <SortableList
             items={props.web_configurations.map((c, index) => ({
               ...c,

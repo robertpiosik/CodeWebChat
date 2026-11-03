@@ -147,6 +147,25 @@ export const translations = {
     hu: 'Chatbotok automatikus kitöltése.',
     bg: 'Автоматично попълване на чатботове.'
   },
+  'chatbots.configurations.notice': {
+    en: 'Communication with the browser is established using local Websockets.',
+    pl: 'Komunikacja z przeglądarką jest nawiązywana za pomocą lokalnych Websocketów.',
+    'zh-cn': '与浏览器的通信是使用本地 Websockets 建立的。',
+    ja: 'ブラウザとの通信はローカル Websocket を使用して確立されます。',
+    'zh-tw': '與瀏覽器的通訊是使用本機 Websockets 建立的。',
+    de: 'Die Kommunikation mit dem Browser wird über lokale Websockets hergestellt.',
+    es: 'La comunicación con el navegador se establece utilizando Websockets locales.',
+    fr: "La communication avec le navigateur est établie à l'aide de Websockets locaux.",
+    'pt-br':
+      'A comunicação com o navegador é estabelecida usando Websockets locais.',
+    ru: 'Связь с браузером устанавливается с использованием локальных Websockets.',
+    ko: '브라우저와의 통신은 로컬 Websockets를 사용하여 설정됩니다.',
+    it: 'La comunicazione con il browser è stabilita utilizzando Websocket locali.',
+    tr: "Tarayıcı ile iletişim yerel Websocket'ler kullanılarak kurulur.",
+    cs: 'Komunikace s prohlížečem je navázána pomocí místních Websocketů.',
+    hu: 'A böngészővel való kommunikáció helyi Websocketek használatával jön létre.',
+    bg: 'Комуникацията с браузъра се осъществява чрез локални Websockets.'
+  },
   'chatbots.configurations.title': {
     en: 'Chatbots',
     pl: 'Chatboty',
