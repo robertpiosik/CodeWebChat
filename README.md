@@ -50,7 +50,7 @@ Selected files are sent alongside task instructions in a single message.
 <details>
 <summary><strong>Effortless context selection</strong></summary>
 
-[Agentic Search](#-agentic-search) prompt accurately selects relevant files hands-free.
+[Agentic Search](#-agentic-search) prompt accurately selects relevant files in the explorer hands-free.
 
 </details>
 
