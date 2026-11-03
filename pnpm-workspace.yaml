@@ -1,5 +1,9 @@
 packages:
   - packages/*
   - apps/*
-onlyBuiltDependencies:
-  - esbuild
+allowBuilds:
+  '@parcel/watcher': true
+  bufferutil: true
+  core-js-pure: true
+  esbuild: true
+  utf-8-validate: true

@@ -11,8 +11,7 @@
     "lint": "eslint src --ext ts,tsx",
     "lint:fix": "eslint src --ext ts,tsx --fix",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "prepare": "husky"
+    "test:watch": "jest --watch"
   },
   "publisher": "robertpiosik",
   "homepage": "https://codeweb.chat/",
