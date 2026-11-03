@@ -42,6 +42,7 @@ import { replace_symbols } from './utils/symbols/replace-symbols'
 import { SymbolCacheManager } from './utils/symbols/symbol-cache'
 import { AgenticSearchState } from '@/features/agentic-search'
 import { t } from '@/i18n'
+import { UPDATE_CHECK_INTERVAL } from '@/constants/values'
 import {
   get_valid_web_configurations,
   get_display_path_for_editor,
@@ -216,7 +217,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       () => {
         this.check_for_updates()
       },
-      24 * 60 * 60 * 1000
+      UPDATE_CHECK_INTERVAL
     )
 
     this.websocket_server_instance.on_connection_status_change((connected) => {
