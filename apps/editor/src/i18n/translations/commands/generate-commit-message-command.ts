@@ -362,21 +362,21 @@ export const translations = {
     bg: 'Контекстни файлове'
   },
   'command.generate-commit-message-command.attach-context-files.placeholder': {
-    en: 'Should use context files to improve accuracy?',
-    pl: 'Czy użyć plików kontekstowych, aby poprawić dokładność?',
-    'zh-cn': '是否使用上下文文件以提高准确性？',
-    ja: '精度を向上させるためにコンテキストファイルを使用しますか？',
-    'zh-tw': '是否使用上下文檔案以提高準確性？',
-    de: 'Sollten Kontextdateien verwendet werden, um die Genauigkeit zu verbessern?',
-    es: '¿Debería usar archivos de contexto para mejorar la precisión?',
-    fr: 'Faut-il utiliser des fichiers de contexte pour améliorer la précision ?',
-    'pt-br': 'Deve usar arquivos de contexto para melhorar a precisão?',
-    ru: 'Использовать ли контекстные файлы для повышения точности?',
-    ko: '정확도를 높이기 위해 컨텍스트 파일을 사용하시겠습니까?',
-    it: 'Usare i file di contesto per migliorare la precisione?',
-    tr: 'Doğruluğu artırmak için bağlam dosyaları kullanılsın mı?',
-    cs: 'Měly by se použít kontextové soubory pro zlepšení přesnosti?',
-    hu: 'Használjon kontextusfájlokat a pontosság javításához?',
-    bg: 'Трябва ли да се използват контекстни файлове за подобряване на точността?'
+    en: 'Choose what to include to improve accuracy',
+    pl: 'Wybierz, co uwzględnić, aby poprawić dokładność',
+    'zh-cn': '选择要包含的内容以提高准确性',
+    ja: '精度を向上させるために含める内容を選択してください',
+    'zh-tw': '選擇要包含的內容以提高準確性',
+    de: 'Wählen Sie aus, was einbezogen werden soll, um die Genauigkeit zu verbessern',
+    es: 'Elige qué incluir para mejorar la precisión',
+    fr: "Choisissez ce qu'il faut inclure pour améliorer la précision",
+    'pt-br': 'Escolha o que incluir para melhorar a precisão',
+    ru: 'Выберите, что включить для повышения точности',
+    ko: '정확도를 높이기 위해 포함할 내용을 선택하세요',
+    it: 'Scegli cosa includere per migliorare la precisione',
+    tr: 'Doğruluğu artırmak için neyin dahil edileceğini seçin',
+    cs: 'Vyberte, co zahrnout pro zlepšení přesnosti',
+    hu: 'Válassza ki, mit foglaljon bele a pontosság javítása érdekében',
+    bg: 'Изберете какво да включите, за да подобрите точността'
   }
 } as const
