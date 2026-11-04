@@ -59,7 +59,7 @@
   "codeWebChat.selectClipboardPaths.title": "Select Clipboard Paths...",
   "codeWebChat.selectParentFolder.title": "Select Parent Folder...",
   "codeWebChat.copyMergeCommitDetails.title": "Copy Merge Commit Details",
-  "codeWebChat.checkForUpdates.title": "Check for Updates...",
+  "codeWebChat.checkForUpdates.title": "Check for Updates",
   "codeWebChat.installSpecificVersion.title": "Install Specific Version...",
   "codeWebChat.category": "CWC"
 }

@@ -59,7 +59,7 @@
   "codeWebChat.selectClipboardPaths.title": "Seleccionar rutas del portapapeles...",
   "codeWebChat.selectParentFolder.title": "Seleccionar carpeta principal...",
   "codeWebChat.copyMergeCommitDetails.title": "Copiar detalles de commits agrupados",
-  "codeWebChat.checkForUpdates.title": "Buscar actualizaciones...",
+  "codeWebChat.checkForUpdates.title": "Buscar actualizaciones",
   "codeWebChat.installSpecificVersion.title": "Instalar versión específica...",
   "codeWebChat.category": "CWC"
 }
