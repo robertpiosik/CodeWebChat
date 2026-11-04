@@ -490,14 +490,20 @@ foreach ($i in $indices) {
     $updated = $false
     if (Test-Path (Join-Path $repoDir ".git")) {
         $updated = Invoke-Step "$msg_step_cloning..." {
-            git -C $repoDir fetch origin --quiet *>$null
+            git -C $repoDir fetch origin --tags --quiet *>$null
             if ($LASTEXITCODE -ne 0) { throw "Failed to fetch" }
             if ($tagName) {
                 git -C $repoDir checkout $tagName --quiet *>$null
                 if ($LASTEXITCODE -ne 0) { throw "Failed to checkout" }
             } else {
-                git -C $repoDir reset --hard origin/main --quiet *>$null
-                if ($LASTEXITCODE -ne 0) { throw "Failed to reset" }
+                $latestTag = git -C $repoDir tag -l '*-vscode' --sort=-creatordate | Select-Object -First 1
+                if ($latestTag) {
+                    git -C $repoDir checkout $latestTag --quiet *>$null
+                    if ($LASTEXITCODE -ne 0) { throw "Failed to checkout latest tag" }
+                } else {
+                    git -C $repoDir reset --hard origin/main --quiet *>$null
+                    if ($LASTEXITCODE -ne 0) { throw "Failed to reset" }
+                }
             }
             git -C $repoDir clean -fd --quiet *>$null
             if ($LASTEXITCODE -ne 0) { throw "Failed to clean" }
@@ -514,6 +520,12 @@ foreach ($i in $indices) {
             if ($tagName) {
                 git -C $repoDir checkout $tagName --quiet *>$null
                 if ($LASTEXITCODE -ne 0) { throw "Failed to checkout" }
+            } else {
+                $latestTag = git -C $repoDir tag -l '*-vscode' --sort=-creatordate | Select-Object -First 1
+                if ($latestTag) {
+                    git -C $repoDir checkout $latestTag --quiet *>$null
+                    if ($LASTEXITCODE -ne 0) { throw "Failed to checkout latest tag" }
+                }
             }
         } $msg_step_cloning
     }
@@ -561,3 +573,4 @@ foreach ($i in $indices) {
 }
 
 Pause
+

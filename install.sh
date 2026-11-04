@@ -498,11 +498,16 @@ mkdir -p -m 700 "$CWC_DIR"
 chmod 700 "$CWC_DIR" 2>/dev/null || true
 
 update_repo() {
-  git -C "$REPO_DIR" fetch origin --quiet && \
+  git -C "$REPO_DIR" fetch origin --tags --quiet && \
   if [ -n "$TAG_NAME" ]; then
     git -C "$REPO_DIR" checkout "$TAG_NAME" --quiet
   else
-    git -C "$REPO_DIR" reset --hard origin/main --quiet
+    LATEST_TAG=$(git -C "$REPO_DIR" tag -l '*-vscode' --sort=-creatordate | head -n 1)
+    if [ -n "$LATEST_TAG" ]; then
+      git -C "$REPO_DIR" checkout "$LATEST_TAG" --quiet
+    else
+      git -C "$REPO_DIR" reset --hard origin/main --quiet
+    fi
   fi && \
   git -C "$REPO_DIR" clean -fd --quiet
 }
@@ -511,6 +516,11 @@ clone_repo() {
   git clone -c core.longpaths=true --quiet https://github.com/CodeWebChat/CWC.git "$REPO_DIR" && \
   if [ -n "$TAG_NAME" ]; then
     git -C "$REPO_DIR" checkout "$TAG_NAME" --quiet
+  else
+    LATEST_TAG=$(git -C "$REPO_DIR" tag -l '*-vscode' --sort=-creatordate | head -n 1)
+    if [ -n "$LATEST_TAG" ]; then
+      git -C "$REPO_DIR" checkout "$LATEST_TAG" --quiet
+    fi
   fi
 }
 
@@ -572,3 +582,4 @@ for i in "${indices[@]}"; do
 done
 
 cd "$ORIGINAL_DIR" || cd /
+
