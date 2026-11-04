@@ -840,7 +840,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command === 'CLEAR_COMPLETED_TASKS') {
             await handlers.handle_clear_completed_tasks(this)
           } else if (message.command === 'UPDATE_EXTENSION') {
-            handlers.handle_update_extension()
+            handlers.handle_update_extension(this)
           } else if (message.command === 'GET_UPDATE_INFO') {
             this.send_message({
               command: 'UPDATE_INFO',

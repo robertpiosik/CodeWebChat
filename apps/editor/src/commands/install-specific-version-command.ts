@@ -159,9 +159,9 @@ export const install_specific_version_command = () => {
 
       quick_pick.onDidAccept(() => {
         const selected = quick_pick.selectedItems[0]
-        if (selected) {
+        if (selected && selected.sha) {
           quick_pick.hide()
-          update_extension(selected.sha)
+          update_extension({ commit_sha: selected.sha })
         }
       })
 

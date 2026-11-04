@@ -17,7 +17,11 @@ export const check_for_updates_command = (
         )
 
         if (action === t('command.check-for-updates-command.action.update')) {
-          update_extension()
+          if (prompt_view_provider.update_info.latest_version_sha) {
+            update_extension({
+              commit_sha: prompt_view_provider.update_info.latest_version_sha
+            })
+          }
         }
       } else {
         vscode.window.showInformationMessage(

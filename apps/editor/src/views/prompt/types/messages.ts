@@ -458,6 +458,7 @@ export interface SaveTasksMessage extends BaseMessage {
 export type UpdateInfo = {
   is_available: boolean
   latest_version?: string
+  latest_version_sha?: string
   current_version_age_days?: number
 }
 

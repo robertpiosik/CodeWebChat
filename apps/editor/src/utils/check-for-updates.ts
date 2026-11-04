@@ -56,6 +56,7 @@ export const check_for_updates = async (
           return {
             is_available: true,
             latest_version,
+            latest_version_sha: vscode_tag.commit?.sha,
             current_version_age_days: age_days
           }
         } else {
