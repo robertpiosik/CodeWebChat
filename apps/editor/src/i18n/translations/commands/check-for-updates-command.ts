@@ -1,4 +1,22 @@
 export const translations = {
+  'command.check-for-updates-command.info.checking-for-updates': {
+    en: 'Checking for updates...',
+    pl: 'Sprawdzanie aktualizacji...',
+    'zh-cn': '正在检查更新...',
+    ja: 'アップデートを確認中...',
+    'zh-tw': '正在檢查更新...',
+    de: 'Suche nach Updates...',
+    es: 'Buscando actualizaciones...',
+    fr: 'Recherche de mises à jour...',
+    'pt-br': 'Verificando atualizações...',
+    ru: 'Проверка обновлений...',
+    ko: '업데이트 확인 중...',
+    it: 'Ricerca aggiornamenti in corso...',
+    tr: 'Güncellemeler kontrol ediliyor...',
+    cs: 'Kontrola aktualizací...',
+    hu: 'Frissítések keresése...',
+    bg: 'Проверка за актуализации...'
+  },
   'command.check-for-updates-command.info.new-version-available': {
     en: 'New version is available!',
     pl: 'Dostępna jest nowa wersja!',
