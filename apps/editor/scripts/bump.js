@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const { execSync } = require('child_process')
+const readline = require('readline')
 
 const pkg_path = path.resolve(__dirname, '../package.json')
 const pkg = JSON.parse(fs.readFileSync(pkg_path, 'utf-8'))
@@ -15,17 +16,30 @@ const version_parts = pkg.version.split('.')
 const last_segment = parseInt(version_parts.pop(), 10) || 0
 
 const next_segment = last_segment + 1
-pkg.version = `${date_prefix}.${next_segment}`
+const next_version = `${date_prefix}.${next_segment}`
 
-fs.writeFileSync(pkg_path, JSON.stringify(pkg, null, 2) + '\n')
-console.log(`Bump version of the VS Code extension to ${pkg.version}`)
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+})
 
-try {
-  execSync(`git add "${pkg_path}"`, { stdio: 'ignore' })
-  execSync(`git commit --no-verify -m "Bump version to ${pkg.version}"`, {
-    stdio: 'ignore'
-  })
-  console.log('Successfully committed the version bump.')
-} catch (error) {
-  console.error('Failed to commit version bump:', error.message)
-}
+rl.question(`Bump version of the VS Code extension to ${next_version}? (y/N) `, (answer) => {
+  if (answer.toLowerCase() === 'y') {
+    pkg.version = next_version
+    fs.writeFileSync(pkg_path, JSON.stringify(pkg, null, 2) + '\n')
+    console.log(`Bumped version of the VS Code extension to ${pkg.version}`)
+
+    try {
+      execSync(`git add "${pkg_path}"`, { stdio: 'ignore' })
+      execSync(`git commit --no-verify -m "Bump version to ${pkg.version}"`, {
+        stdio: 'ignore'
+      })
+      console.log('Successfully committed the version bump.')
+    } catch (error) {
+      console.error('Failed to commit version bump:', error.message)
+    }
+  } else {
+    console.log('Version bump aborted.')
+  }
+  rl.close()
+})
