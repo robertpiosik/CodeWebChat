@@ -413,7 +413,6 @@ export const PromptField: React.FC<PromptField.Props> = (props) => {
                 onInput={(e) => {
                   set_should_show_ghost_text(true)
                   handle_input_change(e)
-                  set_is_completed_tasks_expanded(false)
                 }}
                 onKeyDown={(e) => {
                   if (

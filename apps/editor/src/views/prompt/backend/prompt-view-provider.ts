@@ -836,7 +836,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command === 'GET_COMPLETED_TASKS') {
             handlers.handle_get_completed_tasks(this)
           } else if (message.command === 'SAVE_COMPLETED_TASKS') {
-            await handlers.handle_save_completed_tasks(this)
+            await handlers.handle_save_completed_tasks(this, message)
           } else if (message.command === 'CLEAR_COMPLETED_TASKS') {
             await handlers.handle_clear_completed_tasks(this)
           } else if (message.command === 'UPDATE_EXTENSION') {

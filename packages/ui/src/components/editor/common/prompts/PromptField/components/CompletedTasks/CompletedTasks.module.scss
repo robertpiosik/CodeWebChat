@@ -50,10 +50,6 @@
   }
 }
 
-.tasks-list {
-  cursor: pointer;
-}
-
 .completed-task {
   padding: 2px 7px;
   opacity: var(--dimmed-opacity);
@@ -67,6 +63,5 @@
 
   &__text {
     display: inline;
-    pointer-events: none;
   }
 }

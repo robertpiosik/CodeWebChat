@@ -641,6 +641,7 @@ export interface GetCompletedTasksMessage extends BaseMessage {
 
 export interface SaveCompletedTasksMessage extends BaseMessage {
   command: 'SAVE_COMPLETED_TASKS'
+  task: string
 }
 
 export interface ClearCompletedTasksMessage extends BaseMessage {

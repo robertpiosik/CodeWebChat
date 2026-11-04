@@ -567,18 +567,6 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_task_completed = () => {
-    post_message(props.vscode, {
-      command: 'SAVE_COMPLETED_TASKS'
-    })
-  }
-
-  const handle_clear_completed_tasks = () => {
-    post_message(props.vscode, {
-      command: 'CLEAR_COMPLETED_TASKS'
-    })
-  }
-
   const handle_clear_context = () => {
     post_message(props.vscode, {
       command: 'EXECUTE_COMMAND',
@@ -595,6 +583,27 @@ export const Main: React.FC<Props> = (props) => {
 
   const set_instructions = (value: string) => {
     props.set_instructions(value, current_prompt_type)
+  }
+
+  const handle_task_completed = () => {
+    const instruction = get_current_instructions().trim()
+
+    if (instruction) {
+      post_message(props.vscode, {
+        command: 'SAVE_COMPLETED_TASKS',
+        task: instruction
+      })
+      set_completed_tasks((prev) => [...prev, instruction])
+      set_instructions('')
+      set_caret_position_to_set(0)
+    }
+  }
+
+  const handle_clear_completed_tasks = () => {
+    set_completed_tasks([])
+    post_message(props.vscode, {
+      command: 'CLEAR_COMPLETED_TASKS'
+    })
   }
 
   let current_history: string[] | undefined
