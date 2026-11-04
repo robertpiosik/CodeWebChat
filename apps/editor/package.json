@@ -14,7 +14,7 @@
     "test:watch": "jest --watch"
   },
   "publisher": "robertpiosik",
-  "homepage": "https://codeweb.chat/",
+  "homepage": "https://cwc.dev/",
   "repository": {
     "type": "git",
     "url": "https://github.com/CodeWebChat/CWC"
@@ -22,23 +22,6 @@
   "engines": {
     "vscode": "^1.96.0"
   },
-  "categories": [
-    "Programming Languages",
-    "Machine Learning",
-    "AI",
-    "Chat"
-  ],
-  "keywords": [
-    "ai",
-    "assistant",
-    "chat",
-    "chatgpt",
-    "claude",
-    "deepseek",
-    "gemini",
-    "mistral",
-    "qwen"
-  ],
   "main": "out/extension.js",
   "activationEvents": [],
   "capabilities": {
@@ -1092,6 +1075,10 @@
             {
               "name": "(3)",
               "agent": "OpenCode"
+            },
+            {
+              "name": "(4)",
+              "agent": "Devin"
             }
           ],
           "items": {

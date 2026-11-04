@@ -56,6 +56,12 @@ export const AGENTS = {
     flags_placeholder: '',
     example_flags: []
   },
+  Devin: {
+    docs_url: 'https://docs.devin.ai/cli/reference/commands',
+    homepage_url: 'https://docs.devin.ai/work-with-devin/devin-cli',
+    flags_placeholder: '',
+    example_flags: []
+  },
   'Grok Build': {
     docs_url: 'https://docs.x.ai/build/cli/headless-scripting',
     homepage_url: 'https://x.ai/build',
