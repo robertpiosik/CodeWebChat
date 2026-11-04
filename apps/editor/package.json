@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "Markdown prompts for chatbots, APIs, and CLIs with seamless integration",
-  "version": "2026.1104.367",
+  "version": "2026.1104.368",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -11,7 +11,8 @@
     "lint": "eslint src --ext ts,tsx",
     "lint:fix": "eslint src --ext ts,tsx --fix",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "bump": "node scripts/bump.js"
   },
   "publisher": "robertpiosik",
   "homepage": "https://cwc.dev/",
