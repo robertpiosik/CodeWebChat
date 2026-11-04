@@ -60,5 +60,6 @@
   "codeWebChat.selectParentFolder.title": "상위 폴더 선택...",
   "codeWebChat.copyMergeCommitDetails.title": "병합된 커밋 세부 정보 복사",
   "codeWebChat.checkForUpdates.title": "업데이트 확인...",
+  "codeWebChat.installSpecificVersion.title": "특정 버전 설치...",
   "codeWebChat.category": "CWC"
 }

@@ -60,5 +60,6 @@
   "codeWebChat.selectParentFolder.title": "Übergeordneten Ordner auswählen...",
   "codeWebChat.copyMergeCommitDetails.title": "Details der zusammengefassten Commits kopieren",
   "codeWebChat.checkForUpdates.title": "Nach Updates suchen...",
+  "codeWebChat.installSpecificVersion.title": "Bestimmte Version installieren...",
   "codeWebChat.category": "CWC"
 }

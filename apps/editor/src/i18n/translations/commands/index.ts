@@ -22,9 +22,11 @@ import { translations as copy_markdown_command } from './copy-markdown-command'
 import { translations as copy_merge_commit_details_command } from './copy-merge-commit-details-command'
 import { translations as reference_in_prompt_command } from './reference-in-prompt-command'
 import { translations as check_for_updates_command } from './check-for-updates-command'
+import { translations as install_specific_version_command } from './install-specific-version-command'
 
 export const translations = {
   ...check_for_updates_command,
+  ...install_specific_version_command,
   ...generate_commit_message_command,
   ...code_at_cursor_command,
   ...apply_response_command,

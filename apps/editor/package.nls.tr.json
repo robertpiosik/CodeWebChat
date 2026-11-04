@@ -60,5 +60,6 @@
   "codeWebChat.selectParentFolder.title": "Üst Klasörü Seç...",
   "codeWebChat.copyMergeCommitDetails.title": "Birleştirilmiş Commit Ayrıntılarını Kopyala",
   "codeWebChat.checkForUpdates.title": "Güncellemeleri Kontrol Et...",
+  "codeWebChat.installSpecificVersion.title": "Belirli Bir Sürümü Yükle...",
   "codeWebChat.category": "CWC"
 }

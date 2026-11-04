@@ -437,6 +437,11 @@
         "command": "codeWebChat.checkForUpdates",
         "title": "%codeWebChat.checkForUpdates.title%",
         "category": "%codeWebChat.category%"
+      },
+      {
+        "command": "codeWebChat.installSpecificVersion",
+        "title": "%codeWebChat.installSpecificVersion.title%",
+        "category": "%codeWebChat.category%"
       }
     ],
     "submenus": [
@@ -802,6 +807,11 @@
           "command": "codeWebChat.checkForUpdates",
           "when": "view == promptView",
           "group": "2_more@1"
+        },
+        {
+          "command": "codeWebChat.installSpecificVersion",
+          "when": "view == promptView",
+          "group": "2_more@2"
         }
       ],
       "scm/title": [

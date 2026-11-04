@@ -60,5 +60,6 @@
   "codeWebChat.selectParentFolder.title": "Избери родителска папка...",
   "codeWebChat.copyMergeCommitDetails.title": "Копиране на детайлите на обединените къмити",
   "codeWebChat.checkForUpdates.title": "Проверка за актуализации...",
+  "codeWebChat.installSpecificVersion.title": "Инсталирай специфична версия...",
   "codeWebChat.category": "CWC"
 }

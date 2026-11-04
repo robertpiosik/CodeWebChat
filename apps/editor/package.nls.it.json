@@ -60,5 +60,6 @@
   "codeWebChat.selectParentFolder.title": "Seleziona cartella superiore...",
   "codeWebChat.copyMergeCommitDetails.title": "Copia i dettagli dei commit uniti",
   "codeWebChat.checkForUpdates.title": "Controlla aggiornamenti...",
+  "codeWebChat.installSpecificVersion.title": "Installa versione specifica...",
   "codeWebChat.category": "CWC"
 }

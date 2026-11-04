@@ -2,6 +2,7 @@ $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 $targetScheme = $args[0]
 $lang = $args[1]
+$commitSha = $args[2]
 
 $msg_error="Error:"
 $msg_git_required="git is required but not installed."
@@ -483,10 +484,15 @@ foreach ($i in $indices) {
     $updated = $false
     if (Test-Path (Join-Path $repoDir ".git")) {
         $updated = Invoke-Step "$msg_step_cloning..." {
-            git -C $repoDir fetch origin main --quiet *>$null
+            git -C $repoDir fetch origin --quiet *>$null
             if ($LASTEXITCODE -ne 0) { throw "Failed to fetch" }
-            git -C $repoDir reset --hard FETCH_HEAD --quiet *>$null
-            if ($LASTEXITCODE -ne 0) { throw "Failed to reset" }
+            if ($commitSha) {
+                git -C $repoDir checkout $commitSha --quiet *>$null
+                if ($LASTEXITCODE -ne 0) { throw "Failed to checkout" }
+            } else {
+                git -C $repoDir reset --hard origin/main --quiet *>$null
+                if ($LASTEXITCODE -ne 0) { throw "Failed to reset" }
+            }
             git -C $repoDir clean -fd --quiet *>$null
             if ($LASTEXITCODE -ne 0) { throw "Failed to clean" }
         } $msg_step_cloning
@@ -497,8 +503,12 @@ foreach ($i in $indices) {
             Remove-Item -Path $repoDir -Recurse -Force -ErrorAction SilentlyContinue
         }
         $null = Invoke-Step "$msg_step_cloning..." {
-            git clone -b main -c core.longpaths=true --quiet https://github.com/CodeWebChat/CWC.git $repoDir *>$null
+            git clone -c core.longpaths=true --quiet https://github.com/CodeWebChat/CWC.git $repoDir *>$null
             if ($LASTEXITCODE -ne 0) { throw "Failed to clone" }
+            if ($commitSha) {
+                git -C $repoDir checkout $commitSha --quiet *>$null
+                if ($LASTEXITCODE -ne 0) { throw "Failed to checkout" }
+            }
         } $msg_step_cloning
     }
 
