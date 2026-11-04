@@ -382,6 +382,7 @@ check_editor "VS Code Insiders" "code-insiders" "vscode-insiders"
 check_editor "VSCodium" "codium" "vscodium"
 check_editor "Cursor" "cursor" "cursor"
 check_editor "Antigravity" "agy-ide" "agy"
+check_editor "Devin" "devin-desktop" "devin"
 
 if [ ${#AVAILABLE_EDITORS[@]} -eq 0 ]; then
   echo "$msg_error $msg_no_editors"

@@ -393,7 +393,8 @@ $editorsToCheck = @(
     @{ Name = "VS Code Insiders"; Cmd = "code-insiders"; Scheme = "vscode-insiders" },
     @{ Name = "VSCodium"; Cmd = "codium"; Scheme = "vscodium" },
     @{ Name = "Cursor"; Cmd = "cursor"; Scheme = "cursor" },
-    @{ Name = "Antigravity"; Cmd = "agy-ide"; Scheme = "agy" }
+    @{ Name = "Antigravity"; Cmd = "agy-ide"; Scheme = "agy" },
+    @{ Name = "Devin"; Cmd = "devin-desktop"; Scheme = "devin" }
 )
 
 $availableEditors = @($editorsToCheck | Where-Object { Get-Command $_.Cmd -ErrorAction SilentlyContinue })
