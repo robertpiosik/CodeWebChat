@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
 set -e
 
-TARGET_SCHEME="$1"
-LANGUAGE="${2:-en}"
-TAG_NAME="$3"
+TARGET_SCHEME=""
+LANGUAGE="en"
+TAG_NAME=""
+
+while [[ "$#" -gt 0 ]]; do
+  case "$1" in
+    --editor) TARGET_SCHEME="$2"; shift 2 ;;
+    --lang) LANGUAGE="$2"; shift 2 ;;
+    --tag) TAG_NAME="$2"; shift 2 ;;
+    *) echo "Unknown parameter passed: $1"; exit 1 ;;
+  esac
+done
 
 msg_error="Error:"
 msg_git_required="git is required but not installed."

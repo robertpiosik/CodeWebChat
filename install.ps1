@@ -1,8 +1,13 @@
+param(
+    [string]$editor = "",
+    [string]$lang = "en",
+    [string]$tag = ""
+)
+
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
-$targetScheme = $args[0]
-$lang = $args[1]
-$tagName = $args[2]
+$targetScheme = $editor
+$tagName = $tag
 
 $msg_error="Error:"
 $msg_git_required="git is required but not installed."
