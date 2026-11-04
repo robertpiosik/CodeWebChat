@@ -1,8 +1,32 @@
-param(
-    [string]$editor = "",
-    [string]$lang = "en",
-    [string]$tag = ""
-)
+$editor = ""
+$lang = "en"
+$tag = ""
+
+$i = 0
+while ($i -lt $args.Count) {
+    $arg = $args[$i]
+    if ($arg -match "^--?editor$") {
+        if ($i + 1 -lt $args.Count) { $editor = $args[$i + 1] }
+        $i += 2
+    } elseif ($arg -match "^--?editor[:=](.*)$") {
+        $editor = $matches[1]
+        $i++
+    } elseif ($arg -match "^--?lang$") {
+        if ($i + 1 -lt $args.Count) { $lang = $args[$i + 1] }
+        $i += 2
+    } elseif ($arg -match "^--?lang[:=](.*)$") {
+        $lang = $matches[1]
+        $i++
+    } elseif ($arg -match "^--?tag$") {
+        if ($i + 1 -lt $args.Count) { $tag = $args[$i + 1] }
+        $i += 2
+    } elseif ($arg -match "^--?tag[:=](.*)$") {
+        $tag = $matches[1]
+        $i++
+    } else {
+        $i++
+    }
+}
 
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"

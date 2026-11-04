@@ -10,7 +10,7 @@ while [[ "$#" -gt 0 ]]; do
     --editor) TARGET_SCHEME="$2"; shift 2 ;;
     --lang) LANGUAGE="$2"; shift 2 ;;
     --tag) TAG_NAME="$2"; shift 2 ;;
-    *) echo "Unknown parameter passed: $1"; exit 1 ;;
+    *) shift ;;
   esac
 done
 
