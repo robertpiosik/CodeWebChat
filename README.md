@@ -14,10 +14,7 @@
 
 ## Quick start
 
-CWC works with any VS Code-based editor (Cursor, Antigravity, VSCodium etc.):
-
-> [!NOTE]
-> The installation script located in repository's root builds the extension on your machine, directly from source.
+Build from source for any VS Code-based editor (Cursor, Antigravity, VSCodium etc.):
 
 **macOS / Linux**
 
