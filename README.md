@@ -14,7 +14,7 @@
 
 ## Quick start
 
-Build from source for any VS Code-based editor (Cursor, Antigravity, VSCodium etc.):
+Safely build from source for any VS Code-based editor (Cursor, Antigravity, VSCodium etc.):
 
 > [!NOTE]
 > `raw.githubusercontent.com` domain is GitHub's, used for accessing repository files.
