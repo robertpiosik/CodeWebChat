@@ -10,11 +10,11 @@ export const update_extension = (params: { tag_name: string }) => {
 
   if (os.platform() === 'win32') {
     terminal.sendText(
-      `powershell -c "& ([scriptblock]::Create((irm https://raw.githubusercontent.com/CodeWebChat/CWC/main/install.ps1))) -editor '${uri_scheme}' -lang '${lang}' -tag '${params.tag_name}'"`
+      `powershell -c "& ([scriptblock]::Create((irm https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.ps1))) -editor '${uri_scheme}' -lang '${lang}' -tag '${params.tag_name}'"`
     )
   } else {
     terminal.sendText(
-      `curl -fsSL https://raw.githubusercontent.com/CodeWebChat/CWC/main/install.sh | bash -s -- --editor "${uri_scheme}" --lang "${lang}" --tag "${params.tag_name}"`
+      `curl -fsSL https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.sh | bash -s -- --editor "${uri_scheme}" --lang "${lang}" --tag "${params.tag_name}"`
     )
   }
 }

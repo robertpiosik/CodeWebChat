@@ -16,19 +16,16 @@
 
 Safely build from source for any VS Code-based editor (Cursor, Antigravity, VSCodium etc.):
 
-> [!NOTE]
-> `raw.githubusercontent.com` domain is GitHub's, used for downloading repository files.
-
 **macOS / Linux**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/CodeWebChat/CWC/main/install.sh | bash
+curl -fsSL https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.sh | bash
 ```
 
 **Windows**
 
 ```powershell
-powershell -c "irm https://raw.githubusercontent.com/CodeWebChat/CWC/main/install.ps1 | iex"
+powershell -c "irm https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.ps1 | iex"
 ```
 
 ## Privacy-first
