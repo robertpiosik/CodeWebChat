@@ -128,7 +128,7 @@ export const undo_files = async (params: {
             await ensure_directory_exists(safe_path)
             await vscode.workspace.fs.writeFile(
               file_uri,
-              Buffer.from(state.content, 'utf8')
+              new Uint8Array(Buffer.from(state.content, 'utf8'))
             )
 
             Logger.info({
@@ -179,7 +179,7 @@ export const undo_files = async (params: {
             } else {
               await vscode.workspace.fs.writeFile(
                 file_uri,
-                Buffer.from(state.content, 'utf8')
+                new Uint8Array(Buffer.from(state.content, 'utf8'))
               )
             }
             Logger.info({

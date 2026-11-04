@@ -169,7 +169,9 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
       return
     }
 
-    const audio_buffer = Buffer.concat(prompt_view_provider.audio_chunks)
+    const audio_buffer = Buffer.concat(
+      prompt_view_provider.audio_chunks.map((chunk) => new Uint8Array(chunk))
+    )
     const base64_audio = audio_buffer.toString('base64')
 
     prompt_view_provider.audio_chunks = []
@@ -288,7 +290,10 @@ const stop_recording = async (prompt_view_provider: PromptViewProvider) => {
           os.tmpdir(),
           `cwc-voice-input-${Date.now()}.wav`
         )
-        await fs.promises.writeFile(temp_audio_path, audio_buffer)
+        await fs.promises.writeFile(
+          temp_audio_path,
+          new Uint8Array(audio_buffer)
+        )
 
         const requirements = [
           cli_edit_ask_requirements.disable_tool_calling,

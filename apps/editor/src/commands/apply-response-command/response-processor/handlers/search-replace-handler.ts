@@ -127,7 +127,7 @@ export const handle_search_replace = async (params: {
             }
             await vscode.workspace.fs.writeFile(
               vscode.Uri.file(safe_path),
-              Buffer.from(proposed_content, 'utf8')
+              new Uint8Array(Buffer.from(proposed_content, 'utf8'))
             )
           }
 
@@ -157,7 +157,7 @@ export const handle_search_replace = async (params: {
           if (current_content !== original_content) {
             await vscode.workspace.fs.writeFile(
               vscode.Uri.file(safe_path),
-              Buffer.from(current_content, 'utf8')
+              new Uint8Array(Buffer.from(current_content, 'utf8'))
             )
           }
 

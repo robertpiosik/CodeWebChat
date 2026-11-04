@@ -38,7 +38,9 @@ export const handle_open_prompt_image = async (
     const png_filename = `cwc-image-${hash}.png`
     const png_path = path.join(png_dir, png_filename)
 
-    await fs.promises.writeFile(png_path, buffer, { mode: 0o600 })
+    await fs.promises.writeFile(png_path, new Uint8Array(buffer), {
+      mode: 0o600
+    })
 
     // Open the image
     const uri = vscode.Uri.file(png_path)

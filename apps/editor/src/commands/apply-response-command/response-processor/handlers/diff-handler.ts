@@ -6,7 +6,10 @@ import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '../../types/original-file-state'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { apply_diff } from '../../../../utils/changes-integration/diff-processor'
-import { remove_directory_if_empty, ensure_directory_exists } from '../../utils/file-operations'
+import {
+  remove_directory_if_empty,
+  ensure_directory_exists
+} from '../../utils/file-operations'
 import { DiffItem } from '../../utils/response-parser'
 import { get_error_message } from '@/utils/get-error-message'
 
@@ -507,7 +510,7 @@ const process_diff = async (params: {
   try {
     await vscode.workspace.fs.writeFile(
       vscode.Uri.file(params.file_path),
-      Buffer.from(result, 'utf8')
+      new Uint8Array(Buffer.from(result, 'utf8'))
     )
     return result
   } catch (error) {

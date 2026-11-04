@@ -37,7 +37,7 @@ export const replace_image_symbol = async (params: {
                   'utf-8'
                 )
                 const buffer = Buffer.from(content_base64, 'base64')
-                await fs.promises.writeFile(png_path, buffer)
+                await fs.promises.writeFile(png_path, new Uint8Array(buffer))
               }
               return {
                 path: png_path,

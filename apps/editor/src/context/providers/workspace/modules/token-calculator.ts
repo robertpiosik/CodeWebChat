@@ -109,7 +109,7 @@ export class TokenCalculator implements vscode.Disposable {
 
     try {
       const buffer = await fs.promises.readFile(file_path)
-      const is_binary = is_binary_file(file_path, buffer)
+      const is_binary = is_binary_file(file_path, new Uint8Array(buffer))
 
       let content = is_binary ? 'Binary file' : buffer.toString('utf8')
 

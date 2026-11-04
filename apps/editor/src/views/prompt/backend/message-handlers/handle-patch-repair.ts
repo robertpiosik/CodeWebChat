@@ -545,7 +545,7 @@ export const handle_patch_repair = async (params: {
 
             await vscode.workspace.fs.writeFile(
               vscode.Uri.file(safe_path),
-              Buffer.from(final_content, 'utf8')
+              new Uint8Array(Buffer.from(final_content, 'utf8'))
             )
 
             successful_files.add(

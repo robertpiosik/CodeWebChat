@@ -144,10 +144,10 @@ export const handle_fast_replace = async (params: {
           })
 
           if (!is_pure_rename) {
-             await vscode.workspace.fs.writeFile(
-               vscode.Uri.file(safe_path),
-               Buffer.from(file.content, 'utf8')
-             )
+            await vscode.workspace.fs.writeFile(
+              vscode.Uri.file(safe_path),
+              new Uint8Array(Buffer.from(file.content, 'utf8'))
+            )
           }
 
           original_states.push({
@@ -184,7 +184,10 @@ export const handle_fast_replace = async (params: {
           const file_uri = vscode.Uri.file(safe_path)
           const document = await vscode.workspace.openTextDocument(file_uri)
           const original_content_doc = document.getText()
-          const final_content = preserve_trailing_newline(original_content_doc, file.content)
+          const final_content = preserve_trailing_newline(
+            original_content_doc,
+            file.content
+          )
 
           original_states.push({
             file_path: file.file_path,

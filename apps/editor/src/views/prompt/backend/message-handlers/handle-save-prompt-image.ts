@@ -14,7 +14,7 @@ export const handle_save_prompt_image = async (
     const buffer = Buffer.from(message.content_base64, 'base64')
     const hash = crypto
       .createHash('sha256')
-      .update(buffer)
+      .update(new Uint8Array(buffer))
       .digest('hex')
       .substring(0, 16)
     const filename = `cwc-image-${hash}.txt`

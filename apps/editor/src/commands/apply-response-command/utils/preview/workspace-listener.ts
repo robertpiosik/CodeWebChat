@@ -921,7 +921,7 @@ export const setup_workspace_listeners = (params: {
     try {
       await vscode.workspace.fs.writeFile(
         vscode.Uri.file(file_to_discard.sanitized_path),
-        Buffer.from(proposed, 'utf8')
+        new Uint8Array(Buffer.from(proposed, 'utf8'))
       )
     } finally {
       params.workspace_provider.resume_file_watcher()
@@ -1021,7 +1021,7 @@ export const setup_workspace_listeners = (params: {
         } else {
           await vscode.workspace.fs.writeFile(
             vscode.Uri.file(file_to_toggle.sanitized_path),
-            Buffer.from(file_to_toggle.original_content, 'utf8')
+            new Uint8Array(Buffer.from(file_to_toggle.original_content, 'utf8'))
           )
         }
       } else {
@@ -1040,10 +1040,12 @@ export const setup_workspace_listeners = (params: {
         } else {
           await vscode.workspace.fs.writeFile(
             vscode.Uri.file(file_to_toggle.sanitized_path),
-            Buffer.from(
-              file_to_toggle.content_to_restore ??
-                file_to_toggle.previewable_file.content,
-              'utf8'
+            new Uint8Array(
+              Buffer.from(
+                file_to_toggle.content_to_restore ??
+                  file_to_toggle.previewable_file.content,
+                'utf8'
+              )
             )
           )
         }

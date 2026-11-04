@@ -79,7 +79,7 @@ export const create_file_if_needed = async (params: {
   try {
     await vscode.workspace.fs.writeFile(
       file_uri,
-      Buffer.from(params.content, 'utf8')
+      new Uint8Array(Buffer.from(params.content, 'utf8'))
     )
     Logger.info({
       function_name: 'create_file_if_needed',

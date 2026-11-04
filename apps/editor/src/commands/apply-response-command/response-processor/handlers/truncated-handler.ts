@@ -111,7 +111,7 @@ export const handle_truncated_edit = async (params: {
           proposed_content = process_truncations(file.content, original_content)
           await vscode.workspace.fs.writeFile(
             vscode.Uri.file(safe_path),
-            Buffer.from(proposed_content, 'utf8')
+            new Uint8Array(Buffer.from(proposed_content, 'utf8'))
           )
         }
 
@@ -179,7 +179,7 @@ export const handle_truncated_edit = async (params: {
 
       await vscode.workspace.fs.writeFile(
         vscode.Uri.file(safe_path),
-        Buffer.from(new_content, 'utf8')
+        new Uint8Array(Buffer.from(new_content, 'utf8'))
       )
 
       original_states.push({

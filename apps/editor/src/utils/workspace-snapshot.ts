@@ -50,7 +50,7 @@ export const create_workspace_snapshot = async (
           const diff_file_path = path.join(dest_dir_path, `${folder_key}.diff`)
           await vscode.workspace.fs.writeFile(
             vscode.Uri.file(diff_file_path),
-            Buffer.from(diff, 'utf8')
+            new Uint8Array(Buffer.from(diff, 'utf8'))
           )
         } else {
           Logger.warn({
@@ -186,7 +186,7 @@ export const restore_workspace_snapshot = async (
 
             await vscode.workspace.fs.writeFile(
               vscode.Uri.file(temp_diff_path),
-              Buffer.from(diff, 'utf8')
+              new Uint8Array(Buffer.from(diff, 'utf8'))
             )
             try {
               execFileSync(
@@ -283,7 +283,7 @@ export const restore_workspace_snapshot = async (
             const temp_diff_path = path.join(temp_git_clone_path, 'cwc.diff')
             await vscode.workspace.fs.writeFile(
               vscode.Uri.file(temp_diff_path),
-              Buffer.from(diff, 'utf8')
+              new Uint8Array(Buffer.from(diff, 'utf8'))
             )
             try {
               execFileSync(
