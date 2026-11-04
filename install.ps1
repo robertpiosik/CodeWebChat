@@ -464,7 +464,6 @@ Write-Host ""
 $originalLocation = Get-Location
 
 $cwcDir = Join-Path $env:USERPROFILE ".cwc"
-$repoDir = Join-Path $cwcDir "repository"
 
 try {
 
@@ -472,50 +471,57 @@ if (!(Test-Path $cwcDir)) {
     New-Item -ItemType Directory -Path $cwcDir | Out-Null
 }
 
-$updated = $false
-if (Test-Path (Join-Path $repoDir ".git")) {
-    $updated = Invoke-Step "$msg_step_cloning..." {
-        git -C $repoDir fetch origin main --quiet *>$null
-        if ($LASTEXITCODE -ne 0) { throw "Failed to fetch" }
-        git -C $repoDir reset --hard FETCH_HEAD --quiet *>$null
-        if ($LASTEXITCODE -ne 0) { throw "Failed to reset" }
-        git -C $repoDir clean -fd --quiet *>$null
-        if ($LASTEXITCODE -ne 0) { throw "Failed to clean" }
-    } $msg_step_cloning
-}
+$indices = if ($installAll) { 0..($availableEditors.Count - 1) } else { $selectedIndex }
+foreach ($i in $indices) {
+    $editor = $availableEditors[$i]
+    $repoDir = Join-Path $cwcDir "repository-$($editor.Scheme)"
 
-if (-not $updated) {
-    if (Test-Path $repoDir) {
-        Remove-Item -Path $repoDir -Recurse -Force -ErrorAction SilentlyContinue
+    if ($installAll) {
+        Write-Host "`n=== $($editor.Name) ===" -ForegroundColor Cyan
     }
-    $null = Invoke-Step "$msg_step_cloning..." {
-        git clone -b main -c core.longpaths=true --quiet https://github.com/CodeWebChat/CWC.git $repoDir *>$null
-        if ($LASTEXITCODE -ne 0) { throw "Failed to clone" }
-    } $msg_step_cloning
-}
 
-Set-Location $repoDir
+    $updated = $false
+    if (Test-Path (Join-Path $repoDir ".git")) {
+        $updated = Invoke-Step "$msg_step_cloning..." {
+            git -C $repoDir fetch origin main --quiet *>$null
+            if ($LASTEXITCODE -ne 0) { throw "Failed to fetch" }
+            git -C $repoDir reset --hard FETCH_HEAD --quiet *>$null
+            if ($LASTEXITCODE -ne 0) { throw "Failed to reset" }
+            git -C $repoDir clean -fd --quiet *>$null
+            if ($LASTEXITCODE -ne 0) { throw "Failed to clean" }
+        } $msg_step_cloning
+    }
 
-$null = Invoke-Step "$msg_step_deps..." {
-    npx.cmd --yes pnpm install *>$null
-} $msg_step_deps
+    if (-not $updated) {
+        if (Test-Path $repoDir) {
+            Remove-Item -Path $repoDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+        $null = Invoke-Step "$msg_step_cloning..." {
+            git clone -b main -c core.longpaths=true --quiet https://github.com/CodeWebChat/CWC.git $repoDir *>$null
+            if ($LASTEXITCODE -ne 0) { throw "Failed to clone" }
+        } $msg_step_cloning
+    }
 
-Set-Location apps/editor
+    Set-Location $repoDir
 
-Remove-Item *.vsix -Force -ErrorAction SilentlyContinue
+    $null = Invoke-Step "$msg_step_deps..." {
+        npx.cmd --yes pnpm install *>$null
+    } $msg_step_deps
 
-$null = Invoke-Step "$msg_step_build..." {
-    npx.cmd --yes pnpm run build *>$null
-} $msg_step_build
+    Set-Location apps/editor
 
-$vsixFile = Get-ChildItem *.vsix -ErrorAction SilentlyContinue | Select-Object -First 1
+    Remove-Item *.vsix -Force -ErrorAction SilentlyContinue
 
-if (!$vsixFile) {
-    Fail $msg_vsix_error
-}
+    $null = Invoke-Step "$msg_step_build..." {
+        npx.cmd --yes pnpm run build *>$null
+    } $msg_step_build
 
-function Install-ToEditor($idx) {
-    $editor = $availableEditors[$idx]
+    $vsixFile = Get-ChildItem *.vsix -ErrorAction SilentlyContinue | Select-Object -First 1
+
+    if (!$vsixFile) {
+        Fail $msg_vsix_error
+    }
+
     $ok = Invoke-Step "$msg_step_install $($editor.Name)..." {
         & $editor.Cmd --install-extension $vsixFile.FullName --force *>$null
     }
@@ -530,12 +536,9 @@ function Install-ToEditor($idx) {
     } else {
         Write-Host "$msg_error $msg_install_fail $($editor.Name)." -ForegroundColor Red
     }
+
+    Set-Location $originalLocation
 }
-
-$indices = if ($installAll) { 0..($availableEditors.Count - 1) } else { $selectedIndex }
-foreach ($i in $indices) { Install-ToEditor $i }
-
-Set-Location $originalLocation
 
 } finally {
     Set-Location $originalLocation -ErrorAction SilentlyContinue

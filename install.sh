@@ -482,7 +482,6 @@ run_step() {
 echo ""
 
 CWC_DIR="$HOME/.cwc"
-REPO_DIR="$CWC_DIR/repository"
 
 mkdir -p -m 700 "$CWC_DIR"
 chmod 700 "$CWC_DIR" 2>/dev/null || true
@@ -497,55 +496,61 @@ clone_repo() {
   git clone -b main -c core.longpaths=true --quiet https://github.com/CodeWebChat/CWC.git "$REPO_DIR"
 }
 
-if [ -d "$REPO_DIR/.git" ] && run_step "$msg_step_cloning" update_repo; then
-  :
-else
-  rm -rf "$REPO_DIR"
-  run_step "$msg_step_cloning" clone_repo
-fi
-
-cd "$REPO_DIR"
-
-run_step "$msg_step_deps" npx --yes pnpm install
-
-cd apps/editor
-
-rm -f ./*.vsix
-
-run_step "$msg_step_build" npx --yes pnpm run build
-
-vsix_files=(*.vsix)
-VSIX_FILE="${vsix_files[0]}"
-
-if [ ! -f "$VSIX_FILE" ]; then
-  echo "$msg_error $msg_vsix_error"
-  exit 1
-fi
-
-install_to_editor() {
-  local idx=$1
-  local editor_name="${AVAILABLE_EDITORS[$idx]}"
-  local editor_cmd="${EDITOR_CMDS[$idx]}"
-
-  if ! run_step "$msg_step_install $editor_name" "$editor_cmd" --install-extension "$VSIX_FILE" --force; then
-    echo ""
-    echo "$msg_error $msg_install_fail $editor_name."
-    return 1
-  fi
-
-  echo ""
-  if [ -n "$TARGET_SCHEME" ]; then
-    echo "$msg_updated"
-  else
-    echo "$msg_success $editor_name!"
-  fi
-}
-
 if [[ "$choice" == [aA] ]]; then
   indices=("${!AVAILABLE_EDITORS[@]}")
 else
   indices=($((choice-1)))
 fi
-for i in "${indices[@]}"; do install_to_editor "$i"; done
+
+for i in "${indices[@]}"; do
+  editor_name="${AVAILABLE_EDITORS[$i]}"
+  editor_cmd="${EDITOR_CMDS[$i]}"
+  editor_scheme="${EDITOR_SCHEMES[$i]}"
+
+  if [[ "$choice" == [aA] ]]; then
+    echo -e "\n\033[36m=== $editor_name ===\033[0m"
+  fi
+
+  REPO_DIR="$CWC_DIR/repository-${editor_scheme}"
+
+  if [ -d "$REPO_DIR/.git" ] && run_step "$msg_step_cloning" update_repo; then
+    :
+  else
+    rm -rf "$REPO_DIR"
+    run_step "$msg_step_cloning" clone_repo
+  fi
+
+  cd "$REPO_DIR"
+
+  run_step "$msg_step_deps" npx --yes pnpm install
+
+  cd apps/editor
+
+  rm -f ./*.vsix
+
+  run_step "$msg_step_build" npx --yes pnpm run build
+
+  vsix_files=(*.vsix)
+  VSIX_FILE="${vsix_files[0]}"
+
+  if [ ! -f "$VSIX_FILE" ]; then
+    echo "$msg_error $msg_vsix_error"
+    exit 1
+  fi
+
+  if ! run_step "$msg_step_install $editor_name" "$editor_cmd" --install-extension "$VSIX_FILE" --force; then
+    echo ""
+    echo "$msg_error $msg_install_fail $editor_name."
+  else
+    echo ""
+    if [ -n "$TARGET_SCHEME" ]; then
+      echo "$msg_updated"
+    else
+      echo "$msg_success $editor_name!"
+    fi
+  fi
+
+  cd "$ORIGINAL_DIR"
+done
 
 cd "$ORIGINAL_DIR" || cd /
