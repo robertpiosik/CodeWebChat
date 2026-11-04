@@ -14,7 +14,7 @@
 
 ## Quick start
 
-Securely build from source for VS Code, Cursor, or Antigravity.
+Build from source for VS Code, Cursor, or Antigravity.
 
 **macOS / Linux**
 
