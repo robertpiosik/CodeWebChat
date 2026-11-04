@@ -18,11 +18,13 @@ const next_segment = last_segment + 1
 manifest.version = `${date_prefix}.${next_segment}`
 
 fs.writeFileSync(manifest_path, JSON.stringify(manifest, null, 2) + '\n')
-console.log(`Bumped version to ${manifest.version}`)
+console.log(`Bump version of the browser extension to ${manifest.version}`)
 
 try {
   execSync(`git add "${manifest_path}"`, { stdio: 'ignore' })
-  execSync(`git commit --no-verify -m "Bump version to ${manifest.version}"`, { stdio: 'ignore' })
+  execSync(`git commit --no-verify -m "Bump version to ${manifest.version}"`, {
+    stdio: 'ignore'
+  })
   console.log('Successfully committed the version bump.')
 } catch (error) {
   console.error('Failed to commit version bump:', error.message)

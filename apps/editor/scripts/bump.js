@@ -18,11 +18,13 @@ const next_segment = last_segment + 1
 pkg.version = `${date_prefix}.${next_segment}`
 
 fs.writeFileSync(pkg_path, JSON.stringify(pkg, null, 2) + '\n')
-console.log(`Bumped version to ${pkg.version}`)
+console.log(`Bump version of the VS Code extension to ${pkg.version}`)
 
 try {
   execSync(`git add "${pkg_path}"`, { stdio: 'ignore' })
-  execSync(`git commit --no-verify -m "Bump version to ${pkg.version}"`, { stdio: 'ignore' })
+  execSync(`git commit --no-verify -m "Bump version to ${pkg.version}"`, {
+    stdio: 'ignore'
+  })
   console.log('Successfully committed the version bump.')
 } catch (error) {
   console.error('Failed to commit version bump:', error.message)

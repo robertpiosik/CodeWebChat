@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-const manifest_path = path.join(__dirname, 'src', 'manifest.json')
+const manifest_path = path.join(__dirname, '..', 'src', 'manifest.json')
 const manifest = JSON.parse(fs.readFileSync(manifest_path, 'utf8'))
 
 const firefox_manifest: any = { ...manifest }
@@ -27,16 +27,17 @@ firefox_manifest.optional_permissions = ['cookies'] // Needed by Firefox Contain
 
 delete firefox_manifest.host_permissions
 
-const firefox_dist_dir = path.join(__dirname, 'dist-firefox')
+const firefox_dist_dir = path.join(__dirname, '..', 'dist-firefox')
 if (!fs.existsSync(firefox_dist_dir)) {
   fs.mkdirSync(firefox_dist_dir)
 }
 
-const dist_dir = path.join(__dirname, 'dist')
+const dist_dir = path.join(__dirname, '..', 'dist')
 fs.cpSync(dist_dir, firefox_dist_dir, { recursive: true })
 
 const firefox_manifest_path = path.join(
   __dirname,
+  '..',
   'dist-firefox',
   'manifest.json'
 )

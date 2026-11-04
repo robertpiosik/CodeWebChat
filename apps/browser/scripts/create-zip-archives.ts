@@ -3,7 +3,7 @@ import * as path from 'path'
 import archiver from 'archiver'
 
 const get_version = (): string => {
-  const manifest_path = path.join(__dirname, 'src', 'manifest.json')
+  const manifest_path = path.join(__dirname, '..', 'src', 'manifest.json')
   const manifest = JSON.parse(fs.readFileSync(manifest_path, 'utf8'))
   return manifest.version
 }
@@ -28,14 +28,15 @@ const create_zip_from_directory = (
 const log = (message: string) => console.log(`[create-zip-archives] ${message}`)
 
 const delete_old_zip_archives = (current_version: string) => {
-  const files = fs.readdirSync(__dirname)
+  const base_dir = path.join(__dirname, '..')
+  const files = fs.readdirSync(base_dir)
   const zipPattern = /extension-(.+)-(chrome|firefox)\.zip$/
   let deletedFiles = 0
 
   files.forEach((file) => {
     const match = file.match(zipPattern)
     if (match && match[1] !== current_version) {
-      const filePath = path.join(__dirname, file)
+      const filePath = path.join(base_dir, file)
       log(`Deleting old archive: ${file}`)
       fs.unlinkSync(filePath)
       deletedFiles++
@@ -48,7 +49,7 @@ const delete_old_zip_archives = (current_version: string) => {
 }
 
 const main = async () => {
-  const base_dir = __dirname
+  const base_dir = path.join(__dirname, '..')
   const dist_dir = path.join(base_dir, 'dist')
   const firefox_dist_dir = path.join(base_dir, 'dist-firefox')
   const version = get_version()

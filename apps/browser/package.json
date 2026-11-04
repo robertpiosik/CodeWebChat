@@ -1,7 +1,7 @@
 {
   "name": "gemini-coder-connector",
   "scripts": {
-    "build": "webpack --mode production && ts-node create-firefox-build.ts && ts-node create-zip-archives.ts",
+    "build": "webpack --mode production && ts-node scripts/create-firefox-build.ts && ts-node scripts/create-zip-archives.ts",
     "lint": "eslint src --ext ts,tsx",
     "lint:fix": "eslint src --ext ts,tsx --fix",
     "bump": "node scripts/bump.js"
