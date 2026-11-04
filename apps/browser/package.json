@@ -3,7 +3,8 @@
   "scripts": {
     "build": "webpack --mode production && ts-node create-firefox-build.ts && ts-node create-zip-archives.ts",
     "lint": "eslint src --ext ts,tsx",
-    "lint:fix": "eslint src --ext ts,tsx --fix"
+    "lint:fix": "eslint src --ext ts,tsx --fix",
+    "bump": "node scripts/bump.js"
   },
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "0.6.1",
