@@ -4,9 +4,9 @@ import { PromptViewProvider } from '../prompt-view-provider'
 export const handle_update_extension = (
   prompt_view_provider: PromptViewProvider
 ) => {
-  if (prompt_view_provider.update_info.latest_version_sha) {
+  if (prompt_view_provider.update_info.latest_version_tag) {
     update_extension({
-      commit_sha: prompt_view_provider.update_info.latest_version_sha
+      tag_name: prompt_view_provider.update_info.latest_version_tag
     })
   }
 }

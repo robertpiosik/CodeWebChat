@@ -113,7 +113,6 @@ export const install_specific_version_command = () => {
           label: version,
           description,
           tag: tag.name,
-          sha: tag.commit?.sha,
           buttons: [
             {
               iconPath: new vscode.ThemeIcon('globe'),
@@ -126,7 +125,7 @@ export const install_specific_version_command = () => {
       })
 
       const quick_pick = vscode.window.createQuickPick<
-        vscode.QuickPickItem & { tag: string; sha?: string }
+        vscode.QuickPickItem & { tag: string }
       >()
       quick_pick.title = t('command.install-specific-version-command.title')
       quick_pick.placeholder = t(
@@ -159,9 +158,9 @@ export const install_specific_version_command = () => {
 
       quick_pick.onDidAccept(() => {
         const selected = quick_pick.selectedItems[0]
-        if (selected && selected.sha) {
+        if (selected && selected.tag) {
           quick_pick.hide()
-          update_extension({ commit_sha: selected.sha })
+          update_extension({ tag_name: selected.tag })
         }
       })
 

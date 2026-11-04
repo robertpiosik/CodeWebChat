@@ -17,9 +17,9 @@ export const check_for_updates_command = (
         )
 
         if (action === t('command.check-for-updates-command.action.update')) {
-          if (prompt_view_provider.update_info.latest_version_sha) {
+          if (prompt_view_provider.update_info.latest_version_tag) {
             update_extension({
-              commit_sha: prompt_view_provider.update_info.latest_version_sha
+              tag_name: prompt_view_provider.update_info.latest_version_tag
             })
           }
         }

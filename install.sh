@@ -3,7 +3,7 @@ set -e
 
 TARGET_SCHEME="$1"
 LANGUAGE="${2:-en}"
-COMMIT_SHA="$3"
+TAG_NAME="$3"
 
 msg_error="Error:"
 msg_git_required="git is required but not installed."
@@ -489,8 +489,8 @@ chmod 700 "$CWC_DIR" 2>/dev/null || true
 
 update_repo() {
   git -C "$REPO_DIR" fetch origin --quiet && \
-  if [ -n "$COMMIT_SHA" ]; then
-    git -C "$REPO_DIR" checkout "$COMMIT_SHA" --quiet
+  if [ -n "$TAG_NAME" ]; then
+    git -C "$REPO_DIR" checkout "$TAG_NAME" --quiet
   else
     git -C "$REPO_DIR" reset --hard origin/main --quiet
   fi && \
@@ -499,8 +499,8 @@ update_repo() {
 
 clone_repo() {
   git clone -c core.longpaths=true --quiet https://github.com/CodeWebChat/CWC.git "$REPO_DIR" && \
-  if [ -n "$COMMIT_SHA" ]; then
-    git -C "$REPO_DIR" checkout "$COMMIT_SHA" --quiet
+  if [ -n "$TAG_NAME" ]; then
+    git -C "$REPO_DIR" checkout "$TAG_NAME" --quiet
   fi
 }
 

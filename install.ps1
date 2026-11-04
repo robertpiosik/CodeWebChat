@@ -2,7 +2,7 @@ $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 $targetScheme = $args[0]
 $lang = $args[1]
-$commitSha = $args[2]
+$tagName = $args[2]
 
 $msg_error="Error:"
 $msg_git_required="git is required but not installed."
@@ -486,8 +486,8 @@ foreach ($i in $indices) {
         $updated = Invoke-Step "$msg_step_cloning..." {
             git -C $repoDir fetch origin --quiet *>$null
             if ($LASTEXITCODE -ne 0) { throw "Failed to fetch" }
-            if ($commitSha) {
-                git -C $repoDir checkout $commitSha --quiet *>$null
+            if ($tagName) {
+                git -C $repoDir checkout $tagName --quiet *>$null
                 if ($LASTEXITCODE -ne 0) { throw "Failed to checkout" }
             } else {
                 git -C $repoDir reset --hard origin/main --quiet *>$null
@@ -505,8 +505,8 @@ foreach ($i in $indices) {
         $null = Invoke-Step "$msg_step_cloning..." {
             git clone -c core.longpaths=true --quiet https://github.com/CodeWebChat/CWC.git $repoDir *>$null
             if ($LASTEXITCODE -ne 0) { throw "Failed to clone" }
-            if ($commitSha) {
-                git -C $repoDir checkout $commitSha --quiet *>$null
+            if ($tagName) {
+                git -C $repoDir checkout $tagName --quiet *>$null
                 if ($LASTEXITCODE -ne 0) { throw "Failed to checkout" }
             }
         } $msg_step_cloning
