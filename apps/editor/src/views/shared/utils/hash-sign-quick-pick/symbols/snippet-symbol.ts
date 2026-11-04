@@ -4,7 +4,12 @@ import { open_settings } from '@/views/settings/helpers/open-settings'
 
 export const handle_snippet_item = async (
   prompt_type?: 'ask' | 'edit'
-): Promise<string | undefined> => {
+): Promise<string | 'continue' | undefined> => {
+  const close_button = {
+    iconPath: new vscode.ThemeIcon('close'),
+    tooltip: t('common.close')
+  }
+
   const config = vscode.workspace.getConfiguration('codeWebChat')
   let instructions: { name: string; instruction: string }[] = []
 
@@ -44,9 +49,23 @@ export const handle_snippet_item = async (
   quick_pick.title = t(
     'views.shared.utils.hash-sign-quick-pick.snippet-symbol.title'
   )
+  quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 
   return new Promise((resolve) => {
     let is_accepted = false
+    let did_trigger_back = false
+
+    quick_pick.onDidTriggerButton((button) => {
+      if (button === vscode.QuickInputButtons.Back) {
+        did_trigger_back = true
+        quick_pick.hide()
+        resolve('continue')
+      } else if (button === close_button) {
+        quick_pick.hide()
+        resolve(undefined)
+      }
+    })
+
     quick_pick.onDidAccept(() => {
       is_accepted = true
       const selected = quick_pick.selectedItems[0]
@@ -61,7 +80,7 @@ export const handle_snippet_item = async (
       quick_pick.hide()
     })
     quick_pick.onDidHide(() => {
-      if (!is_accepted) {
+      if (!is_accepted && !did_trigger_back) {
         resolve(undefined)
       }
       quick_pick.dispose()

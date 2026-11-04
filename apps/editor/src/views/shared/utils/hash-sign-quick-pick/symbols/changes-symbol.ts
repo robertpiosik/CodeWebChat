@@ -12,6 +12,11 @@ const execFileAsync = promisify(execFile)
 export const handle_changes_item = async (
   extension_context: vscode.ExtensionContext
 ): Promise<string | 'continue' | undefined> => {
+  const close_button = {
+    iconPath: new vscode.ThemeIcon('close'),
+    tooltip: t('common.close')
+  }
+
   try {
     const workspace_folders = vscode.workspace.workspaceFolders
     if (!workspace_folders || workspace_folders.length === 0) {
@@ -74,7 +79,7 @@ export const handle_changes_item = async (
         quick_pick.items = folder_items
         quick_pick.placeholder = 'Select a repository'
         quick_pick.title = 'Repositories'
-        quick_pick.buttons = [vscode.QuickInputButtons.Back]
+        quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 
         const last_repo = extension_context.workspaceState.get<string>(
           LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY
@@ -97,6 +102,9 @@ export const handle_changes_item = async (
                 did_trigger_back = true
                 quick_pick.hide()
                 resolve('back')
+              } else if (button === close_button) {
+                quick_pick.hide()
+                resolve(undefined)
               }
             }),
             quick_pick.onDidAccept(() => {
@@ -115,7 +123,8 @@ export const handle_changes_item = async (
           quick_pick.show()
         })
 
-        if (!picked_folder || picked_folder === 'back') return 'continue'
+        if (picked_folder === 'back') return 'continue'
+        if (!picked_folder) return undefined
 
         await extension_context.workspaceState.update(
           LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY,
@@ -153,7 +162,7 @@ export const handle_changes_item = async (
         quick_pick.items = branch_items
         quick_pick.placeholder = 'Select branch to compare with'
         quick_pick.title = 'Branches'
-        quick_pick.buttons = [vscode.QuickInputButtons.Back]
+        quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 
         const cwd = selected_workspace.folder.uri.fsPath
         const folder_name = selected_workspace.folder.name
@@ -248,6 +257,9 @@ export const handle_changes_item = async (
                 did_trigger_back = true
                 quick_pick.hide()
                 resolve('back')
+              } else if (button === close_button) {
+                quick_pick.hide()
+                resolve(undefined)
               }
             }),
             quick_pick.onDidAccept(() => {
@@ -268,12 +280,15 @@ export const handle_changes_item = async (
 
         is_active = false
 
-        if (!selected_branch || selected_branch === 'back') {
+        if (selected_branch === 'back') {
           if (workspace_with_branches.length > 1) {
             go_back_to_folders = true
             break
           }
           return 'continue'
+        }
+        if (!selected_branch) {
+          return undefined
         }
 
         const formatted_branch =

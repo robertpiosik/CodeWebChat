@@ -10,11 +10,49 @@ import { display_token_count } from '@shared/utils/display-token-count'
 import { AsciiTree } from '@/utils/ascii-tree/ascii-tree'
 import { build_commit_changes_markdown } from '@/views/prompt/backend/utils/symbols/git/replace-git-symbols'
 
+const get_commit_remote_url = (
+  remote_url: string,
+  hash: string
+): string | undefined => {
+  if (!remote_url) return undefined
+
+  let web_url = remote_url
+
+  if (web_url.startsWith('git@')) {
+    const match = web_url.match(/git@([^:]+):(.+)/)
+    if (match) {
+      web_url = `https://${match[1]}/${match[2]}`
+    }
+  } else if (web_url.startsWith('ssh://')) {
+    const match = web_url.match(/ssh:\/\/(?:[^@]+@)?([^/:]+)(?::\d+)?\/(.+)/)
+    if (match) {
+      web_url = `https://${match[1]}/${match[2]}`
+    }
+  }
+
+  if (web_url.endsWith('.git')) {
+    web_url = web_url.slice(0, -4)
+  }
+
+  if (web_url.includes('bitbucket.org')) {
+    return `${web_url}/commits/${hash}`
+  }
+  if (web_url.includes('gitlab.com') || web_url.includes('gitlab.')) {
+    return `${web_url}/-/commit/${hash}`
+  }
+  return `${web_url}/commit/${hash}`
+}
+
 export const handle_commit_item = async (
   extension_context: vscode.ExtensionContext,
   on_insert: (text: string) => void
 ): Promise<'continue' | undefined> => {
   try {
+    const close_button = {
+      iconPath: new vscode.ThemeIcon('close'),
+      tooltip: t('common.close')
+    }
+
     const workspace_folders = vscode.workspace.workspaceFolders
     if (!workspace_folders || workspace_folders.length === 0) {
       vscode.window.showWarningMessage(
@@ -60,7 +98,8 @@ export const handle_commit_item = async (
         quick_pick.title = t(
           'views.shared.utils.hash-sign-quick-pick.commit-symbol.repositories'
         )
-        quick_pick.buttons = [vscode.QuickInputButtons.Back]
+        quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
+        quick_pick.ignoreFocusOut = true
 
         const last_repo = extension_context.workspaceState.get<string>(
           LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY
@@ -83,6 +122,9 @@ export const handle_commit_item = async (
                 did_trigger_back = true
                 quick_pick.hide()
                 resolve('back')
+              } else if (button === close_button) {
+                quick_pick.hide()
+                resolve(undefined)
               }
             }),
             quick_pick.onDidAccept(() => {
@@ -101,7 +143,8 @@ export const handle_commit_item = async (
           quick_pick.show()
         })
 
-        if (!picked_folder || picked_folder === 'back') return 'continue'
+        if (picked_folder === 'back') return 'continue'
+        if (!picked_folder) return undefined
 
         await extension_context.workspaceState.update(
           LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY,
@@ -142,6 +185,17 @@ export const handle_commit_item = async (
         return 'continue'
       }
 
+      let remote_url: string | undefined
+      try {
+        remote_url = execFileSync(
+          'git',
+          ['config', '--get', 'remote.origin.url'],
+          { cwd: selected_folder.uri.fsPath, encoding: 'utf-8' }
+        ).trim()
+      } catch {
+        // ignore
+      }
+
       const commits_raw = log_output.trim().split('\n')
       const commit_items: vscode.QuickPickItem[] = []
       for (let i = 0; i < commits_raw.length; i += 3) {
@@ -149,7 +203,22 @@ export const handle_commit_item = async (
         const message = commits_raw[i + 1] || ''
         const date = commits_raw[i + 2] || ''
         if (hash) {
-          commit_items.push({ label: hash, detail: message, description: date })
+          const item: vscode.QuickPickItem = {
+            label: hash,
+            detail: message,
+            description: date
+          }
+          if (remote_url) {
+            item.buttons = [
+              {
+                iconPath: new vscode.ThemeIcon('globe'),
+                tooltip: t(
+                  'views.shared.utils.hash-sign-quick-pick.commit-symbol.open-on-remote'
+                )
+              }
+            ]
+          }
+          commit_items.push(item)
         }
       }
 
@@ -165,7 +234,8 @@ export const handle_commit_item = async (
         quick_pick.title = t(
           'views.shared.utils.hash-sign-quick-pick.commit-symbol.commits'
         )
-        quick_pick.buttons = [vscode.QuickInputButtons.Back]
+        quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
+        quick_pick.ignoreFocusOut = true
         quick_pick.matchOnDetail = true
 
         if (last_selected_commit) {
@@ -190,6 +260,22 @@ export const handle_commit_item = async (
                 did_trigger_back = true
                 quick_pick.hide()
                 resolve('back')
+              } else if (button === close_button) {
+                quick_pick.hide()
+                resolve(undefined)
+              }
+            }),
+            quick_pick.onDidTriggerItemButton(async (e) => {
+              quick_pick.activeItems = [e.item]
+              if (
+                e.button.iconPath instanceof vscode.ThemeIcon &&
+                e.button.iconPath.id === 'globe' &&
+                remote_url
+              ) {
+                const url = get_commit_remote_url(remote_url, e.item.label)
+                if (url) {
+                  await vscode.env.openExternal(vscode.Uri.parse(url))
+                }
               }
             }),
             quick_pick.onDidAccept(() => {
@@ -208,7 +294,10 @@ export const handle_commit_item = async (
           quick_pick.show()
         })
 
-        if (!selected_commit || selected_commit === 'back') {
+        if (!selected_commit) {
+          return undefined
+        }
+        if (selected_commit === 'back') {
           if (git_folders.length > 1) {
             go_back_to_folders = true
             break
@@ -308,7 +397,11 @@ export const handle_commit_item = async (
         action_quick_pick.title = t(
           'views.shared.utils.hash-sign-quick-pick.commit-symbol.options'
         )
-        action_quick_pick.buttons = [vscode.QuickInputButtons.Back]
+        action_quick_pick.buttons = [
+          vscode.QuickInputButtons.Back,
+          close_button
+        ]
+        action_quick_pick.ignoreFocusOut = true
 
         const last_action = extension_context.workspaceState.get<string>(
           LAST_SELECTED_COMMIT_REFERENCE_ACTION_STATE_KEY
@@ -331,6 +424,9 @@ export const handle_commit_item = async (
                 did_trigger_back = true
                 action_quick_pick.hide()
                 resolve('back')
+              } else if (button === close_button) {
+                action_quick_pick.hide()
+                resolve(undefined)
               }
             }),
             action_quick_pick.onDidAccept(() => {
@@ -349,7 +445,10 @@ export const handle_commit_item = async (
           action_quick_pick.show()
         })
 
-        if (!selected_action || selected_action === 'back') {
+        if (!selected_action) {
+          return undefined
+        }
+        if (selected_action === 'back') {
           continue
         }
 

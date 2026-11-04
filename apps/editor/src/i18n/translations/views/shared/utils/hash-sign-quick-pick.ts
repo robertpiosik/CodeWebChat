@@ -129,6 +129,24 @@ export const translations = {
     hu: 'Commitok',
     bg: 'Къмити'
   },
+  'views.shared.utils.hash-sign-quick-pick.commit-symbol.open-on-remote': {
+    en: 'Open on remote',
+    pl: 'Otwórz w zdalnym repozytorium',
+    'zh-cn': '在远程打开',
+    ja: 'リモートで開く',
+    'zh-tw': '在遠程打開',
+    de: 'Auf Remote öffnen',
+    es: 'Abrir en remoto',
+    fr: 'Ouvrir sur le distant',
+    'pt-br': 'Abrir no remoto',
+    ru: 'Открыть в удаленном репозитории',
+    ko: '원격에서 열기',
+    it: 'Apri in remoto',
+    tr: 'Uzaktaki depoda aç',
+    cs: 'Otevřít na vzdáleném serveru',
+    hu: 'Megnyitás távoli tárolón',
+    bg: 'Отваряне в отдалечено хранилище'
+  },
   'views.shared.utils.hash-sign-quick-pick.commit-symbol.diff-with-message': {
     en: 'Diff with commit message',
     pl: 'Różnica z wiadomością commita',

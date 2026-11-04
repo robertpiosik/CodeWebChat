@@ -10,6 +10,11 @@ import { LAST_SELECTED_CONTEXT_SOURCE_IN_SYMBOLS_QUICK_PICK_STATE_KEY } from '@/
 export const handle_saved_context_item = async (
   extension_context: vscode.ExtensionContext
 ): Promise<string | 'continue' | undefined> => {
+  const close_button = {
+    iconPath: new vscode.ThemeIcon('close'),
+    tooltip: t('common.close')
+  }
+
   try {
     const workspace_folders = vscode.workspace.workspaceFolders || []
     if (workspace_folders.length === 0) {
@@ -58,7 +63,7 @@ export const handle_saved_context_item = async (
         quick_pick.items = source_options
         quick_pick.placeholder = 'Select context source'
         quick_pick.title = 'Context Sources'
-        quick_pick.buttons = [vscode.QuickInputButtons.Back]
+        quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 
         const last_source = extension_context.workspaceState.get<string>(
           LAST_SELECTED_CONTEXT_SOURCE_IN_SYMBOLS_QUICK_PICK_STATE_KEY
@@ -85,6 +90,9 @@ export const handle_saved_context_item = async (
                 did_trigger_back = true
                 quick_pick.hide()
                 resolve('back')
+              } else if (button === close_button) {
+                quick_pick.hide()
+                resolve(undefined)
               }
             }),
             quick_pick.onDidAccept(() => {
@@ -103,7 +111,8 @@ export const handle_saved_context_item = async (
           quick_pick.show()
         })
 
-        if (!selection || selection === 'back') return 'continue'
+        if (selection === 'back') return 'continue'
+        if (!selection) return undefined
 
         await extension_context.workspaceState.update(
           LAST_SELECTED_CONTEXT_SOURCE_IN_SYMBOLS_QUICK_PICK_STATE_KEY,
@@ -162,7 +171,7 @@ export const handle_saved_context_item = async (
       quick_pick.items = context_items
       quick_pick.placeholder = 'Select a saved context'
       quick_pick.title = 'Saved Contexts'
-      quick_pick.buttons = [vscode.QuickInputButtons.Back]
+      quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 
       const selected_context = await new Promise<
         vscode.QuickPickItem | 'back' | undefined
@@ -177,6 +186,9 @@ export const handle_saved_context_item = async (
               did_trigger_back = true
               quick_pick.hide()
               resolve('back')
+            } else if (button === close_button) {
+              quick_pick.hide()
+              resolve(undefined)
             }
           }),
           quick_pick.onDidAccept(() => {
@@ -195,11 +207,14 @@ export const handle_saved_context_item = async (
         quick_pick.show()
       })
 
-      if (!selected_context || selected_context === 'back') {
+      if (selected_context === 'back') {
         if (source_options.length > 1) {
           continue
         }
         return 'continue'
+      }
+      if (!selected_context) {
+        return undefined
       }
 
       if (selected_context) {

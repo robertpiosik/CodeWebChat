@@ -251,6 +251,11 @@ const get_skill_lock = (): Record<string, { sourceUrl: string }> => {
 export const handle_skill_item = async (): Promise<
   string | 'continue' | undefined
 > => {
+  const close_button = {
+    iconPath: new vscode.ThemeIcon('close'),
+    tooltip: t('common.close')
+  }
+
   const detected_agents = Object.values(agents).filter(
     (agent) =>
       agent.detect_installed() &&
@@ -287,7 +292,7 @@ export const handle_skill_item = async (): Promise<
 
     agent_pick.placeholder = 'Select an agent'
     agent_pick.title = 'Select Agent'
-    agent_pick.buttons = [vscode.QuickInputButtons.Back]
+    agent_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 
     const selected_agent_item = await new Promise<
       vscode.QuickPickItem | 'back' | undefined
@@ -302,6 +307,9 @@ export const handle_skill_item = async (): Promise<
             did_trigger_back = true
             agent_pick.hide()
             resolve('back')
+          } else if (button === close_button) {
+            agent_pick.hide()
+            resolve(undefined)
           }
         }),
         agent_pick.onDidAccept(() => {
@@ -320,8 +328,11 @@ export const handle_skill_item = async (): Promise<
       agent_pick.show()
     })
 
-    if (!selected_agent_item || selected_agent_item === 'back') {
+    if (selected_agent_item === 'back') {
       return 'continue'
+    }
+    if (!selected_agent_item) {
+      return undefined
     }
 
     last_selected_agent_label = selected_agent_item.label
@@ -373,7 +384,7 @@ export const handle_skill_item = async (): Promise<
     })
     skill_pick.placeholder = 'Select a skill'
     skill_pick.title = `Skills of ${agent.display_name}`
-    skill_pick.buttons = [vscode.QuickInputButtons.Back]
+    skill_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
     skill_pick.ignoreFocusOut = true
 
     const selected_skill_item = await new Promise<
@@ -389,6 +400,9 @@ export const handle_skill_item = async (): Promise<
             did_trigger_back = true
             skill_pick.hide()
             resolve('back')
+          } else if (button === close_button) {
+            skill_pick.hide()
+            resolve(undefined)
           }
         }),
         skill_pick.onDidTriggerItemButton(async (e) => {
@@ -424,8 +438,11 @@ export const handle_skill_item = async (): Promise<
       skill_pick.show()
     })
 
-    if (!selected_skill_item || selected_skill_item === 'back') {
+    if (selected_skill_item === 'back') {
       continue
+    }
+    if (!selected_skill_item) {
+      return undefined
     }
 
     const skill_name = selected_skill_item.label
