@@ -13,7 +13,7 @@ const accuracy_boost_label = `$(target) ${t('views.shared.utils.hash-sign-quick-
 const changes_label = `$(git-pull-request-draft) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.changes.label')}`
 const commit_label = `$(git-commit) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.commit.label')}`
 const saved_context_label = `$(checklist) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.saved-context.label')}`
-const skill_label = `$(thinking) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.skill.label')}`
+const skill_label = `$(notebook) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.skill.label')}`
 const snippet_label = `$(surround-with) ${t('views.shared.utils.hash-sign-quick-pick.quick-pick.snippet.label')}`
 
 export const hash_sign_quick_pick = async (params: {
