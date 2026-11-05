@@ -202,7 +202,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                       }
                     }
                   }}
-                  width={100}
+                  width={60}
                 />
               }
             />
