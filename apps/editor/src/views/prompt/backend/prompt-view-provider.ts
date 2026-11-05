@@ -740,8 +740,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handlers.handle_delete_task(this, message)
           } else if (message.command === 'PREVIEW_GENERATED_CODE') {
             await handlers.handle_preview_generated_code(message)
-          } else if (message.command === 'UPDATE_FILE_PROGRESS') {
-            // Handle the message internally instead of invoking a command
           } else if (message.command === 'CREATE_API_CONFIGURATION') {
             await handlers.handle_create_api_configuration(this, message)
           } else if (message.command === 'UPDATE_API_CONFIGURATION') {

@@ -728,7 +728,6 @@ export type FrontendMessage =
   | SaveTasksMessage
   | DeleteTaskMessage
   | PreviewGeneratedCodeMessage
-  | UpdateFileProgressMessage
   | CreateApiConfigurationMessage
   | DeleteApiConfigurationMessage
   | SavePromptImageMessage
