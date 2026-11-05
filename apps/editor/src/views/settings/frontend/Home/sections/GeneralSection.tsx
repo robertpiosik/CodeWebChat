@@ -7,7 +7,8 @@ import { Section as UiSection } from '@ui/components/editor/settings-view/Sectio
 import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
-import { use_translation } from '../../i18n/use-translation'
+import { Notices as UiNotices } from '@ui/components/editor/settings-view/Notices'
+import { Translation, use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
 import {
   PromptInstruction,
@@ -153,7 +154,30 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             props.set_section_ref('section:general:group:updates', el)
           }
         >
-          <UiGroup title={t('general.updates.title')}>
+          <UiGroup
+            title={t('general.updates.title')}
+            notice_slot={
+              <UiNotices
+                notices={[
+                  {
+                    type: 'info',
+                    message: (
+                      <Translation
+                        id="general.updates.notice"
+                        components={{
+                          link: (
+                            <a href="https://docs.github.com/en/enterprise-server@3.20/rest/repos/repos?apiVersion=2022-11-28#list-repository-tags">
+                              GitHub REST API
+                            </a>
+                          )
+                        }}
+                      />
+                    )
+                  }
+                ]}
+              />
+            }
+          >
             <UiItem
               title={t('general.updates.check-frequency.title')}
               description={t('general.updates.check-frequency.description')}

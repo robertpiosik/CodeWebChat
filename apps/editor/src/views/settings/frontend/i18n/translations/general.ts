@@ -17,6 +17,24 @@ export const translations = {
     hu: 'Állítsa be az élményt.',
     bg: 'Конфигурирайте своя опит.'
   },
+  'general.updates.notice': {
+    en: 'Update checks query the {link}.',
+    pl: 'Sprawdzanie aktualizacji wysyła zapytania do {link}.',
+    'zh-cn': '更新检查会查询 {link}。',
+    ja: '更新チェックは {link} をクエリします。',
+    'zh-tw': '更新檢查會查詢 {link}。',
+    de: 'Update-Prüfungen fragen die {link} ab.',
+    es: 'Las comprobaciones de actualización consultan {link}.',
+    fr: 'Les vérifications de mise à jour interrogent {link}.',
+    'pt-br': 'As verificações de atualização consultam {link}.',
+    ru: 'Проверки обновлений обращаются к {link}.',
+    ko: '업데이트 확인은 {link}를 쿼리합니다.',
+    it: 'I controlli degli aggiornamenti interrogano {link}.',
+    tr: 'Güncelleme kontrolleri {link} sorgular.',
+    cs: 'Kontroly aktualizací dotazují {link}.',
+    hu: 'A frissítések ellenőrzése a {link}-t kérdezi le.',
+    bg: 'Проверките за актуализации отправят заявки към {link}.'
+  },
   'general.updates.title': {
     en: 'Updates',
     pl: 'Aktualizacje',
