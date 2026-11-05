@@ -1,7 +1,12 @@
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: ['<rootDir>/apps/**/*.spec.ts', '<rootDir>/packages/**/*.spec.ts'],
+  clearMocks: true,
+  testMatch: [
+    '<rootDir>/apps/**/*.spec.ts?(x)',
+    '<rootDir>/packages/**/*.spec.ts?(x)'
+  ],
   testPathIgnorePatterns: ['/node_modules/', '/out/', '/dist/'],
   moduleNameMapper: {
     '^@shared/(.*)$': '<rootDir>/packages/shared/src/$1',

@@ -38,22 +38,10 @@ const add_ids = (tasks: Task[]): SortableTask[] => {
 }
 
 const remove_ids = (tasks: SortableTask[]): Task[] => {
-  return tasks.map(({ id, children, ...rest }) => ({
+  return tasks.map(({ children, ...rest }) => ({
     ...rest,
     children: children ? remove_ids(children) : []
   }))
-}
-
-const get_structure_signature = (tasks: Task[]): string => {
-  return tasks
-    .map(
-      (t) =>
-        `${t.created_at}` +
-        (t.children && t.children.length > 0
-          ? `[${get_structure_signature(t.children)}]`
-          : '')
-    )
-    .join(',')
 }
 
 export const Tasks: React.FC<Tasks.Props> = (props) => {
@@ -84,7 +72,7 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
     if (!editing_initial_text.trim() && !has_children) {
       props.on_delete(task.created_at)
     } else {
-      const { id, ...rest } = task as any
+      const { ...rest } = task as any
       props.on_change({ ...rest, text: editing_initial_text })
     }
 
@@ -102,7 +90,7 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
       if (!editing_initial_text.trim() && !has_children) {
         props.on_delete(task.created_at)
       } else if (editing_initial_text.trim()) {
-        const { id, ...rest } = task as any
+        const { ...rest } = task as any
         props.on_change({ ...rest, text: editing_initial_text })
       }
     }
@@ -115,7 +103,7 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
   }
 
   const handle_check_change = (task: Task, checked: boolean) => {
-    const { id, ...rest } = task as any
+    const { ...rest } = task as any
     props.on_change({ ...rest, is_checked: checked })
   }
 
@@ -169,7 +157,7 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
             onClick={(e) => {
               e.stopPropagation()
               if (has_children) {
-                const { id, ...rest } = params.task as SortableTask
+                const { ...rest } = params.task as SortableTask
                 props.on_change({
                   ...rest,
                   is_collapsed: !params.task.is_collapsed
@@ -248,7 +236,7 @@ export const Tasks: React.FC<Tasks.Props> = (props) => {
             <Textarea
               value={params.task.text}
               on_change={(value) => {
-                const { id, ...rest } = params.task as any
+                const { ...rest } = params.task as any
                 props.on_change({ ...rest, text: value })
               }}
               autofocus

@@ -6,7 +6,7 @@ export default {
 
 const sample_translations = {
   about:
-    'Hey there! Donating is a great way to show your support for the project. Thank you!',
+    'Donating is a great way to show your support for the project. Thank you!',
   platforms: 'Platforms',
   wallets: 'Wallets',
   scan_qr: 'Scan QR'

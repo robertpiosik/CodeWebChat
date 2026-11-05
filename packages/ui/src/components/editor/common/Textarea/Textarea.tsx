@@ -193,7 +193,7 @@ export const Textarea = React.forwardRef<HTMLDivElement, Props>(
       props.onFocus?.(e)
     }
 
-    const handle_blur = (e: React.FocusEvent<HTMLDivElement>) => {
+    const handle_blur = () => {
       props.on_blur?.()
     }
 

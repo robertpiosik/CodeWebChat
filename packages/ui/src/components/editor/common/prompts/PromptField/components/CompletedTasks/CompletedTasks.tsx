@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect } from 'react'
 import cn from 'classnames'
 import styles from './CompletedTasks.module.scss'
 import { Checkbox } from '../../../../Checkbox/Checkbox'

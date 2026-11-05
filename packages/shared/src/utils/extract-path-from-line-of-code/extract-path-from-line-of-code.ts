@@ -14,7 +14,7 @@ export const extract_path_from_line_of_code = (line: string): string | null => {
     .trim()
 
   const path_match = stripped.match(
-    /(?:^|\s)((?:\.|[.\/\\\w\-\[\]\(\)]+\.)[\w\-]{1,10})(?:\s|$)/
+    /(?:^|\s)((?:\.|[./\\\w\-[\]()]+\.)[\w-]{1,10})(?:\s|$)/
   )
   if (path_match) {
     return path_match[1].replace(/\\/g, '/')

@@ -27,8 +27,8 @@
       "warn",
       { "argsIgnorePattern": "^_" }
     ],
-    "react/prop-types": "off",
     "no-empty": "off",
+    "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-namespace": "off",
     "no-undef": "off",
@@ -36,10 +36,11 @@
   },
   "overrides": [
     {
-      "files": ["webpack.config.js"],
+      "files": ["webpack.config.js", "webpack.config.ts"],
       "env": {
         "node": true
       }
     }
-  ]
+  ],
+  "ignorePatterns": ["node_modules/", "dist/", "out/"]
 }

@@ -17,7 +17,7 @@ export const create_perform_paste =
     const { raw_start, raw_end } = bounds
 
     let text_to_insert = text
-    let caret_offset_adjustment = 0
+    const caret_offset_adjustment = 0
 
     const is_file_in_context =
       props.currently_open_file_path !== undefined &&
@@ -122,7 +122,8 @@ export const create_handle_paste =
         })
         if (bounds && bounds.raw_start !== bounds.raw_end) {
           const new_value =
-            props.value.substring(0, bounds.raw_start) + props.value.substring(bounds.raw_end)
+            props.value.substring(0, bounds.raw_start) +
+            props.value.substring(bounds.raw_end)
 
           utils.update_value(new_value, bounds.raw_start)
           props.on_caret_position_change(bounds.raw_start)

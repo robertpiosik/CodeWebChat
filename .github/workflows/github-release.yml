@@ -12,7 +12,39 @@ permissions:
   contents: write
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 12.17.0
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm i
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Test
+        run: pnpm test
+
   release:
+    needs: check
     runs-on: ubuntu-latest
 
     steps:
@@ -63,6 +95,7 @@ jobs:
           target_commitish: ${{ github.sha }}
 
   release-browser:
+    needs: check
     runs-on: ubuntu-latest
 
     steps:

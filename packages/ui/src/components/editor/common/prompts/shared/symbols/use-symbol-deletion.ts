@@ -234,10 +234,7 @@ export const use_symbol_deletion = (params: {
     return false
   }
 
-  const handle_changes_symbol_deletion = (
-    raw_pos: number,
-    context_file_paths: string[]
-  ): boolean => {
+  const handle_changes_symbol_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = params.value.substring(0, raw_pos)
     const match = text_before_cursor.match(/#Changes\([^)]+\)$/)
 
@@ -249,10 +246,7 @@ export const use_symbol_deletion = (params: {
     return false
   }
 
-  const handle_saved_context_symbol_deletion = (
-    raw_pos: number,
-    context_file_paths: string[]
-  ): boolean => {
+  const handle_saved_context_symbol_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = params.value.substring(0, raw_pos)
     const match = text_before_cursor.match(
       /#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\)$/
@@ -266,10 +260,7 @@ export const use_symbol_deletion = (params: {
     return false
   }
 
-  const handle_commit_symbol_deletion = (
-    raw_pos: number,
-    context_file_paths: string[]
-  ): boolean => {
+  const handle_commit_symbol_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = params.value.substring(0, raw_pos)
     const match = text_before_cursor.match(
       /#(?:Commit|CommitMessage|CommitDiff)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\)$/
@@ -397,11 +388,11 @@ export const use_symbol_deletion = (params: {
     }
 
     if (deletion_params.el.dataset.type === 'changes-symbol') {
-      return handle_changes_symbol_deletion(raw_pos, context_file_paths)
+      return handle_changes_symbol_deletion(raw_pos)
     }
 
     if (deletion_params.el.dataset.type === 'saved-context-symbol') {
-      return handle_saved_context_symbol_deletion(raw_pos, context_file_paths)
+      return handle_saved_context_symbol_deletion(raw_pos)
     }
 
     if (
@@ -409,7 +400,7 @@ export const use_symbol_deletion = (params: {
       deletion_params.el.dataset.type === 'commitmessage-symbol' ||
       deletion_params.el.dataset.type === 'commitdiff-symbol'
     ) {
-      return handle_commit_symbol_deletion(raw_pos, context_file_paths)
+      return handle_commit_symbol_deletion(raw_pos)
     }
 
     if (deletion_params.el.dataset.type === 'skill-symbol') {

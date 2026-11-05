@@ -246,13 +246,7 @@ export const RecentDonations: React.FC<RecentDonationsProps> = (props) => {
                             title={title}
                           >
                             <strong>
-                              {href ? (
-                                <a href={href} target="_blank" rel="nofollow">
-                                  {username}
-                                </a>
-                              ) : (
-                                username
-                              )}
+                              {href ? <a href={href}>{username}</a> : username}
                             </strong>{' '}
                             {after_text}
                           </div>

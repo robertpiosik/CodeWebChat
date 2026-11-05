@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useRef } from 'react'
 import { Scrollable } from '../../../common/Scrollable'
 import { use_progress_times } from '../../../../../hooks/use-progress-times'
 import styles from './OngoingApiCallsModal.module.scss'

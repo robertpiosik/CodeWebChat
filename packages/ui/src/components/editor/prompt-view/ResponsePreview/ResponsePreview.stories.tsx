@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { ResponsePreview } from './ResponsePreview'
-import { ItemInPreview } from '@shared/types/file-in-preview'
 
 export default {
   component: ResponsePreview
