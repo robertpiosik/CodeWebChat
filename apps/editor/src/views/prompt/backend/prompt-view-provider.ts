@@ -87,6 +87,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
   public agentic_search_state: AgenticSearchState
   public completed_tasks: string[] = []
   public update_info: UpdateInfo = { is_available: false }
+  public is_updating: boolean = false
 
   // Voice input
   public is_recording = false
@@ -834,7 +835,10 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command === 'GET_UPDATE_INFO') {
             this.send_message({
               command: 'UPDATE_INFO',
-              update_info: this.update_info
+              update_info: {
+                ...this.update_info,
+                is_updating: this.is_updating
+              }
             })
           }
         } catch (error) {

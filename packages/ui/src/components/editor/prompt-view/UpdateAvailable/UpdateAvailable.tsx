@@ -5,6 +5,7 @@ import cn from 'classnames'
 
 type Props = {
   on_update: () => void
+  is_updating?: boolean
   current_version: string
   latest_version?: string
   translations: {
@@ -17,6 +18,9 @@ type Props = {
 
 export const UpdateAvailable: React.FC<Props> = (props) => {
   const [is_expanded, set_is_expanded] = React.useState(false)
+  const [is_updating_local, set_is_updating_local] = React.useState(false)
+
+  const is_updating = props.is_updating || is_updating_local
 
   return (
     <div
@@ -38,9 +42,11 @@ export const UpdateAvailable: React.FC<Props> = (props) => {
         <Button
           on_click={(e) => {
             e.stopPropagation()
+            set_is_updating_local(true)
             props.on_update()
           }}
           is_small
+          disabled={is_updating}
         >
           {props.translations.button}
         </Button>

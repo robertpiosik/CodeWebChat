@@ -460,6 +460,7 @@ export type UpdateInfo = {
   latest_version?: string
   latest_version_tag?: string
   current_version_age_days?: number
+  is_updating?: boolean
 }
 
 export interface GetUpdateInfoMessage extends BaseMessage {

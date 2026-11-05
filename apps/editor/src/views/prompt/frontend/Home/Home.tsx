@@ -165,6 +165,7 @@ export const Home: React.FC<Props> = (props) => {
           on_update={() =>
             post_message(props.vscode, { command: 'UPDATE_EXTENSION' })
           }
+          is_updating={props.update_info.is_updating}
           current_version={props.version}
           latest_version={props.update_info.latest_version}
           translations={{

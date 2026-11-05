@@ -39,7 +39,19 @@ export const check_for_updates_command = (
         )
 
         if (action === t('command.check-for-updates-command.action.update')) {
+          if (prompt_view_provider.is_updating) {
+            return
+          }
+
           if (prompt_view_provider.update_info.latest_version_tag) {
+            prompt_view_provider.is_updating = true
+            prompt_view_provider.send_message({
+              command: 'UPDATE_INFO',
+              update_info: {
+                ...prompt_view_provider.update_info,
+                is_updating: true
+              }
+            })
             update_extension({
               tag_name: prompt_view_provider.update_info.latest_version_tag
             })
