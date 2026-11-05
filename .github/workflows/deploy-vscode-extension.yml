@@ -37,14 +37,10 @@ jobs:
         run: pnpm i
 
       - name: Lint
-        run: |
-          cd apps/editor
-          pnpm lint
+        run: pnpm lint
 
       - name: Run Tests
-        run: |
-          cd apps/editor
-          pnpm test
+        run: pnpm test
 
       - name: Build VS Code extension
         run: |
