@@ -14,7 +14,7 @@
 
 ## Quick start
 
-Building from source protects against common types of supply chain attacks and is the only supported way to install or update the extension in your VS Code-based editor (Cursor, Antigravity, VSCodium, etc.).
+Safely build from source for any VS Code-based editor (Cursor, Antigravity, VSCodium etc.):
 
 **macOS / Linux**
 
