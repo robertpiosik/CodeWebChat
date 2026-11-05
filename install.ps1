@@ -578,4 +578,6 @@ foreach ($i in $indices) {
     Set-Location $originalLocation -ErrorAction SilentlyContinue
 }
 
-Pause
+if (-not $updated) {
+    Pause
+}
