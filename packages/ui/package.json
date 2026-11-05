@@ -1,7 +1,5 @@
 {
   "name": "ui",
-  "version": "1.0.0",
-  "private": true,
   "scripts": {
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -15,9 +13,9 @@
     "css-loader": "6.5.1",
     "sass": "1.86.1",
     "sass-loader": "12.4.0",
-    "storybook": "7.6.20",
+    "storybook": "7.6.24",
     "style-loader": "3.3.1",
-    "typescript": "5.8.2"
+    "typescript": "6.0.2"
   },
   "dependencies": {
     "@storybook/react": "7.6.20",

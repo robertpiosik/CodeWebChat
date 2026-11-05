@@ -10,15 +10,14 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
-    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "declaration": true,
-    "types": ["node"],
+    "types": ["node", "jest"],
     "sourceMap": true,
-    "baseUrl": ".",
+    "rootDir": "../../",
     "paths": {
       "@/*": ["./src/*", "../../apps/editor/src/*"],
       "@shared/*": ["../shared/src/*"],
@@ -33,6 +32,5 @@
     "../shared/src/*.tsx",
     "../../apps/editor/src/**/*.ts",
     "../../apps/editor/src/**/*.tsx"
-  ],
-  "exclude": ["node_modules", "dist"]
+  ]
 }

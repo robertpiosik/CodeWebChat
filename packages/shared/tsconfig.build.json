@@ -1,5 +1,5 @@
 // Optional: Separate config if you want to build without tests included
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "dist", "src/**/*.spec.ts", "src/**/*.test.ts"]
+  "exclude": ["dist", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }

@@ -9,7 +9,8 @@
     "esModuleInterop": true,
     "jsx": "react-jsx",
     "jsxImportSource": "react",
-    "baseUrl": ".",
+    "rootDir": "../../",
+    "types": ["node", "jest"],
     "paths": {
       "@shared/*": ["./src/*"]
     }
@@ -21,6 +22,5 @@
     "../ui/src/**/*.tsx",
     "../../apps/editor/src/**/*.ts",
     "../../apps/editor/src/**/*.tsx"
-  ],
-  "exclude": ["node_modules"]
+  ]
 }

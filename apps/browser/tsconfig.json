@@ -4,11 +4,12 @@
     "lib": ["dom", "ESNext"],
     "module": "commonjs",
     "outDir": "out",
+    "rootDir": "../../",
     "sourceMap": true,
     "esModuleInterop": true,
-    "baseUrl": ".",
     "strict": true,
     "jsx": "react-jsx",
+    "skipLibCheck": true,
     "types": ["chrome", "webextension-polyfill", "node", "jest"],
     "paths": {
       "@/*": ["./src/*"],
