@@ -31,7 +31,7 @@ rl.question(`Bump version of the VS Code extension to ${next_version}? (y/N) `, 
 
     try {
       execSync(`git add "${pkg_path}"`, { stdio: 'ignore' })
-      execSync(`git commit --no-verify -m "Bump version to ${pkg.version}"`, {
+      execSync(`git commit --no-verify -m "Bump version of the VS Code extension to ${pkg.version}"`, {
         stdio: 'ignore'
       })
       console.log('Successfully committed the version bump.')

@@ -1404,7 +1404,6 @@
     "react-dom": "18.2.0",
     "rimraf": "6.0.1",
     "simplebar-react": "3.3.1",
-    "typescript": "6.0.2",
     "ui": "workspace:*",
     "utf-8-validate": "6.0.5",
     "ws": "8.21.3"

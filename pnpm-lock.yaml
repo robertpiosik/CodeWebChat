@@ -230,12 +230,6 @@ importers:
       '@types/archiver':
         specifier: 6.0.3
         version: 6.0.3
-      '@types/chrome':
-        specifier: 0.3.7
-        version: 0.3.7
-      '@types/jest':
-        specifier: 29.5.14
-        version: 29.5.14
       '@types/node':
         specifier: 20.x
         version: 20.19.43
@@ -284,9 +278,6 @@ importers:
       ts-node:
         specifier: 10.9.2
         version: 10.9.2(@types/node@20.19.43)(typescript@6.0.2)
-      typescript:
-        specifier: 6.0.2
-        version: 6.0.2
       webextension-polyfill:
         specifier: 0.12.0
         version: 0.12.0
@@ -368,9 +359,6 @@ importers:
       simplebar-react:
         specifier: 3.3.1
         version: 3.3.1(react@18.2.0)
-      typescript:
-        specifier: 6.0.2
-        version: 6.0.2
       ui:
         specifier: workspace:*
         version: link:../../packages/ui
@@ -478,9 +466,6 @@ importers:
       '@types/react-dom':
         specifier: 18.2.19
         version: 18.2.19
-      typescript:
-        specifier: 6.0.2
-        version: 6.0.2
 
   packages/shared:
     dependencies:
@@ -490,9 +475,6 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
-      typescript:
-        specifier: 6.0.2
-        version: 6.0.2
     devDependencies:
       '@types/node':
         specifier: 20.x
@@ -573,9 +555,6 @@ importers:
       style-loader:
         specifier: 3.3.1
         version: 3.3.1(webpack@5.112.2)
-      typescript:
-        specifier: 6.0.2
-        version: 6.0.2
 
 packages:
 

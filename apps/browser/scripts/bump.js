@@ -31,7 +31,7 @@ rl.question(`Bump version of the browser extension to ${next_version}? (y/N) `, 
 
     try {
       execSync(`git add "${manifest_path}"`, { stdio: 'ignore' })
-      execSync(`git commit --no-verify -m "Bump version to ${manifest.version}"`, {
+      execSync(`git commit --no-verify -m "Bump version of the browser extension to ${manifest.version}"`, {
         stdio: 'ignore'
       })
       console.log('Successfully committed the version bump.')
