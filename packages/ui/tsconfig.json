@@ -18,12 +18,12 @@
     "types": ["node", "jest"],
     "sourceMap": true,
     "rootDir": "../../",
+    "incremental": true,
     "paths": {
       "@/*": ["./src/*", "../../apps/editor/src/*"],
       "@shared/*": ["../shared/src/*"],
       "@ui/*": ["./src/*"]
-    },
-    "outDir": "dist"
+    }
   },
   "include": [
     "src/**/*.ts",

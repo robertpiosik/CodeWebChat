@@ -7,20 +7,12 @@
     "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
     "rootDir": "../../",
+    "skipLibCheck": true,
     "types": ["node", "jest"],
     "paths": {
       "@shared/*": ["./src/*"]
     }
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "../ui/src/**/*.ts",
-    "../ui/src/**/*.tsx",
-    "../../apps/editor/src/**/*.ts",
-    "../../apps/editor/src/**/*.tsx"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

@@ -1,6 +1,6 @@
 import { get_dictionary } from './get_dictionary'
 
-const Page: React.FC = async () => {
+const Page = async () => {
   const dictionary = await get_dictionary()
 
   return (
