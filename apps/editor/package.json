@@ -8,7 +8,9 @@
     "vscode:prepublish": "rimraf out && npm run compile",
     "compile": "webpack --config ./webpack.config.ts --mode production",
     "watch": "webpack --config ./webpack.config.ts --watch --mode development",
-    "bump": "node scripts/bump.js"
+    "bump": "node scripts/bump.js",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "publisher": "robertpiosik",
   "homepage": "https://cwc.dev/",

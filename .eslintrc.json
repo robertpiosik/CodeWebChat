@@ -32,7 +32,8 @@
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-namespace": "off",
     "no-undef": "off",
-    "no-constant-condition": ["error", { "checkLoops": false }]
+    "no-constant-condition": ["error", { "checkLoops": false }],
+    "@typescript-eslint/no-require-imports": "off"
   },
   "overrides": [
     {
