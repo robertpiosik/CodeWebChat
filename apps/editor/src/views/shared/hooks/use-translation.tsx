@@ -4,24 +4,26 @@ export const TranslationContext = createContext<
   Record<string, Record<string, string>>
 >({})
 
-type ExtractPlaceholders<S extends string> =
+export type ExtractPlaceholders<S extends string> =
   S extends `${string}{${infer Key}}${infer Rest}`
     ? Key | ExtractPlaceholders<Rest>
     : never
 
+export type PlaceholdersForKey<
+  T extends Record<string, Record<string, string>>,
+  K extends keyof T
+> = ExtractPlaceholders<T[K]['en'] extends string ? T[K]['en'] : string>
+
+export type TranslationProps<
+  T extends Record<string, Record<string, string>>,
+  K extends keyof T
+> = [PlaceholdersForKey<T, K>] extends [never]
+  ? { id: K; components?: never }
+  : { id: K; components: Record<PlaceholdersForKey<T, K>, React.ReactNode> }
+
 export function create_translation<
   T extends Record<string, Record<string, string>>
 >(translations: T) {
-  type PlaceholdersForKey<K extends keyof T> = ExtractPlaceholders<
-    T[K]['en'] extends string ? T[K]['en'] : string
-  >
-
-  type TranslationProps<K extends keyof T> = [PlaceholdersForKey<K>] extends [
-    never
-  ]
-    ? { id: K; components?: never }
-    : { id: K; components: Record<PlaceholdersForKey<K>, React.ReactNode> }
-
   const use_translation = () => {
     const lang = document.documentElement.lang || 'en'
     const context_translations = useContext(TranslationContext)
@@ -48,7 +50,7 @@ export function create_translation<
     return { t }
   }
 
-  const Translation = <K extends keyof T>(params: TranslationProps<K>) => {
+  const Translation = <K extends keyof T>(params: TranslationProps<T, K>) => {
     const components = params.components ?? {}
     const { t } = use_translation()
     const text = t(params.id)
