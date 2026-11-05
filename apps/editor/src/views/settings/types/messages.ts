@@ -98,6 +98,15 @@ export interface UpdateDefaultOptionForVoiceInputMessage {
   value: 'ask' | 'send-request' | 'invoke-agent'
 }
 
+export interface GetUpdateCheckFrequencyMessage {
+  command: 'GET_UPDATE_CHECK_FREQUENCY'
+}
+
+export interface UpdateUpdateCheckFrequencyMessage {
+  command: 'UPDATE_UPDATE_CHECK_FREQUENCY'
+  value: 'hourly' | 'daily' | 'weekly' | 'monthly'
+}
+
 export interface GetVoiceInputInstructionsMessage {
   command: 'GET_VOICE_INPUT_INSTRUCTIONS'
 }
@@ -416,6 +425,8 @@ export type FrontendMessage =
   | UpdateSelectAllPromptsInCommitMessagesByDefaultMessage
   | GetDefaultOptionForVoiceInputMessage
   | UpdateDefaultOptionForVoiceInputMessage
+  | GetUpdateCheckFrequencyMessage
+  | UpdateUpdateCheckFrequencyMessage
   | GetVoiceInputInstructionsMessage
   | UpdateVoiceInputInstructionsMessage
   | GetAgenticSearchInstructionsMessage
@@ -509,6 +520,11 @@ export interface SelectAllPromptsInCommitMessagesByDefaultMessage {
 export interface DefaultOptionForVoiceInputMessage {
   command: 'DEFAULT_OPTION_FOR_VOICE_INPUT'
   value: 'ask' | 'send-request' | 'invoke-agent'
+}
+
+export interface UpdateCheckFrequencyMessage {
+  command: 'UPDATE_CHECK_FREQUENCY'
+  value: 'hourly' | 'daily' | 'weekly' | 'monthly'
 }
 
 export interface VoiceInputInstructionsMessage {
@@ -696,6 +712,7 @@ export type BackendMessage =
   | UseContextFilesInCommitMessagePromptMessage
   | SelectAllPromptsInCommitMessagesByDefaultMessage
   | DefaultOptionForVoiceInputMessage
+  | UpdateCheckFrequencyMessage
   | VoiceInputInstructionsMessage
   | AgenticSearchInstructionsMessage
   | AgenticSearchInvocationCountMessage

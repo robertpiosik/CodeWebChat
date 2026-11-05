@@ -21,6 +21,7 @@ import { CliSection } from './sections/CliSection'
 export type NavItem =
   | 'section:general'
   | 'section:general:group:open-links'
+  | 'section:general:group:updates'
   | 'section:general:group:prompt'
   | 'section:general:group:commits'
   | 'section:general:group:voice-input'
@@ -48,6 +49,10 @@ export const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     id: 'section:general:group:open-links',
     label: 'general.open-links.title'
+  },
+  {
+    id: 'section:general:group:updates',
+    label: 'general.updates.title'
   },
   {
     id: 'section:general:group:prompt',
@@ -129,6 +134,10 @@ type Props = {
   attach_ascii_tree_of_context: 'ask' | 'always' | 'never'
   use_context_files_in_commit_message_prompt: 'ask' | 'always' | 'never'
   select_all_prompts_in_commit_messages_by_default: boolean
+  update_check_frequency: 'hourly' | 'daily' | 'weekly' | 'monthly'
+  on_update_check_frequency_change: (
+    value: 'hourly' | 'daily' | 'weekly' | 'monthly'
+  ) => void
   default_option_for_voice_input: 'ask' | 'send-request' | 'invoke-agent'
   on_default_option_for_voice_input_change: (
     value: 'ask' | 'send-request' | 'invoke-agent'
@@ -359,6 +368,10 @@ export const Home: React.FC<Props> = (props) => {
             props.on_open_allow_patterns_settings
           }
           on_open_keybindings={props.on_open_keybindings}
+          update_check_frequency={props.update_check_frequency}
+          on_update_check_frequency_change={
+            props.on_update_check_frequency_change
+          }
           attach_ascii_tree_of_context={props.attach_ascii_tree_of_context}
           on_attach_ascii_tree_of_context_change={
             props.on_attach_ascii_tree_of_context_change

@@ -1019,6 +1019,17 @@
           "scope": "resource",
           "default": false
         },
+        "codeWebChat.updateCheckFrequency": {
+          "type": "string",
+          "scope": "application",
+          "enum": [
+            "hourly",
+            "daily",
+            "weekly",
+            "monthly"
+          ],
+          "default": "hourly"
+        },
         "codeWebChat.ignorePatterns": {
           "type": "array",
           "scope": "resource",

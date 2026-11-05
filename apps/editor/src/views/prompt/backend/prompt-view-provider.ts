@@ -29,7 +29,6 @@ import {
 } from '@shared/types/prompt-types'
 import { Logger } from '@shared/utils/logger'
 import { get_error_message } from '@/utils/get-error-message'
-import { check_for_updates } from '@/utils/check-for-updates'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { ProvidersManager } from '@/services/providers-manager'
 import { SharedContextState } from '@/context/shared-context-state'
@@ -45,7 +44,8 @@ import {
   get_valid_web_configurations,
   get_display_path_for_editor,
   insert_text_at_caret,
-  estimate_token_count
+  estimate_token_count,
+  check_for_updates
 } from './utils'
 
 export class PromptViewProvider implements vscode.WebviewViewProvider {
@@ -448,16 +448,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     )
   }
 
-  async check_for_updates() {
-    const current_version = this.extension_context.extension.packageJSON.version
-    if (!current_version) return
-
-    this.update_info = await check_for_updates(current_version)
-
-    this.send_message({
-      command: 'UPDATE_INFO',
-      update_info: this.update_info
-    })
+  async check_for_updates(params?: { force?: boolean }) {
+    await check_for_updates(this, params)
   }
 
   cancel_all_patch_repairs() {

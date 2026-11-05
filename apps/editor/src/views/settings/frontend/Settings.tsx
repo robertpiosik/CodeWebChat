@@ -101,6 +101,7 @@ export const Settings = () => {
       settings_hook.use_context_files_in_commit_message_prompt !== undefined &&
       settings_hook.select_all_prompts_in_commit_messages_by_default !==
         undefined &&
+      settings_hook.update_check_frequency !== undefined &&
       default_option_for_voice_input !== undefined &&
       settings_hook.gemini_user_id !== undefined &&
       settings_hook.ai_studio_user_id !== undefined &&
@@ -153,6 +154,10 @@ export const Settings = () => {
         }
         select_all_prompts_in_commit_messages_by_default={
           settings_hook.select_all_prompts_in_commit_messages_by_default!
+        }
+        update_check_frequency={settings_hook.update_check_frequency!}
+        on_update_check_frequency_change={
+          settings_hook.handle_update_check_frequency_change
         }
         default_option_for_voice_input={default_option_for_voice_input!}
         on_default_option_for_voice_input_change={(value) => {

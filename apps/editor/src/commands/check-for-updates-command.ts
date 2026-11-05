@@ -21,7 +21,7 @@ export const check_for_updates_command = (
         },
         async () => {
           const start_time = Date.now()
-          await prompt_view_provider.check_for_updates()
+          await prompt_view_provider.check_for_updates({ force: true })
           const elapsed_time = Date.now() - start_time
 
           if (elapsed_time < MINIMUM_WAIT_TIME) {

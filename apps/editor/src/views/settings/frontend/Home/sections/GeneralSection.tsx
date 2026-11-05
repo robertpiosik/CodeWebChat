@@ -22,6 +22,10 @@ type Props = {
   on_open_ignore_patterns_settings: () => void
   on_open_allow_patterns_settings: () => void
   on_open_keybindings: (search?: string) => void
+  update_check_frequency: 'hourly' | 'daily' | 'weekly' | 'monthly'
+  on_update_check_frequency_change: (
+    value: 'hourly' | 'daily' | 'weekly' | 'monthly'
+  ) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
   attach_ascii_tree_of_context: 'ask' | 'always' | 'never'
   on_attach_ascii_tree_of_context_change: (
@@ -136,6 +140,45 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                     'general.open-links.code-at-cursor.keyboard-shortcut.action'
                   )}
                 </UiTextButton>
+              }
+            />
+          </UiGroup>
+        </div>
+
+        <div
+          ref={(el) =>
+            props.set_section_ref('section:general:group:updates', el)
+          }
+        >
+          <UiGroup title={t('general.updates.title')}>
+            <UiItem
+              title={t('general.updates.check-frequency.title')}
+              description={t('general.updates.check-frequency.description')}
+              slot_right={
+                <UiDropdown
+                  options={[
+                    {
+                      value: 'hourly',
+                      label: t('general.updates.frequency.hourly')
+                    },
+                    {
+                      value: 'daily',
+                      label: t('general.updates.frequency.daily')
+                    },
+                    {
+                      value: 'weekly',
+                      label: t('general.updates.frequency.weekly')
+                    },
+                    {
+                      value: 'monthly',
+                      label: t('general.updates.frequency.monthly')
+                    }
+                  ]}
+                  value={props.update_check_frequency}
+                  onChange={(val) =>
+                    props.on_update_check_frequency_change(val as any)
+                  }
+                />
               }
             />
           </UiGroup>

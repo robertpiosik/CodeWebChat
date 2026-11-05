@@ -3,7 +3,7 @@ export const MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE = 20000
 export const MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE = 1000
 export const GIT_LOG_SINCE_DURATION = '6 months ago'
 export const SYMBOL_CACHE_DURATION = 5 * 60 * 1000
-export const UPDATE_CHECK_INTERVAL = 1 * 60 * 60 * 1000 // 1 hour
+export const UPDATE_CHECK_INTERVAL = 5 * 60 * 1000 // 5 minutes
 
 export const DIFF_PLACEHOLDERS = {
   FILE_CREATED: 'File created',

@@ -47,6 +47,9 @@ export const use_settings = (vscode: any) => {
     default_voice_input_instructions,
     set_default_voice_input_instructions
   ] = useState<string | undefined>(undefined)
+  const [update_check_frequency, set_update_check_frequency] = useState<
+    'hourly' | 'daily' | 'weekly' | 'monthly' | undefined
+  >(undefined)
   const [agentic_search_instructions, set_agentic_search_instructions] =
     useState<string | undefined>(undefined)
   const [
@@ -95,6 +98,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_CLI_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
+    post_message(vscode, { command: 'GET_UPDATE_CHECK_FREQUENCY' })
     post_message(vscode, { command: 'GET_VOICE_INPUT_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_AGENTIC_SEARCH_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_AGENTIC_SEARCH_INVOCATION_COUNT' })
@@ -136,6 +140,8 @@ export const use_settings = (vscode: any) => {
       } else if (message.command === 'COMMIT_MESSAGE_INSTRUCTIONS') {
         set_commit_message_instructions(message.instructions)
         set_default_commit_message_instructions(message.default_instructions)
+      } else if (message.command === 'UPDATE_CHECK_FREQUENCY') {
+        set_update_check_frequency(message.value)
       } else if (message.command === 'VOICE_INPUT_INSTRUCTIONS') {
         set_voice_input_instructions(message.instructions)
         set_default_voice_input_instructions(message.default_instructions)
@@ -303,6 +309,16 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, {
       command: 'UPDATE_FORWARDED_PORTS',
       forwarded_ports: ports
+    })
+  }
+
+  const handle_update_check_frequency_change = (
+    value: 'hourly' | 'daily' | 'weekly' | 'monthly'
+  ) => {
+    set_update_check_frequency(value)
+    post_message(vscode, {
+      command: 'UPDATE_UPDATE_CHECK_FREQUENCY',
+      value
     })
   }
 
@@ -491,6 +507,8 @@ export const use_settings = (vscode: any) => {
     commit_message_instructions,
     default_commit_message_instructions,
     voice_input_instructions,
+    update_check_frequency,
+    handle_update_check_frequency_change,
     default_voice_input_instructions,
     agentic_search_instructions,
     default_agentic_search_instructions,

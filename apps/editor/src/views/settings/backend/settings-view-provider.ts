@@ -117,7 +117,9 @@ export class SettingsViewProvider {
         } else if (
           message.command === 'GET_USE_CONTEXT_FILES_IN_COMMIT_MESSAGE_PROMPT'
         ) {
-          await handlers.handle_get_use_context_files_in_commit_message_prompt(this)
+          await handlers.handle_get_use_context_files_in_commit_message_prompt(
+            this
+          )
         } else if (
           message.command ===
           'UPDATE_USE_CONTEXT_FILES_IN_COMMIT_MESSAGE_PROMPT'
@@ -134,7 +136,13 @@ export class SettingsViewProvider {
           message.command ==
           'UPDATE_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
         ) {
-          await handlers.handle_update_include_prompts_in_commit_messages(message)
+          await handlers.handle_update_include_prompts_in_commit_messages(
+            message
+          )
+        } else if (message.command === 'GET_UPDATE_CHECK_FREQUENCY') {
+          await handlers.handle_get_update_check_frequency(this)
+        } else if (message.command === 'UPDATE_UPDATE_CHECK_FREQUENCY') {
+          await handlers.handle_update_update_check_frequency(message)
         } else if (message.command === 'GET_DEFAULT_OPTION_FOR_VOICE_INPUT') {
           await handlers.handle_get_default_option_for_voice_input(this)
         } else if (
@@ -247,8 +255,11 @@ export class SettingsViewProvider {
           void handlers.handle_get_edit_files_system_instructions(this)
           void handlers.handle_get_commit_message_instructions(this)
           void handlers.handle_get_attach_ascii_tree_of_context(this)
-          void handlers.handle_get_use_context_files_in_commit_message_prompt(this)
+          void handlers.handle_get_use_context_files_in_commit_message_prompt(
+            this
+          )
           void handlers.handle_get_include_prompts_in_commit_messages(this)
+          void handlers.handle_get_update_check_frequency(this)
           void handlers.handle_get_default_option_for_voice_input(this)
           void handlers.handle_get_voice_input_instructions(this)
           void handlers.handle_get_agentic_search_instructions(this)
