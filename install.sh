@@ -31,7 +31,6 @@ msg_step_build="Building extension"
 msg_step_install="Installing to"
 msg_vsix_error="VSIX file was not generated."
 msg_install_fail="Failed to install to"
-msg_updated="Updated successfully! Please restart the editor for changes to take effect."
 msg_success="Successfully installed to"
 
 case "$LANGUAGE" in
@@ -53,7 +52,6 @@ case "$LANGUAGE" in
     msg_step_install="Instalowanie w"
     msg_vsix_error="Plik VSIX nie został wygenerowany."
     msg_install_fail="Nie udało się zainstalować w"
-    msg_updated="Pomyślnie zaktualizowano! Zrestartuj edytor, aby zmiany zaczęły obowiązywać."
     msg_success="Pomyślnie zainstalowano w"
     ;;
   zh-tw* | zh-hk*)
@@ -74,7 +72,6 @@ case "$LANGUAGE" in
     msg_step_install="正在安裝至"
     msg_vsix_error="未產生 VSIX 檔案。"
     msg_install_fail="無法安裝至"
-    msg_updated="更新成功！請重新啟動編輯器以使變更生效。"
     msg_success="成功安裝至"
     ;;
   zh*)
@@ -95,7 +92,6 @@ case "$LANGUAGE" in
     msg_step_install="正在安装到"
     msg_vsix_error="未生成 VSIX 文件。"
     msg_install_fail="未能安装到"
-    msg_updated="更新成功！请重启编辑器以使更改生效。"
     msg_success="成功安装到"
     ;;
   ja*)
@@ -116,7 +112,6 @@ case "$LANGUAGE" in
     msg_step_install="インストール中:"
     msg_vsix_error="VSIXファイルが生成されませんでした。"
     msg_install_fail="インストールに失敗しました:"
-    msg_updated="更新が成功しました！変更を適用するにはエディターを再起動してください。"
     msg_success="正常にインストールされました:"
     ;;
   de*)
@@ -137,7 +132,6 @@ case "$LANGUAGE" in
     msg_step_install="Installieren in"
     msg_vsix_error="VSIX-Datei wurde nicht generiert."
     msg_install_fail="Fehler bei der Installation in"
-    msg_updated="Erfolgreich aktualisiert! Bitte starten Sie den Editor neu, damit die Änderungen wirksam werden."
     msg_success="Erfolgreich installiert in"
     ;;
   es*)
@@ -158,7 +152,6 @@ case "$LANGUAGE" in
     msg_step_install="Instalando en"
     msg_vsix_error="No se generó el archivo VSIX."
     msg_install_fail="Fallo al instalar en"
-    msg_updated="¡Actualizado correctamente! Reinicie el editor para que los cambios surtan efecto."
     msg_success="Instalado correctamente en"
     ;;
   fr*)
@@ -179,7 +172,6 @@ case "$LANGUAGE" in
     msg_step_install="Installation sur"
     msg_vsix_error="Le fichier VSIX n'a pas été généré."
     msg_install_fail="Échec de l'installation sur"
-    msg_updated="Mise à jour réussie ! Veuillez redémarrer l'éditeur pour que les modifications prennent effet."
     msg_success="Installé avec succès sur"
     ;;
   pt*)
@@ -200,7 +192,6 @@ case "$LANGUAGE" in
     msg_step_install="Instalando no"
     msg_vsix_error="O arquivo VSIX não foi gerado."
     msg_install_fail="Falha ao instalar no"
-    msg_updated="Atualizado com sucesso! Reinicie o editor para que as alterações tenham efeito."
     msg_success="Instalado com sucesso no"
     ;;
   ru*)
@@ -221,7 +212,6 @@ case "$LANGUAGE" in
     msg_step_install="Установка в"
     msg_vsix_error="Файл VSIX не был сгенерирован."
     msg_install_fail="Не удалось установить в"
-    msg_updated="Успешно обновлено! Перезапустите редактор, чтобы изменения вступили в силу."
     msg_success="Успешно установлено в"
     ;;
   ko*)
@@ -242,7 +232,6 @@ case "$LANGUAGE" in
     msg_step_install="설치 중:"
     msg_vsix_error="VSIX 파일이 생성되지 않았습니다."
     msg_install_fail="설치 실패:"
-    msg_updated="성공적으로 업데이트되었습니다! 변경 사항을 적용하려면 편집기를 다시 시작하세요."
     msg_success="성공적으로 설치되었습니다:"
     ;;
   it*)
@@ -263,7 +252,6 @@ case "$LANGUAGE" in
     msg_step_install="Installazione su"
     msg_vsix_error="Il file VSIX non è stato generato."
     msg_install_fail="Installazione non riuscita su"
-    msg_updated="Aggiornato con successo! Riavvia l'editor affinché le modifiche abbiano effetto."
     msg_success="Installato con successo su"
     ;;
   tr*)
@@ -284,7 +272,6 @@ case "$LANGUAGE" in
     msg_step_install="Şuraya kuruluyor:"
     msg_vsix_error="VSIX dosyası oluşturulmadı."
     msg_install_fail="Şuraya kurulum başarısız:"
-    msg_updated="Başarıyla güncellendi! Değişikliklerin etkili olması için lütfen düzenleyiciyi yeniden başlatın."
     msg_success="Şuraya başarıyla kuruldu:"
     ;;
   cs*)
@@ -305,7 +292,6 @@ case "$LANGUAGE" in
     msg_step_install="Instalace do"
     msg_vsix_error="Soubor VSIX nebyl vygenerován."
     msg_install_fail="Nepodařilo se nainstalovat do"
-    msg_updated="Úspěšně aktualizováno! Restartujte prosím editor, aby se změny projevily."
     msg_success="Úspěšně nainstalováno do"
     ;;
   hu*)
@@ -326,7 +312,6 @@ case "$LANGUAGE" in
     msg_step_install="Telepítés ide:"
     msg_vsix_error="A VSIX fájl nem jött létre."
     msg_install_fail="Nem sikerült telepíteni ide:"
-    msg_updated="Sikeresen frissítve! Kérjük, indítsa újra a szerkesztőt a változtatások érvénybe léptetéséhez."
     msg_success="Sikeresen telepítve ide:"
     ;;
   bg*)
@@ -347,7 +332,6 @@ case "$LANGUAGE" in
     msg_step_install="Инсталиране в"
     msg_vsix_error="VSIX файлът не бе създаден."
     msg_install_fail="Неуспешно инсталиране в"
-    msg_updated="Успешно актуализирано! Моля, рестартирайте редактора, за да влязат в сила промените."
     msg_success="Успешно инсталирано в"
     ;;
 esac
@@ -541,8 +525,9 @@ for i in "${indices[@]}"; do
 
   REPO_DIR="$CWC_DIR/repository-${editor_scheme}"
 
+  is_update=false
   if [ -d "$REPO_DIR/.git" ] && run_step "$msg_step_cloning" update_repo; then
-    :
+    is_update=true
   else
     rm -rf "$REPO_DIR"
     run_step "$msg_step_cloning" clone_repo
@@ -571,9 +556,7 @@ for i in "${indices[@]}"; do
     echo "$msg_error $msg_install_fail $editor_name."
   else
     echo ""
-    if [ -n "$TARGET_SCHEME" ]; then
-      echo "$msg_updated"
-    else
+    if [ "$is_update" = false ]; then
       echo "$msg_success $editor_name!"
     fi
   fi
@@ -582,4 +565,3 @@ for i in "${indices[@]}"; do
 done
 
 cd "$ORIGINAL_DIR" || cd /
-
