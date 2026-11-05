@@ -28,9 +28,6 @@ curl -fsSL https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.sh | b
 powershell -c "irm https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.ps1 | iex"
 ```
 
-> [!NOTE]
-> The same script is used for updates.
-
 ## Privacy-first
 
 No code, prompts, or usage data are collected.
