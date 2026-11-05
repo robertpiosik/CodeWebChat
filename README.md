@@ -14,7 +14,7 @@
 
 ## Quick start
 
-Safely build from source for any VS Code-based editor (Cursor, Antigravity, VSCodium etc.):
+Build from source for any VS Code-based editor (Cursor, Antigravity, VSCodium etc.):
 
 **macOS / Linux**
 
