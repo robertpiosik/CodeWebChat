@@ -138,6 +138,8 @@ type Props = {
   on_update_check_frequency_change: (
     value: 'hourly' | 'daily' | 'weekly' | 'monthly'
   ) => void
+  minimum_release_age: number
+  on_minimum_release_age_change: (value: number) => void
   default_option_for_voice_input: 'ask' | 'send-request' | 'invoke-agent'
   on_default_option_for_voice_input_change: (
     value: 'ask' | 'send-request' | 'invoke-agent'
@@ -372,6 +374,8 @@ export const Home: React.FC<Props> = (props) => {
           on_update_check_frequency_change={
             props.on_update_check_frequency_change
           }
+          minimum_release_age={props.minimum_release_age}
+          on_minimum_release_age_change={props.on_minimum_release_age_change}
           attach_ascii_tree_of_context={props.attach_ascii_tree_of_context}
           on_attach_ascii_tree_of_context_change={
             props.on_attach_ascii_tree_of_context_change

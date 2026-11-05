@@ -107,6 +107,15 @@ export interface UpdateUpdateCheckFrequencyMessage {
   value: 'hourly' | 'daily' | 'weekly' | 'monthly'
 }
 
+export interface GetMinimumReleaseAgeMessage {
+  command: 'GET_MINIMUM_RELEASE_AGE'
+}
+
+export interface UpdateMinimumReleaseAgeMessage {
+  command: 'UPDATE_MINIMUM_RELEASE_AGE'
+  value: number
+}
+
 export interface GetVoiceInputInstructionsMessage {
   command: 'GET_VOICE_INPUT_INSTRUCTIONS'
 }
@@ -427,6 +436,8 @@ export type FrontendMessage =
   | UpdateDefaultOptionForVoiceInputMessage
   | GetUpdateCheckFrequencyMessage
   | UpdateUpdateCheckFrequencyMessage
+  | GetMinimumReleaseAgeMessage
+  | UpdateMinimumReleaseAgeMessage
   | GetVoiceInputInstructionsMessage
   | UpdateVoiceInputInstructionsMessage
   | GetAgenticSearchInstructionsMessage
@@ -525,6 +536,11 @@ export interface DefaultOptionForVoiceInputMessage {
 export interface UpdateCheckFrequencyMessage {
   command: 'UPDATE_CHECK_FREQUENCY'
   value: 'hourly' | 'daily' | 'weekly' | 'monthly'
+}
+
+export interface MinimumReleaseAgeMessage {
+  command: 'MINIMUM_RELEASE_AGE'
+  value: number
 }
 
 export interface VoiceInputInstructionsMessage {
@@ -713,6 +729,7 @@ export type BackendMessage =
   | SelectAllPromptsInCommitMessagesByDefaultMessage
   | DefaultOptionForVoiceInputMessage
   | UpdateCheckFrequencyMessage
+  | MinimumReleaseAgeMessage
   | VoiceInputInstructionsMessage
   | AgenticSearchInstructionsMessage
   | AgenticSearchInvocationCountMessage

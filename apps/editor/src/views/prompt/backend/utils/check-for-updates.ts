@@ -16,6 +16,50 @@ const is_newer = (latest: string, current: string) => {
   return false
 }
 
+const get_version_age_days = async (
+  version: string,
+  tag_name?: string
+): Promise<number> => {
+  const parts = version.split('.')
+  if (parts.length >= 2) {
+    const year = parseInt(parts[0], 10)
+    const mmdd = parts[1]
+    if (!isNaN(year) && mmdd.length === 4) {
+      const month = parseInt(mmdd.substring(0, 2), 10) - 1
+      const day = parseInt(mmdd.substring(2, 4), 10)
+      if (!isNaN(month) && !isNaN(day)) {
+        const version_date = Date.UTC(year, month, day)
+        const age_days = Math.floor(
+          (Date.now() - version_date) / (1000 * 60 * 60 * 24)
+        )
+        return age_days >= 0 ? age_days : 0
+      }
+    }
+  }
+
+  if (tag_name) {
+    try {
+      const res = await axios.get(
+        `https://api.github.com/repos/CodeWebChat/CWC/commits/${tag_name}`,
+        { validateStatus: () => true }
+      )
+      if (res.status === 200) {
+        const date = res.data.commit?.committer?.date
+        if (date) {
+          const age_days = Math.floor(
+            (Date.now() - new Date(date).getTime()) / (1000 * 60 * 60 * 24)
+          )
+          return age_days >= 0 ? age_days : 0
+        }
+      }
+    } catch (e) {
+      console.error('Failed to fetch commit date:', e)
+    }
+  }
+
+  return Infinity
+}
+
 export const check_for_updates = async (
   provider: PromptViewProvider,
   params?: { force?: boolean }
@@ -26,13 +70,17 @@ export const check_for_updates = async (
     provider.extension_context.extension.packageJSON.version
   if (!current_version) return
 
+  const config = vscode.workspace.getConfiguration('codeWebChat')
+  const minimum_release_age = force
+    ? 0
+    : config.get<number>('minimumReleaseAge', 0)
+
   if (!force) {
     const last_check = provider.extension_context.globalState.get<number>(
       state_keys.LAST_UPDATE_CHECK_TIMESTAMP_STATE_KEY,
       0
     )
     const now = Date.now()
-    const config = vscode.workspace.getConfiguration('codeWebChat')
     const frequency = config.get<'hourly' | 'daily' | 'weekly' | 'monthly'>(
       'updateCheckFrequency',
       'hourly'
@@ -73,7 +121,10 @@ export const check_for_updates = async (
     }
   }
 
-  provider.update_info = await fetch_update_info(current_version)
+  provider.update_info = await fetch_update_info(
+    current_version,
+    minimum_release_age
+  )
 
   provider.extension_context.globalState.update(
     state_keys.LAST_UPDATE_CHECK_TIMESTAMP_STATE_KEY,
@@ -91,7 +142,8 @@ export const check_for_updates = async (
 }
 
 const fetch_update_info = async (
-  current_version: string
+  current_version: string,
+  minimum_release_age: number
 ): Promise<UpdateInfo> => {
   if (!current_version) return { is_available: false }
 
@@ -106,38 +158,34 @@ const fetch_update_info = async (
       const tags = res.data
       if (!Array.isArray(tags) || tags.length === 0) break
 
-      const vscode_tag = tags.find((t: any) => t.name?.endsWith('-vscode'))
-      if (vscode_tag) {
-        const latest_version = vscode_tag.name.replace('-vscode', '')
-        if (is_newer(latest_version, current_version)) {
-          let age_days = 0
-          try {
-            const commit_res = await axios.get(
-              `https://api.github.com/repos/CodeWebChat/CWC/commits/${current_version}-vscode`,
-              { validateStatus: () => true }
-            )
-            if (commit_res.status === 200) {
-              const commit_data = commit_res.data
-              const date = commit_data.commit?.committer?.date
-              if (date) {
-                age_days = Math.floor(
-                  (Date.now() - new Date(date).getTime()) /
-                    (1000 * 60 * 60 * 24)
-                )
+      for (const tag of tags) {
+        if (tag.name?.endsWith('-vscode')) {
+          const latest_version = tag.name.replace('-vscode', '')
+          if (is_newer(latest_version, current_version)) {
+            if (minimum_release_age > 0) {
+              const tag_age_days = await get_version_age_days(
+                latest_version,
+                tag.name
+              )
+              if (tag_age_days < minimum_release_age) {
+                continue
               }
             }
-          } catch (e) {
-            console.error('Failed to fetch commit date:', e)
-          }
 
-          return {
-            is_available: true,
-            latest_version,
-            latest_version_tag: vscode_tag.name,
-            current_version_age_days: age_days
+            const current_version_age_days = await get_version_age_days(
+              current_version,
+              `${current_version}-vscode`
+            )
+
+            return {
+              is_available: true,
+              latest_version,
+              latest_version_tag: tag.name,
+              current_version_age_days
+            }
+          } else {
+            return { is_available: false }
           }
-        } else {
-          return { is_available: false }
         }
       }
       page++

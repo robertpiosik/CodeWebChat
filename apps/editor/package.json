@@ -1030,6 +1030,11 @@
           ],
           "default": "hourly"
         },
+        "codeWebChat.minimumReleaseAge": {
+          "type": "integer",
+          "scope": "application",
+          "default": 0
+        },
         "codeWebChat.ignorePatterns": {
           "type": "array",
           "scope": "resource",

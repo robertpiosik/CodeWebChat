@@ -143,6 +143,43 @@ export const translations = {
     hu: 'Havonta',
     bg: 'Ежемесечно'
   },
+  'general.updates.minimum-release-age.title': {
+    en: 'Minimum Release Age',
+    pl: 'Minimalny wiek wydania',
+    'zh-cn': '最小发布时间',
+    ja: '最小リリース経過日数',
+    'zh-tw': '最小發布時間',
+    de: 'Mindestalter für Veröffentlichung',
+    es: 'Edad mínima de lanzamiento',
+    fr: 'Âge minimum de version',
+    'pt-br': 'Idade Mínima de Lançamento',
+    ru: 'Минимальный возраст версии',
+    ko: '최소 릴리스 기간',
+    it: 'Età minima di rilascio',
+    tr: 'Minimum Sürüm Yaşı',
+    cs: 'Minimální stáří verze',
+    hu: 'Kiadás minimális életkora',
+    bg: 'Минимална възраст на версията'
+  },
+  'general.updates.minimum-release-age.description': {
+    en: 'The minimum number of days that must pass after a version is published before it is considered eligible for installation',
+    pl: 'Minimalna liczba dni, które muszą minąć od opublikowania wersji, zanim zostanie ona uznana za kwalifikującą się do instalacji',
+    'zh-cn': '版本发布后必须经过的最少天数才能符合安装条件',
+    ja: 'バージョンが公開されてからインストール可能と見なされるまでに経過する必要がある最小日数',
+    'zh-tw': '版本發布後必須經過的最少天數才能符合安裝條件',
+    de: 'Die Mindestanzahl von Tagen, die nach der Veröffentlichung einer Version vergehen müssen, bevor sie als für die Installation in Frage kommend betrachtet wird',
+    es: 'El número mínimo de días que deben pasar después de que se publique una versión antes de que se considere elegible para su instalación',
+    fr: "Le nombre minimum de jours qui doivent s'écouler après la publication d'une version avant qu'elle ne soit considérée comme éligible à l'installation",
+    'pt-br':
+      'O número mínimo de dias que devem passar após uma versão ser publicada antes que ela seja considerada elegível para instalação',
+    ru: 'Минимальное количество дней, которое должно пройти после публикации версии, прежде чем она будет считаться подходящей для установки',
+    ko: '버전이 게시된 후 설치 대상이 되기 위해 경과해야 하는 최소 일수',
+    it: "Il numero minimo di giorni che devono trascorrere dalla pubblicazione di una versione prima che venga considerata idonea per l'installazione",
+    tr: 'Bir sürümün yayınlanmasından sonra yükleme için uygun kabul edilmesi için geçmesi gereken minimum gün sayısı',
+    cs: 'Minimální počet dní, které musí uplynout po vydání verze, než bude považována za způsobilou k instalaci',
+    hu: 'A verzió közzététele után eltelendő minimális napok száma, mielőtt telepítésre jogosultnak tekintenék',
+    bg: 'Минималният брой дни, които трябва да минат след публикуването на версия, преди да се счита за допустима за инсталиране'
+  },
   'general.open-links.title': {
     en: 'Open...',
     pl: 'Otwórz...',

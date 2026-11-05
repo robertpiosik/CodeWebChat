@@ -5,6 +5,7 @@ import { Item as UiItem } from '@ui/components/editor/settings-view/Item'
 import { Group as UiGroup } from '@ui/components/editor/settings-view/Group/Group'
 import { Section as UiSection } from '@ui/components/editor/settings-view/Section'
 import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
+import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
@@ -26,6 +27,8 @@ type Props = {
   on_update_check_frequency_change: (
     value: 'hourly' | 'daily' | 'weekly' | 'monthly'
   ) => void
+  minimum_release_age: number
+  on_minimum_release_age_change: (value: number) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
   attach_ascii_tree_of_context: 'ask' | 'always' | 'never'
   on_attach_ascii_tree_of_context_change: (
@@ -178,6 +181,28 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   onChange={(val) =>
                     props.on_update_check_frequency_change(val as any)
                   }
+                />
+              }
+            />
+            <UiItem
+              title={t('general.updates.minimum-release-age.title')}
+              description={t('general.updates.minimum-release-age.description')}
+              slot_right={
+                <UiInput
+                  value={props.minimum_release_age}
+                  type="number"
+                  min={0}
+                  on_change={(val) => {
+                    if (val === '') {
+                      props.on_minimum_release_age_change(0)
+                    } else {
+                      const num = parseInt(val, 10)
+                      if (!isNaN(num)) {
+                        props.on_minimum_release_age_change(num)
+                      }
+                    }
+                  }}
+                  width={100}
                 />
               }
             />

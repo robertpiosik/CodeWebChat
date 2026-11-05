@@ -143,6 +143,10 @@ export class SettingsViewProvider {
           await handlers.handle_get_update_check_frequency(this)
         } else if (message.command === 'UPDATE_UPDATE_CHECK_FREQUENCY') {
           await handlers.handle_update_update_check_frequency(message)
+        } else if (message.command === 'GET_MINIMUM_RELEASE_AGE') {
+          await handlers.handle_get_minimum_release_age(this)
+        } else if (message.command === 'UPDATE_MINIMUM_RELEASE_AGE') {
+          await handlers.handle_update_minimum_release_age(message)
         } else if (message.command === 'GET_DEFAULT_OPTION_FOR_VOICE_INPUT') {
           await handlers.handle_get_default_option_for_voice_input(this)
         } else if (
@@ -260,6 +264,7 @@ export class SettingsViewProvider {
           )
           void handlers.handle_get_include_prompts_in_commit_messages(this)
           void handlers.handle_get_update_check_frequency(this)
+          void handlers.handle_get_minimum_release_age(this)
           void handlers.handle_get_default_option_for_voice_input(this)
           void handlers.handle_get_voice_input_instructions(this)
           void handlers.handle_get_agentic_search_instructions(this)
