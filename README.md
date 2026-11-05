@@ -16,8 +16,8 @@
 
 Safely build from source for any VS Code-based editor (Cursor, Antigravity, VSCodium etc.):
 
-> [!IMPORTANT]
-> Clean, local build directly from this repository is the only supported installation method.
+> [!NOTE]
+> Building from source protects from common types of supply chain attacks and is the only supported installation method of the extension for your editor.
 
 **macOS / Linux**
 
