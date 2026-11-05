@@ -16,6 +16,9 @@
 
 Safely build from source for any VS Code-based editor (Cursor, Antigravity, VSCodium etc.):
 
+> [!IMPORTANT]
+> Clean, local build directly from this repository is the only supported installation method.
+
 **macOS / Linux**
 
 ```bash
@@ -34,7 +37,7 @@ No code, prompts, or usage data are collected.
 
 ## Introduction
 
-Autofill chatbots in your web browser, send API requests, or headlessly invoke agentic CLIs using [markdown prompts](#markdown-prompts) with seamless integration. It's free!
+Autofill chatbots in your web browser, send API requests, or headlessly invoke agentic CLIs using [markdown prompts](#markdown-prompts) with seamless integration. CWC is free for personal and commercial use.
 
 > [!TIP]
 >
