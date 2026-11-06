@@ -4,6 +4,7 @@ export const MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE = 1000
 export const GIT_LOG_SINCE_DURATION = '6 months ago'
 export const SYMBOL_CACHE_DURATION = 5 * 60 * 1000
 export const UPDATE_CHECK_INTERVAL = 5 * 60 * 1000 // 5 minutes
+export const MINIMUM_WAIT_TIME = 2000
 
 export const DIFF_PLACEHOLDERS = {
   FILE_CREATED: 'File created',

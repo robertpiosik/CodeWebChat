@@ -2,8 +2,7 @@ import * as vscode from 'vscode'
 import { t } from '../i18n'
 import { PromptViewProvider } from '../views/prompt/backend/prompt-view-provider'
 import { update_extension } from '../utils/update-extension'
-
-const MINIMUM_WAIT_TIME = 2000
+import { MINIMUM_WAIT_TIME } from '../constants/values'
 
 export const check_for_updates_command = (
   prompt_view_provider: PromptViewProvider

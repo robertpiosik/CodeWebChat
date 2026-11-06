@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import axios from 'axios'
 import { t } from '../i18n'
 import { update_extension } from '../utils/update-extension'
+import { MINIMUM_WAIT_TIME } from '../constants/values'
 
 export const install_specific_version_command = () => {
   return vscode.commands.registerCommand(
@@ -19,6 +20,8 @@ export const install_specific_version_command = () => {
           cancellable: false
         },
         async () => {
+          const start_time = Date.now()
+
           while (true) {
             try {
               const res = await axios.get(
@@ -46,6 +49,13 @@ export const install_specific_version_command = () => {
               console.error('Failed to fetch tags', e)
               break
             }
+          }
+
+          const elapsed_time = Date.now() - start_time
+          if (elapsed_time < MINIMUM_WAIT_TIME) {
+            await new Promise((resolve) =>
+              setTimeout(resolve, MINIMUM_WAIT_TIME - elapsed_time)
+            )
           }
         }
       )
