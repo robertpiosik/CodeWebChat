@@ -14,7 +14,10 @@
 
 ## Quick start
 
-Build from source for any VS Code-based editor (Cursor, Antigravity, VSCodium etc.):
+Get started building with CWC in any VS Code-based editor (Cursor, Antigravity, VSCodium, etc.) by using one of the below commands:
+
+> [!NOTE]
+> To mitigate commonly exploited supply chain vulnerabilities, CWC is built from source on your machine.
 
 **Bash**
 
