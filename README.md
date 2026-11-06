@@ -18,13 +18,13 @@ Build from source for any VS Code-based editor (Cursor, Antigravity, VSCodium et
 
 **Bash**
 
-```bash
+```
 sh <(curl -sL https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.sh)
 ```
 
 **PowerShell**
 
-```powershell
+```
 irm https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.ps1 | iex
 ```
 
