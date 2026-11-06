@@ -215,6 +215,24 @@ export const home = {
     hu: 'Frissítés',
     bg: 'Актуализиране'
   },
+  'home.update.updating': {
+    en: 'Updating...',
+    pl: 'Aktualizowanie...',
+    'zh-cn': '更新中...',
+    ja: '更新中...',
+    'zh-tw': '更新中...',
+    de: 'Aktualisieren...',
+    es: 'Actualizando...',
+    fr: 'Mise à jour...',
+    'pt-br': 'Atualizando...',
+    ru: 'Обновление...',
+    ko: '업데이트 중...',
+    it: 'Aggiornamento...',
+    tr: 'Güncelleniyor...',
+    cs: 'Aktualizace...',
+    hu: 'Frissítés...',
+    bg: 'Актуализиране...'
+  },
   'home.update.age': {
     en: '{days} days old',
     pl: '{days} dni',

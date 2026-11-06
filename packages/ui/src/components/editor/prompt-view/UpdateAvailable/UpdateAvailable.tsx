@@ -11,6 +11,7 @@ type Props = {
   translations: {
     title: string
     button: string
+    updating?: string
     age?: React.ReactNode
     changelog?: React.ReactNode
   }
@@ -48,7 +49,9 @@ export const UpdateAvailable: React.FC<Props> = (props) => {
           is_small
           disabled={is_updating}
         >
-          {props.translations.button}
+          {is_updating && props.translations.updating
+            ? props.translations.updating
+            : props.translations.button}
         </Button>
       </div>
       {is_expanded && (

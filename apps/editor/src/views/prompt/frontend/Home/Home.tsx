@@ -171,6 +171,7 @@ export const Home: React.FC<Props> = (props) => {
           translations={{
             title: t('home.update.title'),
             button: t('home.update.button'),
+            updating: t('home.update.updating'),
             age: props.update_info.current_version_age_days ? (
               <Translation
                 id={
