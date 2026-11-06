@@ -54,9 +54,16 @@ export const handle_template_quick_pick = async (
   >()
   templates_quick_pick.title = 'Templates'
   templates_quick_pick.placeholder = 'Select a template'
-  templates_quick_pick.buttons = [
-    { iconPath: new vscode.ThemeIcon('close'), tooltip: t('common.close') }
-  ]
+
+  const settings_button = {
+    iconPath: new vscode.ThemeIcon('settings-gear'),
+    tooltip: t('common.open-settings')
+  }
+  const close_button = {
+    iconPath: new vscode.ThemeIcon('close'),
+    tooltip: t('common.close')
+  }
+  templates_quick_pick.buttons = [settings_button, close_button]
 
   const get_template_id = (t: Template) => t.name || t.template
   const recents_key = get_last_used_template_key(prompt_type)
@@ -103,7 +110,10 @@ export const handle_template_quick_pick = async (
   let is_entering_variables = false
 
   disposables.push(
-    templates_quick_pick.onDidTriggerButton((_button) => {
+    templates_quick_pick.onDidTriggerButton((button) => {
+      if (button === settings_button) {
+        open_settings.general.prompt()
+      }
       templates_quick_pick.hide()
     }),
     templates_quick_pick.onDidAccept(async () => {

@@ -242,6 +242,11 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             <UiItem
               title={t('general.prompt.templates.title')}
               description={t('general.prompt.templates.description')}
+              is_toggleable
+              translations={{
+                expand: t('common.expand'),
+                collapse: t('common.collapse')
+              }}
             >
               <TemplatesForm
                 prompt_instructions={props.prompt_instructions}
@@ -254,6 +259,11 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             <UiItem
               title={t('general.prompt.snippets.title')}
               description={t('general.prompt.snippets.description')}
+              is_toggleable
+              translations={{
+                expand: t('common.expand'),
+                collapse: t('common.collapse')
+              }}
             >
               <SnippetsForm
                 prompt_instructions={props.prompt_instructions}

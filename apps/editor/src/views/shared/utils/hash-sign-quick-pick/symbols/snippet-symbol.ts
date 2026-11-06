@@ -5,6 +5,10 @@ import { open_settings } from '@/views/settings/helpers/open-settings'
 export const handle_snippet_item = async (
   prompt_type?: 'ask' | 'edit'
 ): Promise<string | 'continue' | undefined> => {
+  const settings_button = {
+    iconPath: new vscode.ThemeIcon('settings-gear'),
+    tooltip: t('common.open-settings')
+  }
   const close_button = {
     iconPath: new vscode.ThemeIcon('close'),
     tooltip: t('common.close')
@@ -49,7 +53,11 @@ export const handle_snippet_item = async (
   quick_pick.title = t(
     'views.shared.utils.hash-sign-quick-pick.snippet-symbol.title'
   )
-  quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
+  quick_pick.buttons = [
+    vscode.QuickInputButtons.Back,
+    settings_button,
+    close_button
+  ]
 
   return new Promise((resolve) => {
     let is_accepted = false
@@ -60,6 +68,10 @@ export const handle_snippet_item = async (
         did_trigger_back = true
         quick_pick.hide()
         resolve('continue')
+      } else if (button === settings_button) {
+        open_settings.general.prompt()
+        quick_pick.hide()
+        resolve(undefined)
       } else if (button === close_button) {
         quick_pick.hide()
         resolve(undefined)
