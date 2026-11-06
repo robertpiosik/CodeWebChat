@@ -39,7 +39,17 @@ export const Item: React.FC<Props> = (props) => {
               className={styles.description}
               style={{ whiteSpace: 'normal' }}
             >
-              {props.description}
+              {typeof props.description === 'string'
+                ? props.description.split('`').map((part, i) =>
+                    i % 2 === 1 ? (
+                      <code key={i} className={styles.code}>
+                        {part}
+                      </code>
+                    ) : (
+                      part
+                    )
+                  )
+                : props.description}
             </div>
           )}
         </div>

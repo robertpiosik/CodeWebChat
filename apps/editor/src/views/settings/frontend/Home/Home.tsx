@@ -28,7 +28,7 @@ export type NavItem =
   | 'section:general:group:agentic-search'
   | 'section:web'
   | 'section:web:group:chatbots'
-  | 'section:web:group:ports'
+  | 'section:web:group:remote-machines'
   | 'section:web:group:web-defaults'
   | 'section:api'
   | 'section:api:group:providers'
@@ -79,8 +79,8 @@ export const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'chatbots.configurations.title'
   },
   {
-    id: 'section:web:group:ports',
-    label: 'web.autofill.title'
+    id: 'section:web:group:remote-machines',
+    label: 'web.remote-machines.title'
   },
   {
     id: 'section:web:group:web-defaults',

@@ -351,12 +351,16 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
           )}
         </UiGroup>
       </div>
-      <div ref={(el) => props.set_section_ref('section:web:group:ports', el)}>
+      <div
+        ref={(el) =>
+          props.set_section_ref('section:web:group:remote-machines', el)
+        }
+      >
         <ForwardedPorts
           forwarded_ports={props.forwarded_ports}
           on_update={props.on_update_forwarded_ports}
           translations={{
-            title: t('web.autofill.title'),
+            title: t('web.remote-machines.title'),
             item_title: t('forwarded-ports.add.title'),
             item_description: t('forwarded-ports.add.description'),
             placeholder: t('forwarded-ports.add.placeholder'),
