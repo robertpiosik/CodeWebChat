@@ -4,7 +4,7 @@
   "name": "Autofill for Code Web Chat",
   "short_name": "CWC",
   "description": "Autofill CWC-constructed markdown prompts in free chatbots.",
-  "version": "2026.1102.36",
+  "version": "2026.1106.37",
   "homepage_url": "https://github.com/CodeWebChat/CWC",
   "icons": {
     "16": "icons/icon-16.png",
@@ -12,7 +12,10 @@
     "48": "icons/icon-48.png",
     "128": "icons/icon-128.png"
   },
-  "permissions": ["storage", "alarms"],
+  "permissions": [
+    "storage",
+    "alarms"
+  ],
   "action": {
     "default_title": "Autofill for Code Web Chat",
     "default_popup": "popup.html"
@@ -46,7 +49,9 @@
         "https://chat.z.ai/",
         "https://zchat.z.ai/"
       ],
-      "js": ["send-prompt-content-script.js"]
+      "js": [
+        "send-prompt-content-script.js"
+      ]
     }
   ]
 }
