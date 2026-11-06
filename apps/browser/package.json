@@ -1,5 +1,5 @@
 {
-  "name": "gemini-coder-connector",
+  "name": "browser",
   "scripts": {
     "build": "webpack --mode production && ts-node scripts/create-firefox-build.ts && ts-node scripts/create-zip-archives.ts",
     "bump": "node scripts/bump.js"
