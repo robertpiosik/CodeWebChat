@@ -13,14 +13,19 @@ export const handle_preview_commit_symbol = async (message: {
       ? ` "${message.commit_message.replace(/"/g, '\\"')}"`
       : ''
     const instruction = `#${message.type}(${message.repo_name}:${message.commit_hash}${message_escaped})`
-    const { commit_definitions } = await replace_commit_symbol({
+    const { commit_definitions, instructions } = await replace_commit_symbol({
       instructions: [instruction]
     })
 
-    if (commit_definitions) {
+    const preview_content =
+      message.type === 'CommitMessage'
+        ? instructions[0].trim()
+        : commit_definitions.trim()
+
+    if (preview_content) {
       await preview_text_in_temp_file({
         prefix: 'cwc-commit',
-        content: commit_definitions.trim(),
+        content: preview_content,
         extension: '.md'
       })
     } else {

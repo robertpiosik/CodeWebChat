@@ -697,11 +697,12 @@ export const replace_commit_symbol = async (params: {
             diff,
             commit_hash,
             path_prefix: workspace_folders.length > 1 ? folder_name : undefined,
-            commit_message: symbol_type === 'CommitDiff' ? undefined : commit_message_body
+            commit_message:
+              symbol_type === 'CommitDiff' ? undefined : commit_message_body
           })
         } else {
           if (commit_message_body) {
-            replacement_text = `---\n\n${commit_message_body}\n\n---\n\n`
+            replacement_text = `\`\`\`\n${commit_message_body}\n\`\`\`\n\n`
           }
         }
 
