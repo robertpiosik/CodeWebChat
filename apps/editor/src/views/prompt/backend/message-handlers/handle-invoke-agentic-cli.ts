@@ -59,10 +59,11 @@ export const handle_invoke_agentic_cli = async (
         name
       })
     },
-    build_prompt: async (selected_root: string) => {
+    build_prompt: async (selected_root: string, temp_dir_path?: string) => {
       return build_cli_prompt({
         prompt_view_provider,
-        selected_root
+        selected_root,
+        temp_dir_path
       })
     }
   })

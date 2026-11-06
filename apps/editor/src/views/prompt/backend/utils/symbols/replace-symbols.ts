@@ -20,6 +20,7 @@ export const replace_symbols = async (params: {
   remove_images?: boolean
   image_as_paths?: boolean
   symbols_cache?: SymbolCacheManager
+  copy_images_to_dir?: string
 }): Promise<{
   instructions: string[]
   skill_definitions: string
@@ -97,7 +98,8 @@ export const replace_symbols = async (params: {
       instructions: processed_instructions,
       extension_context: params.extension_context,
       remove: params.remove_images,
-      as_paths: params.image_as_paths
+      as_paths: params.image_as_paths,
+      copy_images_to_dir: params.copy_images_to_dir
     })
   }
 

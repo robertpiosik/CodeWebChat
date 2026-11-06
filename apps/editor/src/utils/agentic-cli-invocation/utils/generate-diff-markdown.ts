@@ -9,6 +9,9 @@ async function get_all_files(dir: string): Promise<string[]> {
   const dirents = await fs.promises.readdir(dir, { withFileTypes: true })
   const files = await Promise.all(
     dirents.map(async (dirent) => {
+      if (dirent.isDirectory() && dirent.name === '.cwc') {
+        return []
+      }
       const res = path.resolve(dir, dirent.name)
       return dirent.isDirectory() ? get_all_files(res) : res
     })

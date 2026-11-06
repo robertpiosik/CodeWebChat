@@ -28,7 +28,10 @@ export const show_agentic_cli_output_channel = () => {
 export const invoke_agentic_cli = async (params: {
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
-  build_prompt: (selected_root: string) => Promise<string | 'back' | undefined>
+  build_prompt: (
+    selected_root: string,
+    temp_dir_path?: string
+  ) => Promise<string | 'back' | undefined>
   notification_title: string
   last_selected_workspace_state_key: string
   agent_state_key?: string
@@ -527,7 +530,10 @@ export const invoke_agentic_cli = async (params: {
         }
       }
 
-      const final_prompt = await params.build_prompt(selected_root!)
+      const final_prompt = await params.build_prompt(
+        selected_root!,
+        temp_dir_path
+      )
 
       if (final_prompt === 'back') {
         if (roots.length === 1 || params.isolate_in_temp_dir) {

@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import * as path from 'path'
 import * as vscode from 'vscode'
 import { PersistentPromptStorage } from '../../persistent-prompt-storage'
 
@@ -7,6 +8,7 @@ export const replace_image_symbol = async (params: {
   extension_context: vscode.ExtensionContext
   remove?: boolean
   as_paths?: boolean
+  copy_images_to_dir?: string
 }): Promise<string[]> => {
   const storage = new PersistentPromptStorage(params.extension_context, 'image')
 
@@ -34,8 +36,22 @@ export const replace_image_symbol = async (params: {
               if (!fs.existsSync(png_path)) {
                 return { success: false }
               }
+              if (params.copy_images_to_dir) {
+                const images_dir = path.join(params.copy_images_to_dir, '.cwc')
+                if (!fs.existsSync(images_dir)) {
+                  await fs.promises.mkdir(images_dir, { recursive: true })
+                }
+                const dest_path = path.join(images_dir, path.basename(png_path))
+                await fs.promises.copyFile(png_path, dest_path)
+                return {
+                  path: path
+                    .relative(params.copy_images_to_dir, dest_path)
+                    .replace(/\\/g, '/'),
+                  success: true
+                }
+              }
               return {
-                path: png_path,
+                path: png_path.replace(/\\/g, '/'),
                 success: true
               }
             } else {

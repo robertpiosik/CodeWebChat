@@ -9,6 +9,7 @@ import { PromptBuilder } from '@/utils/prompt-builder'
 export const build_cli_prompt = async (params: {
   prompt_view_provider: PromptViewProvider
   selected_root?: string
+  temp_dir_path?: string
 }): Promise<string> => {
   const { prompt_view_provider } = params
   let { selected_root } = params
@@ -29,7 +30,8 @@ export const build_cli_prompt = async (params: {
     extension_context: prompt_view_provider.extension_context,
     workspace_provider: prompt_view_provider.workspace_provider,
     image_as_paths: true,
-    symbols_cache: prompt_view_provider.symbols_cache
+    symbols_cache: prompt_view_provider.symbols_cache,
+    copy_images_to_dir: params.temp_dir_path
   })
 
   const processed_query = processed_instructions_array[0]
