@@ -14,7 +14,10 @@
 
 ## Quick start
 
-Get started building with CWC in VS Code, Cursor, Antigravity, etc. by running the installation script. To mitigate commonly exploited supply chain vulnerabilities, the extension is compiled on your machine, directly from this public repository.
+Get started building with CWC in VS Code, Cursor, Antigravity, etc. by running the installation script.
+
+> [!NOTE]
+> To mitigate commonly exploited supply chain vulnerabilities, the extension is compiled on your machine, directly from this public repository.
 
 **Bash**
 
