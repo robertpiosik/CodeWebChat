@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { SymbolCacheManager } from '../symbol-cache'
-import { PersistentTextStorage } from '../../persistent-text-storage'
+import { PersistentPromptStorage } from '../../persistent-prompt-storage'
 import { get_markdown_backticks } from '@/utils/get-markdown-backticks'
 
 export const replace_website_symbol = async (params: {
@@ -8,7 +8,7 @@ export const replace_website_symbol = async (params: {
   extension_context: vscode.ExtensionContext
   symbols_cache?: SymbolCacheManager
 }): Promise<string[]> => {
-  const storage = new PersistentTextStorage(params.extension_context)
+  const storage = new PersistentPromptStorage(params.extension_context, 'text')
 
   return Promise.all(
     params.instructions.map(async (instruction) => {

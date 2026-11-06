@@ -1,15 +1,16 @@
 import * as vscode from 'vscode'
 import { OpenPromptPastedTextMessage } from '../../types/messages'
 import { PromptViewProvider } from '../prompt-view-provider'
-import { PersistentTextStorage } from '../utils/persistent-text-storage'
+import { PersistentPromptStorage } from '../utils/persistent-prompt-storage'
 
 export const handle_open_prompt_pasted_text = async (
   prompt_view_provider: PromptViewProvider,
   message: OpenPromptPastedTextMessage
 ) => {
   try {
-    const storage = new PersistentTextStorage(
-      prompt_view_provider.extension_context
+    const storage = new PersistentPromptStorage(
+      prompt_view_provider.extension_context,
+      'text'
     )
     const file_path = storage.get_file_path(message.id)
 

@@ -58,7 +58,10 @@ export const replace_symbols = async (params: {
 
   if (
     processed_instructions.some(
-      (i) => i.includes('#Commit(') || i.includes('#CommitMessage(') || i.includes('#CommitDiff(')
+      (i) =>
+        i.includes('#Commit(') ||
+        i.includes('#CommitMessage(') ||
+        i.includes('#CommitDiff(')
     )
   ) {
     const result = await replace_commit_symbol({
@@ -92,6 +95,7 @@ export const replace_symbols = async (params: {
   if (processed_instructions.some((i) => i.includes('#Image('))) {
     processed_instructions = await replace_image_symbol({
       instructions: processed_instructions,
+      extension_context: params.extension_context,
       remove: params.remove_images,
       as_paths: params.image_as_paths
     })

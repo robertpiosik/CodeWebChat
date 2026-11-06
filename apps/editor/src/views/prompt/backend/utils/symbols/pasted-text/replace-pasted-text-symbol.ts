@@ -1,12 +1,12 @@
 import * as vscode from 'vscode'
-import { PersistentTextStorage } from '../../persistent-text-storage'
+import { PersistentPromptStorage } from '../../persistent-prompt-storage'
 import { get_markdown_backticks } from '@/utils/get-markdown-backticks'
 
 export const replace_pasted_text_symbol = async (params: {
   instructions: string[]
   extension_context: vscode.ExtensionContext
 }): Promise<string[]> => {
-  const storage = new PersistentTextStorage(params.extension_context)
+  const storage = new PersistentPromptStorage(params.extension_context, 'text')
 
   return Promise.all(
     params.instructions.map(async (instruction) => {

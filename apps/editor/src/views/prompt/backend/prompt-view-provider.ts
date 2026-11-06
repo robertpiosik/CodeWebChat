@@ -764,7 +764,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command === 'SAVE_PROMPT_IMAGE') {
             await handlers.handle_save_prompt_image(this, message)
           } else if (message.command === 'OPEN_PROMPT_IMAGE') {
-            await handlers.handle_open_prompt_image(message)
+            await handlers.handle_open_prompt_image(this, message)
           } else if (message.command === 'SAVE_PROMPT_PASTED_TEXT') {
             await handlers.handle_save_prompt_pasted_text(this, message)
           } else if (message.command === 'OPEN_PROMPT_PASTED_TEXT') {

@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { PasteUrlMessage } from '../../types/messages'
 import { PromptViewProvider } from '../prompt-view-provider'
 import { fetch_website } from '../utils/website-fetcher'
-import { PersistentTextStorage } from '../utils/persistent-text-storage'
+import { PersistentPromptStorage } from '../utils/persistent-prompt-storage'
 
 export const handle_paste_url = async (
   prompt_view_provider: PromptViewProvider,
@@ -20,8 +20,9 @@ export const handle_paste_url = async (
   }
 
   try {
-    const storage = new PersistentTextStorage(
-      prompt_view_provider.extension_context
+    const storage = new PersistentPromptStorage(
+      prompt_view_provider.extension_context,
+      'text'
     )
 
     const abort_controller = new AbortController()

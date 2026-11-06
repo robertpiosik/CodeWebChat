@@ -1,49 +1,33 @@
 import * as fs from 'fs'
-import * as os from 'os'
-import * as path from 'path'
 import * as vscode from 'vscode'
 import { OpenPromptImageMessage } from '../../types/messages'
+import { PromptViewProvider } from '../prompt-view-provider'
+import { PersistentPromptStorage } from '../utils/persistent-prompt-storage'
 
 export const handle_open_prompt_image = async (
+  prompt_view_provider: PromptViewProvider,
   message: OpenPromptImageMessage
 ) => {
   try {
     const hash = message.hash
-    if (!/^[a-fA-F0-9]{16,64}$/.test(hash)) {
-      throw new Error('Invalid image hash')
-    }
-    const txt_filename = `cwc-image-${hash}.txt`
-    const txt_path = path.join(os.tmpdir(), txt_filename)
-
-    // Read base64 content
-    let content_base64: string
-    try {
-      content_base64 = await fs.promises.readFile(txt_path, 'utf-8')
-    } catch (err) {
-      if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
-        vscode.window.showErrorMessage(
-          'Image file not found (it may have been deleted).'
-        )
-        return
-      }
-      throw err
-    }
-
-    const buffer = Buffer.from(content_base64, 'base64')
-
-    // Create a png file for viewing
-    const png_dir = await fs.promises.mkdtemp(
-      path.join(os.tmpdir(), 'cwc-image-')
+    const storage = new PersistentPromptStorage(
+      prompt_view_provider.extension_context,
+      'image'
     )
-    const png_filename = `cwc-image-${hash}.png`
-    const png_path = path.join(png_dir, png_filename)
+    const file_path = storage.get_file_path(hash)
 
-    await fs.promises.writeFile(png_path, new Uint8Array(buffer), {
-      mode: 0o600
-    })
+    // Verify the file exists before attempting to open
+    try {
+      await fs.promises.access(file_path)
+    } catch {
+      vscode.window.showErrorMessage(
+        'Image file not found (it may have been deleted).'
+      )
+      return
+    }
 
     // Open the image
-    const uri = vscode.Uri.file(png_path)
+    const uri = vscode.Uri.file(file_path)
     await vscode.commands.executeCommand('vscode.open', uri)
   } catch (error) {
     vscode.window.showErrorMessage(`Failed to open image: ${error}`)

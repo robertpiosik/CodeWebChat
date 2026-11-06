@@ -5,7 +5,7 @@ import { marked } from 'marked'
 import { JSDOM } from 'jsdom'
 import createDOMPurify from 'dompurify'
 import { PromptViewProvider } from '../prompt-view-provider'
-import { PersistentTextStorage } from '../utils/persistent-text-storage'
+import { PersistentPromptStorage } from '../utils/persistent-prompt-storage'
 
 let current_preview_url: string | undefined
 
@@ -39,8 +39,9 @@ export const handle_open_website = async (
     }
   }
 
-  const storage = new PersistentTextStorage(
-    prompt_view_provider.extension_context
+  const storage = new PersistentPromptStorage(
+    prompt_view_provider.extension_context,
+    'text'
   )
   const file_path = id ? storage.get_file_path(id) : ''
 

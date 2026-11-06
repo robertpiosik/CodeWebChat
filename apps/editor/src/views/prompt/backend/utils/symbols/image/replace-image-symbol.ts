@@ -1,12 +1,15 @@
 import * as fs from 'fs'
-import * as os from 'os'
-import * as path from 'path'
+import * as vscode from 'vscode'
+import { PersistentPromptStorage } from '../../persistent-prompt-storage'
 
 export const replace_image_symbol = async (params: {
   instructions: string[]
+  extension_context: vscode.ExtensionContext
   remove?: boolean
   as_paths?: boolean
 }): Promise<string[]> => {
+  const storage = new PersistentPromptStorage(params.extension_context, 'image')
+
   return Promise.all(
     params.instructions.map(async (instruction) => {
       const regex = /#Image\(([a-fA-F0-9]+)\)/g
@@ -24,32 +27,21 @@ export const replace_image_symbol = async (params: {
       const replacements = await Promise.all(
         matches.map(async (match) => {
           const hash = match[1]
-          const txt_filename = `cwc-image-${hash}.txt`
-          const txt_path = path.join(os.tmpdir(), txt_filename)
-          const png_filename = `cwc-image-${hash}.png`
-          const png_path = path.join(os.tmpdir(), png_filename)
+          const png_path = storage.get_file_path(hash)
 
           try {
             if (params.as_paths) {
               if (!fs.existsSync(png_path)) {
-                const content_base64 = await fs.promises.readFile(
-                  txt_path,
-                  'utf-8'
-                )
-                const buffer = Buffer.from(content_base64, 'base64')
-                await fs.promises.writeFile(png_path, new Uint8Array(buffer))
+                return { success: false }
               }
               return {
                 path: png_path,
                 success: true
               }
             } else {
-              const content_base64 = await fs.promises.readFile(
-                txt_path,
-                'utf-8'
-              )
+              const buffer = await storage.load(hash)
               return {
-                content_base64,
+                content_base64: buffer.toString('base64'),
                 success: true
               }
             }

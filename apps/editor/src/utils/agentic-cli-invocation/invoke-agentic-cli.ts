@@ -367,21 +367,9 @@ export const invoke_agentic_cli = async (params: {
       >()
 
       if (params.isolate_in_temp_dir) {
-        if (params.copy_selected_files) {
-          temp_dir_path = await fs.promises.mkdtemp(
-            path.join(os.tmpdir(), 'cwc-cli-edit-')
-          )
-        } else {
-          // Reuse directory to avoid repeated permission asks
-          const global_storage_path =
-            params.extension_context.globalStorageUri.fsPath
-          if (!fs.existsSync(global_storage_path)) {
-            await fs.promises.mkdir(global_storage_path, { recursive: true })
-          }
-          temp_dir_path = path.join(global_storage_path, 'cwc-cli-ask')
-          await fs.promises.rm(temp_dir_path, { recursive: true, force: true })
-          await fs.promises.mkdir(temp_dir_path, { recursive: true })
-        }
+        temp_dir_path = await fs.promises.mkdtemp(
+          path.join(os.tmpdir(), 'cwc-cli-')
+        )
 
         if (params.copy_selected_files) {
           const selected_files = params.workspace_provider.get_selected_files()
