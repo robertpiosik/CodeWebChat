@@ -1,26 +1,16 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "es6",
-    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
     "declaration": true,
     "types": ["node", "jest"],
     "sourceMap": true,
-    "rootDir": "../../",
-    "incremental": true,
     "paths": {
-      "@/*": ["./src/*", "../../apps/editor/src/*"],
       "@shared/*": ["../shared/src/*"],
       "@ui/*": ["./src/*"]
     }
@@ -29,8 +19,6 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "../shared/src/*.ts",
-    "../shared/src/*.tsx",
-    "../../apps/editor/src/**/*.ts",
-    "../../apps/editor/src/**/*.tsx"
+    "../shared/src/*.tsx"
   ]
 }

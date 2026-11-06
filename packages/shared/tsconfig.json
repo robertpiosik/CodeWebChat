@@ -1,13 +1,6 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "ESNext",
-    "lib": ["ESNext", "dom"],
-    "sourceMap": true,
-    "strict": true,
-    "esModuleInterop": true,
-    "rootDir": "../../",
-    "skipLibCheck": true,
     "types": ["node", "jest"],
     "paths": {
       "@shared/*": ["./src/*"]

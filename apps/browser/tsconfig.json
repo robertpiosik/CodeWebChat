@@ -1,14 +1,6 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["dom", "ESNext"],
-    "module": "commonjs",
-    "rootDir": "../../",
-    "sourceMap": true,
-    "esModuleInterop": true,
-    "strict": true,
-    "jsx": "react-jsx",
-    "skipLibCheck": true,
     "types": ["chrome", "webextension-polyfill", "node", "jest"],
     "paths": {
       "@/*": ["./src/*"],

@@ -1,17 +1,7 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "ESNext",
-    "lib": ["ESNext", "dom"],
-    "sourceMap": true,
-    "strict": true,
-    "esModuleInterop": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
     "types": ["node", "react", "jest"],
-    "skipLibCheck": true,
-    "rootDir": "../../",
-    "incremental": true,
     "paths": {
       "@/*": ["./src/*"],
       "@shared/*": ["../../packages/shared/src/*"],

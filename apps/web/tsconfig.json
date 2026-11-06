@@ -1,19 +1,12 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "ES6",
-    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "types": ["node", "react", "jest"],
-    "skipLibCheck": true,
-    "rootDir": "../../",
     "paths": {
       "@/*": ["./src/*"]
     },
@@ -21,8 +14,7 @@
       {
         "name": "next"
       }
-    ],
-    "jsxImportSource": "react"
+    ]
   },
   "include": [
     "next-env.d.ts",

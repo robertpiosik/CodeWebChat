@@ -1,4 +1,3 @@
-import { Message } from '@/types/messages'
 import browser from 'webextension-polyfill'
 import { apply_response_icon } from '../constants/apply-response-icon'
 import { apply_response_button_title } from '../constants/dictionary'
@@ -8,6 +7,7 @@ import {
 } from './apply-response-styles'
 import { show_response_ready_notification } from './show-response-ready-notification'
 import { session_state } from './session-state'
+import { Message } from '@/types/messages'
 
 export function add_apply_response_button(params: {
   client_id: string
