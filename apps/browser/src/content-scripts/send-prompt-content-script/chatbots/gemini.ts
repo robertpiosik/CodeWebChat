@@ -60,7 +60,7 @@ export const gemini: Chatbot = {
         return
       }
       const model_options = Array.from(
-        menu_content.querySelectorAll('[role="menuitem"]')
+        menu_content.querySelectorAll('gem-menu-item')
       )
       let found = false
       for (const option of model_options) {
