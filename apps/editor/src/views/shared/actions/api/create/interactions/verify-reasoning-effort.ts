@@ -3,6 +3,7 @@ import { Provider } from '@/services/providers-manager'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import axios from 'axios'
 import { build_request_headers } from '@/utils/build-request-headers'
+import { build_chat_request } from '@/utils/build-chat-request'
 
 export const verify_reasoning_effort = async (params: {
   base_url: string
@@ -36,18 +37,16 @@ export const verify_reasoning_effort = async (params: {
   })
 
   try {
-    const response = await axios.post(
-      params.base_url + '/chat/completions',
-      body,
-      {
-        headers: build_request_headers({
-          base_url: params.base_url,
-          api_key: params.api_key
-        }),
-        signal: abort_controller.signal,
-        responseType: 'stream'
-      }
-    )
+    const request = build_chat_request({ base_url: params.base_url, body })
+
+    const response = await axios.post(request.url, request.body, {
+      headers: build_request_headers({
+        base_url: params.base_url,
+        api_key: params.api_key
+      }),
+      signal: abort_controller.signal,
+      responseType: 'stream'
+    })
 
     await new Promise<void>((resolve, reject) => {
       let resolved = false

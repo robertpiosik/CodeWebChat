@@ -6,6 +6,9 @@ export const build_user_content = (params: {
   part1: string
   part2: string
 }): any => {
+  const is_anthropic = params.provider.base_url === PROVIDERS.Anthropic.base_url
+  const is_openai = params.provider.base_url === PROVIDERS.OpenAI.base_url
+
   const parse_text_with_images = (text: string) => {
     if (!text.includes('<cwc-image>')) {
       return [{ type: 'text', text }]
@@ -19,19 +22,27 @@ export const build_user_content = (params: {
           parsed.push({ type: 'text', text: part.trim() })
         }
       } else {
-        parsed.push({
-          type: 'image_url',
-          image_url: {
-            url: `data:image/png;base64,${part}`
-          }
-        })
+        parsed.push(
+          is_anthropic
+            ? {
+                type: 'image',
+                source: {
+                  type: 'base64',
+                  media_type: 'image/png',
+                  data: part
+                }
+              }
+            : {
+                type: 'image_url',
+                image_url: {
+                  url: `data:image/png;base64,${part}`
+                }
+              }
+        )
       }
     }
     return parsed
   }
-
-  const is_anthropic = params.provider.base_url === PROVIDERS.Anthropic.base_url
-  const is_openai = params.provider.base_url === PROVIDERS.OpenAI.base_url
 
   if (is_anthropic || is_openai) {
     const cache_config: any = {}
@@ -48,18 +59,26 @@ export const build_user_content = (params: {
       }
     }
 
-    const user_content: any[] = [
-      {
+    const user_content: any[] = []
+
+    if (params.part1.trim()) {
+      user_content.push({
         type: 'text',
         text: params.part1,
         ...cache_config
-      }
-    ]
+      })
+    }
 
     if (!params.part2.includes('<cwc-image>')) {
-      user_content.push({ type: 'text', text: params.part2 })
+      if (params.part2.trim()) {
+        user_content.push({ type: 'text', text: params.part2 })
+      }
     } else {
-      user_content.push(...parse_text_with_images(params.part2))
+      user_content.push(
+        ...parse_text_with_images(params.part2).filter(
+          (part) => part.type !== 'text' || part.text.trim()
+        )
+      )
     }
 
     return user_content

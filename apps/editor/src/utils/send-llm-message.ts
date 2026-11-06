@@ -3,6 +3,7 @@ import axios, { AxiosResponse } from 'axios'
 import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
 import { build_request_headers } from '@/utils/build-request-headers'
+import { build_chat_request, ChatApiFormat } from '@/utils/build-chat-request'
 
 type StreamCallback = (tokens_per_second: number, total_tokens: number) => void
 type ThinkingStreamCallback = (text: string) => void
@@ -20,17 +21,94 @@ const get_reasoning_output_channel = () => {
 const DATA_PREFIX = 'data: '
 const DONE_TOKEN = '[DONE]'
 
+const extract_stream_delta = (params: {
+  json_data: any
+  format: ChatApiFormat
+}): { content: string; reasoning_content: string; error_message?: string } => {
+  const { json_data } = params
+
+  if (params.format === 'openai-responses') {
+    switch (json_data.type) {
+      case 'response.output_text.delta':
+        return {
+          content: typeof json_data.delta === 'string' ? json_data.delta : '',
+          reasoning_content: ''
+        }
+      case 'response.reasoning_summary_text.delta':
+      case 'response.reasoning_text.delta':
+      case 'response.reasoning_summary.delta':
+        return {
+          content: '',
+          reasoning_content:
+            typeof json_data.delta === 'string' ? json_data.delta : ''
+        }
+      case 'response.reasoning_summary_part.added':
+        return {
+          content: '',
+          reasoning_content: json_data.summary_index > 0 ? '\n\n' : ''
+        }
+      case 'response.failed':
+        return {
+          content: '',
+          reasoning_content: '',
+          error_message: json_data.response?.error?.message || 'Response failed'
+        }
+      case 'error':
+        return {
+          content: '',
+          reasoning_content: '',
+          error_message: json_data.message || 'Unknown stream error'
+        }
+    }
+    return { content: '', reasoning_content: '' }
+  }
+
+  if (params.format === 'anthropic-messages') {
+    if (json_data.type === 'content_block_delta') {
+      const delta = json_data.delta
+      if (delta?.type === 'text_delta' && typeof delta.text === 'string') {
+        return { content: delta.text, reasoning_content: '' }
+      }
+      if (
+        delta?.type === 'thinking_delta' &&
+        typeof delta.thinking === 'string'
+      ) {
+        return { content: '', reasoning_content: delta.thinking }
+      }
+    } else if (json_data.type === 'error') {
+      return {
+        content: '',
+        reasoning_content: '',
+        error_message: json_data.error?.message || 'Unknown stream error'
+      }
+    }
+    return { content: '', reasoning_content: '' }
+  }
+
+  const delta = json_data.choices?.[0]?.delta
+  return {
+    content: typeof delta?.content === 'string' ? delta.content : '',
+    reasoning_content:
+      typeof delta?.reasoning_content === 'string'
+        ? delta.reasoning_content
+        : ''
+  }
+}
+
 const process_stream_chunk = (params: {
   chunk: string
   buffer: string
+  format: ChatApiFormat
 }): {
   updated_buffer: string
   new_content: string
   new_reasoning_content: string
+  error_message?: string
 } => {
   let updated_buffer = params.buffer
   let new_content = ''
   let new_reasoning_content = ''
+  let error_message: string | undefined
   try {
     updated_buffer += params.chunk
     const lines = updated_buffer.split('\n')
@@ -45,17 +123,16 @@ const process_stream_chunk = (params: {
           const json_string = trimmed_line.slice(DATA_PREFIX.length).trim()
           if (!json_string || json_string === DONE_TOKEN) continue
 
-          const json_data = JSON.parse(json_string)
-          const content = json_data.choices?.[0]?.delta?.content
-          const reasoning_content =
-            json_data.choices?.[0]?.delta?.reasoning_content
+          const delta = extract_stream_delta({
+            json_data: JSON.parse(json_string),
+            format: params.format
+          })
 
-          if (typeof content === 'string') {
-            new_content += content
+          if (delta.error_message) {
+            error_message = delta.error_message
           }
-          if (typeof reasoning_content === 'string') {
-            new_reasoning_content += reasoning_content
-          }
+          new_content += delta.content
+          new_reasoning_content += delta.reasoning_content
         } catch (parse_error) {
           Logger.warn({
             function_name: 'process_stream_chunk',
@@ -76,7 +153,8 @@ const process_stream_chunk = (params: {
   return {
     updated_buffer,
     new_content,
-    new_reasoning_content
+    new_reasoning_content,
+    error_message
   }
 }
 
@@ -146,8 +224,14 @@ export const send_llm_message = async (params: {
   }
 
   try {
-    const request_url = params.base_url + '/chat/completions'
-    const request_body: any = { ...params.body, stream: true }
+    const {
+      url: request_url,
+      body: request_body,
+      format: api_format
+    } = build_chat_request({
+      base_url: params.base_url,
+      body: { ...params.body, stream: true }
+    })
 
     let buffer = ''
     let full_response = ''
@@ -306,11 +390,18 @@ export const send_llm_message = async (params: {
       let stream_closed = false
 
       response.data.on('data', async (chunk: string) => {
-        const { updated_buffer, new_content, new_reasoning_content } =
-          process_stream_chunk({
-            chunk,
-            buffer
-          })
+        if (stream_closed) return
+
+        const {
+          updated_buffer,
+          new_content,
+          new_reasoning_content,
+          error_message
+        } = process_stream_chunk({
+          chunk,
+          buffer,
+          format: api_format
+        })
         buffer = updated_buffer
 
         if (new_reasoning_content) {
@@ -319,6 +410,11 @@ export const send_llm_message = async (params: {
         }
 
         process_content(new_content)
+
+        if (error_message) {
+          stream_closed = true
+          reject(new Error(error_message))
+        }
       })
 
       response.data.on('end', () => {
@@ -330,17 +426,17 @@ export const send_llm_message = async (params: {
             if (trimmed_line.startsWith(DATA_PREFIX)) {
               const json_string = trimmed_line.slice(DATA_PREFIX.length).trim()
               if (json_string && json_string !== DONE_TOKEN) {
-                const json_data = JSON.parse(json_string)
-                const content = json_data.choices?.[0]?.delta?.content
-                const reasoning_content =
-                  json_data.choices?.[0]?.delta?.reasoning_content
+                const delta = extract_stream_delta({
+                  json_data: JSON.parse(json_string),
+                  format: api_format
+                })
 
-                if (typeof content === 'string') {
-                  process_content(content)
+                if (delta.content) {
+                  process_content(delta.content)
                 }
-                if (typeof reasoning_content === 'string') {
-                  api_thoughts += reasoning_content
-                  handle_thinking_chunk(reasoning_content)
+                if (delta.reasoning_content) {
+                  api_thoughts += delta.reasoning_content
+                  handle_thinking_chunk(delta.reasoning_content)
                 }
               }
             }

@@ -43,6 +43,8 @@ export class PromptViewApiCallsManager {
     const body_to_hash = JSON.parse(JSON.stringify(params.body))
     delete body_to_hash.reasoning_effort
     delete body_to_hash.reasoning
+    delete body_to_hash.thinking
+    delete body_to_hash.output_config
     if (body_to_hash.extra_body?.google?.thinking_config) {
       delete body_to_hash.extra_body.google.thinking_config
     }

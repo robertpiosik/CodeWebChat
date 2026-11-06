@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import axios from 'axios'
 import { t } from '@/i18n'
 import { build_request_headers } from '@/utils/build-request-headers'
+import { build_chat_request } from '@/utils/build-chat-request'
 
 export const verify_model = async (params: {
   model: string
@@ -61,22 +62,23 @@ export const verify_model = async (params: {
           abort_controller.abort('User cancelled')
         })
 
-        await axios.post(
-          `${params.base_url}/chat/completions`,
-          {
+        const request = build_chat_request({
+          base_url: params.base_url,
+          body: {
             model: params.model,
             messages,
             stream: true
-          },
-          {
-            headers: build_request_headers({
-              base_url: params.base_url,
-              api_key: params.api_key
-            }),
-            signal: abort_controller.signal,
-            responseType: 'stream'
           }
-        )
+        })
+
+        await axios.post(request.url, request.body, {
+          headers: build_request_headers({
+            base_url: params.base_url,
+            api_key: params.api_key
+          }),
+          signal: abort_controller.signal,
+          responseType: 'stream'
+        })
 
         abort_controller.abort('Verified')
         disposable.dispose()
