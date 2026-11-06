@@ -16,16 +16,16 @@
 
 Build from source for any VS Code-based editor (Cursor, Antigravity, VSCodium etc.):
 
-**macOS / Linux**
+**Bash**
 
 ```bash
-curl -fsSL https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.sh | bash
+sh <(curl -fsSL https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.sh)
 ```
 
-**Windows**
+**PowerShell**
 
 ```powershell
-powershell -c "irm https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.ps1 | iex"
+irm https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.ps1 | iex
 ```
 
 ## Privacy-first
