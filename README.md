@@ -16,9 +16,6 @@
 
 Get started building with CWC in VS Code, Cursor, Antigravity, etc. by running the installation script.
 
-> [!NOTE]
-> To mitigate commonly exploited supply chain vulnerabilities, the extension is compiled on your machine, directly from this public repository.
-
 **Bash**
 
 ```
@@ -30,6 +27,9 @@ sh <(curl -sL https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.sh)
 ```
 irm https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.ps1 | iex
 ```
+
+> [!IMPORTANT]
+> To mitigate commonly exploited supply chain vulnerabilities, the extension is not available in the Marketplace. Instead, the installation script compiles it on your machine, directly from this public repository.
 
 ## Privacy-first
 
