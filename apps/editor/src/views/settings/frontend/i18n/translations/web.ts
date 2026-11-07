@@ -2,6 +2,26 @@ export const translations = {
   'web.title': {
     en: 'Web'
   },
+  'web.remote-machines.notice': {
+    en: 'In the remote workspace, forward port `55155` to any port you list below.',
+    pl: 'W zdalnym obszarze roboczym przekieruj port `55155` na dowolny port z listy poniżej.',
+    'zh-cn': '在远程工作区中，将端口 `55155` 转发到您在下方列出的任何端口。',
+    ja: 'リモートワークスペースで、ポート `55155` を以下にリストされている任意のポートに転送します。',
+    'zh-tw':
+      '在遠端工作區中，將通訊埠 `55155` 轉送到您在下方列出的任何通訊埠。',
+    de: 'Leiten Sie im Remote-Arbeitsbereich Port `55155` an einen beliebigen, unten aufgeführten Port weiter.',
+    es: 'En el espacio de trabajo remoto, reenvíe el puerto `55155` a cualquier puerto que enumere a continuación.',
+    fr: "Dans l'espace de travail distant, transférez le port `55155` vers n'importe quel port de la liste ci-dessous.",
+    'pt-br':
+      'No espaço de trabalho remoto, encaminhe a porta `55155` para qualquer porta listada abaixo.',
+    ru: 'В удаленном рабочей области перенаправьте порт `55155` на любой порт из списка ниже.',
+    ko: '원격 작업 공간에서 포트 `55155`를 아래 나열된 포트 중 하나로 전달하십시오.',
+    it: 'Nello spazio di lavoro remoto, inoltra la porta `55155` a qualsiasi porta elencata di seguito.',
+    tr: 'Uzak çalışma alanında, `55155` bağlantı noktasını aşağıda listelediğiniz herhangi bir bağlantı noktasına yönlendirin.',
+    cs: 'Ve vzdáleném pracovním prostoru přesměrujte port `55155` na libovolný port uvedený níže.',
+    hu: 'A távoli munkaterületen továbbítsa a `55155`-ös portot az alább felsorolt bármelyik portra.',
+    bg: 'В отдалеченото работно пространство пренасочете порт `55155` към всеки порт, посочен по-долу.'
+  },
   'web.remote-machines.title': {
     en: 'Remote machines',
     pl: 'Maszyny zdalne',
@@ -57,23 +77,23 @@ export const translations = {
     bg: 'Пренасочени портове'
   },
   'forwarded-ports.add.description': {
-    en: "List ports CWC's Websockets server port `55155` is forwarded to.",
-    pl: 'Wypisz porty, na które przekierowany jest port `55155` serwera Websockets CWC.',
-    'zh-cn': '列出 CWC 的 Websockets 服务器端口 `55155` 转发到的端口。',
-    ja: 'CWC の Websockets サーバーポート `55155` が転送されるポートのリスト。',
-    'zh-tw': '列出 CWC 的 Websockets 伺服器埠 `55155` 轉送到的埠。',
-    de: 'Liste der Ports, an die der Websockets-Server-Port `55155` von CWC weitergeleitet wird.',
-    es: 'Lista de puertos a los que se reenvía el puerto `55155` del servidor Websockets de CWC.',
-    fr: 'Liste des ports vers lesquels le port `55155` du serveur Websockets de CWC est transféré.',
+    en: "List the forwarded ports for the extension's WebSocket server.",
+    pl: 'Wypisz przekierowane porty dla serwera WebSocket tego rozszerzenia.',
+    'zh-cn': '列出扩展的 WebSocket 服务器的转发端口。',
+    ja: '拡張機能の WebSocket サーバーの転送ポートを一覧表示します。',
+    'zh-tw': '列出擴充功能的 WebSocket 伺服器的轉送埠。',
+    de: 'Listen Sie die weitergeleiteten Ports für den WebSocket-Server der Erweiterung auf.',
+    es: 'Enumere los puertos reenviados para el servidor WebSocket de la extensión.',
+    fr: "Lister les ports transférés pour le serveur WebSocket de l'extension.",
     'pt-br':
-      'Liste as portas para as quais a porta `55155` do servidor Websockets do CWC é encaminhada.',
-    ru: 'Список портов, на которые перенаправляется порт `55155` сервера Websockets CWC.',
-    ko: 'CWC의 Websockets 서버 포트 `55155`가 전달되는 포트 목록입니다.',
-    it: 'Elenca le porte a cui è inoltrata la porta `55155` del server Websockets di CWC.',
-    tr: "CWC'nin Websockets sunucu bağlantı noktası `55155`'in yönlendirildiği bağlantı noktalarını listeleyin.",
-    cs: 'Seznam portů, na které je přesměrován port `55155` serveru Websockets CWC.',
-    hu: 'Azon portok listája, amelyekre a CWC Websockets szerverének `55155`-ös portja továbbítva van.',
-    bg: 'Списък на портовете, към които е пренасочен порт `55155` на Websockets сървъра на CWC.'
+      'Liste as portas encaminhadas para o servidor WebSocket da extensão.',
+    ru: 'Перечислите перенаправленные порты для сервера WebSocket расширения.',
+    ko: '확장 프로그램의 WebSocket 서버에 대해 전달된 포트를 나열합니다.',
+    it: "Elenca le porte inoltrate per il server WebSocket dell'estensione.",
+    tr: 'Uzantının WebSocket sunucusu için yönlendirilen bağlantı noktalarını listeleyin.',
+    cs: 'Vypsat přesměrované porty pro WebSocket server rozšíření.',
+    hu: 'Sorolja fel a bővítmény WebSocket szerverének továbbított portjait.',
+    bg: 'Избройте пренасочените портове за WebSocket сървъра на разширението.'
   },
   'forwarded-ports.add.placeholder': {
     en: 'Port number (e.g. 55156)',

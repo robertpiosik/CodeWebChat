@@ -20,6 +20,7 @@ export namespace ForwardedPorts {
     forwarded_ports: number[]
     on_update: (ports: number[]) => void
     translations: Translations
+    notice_slot?: React.ReactNode
   }
 }
 
@@ -44,7 +45,7 @@ export const ForwardedPorts: React.FC<ForwardedPorts.Props> = (props) => {
   }
 
   return (
-    <Group title={props.translations.title}>
+    <Group title={props.translations.title} notice_slot={props.notice_slot}>
       <Item
         title={props.translations.item_title}
         description={props.translations.item_description}

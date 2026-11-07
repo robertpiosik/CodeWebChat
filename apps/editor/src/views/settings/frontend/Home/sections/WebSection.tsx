@@ -367,6 +367,16 @@ export const WebSection = forwardRef<HTMLDivElement, Props>((props, ref) => {
             add: t('forwarded-ports.add.action'),
             delete: t('forwarded-ports.delete')
           }}
+          notice_slot={
+            <UiNotices
+              notices={[
+                {
+                  type: 'info',
+                  message: t('web.remote-machines.notice')
+                }
+              ]}
+            />
+          }
         />
       </div>
       <div

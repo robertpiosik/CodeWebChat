@@ -19,6 +19,11 @@
     a {
       color: var(--cwc-blue-foreground);
     }
+
+    .code {
+      color: var(--cwc-blue-foreground);
+      background-color: var(--cwc-blue-background);
+    }
   }
 
   &--warning {
@@ -27,6 +32,11 @@
 
     a {
       color: var(--cwc-yellow-foreground);
+    }
+
+    .code {
+      color: var(--cwc-yellow-foreground);
+      background-color: var(--cwc-yellow-background);
     }
   }
 }
@@ -51,4 +61,11 @@
     align-self: flex-start;
     padding-top: 1px;
   }
+}
+
+.code {
+  font-family: var(--vscode-editor-font-family);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 12px;
 }

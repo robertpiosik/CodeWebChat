@@ -36,7 +36,19 @@ export const Notices: React.FC<Props> = (props) => {
                 notice.type === 'info' ? 'codicon-info' : 'codicon-warning'
               )}
             />
-            <span>{notice.message}</span>
+            <span>
+              {typeof notice.message === 'string'
+                ? notice.message.split('`').map((part, i) =>
+                    i % 2 === 1 ? (
+                      <code key={i} className={styles.code}>
+                        {part}
+                      </code>
+                    ) : (
+                      part
+                    )
+                  )
+                : notice.message}
+            </span>
           </div>
           {notice.slot_right && <div>{notice.slot_right}</div>}
         </div>
