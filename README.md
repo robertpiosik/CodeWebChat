@@ -22,7 +22,7 @@ Get started building with CWC in VS Code, Cursor, Antigravity, etc. by running t
 sh <(curl -sL https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.sh)
 ```
 
-<a href="https://github.com/CodeWebChat/CWC/blob/main/install.sh"><sup>View install script</sup></a>
+<a href="https://github.com/CodeWebChat/CWC/blob/main/install.sh">View install script</a>
 
 **PowerShell** _Windows_
 
@@ -30,7 +30,7 @@ sh <(curl -sL https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.sh)
 irm https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.ps1 | iex
 ```
 
-<a href="https://github.com/CodeWebChat/CWC/blob/main/install.ps1"><sup>View install script</sup></a>
+<a href="https://github.com/CodeWebChat/CWC/blob/main/install.ps1">View install script</a>
 
 > [!IMPORTANT]
 > To mitigate commonly exploited supply chain vulnerabilities, the extension is not available in the Marketplace. Instead, the installation script compiles it on your machine, directly from this public repository.
