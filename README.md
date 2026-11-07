@@ -16,13 +16,13 @@
 
 Get started building with CWC in VS Code, Cursor, Antigravity, etc. by running the installation script.
 
-**Bash**
+**Bash** <small>macOS/Linux</small>
 
 ```
 sh <(curl -sL https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.sh)
 ```
 
-**PowerShell**
+**PowerShell** <small>Windows</small>
 
 ```
 irm https://github.com/CodeWebChat/CWC/raw/refs/heads/main/install.ps1 | iex
