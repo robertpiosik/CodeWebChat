@@ -41,7 +41,7 @@ No code, prompts, or usage data are collected.
 
 ## Introduction
 
-Autofill chatbots in your web browser, send API requests, or headlessly invoke agentic CLIs using [markdown prompts](#markdown-prompts) with seamless integration. CWC is free for personal and commercial use.
+Autofill chatbots in your web browser, send API requests, or headlessly invoke agentic CLIs using [markdown prompts](#markdown-prompts) with seamless integration. The extension is free for personal and commercial use.
 
 > [!TIP]
 >
